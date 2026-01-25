@@ -90,6 +90,25 @@ function LoopIcon({ className = 'w-8 h-8' }: { className?: string }) {
   );
 }
 
+function ChatBubbleIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 21.192a5.974 5.974 0 01-2.217.348 6.01 6.01 0 01-.672-.038 6.052 6.052 0 01.206-4.248A8.224 8.224 0 013 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+      />
+    </svg>
+  );
+}
+
 function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
     <svg
@@ -304,7 +323,7 @@ export default function LanguagePage() {
       </div>
 
       {/* Mode cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         <ModeCard
           href={`/${language}/drill`}
           icon={<KeyboardIcon className="w-8 h-8" />}
@@ -338,6 +357,15 @@ export default function LanguagePage() {
           title="Method Reference"
           description="Browse all methods with examples. A comprehensive guide to the language's built-in methods."
           buttonText="View Reference"
+          config={config}
+        />
+
+        <ModeCard
+          href={`/${language}/interview`}
+          icon={<ChatBubbleIcon className="w-8 h-8" />}
+          title="Interview Mode"
+          description="Practice with an AI interviewer. Get real-time guidance and hints as you solve algorithm problems."
+          buttonText="Start Interview"
           config={config}
         />
       </div>

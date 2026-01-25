@@ -127,6 +127,14 @@ const modes = [
     gradient: 'from-violet-500/20 to-purple-500/10',
     border: 'border-violet-500/30',
   },
+  {
+    name: 'Interview Mode',
+    icon: '🤖',
+    description:
+      'Practice with an AI interviewer. Get real-time feedback and hints as you solve coding problems.',
+    gradient: 'from-cyan-500/20 to-blue-500/10',
+    border: 'border-cyan-500/30',
+  },
 ];
 
 export default function Home() {

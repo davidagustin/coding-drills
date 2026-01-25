@@ -28,7 +28,7 @@ export const featureFlags = {
 const defaultFlags = {
   [featureFlags.interviewMode]: {
     disabled: false,
-    defaultVariant: 'off',
+    defaultVariant: 'on',
     variants: { on: true, off: false },
   },
   [featureFlags.animatedQuiz]: {
@@ -58,7 +58,7 @@ const defaultFlags = {
   },
   [featureFlags.aiHints]: {
     disabled: false,
-    defaultVariant: 'off',
+    defaultVariant: 'on',
     variants: { on: true, off: false },
   },
 };
