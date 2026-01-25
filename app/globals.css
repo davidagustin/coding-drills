@@ -111,77 +111,81 @@ html.light {
 
 /* Note: Removed @theme inline block to avoid conflicts with Tailwind v4 defaults */
 
-/* Base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Base styles - MUST be in @layer base so Tailwind utilities can override them */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
 }
 
-body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
+/* Typography and element defaults - in @layer base for proper cascade */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
 
-/* Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
+  code,
+  pre {
+    font-family: var(--font-jetbrains), "Fira Code", "Cascadia Code", monospace;
+    font-variant-ligatures: common-ligatures;
+  }
 
-code,
-pre {
-  font-family: var(--font-jetbrains), "Fira Code", "Cascadia Code", monospace;
-  font-variant-ligatures: common-ligatures;
-}
+  /* Selection */
+  ::selection {
+    background: rgba(102, 126, 234, 0.3);
+    color: var(--text-primary);
+  }
 
-/* Selection */
-::selection {
-  background: rgba(102, 126, 234, 0.3);
-  color: var(--text-primary);
-}
+  /* Scrollbar - minimal & styled */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
 
-/* Scrollbar - minimal & styled */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
+  ::-webkit-scrollbar-track {
+    background: var(--bg-surface);
+  }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-surface);
-}
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 5px;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 5px;
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background: #55556a;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #55556a;
-}
+  /* Light mode scrollbar */
+  html.light ::-webkit-scrollbar-track {
+    background: #f4f4f5;
+  }
 
-/* Light mode scrollbar */
-html.light ::-webkit-scrollbar-track {
-  background: #f4f4f5;
-}
+  html.light ::-webkit-scrollbar-thumb {
+    background: #d4d4d8;
+  }
 
-html.light ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
-}
-
-html.light ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+  html.light ::-webkit-scrollbar-thumb:hover {
+    background: #a1a1aa;
+  }
 }
 
 /* Glass morphism utility */
