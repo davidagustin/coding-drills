@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 interface Category {
   id: string;
@@ -22,15 +22,9 @@ export function CategoryPicker({
   onChange,
   showCounts = false,
 }: CategoryPickerProps) {
-  const allSelected = useMemo(
-    () => selected.length === categories.length,
-    [selected.length, categories.length]
-  );
-
-  const noneSelected = useMemo(
-    () => selected.length === 0,
-    [selected.length]
-  );
+  // Simple boolean comparisons don't need useMemo - the overhead outweighs the benefit
+  const allSelected = selected.length === categories.length;
+  const noneSelected = selected.length === 0;
 
   const handleToggleAll = useCallback(() => {
     if (allSelected) {

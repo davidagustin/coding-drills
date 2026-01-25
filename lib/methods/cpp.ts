@@ -47,7 +47,7 @@ export const cppMethods: Method[] = [
     returns: { type: 'reference', description: 'Reference to the inserted element (C++17)' },
     examples: [
       { code: 'vector<pair<int, string>> v;\nv.emplace_back(1, "one");', output: 'v = {{1, "one"}}' },
-      { code: 'struct Point { int x, y; };\nvector<Point> pts;\npts.emplace_back(Point{3, 4});', output: 'Constructs in-place' },
+      { code: 'vector<pair<string, int>> data;\ndata.emplace_back("key", 42);', output: 'Constructs pair in-place' },
     ],
     timeComplexity: 'O(1) amortized',
     spaceComplexity: 'O(1) amortized',
@@ -317,9 +317,9 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'int', description: '0 if equal, <0 if less, >0 if greater' },
     examples: [
-      { code: '"abc".compare("abc");', output: '0' },
-      { code: '"abc".compare("abd");', output: '< 0' },
-      { code: '"abd".compare("abc");', output: '> 0' },
+      { code: 'string s1 = "abc";\ns1.compare("abc");', output: '0' },
+      { code: 'string s1 = "abc";\ns1.compare("abd");', output: '< 0' },
+      { code: 'string s1 = "abd";\ns1.compare("abc");', output: '> 0' },
     ],
     timeComplexity: 'O(min(n, m))',
     spaceComplexity: 'O(1)',
@@ -347,6 +347,7 @@ export const cppMethods: Method[] = [
     timeComplexity: 'O(n log n)',
     spaceComplexity: 'O(log n)',
     relatedMethods: ['stable_sort', 'partial_sort', 'nth_element'],
+    notes: ['C++20: Use std::ranges::sort for cleaner syntax', 'Comparator must define strict weak ordering'],
   },
   {
     name: 'binary_search',
@@ -605,6 +606,7 @@ export const cppMethods: Method[] = [
     timeComplexity: 'O(log n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['count', 'contains', 'operator[]'],
+    notes: ['C++20: Prefer map.contains(key) for existence check'],
   },
   {
     name: 'count',
@@ -622,6 +624,7 @@ export const cppMethods: Method[] = [
     timeComplexity: 'O(log n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['find', 'contains'],
+    notes: ['C++20: Prefer map.contains(key) which returns bool directly'],
   },
   {
     name: 'erase',
@@ -676,6 +679,7 @@ export const cppMethods: Method[] = [
     timeComplexity: 'O(log n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['count', 'contains', 'lower_bound'],
+    notes: ['C++20: Prefer set.contains(value) for existence check'],
   },
   {
     name: 'count',
@@ -693,6 +697,7 @@ export const cppMethods: Method[] = [
     timeComplexity: 'O(log n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['find', 'contains'],
+    notes: ['C++20: Prefer set.contains(value) which returns bool directly'],
   },
 
   // ============================================================
@@ -723,8 +728,8 @@ export const cppMethods: Method[] = [
     arguments: [],
     returns: { type: 'void', description: 'No return value' },
     examples: [
-      { code: 'stack<int> s = {1, 2, 3};\ns.pop();', output: 'Removes 3 (top)' },
-      { code: 'queue<int> q = {1, 2, 3};\nq.pop();', output: 'Removes 1 (front)' },
+      { code: 'stack<int> s;\ns.push(1); s.push(2); s.push(3);\ns.pop();', output: 'Removes 3 (top), s now has {1, 2}' },
+      { code: 'queue<int> q;\nq.push(1); q.push(2); q.push(3);\nq.pop();', output: 'Removes 1 (front), q now has {2, 3}' },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',

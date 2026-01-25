@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { notFound } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
-  SUPPORTED_LANGUAGES,
   LANGUAGE_CONFIG,
   isValidLanguage,
   type SupportedLanguage,
@@ -252,16 +250,27 @@ function StatsSection({
 
 export default function LanguagePage() {
   const params = useParams();
+  const router = useRouter();
   const language = params.language as string;
   const [stats, setStats] = useState<UserStats | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Validate language on client
+  // Track mount state for hydration safety
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Required for hydration safety
     setMounted(true);
+  }, []);
 
+  // Validate language and load stats on client
+  useEffect(() => {
+    if (!mounted) return;
+
+    // Redirect to not-found for invalid languages
+    // Note: In Next.js 15, notFound() should only be called during server render.
+    // For client-side validation, we redirect instead.
     if (!isValidLanguage(language)) {
-      notFound();
+      router.replace("/not-found");
+      return;
     }
 
     // Load stats from localStorage
@@ -275,13 +284,14 @@ export default function LanguagePage() {
           parsed.correctAnswers > 0 ||
           parsed.bestStreak > 0
         ) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading from localStorage
           setStats(parsed);
         }
       }
     } catch {
       // Ignore localStorage errors
     }
-  }, [language]);
+  }, [language, router, mounted]);
 
   if (!mounted) {
     return null;

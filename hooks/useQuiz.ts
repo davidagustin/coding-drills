@@ -120,8 +120,8 @@ export interface UseQuizReturn {
   restart: () => void;
   /** End quiz early */
   endQuiz: () => QuizSessionResult;
-  /** Current session result (partial) */
-  sessionResult: QuizSessionResult;
+  /** Get current session result (call when needed, not during render) */
+  getSessionResult: () => QuizSessionResult;
 }
 
 // ============================================================================
@@ -181,12 +181,13 @@ function filterQuestions(
  * Handles question navigation, answer selection, scoring, timing, and persistence
  */
 export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
+  // Use nullish coalescing (??) for settings - respects falsy but valid values like 0
   const {
     questions,
     quizLength = 10,
     shuffle = true,
     shuffleOptions = true,
-    difficulty = getSetting('preferredDifficulty') || 'mixed',
+    difficulty = getSetting('preferredDifficulty') ?? 'mixed',
     category,
     timeLimit = 0,
     questionTimeLimit = 0,
@@ -194,7 +195,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
     pointsPerCorrect = 100,
     streakBonus = 10,
     timeBonusPerSecond = 5,
-    showCorrectAnswer = true,
+    showCorrectAnswer: _showCorrectAnswer = true,
     answerDelay = 1500,
   } = options;
 
@@ -237,7 +238,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
       pointsEarned: number;
     }>
   >([]);
-  const questionStartTime = useRef<number>(Date.now());
+  const questionStartTime = useRef<number>(0);
 
   // Auto-advance timeout ref
   const autoAdvanceTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -296,6 +297,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
 
       questionStartTime.current = Date.now();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- questionTimer methods are stable, adding object causes infinite loop
   }, [currentQuestion, shuffleOptions, effectiveQuestionTimeLimit]);
 
   // Clear auto-advance timeout on unmount
@@ -325,10 +327,6 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
     };
   }, [correctCount, incorrectCount, score, streak, bestStreak, quizTimer.time]);
 
-  const sessionResult = useMemo(
-    () => calculateSessionResult(),
-    [calculateSessionResult]
-  );
 
   // Complete the quiz
   const completeQuiz = useCallback(() => {
@@ -541,7 +539,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
     nextQuestion,
     restart,
     endQuiz,
-    sessionResult,
+    getSessionResult: calculateSessionResult,
   };
 }
 

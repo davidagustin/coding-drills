@@ -4,10 +4,13 @@ import type { Problem } from '../types';
  * Java Coding Drills Problems
  *
  * Comprehensive collection of Java problems covering:
- * - ArrayList/List Methods (12+ problems)
- * - Stream API (15+ problems)
- * - String Methods (10+ problems)
- * - Array Operations (5+ problems)
+ * - ArrayList/List Methods (20 problems)
+ * - Stream API (25 problems)
+ * - String Methods (17 problems)
+ * - Array Operations (8 problems)
+ *
+ * Note: Examples are compatible with Java 8+, with hints for modern Java features
+ * (Java 11+ strip(), Java 16+ toList(), etc.) where applicable.
  */
 
 export const javaProblems: Problem[] = [
@@ -100,7 +103,7 @@ export const javaProblems: Problem[] = [
     setupCode: 'List<Integer> nums = new ArrayList<>(Arrays.asList(10, 20, 30, 40));',
     expected: [20, 30, 40],
     sample: 'nums.remove(0); // nums is now [20, 30, 40]',
-    hints: ['Use remove(index) to remove by position', 'For Integer lists, remove(int) removes by index, not value'],
+    hints: ['Use remove(index) to remove by position', 'For List<Integer>, remove(int) removes by index', 'To remove by value, use remove(Integer.valueOf(10)) to force Object removal'],
     validPatterns: [/\.remove\(\s*0\s*\)/],
     tags: ['ArrayList', 'remove', 'index'],
   },
@@ -254,8 +257,8 @@ export const javaProblems: Problem[] = [
     setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);',
     expected: [2, 4, 6],
     sample: 'nums.stream().filter(n -> n % 2 == 0).collect(Collectors.toList())',
-    hints: ['Use stream(), filter(), and collect()', 'Lambda: n -> n % 2 == 0 checks for even'],
-    validPatterns: [/\.stream\(\)/, /\.filter\(/, /\.collect\(/],
+    hints: ['Use stream(), filter(), and collect()', 'Lambda: n -> n % 2 == 0 checks for even numbers', 'Java 16+: Use .toList() instead of .collect(Collectors.toList())'],
+    validPatterns: [/\.stream\(\)/, /\.filter\(/, /\.collect\(|\.toList\(\)/],
     tags: ['Stream', 'filter', 'lambda'],
   },
 
@@ -343,10 +346,10 @@ export const javaProblems: Problem[] = [
     setup: 'List<Integer> nums = Arrays.asList(3, 7, 2, 9, 5);',
     setupCode: 'List<Integer> nums = Arrays.asList(3, 7, 2, 9, 5);',
     expected: 9,
-    sample: 'nums.stream().reduce(Integer.MIN_VALUE, Integer::max)',
-    hints: ['Use reduce() with Integer::max', 'Identity should be Integer.MIN_VALUE or use Optional variant'],
-    validPatterns: [/\.stream\(\)/, /\.reduce\(/, /max|Math\.max/],
-    tags: ['Stream', 'reduce', 'max'],
+    sample: 'nums.stream().reduce(Integer::max).orElse(null) // or: nums.stream().reduce(Integer.MIN_VALUE, Integer::max)',
+    hints: ['Use reduce() with Integer::max', 'Prefer reduce(BinaryOperator) returning Optional over reduce with identity for max/min', 'Alternative: use max(Comparator) which is more readable'],
+    validPatterns: [/\.stream\(\)/, /\.reduce\(|\.max\(/],
+    tags: ['Stream', 'reduce', 'max', 'Optional'],
   },
 
   {
@@ -479,7 +482,7 @@ export const javaProblems: Problem[] = [
     setupCode: 'List<Integer> nums = Arrays.asList(1, 3, 4, 5, 6);',
     expected: 4,
     sample: 'nums.stream().filter(n -> n % 2 == 0).findFirst().orElse(null)',
-    hints: ['Use filter() then findFirst()', 'findFirst() returns an Optional'],
+    hints: ['Use filter() then findFirst()', 'findFirst() returns an Optional<T>', 'Use orElse(default) or orElseThrow() to unwrap the Optional', 'findAny() is similar but may return any matching element (useful for parallel streams)'],
     validPatterns: [/\.stream\(\)/, /\.filter\(/, /\.findFirst\(\)/],
     tags: ['Stream', 'findFirst', 'Optional'],
   },
@@ -492,11 +495,11 @@ export const javaProblems: Problem[] = [
     text: 'Print each element using forEach (returns void, side effect)',
     setup: 'List<String> words = Arrays.asList("hello", "world");',
     setupCode: 'List<String> words = Arrays.asList("hello", "world");',
-    expected: 'void (prints: hello world)',
-    sample: 'words.stream().forEach(System.out::println)',
-    hints: ['Use forEach() for side effects', 'System.out::println is a method reference'],
-    validPatterns: [/\.stream\(\)/, /\.forEach\(/],
-    tags: ['Stream', 'forEach', 'terminal'],
+    expected: null,
+    sample: 'words.stream().forEach(System.out::println) // or: words.forEach(System.out::println)',
+    hints: ['Use forEach() for side effects like printing', 'System.out::println is a method reference', 'forEach returns void - it is a terminal operation', 'Note: List has forEach() directly, stream() is optional here'],
+    validPatterns: [/\.forEach\(/],
+    tags: ['Stream', 'forEach', 'terminal', 'side-effect'],
   },
 
   {
@@ -509,9 +512,9 @@ export const javaProblems: Problem[] = [
     setupCode: 'List<List<Integer>> nested = Arrays.asList(\n  Arrays.asList(1, 2),\n  Arrays.asList(3, 4),\n  Arrays.asList(5, 6)\n);',
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'nested.stream().flatMap(List::stream).collect(Collectors.toList())',
-    hints: ['Use flatMap() to flatten', 'List::stream converts each inner list to a stream'],
-    validPatterns: [/\.stream\(\)/, /\.flatMap\(/, /\.collect\(/],
-    tags: ['Stream', 'flatMap', 'nested'],
+    hints: ['Use flatMap() to flatten nested structures', 'flatMap transforms each element to a stream, then flattens all streams into one', 'List::stream is a method reference equivalent to list -> list.stream()', 'Common use: flatten nested collections, or map to multiple values per input'],
+    validPatterns: [/\.stream\(\)/, /\.flatMap\(/, /\.collect\(|\.toList\(\)/],
+    tags: ['Stream', 'flatMap', 'nested', 'advanced'],
   },
 
   {
@@ -693,8 +696,8 @@ export const javaProblems: Problem[] = [
     setupCode: 'String str = "   Hello World   ";',
     expected: 'Hello World',
     sample: 'str.trim() // returns "Hello World"',
-    hints: ['Use trim()', 'Only removes leading and trailing spaces'],
-    validPatterns: [/\.trim\(\)/],
+    hints: ['Use trim() to remove leading and trailing whitespace', 'Java 11+: Use strip() which handles Unicode whitespace better', 'stripLeading() and stripTrailing() remove whitespace from one side only'],
+    validPatterns: [/\.trim\(\)|\.strip\(\)/],
     tags: ['String', 'trim', 'whitespace'],
   },
 
@@ -723,7 +726,7 @@ export const javaProblems: Problem[] = [
     setupCode: 'String str = "abc123def456";',
     expected: 'abcdef',
     sample: 'str.replaceAll("\\\\d", "") // returns "abcdef"',
-    hints: ['Use replaceAll(regex, replacement)', '\\\\d matches any digit'],
+    hints: ['Use replaceAll(regex, replacement)', 'In Java, write "\\\\d" to match any digit (the double backslash escapes to \\d in the regex)'],
     validPatterns: [/\.replaceAll\(/],
     tags: ['String', 'replaceAll', 'regex'],
   },
@@ -783,9 +786,9 @@ export const javaProblems: Problem[] = [
     setupCode: 'String str1 = "hello";\nString str2 = "hello";',
     expected: true,
     sample: 'str1.equals(str2) // returns true',
-    hints: ['Use equals() for content comparison', 'Never use == for string content'],
-    validPatterns: [/\.equals\(/],
-    tags: ['String', 'equals', 'comparison'],
+    hints: ['Use equals() for content comparison', 'NEVER use == for string content comparison (== checks reference equality)', 'Objects.equals(str1, str2) is null-safe alternative'],
+    validPatterns: [/\.equals\(|Objects\.equals\(/],
+    tags: ['String', 'equals', 'comparison', 'best-practice'],
   },
 
   {
@@ -856,15 +859,15 @@ export const javaProblems: Problem[] = [
     id: 'java-array-004',
     category: 'Arrays Utility',
     difficulty: 'medium',
-    title: 'Array to Stream',
-    text: 'Convert the array to a Stream',
+    title: 'Array to Stream and Sum',
+    text: 'Convert the array to a Stream and calculate the sum',
     setup: 'int[] nums = {1, 2, 3, 4, 5};',
     setupCode: 'int[] nums = {1, 2, 3, 4, 5};',
-    expected: 'IntStream of [1, 2, 3, 4, 5]',
-    sample: 'Arrays.stream(nums) // returns IntStream',
-    hints: ['Use Arrays.stream()', 'For int[] returns IntStream'],
+    expected: 15,
+    sample: 'Arrays.stream(nums).sum() // returns 15',
+    hints: ['Use Arrays.stream() to create an IntStream', 'IntStream has sum(), average(), min(), max() methods', 'For primitive arrays, Arrays.stream() returns primitive streams (IntStream, LongStream, DoubleStream)'],
     validPatterns: [/Arrays\.stream\(\s*nums\s*\)/],
-    tags: ['Arrays', 'stream', 'conversion'],
+    tags: ['Arrays', 'stream', 'IntStream', 'conversion'],
   },
 
   {
@@ -939,11 +942,11 @@ export const javaProblems: Problem[] = [
     text: 'Group strings by their length',
     setup: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe");',
     setupCode: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe");',
-    expected: '{3=[cat, dog, rat], 7=[giraffe], 8=[elephant]}',
+    expected: { 3: ['cat', 'dog', 'rat'], 7: ['giraffe'], 8: ['elephant'] },
     sample: 'words.stream().collect(Collectors.groupingBy(String::length))',
-    hints: ['Use Collectors.groupingBy()', 'Groups elements by the classifier function'],
+    hints: ['Use Collectors.groupingBy(classifier)', 'Returns Map<K, List<T>> where K is the classifier result', 'String::length is a method reference returning the string length'],
     validPatterns: [/\.stream\(\)/, /\.collect\(/, /groupingBy/],
-    tags: ['Stream', 'Collectors', 'groupingBy'],
+    tags: ['Stream', 'Collectors', 'groupingBy', 'Map'],
   },
 
   {
@@ -1060,14 +1063,14 @@ export const javaProblems: Problem[] = [
     category: 'Collections Utility',
     difficulty: 'medium',
     title: 'Shuffle List',
-    text: 'Randomly shuffle the elements in the list',
+    text: 'Randomly shuffle the elements in the list (use Collections.shuffle)',
     setup: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));',
     setupCode: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));',
-    expected: 'shuffled list (random order)',
+    expected: null,
     sample: 'Collections.shuffle(nums); // nums is now in random order',
-    hints: ['Use Collections.shuffle()', 'Modifies the list in place'],
-    validPatterns: [/Collections\.shuffle\(\s*nums\s*\)/],
-    tags: ['Collections', 'shuffle', 'random'],
+    hints: ['Use Collections.shuffle(list)', 'Modifies the list in place using a default Random source', 'For reproducible shuffles, use Collections.shuffle(list, random) with a seeded Random'],
+    validPatterns: [/Collections\.shuffle\(\s*nums/],
+    tags: ['Collections', 'shuffle', 'random', 'in-place'],
   },
 
   {

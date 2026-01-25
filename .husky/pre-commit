@@ -1,1 +1,5 @@
+# Run lint-staged for formatting and linting
 npx lint-staged
+
+# Run type-check on the entire project (fast due to incremental compilation)
+npx tsc --noEmit

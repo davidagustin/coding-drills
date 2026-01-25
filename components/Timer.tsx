@@ -8,6 +8,8 @@ interface TimerProps {
   mode: TimerMode;
   initialTime?: number; // in seconds
   onComplete?: () => void;
+  /** Accessible label for the timer */
+  ariaLabel?: string;
 }
 
 function formatTime(seconds: number): string {
@@ -16,12 +18,22 @@ function formatTime(seconds: number): string {
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
+function formatTimeForScreenReader(seconds: number): string {
+  const mins = Math.floor(Math.abs(seconds) / 60);
+  const secs = Math.abs(seconds) % 60;
+  if (mins > 0) {
+    return `${mins} minute${mins !== 1 ? 's' : ''} and ${secs} second${secs !== 1 ? 's' : ''}`;
+  }
+  return `${secs} second${secs !== 1 ? 's' : ''}`;
+}
+
+export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerProps) {
   const [time, setTime] = useState(mode === 'countdown' ? initialTime : 0);
   const [isRunning, setIsRunning] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const onCompleteRef = useRef(onComplete);
+  const announcementRef = useRef<HTMLDivElement>(null);
 
   // Keep onComplete ref updated
   useEffect(() => {
@@ -98,6 +110,7 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
   };
 
   const styles = getUrgencyStyles();
+  const timerLabel = ariaLabel || (mode === 'countdown' ? 'Countdown timer' : 'Stopwatch');
 
   return (
     <div
@@ -106,7 +119,26 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
         ${styles.container}
         ${styles.pulse ? 'animate-pulse' : ''}
       `}
+      role="timer"
+      aria-label={timerLabel}
     >
+      {/* Screen reader announcements for time updates */}
+      <div
+        ref={announcementRef}
+        className="sr-only"
+        aria-live={urgencyLevel === 'critical' ? 'assertive' : 'polite'}
+        aria-atomic="true"
+      >
+        {mode === 'countdown' && (time === 30 || time === 10 || time === 5 || time === 0) && (
+          <span>
+            {time === 0 
+              ? 'Time is up!' 
+              : `${formatTimeForScreenReader(time)} remaining`
+            }
+          </span>
+        )}
+      </div>
+
       {/* Timer display */}
       <div className="flex items-center gap-2">
         <svg
@@ -114,6 +146,8 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
         >
           <path
             strokeLinecap="round"
@@ -127,18 +161,27 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
             text-3xl font-mono font-bold tabular-nums tracking-tight
             ${styles.text}
           `}
+          aria-hidden="true"
         >
           {formatTime(time)}
+        </span>
+        {/* Screen reader friendly time */}
+        <span className="sr-only">
+          {formatTimeForScreenReader(time)}
+          {mode === 'countdown' ? ' remaining' : ' elapsed'}
         </span>
       </div>
 
       {/* Mode indicator */}
-      <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <span 
+        className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400"
+        id="timer-mode-label"
+      >
         {mode === 'countdown' ? 'Time Remaining' : 'Elapsed Time'}
       </span>
 
       {/* Controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2" role="group" aria-label="Timer controls">
         {!isRunning ? (
           <button
             onClick={handleStart}
@@ -147,9 +190,17 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
               flex items-center gap-1.5 px-4 py-2 text-sm font-medium
               bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-600 disabled:cursor-not-allowed
               text-white rounded-lg transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900
             "
+            aria-label={hasCompleted && mode === 'countdown' ? 'Timer completed, reset to start again' : 'Start timer'}
           >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg 
+              className="w-4 h-4" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
               <path d="M8 5v14l11-7z" />
             </svg>
             Start
@@ -161,9 +212,17 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
               flex items-center gap-1.5 px-4 py-2 text-sm font-medium
               bg-amber-600 hover:bg-amber-500
               text-white rounded-lg transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-900
             "
+            aria-label="Pause timer"
           >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg 
+              className="w-4 h-4" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
               <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
             </svg>
             Pause
@@ -176,9 +235,18 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
             flex items-center gap-1.5 px-4 py-2 text-sm font-medium
             bg-gray-600 hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600
             text-white rounded-lg transition-colors duration-200
+            focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900
           "
+          aria-label="Reset timer"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg 
+            className="w-4 h-4" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -192,7 +260,11 @@ export function Timer({ mode, initialTime = 60, onComplete }: TimerProps) {
 
       {/* Completion message */}
       {hasCompleted && mode === 'countdown' && (
-        <div className="text-sm font-medium text-red-400 dark:text-red-300 animate-bounce">
+        <div 
+          className="text-sm font-medium text-red-400 dark:text-red-300 animate-bounce"
+          role="alert"
+          aria-live="assertive"
+        >
           Time is up!
         </div>
       )}

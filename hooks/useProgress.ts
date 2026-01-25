@@ -15,6 +15,7 @@ import {
   type SessionResult,
   type UserProgress,
 } from '@/lib/storage';
+import { logError } from '@/lib/errorLogger';
 
 // ============================================================================
 // Types
@@ -127,7 +128,9 @@ export function useProgress(language: string): UseProgressReturn {
       setProgress(savedProgress);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to load progress'));
+      const errorObj = err instanceof Error ? err : new Error('Failed to load progress');
+      logError(errorObj, { operation: 'loadProgress', language });
+      setError(errorObj);
     } finally {
       setIsLoading(false);
     }
@@ -141,7 +144,10 @@ export function useProgress(language: string): UseProgressReturn {
           const savedProgress = getProgress(language);
           setProgress(savedProgress);
         } catch (err) {
-          console.error('Error syncing progress:', err);
+          logError(
+            err instanceof Error ? err : new Error('Error syncing progress'),
+            { operation: 'syncProgress', language }
+          );
         }
       }
     };
@@ -158,7 +164,9 @@ export function useProgress(language: string): UseProgressReturn {
       setProgress(savedProgress);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to refresh progress'));
+      const errorObj = err instanceof Error ? err : new Error('Failed to refresh progress');
+      logError(errorObj, { operation: 'refreshProgress', language });
+      setError(errorObj);
     }
   }, [language]);
 
@@ -242,7 +250,10 @@ export function useAllProgress(): UseAllProgressReturn {
       const progress = getAllProgress();
       setAllProgress(progress);
     } catch (err) {
-      console.error('Error loading all progress:', err);
+      logError(
+        err instanceof Error ? err : new Error('Error loading all progress'),
+        { operation: 'loadAllProgress' }
+      );
     } finally {
       setIsLoading(false);
     }
@@ -256,7 +267,10 @@ export function useAllProgress(): UseAllProgressReturn {
           const progress = getAllProgress();
           setAllProgress(progress);
         } catch (err) {
-          console.error('Error syncing all progress:', err);
+          logError(
+            err instanceof Error ? err : new Error('Error syncing all progress'),
+            { operation: 'syncAllProgress' }
+          );
         }
       }
     };
@@ -269,10 +283,14 @@ export function useAllProgress(): UseAllProgressReturn {
 
   const languages = useMemo(() => Object.keys(allProgress), [allProgress]);
 
-  const overallStats = useMemo(() => {
-    if (typeof window === 'undefined') return DEFAULT_OVERALL_STATS;
-    return getOverallStats();
-  }, [allProgress]);
+  const overallStats = useMemo(
+    () => {
+      if (typeof window === 'undefined') return DEFAULT_OVERALL_STATS;
+      return getOverallStats();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- allProgress triggers recalculation when any progress changes
+    [allProgress]
+  );
 
   const refresh = useCallback(() => {
     try {

@@ -300,8 +300,22 @@ class SeededRandom {
     return result;
   }
 
+  /**
+   * Pick a random element from an array using Array.at() for cleaner access
+   * @throws Error if array is empty
+   */
   pick<T>(array: T[]): T {
-    return array[Math.floor(this.next() * array.length)];
+    if (array.length === 0) {
+      throw new Error('Cannot pick from empty array');
+    }
+    const index = Math.floor(this.next() * array.length);
+    // Use Array.at() for potential negative index support and clarity
+    const element = array.at(index);
+    // TypeScript narrowing - at() can return undefined for out-of-bounds
+    if (element === undefined) {
+      throw new Error('Unexpected undefined element');
+    }
+    return element;
   }
 }
 
@@ -659,6 +673,7 @@ function buildTestSetup(setupCode: string, testCase: TestCase): string {
 
 /**
  * Calculate statistics for test results
+ * Uses modern array methods for cleaner aggregation
  */
 export function calculateTestStats(results: ValidationResult[]): {
   totalTests: number;
@@ -669,19 +684,38 @@ export function calculateTestStats(results: ValidationResult[]): {
   minTime: number;
   maxTime: number;
 } {
-  const totalTests = results.reduce((sum, r) => sum + r.total, 0);
-  const totalPassed = results.reduce((sum, r) => sum + r.passed, 0);
-  const totalFailed = results.reduce((sum, r) => sum + r.failed, 0);
-  const times = results.map((r) => r.executionTime || 0).filter((t) => t > 0);
+  // Use object destructuring in reduce for cleaner accumulator updates
+  const { totalTests, totalPassed, totalFailed } = results.reduce(
+    (acc, r) => ({
+      totalTests: acc.totalTests + r.total,
+      totalPassed: acc.totalPassed + r.passed,
+      totalFailed: acc.totalFailed + r.failed,
+    }),
+    { totalTests: 0, totalPassed: 0, totalFailed: 0 }
+  );
+
+  // Filter and map execution times using nullish coalescing
+  const times = results
+    .map((r) => r.executionTime ?? 0)
+    .filter((t) => t > 0);
+
+  // Calculate time stats with early returns for empty arrays
+  const averageTime = times.length > 0
+    ? times.reduce((a, b) => a + b, 0) / times.length
+    : 0;
+
+  // Use spread with fallback for empty arrays
+  const minTime = times.length > 0 ? Math.min(...times) : 0;
+  const maxTime = times.length > 0 ? Math.max(...times) : 0;
 
   return {
     totalTests,
     totalPassed,
     totalFailed,
     passRate: totalTests > 0 ? totalPassed / totalTests : 0,
-    averageTime: times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0,
-    minTime: times.length > 0 ? Math.min(...times) : 0,
-    maxTime: times.length > 0 ? Math.max(...times) : 0,
+    averageTime,
+    minTime,
+    maxTime,
   };
 }
 

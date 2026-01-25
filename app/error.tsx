@@ -51,7 +51,7 @@ export default function Error({ error, reset }: ErrorProps) {
           <p className="text-gray-400 text-lg">
             We encountered an unexpected error.
             <br />
-            Don't worry, these things happen in code.
+            Don&apos;t worry, these things happen in code.
           </p>
         </div>
 

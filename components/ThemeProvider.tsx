@@ -193,87 +193,10 @@ export function useTheme(): ThemeContextValue {
 }
 
 // ============================================================================
-// Theme Toggle Button Component
-// ============================================================================
-
-interface ThemeToggleProps {
-  className?: string;
-  size?: 'sm' | 'md' | 'lg';
-}
-
-export function ThemeToggle({ className = '', size = 'md' }: ThemeToggleProps) {
-  const { toggleTheme, isDark } = useTheme();
-
-  const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10',
-    lg: 'w-12 h-12',
-  };
-
-  const iconSizes = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6',
-  };
-
-  return (
-    <button
-      onClick={toggleTheme}
-      className={`
-        ${sizeClasses[size]}
-        inline-flex items-center justify-center
-        rounded-lg
-        bg-zinc-800 hover:bg-zinc-700
-        dark:bg-zinc-800 dark:hover:bg-zinc-700
-        light:bg-zinc-200 light:hover:bg-zinc-300
-        text-zinc-300 hover:text-white
-        dark:text-zinc-300 dark:hover:text-white
-        light:text-zinc-600 light:hover:text-zinc-900
-        transition-colors duration-200
-        focus:outline-none focus:ring-2 focus:ring-offset-2
-        focus:ring-zinc-500 focus:ring-offset-zinc-900
-        ${className}
-      `}
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-    >
-      {isDark ? (
-        // Sun icon for dark mode (clicking will switch to light)
-        <svg
-          className={iconSizes[size]}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-          />
-        </svg>
-      ) : (
-        // Moon icon for light mode (clicking will switch to dark)
-        <svg
-          className={iconSizes[size]}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-          />
-        </svg>
-      )}
-    </button>
-  );
-}
-
-// ============================================================================
 // Exports
 // ============================================================================
+
+// NOTE: ThemeToggle component is in a separate file (ThemeToggle.tsx)
+// to avoid code duplication and maintain single responsibility
 
 export default ThemeProvider;

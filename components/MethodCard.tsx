@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useMemo } from 'react';
 
 interface MethodCardProps {
   method: string;
@@ -12,7 +12,57 @@ interface MethodCardProps {
   disabled?: boolean;
 }
 
-export function MethodCard({
+// Pre-computed style objects to avoid object creation on every render
+const STYLES = {
+  correct: {
+    container: 'bg-emerald-50 border-emerald-500 dark:bg-emerald-900/30 dark:border-emerald-500',
+    text: 'text-emerald-700 dark:text-emerald-300',
+    icon: 'correct' as const,
+  },
+  incorrect: {
+    container: 'bg-red-50 border-red-500 dark:bg-red-900/30 dark:border-red-500',
+    text: 'text-red-700 dark:text-red-300',
+    icon: 'incorrect' as const,
+  },
+  neutral: {
+    container: 'bg-gray-50 border-gray-300 dark:bg-gray-800/50 dark:border-gray-600 opacity-60',
+    text: 'text-gray-500 dark:text-gray-400',
+    icon: null,
+  },
+  selected: {
+    container: 'bg-blue-50 border-blue-500 dark:bg-blue-900/30 dark:border-blue-500 ring-2 ring-blue-500/30',
+    text: 'text-blue-700 dark:text-blue-300',
+    icon: 'selected' as const,
+  },
+  defaultEnabled: {
+    container: 'bg-white border-gray-300 dark:bg-gray-800 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50/50 dark:hover:border-blue-500 dark:hover:bg-blue-900/20',
+    text: 'text-gray-900 dark:text-gray-100',
+    icon: null,
+  },
+  defaultDisabled: {
+    container: 'bg-white border-gray-300 dark:bg-gray-800 dark:border-gray-600',
+    text: 'text-gray-900 dark:text-gray-100',
+    icon: null,
+  },
+} as const;
+
+// Memoized style computation to avoid recalculation
+function getCardStyles(
+  isRevealed: boolean,
+  isCorrect: boolean | null | undefined,
+  isSelected: boolean,
+  disabled: boolean
+) {
+  if (isRevealed) {
+    if (isCorrect === true) return STYLES.correct;
+    if (isCorrect === false && isSelected) return STYLES.incorrect;
+    return STYLES.neutral;
+  }
+  if (isSelected) return STYLES.selected;
+  return disabled ? STYLES.defaultDisabled : STYLES.defaultEnabled;
+}
+
+export const MethodCard = memo(function MethodCard({
   method,
   description,
   isSelected,
@@ -21,54 +71,11 @@ export function MethodCard({
   onClick,
   disabled = false,
 }: MethodCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const getCardStyles = () => {
-    // After reveal
-    if (isRevealed) {
-      if (isCorrect === true) {
-        return {
-          container: 'bg-emerald-50 border-emerald-500 dark:bg-emerald-900/30 dark:border-emerald-500',
-          text: 'text-emerald-700 dark:text-emerald-300',
-          icon: 'correct',
-        };
-      }
-      if (isCorrect === false && isSelected) {
-        return {
-          container: 'bg-red-50 border-red-500 dark:bg-red-900/30 dark:border-red-500',
-          text: 'text-red-700 dark:text-red-300',
-          icon: 'incorrect',
-        };
-      }
-      // Not selected and not correct (neutral after reveal)
-      return {
-        container: 'bg-gray-50 border-gray-300 dark:bg-gray-800/50 dark:border-gray-600 opacity-60',
-        text: 'text-gray-500 dark:text-gray-400',
-        icon: null,
-      };
-    }
-
-    // Before reveal - selected state
-    if (isSelected) {
-      return {
-        container: 'bg-blue-50 border-blue-500 dark:bg-blue-900/30 dark:border-blue-500 ring-2 ring-blue-500/30',
-        text: 'text-blue-700 dark:text-blue-300',
-        icon: 'selected',
-      };
-    }
-
-    // Before reveal - default/hover state
-    return {
-      container: `
-        bg-white border-gray-300 dark:bg-gray-800 dark:border-gray-600
-        ${!disabled && 'hover:border-blue-400 hover:bg-blue-50/50 dark:hover:border-blue-500 dark:hover:bg-blue-900/20'}
-      `,
-      text: 'text-gray-900 dark:text-gray-100',
-      icon: null,
-    };
-  };
-
-  const styles = getCardStyles();
+  // Memoize styles to avoid recalculation on every render
+  const styles = useMemo(
+    () => getCardStyles(isRevealed, isCorrect, isSelected, disabled),
+    [isRevealed, isCorrect, isSelected, disabled]
+  );
 
   const renderIcon = () => {
     switch (styles.icon) {
@@ -105,8 +112,6 @@ export function MethodCard({
     <button
       onClick={onClick}
       disabled={disabled || isRevealed}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       className={`
         group w-full p-4 rounded-xl border-2 text-left
         transition-all duration-200 ease-out
@@ -141,14 +146,10 @@ export function MethodCard({
           )}
         </div>
 
-        {/* Hover arrow indicator (before reveal) */}
+        {/* Hover arrow indicator (before reveal) - uses CSS group-hover instead of state */}
         {!isRevealed && !isSelected && !disabled && (
           <svg
-            className={`
-              w-5 h-5 text-gray-400 dark:text-gray-500
-              transition-all duration-200
-              ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}
-            `}
+            className="w-5 h-5 text-gray-400 dark:text-gray-500 transition-all duration-200 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -159,6 +160,6 @@ export function MethodCard({
       </div>
     </button>
   );
-}
+});
 
 export default MethodCard;

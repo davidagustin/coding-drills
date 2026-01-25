@@ -8,7 +8,7 @@ interface ThemeToggleProps {
 }
 
 export function ThemeToggle({ className = "", size = "md" }: ThemeToggleProps) {
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
 
   const sizeClasses = {
     sm: "w-8 h-8",

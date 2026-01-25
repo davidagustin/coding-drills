@@ -16,6 +16,8 @@ const LANGUAGE_TO_MONACO: Record<LanguageId, string> = {
   go: 'go',
   ruby: 'ruby',
   c: 'c',
+  php: 'php',
+  kotlin: 'kotlin',
 };
 
 interface CodeDisplayProps {

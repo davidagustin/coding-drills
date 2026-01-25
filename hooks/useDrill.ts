@@ -110,8 +110,8 @@ export interface UseDrillReturn {
   endSession: () => DrillSessionResult;
   /** Show hint for current problem */
   showHint: () => string | null;
-  /** Current session result (partial) */
-  sessionResult: DrillSessionResult;
+  /** Get current session result (call when needed, not during render) */
+  getSessionResult: () => DrillSessionResult;
 }
 
 // ============================================================================
@@ -186,16 +186,18 @@ function checkAnswer(
  * Handles problem navigation, answer checking, scoring, and persistence
  */
 export function useDrill(language: string, options: DrillOptions): UseDrillReturn {
+  // Use nullish coalescing (??) instead of || for settings that could be 0 or false
+  // This ensures that falsy but valid values (0, false, '') are respected
   const {
     problems,
-    sessionLength = getSetting('sessionLength') || 10,
+    sessionLength = getSetting('sessionLength') ?? 10,
     shuffle = true,
-    difficulty = getSetting('preferredDifficulty') || 'mixed',
+    difficulty = getSetting('preferredDifficulty') ?? 'mixed',
     category,
-    timerMode = getSetting('timerMode') || 'up',
-    timerDuration = getSetting('timerDuration') || 300,
+    timerMode = getSetting('timerMode') ?? 'up',
+    timerDuration = getSetting('timerDuration') ?? 300,
     onComplete,
-    autoAdvance = getSetting('autoAdvance') || false,
+    autoAdvance = getSetting('autoAdvance') ?? false,
     autoAdvanceDelay = 1500,
     caseSensitive = false,
     trimAnswers = true,
@@ -235,7 +237,7 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
       timeSpent: number;
     }>
   >([]);
-  const problemStartTime = useRef<number>(Date.now());
+  const problemStartTime = useRef<number>(0);
 
   // Timer
   const timer = useTimer({
@@ -278,10 +280,6 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
     };
   }, [correctCount, incorrectCount, skippedCount, streak, bestStreak, timer.time]);
 
-  const sessionResult = useMemo(
-    () => calculateSessionResult(),
-    [calculateSessionResult]
-  );
 
   // Complete the session
   const completeSession = useCallback(() => {
@@ -485,7 +483,7 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
     restart,
     endSession,
     showHint,
-    sessionResult,
+    getSessionResult: calculateSessionResult,
   };
 }
 

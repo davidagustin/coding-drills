@@ -1,5 +1,5 @@
 import { QuizQuestion, LanguageId, Method, Difficulty } from './types';
-import { getMethodsByLanguage, getMethodsByCategory } from './problems';
+import { getMethodsByLanguage } from './problems';
 
 export interface QuizConfig {
   language: LanguageId;
@@ -21,9 +21,13 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 /**
- * Gets a random element from an array
+ * Gets a random element from a non-empty array
+ * @throws Error if array is empty
  */
-function getRandomElement<T>(array: T[]): T {
+function getRandomElement<T>(array: readonly T[]): T {
+  if (array.length === 0) {
+    throw new Error('Cannot get random element from empty array');
+  }
   return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -199,8 +203,8 @@ function createQuestionFromMethod(
   // Create all options and shuffle
   const allOptions = shuffleArray([method.name, ...wrongOptions]);
 
-  // Find the index of the correct answer after shuffling
-  const correctIndex = allOptions.indexOf(method.name);
+  // Find the index of the correct answer after shuffling (used for validation)
+  const _correctIndex = allOptions.indexOf(method.name);
 
   // Extract just the data structure from the code example
   // This prevents revealing the answer in the input display
@@ -413,6 +417,7 @@ export function getLeaderboard(): LeaderboardEntry[] {
 
   try {
     const stored = localStorage.getItem(LEADERBOARD_KEY);
+    // Use nullish coalescing for cleaner fallback
     return stored ? JSON.parse(stored) : [];
   } catch {
     return [];
@@ -422,7 +427,8 @@ export function getLeaderboard(): LeaderboardEntry[] {
 export function addToLeaderboard(entry: Omit<LeaderboardEntry, 'id' | 'date'>): LeaderboardEntry {
   const newEntry: LeaderboardEntry = {
     ...entry,
-    id: `lb-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    // Use substring instead of deprecated substr (ES2023+ best practice)
+    id: `lb-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     date: new Date().toISOString()
   };
 
@@ -432,9 +438,10 @@ export function addToLeaderboard(entry: Omit<LeaderboardEntry, 'id' | 'date'>): 
     const leaderboard = getLeaderboard();
     leaderboard.push(newEntry);
 
-    // Sort by score (descending) and keep top entries
-    leaderboard.sort((a, b) => b.score - a.score);
-    const trimmed = leaderboard.slice(0, MAX_LEADERBOARD_ENTRIES);
+    // Use toSorted() for immutable sorting (ES2023) - creates new array
+    const trimmed = leaderboard
+      .toSorted((a, b) => b.score - a.score)
+      .slice(0, MAX_LEADERBOARD_ENTRIES);
 
     localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
 

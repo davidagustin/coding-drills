@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -13,7 +13,7 @@ import type { Method } from '@/lib/types';
 
 type SortOption = 'alphabetical' | 'category' | 'default';
 
-// Category color mapping
+// Category color mapping - pre-computed for performance
 const CATEGORY_COLORS: Record<string, string> = {
   'Array Methods': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   'String Methods': 'bg-green-500/20 text-green-400 border-green-500/30',
@@ -28,12 +28,25 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Built-in Functions': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
 };
 
+const DEFAULT_CATEGORY_COLOR = 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30';
+
+// Memoized category color lookup to avoid repeated object access
 function getCategoryColor(category: string): string {
-  return CATEGORY_COLORS[category] || 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30';
+  return CATEGORY_COLORS[category] || DEFAULT_CATEGORY_COLOR;
 }
 
-// Method Card Component
-function MethodCard({
+// Pre-compute the background-only color for category headers
+const CATEGORY_BG_COLORS: Record<string, string> = {};
+for (const [category, color] of Object.entries(CATEGORY_COLORS)) {
+  CATEGORY_BG_COLORS[category] = color.split(' ')[0];
+}
+
+function getCategoryBgColor(category: string): string {
+  return CATEGORY_BG_COLORS[category] || 'bg-zinc-500/20';
+}
+
+// Method Card Component - Memoized to prevent unnecessary re-renders
+const MethodCard = memo(function MethodCard({
   method,
   isExpanded,
   onToggle,
@@ -44,6 +57,9 @@ function MethodCard({
   onToggle: () => void;
   languageConfig: typeof LANGUAGE_CONFIG[SupportedLanguage];
 }) {
+  // Memoize the category color to avoid recalculation
+  const categoryColor = useMemo(() => getCategoryColor(method.category), [method.category]);
+
   return (
     <div
       id={`method-${method.name.replace(/\./g, '-')}`}
@@ -64,9 +80,7 @@ function MethodCard({
               {method.name}
             </code>
             <span
-              className={`text-xs px-2 py-0.5 rounded-full border ${getCategoryColor(
-                method.category
-              )}`}
+              className={`text-xs px-2 py-0.5 rounded-full border ${categoryColor}`}
             >
               {method.category}
             </span>
@@ -289,10 +303,10 @@ function MethodCard({
       )}
     </div>
   );
-}
+});
 
-// Quick Navigation Component
-function QuickNav({
+// Quick Navigation Component - Memoized to prevent unnecessary re-renders
+const QuickNav = memo(function QuickNav({
   categories,
   methods,
   languageConfig,
@@ -308,15 +322,15 @@ function QuickNav({
     return Array.from(letters).sort();
   }, [methods]);
 
-  const scrollToCategory = (category: string) => {
+  const scrollToCategory = useCallback((category: string) => {
     const element = document.getElementById(`category-${category.replace(/\s+/g, '-')}`);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     setIsOpen(false);
-  };
+  }, []);
 
-  const scrollToLetter = (letter: string) => {
+  const scrollToLetter = useCallback((letter: string) => {
     const method = methods.find((m) => m.name[0].toUpperCase() === letter);
     if (method) {
       const element = document.getElementById(`method-${method.name.replace(/\./g, '-')}`);
@@ -325,7 +339,7 @@ function QuickNav({
       }
     }
     setIsOpen(false);
-  };
+  }, [methods]);
 
   return (
     <>
@@ -422,7 +436,7 @@ function QuickNav({
       </div>
     </>
   );
-}
+});
 
 // Print Styles Component
 function PrintStyles() {
@@ -453,28 +467,22 @@ function PrintStyles() {
 export default function ReferencePage() {
   const params = useParams();
   const language = params.language as string;
+  const isValid = isValidLanguage(language);
 
-  // State
+  // State - must be called before any conditional returns
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<SortOption>('default');
   const [expandedMethods, setExpandedMethods] = useState<Set<string>>(new Set());
 
-  // Validate language
-  if (!isValidLanguage(language)) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-zinc-400">Language not found</p>
-      </div>
-    );
-  }
+  // Get data - memoized to prevent unnecessary recalculations
+  const languageConfig = isValid ? LANGUAGE_CONFIG[language] : null;
+  const methods = useMemo(() => isValid ? getMethodsForLanguage(language) : [], [isValid, language]);
+  const categories = useMemo(() => isValid ? getCategoriesForLanguage(language) : [], [isValid, language]);
 
-  const languageConfig = LANGUAGE_CONFIG[language];
-  const methods = getMethodsForLanguage(language);
-  const categories = getCategoriesForLanguage(language);
-
-  // Filter and sort methods
+  // Filter and sort methods - hooks must be called unconditionally
   const filteredMethods = useMemo(() => {
+    if (!isValid) return [];
     let result = [...methods];
 
     // Filter by search query
@@ -507,10 +515,11 @@ export default function ReferencePage() {
     }
 
     return result;
-  }, [methods, searchQuery, selectedCategory, sortBy]);
+  }, [isValid, methods, searchQuery, selectedCategory, sortBy]);
 
   // Group methods by category for display
   const methodsByCategory = useMemo(() => {
+    if (!isValid) return {};
     if (sortBy === 'alphabetical') {
       return { 'All Methods': filteredMethods };
     }
@@ -521,7 +530,7 @@ export default function ReferencePage() {
       acc[method.category].push(method);
       return acc;
     }, {} as Record<string, Method[]>);
-  }, [filteredMethods, sortBy]);
+  }, [isValid, filteredMethods, sortBy]);
 
   // Toggle method expansion
   const toggleMethod = useCallback((methodName: string) => {
@@ -535,6 +544,15 @@ export default function ReferencePage() {
       return next;
     });
   }, []);
+
+  // Validate language - early return AFTER all hooks
+  if (!isValid || !languageConfig) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-zinc-400">Language not found</p>
+      </div>
+    );
+  }
 
   // Expand all / Collapse all
   const expandAll = () => {
@@ -678,9 +696,7 @@ export default function ReferencePage() {
               {sortBy !== 'alphabetical' && (
                 <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3 print-break">
                   <span
-                    className={`w-3 h-3 rounded-full ${
-                      getCategoryColor(category).split(' ')[0]
-                    }`}
+                    className={`w-3 h-3 rounded-full ${getCategoryBgColor(category)}`}
                   />
                   {category}
                   <span className="text-sm font-normal text-zinc-500">

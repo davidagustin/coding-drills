@@ -5,6 +5,7 @@ import {
   type ReactNode,
   type ErrorInfo,
 } from 'react';
+import { logComponentError, getUserFriendlyMessage } from '@/lib/errorLogger';
 
 // ============================================================================
 // Types
@@ -15,12 +16,17 @@ interface ErrorBoundaryProps {
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
   showDetails?: boolean;
+  /** Fallback UI level - 'page' shows full-page error, 'inline' shows inline error */
+  level?: 'page' | 'inline';
+  /** Custom title for the error message */
+  errorTitle?: string;
 }
 
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
   errorInfo: ErrorInfo | null;
+  errorId: string | null;
 }
 
 // ============================================================================
@@ -34,6 +40,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       hasError: false,
       error: null,
       errorInfo: null,
+      errorId: null,
     };
   }
 
@@ -45,20 +52,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error to console in development
-    console.error('ErrorBoundary caught an error:', error);
-    console.error('Error Info:', errorInfo);
+    // Log error using centralized error logger
+    const loggedError = logComponentError(
+      error,
+      errorInfo.componentStack || undefined,
+      { boundary: 'ErrorBoundary' }
+    );
 
     // Store error info for potential display
-    this.setState({ errorInfo });
+    this.setState({
+      errorInfo,
+      errorId: loggedError.id,
+    });
 
     // Call optional error handler
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
-
-    // In production, you might want to send to an error reporting service
-    // e.g., Sentry, LogRocket, etc.
   }
 
   handleRetry = (): void => {
@@ -66,6 +76,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       hasError: false,
       error: null,
       errorInfo: null,
+      errorId: null,
     });
   };
 
@@ -82,8 +93,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   };
 
   render(): ReactNode {
-    const { hasError, error, errorInfo } = this.state;
-    const { children, fallback, showDetails = false } = this.props;
+    const { hasError, error, errorInfo, errorId } = this.state;
+    const { children, fallback, showDetails = false, level = 'page', errorTitle } = this.props;
 
     if (hasError) {
       // Use custom fallback if provided
@@ -91,7 +102,28 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return fallback;
       }
 
-      // Default error UI
+      // Get user-friendly error message
+      const userMessage = error ? getUserFriendlyMessage(error) : 'An unexpected error occurred.';
+
+      // Inline error UI (for smaller components)
+      if (level === 'inline') {
+        return (
+          <div className="p-6 bg-red-500/10 border border-red-500/30 rounded-xl text-center">
+            <h2 className="text-lg font-semibold text-red-400 mb-2">
+              {errorTitle || 'Something went wrong'}
+            </h2>
+            <p className="text-zinc-400 mb-4">{userMessage}</p>
+            <button
+              onClick={this.handleRetry}
+              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        );
+      }
+
+      // Default full-page error UI
       return (
         <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
           <div className="max-w-lg w-full">
@@ -116,13 +148,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
               {/* Error Title */}
               <h1 className="text-2xl font-bold text-white mb-2">
-                Something went wrong
+                {errorTitle || 'Something went wrong'}
               </h1>
 
-              {/* Error Description */}
+              {/* User-friendly Error Description */}
               <p className="text-zinc-400 mb-6">
-                We encountered an unexpected error. Don&apos;t worry, your progress is saved.
+                {userMessage}
               </p>
+
+              {/* Error ID for support */}
+              {errorId && (
+                <p className="text-xs text-zinc-600 mb-4">
+                  Error ID: {errorId}
+                </p>
+              )}
 
               {/* Error Details (development only) */}
               {showDetails && error && (

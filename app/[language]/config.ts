@@ -10,6 +10,8 @@ export const SUPPORTED_LANGUAGES = [
   "go",
   "ruby",
   "c",
+  "php",
+  "kotlin",
 ] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -87,6 +89,20 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: "bg-gray-500/10",
     borderColor: "border-gray-500/30",
     hoverBg: "hover:bg-gray-500/20",
+  },
+  php: {
+    name: "PHP",
+    color: "text-indigo-400",
+    bgColor: "bg-indigo-500/10",
+    borderColor: "border-indigo-500/30",
+    hoverBg: "hover:bg-indigo-500/20",
+  },
+  kotlin: {
+    name: "Kotlin",
+    color: "text-purple-400",
+    bgColor: "bg-purple-500/10",
+    borderColor: "border-purple-500/30",
+    hoverBg: "hover:bg-purple-500/20",
   },
 };
 

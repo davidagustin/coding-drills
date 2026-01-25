@@ -4,21 +4,16 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import type { Problem, LanguageId, Difficulty } from '@/lib/types';
 import { validateProblemAnswer, formatOutput } from '@/lib/codeValidator';
-import { javascriptProblems } from '@/lib/problems/javascript';
-import { typescriptProblems } from '@/lib/problems/typescript';
-import { pythonProblems } from '@/lib/problems/python';
-import { javaProblems } from '@/lib/problems/java';
-import { cppProblems } from '@/lib/problems/cpp';
-import { csharpProblems } from '@/lib/problems/csharp';
-import { rubyProblems } from '@/lib/problems/ruby';
-import { goProblems } from '@/lib/problems/go';
-import { cProblems } from '@/lib/problems/c';
+import { problemsByLanguage } from '@/lib/problems/index';
+
+// Static problems reference for synchronous access (fallback for lazy loading)
+const PROBLEMS_BY_LANGUAGE: Partial<Record<LanguageId, Problem[]>> = problemsByLanguage;
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type DrillPhase = 'setup' | 'drilling' | 'feedback' | 'results';
+type DrillPhase = 'setup' | 'loading' | 'drilling' | 'feedback' | 'results';
 
 interface DrillConfig {
   categories: string[];
@@ -46,20 +41,66 @@ interface AnswerRecord {
 }
 
 // ============================================================================
-// Problem Data by Language
+// Lazy-loaded Problem Data by Language (Code Splitting)
 // ============================================================================
 
-const PROBLEMS_BY_LANGUAGE: Record<LanguageId, Problem[]> = {
-  javascript: javascriptProblems,
-  typescript: typescriptProblems,
-  python: pythonProblems,
-  java: javaProblems,
-  cpp: cppProblems,
-  csharp: csharpProblems,
-  ruby: rubyProblems,
-  go: goProblems,
-  c: cProblems,
+// Problem loaders - dynamically imported only when needed
+const problemLoaders: Record<LanguageId, () => Promise<{ default: Problem[] } | { [key: string]: Problem[] }>> = {
+  javascript: () => import('@/lib/problems/javascript'),
+  typescript: () => import('@/lib/problems/typescript'),
+  python: () => import('@/lib/problems/python'),
+  java: () => import('@/lib/problems/java'),
+  cpp: () => import('@/lib/problems/cpp'),
+  csharp: () => import('@/lib/problems/csharp'),
+  ruby: () => import('@/lib/problems/ruby'),
+  go: () => import('@/lib/problems/go'),
+  c: () => import('@/lib/problems/c'),
+  php: () => import('@/lib/problems/php'),
+  kotlin: () => import('@/lib/problems/kotlin'),
 };
+
+// Extract problems from module based on naming convention
+function extractProblems(mod: { default?: Problem[]; [key: string]: Problem[] | undefined }, language: LanguageId): Problem[] {
+  // Try default export first
+  if (mod.default && Array.isArray(mod.default)) {
+    return mod.default;
+  }
+  // Try named export matching pattern
+  const namedKey = `${language}Problems`;
+  if (mod[namedKey] && Array.isArray(mod[namedKey])) {
+    return mod[namedKey] as Problem[];
+  }
+  // Fallback: find first array export
+  for (const value of Object.values(mod)) {
+    if (Array.isArray(value)) {
+      return value;
+    }
+  }
+  return [];
+}
+
+// Cache for loaded problems to avoid re-fetching
+const problemsCache = new Map<LanguageId, Problem[]>();
+
+async function _loadProblems(language: LanguageId): Promise<Problem[]> {
+  // Check cache first
+  if (problemsCache.has(language)) {
+    return problemsCache.get(language)!;
+  }
+
+  const loader = problemLoaders[language];
+  if (!loader) return [];
+
+  try {
+    const mod = await loader();
+    const problems = extractProblems(mod as { default?: Problem[]; [key: string]: Problem[] | undefined }, language);
+    problemsCache.set(language, problems);
+    return problems;
+  } catch (error) {
+    console.error(`Failed to load problems for ${language}:`, error);
+    return [];
+  }
+}
 
 // ============================================================================
 // Utility Functions
@@ -109,7 +150,7 @@ function selectProblems(
 }
 
 function isValidLanguage(lang: string): lang is LanguageId {
-  return ['javascript', 'typescript', 'python', 'java', 'cpp', 'csharp', 'go', 'ruby', 'c'].includes(lang);
+  return ['javascript', 'typescript', 'python', 'java', 'cpp', 'csharp', 'go', 'ruby', 'c', 'php', 'kotlin'].includes(lang);
 }
 
 // ============================================================================

@@ -145,18 +145,18 @@ export default function Home() {
               <span className="gradient-text">Code Drills</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto animate-fade-in-up delay-100" style={{ opacity: 0 }}>
+            <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto animate-fade-in-up delay-100">
               Master programming methods through practice
             </p>
 
-            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200" style={{ opacity: 0 }}>
+            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200">
               Sharpen your coding skills across 9 programming languages.
               Practice essential methods, test your knowledge with quizzes,
               and build the muscle memory every developer needs.
             </p>
 
             {/* CTA Arrow */}
-            <div className="pt-8 animate-fade-in-up delay-300" style={{ opacity: 0 }}>
+            <div className="pt-8 animate-fade-in-up delay-300">
               <div className="animate-float">
                 <svg
                   className="w-8 h-8 mx-auto text-gray-500"
@@ -179,10 +179,10 @@ export default function Home() {
 
       {/* Language Selection Grid */}
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100 animate-fade-in-up delay-300" style={{ opacity: 0 }}>
+        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100 animate-fade-in-up delay-400">
           Choose Your Language
         </h2>
-        <p className="text-gray-500 text-center mb-10 animate-fade-in-up delay-400" style={{ opacity: 0 }}>
+        <p className="text-gray-500 text-center mb-10 animate-fade-in-up delay-500">
           Select a programming language to start practicing
         </p>
 
@@ -195,13 +195,8 @@ export default function Home() {
                 group relative overflow-hidden rounded-2xl border ${lang.borderColor}
                 bg-gradient-to-br ${lang.bgGradient} backdrop-blur-sm
                 p-6 md:p-8 card-hover ${lang.hoverGlow}
-                animate-fade-in-up
+                animate-fade-in-up delay-${Math.min(400 + index * 50, 800)}
               `}
-              style={{
-                opacity: 0,
-                animationDelay: `${400 + index * 50}ms`,
-                animationFillMode: 'forwards'
-              }}
             >
               {/* Hover gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -247,7 +242,7 @@ export default function Home() {
         </p>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {modes.map((mode, index) => (
+          {modes.map((mode) => (
             <div
               key={mode.name}
               className={`
@@ -284,7 +279,7 @@ export default function Home() {
             { stat: "100+", label: "Methods", icon: "⚡" },
             { stat: "∞", label: "Practice", icon: "🔄" },
             { stat: "Free", label: "Forever", icon: "✨" },
-          ].map((item, index) => (
+          ].map((item) => (
             <div key={item.label} className="p-6">
               <div className="text-3xl mb-2">{item.icon}</div>
               <div className="text-3xl md:text-4xl font-bold text-gray-100">{item.stat}</div>

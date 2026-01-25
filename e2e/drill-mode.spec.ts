@@ -261,7 +261,7 @@ test.describe('Drill Mode - Answer Validation', () => {
 
   test('should show success feedback for correct answers', async ({ page }) => {
     // Get the sample solution if visible (for testing purposes)
-    const sampleSolution = await page.locator('[data-testid="sample-solution"]').textContent().catch(() => null);
+    const _sampleSolution = await page.locator('[data-testid="sample-solution"]').textContent().catch(() => null);
 
     const inputField = page.locator('[data-testid="code-input"]').or(
       page.locator('input[type="text"]').or(
@@ -465,8 +465,7 @@ test.describe('Drill Mode - Anti-Hardcode Validation', () => {
     await page.waitForTimeout(1000);
 
     // Hardcode-specific error should not appear
-    const isHardcodeError = await hardcodeError.isVisible().catch(() => false);
-    // This test verifies the method pattern is accepted, not that the answer is correct
+    const _isHardcodeError = await hardcodeError.isVisible().catch(() => false);
   });
 });
 
@@ -531,7 +530,7 @@ test.describe('Drill Mode - Progress & Stats', () => {
       page.locator('text=/(score|correct).*\\d/i')
     );
 
-    const initialScore = await scoreDisplay.first().textContent().catch(() => '0');
+    const _initialScore = await scoreDisplay.first().textContent().catch(() => '0');
 
     const inputField = page.locator('[data-testid="code-input"]').or(
       page.locator('input[type="text"]').or(
@@ -546,9 +545,7 @@ test.describe('Drill Mode - Progress & Stats', () => {
 
     // If correct, score should increment
     await page.waitForTimeout(500);
-    const newScore = await scoreDisplay.first().textContent().catch(() => '0');
-
-    // Score may have changed (depends on answer correctness)
+    const _newScore = await scoreDisplay.first().textContent().catch(() => '0');
   });
 
   test('should save progress to localStorage', async ({ page }) => {

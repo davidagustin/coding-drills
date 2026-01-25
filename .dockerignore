@@ -1,0 +1,66 @@
+# =============================================================================
+# Docker ignore file for coding-drills
+# Excludes files from Docker build context to speed up builds
+# =============================================================================
+
+# Dependencies (will be installed fresh in container)
+node_modules
+.pnpm-store
+
+# Build outputs (will be generated in container)
+.next
+out
+build
+storybook-static
+
+# Test artifacts
+coverage
+playwright-report
+test-results
+*.tsbuildinfo
+
+# Development files
+.git
+.gitignore
+.husky
+*.md
+!README.md
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Environment files (secrets should be passed via K8s secrets)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+build-storybook.log
+
+# Test configuration (not needed in production)
+e2e
+playwright.config.ts
+vitest.config.ts
+vitest.shims.d.ts
+
+# Storybook (optional - can be built separately)
+.storybook
+stories
+
+# CI/CD configuration
+.github
+
+# Documentation and misc
+*.md
+LICENSE
+renovate.json
+chromatic.config.json

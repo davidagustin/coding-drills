@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   getExerciseById,
@@ -9,7 +9,7 @@ import {
   DIFFICULTY_CONFIG,
   type Exercise,
 } from "@/lib/exercises";
-import { LANGUAGE_CONFIG, isValidLanguage, type SupportedLanguage } from "../../config";
+import { LANGUAGE_CONFIG, isValidLanguage } from "../../config";
 
 // Icon components
 function ArrowLeftIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -95,7 +95,6 @@ type ViewMode = 'learn' | 'practice';
 
 export default function ExerciseDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const language = params.language as string;
   const exerciseId = params.exerciseId as string;
 

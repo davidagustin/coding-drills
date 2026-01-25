@@ -14,6 +14,8 @@ import { csharpProblems } from './csharp';
 import { rubyProblems } from './ruby';
 import { goProblems } from './go';
 import { cProblems } from './c';
+import { kotlinProblems } from './kotlin';
+import { phpProblems } from './php';
 
 // Export individual problem sets
 export { javascriptProblems } from './javascript';
@@ -25,6 +27,8 @@ export { csharpProblems } from './csharp';
 export { rubyProblems } from './ruby';
 export { goProblems } from './go';
 export { cProblems } from './c';
+export { kotlinProblems } from './kotlin';
+export { phpProblems } from './php';
 
 // Combined problems map by language
 export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
@@ -37,6 +41,8 @@ export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
   ruby: rubyProblems,
   go: goProblems,
   c: cProblems,
+  kotlin: kotlinProblems,
+  php: phpProblems,
 };
 
 // Get problems for a specific language

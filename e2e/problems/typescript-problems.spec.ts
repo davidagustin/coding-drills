@@ -110,7 +110,7 @@ async function submitAnswer(page: Page, answer: string): Promise<{
 // ============================================================================
 
 test.describe('TypeScript Problems - E2E Tests', () => {
-  test.skip('TypeScript problems not yet implemented', async ({ page }) => {
+  test.skip('TypeScript problems not yet implemented', async ({ page: _page }) => {
     // This test is skipped until TypeScript problems are available
     // When ready, import typescriptProblems and generate tests similar to JavaScript
   });

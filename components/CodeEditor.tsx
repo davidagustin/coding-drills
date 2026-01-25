@@ -19,6 +19,8 @@ const LANGUAGE_TO_MONACO: Record<LanguageId, string> = {
   go: 'go',
   ruby: 'ruby',
   c: 'c',
+  php: 'php',
+  kotlin: 'kotlin',
 };
 
 /**
@@ -34,6 +36,8 @@ const LANGUAGE_EXTENSIONS: Record<LanguageId, string> = {
   go: '.go',
   ruby: '.rb',
   c: '.c',
+  php: '.php',
+  kotlin: '.kt',
 };
 
 interface CodeEditorProps {
@@ -101,7 +105,8 @@ export default function CodeEditor({
 
     // Create a unique model URI for this editor instance to prevent conflicts
     if (!modelUriRef.current) {
-      const uniqueId = `file:///editor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}${fileExtension}`;
+      // Use substring instead of deprecated substr (ES2023+ best practice)
+      const uniqueId = `file:///editor-${Date.now()}-${Math.random().toString(36).substring(2, 11)}${fileExtension}`;
       modelUriRef.current = uniqueId;
 
       // Create a new model with the unique URI

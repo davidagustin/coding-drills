@@ -115,6 +115,7 @@ export function useTimer(options: UseTimerOptions = {}): UseTimerReturn {
   // Auto-start effect (client-side only)
   useEffect(() => {
     if (autoStart && typeof window !== 'undefined') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR safety: must run client-side only
       setIsRunning(true);
     }
   }, [autoStart]);

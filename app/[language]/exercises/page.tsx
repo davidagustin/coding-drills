@@ -283,20 +283,26 @@ export default function ExercisesPage() {
   const [progress, setProgress] = useState<Record<string, ExerciseProgress>>({});
   const [selectedCategory, setSelectedCategory] = useState<ExerciseCategory | 'all'>('all');
 
+  // Track mount state for hydration safety
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Required for hydration safety
     setMounted(true);
+  }, []);
 
-    // Load progress from localStorage
+  // Load progress from localStorage
+  useEffect(() => {
+    if (!mounted) return;
     const storageKey = `coding-drills-exercises-${language}`;
     try {
       const stored = localStorage.getItem(storageKey);
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading from localStorage
         setProgress(JSON.parse(stored));
       }
     } catch {
       // Ignore localStorage errors
     }
-  }, [language]);
+  }, [language, mounted]);
 
   if (!mounted) {
     return (

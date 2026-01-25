@@ -347,19 +347,47 @@ export function validatePython(
 }
 
 /**
+ * Type for bracket mapping
+ */
+type OpenBracket = '(' | '[' | '{';
+type CloseBracket = ')' | ']' | '}';
+
+const BRACKET_PAIRS: Record<OpenBracket, CloseBracket> = {
+  '(': ')',
+  '[': ']',
+  '{': '}',
+};
+
+const OPEN_BRACKETS = new Set<string>(Object.keys(BRACKET_PAIRS));
+const CLOSE_BRACKETS = new Set<string>(Object.values(BRACKET_PAIRS));
+
+/**
+ * Type guard for open brackets
+ */
+function isOpenBracket(char: string): char is OpenBracket {
+  return OPEN_BRACKETS.has(char);
+}
+
+/**
+ * Type guard for close brackets
+ */
+function isCloseBracket(char: string): char is CloseBracket {
+  return CLOSE_BRACKETS.has(char);
+}
+
+/**
  * Check common Python syntax issues
  */
 function checkPythonSyntax(code: string): string[] {
   const issues: string[] = [];
 
   // Check for mismatched brackets
-  const brackets = { '(': ')', '[': ']', '{': '}' };
-  const stack: string[] = [];
+  const stack: CloseBracket[] = [];
 
   for (const char of code) {
-    if (char in brackets) {
-      stack.push(brackets[char as keyof typeof brackets]);
-    } else if (Object.values(brackets).includes(char)) {
+    if (isOpenBracket(char)) {
+      stack.push(BRACKET_PAIRS[char]);
+    } else if (isCloseBracket(char)) {
       if (stack.pop() !== char) {
         issues.push('Mismatched brackets detected.');
         break;
@@ -988,17 +1016,19 @@ function classifyError(error: Error): ErrorType {
 
 /**
  * Get helpful hint for an error message
+ * Uses Array.prototype.find() for cleaner iteration
  */
 export function getErrorHint(errorMessage: string): ErrorHint | null {
-  for (const hint of ERROR_HINTS) {
-    if (hint.pattern.test(errorMessage)) {
-      return {
-        ...hint,
-        hint: errorMessage.replace(hint.pattern, hint.hint),
-      };
-    }
+  const matchedHint = ERROR_HINTS.find((hint) => hint.pattern.test(errorMessage));
+
+  if (!matchedHint) {
+    return null;
   }
-  return null;
+
+  return {
+    ...matchedHint,
+    hint: errorMessage.replace(matchedHint.pattern, matchedHint.hint),
+  };
 }
 
 /**

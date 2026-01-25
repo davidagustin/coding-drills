@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import {
   generateQuiz,
   calculateScore,
@@ -533,6 +533,7 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
 
   useEffect(() => {
     // Reset timer when question changes
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer sync is intentional
     setTimeLeft(state.config.timePerQuestion);
   }, [state.currentQuestionIndex, state.config.timePerQuestion]);
 
@@ -652,8 +653,10 @@ function ResultsPhase({ result, config, onPlayAgain, onChangeSettings, answers, 
   const [leaderboardPosition, setLeaderboardPosition] = useState<number>(0);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- Initial data load */
     setLeaderboard(getLeaderboard().slice(0, 10));
     setLeaderboardPosition(getLeaderboardPosition(result.totalScore));
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [result.totalScore]);
 
   const handleSaveScore = () => {
@@ -902,12 +905,11 @@ Try it yourself!`;
 
 export default function QuizPage() {
   const params = useParams();
-  const router = useRouter();
   const language = (params?.language as LanguageId) || 'javascript';
 
   const availableCategories = getCategoriesForLanguage(language);
 
-  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [soundEnabled] = useState(true);
   const { playCorrect, playIncorrect, playComplete } = useSoundEffects(soundEnabled);
 
   const [state, setState] = useState<QuizState>({
@@ -959,92 +961,7 @@ export default function QuizPage() {
     }));
   };
 
-  // Handle option selection
-  const handleSelectOption = useCallback((option: string) => {
-    if (state.showingAnswer || state.selectedOption !== null) return;
-
-    const currentQuestion = state.questions[state.currentQuestionIndex];
-    const isCorrect = option === currentQuestion.correctMethod;
-    const timeSpent = state.questionStartTime
-      ? (Date.now() - state.questionStartTime) / 1000
-      : 0;
-
-    // Calculate score
-    const scoreResult: ScoreResult = calculateScore(
-      isCorrect,
-      timeSpent,
-      state.config.timePerQuestion,
-      state.streak
-    );
-
-    // Play sound
-    if (isCorrect) {
-      playCorrect();
-    } else {
-      playIncorrect();
-    }
-
-    // Create answer record
-    const answer: QuizAnswer = {
-      questionId: currentQuestion.id,
-      selectedOption: option,
-      isCorrect,
-      timeSpent,
-      points: scoreResult.totalPoints
-    };
-
-    // Update state
-    const newStreak = isCorrect ? state.streak + 1 : 0;
-    const newMaxStreak = Math.max(state.maxStreak, newStreak);
-
-    setState(prev => ({
-      ...prev,
-      selectedOption: option,
-      showingAnswer: true,
-      score: prev.score + scoreResult.totalPoints,
-      streak: newStreak,
-      maxStreak: newMaxStreak,
-      answers: [...prev.answers, answer]
-    }));
-
-    // Auto-advance after delay
-    autoAdvanceTimeoutRef.current = setTimeout(() => {
-      advanceToNextQuestion();
-    }, 2000);
-  }, [state, playCorrect, playIncorrect]);
-
-  // Handle timeout
-  const handleTimeout = useCallback(() => {
-    if (state.showingAnswer) return;
-
-    const currentQuestion = state.questions[state.currentQuestionIndex];
-    const timeSpent = state.config.timePerQuestion;
-
-    playIncorrect();
-
-    const answer: QuizAnswer = {
-      questionId: currentQuestion.id,
-      selectedOption: null,
-      isCorrect: false,
-      timeSpent,
-      points: 0
-    };
-
-    setState(prev => ({
-      ...prev,
-      selectedOption: null,
-      showingAnswer: true,
-      streak: 0,
-      answers: [...prev.answers, answer]
-    }));
-
-    // Auto-advance after delay
-    autoAdvanceTimeoutRef.current = setTimeout(() => {
-      advanceToNextQuestion();
-    }, 2500);
-  }, [state, playIncorrect]);
-
-  // Advance to next question
+  // Advance to next question - defined first as it's used by handlers below
   const advanceToNextQuestion = useCallback(() => {
     if (autoAdvanceTimeoutRef.current) {
       clearTimeout(autoAdvanceTimeoutRef.current);
@@ -1067,7 +984,7 @@ export default function QuizPage() {
 
         return {
           ...prev,
-          phase: 'results',
+          phase: 'results' as Phase,
           endTime
         };
       }
@@ -1082,6 +999,95 @@ export default function QuizPage() {
       };
     });
   }, [playComplete]);
+
+  // Handle option selection - using functional setState to avoid stale closure issues
+  const handleSelectOption = useCallback((option: string) => {
+    setState(prev => {
+      if (prev.showingAnswer || prev.selectedOption !== null) return prev;
+
+      const currentQuestion = prev.questions[prev.currentQuestionIndex];
+      const isCorrect = option === currentQuestion.correctMethod;
+      const timeSpent = prev.questionStartTime
+        ? (Date.now() - prev.questionStartTime) / 1000
+        : 0;
+
+      // Calculate score
+      const scoreResult: ScoreResult = calculateScore(
+        isCorrect,
+        timeSpent,
+        prev.config.timePerQuestion,
+        prev.streak
+      );
+
+      // Play sound (side effect)
+      if (isCorrect) {
+        playCorrect();
+      } else {
+        playIncorrect();
+      }
+
+      // Create answer record
+      const answer: QuizAnswer = {
+        questionId: currentQuestion.id,
+        selectedOption: option,
+        isCorrect,
+        timeSpent,
+        points: scoreResult.totalPoints
+      };
+
+      // Update state
+      const newStreak = isCorrect ? prev.streak + 1 : 0;
+      const newMaxStreak = Math.max(prev.maxStreak, newStreak);
+
+      // Schedule auto-advance (side effect)
+      autoAdvanceTimeoutRef.current = setTimeout(() => {
+        advanceToNextQuestion();
+      }, 2000);
+
+      return {
+        ...prev,
+        selectedOption: option,
+        showingAnswer: true,
+        score: prev.score + scoreResult.totalPoints,
+        streak: newStreak,
+        maxStreak: newMaxStreak,
+        answers: [...prev.answers, answer]
+      };
+    });
+  }, [playCorrect, playIncorrect, advanceToNextQuestion]);
+
+  // Handle timeout - using functional setState to avoid stale closure issues
+  const handleTimeout = useCallback(() => {
+    setState(prev => {
+      if (prev.showingAnswer) return prev;
+
+      const currentQuestion = prev.questions[prev.currentQuestionIndex];
+      const timeSpent = prev.config.timePerQuestion;
+
+      playIncorrect();
+
+      const answer: QuizAnswer = {
+        questionId: currentQuestion.id,
+        selectedOption: null,
+        isCorrect: false,
+        timeSpent,
+        points: 0
+      };
+
+      // Schedule auto-advance (side effect)
+      autoAdvanceTimeoutRef.current = setTimeout(() => {
+        advanceToNextQuestion();
+      }, 2500);
+
+      return {
+        ...prev,
+        selectedOption: null,
+        showingAnswer: true,
+        streak: 0,
+        answers: [...prev.answers, answer]
+      };
+    });
+  }, [playIncorrect, advanceToNextQuestion]);
 
   // Play again with same settings
   const handlePlayAgain = () => {

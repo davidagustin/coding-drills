@@ -180,10 +180,15 @@ function safeRemoveItem(key: string): boolean {
 }
 
 /**
- * Generate unique session ID
+ * Generate unique session ID using crypto API when available (ES2023+ best practice)
+ * Falls back to Math.random for broader compatibility
  */
 function generateSessionId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  // Use crypto.randomUUID() when available (modern browsers, Node 19+)
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return `${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+  }
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 }
 
 /**
@@ -327,6 +332,48 @@ export function saveQuizProgress(language: string, result: QuizResult): boolean 
 }
 
 /**
+ * Type guard for DrillResult
+ */
+function isDrillResult(result: unknown): result is DrillResult {
+  return (
+    typeof result === 'object' &&
+    result !== null &&
+    'correct' in result &&
+    typeof (result as DrillResult).correct === 'boolean'
+  );
+}
+
+/**
+ * Type guard for QuizResult
+ */
+function isQuizResult(result: unknown): result is QuizResult {
+  return (
+    typeof result === 'object' &&
+    result !== null &&
+    'score' in result &&
+    'totalQuestions' in result &&
+    'accuracy' in result &&
+    'streak' in result &&
+    'timeSpent' in result
+  );
+}
+
+/**
+ * Type guard for SessionResult (without id and date)
+ */
+function isSessionResult(result: unknown): result is Omit<SessionResult, 'id' | 'date'> {
+  return (
+    typeof result === 'object' &&
+    result !== null &&
+    'duration' in result &&
+    'totalProblems' in result &&
+    'correctAnswers' in result &&
+    'accuracy' in result &&
+    'streak' in result
+  );
+}
+
+/**
  * Generic save progress function
  */
 export function saveProgress(
@@ -336,14 +383,29 @@ export function saveProgress(
 ): boolean {
   switch (type) {
     case 'drill':
-      return saveDrillProgress(language, result as DrillResult);
-    case 'quiz':
-      return saveQuizProgress(language, result as QuizResult);
-    case 'session':
-      return saveDrillSession(language, result as Omit<SessionResult, 'id' | 'date'>);
-    default:
-      console.error(`Unknown progress type: ${type}`);
+      if (isDrillResult(result)) {
+        return saveDrillProgress(language, result);
+      }
+      console.error('Invalid drill result format');
       return false;
+    case 'quiz':
+      if (isQuizResult(result)) {
+        return saveQuizProgress(language, result);
+      }
+      console.error('Invalid quiz result format');
+      return false;
+    case 'session':
+      if (isSessionResult(result)) {
+        return saveDrillSession(language, result);
+      }
+      console.error('Invalid session result format');
+      return false;
+    default: {
+      // Exhaustive check - this should never happen
+      const _exhaustiveCheck: never = type;
+      console.error(`Unknown progress type: ${_exhaustiveCheck}`);
+      return false;
+    }
   }
 }
 
@@ -555,11 +617,12 @@ export function getTotalTimeSpent(language: string): number {
 
 /**
  * Get languages sorted by last played
+ * Uses toSorted() for immutable sorting (ES2023)
  */
 export function getLanguagesByRecent(): string[] {
   const allProgress = getAllProgress();
   return Object.entries(allProgress)
-    .sort(([, a], [, b]) =>
+    .toSorted(([, a], [, b]) =>
       new Date(b.lastPlayed).getTime() - new Date(a.lastPlayed).getTime()
     )
     .map(([lang]) => lang);

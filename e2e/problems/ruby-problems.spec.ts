@@ -105,7 +105,7 @@ async function submitAnswer(page: Page, answer: string): Promise<{
 // ============================================================================
 
 test.describe('Ruby Problems - E2E Tests', () => {
-  test.skip('Ruby problems not yet implemented', async ({ page }) => {
+  test.skip('Ruby problems not yet implemented', async ({ page: _page }) => {
     // This test is skipped until Ruby problems are available
   });
 

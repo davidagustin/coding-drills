@@ -1,5 +1,7 @@
 'use client';
 
+import { memo } from 'react';
+
 interface Stat {
   label: string;
   value: string | number;
@@ -13,7 +15,8 @@ interface StatsBarProps {
   variant?: 'default' | 'compact' | 'card';
 }
 
-const TrendIcon = ({ trend }: { trend: 'up' | 'down' | 'neutral' }) => {
+// Memoized to prevent unnecessary re-renders when parent updates
+const TrendIcon = memo(function TrendIcon({ trend }: { trend: 'up' | 'down' | 'neutral' }) {
   if (trend === 'up') {
     return (
       <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +36,7 @@ const TrendIcon = ({ trend }: { trend: 'up' | 'down' | 'neutral' }) => {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14" />
     </svg>
   );
-};
+});
 
 export function StatsBar({ stats, variant = 'default' }: StatsBarProps) {
   if (variant === 'compact') {
@@ -41,7 +44,7 @@ export function StatsBar({ stats, variant = 'default' }: StatsBarProps) {
       <div className="flex flex-wrap items-center gap-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
         {stats.map((stat, index) => (
           <div
-            key={index}
+            key={stat.label}
             className={`
               flex items-center gap-2
               ${index !== stats.length - 1 ? 'pr-4 border-r border-gray-300 dark:border-gray-600' : ''}
@@ -69,9 +72,9 @@ export function StatsBar({ stats, variant = 'default' }: StatsBarProps) {
   if (variant === 'card') {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {stats.map((stat, index) => (
+        {stats.map((stat) => (
           <div
-            key={index}
+            key={stat.label}
             className={`
               flex flex-col items-center p-4 rounded-xl border transition-all duration-200
               ${
@@ -110,9 +113,9 @@ export function StatsBar({ stats, variant = 'default' }: StatsBarProps) {
   // Default variant
   return (
     <div className="flex flex-wrap justify-between items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
-      {stats.map((stat, index) => (
+      {stats.map((stat) => (
         <div
-          key={index}
+          key={stat.label}
           className="flex flex-col items-center min-w-[80px]"
         >
           <div className="flex items-center gap-2 mb-1">

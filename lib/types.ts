@@ -11,7 +11,9 @@ export type LanguageId =
   | 'csharp'
   | 'go'
   | 'ruby'
-  | 'c';
+  | 'c'
+  | 'php'
+  | 'kotlin';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -88,7 +90,7 @@ export interface QuizQuestion {
 }
 
 export interface UserProgress {
-  odaysssId: string;
+  userId: string;
   completedProblems: string[];
   scores: Record<string, number>;
   streakDays: number;
@@ -97,7 +99,7 @@ export interface UserProgress {
 }
 
 export interface ProblemAttempt {
-  odaysssId: string;
+  userId: string;
   problemId: string;
   code: string;
   isCorrect: boolean;

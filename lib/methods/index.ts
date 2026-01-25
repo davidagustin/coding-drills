@@ -15,6 +15,7 @@ import { csharpMethods } from './csharp';
 import { goMethods } from './go';
 import { rubyMethods } from './ruby';
 import { cMethods } from './c';
+import { phpMethods } from './php';
 
 // Export individual method sets
 export { javascriptMethods } from './javascript';
@@ -26,6 +27,7 @@ export { csharpMethods } from './csharp';
 export { goMethods } from './go';
 export { rubyMethods } from './ruby';
 export { cMethods } from './c';
+export { phpMethods } from './php';
 
 // Export types
 export * from './types';
@@ -41,6 +43,7 @@ export const methodsByLanguage: Partial<Record<LanguageId, Method[]>> = {
   go: goMethods,
   ruby: rubyMethods,
   c: cMethods,
+  php: phpMethods,
 };
 
 // Get methods for a specific language

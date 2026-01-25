@@ -1,0 +1,37 @@
+# Validate commit message follows conventional commits format
+# Format: type(scope?): subject
+# Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+
+commit_regex='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .{1,100}$'
+merge_regex='^Merge '
+revert_regex='^Revert '
+
+commit_msg=$(cat "$1")
+
+# Allow merge commits and reverts
+if echo "$commit_msg" | grep -qE "$merge_regex"; then
+  exit 0
+fi
+
+if echo "$commit_msg" | grep -qE "$revert_regex"; then
+  exit 0
+fi
+
+if ! echo "$commit_msg" | grep -qE "$commit_regex"; then
+  echo ""
+  echo "ERROR: Invalid commit message format."
+  echo ""
+  echo "Commit message must follow Conventional Commits format:"
+  echo "  type(scope?): subject"
+  echo ""
+  echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+  echo ""
+  echo "Examples:"
+  echo "  feat(auth): add login functionality"
+  echo "  fix: resolve memory leak in editor"
+  echo "  docs: update README with new instructions"
+  echo ""
+  echo "Your message: $commit_msg"
+  echo ""
+  exit 1
+fi

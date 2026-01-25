@@ -105,7 +105,7 @@ async function submitAnswer(page: Page, answer: string): Promise<{
 // ============================================================================
 
 test.describe('C Problems - E2E Tests', () => {
-  test.skip('C problems not yet implemented', async ({ page }) => {
+  test.skip('C problems not yet implemented', async ({ page: _page }) => {
     // This test is skipped until C problems are available
   });
 

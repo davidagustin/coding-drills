@@ -9,21 +9,107 @@ import * as webllm from '@mlc-ai/web-llm';
 // WebGPU Type Declarations
 // ============================================================================
 
-// Extend Navigator interface to include WebGPU
+/**
+ * WebGPU types for browser environments
+ * These extend the Navigator interface to include the WebGPU API
+ * Note: In modern browsers with WebGPU support, these types are available
+ * natively. This declaration is for TypeScript compilation in environments
+ * where the WebGPU types might not be available.
+ */
 declare global {
   interface Navigator {
-    gpu?: {
-      requestAdapter(): Promise<GPUAdapter | null>;
-    };
+    readonly gpu?: GPU;
+  }
+
+  interface GPU {
+    requestAdapter(options?: GPURequestAdapterOptions): Promise<GPUAdapter | null>;
+    getPreferredCanvasFormat(): GPUTextureFormat;
+  }
+
+  interface GPURequestAdapterOptions {
+    powerPreference?: 'low-power' | 'high-performance';
+    forceFallbackAdapter?: boolean;
   }
 
   interface GPUAdapter {
-    requestDevice(): Promise<GPUDevice>;
+    readonly features: ReadonlySet<string>;
+    readonly limits: GPUSupportedLimits;
+    readonly isFallbackAdapter: boolean;
+    requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
+    requestAdapterInfo(): Promise<GPUAdapterInfo>;
   }
 
-  interface GPUDevice {
+  interface GPUSupportedLimits {
+    readonly maxTextureDimension1D: number;
+    readonly maxTextureDimension2D: number;
+    readonly maxTextureDimension3D: number;
+    readonly maxTextureArrayLayers: number;
+    readonly maxBindGroups: number;
+    readonly maxBufferSize: number;
+    readonly maxStorageBufferBindingSize: number;
+    readonly maxUniformBufferBindingSize: number;
+  }
+
+  interface GPUAdapterInfo {
+    readonly vendor: string;
+    readonly architecture: string;
+    readonly device: string;
+    readonly description: string;
+  }
+
+  interface GPUDeviceDescriptor {
+    label?: string;
+    requiredFeatures?: Iterable<string>;
+    requiredLimits?: Record<string, number>;
+  }
+
+  interface GPUDevice extends EventTarget {
+    readonly features: ReadonlySet<string>;
+    readonly limits: GPUSupportedLimits;
+    readonly queue: GPUQueue;
+    readonly lost: Promise<GPUDeviceLostInfo>;
+    destroy(): void;
+    createBuffer(descriptor: GPUBufferDescriptor): GPUBuffer;
+  }
+
+  interface GPUQueue {
+    submit(commandBuffers: Iterable<GPUCommandBuffer>): void;
+    writeBuffer(buffer: GPUBuffer, bufferOffset: number, data: BufferSource, dataOffset?: number, size?: number): void;
+  }
+
+  interface GPUDeviceLostInfo {
+    readonly reason: 'unknown' | 'destroyed';
+    readonly message: string;
+  }
+
+  interface GPUBufferDescriptor {
+    label?: string;
+    size: number;
+    usage: number;
+    mappedAtCreation?: boolean;
+  }
+
+  interface GPUBuffer {
+    readonly size: number;
+    readonly usage: number;
+    readonly mapState: 'unmapped' | 'pending' | 'mapped';
+    mapAsync(mode: number, offset?: number, size?: number): Promise<void>;
+    getMappedRange(offset?: number, size?: number): ArrayBuffer;
+    unmap(): void;
     destroy(): void;
   }
+
+  interface GPUCommandBuffer {
+    readonly label: string;
+  }
+
+  type GPUTextureFormat =
+    | 'bgra8unorm'
+    | 'rgba8unorm'
+    | 'rgba8unorm-srgb'
+    | 'bgra8unorm-srgb'
+    | 'rgba16float'
+    | 'rgba32float';
 }
 
 // ============================================================================
@@ -222,7 +308,9 @@ export async function chat(
       max_tokens: 2048,
     });
 
-    const content = response.choices[0]?.message?.content;
+    // Use Array.at() for cleaner first element access (ES2022+)
+    // Combined with optional chaining and nullish coalescing for safety
+    const content = response.choices.at(0)?.message?.content ?? null;
     if (!content) {
       throw new Error('No response content received from model');
     }
@@ -276,18 +364,16 @@ export async function streamChat(
     let fullResponse = '';
 
     for await (const chunk of stream) {
-      const delta = chunk.choices[0]?.delta?.content;
+      // Use Array.at() for first element access (ES2022+)
+      const delta = chunk.choices.at(0)?.delta?.content;
       if (delta) {
         fullResponse += delta;
-        if (onToken) {
-          onToken(delta);
-        }
+        onToken?.(delta);
       }
     }
 
-    if (onComplete) {
-      onComplete(fullResponse);
-    }
+    // Use optional chaining for callback invocation
+    onComplete?.(fullResponse);
 
     return fullResponse;
   } catch (error) {

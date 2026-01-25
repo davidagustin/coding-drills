@@ -30,6 +30,42 @@ const defaultIcon = (
   </svg>
 );
 
+const buttonClasses = `
+  inline-flex items-center gap-2 px-6 py-3
+  bg-gradient-to-r from-purple-600 to-blue-600
+  hover:from-purple-500 hover:to-blue-500
+  text-white font-semibold rounded-xl
+  transition-all duration-200
+  hover:shadow-lg hover:shadow-purple-500/25
+  focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900
+`;
+
+// Extracted outside render to prevent recreation on each render
+function ActionButton({ action }: { action?: EmptyStateProps['action'] }) {
+  if (!action) return null;
+
+  if (action.href) {
+    return (
+      <Link href={action.href} className={buttonClasses}>
+        {action.label}
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </Link>
+    );
+  }
+
+  if (action.onClick) {
+    return (
+      <button onClick={action.onClick} className={buttonClasses}>
+        {action.label}
+      </button>
+    );
+  }
+
+  return null;
+}
+
 export function EmptyState({
   icon = defaultIcon,
   title,
@@ -37,39 +73,6 @@ export function EmptyState({
   action,
   className = '',
 }: EmptyStateProps) {
-  const ActionButton = () => {
-    const buttonClasses = `
-      inline-flex items-center gap-2 px-6 py-3
-      bg-gradient-to-r from-purple-600 to-blue-600
-      hover:from-purple-500 hover:to-blue-500
-      text-white font-semibold rounded-xl
-      transition-all duration-200
-      hover:shadow-lg hover:shadow-purple-500/25
-      focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900
-    `;
-
-    if (action?.href) {
-      return (
-        <Link href={action.href} className={buttonClasses}>
-          {action.label}
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
-      );
-    }
-
-    if (action?.onClick) {
-      return (
-        <button onClick={action.onClick} className={buttonClasses}>
-          {action.label}
-        </button>
-      );
-    }
-
-    return null;
-  };
-
   return (
     <div
       className={`
@@ -99,7 +102,7 @@ export function EmptyState({
       )}
 
       {/* Action button */}
-      {action && <ActionButton />}
+      {action && <ActionButton action={action} />}
     </div>
   );
 }
