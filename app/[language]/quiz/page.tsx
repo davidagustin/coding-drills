@@ -482,9 +482,17 @@ interface QuestionDisplayProps {
 function QuestionDisplay({ question }: QuestionDisplayProps) {
   return (
     <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-      <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-4">
-        Which method produces this output?
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-slate-400 text-sm uppercase tracking-wider">
+          Which method produces this output?
+        </h3>
+        {/* Method type hint */}
+        {question.methodHint && (
+          <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-full border border-blue-500/30">
+            {question.methodHint}
+          </span>
+        )}
+      </div>
 
       {/* Code snippet */}
       <div className="mb-4">

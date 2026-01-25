@@ -28,6 +28,92 @@ function getRandomElement<T>(array: T[]): T {
 }
 
 /**
+ * Extracts the data structure from a method call
+ * e.g., "Object.keys({a: 1, b: 2})" -> "{a: 1, b: 2}"
+ * e.g., "[1, 2, 3].map(x => x * 2)" -> "[1, 2, 3]"
+ * e.g., '"hello world".split(" ")' -> '"hello world"'
+ */
+function extractDataStructure(code: string): { dataInput: string; methodHint: string } {
+  // Handle Object.method(data) patterns
+  const objectMethodMatch = code.match(/^Object\.(\w+)\((.+)\)$/);
+  if (objectMethodMatch) {
+    return {
+      dataInput: objectMethodMatch[2].trim(),
+      methodHint: 'Object method'
+    };
+  }
+
+  // Handle Math.method(args) patterns
+  const mathMethodMatch = code.match(/^Math\.(\w+)\((.+)\)$/);
+  if (mathMethodMatch) {
+    return {
+      dataInput: mathMethodMatch[2].trim(),
+      methodHint: 'Math method'
+    };
+  }
+
+  // Handle Number.method(args) patterns
+  const numberMethodMatch = code.match(/^Number\.(\w+)\((.+)\)$/);
+  if (numberMethodMatch) {
+    return {
+      dataInput: numberMethodMatch[2].trim(),
+      methodHint: 'Number method'
+    };
+  }
+
+  // Handle array.method() patterns - extract the array
+  const arrayMethodMatch = code.match(/^(\[.+?\])\.(\w+)\(.*\)$/);
+  if (arrayMethodMatch) {
+    return {
+      dataInput: arrayMethodMatch[1],
+      methodHint: 'Array method'
+    };
+  }
+
+  // Handle string.method() patterns - extract the string
+  const stringMethodMatch = code.match(/^(".+?"|'.+?')\.(\w+)\(.*\)$/);
+  if (stringMethodMatch) {
+    return {
+      dataInput: stringMethodMatch[1],
+      methodHint: 'String method'
+    };
+  }
+
+  // Handle (number).method() patterns
+  const numberInstanceMatch = code.match(/^\((.+?)\)\.(\w+)\(.*\)$/);
+  if (numberInstanceMatch) {
+    return {
+      dataInput: numberInstanceMatch[1],
+      methodHint: 'Number method'
+    };
+  }
+
+  // Handle spread operator patterns like Math.max(...[1, 2, 3])
+  const spreadMatch = code.match(/^(Math|Object|Number)\.(\w+)\(\.\.\.(\[.+?\])\)$/);
+  if (spreadMatch) {
+    return {
+      dataInput: spreadMatch[3],
+      methodHint: `${spreadMatch[1]} method`
+    };
+  }
+
+  // Fallback: try to extract anything in parentheses or brackets
+  const parenMatch = code.match(/\(([^)]+)\)/);
+  if (parenMatch) {
+    return {
+      dataInput: parenMatch[1].trim(),
+      methodHint: 'Method call'
+    };
+  }
+
+  // Last resort: return a generic hint (but this shouldn't happen often)
+  return {
+    dataInput: '[data]',
+    methodHint: 'Apply a method'
+  };
+}
+
+/**
  * Gets random elements from an array (without duplicates)
  */
 function getRandomElements<T>(array: T[], count: number): T[] {
@@ -116,15 +202,20 @@ function createQuestionFromMethod(
   // Find the index of the correct answer after shuffling
   const correctIndex = allOptions.indexOf(method.name);
 
+  // Extract just the data structure from the code example
+  // This prevents revealing the answer in the input display
+  const { dataInput, methodHint } = extractDataStructure(example.code);
+
   return {
     id: `q-${questionIndex}-${Date.now()}`,
-    input: example.code,
+    input: dataInput,
     output: example.output,
     correctMethod: method.name,
     options: allOptions,
     difficulty: getDifficultyForMethod(method),
     explanation: example.explanation || method.description,
-    category: method.category
+    category: method.category,
+    methodHint: methodHint
   };
 }
 
