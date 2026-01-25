@@ -1,0 +1,387 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+import {
+  SUPPORTED_LANGUAGES,
+  LANGUAGE_CONFIG,
+  isValidLanguage,
+  type SupportedLanguage,
+} from "./config";
+import { LanguageIcon } from "./LanguageIcon";
+
+// Stats interface for localStorage
+interface UserStats {
+  totalAnswered: number;
+  correctAnswers: number;
+  bestStreak: number;
+}
+
+// Icon components for mode cards
+function KeyboardIcon({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"
+      />
+    </svg>
+  );
+}
+
+function LightbulbIcon({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+      />
+    </svg>
+  );
+}
+
+function BookIcon({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+      />
+    </svg>
+  );
+}
+
+function LoopIcon({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+      />
+    </svg>
+  );
+}
+
+function ArrowLeftIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+      />
+    </svg>
+  );
+}
+
+function ArrowRightIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+      />
+    </svg>
+  );
+}
+
+function TrophyIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0116.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.997 6.997 0 01-5.27 2.499 6.997 6.997 0 01-5.27-2.499"
+      />
+    </svg>
+  );
+}
+
+
+// Mode card component
+interface ModeCardProps {
+  href: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  buttonText: string;
+  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
+}
+
+function ModeCard({
+  href,
+  icon,
+  title,
+  description,
+  buttonText,
+  config,
+}: ModeCardProps) {
+  return (
+    <Link
+      href={href}
+      className={`group relative overflow-hidden rounded-2xl border ${config.borderColor} bg-zinc-900/50 p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${config.hoverBg}`}
+    >
+      {/* Gradient overlay on hover */}
+      <div
+        className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${config.bgColor}`}
+      />
+
+      <div className="relative z-10">
+        {/* Icon */}
+        <div
+          className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${config.bgColor} ${config.color} mb-4`}
+        >
+          {icon}
+        </div>
+
+        {/* Title */}
+        <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+
+        {/* Description */}
+        <p className="text-zinc-400 mb-6 leading-relaxed">{description}</p>
+
+        {/* Button */}
+        <div
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${config.bgColor} ${config.color} font-medium transition-all duration-200 group-hover:gap-3`}
+        >
+          {buttonText}
+          <ArrowRightIcon className="w-4 h-4" />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// Stats section component
+function StatsSection({
+  stats,
+  config,
+}: {
+  stats: UserStats;
+  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
+}) {
+  const accuracy =
+    stats.totalAnswered > 0
+      ? Math.round((stats.correctAnswers / stats.totalAnswered) * 100)
+      : 0;
+
+  return (
+    <div
+      className={`rounded-2xl border ${config.borderColor} bg-zinc-900/30 p-6`}
+    >
+      <div className="flex items-center gap-2 mb-6">
+        <TrophyIcon className={`w-6 h-6 ${config.color}`} />
+        <h3 className="text-lg font-semibold text-white">Your Progress</h3>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        {/* Total Answered */}
+        <div className="text-center">
+          <div className={`text-3xl font-bold ${config.color}`}>
+            {stats.totalAnswered}
+          </div>
+          <div className="text-sm text-zinc-500 mt-1">Questions Answered</div>
+        </div>
+
+        {/* Accuracy */}
+        <div className="text-center">
+          <div className={`text-3xl font-bold ${config.color}`}>{accuracy}%</div>
+          <div className="text-sm text-zinc-500 mt-1">Accuracy</div>
+        </div>
+
+        {/* Best Streak */}
+        <div className="text-center">
+          <div className={`text-3xl font-bold ${config.color}`}>
+            {stats.bestStreak}
+          </div>
+          <div className="text-sm text-zinc-500 mt-1">Best Streak</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function LanguagePage() {
+  const params = useParams();
+  const language = params.language as string;
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Validate language on client
+  useEffect(() => {
+    setMounted(true);
+
+    if (!isValidLanguage(language)) {
+      notFound();
+    }
+
+    // Load stats from localStorage
+    const storageKey = `coding-drills-stats-${language}`;
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        const parsed = JSON.parse(stored) as UserStats;
+        if (
+          parsed.totalAnswered > 0 ||
+          parsed.correctAnswers > 0 ||
+          parsed.bestStreak > 0
+        ) {
+          setStats(parsed);
+        }
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [language]);
+
+  if (!mounted) {
+    return null;
+  }
+
+  if (!isValidLanguage(language)) {
+    return null;
+  }
+
+  const config = LANGUAGE_CONFIG[language];
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Back to home link */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 group"
+      >
+        <ArrowLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        Back to Languages
+      </Link>
+
+      {/* Language header */}
+      <div className="text-center mb-12">
+        <div
+          className={`inline-flex items-center justify-center w-24 h-24 rounded-2xl ${config.bgColor} ${config.borderColor} border mb-6`}
+        >
+          <LanguageIcon language={language} className="w-16 h-16" />
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+          {config.name}
+        </h1>
+        <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+          Master {config.name} methods through interactive drills, quizzes, and
+          comprehensive references.
+        </p>
+      </div>
+
+      {/* Mode cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <ModeCard
+          href={`/${language}/drill`}
+          icon={<KeyboardIcon className="w-8 h-8" />}
+          title="Drill Mode"
+          description="Type code solutions to method challenges. Build muscle memory and improve your typing speed."
+          buttonText="Start Drilling"
+          config={config}
+        />
+
+        <ModeCard
+          href={`/${language}/quiz`}
+          icon={<LightbulbIcon className="w-8 h-8" />}
+          title="Quiz Mode"
+          description="Match inputs and outputs to methods. Test your knowledge and learn new patterns."
+          buttonText="Start Quiz"
+          config={config}
+        />
+
+        <ModeCard
+          href={`/${language}/exercises`}
+          icon={<LoopIcon className="w-8 h-8" />}
+          title="Algorithm Exercises"
+          description="Master traversal patterns, DFS/BFS, recursion, and iteration control with guided exercises."
+          buttonText="Start Exercises"
+          config={config}
+        />
+
+        <ModeCard
+          href={`/${language}/reference`}
+          icon={<BookIcon className="w-8 h-8" />}
+          title="Method Reference"
+          description="Browse all methods with examples. A comprehensive guide to the language's built-in methods."
+          buttonText="View Reference"
+          config={config}
+        />
+      </div>
+
+      {/* Stats section (only if user has previous activity) */}
+      {stats && <StatsSection stats={stats} config={config} />}
+
+      {/* Quick tips section */}
+      <div className="mt-12 text-center">
+        <h3 className="text-lg font-medium text-zinc-300 mb-4">
+          Quick Tips for {config.name}
+        </h3>
+        <div className="flex flex-wrap justify-center gap-3">
+          {[
+            "Start with Drill Mode to build muscle memory",
+            "Use Quiz Mode to test retention",
+            "Reference section for quick lookups",
+          ].map((tip, index) => (
+            <span
+              key={index}
+              className={`inline-flex items-center px-4 py-2 rounded-full text-sm ${config.bgColor} ${config.color} ${config.borderColor} border`}
+            >
+              {tip}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

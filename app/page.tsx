@@ -1,65 +1,323 @@
-import Image from "next/image";
+import Link from "next/link";
+
+const languages = [
+  {
+    name: "JavaScript",
+    slug: "javascript",
+    icon: "JS",
+    emoji: null,
+    bgGradient: "from-yellow-500/20 to-yellow-600/10",
+    borderColor: "border-yellow-500/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(234,179,8,0.4)]",
+    iconBg: "bg-yellow-500",
+    iconText: "text-black font-bold",
+  },
+  {
+    name: "TypeScript",
+    slug: "typescript",
+    icon: "TS",
+    emoji: null,
+    bgGradient: "from-blue-500/20 to-blue-600/10",
+    borderColor: "border-blue-500/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(59,130,246,0.4)]",
+    iconBg: "bg-blue-600",
+    iconText: "text-white font-bold",
+  },
+  {
+    name: "Python",
+    slug: "python",
+    icon: null,
+    emoji: "🐍",
+    bgGradient: "from-blue-500/20 via-yellow-500/10 to-blue-600/10",
+    borderColor: "border-blue-400/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(59,130,246,0.4)]",
+    iconBg: "bg-gradient-to-br from-blue-500 to-yellow-400",
+    iconText: "text-white",
+  },
+  {
+    name: "Java",
+    slug: "java",
+    icon: null,
+    emoji: "☕",
+    bgGradient: "from-red-500/20 to-orange-500/10",
+    borderColor: "border-red-500/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(239,68,68,0.4)]",
+    iconBg: "bg-gradient-to-br from-red-500 to-orange-500",
+    iconText: "text-white",
+  },
+  {
+    name: "C++",
+    slug: "cpp",
+    icon: "</>",
+    emoji: null,
+    bgGradient: "from-blue-600/20 to-blue-700/10",
+    borderColor: "border-blue-600/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]",
+    iconBg: "bg-blue-700",
+    iconText: "text-white font-mono text-sm",
+  },
+  {
+    name: "C#",
+    slug: "csharp",
+    icon: "#",
+    emoji: null,
+    bgGradient: "from-purple-500/20 to-purple-600/10",
+    borderColor: "border-purple-500/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(168,85,247,0.4)]",
+    iconBg: "bg-purple-600",
+    iconText: "text-white font-bold text-2xl",
+  },
+  {
+    name: "Go",
+    slug: "go",
+    icon: "Go",
+    emoji: null,
+    bgGradient: "from-cyan-500/20 to-cyan-600/10",
+    borderColor: "border-cyan-500/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]",
+    iconBg: "bg-cyan-500",
+    iconText: "text-white font-bold",
+  },
+  {
+    name: "Ruby",
+    slug: "ruby",
+    icon: null,
+    emoji: "💎",
+    bgGradient: "from-red-600/20 to-red-700/10",
+    borderColor: "border-red-600/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(220,38,38,0.4)]",
+    iconBg: "bg-red-600",
+    iconText: "text-white",
+  },
+  {
+    name: "C",
+    slug: "c",
+    icon: "C",
+    emoji: null,
+    bgGradient: "from-gray-500/20 to-gray-600/10",
+    borderColor: "border-gray-500/30",
+    hoverGlow: "hover:shadow-[0_0_30px_rgba(107,114,128,0.4)]",
+    iconBg: "bg-gray-600",
+    iconText: "text-white font-bold",
+  },
+];
+
+const modes = [
+  {
+    name: "Drill Mode",
+    icon: "🎯",
+    description: "Practice method implementations with guided exercises. Build muscle memory through repetition.",
+    gradient: "from-emerald-500/20 to-teal-500/10",
+    border: "border-emerald-500/30",
+  },
+  {
+    name: "Quiz Mode",
+    icon: "🧠",
+    description: "Test your knowledge with multiple choice questions. Identify gaps in your understanding.",
+    gradient: "from-amber-500/20 to-orange-500/10",
+    border: "border-amber-500/30",
+  },
+  {
+    name: "Reference Mode",
+    icon: "📚",
+    description: "Browse comprehensive documentation and examples. Quick lookup for syntax and patterns.",
+    gradient: "from-violet-500/20 to-purple-500/10",
+    border: "border-violet-500/30",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-mesh">
+      {/* Hero Section */}
+      <header className="relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse-glow" />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-glow delay-500" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-t from-cyan-500/5 to-transparent blur-2xl" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
+          {/* Main Title */}
+          <div className="text-center space-y-6 animate-fade-in-up">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+              <span className="gradient-text">Code Drills</span>
+            </h1>
+
+            <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto animate-fade-in-up delay-100" style={{ opacity: 0 }}>
+              Master programming methods through practice
+            </p>
+
+            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200" style={{ opacity: 0 }}>
+              Sharpen your coding skills across 9 programming languages.
+              Practice essential methods, test your knowledge with quizzes,
+              and build the muscle memory every developer needs.
+            </p>
+
+            {/* CTA Arrow */}
+            <div className="pt-8 animate-fade-in-up delay-300" style={{ opacity: 0 }}>
+              <div className="animate-float">
+                <svg
+                  className="w-8 h-8 mx-auto text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
+      </header>
+
+      {/* Language Selection Grid */}
+      <section className="max-w-6xl mx-auto px-6 py-12">
+        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100 animate-fade-in-up delay-300" style={{ opacity: 0 }}>
+          Choose Your Language
+        </h2>
+        <p className="text-gray-500 text-center mb-10 animate-fade-in-up delay-400" style={{ opacity: 0 }}>
+          Select a programming language to start practicing
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {languages.map((lang, index) => (
+            <Link
+              key={lang.slug}
+              href={`/${lang.slug}`}
+              className={`
+                group relative overflow-hidden rounded-2xl border ${lang.borderColor}
+                bg-gradient-to-br ${lang.bgGradient} backdrop-blur-sm
+                p-6 md:p-8 card-hover ${lang.hoverGlow}
+                animate-fade-in-up
+              `}
+              style={{
+                opacity: 0,
+                animationDelay: `${400 + index * 50}ms`,
+                animationFillMode: 'forwards'
+              }}
+            >
+              {/* Hover gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              <div className="relative flex flex-col items-center text-center space-y-3">
+                {/* Icon */}
+                <div className={`
+                  w-14 h-14 md:w-16 md:h-16 rounded-xl ${lang.iconBg}
+                  flex items-center justify-center
+                  transform group-hover:scale-110 transition-transform duration-300
+                `}>
+                  {lang.emoji ? (
+                    <span className="text-3xl md:text-4xl">{lang.emoji}</span>
+                  ) : (
+                    <span className={`text-lg md:text-xl ${lang.iconText}`}>{lang.icon}</span>
+                  )}
+                </div>
+
+                {/* Language Name */}
+                <h3 className="text-lg md:text-xl font-semibold text-gray-100 group-hover:text-white transition-colors">
+                  {lang.name}
+                </h3>
+
+                {/* Arrow indicator */}
+                <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Mode Selection Preview */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100">
+          Learning Modes
+        </h2>
+        <p className="text-gray-500 text-center mb-10">
+          Multiple ways to master your chosen language
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {modes.map((mode, index) => (
+            <div
+              key={mode.name}
+              className={`
+                relative overflow-hidden rounded-2xl border ${mode.border}
+                bg-gradient-to-br ${mode.gradient} backdrop-blur-sm
+                p-6 md:p-8 card-hover
+              `}
+            >
+              {/* Mode Icon */}
+              <div className="text-4xl md:text-5xl mb-4">{mode.icon}</div>
+
+              {/* Mode Name */}
+              <h3 className="text-xl font-semibold text-gray-100 mb-3">
+                {mode.name}
+              </h3>
+
+              {/* Description */}
+              <p className="text-gray-400 text-sm leading-relaxed">
+                {mode.description}
+              </p>
+
+              {/* Decorative corner glow */}
+              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features Preview */}
+      <section className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+          {[
+            { stat: "9", label: "Languages", icon: "🌐" },
+            { stat: "100+", label: "Methods", icon: "⚡" },
+            { stat: "∞", label: "Practice", icon: "🔄" },
+            { stat: "Free", label: "Forever", icon: "✨" },
+          ].map((item, index) => (
+            <div key={item.label} className="p-6">
+              <div className="text-3xl mb-2">{item.icon}</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-100">{item.stat}</div>
+              <div className="text-gray-500">{item.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-800/50 mt-12">
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold gradient-text">Code Drills</span>
+            </div>
+
+            <p className="text-gray-500 text-sm text-center">
+              Built for developers who believe in the power of practice.
+            </p>
+
+            <div className="flex items-center gap-4 text-gray-500 text-sm">
+              <span>Made with</span>
+              <span className="text-red-500">♥</span>
+              <span>and Next.js</span>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-gray-800/30 text-center text-gray-600 text-xs">
+            © {new Date().getFullYear()} Code Drills. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
