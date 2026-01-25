@@ -118,7 +118,10 @@ export const scalaProblems: Problem[] = [
     setupCode: 'val numbers = List(1, 2, 3, 4, 5)',
     expected: 15,
     sample: 'numbers.reduce(_ + _)',
-    hints: ['reduce combines elements pairwise', 'The underscores represent accumulator and current'],
+    hints: [
+      'reduce combines elements pairwise',
+      'The underscores represent accumulator and current',
+    ],
     validPatterns: [/\.reduce\s*\(/, /\.reduce\s*\{/],
     tags: ['reduce', 'aggregation', 'sum'],
   },
@@ -640,7 +643,10 @@ export const scalaProblems: Problem[] = [
     setupCode: 'val prices = Map("apple" -> 1, "banana" -> 2, "cherry" -> 3)',
     expected: { apple: 2, banana: 4, cherry: 6 },
     sample: 'prices.view.mapValues(_ * 2).toMap',
-    hints: ['mapValues transforms values keeping keys', 'Use view for lazy evaluation in Scala 2.13+'],
+    hints: [
+      'mapValues transforms values keeping keys',
+      'Use view for lazy evaluation in Scala 2.13+',
+    ],
     validPatterns: [/\.mapValues\s*\(/, /\.map\s*\{.*=>/],
     tags: ['mapValues', 'transform', 'map'],
   },
@@ -673,7 +679,8 @@ export const scalaProblems: Problem[] = [
     setup: 'val num = 2',
     setupCode: 'val num = 2',
     expected: 'two',
-    sample: 'num match { case 1 => "one"; case 2 => "two"; case 3 => "three"; case _ => "unknown" }',
+    sample:
+      'num match { case 1 => "one"; case 2 => "two"; case 3 => "three"; case _ => "unknown" }',
     hints: ['Use match expression', 'Underscore _ is wildcard pattern'],
     validPatterns: [/num\s+match\s*\{/],
     tags: ['match', 'pattern', 'basics'],
@@ -703,7 +710,8 @@ export const scalaProblems: Problem[] = [
     setup: 'val num = -5',
     setupCode: 'val num = -5',
     expected: 'negative',
-    sample: 'num match { case n if n > 0 => "positive"; case n if n < 0 => "negative"; case _ => "zero" }',
+    sample:
+      'num match { case n if n > 0 => "positive"; case n if n < 0 => "negative"; case _ => "zero" }',
     hints: ['Use if guard after pattern', 'Guard adds condition to pattern'],
     validPatterns: [/match\s*\{.*case.*if\s+/],
     tags: ['match', 'guard', 'condition'],
@@ -748,7 +756,8 @@ export const scalaProblems: Problem[] = [
     setup: 'val value: Any = "hello"',
     setupCode: 'val value: Any = "hello"',
     expected: 'string: hello',
-    sample: 'value match { case s: String => s"string: $s"; case i: Int => s"int: $i"; case _ => "unknown" }',
+    sample:
+      'value match { case s: String => s"string: $s"; case i: Int => s"int: $i"; case _ => "unknown" }',
     hints: ['Use : Type to match on type', 'Variable binding with type'],
     validPatterns: [/match\s*\{.*case\s+\w+:\s*String/],
     tags: ['match', 'type', 'casting'],

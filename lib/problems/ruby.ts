@@ -1009,7 +1009,10 @@ export const rubyProblems: Problem[] = [
     text: 'Use `partition` to split numbers into even and odd arrays.',
     setup: 'numbers = [1, 2, 3, 4, 5, 6]',
     setupCode: 'numbers = [1, 2, 3, 4, 5, 6]',
-    expected: [[2, 4, 6], [1, 3, 5]],
+    expected: [
+      [2, 4, 6],
+      [1, 3, 5],
+    ],
     sample: 'numbers.partition { |n| n.even? }',
     hints: [
       'partition returns two arrays: [truthy, falsy]',
@@ -1029,15 +1032,13 @@ export const rubyProblems: Problem[] = [
     text: 'Use `partition` to separate passing (>= 60) and failing scores.',
     setup: 'scores = [85, 42, 91, 55, 78, 33]',
     setupCode: 'scores = [85, 42, 91, 55, 78, 33]',
-    expected: [[85, 91, 78], [42, 55, 33]],
+    expected: [
+      [85, 91, 78],
+      [42, 55, 33],
+    ],
     sample: 'scores.partition { |s| s >= 60 }',
-    hints: [
-      'partition splits based on condition',
-      'Returns [passing, failing] arrays',
-    ],
-    validPatterns: [
-      /scores\.partition\s*\{\s*\|(\w+)\|\s*\1\s*>=\s*60\s*\}/,
-    ],
+    hints: ['partition splits based on condition', 'Returns [passing, failing] arrays'],
+    validPatterns: [/scores\.partition\s*\{\s*\|(\w+)\|\s*\1\s*>=\s*60\s*\}/],
     tags: ['partition', 'filter', 'scores'],
   },
 
@@ -1072,12 +1073,9 @@ export const rubyProblems: Problem[] = [
     text: 'Use `group_by` to group words by their first letter (lowercase).',
     setup: 'words = ["Apple", "Banana", "apricot", "Blueberry", "cherry"]',
     setupCode: 'words = ["Apple", "Banana", "apricot", "Blueberry", "cherry"]',
-    expected: { 'a': ['Apple', 'apricot'], 'b': ['Banana', 'Blueberry'], 'c': ['cherry'] },
+    expected: { a: ['Apple', 'apricot'], b: ['Banana', 'Blueberry'], c: ['cherry'] },
     sample: 'words.group_by { |w| w[0].downcase }',
-    hints: [
-      'Access first character with [0]',
-      'Use downcase for case-insensitive grouping',
-    ],
+    hints: ['Access first character with [0]', 'Use downcase for case-insensitive grouping'],
     validPatterns: [
       /words\.group_by\s*\{\s*\|(\w+)\|\s*\1\[0\]\.downcase\s*\}/,
       /words\.group_by\s*\{\s*\|(\w+)\|\s*\1\.chr\.downcase\s*\}/,
@@ -1121,10 +1119,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'numbers = [10, 20, 30, 40]',
     expected: [0, 20, 60, 120],
     sample: 'numbers.collect.with_index { |n, i| n * i }',
-    hints: [
-      'Chain with_index after collect',
-      'Block receives element and index',
-    ],
+    hints: ['Chain with_index after collect', 'Block receives element and index'],
     validPatterns: [
       /numbers\.collect\.with_index\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\*\s*\2\s*\}/,
       /numbers\.map\.with_index\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\*\s*\2\s*\}/,
@@ -1148,14 +1143,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "I have 3 cats and 2 dogs"',
     expected: ['3', '2'],
     sample: 'text.scan(/\\d+/)',
-    hints: [
-      'scan returns all regex matches as array',
-      'Use \\d+ to match digits',
-    ],
-    validPatterns: [
-      /text\.scan\s*\(\s*\/\\d\+\/\s*\)/,
-      /text\.scan\s*\(\s*\/\[0-9\]\+\/\s*\)/,
-    ],
+    hints: ['scan returns all regex matches as array', 'Use \\d+ to match digits'],
+    validPatterns: [/text\.scan\s*\(\s*\/\\d\+\/\s*\)/, /text\.scan\s*\(\s*\/\[0-9\]\+\/\s*\)/],
     tags: ['scan', 'regex', 'extract'],
   },
   {
@@ -1190,10 +1179,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'email = "user@example.com"',
     expected: 'example.com',
     sample: 'email.match(/@(.+)/)[1]',
-    hints: [
-      'match returns MatchData object',
-      'Use capturing group and index [1]',
-    ],
+    hints: ['match returns MatchData object', 'Use capturing group and index [1]'],
     validPatterns: [
       /email\.match\s*\(\s*\/@\(\.\+\)\/\s*\)\s*\[1\]/,
       /email\.match\s*\(\s*\/@\(\[^@\]\+\)\/\s*\)\s*\[1\]/,
@@ -1214,10 +1200,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "heeellooo   woorrld"',
     expected: 'helo world',
     sample: 'text.squeeze',
-    hints: [
-      'squeeze reduces runs of same character to one',
-      'Works on all characters by default',
-    ],
+    hints: ['squeeze reduces runs of same character to one', 'Works on all characters by default'],
     validPatterns: [/text\.squeeze\b/],
     tags: ['squeeze', 'duplicates', 'compress'],
   },
@@ -1231,13 +1214,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "hello    world   ruby"',
     expected: 'hello world ruby',
     sample: 'text.squeeze(" ")',
-    hints: [
-      'Pass character to squeeze as argument',
-      'Only that character will be squeezed',
-    ],
-    validPatterns: [
-      /text\.squeeze\s*\(\s*["'] ["']\s*\)/,
-    ],
+    hints: ['Pass character to squeeze as argument', 'Only that character will be squeezed'],
+    validPatterns: [/text\.squeeze\s*\(\s*["'] ["']\s*\)/],
     tags: ['squeeze', 'spaces', 'normalize'],
   },
 
@@ -1257,9 +1235,7 @@ export const rubyProblems: Problem[] = [
       'Use \\b for word boundary',
       'Block receives matched text',
     ],
-    validPatterns: [
-      /text\.gsub\s*\(\s*\/.*r.*\/[i]?\s*\)\s*\{\s*\|(\w+)\|\s*\1\.upcase\s*\}/,
-    ],
+    validPatterns: [/text\.gsub\s*\(\s*\/.*r.*\/[i]?\s*\)\s*\{\s*\|(\w+)\|\s*\1\.upcase\s*\}/],
     tags: ['gsub', 'block', 'transform', 'regex'],
   },
 
@@ -1274,10 +1250,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'filename = "document.txt"',
     expected: 'document',
     sample: 'filename.chomp(".txt")',
-    hints: [
-      'chomp can take a suffix argument',
-      'Only removes if string ends with that suffix',
-    ],
+    hints: ['chomp can take a suffix argument', 'Only removes if string ends with that suffix'],
     validPatterns: [
       /filename\.chomp\s*\(\s*["']\.txt["']\s*\)/,
       /filename\.delete_suffix\s*\(\s*["']\.txt["']\s*\)/,
@@ -1298,15 +1271,14 @@ export const rubyProblems: Problem[] = [
     text: 'Use `zip` to combine two arrays into pairs.',
     setup: 'names = ["Alice", "Bob", "Carol"]\nages = [25, 30, 35]',
     setupCode: 'names = ["Alice", "Bob", "Carol"]\nages = [25, 30, 35]',
-    expected: [['Alice', 25], ['Bob', 30], ['Carol', 35]],
+    expected: [
+      ['Alice', 25],
+      ['Bob', 30],
+      ['Carol', 35],
+    ],
     sample: 'names.zip(ages)',
-    hints: [
-      'zip combines arrays element-wise',
-      'Returns array of pairs',
-    ],
-    validPatterns: [
-      /names\.zip\s*\(\s*ages\s*\)/,
-    ],
+    hints: ['zip combines arrays element-wise', 'Returns array of pairs'],
+    validPatterns: [/names\.zip\s*\(\s*ages\s*\)/],
     tags: ['zip', 'combine', 'pairs'],
   },
   {
@@ -1319,10 +1291,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'keys = [:name, :age, :city]\nvalues = ["Alice", 30, "NYC"]',
     expected: { name: 'Alice', age: 30, city: 'NYC' },
     sample: 'keys.zip(values).to_h',
-    hints: [
-      'zip creates array of pairs',
-      'to_h converts pairs to hash',
-    ],
+    hints: ['zip creates array of pairs', 'to_h converts pairs to hash'],
     validPatterns: [
       /keys\.zip\s*\(\s*values\s*\)\.to_h\b/,
       /Hash\s*\[\s*keys\.zip\s*\(\s*values\s*\)\s*\]/,
@@ -1339,12 +1308,13 @@ export const rubyProblems: Problem[] = [
     text: 'Use `transpose` to swap rows and columns of a 2D array.',
     setup: 'matrix = [[1, 2, 3], [4, 5, 6]]',
     setupCode: 'matrix = [[1, 2, 3], [4, 5, 6]]',
-    expected: [[1, 4], [2, 5], [3, 6]],
-    sample: 'matrix.transpose',
-    hints: [
-      'transpose flips rows and columns',
-      'Works on arrays of equal-length arrays',
+    expected: [
+      [1, 4],
+      [2, 5],
+      [3, 6],
     ],
+    sample: 'matrix.transpose',
+    hints: ['transpose flips rows and columns', 'Works on arrays of equal-length arrays'],
     validPatterns: [/matrix\.transpose\b/],
     tags: ['transpose', 'matrix', '2d'],
   },
@@ -1360,14 +1330,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'letters = ["a", "b", "c", "d"]',
     expected: ['b', 'c', 'd', 'a'],
     sample: 'letters.rotate',
-    hints: [
-      'rotate(1) moves first element to end',
-      'Default rotation is 1',
-    ],
-    validPatterns: [
-      /letters\.rotate\b/,
-      /letters\.rotate\s*\(\s*1\s*\)/,
-    ],
+    hints: ['rotate(1) moves first element to end', 'Default rotation is 1'],
+    validPatterns: [/letters\.rotate\b/, /letters\.rotate\s*\(\s*1\s*\)/],
     tags: ['rotate', 'shift', 'circular'],
   },
   {
@@ -1380,13 +1344,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: [4, 5, 1, 2, 3],
     sample: 'numbers.rotate(-2)',
-    hints: [
-      'Negative argument rotates right',
-      'rotate(-2) brings last 2 elements to front',
-    ],
-    validPatterns: [
-      /numbers\.rotate\s*\(\s*-2\s*\)/,
-    ],
+    hints: ['Negative argument rotates right', 'rotate(-2) brings last 2 elements to front'],
+    validPatterns: [/numbers\.rotate\s*\(\s*-2\s*\)/],
     tags: ['rotate', 'right', 'negative'],
   },
 
@@ -1401,13 +1360,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'nested = [[1, [2, 3]], [4, [5, 6]]]',
     expected: [1, [2, 3], 4, [5, 6]],
     sample: 'nested.flatten(1)',
-    hints: [
-      'flatten(n) flattens n levels deep',
-      'flatten(1) only removes one nesting level',
-    ],
-    validPatterns: [
-      /nested\.flatten\s*\(\s*1\s*\)/,
-    ],
+    hints: ['flatten(n) flattens n levels deep', 'flatten(1) only removes one nesting level'],
+    validPatterns: [/nested\.flatten\s*\(\s*1\s*\)/],
     tags: ['flatten', 'depth', 'nested'],
   },
 
@@ -1426,10 +1380,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'codes = { a: 1, b: 2, c: 3 }',
     expected: { 1: ':a', 2: ':b', 3: ':c' },
     sample: 'codes.invert',
-    hints: [
-      'invert swaps keys and values',
-      'Original values become new keys',
-    ],
+    hints: ['invert swaps keys and values', 'Original values become new keys'],
     validPatterns: [/codes\.invert\b/],
     tags: ['invert', 'swap', 'reverse'],
   },
@@ -1443,12 +1394,9 @@ export const rubyProblems: Problem[] = [
     text: 'Use `transform_keys` to convert all symbol keys to strings.',
     setup: 'person = { name: "Alice", age: 30 }',
     setupCode: 'person = { name: "Alice", age: 30 }',
-    expected: { 'name': 'Alice', 'age': 30 },
+    expected: { name: 'Alice', age: 30 },
     sample: 'person.transform_keys(&:to_s)',
-    hints: [
-      'transform_keys applies block to each key',
-      'Use &:to_s for symbol to string',
-    ],
+    hints: ['transform_keys applies block to each key', 'Use &:to_s for symbol to string'],
     validPatterns: [
       /person\.transform_keys\s*\(\s*&:to_s\s*\)/,
       /person\.transform_keys\s*\{\s*\|(\w+)\|\s*\1\.to_s\s*\}/,
@@ -1467,13 +1415,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'scores = { alice: 10, bob: 15, carol: 20 }',
     expected: { alice: 20, bob: 30, carol: 40 },
     sample: 'scores.transform_values { |v| v * 2 }',
-    hints: [
-      'transform_values applies block to each value',
-      'Keys remain unchanged',
-    ],
-    validPatterns: [
-      /scores\.transform_values\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*2\s*\}/,
-    ],
+    hints: ['transform_values applies block to each value', 'Keys remain unchanged'],
+    validPatterns: [/scores\.transform_values\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*2\s*\}/],
     tags: ['transform_values', 'values', 'multiply'],
   },
 
@@ -1488,13 +1431,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'person = { name: "Alice", age: 30, city: "NYC", job: "Engineer" }',
     expected: { name: 'Alice', age: 30 },
     sample: 'person.slice(:name, :age)',
-    hints: [
-      'slice returns new hash with only specified keys',
-      'Pass multiple keys as arguments',
-    ],
-    validPatterns: [
-      /person\.slice\s*\(\s*:name,\s*:age\s*\)/,
-    ],
+    hints: ['slice returns new hash with only specified keys', 'Pass multiple keys as arguments'],
+    validPatterns: [/person\.slice\s*\(\s*:name,\s*:age\s*\)/],
     tags: ['slice', 'subset', 'extract'],
   },
 
@@ -1513,10 +1451,7 @@ export const rubyProblems: Problem[] = [
     setupCode: '# Use map with a block that squares numbers',
     expected: [1, 4, 9],
     sample: '[1, 2, 3].map { |n| n ** 2 }',
-    hints: [
-      'Blocks are code between { } or do/end',
-      'map yields each element to the block',
-    ],
+    hints: ['Blocks are code between { } or do/end', 'map yields each element to the block'],
     validPatterns: [
       /\[1,\s*2,\s*3\]\.map\s*\{\s*\|(\w+)\|\s*\1\s*\*\*\s*2\s*\}/,
       /\[1,\s*2,\s*3\]\.map\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*\1\s*\}/,
@@ -1535,10 +1470,7 @@ export const rubyProblems: Problem[] = [
     setupCode: '# Create a Proc that doubles, then call with 5',
     expected: 10,
     sample: 'doubler = Proc.new { |n| n * 2 }; doubler.call(5)',
-    hints: [
-      'Proc.new creates a proc object',
-      'Call proc with .call(arg)',
-    ],
+    hints: ['Proc.new creates a proc object', 'Call proc with .call(arg)'],
     validPatterns: [
       /Proc\.new\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*2\s*\}.*\.call\s*\(\s*5\s*\)/,
       /proc\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*2\s*\}.*\.call\s*\(\s*5\s*\)/,
@@ -1579,13 +1511,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: ['1', '2', '3', '4', '5'],
     sample: 'numbers.map(&:to_s)',
-    hints: [
-      '&:method_name converts symbol to proc',
-      'Equivalent to { |x| x.method_name }',
-    ],
-    validPatterns: [
-      /numbers\.map\s*\(\s*&:to_s\s*\)/,
-    ],
+    hints: ['&:method_name converts symbol to proc', 'Equivalent to { |x| x.method_name }'],
+    validPatterns: [/numbers\.map\s*\(\s*&:to_s\s*\)/],
     tags: ['symbol_to_proc', 'map', 'shorthand'],
   },
 
@@ -1600,14 +1527,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3]',
     expected: [3, 5, 7],
     sample: 'numbers.map { |n| n * 2 }.tap { |arr| p arr }.map { |n| n + 1 }',
-    hints: [
-      'tap yields self to block and returns self',
-      'Useful for debugging method chains',
-    ],
-    validPatterns: [
-      /\.tap\s*\{.*\}.*\.map\s*\{/,
-      /numbers\.map\s*\{.*\}\.map\s*\{.*\+\s*1/,
-    ],
+    hints: ['tap yields self to block and returns self', 'Useful for debugging method chains'],
+    validPatterns: [/\.tap\s*\{.*\}.*\.map\s*\{/, /numbers\.map\s*\{.*\}\.map\s*\{.*\+\s*1/],
     tags: ['tap', 'debug', 'chain'],
   },
 
@@ -1629,13 +1550,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "ruby"',
     expected: '   ruby    ',
     sample: 'text.center(11)',
-    hints: [
-      'center pads both sides equally',
-      'Default padding character is space',
-    ],
-    validPatterns: [
-      /text\.center\s*\(\s*11\s*\)/,
-    ],
+    hints: ['center pads both sides equally', 'Default padding character is space'],
+    validPatterns: [/text\.center\s*\(\s*11\s*\)/],
     tags: ['center', 'padding', 'alignment'],
   },
   {
@@ -1648,13 +1564,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "hi"',
     expected: '****hi****',
     sample: 'text.center(10, "*")',
-    hints: [
-      'Pass second argument for custom padding',
-      'Padding character can be any string',
-    ],
-    validPatterns: [
-      /text\.center\s*\(\s*10,\s*["']\*["']\s*\)/,
-    ],
+    hints: ['Pass second argument for custom padding', 'Padding character can be any string'],
+    validPatterns: [/text\.center\s*\(\s*10,\s*["']\*["']\s*\)/],
     tags: ['center', 'padding', 'custom'],
   },
 
@@ -1669,13 +1580,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "ruby"',
     expected: 'ruby      ',
     sample: 'text.ljust(10)',
-    hints: [
-      'ljust pads on the right side',
-      'String stays on the left',
-    ],
-    validPatterns: [
-      /text\.ljust\s*\(\s*10\s*\)/,
-    ],
+    hints: ['ljust pads on the right side', 'String stays on the left'],
+    validPatterns: [/text\.ljust\s*\(\s*10\s*\)/],
     tags: ['ljust', 'padding', 'alignment'],
   },
   {
@@ -1688,13 +1594,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'item = "Price"',
     expected: 'Price..........',
     sample: 'item.ljust(15, ".")',
-    hints: [
-      'Second argument specifies padding character',
-      'Useful for creating formatted output',
-    ],
-    validPatterns: [
-      /item\.ljust\s*\(\s*15,\s*["']\.["']\s*\)/,
-    ],
+    hints: ['Second argument specifies padding character', 'Useful for creating formatted output'],
+    validPatterns: [/item\.ljust\s*\(\s*15,\s*["']\.["']\s*\)/],
     tags: ['ljust', 'padding', 'format'],
   },
 
@@ -1709,13 +1610,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'num = "42"',
     expected: '00042',
     sample: 'num.rjust(5, "0")',
-    hints: [
-      'rjust pads on the left side',
-      'Common for zero-padding numbers',
-    ],
-    validPatterns: [
-      /num\.rjust\s*\(\s*5,\s*["']0["']\s*\)/,
-    ],
+    hints: ['rjust pads on the left side', 'Common for zero-padding numbers'],
+    validPatterns: [/num\.rjust\s*\(\s*5,\s*["']0["']\s*\)/],
     tags: ['rjust', 'padding', 'zero-pad'],
   },
 
@@ -1730,10 +1626,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "hello world"',
     expected: 'hll wrld',
     sample: 'text.delete("aeiou")',
-    hints: [
-      'delete removes all characters in the argument',
-      'Pass all vowels as a single string',
-    ],
+    hints: ['delete removes all characters in the argument', 'Pass all vowels as a single string'],
     validPatterns: [
       /text\.delete\s*\(\s*["']aeiou["']\s*\)/,
       /text\.delete\s*\(\s*["']aeiouAEIOU["']\s*\)/,
@@ -1771,7 +1664,11 @@ export const rubyProblems: Problem[] = [
     text: 'Use `scan` with capture groups to extract key-value pairs.',
     setup: 'text = "name=Alice, age=30, city=NYC"',
     setupCode: 'text = "name=Alice, age=30, city=NYC"',
-    expected: [['name', 'Alice'], ['age', '30'], ['city', 'NYC']],
+    expected: [
+      ['name', 'Alice'],
+      ['age', '30'],
+      ['city', 'NYC'],
+    ],
     sample: 'text.scan(/(\\w+)=(\\w+)/)',
     hints: [
       'Capture groups () in regex return nested arrays',
@@ -1800,7 +1697,7 @@ export const rubyProblems: Problem[] = [
       'Access captured values with [:name] or .captures',
     ],
     validPatterns: [
-      /date\.match\s*\(.*\?\<year\>.*\)\s*\[\s*:year\s*\]/,
+      /date\.match\s*\(.*\?<year>.*\)\s*\[\s*:year\s*\]/,
       /date\.match\s*\(.*\)\s*\[\s*1\s*\]/,
       /date\.split\s*\(\s*["']-["']\s*\)\s*\[\s*0\s*\]/,
     ],
@@ -1818,14 +1715,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "hello123world"',
     expected: 5,
     sample: 'text =~ /\\d/',
-    hints: [
-      '=~ returns the index of first match',
-      'Returns nil if no match found',
-    ],
-    validPatterns: [
-      /text\s*=~\s*\/\\d\//,
-      /text\s*=~\s*\/\[0-9\]\//,
-    ],
+    hints: ['=~ returns the index of first match', 'Returns nil if no match found'],
+    validPatterns: [/text\s*=~\s*\/\\d\//, /text\s*=~\s*\/\[0-9\]\//],
     tags: ['=~', 'match', 'index', 'regex'],
   },
 
@@ -1840,13 +1731,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "I have 3 cats and 5 dogs"',
     expected: 'I have 6 cats and 10 dogs',
     sample: 'text.gsub(/\\d+/) { |n| (n.to_i * 2).to_s }',
-    hints: [
-      'Block receives matched string',
-      'Convert to integer, double, convert back to string',
-    ],
-    validPatterns: [
-      /text\.gsub\s*\(\s*\/\\d\+\/\s*\)\s*\{\s*\|(\w+)\|.*\.to_i\s*\*\s*2/,
-    ],
+    hints: ['Block receives matched string', 'Convert to integer, double, convert back to string'],
+    validPatterns: [/text\.gsub\s*\(\s*\/\\d\+\/\s*\)\s*\{\s*\|(\w+)\|.*\.to_i\s*\*\s*2/],
     tags: ['gsub', 'block', 'transform', 'numbers'],
   },
   {
@@ -1883,10 +1769,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "hello"',
     expected: 2,
     sample: 'count = 0; text.each_char { |c| count += 1 if "aeiou".include?(c) }; count',
-    hints: [
-      'each_char yields each character',
-      'Check if character is in vowels string',
-    ],
+    hints: ['each_char yields each character', 'Check if character is in vowels string'],
     validPatterns: [
       /text\.each_char\s*\{/,
       /text\.chars\.count\s*\{.*aeiou/,
@@ -1905,7 +1788,8 @@ export const rubyProblems: Problem[] = [
     setup: 'text = "hello\\n\\nworld\\n\\nruby"',
     setupCode: 'text = "hello\\n\\nworld\\n\\nruby"',
     expected: ['hello', 'world', 'ruby'],
-    sample: 'result = []; text.each_line { |line| result << line.strip unless line.strip.empty? }; result',
+    sample:
+      'result = []; text.each_line { |line| result << line.strip unless line.strip.empty? }; result',
     hints: [
       'each_line yields each line including newline',
       'Use strip to remove whitespace',
@@ -1930,10 +1814,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'name = "Alice"\nage = 30',
     expected: 'Name: Alice, Age: 30',
     sample: '"Name: %s, Age: %d" % [name, age]',
-    hints: [
-      '% operator uses printf-style format specifiers',
-      '%s for strings, %d for integers',
-    ],
+    hints: ['% operator uses printf-style format specifiers', '%s for strings, %d for integers'],
     validPatterns: [
       /["'].*%s.*%d.*["']\s*%\s*\[\s*name,\s*age\s*\]/,
       /["'].*%\{.*\}.*["']\s*%\s*\{/,
@@ -1950,10 +1831,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'price = 19.99567',
     expected: 'Price: $19.99',
     sample: '"Price: $%.2f" % price',
-    hints: [
-      '%.2f formats float with 2 decimal places',
-      'Rounds the value automatically',
-    ],
+    hints: ['%.2f formats float with 2 decimal places', 'Rounds the value automatically'],
     validPatterns: [
       /["'].*%\.2f.*["']\s*%\s*price/,
       /sprintf\s*\(\s*["'].*%\.2f.*["'],\s*price\s*\)/,
@@ -1970,13 +1848,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'data = { name: "Ruby", version: 3.2 }',
     expected: 'Language: Ruby v3.2',
     sample: '"Language: %{name} v%{version}" % data',
-    hints: [
-      '%{key} uses named placeholders',
-      'Hash keys must match placeholder names',
-    ],
-    validPatterns: [
-      /["'].*%\{name\}.*%\{version\}.*["']\s*%\s*data/,
-    ],
+    hints: ['%{key} uses named placeholders', 'Hash keys must match placeholder names'],
+    validPatterns: [/["'].*%\{name\}.*%\{version\}.*["']\s*%\s*data/],
     tags: ['%', 'format', 'named', 'hash'],
   },
 
@@ -1991,14 +1864,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "hello"',
     expected: 'UTF-8',
     sample: 'text.encoding.to_s',
-    hints: [
-      'encoding returns an Encoding object',
-      'Use to_s or name to get string representation',
-    ],
-    validPatterns: [
-      /text\.encoding\.to_s/,
-      /text\.encoding\.name/,
-    ],
+    hints: ['encoding returns an Encoding object', 'Use to_s or name to get string representation'],
+    validPatterns: [/text\.encoding\.to_s/, /text\.encoding\.name/],
     tags: ['encoding', 'utf-8', 'charset'],
   },
   {
@@ -2038,10 +1905,7 @@ export const rubyProblems: Problem[] = [
       'Squiggly heredoc strips leading whitespace',
       'lines.count gives number of lines',
     ],
-    validPatterns: [
-      /<<[~-]?[A-Z]+/,
-      /<<-?[A-Z]+/,
-    ],
+    validPatterns: [/<<[~-]?[A-Z]+/, /<<-?[A-Z]+/],
     tags: ['heredoc', 'multiline', 'string'],
   },
 
@@ -2060,9 +1924,7 @@ export const rubyProblems: Problem[] = [
       '#{} can contain any Ruby expression',
       'Expression is evaluated and converted to string',
     ],
-    validPatterns: [
-      /"#\{a\}\s*\+\s*#\{b\}\s*=\s*#\{a\s*\+\s*b\}"/,
-    ],
+    validPatterns: [/"#\{a\}\s*\+\s*#\{b\}\s*=\s*#\{a\s*\+\s*b\}"/],
     tags: ['interpolation', 'expression', 'embed'],
   },
   {
@@ -2075,13 +1937,8 @@ export const rubyProblems: Problem[] = [
     setupCode: 'items = ["apple", "banana", "cherry"]',
     expected: 'Total: 3 items',
     sample: '"Total: #{items.length} items"',
-    hints: [
-      'Any method can be called inside #{}',
-      'Result is automatically converted to string',
-    ],
-    validPatterns: [
-      /".*#\{items\.(length|size|count)\}.*"/,
-    ],
+    hints: ['Any method can be called inside #{}', 'Result is automatically converted to string'],
+    validPatterns: [/".*#\{items\.(length|size|count)\}.*"/],
     tags: ['interpolation', 'method', 'call'],
   },
 
@@ -2101,10 +1958,7 @@ export const rubyProblems: Problem[] = [
       'Use .string to get the written content',
       'chomp removes trailing newline from puts',
     ],
-    validPatterns: [
-      /StringIO\.new.*\.puts.*\.string/,
-      /StringIO\.new.*<<.*\.string/,
-    ],
+    validPatterns: [/StringIO\.new.*\.puts.*\.string/, /StringIO\.new.*<<.*\.string/],
     tags: ['StringIO', 'io', 'buffer', 'capture'],
   },
   {
@@ -2140,10 +1994,7 @@ export const rubyProblems: Problem[] = [
     setupCode: 'text = "heeelllo   wooorld"',
     expected: 'helo   world',
     sample: 'text.squeeze("a-z")',
-    hints: [
-      'squeeze accepts character ranges',
-      'Only specified characters are squeezed',
-    ],
+    hints: ['squeeze accepts character ranges', 'Only specified characters are squeezed'],
     validPatterns: [
       /text\.squeeze\s*\(\s*["']a-z["']\s*\)/,
       /text\.squeeze\s*\(\s*["']a-zA-Z["']\s*\)/,
@@ -2165,16 +2016,14 @@ export const rubyProblems: Problem[] = [
     text: 'Use `each_with_object` to create a hash mapping each word to its length.',
     setup: 'words = ["cat", "elephant", "dog"]',
     setupCode: 'words = ["cat", "elephant", "dog"]',
-    expected: { 'cat': 3, 'elephant': 8, 'dog': 3 },
+    expected: { cat: 3, elephant: 8, dog: 3 },
     sample: 'words.each_with_object({}) { |word, hash| hash[word] = word.length }',
     hints: [
       'each_with_object passes an accumulator to each iteration',
       'The accumulator is the second block parameter',
       'Returns the accumulator after all iterations',
     ],
-    validPatterns: [
-      /words\.each_with_object\s*\(\s*\{\s*\}\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|/,
-    ],
+    validPatterns: [/words\.each_with_object\s*\(\s*\{\s*\}\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|/],
     tags: ['each_with_object', 'hash', 'accumulator'],
   },
   {
@@ -2192,9 +2041,7 @@ export const rubyProblems: Problem[] = [
       'Use << to append transformed elements',
       'Returns the modified array after iteration',
     ],
-    validPatterns: [
-      /numbers\.each_with_object\s*\(\s*\[\s*\]\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|/,
-    ],
+    validPatterns: [/numbers\.each_with_object\s*\(\s*\[\s*\]\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|/],
     tags: ['each_with_object', 'array', 'transform'],
   },
   {
@@ -2213,9 +2060,7 @@ export const rubyProblems: Problem[] = [
       'Use ternary operator or if/else in block',
       'Append to the appropriate array based on condition',
     ],
-    validPatterns: [
-      /numbers\.each_with_object\s*\(\s*\{\s*even:.*odd:.*\}\s*\)\s*\{/,
-    ],
+    validPatterns: [/numbers\.each_with_object\s*\(\s*\{\s*even:.*odd:.*\}\s*\)\s*\{/],
     tags: ['each_with_object', 'grouping', 'conditional'],
   },
 
@@ -2228,7 +2073,7 @@ export const rubyProblems: Problem[] = [
     text: 'Use `tally` to count occurrences of each fruit.',
     setup: 'fruits = ["apple", "banana", "apple", "cherry", "banana", "apple"]',
     setupCode: 'fruits = ["apple", "banana", "apple", "cherry", "banana", "apple"]',
-    expected: { 'apple': 3, 'banana': 2, 'cherry': 1 },
+    expected: { apple: 3, banana: 2, cherry: 1 },
     sample: 'fruits.tally',
     hints: [
       'tally returns a hash of element counts',
@@ -2246,17 +2091,14 @@ export const rubyProblems: Problem[] = [
     text: 'Count words by their first letter using `map` and `tally`.',
     setup: 'words = ["apple", "ant", "bear", "banana", "cat"]',
     setupCode: 'words = ["apple", "ant", "bear", "banana", "cat"]',
-    expected: { 'a': 2, 'b': 2, 'c': 1 },
+    expected: { a: 2, b: 2, c: 1 },
     sample: 'words.map { |w| w[0] }.tally',
     hints: [
       'First transform elements with map',
       'Then tally the transformed values',
       'Chain map and tally together',
     ],
-    validPatterns: [
-      /words\.map\s*\{.*\[0\].*\}\.tally/,
-      /words\.map\s*\(\s*&:chr\s*\)\.tally/,
-    ],
+    validPatterns: [/words\.map\s*\{.*\[0\].*\}\.tally/, /words\.map\s*\(\s*&:chr\s*\)\.tally/],
     tags: ['tally', 'map', 'transform'],
   },
   {
@@ -2291,7 +2133,12 @@ export const rubyProblems: Problem[] = [
     text: 'Use `chunk` to group consecutive numbers by whether they are even.',
     setup: 'numbers = [1, 3, 2, 4, 5, 7, 6, 8]',
     setupCode: 'numbers = [1, 3, 2, 4, 5, 7, 6, 8]',
-    expected: [[false, [1, 3]], [true, [2, 4]], [false, [5, 7]], [true, [6, 8]]],
+    expected: [
+      [false, [1, 3]],
+      [true, [2, 4]],
+      [false, [5, 7]],
+      [true, [6, 8]],
+    ],
     sample: 'numbers.chunk { |n| n.even? }.to_a',
     hints: [
       'chunk groups consecutive elements with same block value',
@@ -2312,7 +2159,12 @@ export const rubyProblems: Problem[] = [
     text: 'Use `chunk` to group consecutive numbers by positive/negative.',
     setup: 'numbers = [1, 2, -1, -3, 4, 5, -2]',
     setupCode: 'numbers = [1, 2, -1, -3, 4, 5, -2]',
-    expected: [[true, [1, 2]], [false, [-1, -3]], [true, [4, 5]], [false, [-2]]],
+    expected: [
+      [true, [1, 2]],
+      [false, [-1, -3]],
+      [true, [4, 5]],
+      [false, [-2]],
+    ],
     sample: 'numbers.chunk { |n| n > 0 }.to_a',
     hints: [
       'chunk creates runs of elements with same block result',
@@ -2333,16 +2185,18 @@ export const rubyProblems: Problem[] = [
     text: 'Use `chunk_while` to split into ascending runs.',
     setup: 'numbers = [1, 2, 4, 3, 5, 6, 2, 8]',
     setupCode: 'numbers = [1, 2, 4, 3, 5, 6, 2, 8]',
-    expected: [[1, 2, 4], [3, 5, 6], [2, 8]],
+    expected: [
+      [1, 2, 4],
+      [3, 5, 6],
+      [2, 8],
+    ],
     sample: 'numbers.chunk_while { |a, b| a < b }.to_a',
     hints: [
       'chunk_while continues a chunk while block returns true',
       'Block receives consecutive pairs of elements',
       'New chunk starts when condition becomes false',
     ],
-    validPatterns: [
-      /numbers\.chunk_while\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*<\s*\2\s*\}\.to_a/,
-    ],
+    validPatterns: [/numbers\.chunk_while\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*<\s*\2\s*\}\.to_a/],
     tags: ['chunk_while', 'ascending', 'consecutive'],
   },
   {
@@ -2376,7 +2230,11 @@ export const rubyProblems: Problem[] = [
     text: 'Use `slice_before` to start a new slice before each negative number.',
     setup: 'numbers = [1, 2, -1, 3, 4, -2, 5]',
     setupCode: 'numbers = [1, 2, -1, 3, 4, -2, 5]',
-    expected: [[1, 2], [-1, 3, 4], [-2, 5]],
+    expected: [
+      [1, 2],
+      [-1, 3, 4],
+      [-2, 5],
+    ],
     sample: 'numbers.slice_before { |n| n < 0 }.to_a',
     hints: [
       'slice_before starts new slice when block is true',
@@ -2418,7 +2276,11 @@ export const rubyProblems: Problem[] = [
     text: 'Use `slice_when` to split when gap > 1 between consecutive numbers.',
     setup: 'numbers = [1, 2, 3, 6, 7, 10, 11, 12]',
     setupCode: 'numbers = [1, 2, 3, 6, 7, 10, 11, 12]',
-    expected: [[1, 2, 3], [6, 7], [10, 11, 12]],
+    expected: [
+      [1, 2, 3],
+      [6, 7],
+      [10, 11, 12],
+    ],
     sample: 'numbers.slice_when { |a, b| b - a > 1 }.to_a',
     hints: [
       'slice_when splits when block returns true',
@@ -2533,9 +2395,7 @@ export const rubyProblems: Problem[] = [
       'Returns an Enumerator',
       'Use to_a to convert to array',
     ],
-    validPatterns: [
-      /items\.cycle\s*\(\s*3\s*\)\.to_a/,
-    ],
+    validPatterns: [/items\.cycle\s*\(\s*3\s*\)\.to_a/],
     tags: ['cycle', 'repeat', 'finite'],
   },
 
@@ -2653,16 +2513,19 @@ export const rubyProblems: Problem[] = [
     text: 'Use `each_cons` to get all consecutive pairs of elements.',
     setup: 'numbers = [1, 2, 3, 4, 5]',
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
-    expected: [[1, 2], [2, 3], [3, 4], [4, 5]],
+    expected: [
+      [1, 2],
+      [2, 3],
+      [3, 4],
+      [4, 5],
+    ],
     sample: 'numbers.each_cons(2).to_a',
     hints: [
       'each_cons(n) yields overlapping slices of n elements',
       'Each slice shares n-1 elements with the next',
       'Returns an Enumerator, use to_a to collect',
     ],
-    validPatterns: [
-      /numbers\.each_cons\s*\(\s*2\s*\)\.to_a/,
-    ],
+    validPatterns: [/numbers\.each_cons\s*\(\s*2\s*\)\.to_a/],
     tags: ['each_cons', 'consecutive', 'sliding_window'],
   },
   {
@@ -2680,9 +2543,7 @@ export const rubyProblems: Problem[] = [
       'Last slice may have fewer than n elements',
       'Useful for batch processing',
     ],
-    validPatterns: [
-      /numbers\.each_slice\s*\(\s*3\s*\)\.to_a/,
-    ],
+    validPatterns: [/numbers\.each_slice\s*\(\s*3\s*\)\.to_a/],
     tags: ['each_slice', 'batch', 'chunking'],
   },
 ];

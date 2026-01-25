@@ -82,7 +82,7 @@ export const rProblems: Problem[] = [
     text: 'Find the minimum value in the given vector.',
     setup: 'prices <- c(25.99, 19.99, 34.50, 12.00, 28.75)',
     setupCode: 'prices <- c(25.99, 19.99, 34.50, 12.00, 28.75)',
-    expected: 12.00,
+    expected: 12.0,
     sample: 'min(prices)',
     hints: ['Use the min() function', 'It returns the smallest element'],
     validPatterns: [/min\s*\(/],
@@ -448,7 +448,10 @@ export const rProblems: Problem[] = [
     setupCode: 'items <- list(a = 1:5, b = 1:10, c = 1:3)',
     expected: { a: 5, b: 10, c: 3 },
     sample: 'lapply(items, length)',
-    hints: ['Use lapply() to apply a function to each element', 'First arg is list, second is function'],
+    hints: [
+      'Use lapply() to apply a function to each element',
+      'First arg is list, second is function',
+    ],
     validPatterns: [/lapply\s*\(/],
     tags: ['lists', 'lapply', 'apply'],
   },
@@ -706,8 +709,10 @@ export const rProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Merge Two Data Frames',
     text: 'Merge the two data frames by the common "id" column.',
-    setup: 'df1 <- data.frame(id = 1:3, name = c("A", "B", "C"))\ndf2 <- data.frame(id = 1:3, score = c(80, 90, 85))',
-    setupCode: 'df1 <- data.frame(id = 1:3, name = c("A", "B", "C"))\ndf2 <- data.frame(id = 1:3, score = c(80, 90, 85))',
+    setup:
+      'df1 <- data.frame(id = 1:3, name = c("A", "B", "C"))\ndf2 <- data.frame(id = 1:3, score = c(80, 90, 85))',
+    setupCode:
+      'df1 <- data.frame(id = 1:3, name = c("A", "B", "C"))\ndf2 <- data.frame(id = 1:3, score = c(80, 90, 85))',
     expected: { id: [1, 2, 3], name: ['A', 'B', 'C'], score: [80, 90, 85] },
     sample: 'merge(df1, df2, by = "id")',
     hints: ['Use the merge() function', 'Specify the common column with by argument'],
@@ -720,8 +725,10 @@ export const rProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Subset with Multiple Conditions',
     text: 'Get rows where age > 20 AND salary > 50000.',
-    setup: 'employees <- data.frame(\n  name = c("Ann", "Bob", "Cat", "Dan"),\n  age = c(25, 19, 32, 28),\n  salary = c(55000, 45000, 72000, 48000)\n)',
-    setupCode: 'employees <- data.frame(\n  name = c("Ann", "Bob", "Cat", "Dan"),\n  age = c(25, 19, 32, 28),\n  salary = c(55000, 45000, 72000, 48000)\n)',
+    setup:
+      'employees <- data.frame(\n  name = c("Ann", "Bob", "Cat", "Dan"),\n  age = c(25, 19, 32, 28),\n  salary = c(55000, 45000, 72000, 48000)\n)',
+    setupCode:
+      'employees <- data.frame(\n  name = c("Ann", "Bob", "Cat", "Dan"),\n  age = c(25, 19, 32, 28),\n  salary = c(55000, 45000, 72000, 48000)\n)',
     expected: { name: ['Ann', 'Cat'], age: [25, 32], salary: [55000, 72000] },
     sample: 'subset(employees, age > 20 & salary > 50000)',
     hints: ['Use & for AND conditions in subset', 'Both conditions must be TRUE'],
@@ -774,7 +781,10 @@ export const rProblems: Problem[] = [
     setupCode: 'payments <- c(100, 200, 150, 300)',
     expected: [100, 300, 450, 750],
     sample: 'cumsum(payments)',
-    hints: ['Use the cumsum() function', 'Each element is sum of all previous elements plus current'],
+    hints: [
+      'Use the cumsum() function',
+      'Each element is sum of all previous elements plus current',
+    ],
     validPatterns: [/cumsum\s*\(/],
     tags: ['vectors', 'cumsum', 'cumulative'],
   },

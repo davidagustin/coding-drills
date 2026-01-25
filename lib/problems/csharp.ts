@@ -1078,7 +1078,8 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Flatten Nested Collections with SelectMany()',
     text: 'Flatten the list of lists into a single list using SelectMany()',
-    setup: 'List<List<int>> nested = new List<List<int>> { new List<int> { 1, 2 }, new List<int> { 3, 4 }, new List<int> { 5 } };',
+    setup:
+      'List<List<int>> nested = new List<List<int>> { new List<int> { 1, 2 }, new List<int> { 3, 4 }, new List<int> { 5 } };',
     setupCode:
       'List<List<int>> nested = new List<List<int>> { new List<int> { 1, 2 }, new List<int> { 3, 4 }, new List<int> { 5 } };',
     expected: '{ 1, 2, 3, 4, 5 }',
@@ -1087,10 +1088,7 @@ export const csharpProblems: Problem[] = [
       'SelectMany() flattens nested collections into one sequence',
       'It projects each element to a sequence and flattens the result',
     ],
-    validPatterns: [
-      /nested\.SelectMany\s*\(\s*\w+\s*=>\s*\w+\s*\)/,
-      /\.SelectMany\(/,
-    ],
+    validPatterns: [/nested\.SelectMany\s*\(\s*\w+\s*=>\s*\w+\s*\)/, /\.SelectMany\(/],
     tags: ['linq', 'selectmany', 'flatten', 'projection'],
   },
   {
@@ -1107,10 +1105,7 @@ export const csharpProblems: Problem[] = [
       'SelectMany has an overload that provides the index of the source element',
       'You can combine it with Select to create tuples',
     ],
-    validPatterns: [
-      /\.SelectMany\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/,
-      /SelectMany.*Select/,
-    ],
+    validPatterns: [/\.SelectMany\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/, /SelectMany.*Select/],
     tags: ['linq', 'selectmany', 'index', 'advanced'],
   },
   {
@@ -1119,7 +1114,8 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'GroupBy with Key Selector and Count',
     text: 'Group words by their first letter and count how many in each group',
-    setup: 'List<string> words = new List<string> { "apple", "apricot", "banana", "blueberry", "cherry" };',
+    setup:
+      'List<string> words = new List<string> { "apple", "apricot", "banana", "blueberry", "cherry" };',
     setupCode:
       'List<string> words = new List<string> { "apple", "apricot", "banana", "blueberry", "cherry" };',
     expected: '{ (a, 2), (b, 2), (c, 1) }',
@@ -1128,10 +1124,7 @@ export const csharpProblems: Problem[] = [
       'GroupBy returns IGrouping<TKey, TElement> with a Key property',
       'Use Select to project each group into a result',
     ],
-    validPatterns: [
-      /\.GroupBy\s*\(.*\[0\].*\)/,
-      /GroupBy.*\.Select.*Count\(/,
-    ],
+    validPatterns: [/\.GroupBy\s*\(.*\[0\].*\)/, /GroupBy.*\.Select.*Count\(/],
     tags: ['linq', 'groupby', 'count', 'projection'],
   },
   {
@@ -1161,18 +1154,14 @@ export const csharpProblems: Problem[] = [
     title: 'Multi-Level Sorting with OrderBy and ThenBy',
     text: 'Sort people by age ascending, then by name descending',
     setup: 'var people = new[] { ("Alice", 30), ("Bob", 25), ("Charlie", 30), ("Diana", 25) };',
-    setupCode:
-      'var people = new[] { ("Alice", 30), ("Bob", 25), ("Charlie", 30), ("Diana", 25) };',
+    setupCode: 'var people = new[] { ("Alice", 30), ("Bob", 25), ("Charlie", 30), ("Diana", 25) };',
     expected: '{ (Diana, 25), (Bob, 25), (Charlie, 30), (Alice, 30) }',
     sample: 'people.OrderBy(p => p.Item2).ThenByDescending(p => p.Item1)',
     hints: [
       'Use ThenBy or ThenByDescending for secondary sort criteria',
       'OrderBy must come before ThenBy',
     ],
-    validPatterns: [
-      /\.OrderBy\s*\(.*\)\.ThenByDescending\s*\(/,
-      /OrderBy.*ThenByDescending/,
-    ],
+    validPatterns: [/\.OrderBy\s*\(.*\)\.ThenByDescending\s*\(/, /OrderBy.*ThenByDescending/],
     tags: ['linq', 'orderby', 'thenby', 'sorting', 'advanced'],
   },
   {
@@ -1213,10 +1202,7 @@ export const csharpProblems: Problem[] = [
       'String.Format uses {0}, {1}, etc. as placeholders',
       'Consider using string interpolation ($"") for simpler cases',
     ],
-    validPatterns: [
-      /string\.Format\s*\(\s*".*\{0\}.*\{1\}.*"/,
-      /String\.Format/,
-    ],
+    validPatterns: [/string\.Format\s*\(\s*".*\{0\}.*\{1\}.*"/, /String\.Format/],
     tags: ['string', 'format', 'formatting'],
   },
   {
@@ -1233,11 +1219,7 @@ export const csharpProblems: Problem[] = [
       'N2 format specifier adds thousands separator and 2 decimal places',
       'C2 would add currency symbol',
     ],
-    validPatterns: [
-      /string\.Format\s*\(\s*"\{0:N2\}"/,
-      /:N2\}/,
-      /\.ToString\s*\(\s*"N2"\s*\)/,
-    ],
+    validPatterns: [/string\.Format\s*\(\s*"\{0:N2\}"/, /:N2\}/, /\.ToString\s*\(\s*"N2"\s*\)/],
     tags: ['string', 'format', 'number', 'formatting'],
   },
   {
@@ -1254,10 +1236,7 @@ export const csharpProblems: Problem[] = [
       'PadLeft adds padding characters to the left until the total length is reached',
       'If the string is already >= the specified length, no padding is added',
     ],
-    validPatterns: [
-      /\.PadLeft\s*\(\s*10\s*,\s*'0'\s*\)/,
-      /PadLeft\s*\(\s*10/,
-    ],
+    validPatterns: [/\.PadLeft\s*\(\s*10\s*,\s*'0'\s*\)/, /PadLeft\s*\(\s*10/],
     tags: ['string', 'padleft', 'formatting'],
   },
   {
@@ -1274,10 +1253,7 @@ export const csharpProblems: Problem[] = [
       'PadRight adds padding characters to the right until the total length is reached',
       'Useful for creating aligned output',
     ],
-    validPatterns: [
-      /\.PadRight\s*\(\s*15\s*,\s*'\.\'\s*\)/,
-      /PadRight\s*\(\s*15/,
-    ],
+    validPatterns: [/\.PadRight\s*\(\s*15\s*,\s*'\.'\s*\)/, /PadRight\s*\(\s*15/],
     tags: ['string', 'padright', 'formatting'],
   },
   {
@@ -1294,10 +1270,7 @@ export const csharpProblems: Problem[] = [
       'TrimStart removes specified characters from the beginning',
       'Without arguments, it removes whitespace',
     ],
-    validPatterns: [
-      /\.TrimStart\s*\(\s*'0'\s*\)/,
-      /TrimStart.*0/,
-    ],
+    validPatterns: [/\.TrimStart\s*\(\s*'0'\s*\)/, /TrimStart.*0/],
     tags: ['string', 'trimstart', 'trim'],
   },
   {
@@ -1314,10 +1287,7 @@ export const csharpProblems: Problem[] = [
       'TrimEnd removes specified characters from the end',
       'Without arguments, it removes whitespace',
     ],
-    validPatterns: [
-      /\.TrimEnd\s*\(\s*'!'\s*\)/,
-      /TrimEnd.*!/,
-    ],
+    validPatterns: [/\.TrimEnd\s*\(\s*'!'\s*\)/, /TrimEnd.*!/],
     tags: ['string', 'trimend', 'trim'],
   },
   {
@@ -1330,14 +1300,8 @@ export const csharpProblems: Problem[] = [
     setupCode: 'int[] numbers = { 1, 2, 3, 4, 5 };',
     expected: '"1 | 2 | 3 | 4 | 5"',
     sample: 'string.Join(" | ", numbers)',
-    hints: [
-      'String.Join automatically converts elements to strings',
-      'Works with any IEnumerable',
-    ],
-    validPatterns: [
-      /string\.Join\s*\(\s*"\s*\|\s*"/,
-      /String\.Join.*\|/,
-    ],
+    hints: ['String.Join automatically converts elements to strings', 'Works with any IEnumerable'],
+    validPatterns: [/string\.Join\s*\(\s*"\s*\|\s*"/, /String\.Join.*\|/],
     tags: ['string', 'join', 'formatting'],
   },
 
@@ -1358,10 +1322,7 @@ export const csharpProblems: Problem[] = [
       'ConvertAll is a List<T> method similar to Select but returns List<TOutput>',
       'More efficient than Select().ToList() for lists',
     ],
-    validPatterns: [
-      /\.ConvertAll\s*\(.*\.ToString\s*\(\s*\)\s*\)/,
-      /ConvertAll.*ToString/,
-    ],
+    validPatterns: [/\.ConvertAll\s*\(.*\.ToString\s*\(\s*\)\s*\)/, /ConvertAll.*ToString/],
     tags: ['list', 'convertall', 'conversion', 'collections'],
   },
   {
@@ -1378,10 +1339,7 @@ export const csharpProblems: Problem[] = [
       'FindIndex returns -1 if no element matches the predicate',
       'Different from IndexOf which searches for a specific value',
     ],
-    validPatterns: [
-      /\.FindIndex\s*\(\s*\w+\s*=>\s*\w+\s*>\s*20\s*\)/,
-      /FindIndex.*>.*20/,
-    ],
+    validPatterns: [/\.FindIndex\s*\(\s*\w+\s*=>\s*\w+\s*>\s*20\s*\)/, /FindIndex.*>.*20/],
     tags: ['list', 'findindex', 'predicate', 'collections'],
   },
   {
@@ -1418,10 +1376,7 @@ export const csharpProblems: Problem[] = [
       'BinarySearch requires the list to be sorted',
       'Returns bitwise complement of next larger element index if not found',
     ],
-    validPatterns: [
-      /\.BinarySearch\s*\(\s*30\s*\)/,
-      /BinarySearch\(30\)/,
-    ],
+    validPatterns: [/\.BinarySearch\s*\(\s*30\s*\)/, /BinarySearch\(30\)/],
     tags: ['list', 'binarysearch', 'search', 'collections'],
   },
 
@@ -1434,7 +1389,8 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Add if Key Does Not Exist with TryAdd()',
     text: 'Add "cherry" with value 3 only if the key does not exist using TryAdd()',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     setupCode:
       'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: 'true (and fruits now has cherry: 3)',
@@ -1443,10 +1399,7 @@ export const csharpProblems: Problem[] = [
       'TryAdd returns true if added, false if key already exists',
       'Safer than Add which throws if key exists',
     ],
-    validPatterns: [
-      /\.TryAdd\s*\(\s*"cherry"\s*,\s*3\s*\)/,
-      /TryAdd.*cherry.*3/,
-    ],
+    validPatterns: [/\.TryAdd\s*\(\s*"cherry"\s*,\s*3\s*\)/, /TryAdd.*cherry.*3/],
     tags: ['dictionary', 'tryadd', 'collections'],
   },
   {
@@ -1455,7 +1408,8 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Get Value with Custom Default',
     text: 'Get the value for "mango" or -1 if not found using GetValueOrDefault with custom default',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     setupCode:
       'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: '-1',
@@ -1476,7 +1430,8 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'TryGetValue with Pattern Matching',
     text: 'Get the value for "apple" and use it if found, otherwise use 0, using TryGetValue with pattern',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 5, ["banana"] = 3 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 5, ["banana"] = 3 };',
     setupCode:
       'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 5, ["banana"] = 3 };',
     expected: '5',
@@ -1509,10 +1464,7 @@ export const csharpProblems: Problem[] = [
       '?. returns null if the left operand is null',
       'The result type is nullable (int? in this case)',
     ],
-    validPatterns: [
-      /text\?\.Length/,
-      /\?\.Length/,
-    ],
+    validPatterns: [/text\?\.Length/, /\?\.Length/],
     tags: ['nullable', 'conditional', 'null-safe'],
   },
   {
@@ -1529,10 +1481,7 @@ export const csharpProblems: Problem[] = [
       '?? operators can be chained for multiple fallbacks',
       'Evaluation is left-to-right and short-circuits on first non-null',
     ],
-    validPatterns: [
-      /first\s*\?\?\s*second\s*\?\?\s*"default"/,
-      /\?\?.*\?\?/,
-    ],
+    validPatterns: [/first\s*\?\?\s*second\s*\?\?\s*"default"/, /\?\?.*\?\?/],
     tags: ['nullable', 'coalesce', 'chain'],
   },
   {
@@ -1545,14 +1494,8 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int>? numbers = null;',
     expected: 'numbers is now an empty list',
     sample: 'numbers ??= new List<int>();',
-    hints: [
-      '??= only assigns if the variable is null',
-      'Useful for lazy initialization',
-    ],
-    validPatterns: [
-      /numbers\s*\?\?=\s*new\s+List<int>\s*\(\s*\)/,
-      /\?\?=\s*new\s+List/,
-    ],
+    hints: ['??= only assigns if the variable is null', 'Useful for lazy initialization'],
+    validPatterns: [/numbers\s*\?\?=\s*new\s+List<int>\s*\(\s*\)/, /\?\?=\s*new\s+List/],
     tags: ['nullable', 'assignment', 'coalesce'],
   },
   {
@@ -1569,10 +1512,7 @@ export const csharpProblems: Problem[] = [
       '?. can be used before method calls',
       'The entire expression returns null if the object is null',
     ],
-    validPatterns: [
-      /name\?\.ToUpper\s*\(\s*\)/,
-      /\?\.ToUpper\(/,
-    ],
+    validPatterns: [/name\?\.ToUpper\s*\(\s*\)/, /\?\.ToUpper\(/],
     tags: ['nullable', 'conditional', 'method'],
   },
   {
@@ -1589,10 +1529,7 @@ export const csharpProblems: Problem[] = [
       'Combine ?. and ?? for safe navigation with defaults',
       'FirstOrDefault() returns default char for empty strings',
     ],
-    validPatterns: [
-      /\?\..*\?\..*\?\?/,
-      /FirstOrDefault.*\?\?/,
-    ],
+    validPatterns: [/\?\..*\?\..*\?\?/, /FirstOrDefault.*\?\?/],
     tags: ['nullable', 'conditional', 'coalesce', 'chain', 'advanced'],
   },
 
@@ -1643,8 +1580,10 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Combine Sequences with Zip',
     text: 'Pair products with their prices using Zip()',
-    setup: 'string[] products = { "Apple", "Banana", "Cherry" };\ndecimal[] prices = { 1.50m, 0.75m, 2.00m };',
-    setupCode: 'string[] products = { "Apple", "Banana", "Cherry" };\ndecimal[] prices = { 1.50m, 0.75m, 2.00m };',
+    setup:
+      'string[] products = { "Apple", "Banana", "Cherry" };\ndecimal[] prices = { 1.50m, 0.75m, 2.00m };',
+    setupCode:
+      'string[] products = { "Apple", "Banana", "Cherry" };\ndecimal[] prices = { 1.50m, 0.75m, 2.00m };',
     expected: '{ "Apple: $1.50", "Banana: $0.75", "Cherry: $2.00" }',
     sample: 'products.Zip(prices, (p, price) => $"{p}: ${price}")',
     hints: [
@@ -1679,8 +1618,10 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Cast Non-Generic Collection',
     text: 'Convert ArrayList to IEnumerable<string> using Cast<T>()',
-    setup: 'System.Collections.ArrayList list = new System.Collections.ArrayList { "a", "b", "c" };',
-    setupCode: 'System.Collections.ArrayList list = new System.Collections.ArrayList { "a", "b", "c" };',
+    setup:
+      'System.Collections.ArrayList list = new System.Collections.ArrayList { "a", "b", "c" };',
+    setupCode:
+      'System.Collections.ArrayList list = new System.Collections.ArrayList { "a", "b", "c" };',
     expected: 'IEnumerable<string> { "a", "b", "c" }',
     sample: 'list.Cast<string>()',
     hints: [
@@ -1753,10 +1694,14 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'GroupBy with Element Projection',
     text: 'Group students by grade and project to a summary with grade, count, and names',
-    setup: 'var students = new[] { new { Name = "Alice", Grade = "A" }, new { Name = "Bob", Grade = "B" }, new { Name = "Carol", Grade = "A" }, new { Name = "Dave", Grade = "B" }, new { Name = "Eve", Grade = "A" } };',
-    setupCode: 'var students = new[] { new { Name = "Alice", Grade = "A" }, new { Name = "Bob", Grade = "B" }, new { Name = "Carol", Grade = "A" }, new { Name = "Dave", Grade = "B" }, new { Name = "Eve", Grade = "A" } };',
-    expected: '{ { Grade = "A", Count = 3, Names = "Alice, Carol, Eve" }, { Grade = "B", Count = 2, Names = "Bob, Dave" } }',
-    sample: 'students.GroupBy(s => s.Grade).Select(g => new { Grade = g.Key, Count = g.Count(), Names = string.Join(", ", g.Select(s => s.Name)) })',
+    setup:
+      'var students = new[] { new { Name = "Alice", Grade = "A" }, new { Name = "Bob", Grade = "B" }, new { Name = "Carol", Grade = "A" }, new { Name = "Dave", Grade = "B" }, new { Name = "Eve", Grade = "A" } };',
+    setupCode:
+      'var students = new[] { new { Name = "Alice", Grade = "A" }, new { Name = "Bob", Grade = "B" }, new { Name = "Carol", Grade = "A" }, new { Name = "Dave", Grade = "B" }, new { Name = "Eve", Grade = "A" } };',
+    expected:
+      '{ { Grade = "A", Count = 3, Names = "Alice, Carol, Eve" }, { Grade = "B", Count = 2, Names = "Bob, Dave" } }',
+    sample:
+      'students.GroupBy(s => s.Grade).Select(g => new { Grade = g.Key, Count = g.Count(), Names = string.Join(", ", g.Select(s => s.Name)) })',
     hints: [
       'GroupBy returns IEnumerable<IGrouping<TKey, TElement>>',
       'Use g.Key to access the grouping key',
@@ -1771,10 +1716,13 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'GroupBy with Having Equivalent',
     text: 'Group orders by customer and filter to only customers with more than 2 orders',
-    setup: 'var orders = new[] { new { CustomerId = 1, Amount = 100 }, new { CustomerId = 2, Amount = 50 }, new { CustomerId = 1, Amount = 200 }, new { CustomerId = 1, Amount = 150 }, new { CustomerId = 2, Amount = 75 } };',
-    setupCode: 'var orders = new[] { new { CustomerId = 1, Amount = 100 }, new { CustomerId = 2, Amount = 50 }, new { CustomerId = 1, Amount = 200 }, new { CustomerId = 1, Amount = 150 }, new { CustomerId = 2, Amount = 75 } };',
+    setup:
+      'var orders = new[] { new { CustomerId = 1, Amount = 100 }, new { CustomerId = 2, Amount = 50 }, new { CustomerId = 1, Amount = 200 }, new { CustomerId = 1, Amount = 150 }, new { CustomerId = 2, Amount = 75 } };',
+    setupCode:
+      'var orders = new[] { new { CustomerId = 1, Amount = 100 }, new { CustomerId = 2, Amount = 50 }, new { CustomerId = 1, Amount = 200 }, new { CustomerId = 1, Amount = 150 }, new { CustomerId = 2, Amount = 75 } };',
     expected: '{ { CustomerId = 1, OrderCount = 3, Total = 450 } }',
-    sample: 'orders.GroupBy(o => o.CustomerId).Where(g => g.Count() > 2).Select(g => new { CustomerId = g.Key, OrderCount = g.Count(), Total = g.Sum(o => o.Amount) })',
+    sample:
+      'orders.GroupBy(o => o.CustomerId).Where(g => g.Count() > 2).Select(g => new { CustomerId = g.Key, OrderCount = g.Count(), Total = g.Sum(o => o.Amount) })',
     hints: [
       'Use Where after GroupBy for HAVING equivalent',
       'The Where predicate receives IGrouping<TKey, TElement>',
@@ -1789,10 +1737,14 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Inner Join with Method Syntax',
     text: 'Join orders to customers by CustomerId to get customer names with order amounts',
-    setup: 'var customers = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar orders = new[] { new { CustomerId = 1, Amount = 100m }, new { CustomerId = 2, Amount = 200m }, new { CustomerId = 1, Amount = 150m } };',
-    setupCode: 'var customers = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar orders = new[] { new { CustomerId = 1, Amount = 100m }, new { CustomerId = 2, Amount = 200m }, new { CustomerId = 1, Amount = 150m } };',
-    expected: '{ { Customer = "Alice", Amount = 100 }, { Customer = "Alice", Amount = 150 }, { Customer = "Bob", Amount = 200 } }',
-    sample: 'orders.Join(customers, o => o.CustomerId, c => c.Id, (o, c) => new { Customer = c.Name, o.Amount })',
+    setup:
+      'var customers = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar orders = new[] { new { CustomerId = 1, Amount = 100m }, new { CustomerId = 2, Amount = 200m }, new { CustomerId = 1, Amount = 150m } };',
+    setupCode:
+      'var customers = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar orders = new[] { new { CustomerId = 1, Amount = 100m }, new { CustomerId = 2, Amount = 200m }, new { CustomerId = 1, Amount = 150m } };',
+    expected:
+      '{ { Customer = "Alice", Amount = 100 }, { Customer = "Alice", Amount = 150 }, { Customer = "Bob", Amount = 200 } }',
+    sample:
+      'orders.Join(customers, o => o.CustomerId, c => c.Id, (o, c) => new { Customer = c.Name, o.Amount })',
     hints: [
       'Join takes: inner sequence, outer key selector, inner key selector, result selector',
       'Only matching pairs are included (inner join)',
@@ -1807,10 +1759,14 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Group Join for Hierarchical Data',
     text: 'Use GroupJoin to get each category with its list of products',
-    setup: 'var categories = new[] { new { Id = 1, Name = "Fruit" }, new { Id = 2, Name = "Dairy" } };\nvar products = new[] { new { Name = "Apple", CatId = 1 }, new { Name = "Milk", CatId = 2 }, new { Name = "Banana", CatId = 1 } };',
-    setupCode: 'var categories = new[] { new { Id = 1, Name = "Fruit" }, new { Id = 2, Name = "Dairy" } };\nvar products = new[] { new { Name = "Apple", CatId = 1 }, new { Name = "Milk", CatId = 2 }, new { Name = "Banana", CatId = 1 } };',
-    expected: '{ { Category = "Fruit", Products = ["Apple", "Banana"] }, { Category = "Dairy", Products = ["Milk"] } }',
-    sample: 'categories.GroupJoin(products, c => c.Id, p => p.CatId, (c, prods) => new { Category = c.Name, Products = prods.Select(p => p.Name).ToList() })',
+    setup:
+      'var categories = new[] { new { Id = 1, Name = "Fruit" }, new { Id = 2, Name = "Dairy" } };\nvar products = new[] { new { Name = "Apple", CatId = 1 }, new { Name = "Milk", CatId = 2 }, new { Name = "Banana", CatId = 1 } };',
+    setupCode:
+      'var categories = new[] { new { Id = 1, Name = "Fruit" }, new { Id = 2, Name = "Dairy" } };\nvar products = new[] { new { Name = "Apple", CatId = 1 }, new { Name = "Milk", CatId = 2 }, new { Name = "Banana", CatId = 1 } };',
+    expected:
+      '{ { Category = "Fruit", Products = ["Apple", "Banana"] }, { Category = "Dairy", Products = ["Milk"] } }',
+    sample:
+      'categories.GroupJoin(products, c => c.Id, p => p.CatId, (c, prods) => new { Category = c.Name, Products = prods.Select(p => p.Name).ToList() })',
     hints: [
       'GroupJoin groups inner elements by the outer key',
       'Returns all outer elements even without matches',
@@ -1826,9 +1782,11 @@ export const csharpProblems: Problem[] = [
     title: 'Custom Aggregation: Find Longest Word',
     text: 'Use Aggregate to find the longest string in the list',
     setup: 'List<string> words = new List<string> { "cat", "elephant", "dog", "hippopotamus" };',
-    setupCode: 'List<string> words = new List<string> { "cat", "elephant", "dog", "hippopotamus" };',
+    setupCode:
+      'List<string> words = new List<string> { "cat", "elephant", "dog", "hippopotamus" };',
     expected: '"hippopotamus"',
-    sample: 'words.Aggregate((longest, current) => current.Length > longest.Length ? current : longest)',
+    sample:
+      'words.Aggregate((longest, current) => current.Length > longest.Length ? current : longest)',
     hints: [
       'Aggregate applies a function cumulatively to the sequence',
       'Without seed, first element becomes initial accumulator',
@@ -1861,10 +1819,14 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Query Syntax: Join with into',
     text: 'Rewrite the join using LINQ query syntax with the join keyword',
-    setup: 'var authors = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar books = new[] { new { Title = "C# Basics", AuthorId = 1 }, new { Title = "Advanced C#", AuthorId = 1 }, new { Title = "Python 101", AuthorId = 2 } };',
-    setupCode: 'var authors = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar books = new[] { new { Title = "C# Basics", AuthorId = 1 }, new { Title = "Advanced C#", AuthorId = 1 }, new { Title = "Python 101", AuthorId = 2 } };',
-    expected: '{ { Author = "Alice", Title = "C# Basics" }, { Author = "Alice", Title = "Advanced C#" }, { Author = "Bob", Title = "Python 101" } }',
-    sample: 'from a in authors join b in books on a.Id equals b.AuthorId select new { Author = a.Name, b.Title }',
+    setup:
+      'var authors = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar books = new[] { new { Title = "C# Basics", AuthorId = 1 }, new { Title = "Advanced C#", AuthorId = 1 }, new { Title = "Python 101", AuthorId = 2 } };',
+    setupCode:
+      'var authors = new[] { new { Id = 1, Name = "Alice" }, new { Id = 2, Name = "Bob" } };\nvar books = new[] { new { Title = "C# Basics", AuthorId = 1 }, new { Title = "Advanced C#", AuthorId = 1 }, new { Title = "Python 101", AuthorId = 2 } };',
+    expected:
+      '{ { Author = "Alice", Title = "C# Basics" }, { Author = "Alice", Title = "Advanced C#" }, { Author = "Bob", Title = "Python 101" } }',
+    sample:
+      'from a in authors join b in books on a.Id equals b.AuthorId select new { Author = a.Name, b.Title }',
     hints: [
       'Query syntax uses "join ... on ... equals ..."',
       'The equals keyword is required (not ==)',
@@ -1881,8 +1843,10 @@ export const csharpProblems: Problem[] = [
     text: 'Group numbers by their tens digit using query syntax with group ... by ... into',
     setup: 'int[] numbers = { 5, 15, 25, 12, 32, 45, 48 };',
     setupCode: 'int[] numbers = { 5, 15, 25, 12, 32, 45, 48 };',
-    expected: '{ { Tens = 0, Numbers = [5] }, { Tens = 1, Numbers = [15, 12] }, { Tens = 2, Numbers = [25] }, { Tens = 3, Numbers = [32] }, { Tens = 4, Numbers = [45, 48] } }',
-    sample: 'from n in numbers group n by n / 10 into g select new { Tens = g.Key, Numbers = g.ToList() }',
+    expected:
+      '{ { Tens = 0, Numbers = [5] }, { Tens = 1, Numbers = [15, 12] }, { Tens = 2, Numbers = [25] }, { Tens = 3, Numbers = [32] }, { Tens = 4, Numbers = [45, 48] } }',
+    sample:
+      'from n in numbers group n by n / 10 into g select new { Tens = g.Key, Numbers = g.ToList() }',
     hints: [
       'Use "group ... by ... into ..." for query continuation',
       'The "into" keyword creates a new range variable for the group',
@@ -1897,10 +1861,13 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Query Syntax: Let Clause for Computed Values',
     text: 'Use let clause to compute total price and filter expensive items',
-    setup: 'var items = new[] { new { Name = "A", Qty = 2, Price = 10m }, new { Name = "B", Qty = 5, Price = 3m }, new { Name = "C", Qty = 1, Price = 50m } };',
-    setupCode: 'var items = new[] { new { Name = "A", Qty = 2, Price = 10m }, new { Name = "B", Qty = 5, Price = 3m }, new { Name = "C", Qty = 1, Price = 50m } };',
+    setup:
+      'var items = new[] { new { Name = "A", Qty = 2, Price = 10m }, new { Name = "B", Qty = 5, Price = 3m }, new { Name = "C", Qty = 1, Price = 50m } };',
+    setupCode:
+      'var items = new[] { new { Name = "A", Qty = 2, Price = 10m }, new { Name = "B", Qty = 5, Price = 3m }, new { Name = "C", Qty = 1, Price = 50m } };',
     expected: '{ { Name = "A", Total = 20 }, { Name = "C", Total = 50 } }',
-    sample: 'from i in items let total = i.Qty * i.Price where total >= 20 select new { i.Name, Total = total }',
+    sample:
+      'from i in items let total = i.Qty * i.Price where total >= 20 select new { i.Name, Total = total }',
     hints: [
       'The let clause introduces a computed range variable',
       'Avoids recalculating the expression multiple times',
@@ -1915,10 +1882,14 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Zip Multiple Sequences',
     text: 'Combine three arrays (ids, names, scores) using chained Zip calls',
-    setup: 'int[] ids = { 1, 2, 3 };\nstring[] names = { "Alice", "Bob", "Carol" };\nint[] scores = { 95, 87, 92 };',
-    setupCode: 'int[] ids = { 1, 2, 3 };\nstring[] names = { "Alice", "Bob", "Carol" };\nint[] scores = { 95, 87, 92 };',
-    expected: '{ { Id = 1, Name = "Alice", Score = 95 }, { Id = 2, Name = "Bob", Score = 87 }, { Id = 3, Name = "Carol", Score = 92 } }',
-    sample: 'ids.Zip(names, (id, name) => new { Id = id, Name = name }).Zip(scores, (x, score) => new { x.Id, x.Name, Score = score })',
+    setup:
+      'int[] ids = { 1, 2, 3 };\nstring[] names = { "Alice", "Bob", "Carol" };\nint[] scores = { 95, 87, 92 };',
+    setupCode:
+      'int[] ids = { 1, 2, 3 };\nstring[] names = { "Alice", "Bob", "Carol" };\nint[] scores = { 95, 87, 92 };',
+    expected:
+      '{ { Id = 1, Name = "Alice", Score = 95 }, { Id = 2, Name = "Bob", Score = 87 }, { Id = 3, Name = "Carol", Score = 92 } }',
+    sample:
+      'ids.Zip(names, (id, name) => new { Id = id, Name = name }).Zip(scores, (x, score) => new { x.Id, x.Name, Score = score })',
     hints: [
       'Chain Zip calls for more than two sequences',
       'First Zip creates intermediate result',
@@ -1971,10 +1942,14 @@ export const csharpProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Multi-Level GroupBy with Composite Key',
     text: 'Group transactions by year and month, calculate count and total per group',
-    setup: 'var transactions = new[] { new { Date = new DateTime(2024, 1, 15), Amount = 100m }, new { Date = new DateTime(2024, 1, 20), Amount = 150m }, new { Date = new DateTime(2024, 2, 10), Amount = 200m }, new { Date = new DateTime(2024, 2, 25), Amount = 75m }, new { Date = new DateTime(2024, 1, 5), Amount = 50m } };',
-    setupCode: 'var transactions = new[] { new { Date = new DateTime(2024, 1, 15), Amount = 100m }, new { Date = new DateTime(2024, 1, 20), Amount = 150m }, new { Date = new DateTime(2024, 2, 10), Amount = 200m }, new { Date = new DateTime(2024, 2, 25), Amount = 75m }, new { Date = new DateTime(2024, 1, 5), Amount = 50m } };',
-    expected: '{ { Year = 2024, Month = 1, Count = 3, Total = 300 }, { Year = 2024, Month = 2, Count = 2, Total = 275 } }',
-    sample: 'transactions.GroupBy(t => new { t.Date.Year, t.Date.Month }).Select(g => new { g.Key.Year, g.Key.Month, Count = g.Count(), Total = g.Sum(t => t.Amount) })',
+    setup:
+      'var transactions = new[] { new { Date = new DateTime(2024, 1, 15), Amount = 100m }, new { Date = new DateTime(2024, 1, 20), Amount = 150m }, new { Date = new DateTime(2024, 2, 10), Amount = 200m }, new { Date = new DateTime(2024, 2, 25), Amount = 75m }, new { Date = new DateTime(2024, 1, 5), Amount = 50m } };',
+    setupCode:
+      'var transactions = new[] { new { Date = new DateTime(2024, 1, 15), Amount = 100m }, new { Date = new DateTime(2024, 1, 20), Amount = 150m }, new { Date = new DateTime(2024, 2, 10), Amount = 200m }, new { Date = new DateTime(2024, 2, 25), Amount = 75m }, new { Date = new DateTime(2024, 1, 5), Amount = 50m } };',
+    expected:
+      '{ { Year = 2024, Month = 1, Count = 3, Total = 300 }, { Year = 2024, Month = 2, Count = 2, Total = 275 } }',
+    sample:
+      'transactions.GroupBy(t => new { t.Date.Year, t.Date.Month }).Select(g => new { g.Key.Year, g.Key.Month, Count = g.Count(), Total = g.Sum(t => t.Amount) })',
     hints: [
       'Use anonymous type for composite grouping key',
       'Access key parts with g.Key.PropertyName',
@@ -1989,10 +1964,14 @@ export const csharpProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Left Outer Join Pattern',
     text: 'Perform left outer join to get all employees with their department (or "Unassigned" if null)',
-    setup: 'var employees = new[] { new { Name = "Alice", DeptId = (int?)1 }, new { Name = "Bob", DeptId = (int?)null }, new { Name = "Carol", DeptId = (int?)2 } };\nvar departments = new[] { new { Id = 1, Name = "Engineering" }, new { Id = 2, Name = "Marketing" } };',
-    setupCode: 'var employees = new[] { new { Name = "Alice", DeptId = (int?)1 }, new { Name = "Bob", DeptId = (int?)null }, new { Name = "Carol", DeptId = (int?)2 } };\nvar departments = new[] { new { Id = 1, Name = "Engineering" }, new { Id = 2, Name = "Marketing" } };',
-    expected: '{ { Employee = "Alice", Dept = "Engineering" }, { Employee = "Bob", Dept = "Unassigned" }, { Employee = "Carol", Dept = "Marketing" } }',
-    sample: 'employees.GroupJoin(departments, e => e.DeptId, d => (int?)d.Id, (e, depts) => new { e, depts }).SelectMany(x => x.depts.DefaultIfEmpty(), (x, d) => new { Employee = x.e.Name, Dept = d?.Name ?? "Unassigned" })',
+    setup:
+      'var employees = new[] { new { Name = "Alice", DeptId = (int?)1 }, new { Name = "Bob", DeptId = (int?)null }, new { Name = "Carol", DeptId = (int?)2 } };\nvar departments = new[] { new { Id = 1, Name = "Engineering" }, new { Id = 2, Name = "Marketing" } };',
+    setupCode:
+      'var employees = new[] { new { Name = "Alice", DeptId = (int?)1 }, new { Name = "Bob", DeptId = (int?)null }, new { Name = "Carol", DeptId = (int?)2 } };\nvar departments = new[] { new { Id = 1, Name = "Engineering" }, new { Id = 2, Name = "Marketing" } };',
+    expected:
+      '{ { Employee = "Alice", Dept = "Engineering" }, { Employee = "Bob", Dept = "Unassigned" }, { Employee = "Carol", Dept = "Marketing" } }',
+    sample:
+      'employees.GroupJoin(departments, e => e.DeptId, d => (int?)d.Id, (e, depts) => new { e, depts }).SelectMany(x => x.depts.DefaultIfEmpty(), (x, d) => new { Employee = x.e.Name, Dept = d?.Name ?? "Unassigned" })',
     hints: [
       'Left outer join = GroupJoin + SelectMany + DefaultIfEmpty',
       'DefaultIfEmpty ensures unmatched rows are included',
@@ -2028,7 +2007,8 @@ export const csharpProblems: Problem[] = [
     setup: 'string[] words = { "apple", "banana", "apple", "cherry", "banana", "apple" };',
     setupCode: 'string[] words = { "apple", "banana", "apple", "cherry", "banana", "apple" };',
     expected: '"apple:3, banana:2, cherry:1"',
-    sample: 'words.Aggregate(new Dictionary<string, int>(), (dict, word) => { dict[word] = dict.GetValueOrDefault(word) + 1; return dict; }, dict => string.Join(", ", dict.OrderByDescending(kv => kv.Value).Select(kv => $"{kv.Key}:{kv.Value}")))',
+    sample:
+      'words.Aggregate(new Dictionary<string, int>(), (dict, word) => { dict[word] = dict.GetValueOrDefault(word) + 1; return dict; }, dict => string.Join(", ", dict.OrderByDescending(kv => kv.Value).Select(kv => $"{kv.Key}:{kv.Value}")))',
     hints: [
       'Aggregate overload: seed, accumulator function, result selector',
       'Seed is the initial accumulator (empty dictionary)',
@@ -2043,8 +2023,10 @@ export const csharpProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Deferred Execution Pitfall',
     text: 'Demonstrate the deferred execution pitfall: the list is modified before the query is enumerated',
-    setup: 'List<int> numbers = new List<int> { 1, 2, 3 };\nvar evens = numbers.Where(x => x % 2 == 0);',
-    setupCode: 'List<int> numbers = new List<int> { 1, 2, 3 };\nvar evens = numbers.Where(x => x % 2 == 0);',
+    setup:
+      'List<int> numbers = new List<int> { 1, 2, 3 };\nvar evens = numbers.Where(x => x % 2 == 0);',
+    setupCode:
+      'List<int> numbers = new List<int> { 1, 2, 3 };\nvar evens = numbers.Where(x => x % 2 == 0);',
     expected: 'After numbers.Add(4): evens.ToList() returns { 2, 4 }',
     sample: 'numbers.Add(4); var result = evens.ToList();',
     hints: [
@@ -2074,10 +2056,7 @@ export const csharpProblems: Problem[] = [
       'Use :C2 format specifier for currency with 2 decimal places',
       'Format specifiers go after the colon inside the braces',
     ],
-    validPatterns: [
-      /\$".*\{price:C2?\}"/i,
-      /\{price:C\d?\}/i,
-    ],
+    validPatterns: [/\$".*\{price:C2?\}"/i, /\{price:C\d?\}/i],
     tags: ['string', 'interpolation', 'format', 'currency'],
   },
   {
@@ -2094,10 +2073,7 @@ export const csharpProblems: Problem[] = [
       'Use comma followed by width for alignment',
       'Positive width right-aligns, negative left-aligns',
     ],
-    validPatterns: [
-      /\$".*\{name,10\}"/i,
-      /\{name,\d+\}/i,
-    ],
+    validPatterns: [/\$".*\{name,10\}"/i, /\{name,\d+\}/i],
     tags: ['string', 'interpolation', 'alignment', 'format'],
   },
   {
@@ -2114,10 +2090,7 @@ export const csharpProblems: Problem[] = [
       'DateTime format strings can be used directly in interpolation',
       'yyyy = 4-digit year, MM = 2-digit month, dd = 2-digit day',
     ],
-    validPatterns: [
-      /\$".*\{date:yyyy-MM-dd\}"/i,
-      /\{date:yyyy-MM-dd\}/i,
-    ],
+    validPatterns: [/\$".*\{date:yyyy-MM-dd\}"/i, /\{date:yyyy-MM-dd\}/i],
     tags: ['string', 'interpolation', 'datetime', 'format'],
   },
   {
@@ -2134,10 +2107,7 @@ export const csharpProblems: Problem[] = [
       'Any valid C# expression can be used inside interpolation braces',
       'Complex expressions may need parentheses for clarity',
     ],
-    validPatterns: [
-      /\$".*\{width\s*\*\s*height\}"/i,
-      /\{width.*\*.*height\}/i,
-    ],
+    validPatterns: [/\$".*\{width\s*\*\s*height\}"/i, /\{width.*\*.*height\}/i],
     tags: ['string', 'interpolation', 'expression'],
   },
   {
@@ -2154,10 +2124,7 @@ export const csharpProblems: Problem[] = [
       'Wrap ternary expressions in parentheses inside interpolation',
       'String literals inside need to be properly escaped or use different quotes',
     ],
-    validPatterns: [
-      /\$".*\{\(score\s*>=\s*60\s*\?/i,
-      /score.*>=.*60.*\?.*Pass.*:.*Fail/i,
-    ],
+    validPatterns: [/\$".*\{\(score\s*>=\s*60\s*\?/i, /score.*>=.*60.*\?.*Pass.*:.*Fail/i],
     tags: ['string', 'interpolation', 'ternary', 'conditional'],
   },
   {
@@ -2214,10 +2181,7 @@ export const csharpProblems: Problem[] = [
       'Insert takes an index and the value to insert',
       'Existing content shifts to the right',
     ],
-    validPatterns: [
-      /sb\.Insert\(6,\s*"Beautiful "\)/i,
-      /\.Insert\(6/i,
-    ],
+    validPatterns: [/sb\.Insert\(6,\s*"Beautiful "\)/i, /\.Insert\(6/i],
     tags: ['string', 'stringbuilder', 'insert'],
   },
   {
@@ -2234,10 +2198,7 @@ export const csharpProblems: Problem[] = [
       'Replace modifies the StringBuilder in-place',
       'Replaces all occurrences, not just the first',
     ],
-    validPatterns: [
-      /sb\.Replace\("old",\s*"new"\)/i,
-      /\.Replace\("old"/i,
-    ],
+    validPatterns: [/sb\.Replace\("old",\s*"new"\)/i, /\.Replace\("old"/i],
     tags: ['string', 'stringbuilder', 'replace'],
   },
   {
@@ -2246,18 +2207,17 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'StringBuilder with AppendFormat',
     text: 'Append formatted text "Name: Alice, Age: 30" using AppendFormat',
-    setup: 'using System.Text;\nvar sb = new StringBuilder();\nstring name = "Alice";\nint age = 30;',
-    setupCode: 'using System.Text;\nvar sb = new StringBuilder();\nstring name = "Alice";\nint age = 30;',
+    setup:
+      'using System.Text;\nvar sb = new StringBuilder();\nstring name = "Alice";\nint age = 30;',
+    setupCode:
+      'using System.Text;\nvar sb = new StringBuilder();\nstring name = "Alice";\nint age = 30;',
     expected: '"Name: Alice, Age: 30"',
     sample: 'sb.AppendFormat("Name: {0}, Age: {1}", name, age);',
     hints: [
       'AppendFormat uses the same format syntax as String.Format',
       'Placeholders are {0}, {1}, etc.',
     ],
-    validPatterns: [
-      /sb\.AppendFormat\(".*\{0\}.*\{1\}"/i,
-      /\.AppendFormat\(/i,
-    ],
+    validPatterns: [/sb\.AppendFormat\(".*\{0\}.*\{1\}"/i, /\.AppendFormat\(/i],
     tags: ['string', 'stringbuilder', 'format', 'appendformat'],
   },
   {
@@ -2274,10 +2234,7 @@ export const csharpProblems: Problem[] = [
       'AsSpan() creates a span view without copying',
       'Slice(start, length) extracts a portion',
     ],
-    validPatterns: [
-      /text\.AsSpan\(\)\.Slice\(6,\s*5\)/i,
-      /\.AsSpan\(\).*\.Slice\(/i,
-    ],
+    validPatterns: [/text\.AsSpan\(\)\.Slice\(6,\s*5\)/i, /\.AsSpan\(\).*\.Slice\(/i],
     tags: ['string', 'span', 'slice', 'performance'],
   },
   {
@@ -2290,14 +2247,8 @@ export const csharpProblems: Problem[] = [
     setupCode: 'string text = "Hello World!";',
     expected: 'ReadOnlySpan<char> containing "World!"',
     sample: 'text.AsSpan()[^6..]',
-    hints: [
-      'Range operator works with spans',
-      '^6.. means from 6th-from-end to end',
-    ],
-    validPatterns: [
-      /text\.AsSpan\(\)\[\^6\.\.\.?\]/i,
-      /\.AsSpan\(\)\[\^\d+\.\./i,
-    ],
+    hints: ['Range operator works with spans', '^6.. means from 6th-from-end to end'],
+    validPatterns: [/text\.AsSpan\(\)\[\^6\.\.\.?\]/i, /\.AsSpan\(\)\[\^\d+\.\./i],
     tags: ['string', 'span', 'range', 'index'],
   },
   {
@@ -2309,16 +2260,14 @@ export const csharpProblems: Problem[] = [
     setup: 'string text = "Hello";',
     setupCode: 'string text = "Hello";',
     expected: 'Span<char> containing "olleH"',
-    sample: 'Span<char> buffer = stackalloc char[text.Length];\ntext.AsSpan().CopyTo(buffer);\nbuffer.Reverse();',
+    sample:
+      'Span<char> buffer = stackalloc char[text.Length];\ntext.AsSpan().CopyTo(buffer);\nbuffer.Reverse();',
     hints: [
       'stackalloc allocates memory on the stack (fast, no GC)',
       'CopyTo copies span contents to another span',
       'Reverse() reverses the span in-place',
     ],
-    validPatterns: [
-      /stackalloc\s+char\[/i,
-      /\.CopyTo\(.*\).*\.Reverse\(/i,
-    ],
+    validPatterns: [/stackalloc\s+char\[/i, /\.CopyTo\(.*\).*\.Reverse\(/i],
     tags: ['string', 'span', 'stackalloc', 'performance', 'advanced'],
   },
   {
@@ -2335,10 +2284,7 @@ export const csharpProblems: Problem[] = [
       'Use @ for verbatim strings to avoid double escaping',
       'IsMatch returns true if any match is found',
     ],
-    validPatterns: [
-      /Regex\.IsMatch\(email/i,
-      /Regex\.IsMatch.*@/i,
-    ],
+    validPatterns: [/Regex\.IsMatch\(email/i, /Regex\.IsMatch.*@/i],
     tags: ['string', 'regex', 'match', 'validation'],
   },
   {
@@ -2351,14 +2297,8 @@ export const csharpProblems: Problem[] = [
     setupCode: 'using System.Text.RegularExpressions;\nstring text = "Phone: 123-456-7890";',
     expected: '"Phone: ###-###-####"',
     sample: 'Regex.Replace(text, @"\\d", "#")',
-    hints: [
-      '\\d matches any digit',
-      'Replace replaces all matches by default',
-    ],
-    validPatterns: [
-      /Regex\.Replace\(text,\s*@?"\\d"/i,
-      /Regex\.Replace.*\\d.*#/i,
-    ],
+    hints: ['\\d matches any digit', 'Replace replaces all matches by default'],
+    validPatterns: [/Regex\.Replace\(text,\s*@?"\\d"/i, /Regex\.Replace.*\\d.*#/i],
     tags: ['string', 'regex', 'replace'],
   },
   {
@@ -2375,10 +2315,7 @@ export const csharpProblems: Problem[] = [
       'Named groups use (?<name>pattern) syntax',
       'Access captured value via Groups["name"].Value',
     ],
-    validPatterns: [
-      /Regex\.Match.*\(\?<\w+>.*Groups\["\w+"\]/i,
-      /\(\?<area>/i,
-    ],
+    validPatterns: [/Regex\.Match.*\(\?<\w+>.*Groups\["\w+"\]/i, /\(\?<area>/i],
     tags: ['string', 'regex', 'groups', 'capture', 'advanced'],
   },
   {
@@ -2391,14 +2328,8 @@ export const csharpProblems: Problem[] = [
     setupCode: 'using System.Text.RegularExpressions;\nstring text = "one  two\\tthree\\nfour";',
     expected: '["one", "two", "three", "four"]',
     sample: 'Regex.Split(text, @"\\s+")',
-    hints: [
-      '\\s matches any whitespace character',
-      '+ means one or more occurrences',
-    ],
-    validPatterns: [
-      /Regex\.Split\(text,\s*@?"\\s\+"/i,
-      /Regex\.Split.*\\s\+/i,
-    ],
+    hints: ['\\s matches any whitespace character', '+ means one or more occurrences'],
+    validPatterns: [/Regex\.Split\(text,\s*@?"\\s\+"/i, /Regex\.Split.*\\s\+/i],
     tags: ['string', 'regex', 'split', 'whitespace'],
   },
   {
@@ -2490,7 +2421,8 @@ export const csharpProblems: Problem[] = [
     setup: 'string text = " one , two , three ";',
     setupCode: 'string text = " one , two , three ";',
     expected: '["one", "two", "three"]',
-    sample: "text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)",
+    sample:
+      "text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)",
     hints: [
       'TrimEntries trims whitespace from each result (requires .NET 5+)',
       'Use | to combine multiple options',
@@ -2535,10 +2467,7 @@ export const csharpProblems: Problem[] = [
       'Negative width left-aligns, positive right-aligns',
       'Combine alignment and format: {index,alignment:format}',
     ],
-    validPatterns: [
-      /string\.Format\("\{0,-15\}\{1,10:C\}"/i,
-      /\{\d+,-?\d+:C\}/i,
-    ],
+    validPatterns: [/string\.Format\("\{0,-15\}\{1,10:C\}"/i, /\{\d+,-?\d+:C\}/i],
     tags: ['string', 'format', 'alignment', 'composite', 'advanced'],
   },
   {
@@ -2555,10 +2484,7 @@ export const csharpProblems: Problem[] = [
       'String.Join works with any IEnumerable',
       'Combine with LINQ Select for transformation',
     ],
-    validPatterns: [
-      /string\.Join\(".*",\s*numbers\.Select\(.*\*/i,
-      /Join.*Select.*\*/i,
-    ],
+    validPatterns: [/string\.Join\(".*",\s*numbers\.Select\(.*\*/i, /Join.*Select.*\*/i],
     tags: ['string', 'join', 'linq', 'transform', 'advanced'],
   },
 ];

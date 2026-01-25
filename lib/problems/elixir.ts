@@ -26,10 +26,7 @@ export const elixirProblems: Problem[] = [
       'Use rem(x, 2) == 0 to check for even numbers',
       'You can also use the capture operator &',
     ],
-    validPatterns: [
-      /Enum\.filter\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.filter/,
-    ],
+    validPatterns: [/Enum\.filter\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.filter/],
     tags: ['enum', 'filter', 'even'],
   },
   {
@@ -42,14 +39,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [-3, -1, 0, 2, 5, -4]',
     expected: [2, 5],
     sample: 'Enum.filter(numbers, fn x -> x > 0 end)',
-    hints: [
-      'Enum.filter keeps elements where the function returns true',
-      'Check if x > 0',
-    ],
-    validPatterns: [
-      /Enum\.filter\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.filter/,
-    ],
+    hints: ['Enum.filter keeps elements where the function returns true', 'Check if x > 0'],
+    validPatterns: [/Enum\.filter\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.filter/],
     tags: ['enum', 'filter', 'positive'],
   },
 
@@ -69,10 +60,7 @@ export const elixirProblems: Problem[] = [
       'Use fn x -> x * 2 end to double',
       'Can also use &(&1 * 2) capture syntax',
     ],
-    validPatterns: [
-      /Enum\.map\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.map/,
-    ],
+    validPatterns: [/Enum\.map\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.map/],
     tags: ['enum', 'map', 'transform'],
   },
   {
@@ -89,10 +77,7 @@ export const elixirProblems: Problem[] = [
       'Multiply x by itself to square it',
       'Can use :math.pow/2 but multiplication is simpler',
     ],
-    validPatterns: [
-      /Enum\.map\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.map/,
-    ],
+    validPatterns: [/Enum\.map\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.map/],
     tags: ['enum', 'map', 'square'],
   },
 
@@ -132,13 +117,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [5, 2, 8, 1, 9]',
     expected: [1, 2, 5, 8, 9],
     sample: 'Enum.sort(numbers)',
-    hints: [
-      'Enum.sort/1 sorts in ascending order by default',
-    ],
-    validPatterns: [
-      /Enum\.sort\s*\(\s*numbers\s*\)/,
-      /numbers\s*\|>\s*Enum\.sort/,
-    ],
+    hints: ['Enum.sort/1 sorts in ascending order by default'],
+    validPatterns: [/Enum\.sort\s*\(\s*numbers\s*\)/, /numbers\s*\|>\s*Enum\.sort/],
     tags: ['enum', 'sort', 'ascending'],
   },
 
@@ -153,13 +133,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: [5, 4, 3, 2, 1],
     sample: 'Enum.reverse(numbers)',
-    hints: [
-      'Enum.reverse/1 returns elements in reverse order',
-    ],
-    validPatterns: [
-      /Enum\.reverse\s*\(\s*numbers\s*\)/,
-      /numbers\s*\|>\s*Enum\.reverse/,
-    ],
+    hints: ['Enum.reverse/1 returns elements in reverse order'],
+    validPatterns: [/Enum\.reverse\s*\(\s*numbers\s*\)/, /numbers\s*\|>\s*Enum\.reverse/],
     tags: ['enum', 'reverse'],
   },
 
@@ -178,10 +153,7 @@ export const elixirProblems: Problem[] = [
       'Enum.find returns the first element matching the condition',
       'Returns nil if no match found',
     ],
-    validPatterns: [
-      /Enum\.find\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.find/,
-    ],
+    validPatterns: [/Enum\.find\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.find/],
     tags: ['enum', 'find', 'first'],
   },
 
@@ -196,13 +168,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [5, 8, 12, 3]',
     expected: true,
     sample: 'Enum.any?(numbers, fn x -> x > 10 end)',
-    hints: [
-      'Enum.any? returns true if at least one element satisfies the condition',
-    ],
-    validPatterns: [
-      /Enum\.any\?\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.any\?/,
-    ],
+    hints: ['Enum.any? returns true if at least one element satisfies the condition'],
+    validPatterns: [/Enum\.any\?\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.any\?/],
     tags: ['enum', 'any?', 'predicate'],
   },
 
@@ -217,13 +184,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: true,
     sample: 'Enum.all?(numbers, fn x -> x > 0 end)',
-    hints: [
-      'Enum.all? returns true only if all elements satisfy the condition',
-    ],
-    validPatterns: [
-      /Enum\.all\?\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.all\?/,
-    ],
+    hints: ['Enum.all? returns true only if all elements satisfy the condition'],
+    validPatterns: [/Enum\.all\?\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.all\?/],
     tags: ['enum', 'all?', 'predicate'],
   },
 
@@ -242,10 +204,7 @@ export const elixirProblems: Problem[] = [
       'Enum.count/2 counts elements matching the condition',
       'Enum.count/1 just counts total elements',
     ],
-    validPatterns: [
-      /Enum\.count\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.count/,
-    ],
+    validPatterns: [/Enum\.count\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.count/],
     tags: ['enum', 'count'],
   },
 
@@ -264,13 +223,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "hello"',
     expected: 5,
     sample: 'String.length(text)',
-    hints: [
-      'String.length counts Unicode graphemes, not bytes',
-    ],
-    validPatterns: [
-      /String\.length\s*\(\s*text\s*\)/,
-      /text\s*\|>\s*String\.length/,
-    ],
+    hints: ['String.length counts Unicode graphemes, not bytes'],
+    validPatterns: [/String\.length\s*\(\s*text\s*\)/, /text\s*\|>\s*String\.length/],
     tags: ['string', 'length'],
   },
 
@@ -285,13 +239,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "hello world"',
     expected: 'HELLO WORLD',
     sample: 'String.upcase(text)',
-    hints: [
-      'String.upcase converts all characters to uppercase',
-    ],
-    validPatterns: [
-      /String\.upcase\s*\(\s*text\s*\)/,
-      /text\s*\|>\s*String\.upcase/,
-    ],
+    hints: ['String.upcase converts all characters to uppercase'],
+    validPatterns: [/String\.upcase\s*\(\s*text\s*\)/, /text\s*\|>\s*String\.upcase/],
     tags: ['string', 'upcase', 'uppercase'],
   },
 
@@ -306,13 +255,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "HELLO WORLD"',
     expected: 'hello world',
     sample: 'String.downcase(text)',
-    hints: [
-      'String.downcase converts all characters to lowercase',
-    ],
-    validPatterns: [
-      /String\.downcase\s*\(\s*text\s*\)/,
-      /text\s*\|>\s*String\.downcase/,
-    ],
+    hints: ['String.downcase converts all characters to lowercase'],
+    validPatterns: [/String\.downcase\s*\(\s*text\s*\)/, /text\s*\|>\s*String\.downcase/],
     tags: ['string', 'downcase', 'lowercase'],
   },
 
@@ -331,10 +275,7 @@ export const elixirProblems: Problem[] = [
       'String.split divides a string by a delimiter',
       'String.split/1 splits on whitespace by default',
     ],
-    validPatterns: [
-      /String\.split\s*\(\s*text/,
-      /text\s*\|>\s*String\.split/,
-    ],
+    validPatterns: [/String\.split\s*\(\s*text/, /text\s*\|>\s*String\.split/],
     tags: ['string', 'split'],
   },
 
@@ -349,13 +290,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "hello world"',
     expected: true,
     sample: 'String.contains?(text, "world")',
-    hints: [
-      'String.contains? returns true if substring is found',
-    ],
-    validPatterns: [
-      /String\.contains\?\s*\(\s*text/,
-      /text\s*\|>\s*String\.contains\?/,
-    ],
+    hints: ['String.contains? returns true if substring is found'],
+    validPatterns: [/String\.contains\?\s*\(\s*text/, /text\s*\|>\s*String\.contains\?/],
     tags: ['string', 'contains?', 'substring'],
   },
 
@@ -370,13 +306,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "hello world"',
     expected: 'hello elixir',
     sample: 'String.replace(text, "world", "elixir")',
-    hints: [
-      'String.replace takes the string, pattern to find, and replacement',
-    ],
-    validPatterns: [
-      /String\.replace\s*\(\s*text/,
-      /text\s*\|>\s*String\.replace/,
-    ],
+    hints: ['String.replace takes the string, pattern to find, and replacement'],
+    validPatterns: [/String\.replace\s*\(\s*text/, /text\s*\|>\s*String\.replace/],
     tags: ['string', 'replace'],
   },
 
@@ -391,13 +322,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "  hello world  "',
     expected: 'hello world',
     sample: 'String.trim(text)',
-    hints: [
-      'String.trim removes whitespace from both ends',
-    ],
-    validPatterns: [
-      /String\.trim\s*\(\s*text\s*\)/,
-      /text\s*\|>\s*String\.trim/,
-    ],
+    hints: ['String.trim removes whitespace from both ends'],
+    validPatterns: [/String\.trim\s*\(\s*text\s*\)/, /text\s*\|>\s*String\.trim/],
     tags: ['string', 'trim', 'whitespace'],
   },
 
@@ -416,14 +342,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: 1,
     sample: 'hd(numbers)',
-    hints: [
-      'hd returns the head (first element) of a list',
-      'Raises an error on empty list',
-    ],
-    validPatterns: [
-      /hd\s*\(\s*numbers\s*\)/,
-      /List\.first\s*\(\s*numbers\s*\)/,
-    ],
+    hints: ['hd returns the head (first element) of a list', 'Raises an error on empty list'],
+    validPatterns: [/hd\s*\(\s*numbers\s*\)/, /List\.first\s*\(\s*numbers\s*\)/],
     tags: ['list', 'hd', 'head', 'first'],
   },
 
@@ -438,13 +358,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: [2, 3, 4, 5],
     sample: 'tl(numbers)',
-    hints: [
-      'tl returns the tail (everything except the head)',
-      'Raises an error on empty list',
-    ],
-    validPatterns: [
-      /tl\s*\(\s*numbers\s*\)/,
-    ],
+    hints: ['tl returns the tail (everything except the head)', 'Raises an error on empty list'],
+    validPatterns: [/tl\s*\(\s*numbers\s*\)/],
     tags: ['list', 'tl', 'tail'],
   },
 
@@ -459,13 +374,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'list1 = [1, 2, 3]\nlist2 = [4, 5, 6]',
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'list1 ++ list2',
-    hints: [
-      '++ appends the second list to the first',
-      'Also available as Kernel.++/2',
-    ],
-    validPatterns: [
-      /list1\s*\+\+\s*list2/,
-    ],
+    hints: ['++ appends the second list to the first', 'Also available as Kernel.++/2'],
+    validPatterns: [/list1\s*\+\+\s*list2/],
     tags: ['list', '++', 'concat'],
   },
 
@@ -484,9 +394,7 @@ export const elixirProblems: Problem[] = [
       '-- removes elements from the left list that appear in the right list',
       'Only removes one occurrence per element',
     ],
-    validPatterns: [
-      /list1\s*--\s*list2/,
-    ],
+    validPatterns: [/list1\s*--\s*list2/],
     tags: ['list', '--', 'subtract'],
   },
 
@@ -501,14 +409,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: 5,
     sample: 'length(numbers)',
-    hints: [
-      'length/1 counts the number of elements',
-      'This is O(n) operation for lists',
-    ],
-    validPatterns: [
-      /length\s*\(\s*numbers\s*\)/,
-      /Enum\.count\s*\(\s*numbers\s*\)/,
-    ],
+    hints: ['length/1 counts the number of elements', 'This is O(n) operation for lists'],
+    validPatterns: [/length\s*\(\s*numbers\s*\)/, /Enum\.count\s*\(\s*numbers\s*\)/],
     tags: ['list', 'length', 'count'],
   },
 
@@ -531,11 +433,7 @@ export const elixirProblems: Problem[] = [
       'Map.get returns the value for a key',
       'Returns nil if key not found (or use Map.get/3 for default)',
     ],
-    validPatterns: [
-      /Map\.get\s*\(\s*person,\s*:name\s*\)/,
-      /person\[:name\]/,
-      /person\.name/,
-    ],
+    validPatterns: [/Map\.get\s*\(\s*person,\s*:name\s*\)/, /person\[:name\]/, /person\.name/],
     tags: ['map', 'get', 'access'],
   },
 
@@ -550,13 +448,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'person = %{name: "Alice", age: 30}',
     expected: { name: 'Alice', age: 30, city: 'NYC' },
     sample: 'Map.put(person, :city, "NYC")',
-    hints: [
-      'Map.put adds or updates a key-value pair',
-      'Returns a new map (immutability)',
-    ],
-    validPatterns: [
-      /Map\.put\s*\(\s*person,\s*:city,\s*"NYC"\s*\)/,
-    ],
+    hints: ['Map.put adds or updates a key-value pair', 'Returns a new map (immutability)'],
+    validPatterns: [/Map\.put\s*\(\s*person,\s*:city,\s*"NYC"\s*\)/],
     tags: ['map', 'put', 'add'],
   },
 
@@ -571,13 +464,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'person = %{name: "Alice", age: 30, city: "NYC"}',
     expected: { name: 'Alice', city: 'NYC' },
     sample: 'Map.delete(person, :age)',
-    hints: [
-      'Map.delete removes a key from the map',
-      'Returns a new map without that key',
-    ],
-    validPatterns: [
-      /Map\.delete\s*\(\s*person,\s*:age\s*\)/,
-    ],
+    hints: ['Map.delete removes a key from the map', 'Returns a new map without that key'],
+    validPatterns: [/Map\.delete\s*\(\s*person,\s*:age\s*\)/],
     tags: ['map', 'delete', 'remove'],
   },
 
@@ -592,14 +480,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'person = %{name: "Alice", age: 30}',
     expected: [':age', ':name'],
     sample: 'Map.keys(person)',
-    hints: [
-      'Map.keys returns a list of all keys',
-      'Order is not guaranteed',
-    ],
-    validPatterns: [
-      /Map\.keys\s*\(\s*person\s*\)/,
-      /person\s*\|>\s*Map\.keys/,
-    ],
+    hints: ['Map.keys returns a list of all keys', 'Order is not guaranteed'],
+    validPatterns: [/Map\.keys\s*\(\s*person\s*\)/, /person\s*\|>\s*Map\.keys/],
     tags: ['map', 'keys'],
   },
 
@@ -614,14 +496,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'person = %{name: "Alice", age: 30}',
     expected: [30, 'Alice'],
     sample: 'Map.values(person)',
-    hints: [
-      'Map.values returns a list of all values',
-      'Order corresponds to Map.keys order',
-    ],
-    validPatterns: [
-      /Map\.values\s*\(\s*person\s*\)/,
-      /person\s*\|>\s*Map\.values/,
-    ],
+    hints: ['Map.values returns a list of all values', 'Order corresponds to Map.keys order'],
+    validPatterns: [/Map\.values\s*\(\s*person\s*\)/, /person\s*\|>\s*Map\.values/],
     tags: ['map', 'values'],
   },
 
@@ -636,13 +512,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'map1 = %{a: 1, b: 2}\nmap2 = %{b: 3, c: 4}',
     expected: { a: 1, b: 3, c: 4 },
     sample: 'Map.merge(map1, map2)',
-    hints: [
-      'Map.merge combines two maps',
-      'Values from second map override first on conflicts',
-    ],
-    validPatterns: [
-      /Map\.merge\s*\(\s*map1,\s*map2\s*\)/,
-    ],
+    hints: ['Map.merge combines two maps', 'Values from second map override first on conflicts'],
+    validPatterns: [/Map\.merge\s*\(\s*map1,\s*map2\s*\)/],
     tags: ['map', 'merge', 'combine'],
   },
 
@@ -684,10 +555,7 @@ export const elixirProblems: Problem[] = [
     setupCode: 'numbers = [3, 1, 4, 1, 5, 9]',
     expected: [9, 5, 4, 3, 1, 1],
     sample: 'Enum.sort(numbers, :desc)',
-    hints: [
-      'Use :desc as the second argument',
-      'Or use a custom comparison function',
-    ],
+    hints: ['Use :desc as the second argument', 'Or use a custom comparison function'],
     validPatterns: [
       /Enum\.sort\s*\(\s*numbers,\s*:desc\s*\)/,
       /Enum\.sort\s*\(\s*numbers,\s*&\s*\(\s*&1\s*>=\s*&2\s*\)\s*\)/,
@@ -711,10 +579,7 @@ export const elixirProblems: Problem[] = [
       'Enum.group_by groups elements by function result',
       'Returns a map with groups as keys',
     ],
-    validPatterns: [
-      /Enum\.group_by\s*\(\s*numbers/,
-      /numbers\s*\|>\s*Enum\.group_by/,
-    ],
+    validPatterns: [/Enum\.group_by\s*\(\s*numbers/, /numbers\s*\|>\s*Enum\.group_by/],
     tags: ['enum', 'group_by', 'categorize'],
   },
 
@@ -727,15 +592,14 @@ export const elixirProblems: Problem[] = [
     text: 'Use `Enum.zip/2` to combine two lists into pairs.',
     setup: 'names = ["Alice", "Bob", "Carol"]\nages = [30, 25, 35]',
     setupCode: 'names = ["Alice", "Bob", "Carol"]\nages = [30, 25, 35]',
-    expected: [['Alice', 30], ['Bob', 25], ['Carol', 35]],
+    expected: [
+      ['Alice', 30],
+      ['Bob', 25],
+      ['Carol', 35],
+    ],
     sample: 'Enum.zip(names, ages)',
-    hints: [
-      'Enum.zip pairs elements from two lists',
-      'Stops at the shorter list',
-    ],
-    validPatterns: [
-      /Enum\.zip\s*\(\s*names,\s*ages\s*\)/,
-    ],
+    hints: ['Enum.zip pairs elements from two lists', 'Stops at the shorter list'],
+    validPatterns: [/Enum\.zip\s*\(\s*names,\s*ages\s*\)/],
     tags: ['enum', 'zip', 'combine'],
   },
 
@@ -754,14 +618,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "a,b;c,d;e"',
     expected: ['a', 'b', 'c', 'd', 'e'],
     sample: 'String.split(text, ~r/[,;]/)',
-    hints: [
-      'Use a regex pattern with character class',
-      '~r/[,;]/ matches comma or semicolon',
-    ],
-    validPatterns: [
-      /String\.split\s*\(\s*text,\s*~r/,
-      /text\s*\|>\s*String\.split\s*\(\s*~r/,
-    ],
+    hints: ['Use a regex pattern with character class', '~r/[,;]/ matches comma or semicolon'],
+    validPatterns: [/String\.split\s*\(\s*text,\s*~r/, /text\s*\|>\s*String\.split\s*\(\s*~r/],
     tags: ['string', 'split', 'regex'],
   },
 
@@ -776,14 +634,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "phone: 123-456-7890"',
     expected: 'phone: XXX-XXX-XXXX',
     sample: 'String.replace(text, ~r/\\d/, "X")',
-    hints: [
-      'Use ~r/\\d/ to match digits',
-      'replace/3 replaces all occurrences by default',
-    ],
-    validPatterns: [
-      /String\.replace\s*\(\s*text,\s*~r/,
-      /text\s*\|>\s*String\.replace\s*\(\s*~r/,
-    ],
+    hints: ['Use ~r/\\d/ to match digits', 'replace/3 replaces all occurrences by default'],
+    validPatterns: [/String\.replace\s*\(\s*text,\s*~r/, /text\s*\|>\s*String\.replace\s*\(\s*~r/],
     tags: ['string', 'replace', 'regex'],
   },
 
@@ -798,10 +650,7 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "hello world"',
     expected: 'hello',
     sample: 'String.slice(text, 0, 5)',
-    hints: [
-      'String.slice takes start index and length',
-      'Can also use range syntax',
-    ],
+    hints: ['String.slice takes start index and length', 'Can also use range syntax'],
     validPatterns: [
       /String\.slice\s*\(\s*text,\s*0,\s*5\s*\)/,
       /String\.slice\s*\(\s*text,\s*0\.\.4\s*\)/,
@@ -825,14 +674,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'nested = [[1, 2], [3, [4, 5]], [6]]',
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'List.flatten(nested)',
-    hints: [
-      'List.flatten removes all nesting',
-      'Works with arbitrary depth',
-    ],
-    validPatterns: [
-      /List\.flatten\s*\(\s*nested\s*\)/,
-      /nested\s*\|>\s*List\.flatten/,
-    ],
+    hints: ['List.flatten removes all nesting', 'Works with arbitrary depth'],
+    validPatterns: [/List\.flatten\s*\(\s*nested\s*\)/, /nested\s*\|>\s*List\.flatten/],
     tags: ['list', 'flatten', 'nested'],
   },
 
@@ -851,14 +694,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'data = %{name: "counter", count: 5}',
     expected: { name: 'counter', count: 6 },
     sample: 'Map.update!(data, :count, &(&1 + 1))',
-    hints: [
-      'Map.update! takes a function to transform the value',
-      'Raises if key does not exist',
-    ],
-    validPatterns: [
-      /Map\.update!\s*\(\s*data,\s*:count/,
-      /Map\.update\s*\(\s*data,\s*:count/,
-    ],
+    hints: ['Map.update! takes a function to transform the value', 'Raises if key does not exist'],
+    validPatterns: [/Map\.update!\s*\(\s*data,\s*:count/, /Map\.update\s*\(\s*data,\s*:count/],
     tags: ['map', 'update', 'transform'],
   },
 
@@ -880,9 +717,7 @@ export const elixirProblems: Problem[] = [
       'Use |> to chain function calls',
       'Each result becomes first argument of next function',
     ],
-    validPatterns: [
-      /numbers\s*\|>\s*Enum\.filter.*\|>\s*Enum\.map.*\|>\s*Enum\.sum/,
-    ],
+    validPatterns: [/numbers\s*\|>\s*Enum\.filter.*\|>\s*Enum\.map.*\|>\s*Enum\.sum/],
     tags: ['pipe', 'chain', 'functional'],
   },
   {
@@ -895,13 +730,8 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "  HELLO WORLD  "',
     expected: ['hello', 'world'],
     sample: 'text |> String.trim() |> String.downcase() |> String.split()',
-    hints: [
-      'Chain String functions with |>',
-      'Each function transforms and passes result',
-    ],
-    validPatterns: [
-      /text\s*\|>\s*String\.trim.*\|>\s*String\.downcase.*\|>\s*String\.split/,
-    ],
+    hints: ['Chain String functions with |>', 'Each function transforms and passes result'],
+    validPatterns: [/text\s*\|>\s*String\.trim.*\|>\s*String\.downcase.*\|>\s*String\.split/],
     tags: ['pipe', 'string', 'transform'],
   },
   // ============================================================
@@ -940,16 +770,14 @@ export const elixirProblems: Problem[] = [
     setup: 'numbers = [1, 2, 3, 4, 5, 6]',
     setupCode: 'numbers = [1, 2, 3, 4, 5, 6]',
     expected: { evens: [6, 4, 2], odds: [5, 3, 1] },
-    sample: 'Enum.reduce(numbers, %{evens: [], odds: []}, fn x, acc -> if rem(x, 2) == 0, do: Map.update!(acc, :evens, &[x | &1]), else: Map.update!(acc, :odds, &[x | &1]) end)',
+    sample:
+      'Enum.reduce(numbers, %{evens: [], odds: []}, fn x, acc -> if rem(x, 2) == 0, do: Map.update!(acc, :evens, &[x | &1]), else: Map.update!(acc, :odds, &[x | &1]) end)',
     hints: [
       'Use map with :evens and :odds keys',
       'Prepend to lists for efficiency',
       'Can also use Enum.split_with/2',
     ],
-    validPatterns: [
-      /Enum\.reduce\s*\(\s*numbers,\s*%\{/,
-      /Enum\.split_with\s*\(\s*numbers/,
-    ],
+    validPatterns: [/Enum\.reduce\s*\(\s*numbers,\s*%\{/, /Enum\.split_with\s*\(\s*numbers/],
     tags: ['enum', 'reduce', 'partition'],
   },
 
@@ -962,16 +790,14 @@ export const elixirProblems: Problem[] = [
     text: 'Use `Enum.with_index/2` and `Enum.map/2` to create indexed tuples with doubled values.',
     setup: 'numbers = [10, 20, 30]',
     setupCode: 'numbers = [10, 20, 30]',
-    expected: [[0, 20], [1, 40], [2, 60]],
+    expected: [
+      [0, 20],
+      [1, 40],
+      [2, 60],
+    ],
     sample: 'numbers |> Enum.with_index() |> Enum.map(fn {val, idx} -> {idx, val * 2} end)',
-    hints: [
-      'with_index adds index to each element',
-      'Pattern match in the map function',
-    ],
-    validPatterns: [
-      /Enum\.with_index.*Enum\.map/,
-      /numbers\s*\|>.*with_index.*\|>.*map/,
-    ],
+    hints: ['with_index adds index to each element', 'Pattern match in the map function'],
+    validPatterns: [/Enum\.with_index.*Enum\.map/, /numbers\s*\|>.*with_index.*\|>.*map/],
     tags: ['enum', 'with_index', 'transform'],
   },
 
@@ -989,10 +815,7 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "hello world elixir"',
     expected: 'Hello World Elixir',
     sample: 'text |> String.split() |> Enum.map(&String.capitalize/1) |> Enum.join(" ")',
-    hints: [
-      'Split into words, capitalize each, join back',
-      'Use String.capitalize for each word',
-    ],
+    hints: ['Split into words, capitalize each, join back', 'Use String.capitalize for each word'],
     validPatterns: [
       /String\.split.*Enum\.map.*String\.capitalize.*Enum\.join/,
       /text\s*\|>.*split.*\|>.*capitalize.*\|>.*join/,
@@ -1009,10 +832,7 @@ export const elixirProblems: Problem[] = [
     setupCode: 'text = "hello world"',
     expected: 3,
     sample: 'text |> String.graphemes() |> Enum.count(&(&1 in ~w(a e i o u)))',
-    hints: [
-      'Convert to graphemes, then count matches',
-      'Use a list of vowels to check membership',
-    ],
+    hints: ['Convert to graphemes, then count matches', 'Use a list of vowels to check membership'],
     validPatterns: [
       /String\.graphemes.*Enum\.count/,
       /String\.replace.*String\.length/,
@@ -1033,12 +853,13 @@ export const elixirProblems: Problem[] = [
     text: 'Create pairs of [element, index] for each element without using Enum.with_index.',
     setup: 'letters = ["a", "b", "c"]',
     setupCode: 'letters = ["a", "b", "c"]',
-    expected: [['a', 0], ['b', 1], ['c', 2]],
-    sample: 'Enum.zip(letters, 0..length(letters)-1) |> Enum.map(&Tuple.to_list/1)',
-    hints: [
-      'Zip with a range of indices',
-      'Or use Enum.with_index and convert',
+    expected: [
+      ['a', 0],
+      ['b', 1],
+      ['c', 2],
     ],
+    sample: 'Enum.zip(letters, 0..length(letters)-1) |> Enum.map(&Tuple.to_list/1)',
+    hints: ['Zip with a range of indices', 'Or use Enum.with_index and convert'],
     validPatterns: [
       /Enum\.zip\s*\(\s*letters/,
       /Enum\.with_index.*Enum\.map/,
@@ -1065,11 +886,7 @@ export const elixirProblems: Problem[] = [
       'Map.new/2 creates map from enumerable with transform',
       'Transform both key and value in the function',
     ],
-    validPatterns: [
-      /Map\.new\s*\(\s*data/,
-      /Enum\.map.*\|>\s*Map\.new/,
-      /data\s*\|>\s*Map\.new/,
-    ],
+    validPatterns: [/Map\.new\s*\(\s*data/, /Enum\.map.*\|>\s*Map\.new/, /data\s*\|>\s*Map\.new/],
     tags: ['map', 'transform', 'new'],
   },
   {
@@ -1103,17 +920,15 @@ export const elixirProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Complex Data Pipeline',
     text: 'Filter users over 18, extract emails, downcase them, and sort.',
-    setup: 'users = [%{name: "Bob", age: 25, email: "BOB@MAIL.COM"}, %{name: "Alice", age: 17, email: "ALICE@MAIL.COM"}, %{name: "Carol", age: 30, email: "CAROL@MAIL.COM"}]',
-    setupCode: 'users = [%{name: "Bob", age: 25, email: "BOB@MAIL.COM"}, %{name: "Alice", age: 17, email: "ALICE@MAIL.COM"}, %{name: "Carol", age: 30, email: "CAROL@MAIL.COM"}]',
+    setup:
+      'users = [%{name: "Bob", age: 25, email: "BOB@MAIL.COM"}, %{name: "Alice", age: 17, email: "ALICE@MAIL.COM"}, %{name: "Carol", age: 30, email: "CAROL@MAIL.COM"}]',
+    setupCode:
+      'users = [%{name: "Bob", age: 25, email: "BOB@MAIL.COM"}, %{name: "Alice", age: 17, email: "ALICE@MAIL.COM"}, %{name: "Carol", age: 30, email: "CAROL@MAIL.COM"}]',
     expected: ['bob@mail.com', 'carol@mail.com'],
-    sample: 'users |> Enum.filter(&(&1.age >= 18)) |> Enum.map(& &1.email) |> Enum.map(&String.downcase/1) |> Enum.sort()',
-    hints: [
-      'Chain filter, map, map, sort',
-      'Each step transforms the data',
-    ],
-    validPatterns: [
-      /users\s*\|>\s*Enum\.filter.*\|>.*\|>.*\|>/,
-    ],
+    sample:
+      'users |> Enum.filter(&(&1.age >= 18)) |> Enum.map(& &1.email) |> Enum.map(&String.downcase/1) |> Enum.sort()',
+    hints: ['Chain filter, map, map, sort', 'Each step transforms the data'],
+    validPatterns: [/users\s*\|>\s*Enum\.filter.*\|>.*\|>.*\|>/],
     tags: ['pipe', 'filter', 'transform', 'complex'],
   },
   {
@@ -1130,9 +945,7 @@ export const elixirProblems: Problem[] = [
       'Split into words, then use Enum.frequencies',
       'Downcase first for consistent counting',
     ],
-    validPatterns: [
-      /text\s*\|>\s*String\.downcase.*\|>\s*String\.split.*\|>\s*Enum\.frequencies/,
-    ],
+    validPatterns: [/text\s*\|>\s*String\.downcase.*\|>\s*String\.split.*\|>\s*Enum\.frequencies/],
     tags: ['pipe', 'frequency', 'word_count'],
   },
 
@@ -1220,7 +1033,11 @@ export const elixirProblems: Problem[] = [
     text: 'Use `Stream.with_index/2` starting from 1 to add indices to elements.',
     setup: 'letters = ["a", "b", "c"]',
     setupCode: 'letters = ["a", "b", "c"]',
-    expected: [['a', 1], ['b', 2], ['c', 3]],
+    expected: [
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ],
     sample: 'letters |> Stream.with_index(1) |> Enum.to_list()',
     hints: [
       'Stream.with_index(offset) adds indices starting at offset',
@@ -1334,7 +1151,8 @@ export const elixirProblems: Problem[] = [
     setup: '# No setup needed',
     setupCode: '',
     expected: [0, 1, 1, 2, 3, 5, 8, 13],
-    sample: 'Stream.iterate({0, 1}, fn {a, b} -> {b, a + b} end) |> Stream.map(&elem(&1, 0)) |> Enum.take(8)',
+    sample:
+      'Stream.iterate({0, 1}, fn {a, b} -> {b, a + b} end) |> Stream.map(&elem(&1, 0)) |> Enum.take(8)',
     hints: [
       'Use tuple {a, b} to track two consecutive numbers',
       'Next tuple is {b, a + b}',
@@ -1371,8 +1189,10 @@ export const elixirProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Round Robin Assignment',
     text: 'Use `Stream.cycle/1` with `Enum.zip/2` to assign 6 tasks to 3 workers in round-robin fashion.',
-    setup: 'tasks = [:task1, :task2, :task3, :task4, :task5, :task6]\nworkers = [:alice, :bob, :charlie]',
-    setupCode: 'tasks = [:task1, :task2, :task3, :task4, :task5, :task6]\nworkers = [:alice, :bob, :charlie]',
+    setup:
+      'tasks = [:task1, :task2, :task3, :task4, :task5, :task6]\nworkers = [:alice, :bob, :charlie]',
+    setupCode:
+      'tasks = [:task1, :task2, :task3, :task4, :task5, :task6]\nworkers = [:alice, :bob, :charlie]',
     expected: [
       [':task1', ':alice'],
       [':task2', ':bob'],
@@ -1440,7 +1260,8 @@ export const elixirProblems: Problem[] = [
     setup: '# No setup needed',
     setupCode: '',
     expected: [1, 2, 6, 24, 120],
-    sample: 'Stream.unfold({1, 1}, fn {n, fact} -> {fact, {n + 1, fact * (n + 1)}} end) |> Enum.take(5)',
+    sample:
+      'Stream.unfold({1, 1}, fn {n, fact} -> {fact, {n + 1, fact * (n + 1)}} end) |> Enum.take(5)',
     hints: [
       'Track both n and current factorial in state',
       'State is {n, n!}',
@@ -1480,7 +1301,11 @@ export const elixirProblems: Problem[] = [
     text: 'Use `Stream.chunk_every/2` to split a list into chunks of 2 elements.',
     setup: 'numbers = [1, 2, 3, 4, 5, 6]',
     setupCode: 'numbers = [1, 2, 3, 4, 5, 6]',
-    expected: [[1, 2], [3, 4], [5, 6]],
+    expected: [
+      [1, 2],
+      [3, 4],
+      [5, 6],
+    ],
     sample: 'numbers |> Stream.chunk_every(2) |> Enum.to_list()',
     hints: [
       'Stream.chunk_every(n) creates chunks of size n',
@@ -1498,7 +1323,11 @@ export const elixirProblems: Problem[] = [
     text: 'Create sliding windows of size 3 with step 1 (overlapping windows) using `Stream.chunk_every/4`.',
     setup: 'numbers = [1, 2, 3, 4, 5]',
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
-    expected: [[1, 2, 3], [2, 3, 4], [3, 4, 5]],
+    expected: [
+      [1, 2, 3],
+      [2, 3, 4],
+      [3, 4, 5],
+    ],
     sample: 'numbers |> Stream.chunk_every(3, 1, :discard) |> Enum.to_list()',
     hints: [
       'chunk_every(count, step, leftover)',
@@ -1540,7 +1369,8 @@ export const elixirProblems: Problem[] = [
     setup: 'numbers = 1..1000',
     setupCode: 'numbers = 1..1000',
     expected: [100, 400, 900, 1600, 2500],
-    sample: 'numbers |> Stream.map(&(&1 * &1)) |> Stream.filter(&(rem(&1, 100) == 0)) |> Enum.take(5)',
+    sample:
+      'numbers |> Stream.map(&(&1 * &1)) |> Stream.filter(&(rem(&1, 100) == 0)) |> Enum.take(5)',
     hints: [
       'Use Stream.map and Stream.filter for lazy evaluation',
       'Enum.take forces evaluation of only needed elements',
@@ -1573,8 +1403,10 @@ export const elixirProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Zip Multiple Streams',
     text: 'Use `Stream.zip/1` to combine three lists into tuples.',
-    setup: 'names = ["Alice", "Bob", "Charlie"]\nages = [25, 30, 35]\ncities = ["NYC", "LA", "Chicago"]',
-    setupCode: 'names = ["Alice", "Bob", "Charlie"]\nages = [25, 30, 35]\ncities = ["NYC", "LA", "Chicago"]',
+    setup:
+      'names = ["Alice", "Bob", "Charlie"]\nages = [25, 30, 35]\ncities = ["NYC", "LA", "Chicago"]',
+    setupCode:
+      'names = ["Alice", "Bob", "Charlie"]\nages = [25, 30, 35]\ncities = ["NYC", "LA", "Chicago"]',
     expected: [
       ['Alice', 25, 'NYC'],
       ['Bob', 30, 'LA'],
@@ -1603,7 +1435,8 @@ export const elixirProblems: Problem[] = [
     setup: 'numbers = [1, 2, 3, 4, 5]',
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: [1, 3, 6, 10, 15],
-    sample: 'numbers |> Stream.transform(0, fn x, acc -> {[acc + x], acc + x} end) |> Enum.to_list()',
+    sample:
+      'numbers |> Stream.transform(0, fn x, acc -> {[acc + x], acc + x} end) |> Enum.to_list()',
     hints: [
       'transform(enumerable, acc, reducer)',
       'reducer returns {emit_list, new_acc}',
@@ -1621,7 +1454,8 @@ export const elixirProblems: Problem[] = [
     setup: 'numbers = [1, 1, 2, 2, 2, 3, 1, 1]',
     setupCode: 'numbers = [1, 1, 2, 2, 2, 3, 1, 1]',
     expected: [1, 2, 3, 1],
-    sample: 'numbers |> Stream.transform(nil, fn x, prev -> if x == prev, do: {[], x}, else: {[x], x} end) |> Enum.to_list()',
+    sample:
+      'numbers |> Stream.transform(nil, fn x, prev -> if x == prev, do: {[], x}, else: {[x], x} end) |> Enum.to_list()',
     hints: [
       'Track previous element in accumulator',
       'Emit empty list when duplicate',
@@ -1639,7 +1473,8 @@ export const elixirProblems: Problem[] = [
     setup: 'numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]',
     setupCode: 'numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]',
     expected: [1, 2, 3, 4],
-    sample: 'numbers |> Stream.transform(0, fn x, acc -> if acc + x > 10, do: {:halt, acc}, else: {[x], acc + x} end) |> Enum.to_list()',
+    sample:
+      'numbers |> Stream.transform(0, fn x, acc -> if acc + x > 10, do: {:halt, acc}, else: {[x], acc + x} end) |> Enum.to_list()',
     hints: [
       'Track running sum in accumulator',
       'Return {:halt, state} to stop stream',
@@ -1662,7 +1497,8 @@ export const elixirProblems: Problem[] = [
     setup: '# Stream.resource(start_fn, next_fn, cleanup_fn)',
     setupCode: '',
     expected: [1, 2, 3, 4, 5],
-    sample: 'Stream.resource(fn -> 1 end, fn n -> if n <= 5, do: {[n], n + 1}, else: {:halt, n} end, fn _ -> :ok end) |> Enum.to_list()',
+    sample:
+      'Stream.resource(fn -> 1 end, fn n -> if n <= 5, do: {[n], n + 1}, else: {:halt, n} end, fn _ -> :ok end) |> Enum.to_list()',
     hints: [
       'Stream.resource(start_fn, next_fn, cleanup_fn)',
       'next_fn returns {[values], next_state} or {:halt, state}',
@@ -1680,7 +1516,8 @@ export const elixirProblems: Problem[] = [
     setup: 'initial_queue = [10, 20, 30, 40]',
     setupCode: 'initial_queue = [10, 20, 30, 40]',
     expected: [10, 20, 30, 40],
-    sample: 'Stream.resource(fn -> initial_queue end, fn [] -> {:halt, []}; [h | t] -> {[h], t} end, fn _ -> :ok end) |> Enum.to_list()',
+    sample:
+      'Stream.resource(fn -> initial_queue end, fn [] -> {:halt, []}; [h | t] -> {[h], t} end, fn _ -> :ok end) |> Enum.to_list()',
     hints: [
       'Use list as queue state',
       'Pop from head, return tail as next state',
@@ -1721,7 +1558,8 @@ export const elixirProblems: Problem[] = [
     setup: 'lines = ["  apple  ", "  banana  ", "  avocado  ", "  cherry  "]',
     setupCode: 'lines = ["  apple  ", "  banana  ", "  avocado  ", "  cherry  "]',
     expected: ['APPLE', 'AVOCADO'],
-    sample: 'lines |> Stream.map(&String.trim/1) |> Stream.map(&String.upcase/1) |> Stream.filter(&String.starts_with?(&1, "A")) |> Enum.to_list()',
+    sample:
+      'lines |> Stream.map(&String.trim/1) |> Stream.map(&String.upcase/1) |> Stream.filter(&String.starts_with?(&1, "A")) |> Enum.to_list()',
     hints: [
       'Chain multiple Stream operations',
       'String.trim removes whitespace',
@@ -1744,7 +1582,8 @@ export const elixirProblems: Problem[] = [
     setup: 'values = [10, 20, 30, 40, 50]',
     setupCode: 'values = [10, 20, 30, 40, 50]',
     expected: [20.0, 30.0, 40.0],
-    sample: 'values |> Stream.chunk_every(3, 1, :discard) |> Enum.map(fn chunk -> Enum.sum(chunk) / length(chunk) end)',
+    sample:
+      'values |> Stream.chunk_every(3, 1, :discard) |> Enum.map(fn chunk -> Enum.sum(chunk) / length(chunk) end)',
     hints: [
       'Create sliding windows of size 3',
       'Calculate average for each window',
@@ -1780,7 +1619,8 @@ export const elixirProblems: Problem[] = [
     setup: '# Collatz conjecture: sequence always reaches 1',
     setupCode: '',
     expected: [13, 40, 20, 10, 5, 16, 8, 4, 2, 1],
-    sample: 'Stream.iterate(13, fn n -> if rem(n, 2) == 0, do: div(n, 2), else: n * 3 + 1 end) |> Enum.take_while(&(&1 != 1)) |> then(&(&1 ++ [1]))',
+    sample:
+      'Stream.iterate(13, fn n -> if rem(n, 2) == 0, do: div(n, 2), else: n * 3 + 1 end) |> Enum.take_while(&(&1 != 1)) |> then(&(&1 ++ [1]))',
     hints: [
       'Collatz: n/2 if even, 3n+1 if odd',
       'Use Enum.take_while to stop at 1',
@@ -1795,8 +1635,10 @@ export const elixirProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Prime Number Generator',
     text: 'Generate the first 5 prime numbers using Stream operations.',
-    setup: 'is_prime = fn n -> n > 1 and Enum.all?(2..max(2, trunc(:math.sqrt(n))), &(rem(n, &1) != 0 or &1 == n)) end',
-    setupCode: 'is_prime = fn n -> n > 1 and Enum.all?(2..max(2, trunc(:math.sqrt(n))), &(rem(n, &1) != 0 or &1 == n)) end',
+    setup:
+      'is_prime = fn n -> n > 1 and Enum.all?(2..max(2, trunc(:math.sqrt(n))), &(rem(n, &1) != 0 or &1 == n)) end',
+    setupCode:
+      'is_prime = fn n -> n > 1 and Enum.all?(2..max(2, trunc(:math.sqrt(n))), &(rem(n, &1) != 0 or &1 == n)) end',
     expected: [2, 3, 5, 7, 11],
     sample: 'Stream.iterate(2, &(&1 + 1)) |> Stream.filter(is_prime) |> Enum.take(5)',
     hints: [
@@ -1804,7 +1646,11 @@ export const elixirProblems: Problem[] = [
       'Filter using primality test',
       'Take only first 5 primes',
     ],
-    validPatterns: [/Stream\.iterate/, /Stream\.filter.*is_prime|is_prime.*Stream\.filter/, /Enum\.take/],
+    validPatterns: [
+      /Stream\.iterate/,
+      /Stream\.filter.*is_prime|is_prime.*Stream\.filter/,
+      /Enum\.take/,
+    ],
     tags: ['stream', 'iterate', 'filter', 'prime', 'math'],
   },
 ];

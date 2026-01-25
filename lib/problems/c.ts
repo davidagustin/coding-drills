@@ -644,13 +644,15 @@ export const cProblems: Problem[] = [
     setup: 'char str[] = "Hello World";',
     setupCode: 'char str[] = "Hello World";',
     expected: '11',
-    sample:
-      'int len = 0;\nwhile (str[len] != \'\\0\') {\n    len++;\n}',
+    sample: "int len = 0;\nwhile (str[len] != '\\0') {\n    len++;\n}",
     hints: [
       'Strings in C are null-terminated',
       'Count characters until you hit the null terminator \\0',
     ],
-    validPatterns: [/while\s*\([^)]*!=\s*['"]?\\0['"]?\s*\)|while\s*\(\s*str\s*\[/, /len\s*\+\+|len\s*\+=\s*1/],
+    validPatterns: [
+      /while\s*\([^)]*!=\s*['"]?\\0['"]?\s*\)|while\s*\(\s*str\s*\[/,
+      /len\s*\+\+|len\s*\+=\s*1/,
+    ],
     tags: ['strlen', 'string', 'manual', 'loop'],
   },
   {
@@ -663,12 +665,16 @@ export const cProblems: Problem[] = [
     setupCode: 'char src[] = "Hello";\nchar dest[20];',
     expected: 'dest = "Hello"',
     sample:
-      'int i = 0;\nwhile (src[i] != \'\\0\') {\n    dest[i] = src[i];\n    i++;\n}\ndest[i] = \'\\0\';',
+      "int i = 0;\nwhile (src[i] != '\\0') {\n    dest[i] = src[i];\n    i++;\n}\ndest[i] = '\\0';",
     hints: [
       'Copy character by character until null terminator',
       'Remember to add null terminator to destination',
     ],
-    validPatterns: [/while\s*\([^)]+\)|for\s*\([^)]+\)/, /dest\s*\[\s*\w+\s*\]\s*=\s*src\s*\[/, /dest\s*\[\s*\w+\s*\]\s*=\s*['"]?\\0['"]?/],
+    validPatterns: [
+      /while\s*\([^)]+\)|for\s*\([^)]+\)/,
+      /dest\s*\[\s*\w+\s*\]\s*=\s*src\s*\[/,
+      /dest\s*\[\s*\w+\s*\]\s*=\s*['"]?\\0['"]?/,
+    ],
     tags: ['strcpy', 'string', 'manual', 'loop'],
   },
   {
@@ -681,12 +687,12 @@ export const cProblems: Problem[] = [
     setupCode: 'char dest[30] = "Hello ";\nchar src[] = "World";',
     expected: 'dest = "Hello World"',
     sample:
-      'int i = 0, j = 0;\nwhile (dest[i] != \'\\0\') i++;\nwhile (src[j] != \'\\0\') {\n    dest[i++] = src[j++];\n}\ndest[i] = \'\\0\';',
-    hints: [
-      'First find the end of dest string',
-      'Then copy src starting at that position',
+      "int i = 0, j = 0;\nwhile (dest[i] != '\\0') i++;\nwhile (src[j] != '\\0') {\n    dest[i++] = src[j++];\n}\ndest[i] = '\\0';",
+    hints: ['First find the end of dest string', 'Then copy src starting at that position'],
+    validPatterns: [
+      /while\s*\([^)]*!=\s*['"]?\\0['"]?\s*\)/,
+      /dest\s*\[\s*\w+\s*\]\s*=\s*src\s*\[/,
     ],
-    validPatterns: [/while\s*\([^)]*!=\s*['"]?\\0['"]?\s*\)/, /dest\s*\[\s*\w+\s*\]\s*=\s*src\s*\[/],
     tags: ['strcat', 'string', 'manual', 'loop'],
   },
   {
@@ -724,7 +730,10 @@ export const cProblems: Problem[] = [
       'If all characters of needle match, found it',
       'Return NULL if not found',
     ],
-    validPatterns: [/for\s*\([^)]+\).*while|while\s*\([^)]+\).*for/, /haystack\s*\[\s*\w+\s*\+\s*\w+\s*\]\s*==\s*needle/],
+    validPatterns: [
+      /for\s*\([^)]+\).*while|while\s*\([^)]+\).*for/,
+      /haystack\s*\[\s*\w+\s*\+\s*\w+\s*\]\s*==\s*needle/,
+    ],
     tags: ['strstr', 'string', 'manual', 'search'],
   },
   {
@@ -756,15 +765,16 @@ export const cProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Copy Struct with memcpy',
     text: 'Copy the source struct to destination using memcpy()',
-    setup: '#include <string.h>\nstruct Point { int x; int y; };\nstruct Point src = {10, 20};\nstruct Point dest;',
-    setupCode: '#include <string.h>\nstruct Point { int x; int y; };\nstruct Point src = {10, 20};\nstruct Point dest;',
+    setup:
+      '#include <string.h>\nstruct Point { int x; int y; };\nstruct Point src = {10, 20};\nstruct Point dest;',
+    setupCode:
+      '#include <string.h>\nstruct Point { int x; int y; };\nstruct Point src = {10, 20};\nstruct Point dest;',
     expected: 'memcpy(&dest, &src, sizeof(struct Point))',
     sample: 'memcpy(&dest, &src, sizeof(struct Point))',
-    hints: [
-      'Use sizeof to get the struct size',
-      'Pass addresses of structs with &',
+    hints: ['Use sizeof to get the struct size', 'Pass addresses of structs with &'],
+    validPatterns: [
+      /memcpy\s*\(\s*&dest\s*,\s*&src\s*,\s*sizeof\s*\(\s*(struct\s+)?Point\s*\)\s*\)/,
     ],
-    validPatterns: [/memcpy\s*\(\s*&dest\s*,\s*&src\s*,\s*sizeof\s*\(\s*(struct\s+)?Point\s*\)\s*\)/],
     tags: ['memcpy', 'string.h', 'struct', 'memory'],
   },
   {
@@ -799,7 +809,9 @@ export const cProblems: Problem[] = [
       'Calculate byte count with sizeof',
       'Source is arr + 2, destination is arr',
     ],
-    validPatterns: [/memmove\s*\(\s*arr\s*,\s*arr\s*\+\s*2\s*,\s*\(\s*n\s*-\s*2\s*\)\s*\*\s*sizeof\s*\(\s*int\s*\)\s*\)/],
+    validPatterns: [
+      /memmove\s*\(\s*arr\s*,\s*arr\s*\+\s*2\s*,\s*\(\s*n\s*-\s*2\s*\)\s*\*\s*sizeof\s*\(\s*int\s*\)\s*\)/,
+    ],
     tags: ['memmove', 'string.h', 'memory', 'overlap'],
   },
   {
@@ -808,8 +820,10 @@ export const cProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Compare Integer Arrays with memcmp',
     text: 'Compare two integer arrays using memcmp()',
-    setup: '#include <string.h>\nint arr1[] = {1, 2, 3, 4, 5};\nint arr2[] = {1, 2, 3, 4, 5};\nint n = 5;',
-    setupCode: '#include <string.h>\nint arr1[] = {1, 2, 3, 4, 5};\nint arr2[] = {1, 2, 3, 4, 5};\nint n = 5;',
+    setup:
+      '#include <string.h>\nint arr1[] = {1, 2, 3, 4, 5};\nint arr2[] = {1, 2, 3, 4, 5};\nint n = 5;',
+    setupCode:
+      '#include <string.h>\nint arr1[] = {1, 2, 3, 4, 5};\nint arr2[] = {1, 2, 3, 4, 5};\nint n = 5;',
     expected: 'memcmp(arr1, arr2, n * sizeof(int))',
     sample: 'int result = memcmp(arr1, arr2, n * sizeof(int))',
     hints: [
@@ -830,14 +844,11 @@ export const cProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Check if Character is Alphabetic',
     text: 'Check if the character is a letter using isalpha()',
-    setup: '#include <ctype.h>\nchar ch = \'A\';',
-    setupCode: '#include <ctype.h>\nchar ch = \'A\';',
+    setup: "#include <ctype.h>\nchar ch = 'A';",
+    setupCode: "#include <ctype.h>\nchar ch = 'A';",
     expected: 'isalpha(ch)',
     sample: 'if (isalpha(ch)) { /* is a letter */ }',
-    hints: [
-      'isalpha returns non-zero for a-z and A-Z',
-      'Returns 0 for non-alphabetic characters',
-    ],
+    hints: ['isalpha returns non-zero for a-z and A-Z', 'Returns 0 for non-alphabetic characters'],
     validPatterns: [/isalpha\s*\(\s*ch\s*\)/],
     tags: ['isalpha', 'ctype.h', 'character'],
   },
@@ -847,14 +858,11 @@ export const cProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Check if Character is Digit',
     text: 'Check if the character is a digit using isdigit()',
-    setup: '#include <ctype.h>\nchar ch = \'5\';',
-    setupCode: '#include <ctype.h>\nchar ch = \'5\';',
+    setup: "#include <ctype.h>\nchar ch = '5';",
+    setupCode: "#include <ctype.h>\nchar ch = '5';",
     expected: 'isdigit(ch)',
     sample: 'if (isdigit(ch)) { /* is a digit */ }',
-    hints: [
-      'isdigit returns non-zero for 0-9',
-      'Returns 0 for non-digit characters',
-    ],
+    hints: ['isdigit returns non-zero for 0-9', 'Returns 0 for non-digit characters'],
     validPatterns: [/isdigit\s*\(\s*ch\s*\)/],
     tags: ['isdigit', 'ctype.h', 'character'],
   },
@@ -864,8 +872,8 @@ export const cProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Convert to Uppercase',
     text: 'Convert the lowercase character to uppercase using toupper()',
-    setup: '#include <ctype.h>\nchar ch = \'a\';',
-    setupCode: '#include <ctype.h>\nchar ch = \'a\';',
+    setup: "#include <ctype.h>\nchar ch = 'a';",
+    setupCode: "#include <ctype.h>\nchar ch = 'a';",
     expected: 'toupper(ch)',
     sample: 'char upper = toupper(ch)',
     hints: [
@@ -881,8 +889,8 @@ export const cProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Convert to Lowercase',
     text: 'Convert the uppercase character to lowercase using tolower()',
-    setup: '#include <ctype.h>\nchar ch = \'Z\';',
-    setupCode: '#include <ctype.h>\nchar ch = \'Z\';',
+    setup: "#include <ctype.h>\nchar ch = 'Z';",
+    setupCode: "#include <ctype.h>\nchar ch = 'Z';",
     expected: 'tolower(ch)',
     sample: 'char lower = tolower(ch)',
     hints: [
@@ -898,8 +906,8 @@ export const cProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Check if Character is Whitespace',
     text: 'Check if the character is whitespace using isspace()',
-    setup: '#include <ctype.h>\nchar ch = \' \';',
-    setupCode: '#include <ctype.h>\nchar ch = \' \';',
+    setup: "#include <ctype.h>\nchar ch = ' ';",
+    setupCode: "#include <ctype.h>\nchar ch = ' ';",
     expected: 'isspace(ch)',
     sample: 'if (isspace(ch)) { /* is whitespace */ }',
     hints: [
@@ -918,12 +926,8 @@ export const cProblems: Problem[] = [
     setup: '#include <ctype.h>\nchar str[] = "Hello World";',
     setupCode: '#include <ctype.h>\nchar str[] = "Hello World";',
     expected: 'str = "HELLO WORLD"',
-    sample:
-      'for (int i = 0; str[i]; i++) {\n    str[i] = toupper(str[i]);\n}',
-    hints: [
-      'Loop through each character',
-      'Apply toupper to each character',
-    ],
+    sample: 'for (int i = 0; str[i]; i++) {\n    str[i] = toupper(str[i]);\n}',
+    hints: ['Loop through each character', 'Apply toupper to each character'],
     validPatterns: [/for\s*\([^)]+\)|while\s*\([^)]+\)/, /str\s*\[\s*\w+\s*\]\s*=\s*toupper/],
     tags: ['toupper', 'ctype.h', 'string', 'loop'],
   },
@@ -941,10 +945,7 @@ export const cProblems: Problem[] = [
     setupCode: '#include <math.h>\ndouble num = -3.14;',
     expected: 'fabs(num)',
     sample: 'double result = fabs(num)',
-    hints: [
-      'fabs is for floating point (double)',
-      'abs from stdlib.h is for integers',
-    ],
+    hints: ['fabs is for floating point (double)', 'abs from stdlib.h is for integers'],
     validPatterns: [/fabs\s*\(\s*num\s*\)/],
     tags: ['fabs', 'math.h', 'absolute'],
   },
@@ -975,10 +976,7 @@ export const cProblems: Problem[] = [
     setupCode: '#include <math.h>\ndouble num = 16.0;',
     expected: 'sqrt(num)',
     sample: 'double result = sqrt(num)',
-    hints: [
-      'sqrt returns the square root as double',
-      'Negative input results in NaN',
-    ],
+    hints: ['sqrt returns the square root as double', 'Negative input results in NaN'],
     validPatterns: [/sqrt\s*\(\s*num\s*\)|sqrt\s*\(\s*16(\.0)?\s*\)/],
     tags: ['sqrt', 'math.h', 'root'],
   },
@@ -1010,10 +1008,7 @@ export const cProblems: Problem[] = [
     setupCode: '#include <math.h>\ndouble a = 5.5;\ndouble b = 2.0;',
     expected: 'fmod(a, b)',
     sample: 'double remainder = fmod(a, b)',
-    hints: [
-      'fmod(x, y) returns remainder of x/y',
-      '% operator only works for integers',
-    ],
+    hints: ['fmod(x, y) returns remainder of x/y', '% operator only works for integers'],
     validPatterns: [/fmod\s*\(\s*a\s*,\s*b\s*\)|fmod\s*\(\s*5\.5\s*,\s*2(\.0)?\s*\)/],
     tags: ['fmod', 'math.h', 'modulo'],
   },
@@ -1027,10 +1022,7 @@ export const cProblems: Problem[] = [
     setupCode: '#include <math.h>\ndouble x1 = 0.0, y1 = 0.0;\ndouble x2 = 3.0, y2 = 4.0;',
     expected: '5.0',
     sample: 'double distance = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));',
-    hints: [
-      'Distance formula: sqrt((x2-x1)^2 + (y2-y1)^2)',
-      'Use pow(value, 2) to square',
-    ],
+    hints: ['Distance formula: sqrt((x2-x1)^2 + (y2-y1)^2)', 'Use pow(value, 2) to square'],
     validPatterns: [/sqrt\s*\(\s*pow\s*\([^)]+,\s*2\s*\)\s*\+\s*pow\s*\([^)]+,\s*2\s*\)\s*\)/],
     tags: ['sqrt', 'pow', 'math.h', 'geometry'],
   },
@@ -1048,11 +1040,10 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdio.h>\nchar buffer[100];\nchar name[] = "Alice";\nint score = 95;',
     expected: 'sprintf(buffer, "%s scored %d points", name, score)',
     sample: 'sprintf(buffer, "%s scored %d points", name, score)',
-    hints: [
-      'sprintf writes formatted string to buffer',
-      'Use %s for strings, %d for integers',
+    hints: ['sprintf writes formatted string to buffer', 'Use %s for strings, %d for integers'],
+    validPatterns: [
+      /sprintf\s*\(\s*buffer\s*,\s*["'][^"']*%s[^"']*%d[^"']*["']\s*,\s*name\s*,\s*score\s*\)/,
     ],
-    validPatterns: [/sprintf\s*\(\s*buffer\s*,\s*["'][^"']*%s[^"']*%d[^"']*["']\s*,\s*name\s*,\s*score\s*\)/],
     tags: ['sprintf', 'stdio.h', 'format'],
   },
   {
@@ -1070,7 +1061,9 @@ export const cProblems: Problem[] = [
       'Use & to pass address of variables',
       'Format string matches input pattern',
     ],
-    validPatterns: [/sscanf\s*\(\s*date\s*,\s*["']%d-%d-%d["']\s*,\s*&day\s*,\s*&month\s*,\s*&year\s*\)/],
+    validPatterns: [
+      /sscanf\s*\(\s*date\s*,\s*["']%d-%d-%d["']\s*,\s*&day\s*,\s*&month\s*,\s*&year\s*\)/,
+    ],
     tags: ['sscanf', 'stdio.h', 'parse'],
   },
   {
@@ -1079,8 +1072,10 @@ export const cProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Safe String Formatting with snprintf',
     text: 'Safely format a long message into a small buffer using snprintf()',
-    setup: '#include <stdio.h>\nchar buffer[20];\nchar *message = "This is a very long message that exceeds buffer";',
-    setupCode: '#include <stdio.h>\nchar buffer[20];\nchar *message = "This is a very long message that exceeds buffer";',
+    setup:
+      '#include <stdio.h>\nchar buffer[20];\nchar *message = "This is a very long message that exceeds buffer";',
+    setupCode:
+      '#include <stdio.h>\nchar buffer[20];\nchar *message = "This is a very long message that exceeds buffer";',
     expected: 'snprintf(buffer, sizeof(buffer), "%s", message)',
     sample: 'int written = snprintf(buffer, sizeof(buffer), "%s", message);',
     hints: [
@@ -1088,7 +1083,9 @@ export const cProblems: Problem[] = [
       'Returns number of characters that would be written',
       'If return >= size, output was truncated',
     ],
-    validPatterns: [/snprintf\s*\(\s*buffer\s*,\s*(sizeof\s*\(\s*buffer\s*\)|20)\s*,\s*["']%s["']\s*,\s*message\s*\)/],
+    validPatterns: [
+      /snprintf\s*\(\s*buffer\s*,\s*(sizeof\s*\(\s*buffer\s*\)|20)\s*,\s*["']%s["']\s*,\s*message\s*\)/,
+    ],
     tags: ['snprintf', 'stdio.h', 'safe', 'format'],
   },
 
@@ -1103,13 +1100,16 @@ export const cProblems: Problem[] = [
     text: 'Copy at most 10 characters from src to dest using strncpy, ensuring null termination',
     setup: '#include <string.h>\nchar src[] = "Hello World!";\nchar dest[11];',
     setupCode: '#include <string.h>\nchar src[] = "Hello World!";\nchar dest[11];',
-    expected: 'strncpy(dest, src, 10); dest[10] = \'\\0\';',
-    sample: 'strncpy(dest, src, 10);\ndest[10] = \'\\0\';',
+    expected: "strncpy(dest, src, 10); dest[10] = '\\0';",
+    sample: "strncpy(dest, src, 10);\ndest[10] = '\\0';",
     hints: [
       'strncpy may not null-terminate if src is longer than n',
       'Always manually set the last byte to null for safety',
     ],
-    validPatterns: [/strncpy\s*\(\s*dest\s*,\s*src\s*,\s*10\s*\)/, /dest\s*\[\s*10\s*\]\s*=\s*['"]?\\0['"]?/],
+    validPatterns: [
+      /strncpy\s*\(\s*dest\s*,\s*src\s*,\s*10\s*\)/,
+      /dest\s*\[\s*10\s*\]\s*=\s*['"]?\\0['"]?/,
+    ],
     tags: ['strncpy', 'string.h', 'safe', 'null-termination'],
   },
   {
@@ -1155,12 +1155,17 @@ export const cProblems: Problem[] = [
     setup: '#include <string.h>\nchar str[] = "Hello World";',
     setupCode: '#include <string.h>\nchar str[] = "Hello World";',
     expected: 'count = 3',
-    sample: 'int count = 0;\nchar *ptr = str;\nwhile ((ptr = strchr(ptr, \'l\')) != NULL) {\n    count++;\n    ptr++;\n}',
+    sample:
+      "int count = 0;\nchar *ptr = str;\nwhile ((ptr = strchr(ptr, 'l')) != NULL) {\n    count++;\n    ptr++;\n}",
     hints: [
       'strchr finds the first occurrence of a character',
       'Call repeatedly starting from position after last match',
     ],
-    validPatterns: [/strchr\s*\(\s*ptr\s*,\s*['"]?l['"]?\s*\)/, /while\s*\([^)]*strchr/, /count\s*\+\+/],
+    validPatterns: [
+      /strchr\s*\(\s*ptr\s*,\s*['"]?l['"]?\s*\)/,
+      /while\s*\([^)]*strchr/,
+      /count\s*\+\+/,
+    ],
     tags: ['strchr', 'string.h', 'count', 'loop'],
   },
   {
@@ -1171,7 +1176,7 @@ export const cProblems: Problem[] = [
     text: 'Find the file extension (part after last dot) using strrchr',
     setup: '#include <string.h>\nchar filename[] = "archive.tar.gz";',
     setupCode: '#include <string.h>\nchar filename[] = "archive.tar.gz";',
-    expected: 'strrchr(filename, \'.\')',
+    expected: "strrchr(filename, '.')",
     sample: 'char *ext = strrchr(filename, \'.\');\n// ext points to ".gz"',
     hints: [
       'strrchr finds the last occurrence of a character',
@@ -1239,8 +1244,8 @@ export const cProblems: Problem[] = [
     text: 'Find the first occurrence of newline character in the buffer using memchr',
     setup: '#include <string.h>\nchar buffer[] = "Line1\\nLine2\\nLine3";\nsize_t len = 18;',
     setupCode: '#include <string.h>\nchar buffer[] = "Line1\\nLine2\\nLine3";\nsize_t len = 18;',
-    expected: 'memchr(buffer, \'\\n\', len)',
-    sample: 'char *newline = memchr(buffer, \'\\n\', len);',
+    expected: "memchr(buffer, '\\n', len)",
+    sample: "char *newline = memchr(buffer, '\\n', len);",
     hints: [
       'memchr searches n bytes for the specified byte value',
       'Works with binary data that may contain null bytes',
@@ -1256,13 +1261,17 @@ export const cProblems: Problem[] = [
     text: 'Insert a space at position 5 by shifting the rest of the string using memmove',
     setup: '#include <string.h>\nchar str[20] = "HelloWorld";\nint pos = 5;',
     setupCode: '#include <string.h>\nchar str[20] = "HelloWorld";\nint pos = 5;',
-    expected: 'memmove(str + pos + 1, str + pos, strlen(str) - pos + 1); str[pos] = \' \';',
-    sample: 'memmove(str + pos + 1, str + pos, strlen(str) - pos + 1);\nstr[pos] = \' \';\n// Result: "Hello World"',
+    expected: "memmove(str + pos + 1, str + pos, strlen(str) - pos + 1); str[pos] = ' ';",
+    sample:
+      'memmove(str + pos + 1, str + pos, strlen(str) - pos + 1);\nstr[pos] = \' \';\n// Result: "Hello World"',
     hints: [
       'memmove handles overlapping regions safely',
       'Shift includes the null terminator (+1)',
     ],
-    validPatterns: [/memmove\s*\(\s*str\s*\+\s*pos\s*\+\s*1/, /str\s*\[\s*pos\s*\]\s*=\s*['"]?\s['"]?/],
+    validPatterns: [
+      /memmove\s*\(\s*str\s*\+\s*pos\s*\+\s*1/,
+      /str\s*\[\s*pos\s*\]\s*=\s*['"]?\s['"]?/,
+    ],
     tags: ['memmove', 'string.h', 'memory', 'insert'],
   },
   {
@@ -1275,10 +1284,7 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\nchar str[] = "   -42";',
     expected: 'atoi(str)',
     sample: 'int num = atoi(str);\n// num = -42 (atoi skips leading whitespace)',
-    hints: [
-      'atoi automatically skips leading whitespace',
-      'Handles optional sign (+ or -)',
-    ],
+    hints: ['atoi automatically skips leading whitespace', 'Handles optional sign (+ or -)'],
     validPatterns: [/atoi\s*\(\s*str\s*\)/],
     tags: ['atoi', 'stdlib.h', 'conversion', 'whitespace'],
   },
@@ -1292,10 +1298,7 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\nchar str[] = "1.5e-3";',
     expected: 'atof(str)',
     sample: 'double num = atof(str);\n// num = 0.0015',
-    hints: [
-      'atof handles scientific notation (e or E)',
-      'Returns double, not float',
-    ],
+    hints: ['atof handles scientific notation (e or E)', 'Returns double, not float'],
     validPatterns: [/atof\s*\(\s*str\s*\)/],
     tags: ['atof', 'stdlib.h', 'conversion', 'scientific'],
   },
@@ -1343,10 +1346,7 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\nchar str[] = "11010110";\nchar *endptr;',
     expected: 'strtol(str, &endptr, 2)',
     sample: 'long num = strtol(str, &endptr, 2);\n// num = 214',
-    hints: [
-      'Use base 2 for binary conversion',
-      'Only 0 and 1 are valid binary digits',
-    ],
+    hints: ['Use base 2 for binary conversion', 'Only 0 and 1 are valid binary digits'],
     validPatterns: [/strtol\s*\(\s*str\s*,\s*(&endptr|NULL)\s*,\s*2\s*\)/],
     tags: ['strtol', 'stdlib.h', 'conversion', 'binary'],
   },
@@ -1359,12 +1359,17 @@ export const cProblems: Problem[] = [
     setup: '#include <string.h>\nchar str[] = "Hello";',
     setupCode: '#include <string.h>\nchar str[] = "Hello";',
     expected: 'str = "olleH"',
-    sample: 'int len = strlen(str);\nfor (int i = 0; i < len / 2; i++) {\n    char temp = str[i];\n    str[i] = str[len - 1 - i];\n    str[len - 1 - i] = temp;\n}',
+    sample:
+      'int len = strlen(str);\nfor (int i = 0; i < len / 2; i++) {\n    char temp = str[i];\n    str[i] = str[len - 1 - i];\n    str[len - 1 - i] = temp;\n}',
     hints: [
       'Swap characters from both ends moving toward center',
       'Only iterate to len/2 to avoid double-swapping',
     ],
-    validPatterns: [/for\s*\([^)]*len\s*\/\s*2/, /temp|swap/i, /str\s*\[\s*len\s*-\s*1\s*-\s*\w+\s*\]/],
+    validPatterns: [
+      /for\s*\([^)]*len\s*\/\s*2/,
+      /temp|swap/i,
+      /str\s*\[\s*len\s*-\s*1\s*-\s*\w+\s*\]/,
+    ],
     tags: ['string', 'reverse', 'array', 'in-place'],
   },
   {
@@ -1390,16 +1395,23 @@ export const cProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Tokenize CSV Line with strtok',
     text: 'Parse a CSV line into individual fields using strtok with comma delimiter',
-    setup: '#include <string.h>\n#include <stdio.h>\nchar csv[] = "John,25,Engineer,NYC";\nchar *fields[10];\nint count = 0;',
-    setupCode: '#include <string.h>\n#include <stdio.h>\nchar csv[] = "John,25,Engineer,NYC";\nchar *fields[10];\nint count = 0;',
+    setup:
+      '#include <string.h>\n#include <stdio.h>\nchar csv[] = "John,25,Engineer,NYC";\nchar *fields[10];\nint count = 0;',
+    setupCode:
+      '#include <string.h>\n#include <stdio.h>\nchar csv[] = "John,25,Engineer,NYC";\nchar *fields[10];\nint count = 0;',
     expected: 'fields contains: "John", "25", "Engineer", "NYC"',
-    sample: 'char *token = strtok(csv, ",");\nwhile (token && count < 10) {\n    fields[count++] = token;\n    token = strtok(NULL, ",");\n}',
+    sample:
+      'char *token = strtok(csv, ",");\nwhile (token && count < 10) {\n    fields[count++] = token;\n    token = strtok(NULL, ",");\n}',
     hints: [
       'First call uses the string, subsequent calls use NULL',
       'strtok modifies the original string (inserts nulls)',
       'Store pointers to tokens, not copies',
     ],
-    validPatterns: [/strtok\s*\(\s*csv\s*,\s*["'],["']\s*\)/, /strtok\s*\(\s*NULL\s*,/, /fields\s*\[\s*count/],
+    validPatterns: [
+      /strtok\s*\(\s*csv\s*,\s*["'],["']\s*\)/,
+      /strtok\s*\(\s*NULL\s*,/,
+      /fields\s*\[\s*count/,
+    ],
     tags: ['strtok', 'string.h', 'csv', 'tokenize'],
   },
   {
@@ -1411,13 +1423,18 @@ export const cProblems: Problem[] = [
     setup: '#include <string.h>\n#include <ctype.h>\nchar ident[] = "my_var123";',
     setupCode: '#include <string.h>\n#include <ctype.h>\nchar ident[] = "my_var123";',
     expected: 'Valid identifier check',
-    sample: 'int isValid = (isalpha(ident[0]) || ident[0] == \'_\') &&\n    strspn(ident, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_") == strlen(ident);',
+    sample:
+      'int isValid = (isalpha(ident[0]) || ident[0] == \'_\') &&\n    strspn(ident, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_") == strlen(ident);',
     hints: [
       'First character must be letter or underscore',
       'strspn returns length of valid prefix',
       'Valid if strspn length equals string length',
     ],
-    validPatterns: [/isalpha\s*\(\s*ident\s*\[\s*0\s*\]\s*\)|ident\s*\[\s*0\s*\]\s*==\s*['"]_['"]/, /strspn\s*\(\s*ident/, /strlen\s*\(\s*ident\s*\)/],
+    validPatterns: [
+      /isalpha\s*\(\s*ident\s*\[\s*0\s*\]\s*\)|ident\s*\[\s*0\s*\]\s*==\s*['"]_['"]/,
+      /strspn\s*\(\s*ident/,
+      /strlen\s*\(\s*ident\s*\)/,
+    ],
     tags: ['strspn', 'string.h', 'validation', 'identifier'],
   },
   {
@@ -1429,7 +1446,8 @@ export const cProblems: Problem[] = [
     setup: '#include <ctype.h>\nchar text[] = "  Hello   World  How Are   You  ";',
     setupCode: '#include <ctype.h>\nchar text[] = "  Hello   World  How Are   You  ";',
     expected: 'count = 5',
-    sample: 'int count = 0;\nchar *ptr = text;\nwhile (*ptr) {\n    while (*ptr && isspace(*ptr)) ptr++;\n    if (*ptr) {\n        count++;\n        while (*ptr && !isspace(*ptr)) ptr++;\n    }\n}',
+    sample:
+      'int count = 0;\nchar *ptr = text;\nwhile (*ptr) {\n    while (*ptr && isspace(*ptr)) ptr++;\n    if (*ptr) {\n        count++;\n        while (*ptr && !isspace(*ptr)) ptr++;\n    }\n}',
     hints: [
       'Skip leading spaces, then count word start',
       'Use isspace() to detect whitespace',
@@ -1444,16 +1462,19 @@ export const cProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Implement Circular Buffer Write',
     text: 'Write data to a circular buffer, wrapping around to the beginning when full',
-    setup: '#include <string.h>\nchar buffer[10];\nint head = 7;\nint size = 10;\nchar data[] = "HELLO";',
-    setupCode: '#include <string.h>\nchar buffer[10];\nint head = 7;\nint size = 10;\nchar data[] = "HELLO";',
+    setup:
+      '#include <string.h>\nchar buffer[10];\nint head = 7;\nint size = 10;\nchar data[] = "HELLO";',
+    setupCode:
+      '#include <string.h>\nchar buffer[10];\nint head = 7;\nint size = 10;\nchar data[] = "HELLO";',
     expected: 'Data wraps around in circular buffer',
-    sample: 'for (int i = 0; data[i]; i++) {\n    buffer[(head + i) % size] = data[i];\n}\nhead = (head + strlen(data)) % size;',
+    sample:
+      'for (int i = 0; data[i]; i++) {\n    buffer[(head + i) % size] = data[i];\n}\nhead = (head + strlen(data)) % size;',
     hints: [
       'Use modulo operator for wrapping',
       'head + offset % size gives circular index',
       'Update head position after write',
     ],
-    validPatterns: [/\(\s*head\s*\+\s*\w+\s*\)\s*%\s*size/, /buffer\s*\[\s*\([^]]*%\s*size\s*\)\s*\]/],
+    validPatterns: [/\(\s*head\s*\+\s*\w+\s*\)\s*%\s*size/, /buffer\s*\[\s*\(.*%\s*size\s*\)\s*\]/],
     tags: ['circular-buffer', 'array', 'modulo', 'ring-buffer'],
   },
   {
@@ -1462,16 +1483,22 @@ export const cProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Parse Lines from Buffer with memchr',
     text: 'Find and extract the first line from a buffer containing multiple lines',
-    setup: '#include <string.h>\nchar buffer[] = "First line\\nSecond line\\nThird";\nsize_t buflen = 29;',
-    setupCode: '#include <string.h>\nchar buffer[] = "First line\\nSecond line\\nThird";\nsize_t buflen = 29;',
+    setup:
+      '#include <string.h>\nchar buffer[] = "First line\\nSecond line\\nThird";\nsize_t buflen = 29;',
+    setupCode:
+      '#include <string.h>\nchar buffer[] = "First line\\nSecond line\\nThird";\nsize_t buflen = 29;',
     expected: 'Pointer to newline and line length',
-    sample: 'char *newline = memchr(buffer, \'\\n\', buflen);\nsize_t linelen = newline ? (newline - buffer) : buflen;',
+    sample:
+      "char *newline = memchr(buffer, '\\n', buflen);\nsize_t linelen = newline ? (newline - buffer) : buflen;",
     hints: [
       'memchr returns pointer to found byte or NULL',
       'Calculate line length by pointer subtraction',
       'Handle case when no newline is found',
     ],
-    validPatterns: [/memchr\s*\(\s*buffer\s*,\s*['"]?\\n['"]?\s*,\s*buflen\s*\)/, /newline\s*-\s*buffer/],
+    validPatterns: [
+      /memchr\s*\(\s*buffer\s*,\s*['"]?\\n['"]?\s*,\s*buflen\s*\)/,
+      /newline\s*-\s*buffer/,
+    ],
     tags: ['memchr', 'string.h', 'parsing', 'lines'],
   },
   {
@@ -1483,7 +1510,8 @@ export const cProblems: Problem[] = [
     setup: '#include <string.h>\nchar str[] = "Hello World";\nint pos = 5;\nint len = 3;',
     setupCode: '#include <string.h>\nchar str[] = "Hello World";\nint pos = 5;\nint len = 3;',
     expected: 'memmove(str + pos, str + pos + len, strlen(str) - pos - len + 1)',
-    sample: 'memmove(str + pos, str + pos + len, strlen(str) - pos - len + 1);\n// Result: "Helloorld"',
+    sample:
+      'memmove(str + pos, str + pos + len, strlen(str) - pos - len + 1);\n// Result: "Helloorld"',
     hints: [
       'Move characters after deleted portion to fill the gap',
       'Include null terminator in the move',
@@ -1500,13 +1528,17 @@ export const cProblems: Problem[] = [
     setup: '#include <string.h>\nchar str[] = "apple:banana:cherry";\nchar *saveptr;',
     setupCode: '#include <string.h>\nchar str[] = "apple:banana:cherry";\nchar *saveptr;',
     expected: 'Use strtok_r with saveptr for thread safety',
-    sample: 'char *token = strtok_r(str, ":", &saveptr);\nwhile (token) {\n    // process token\n    token = strtok_r(NULL, ":", &saveptr);\n}',
+    sample:
+      'char *token = strtok_r(str, ":", &saveptr);\nwhile (token) {\n    // process token\n    token = strtok_r(NULL, ":", &saveptr);\n}',
     hints: [
       'strtok_r uses saveptr instead of static state',
       'Safe to use in multi-threaded code',
       'POSIX function, may need _GNU_SOURCE',
     ],
-    validPatterns: [/strtok_r\s*\(\s*str\s*,\s*["']:["']\s*,\s*&saveptr\s*\)/, /strtok_r\s*\(\s*NULL\s*,/],
+    validPatterns: [
+      /strtok_r\s*\(\s*str\s*,\s*["']:["']\s*,\s*&saveptr\s*\)/,
+      /strtok_r\s*\(\s*NULL\s*,/,
+    ],
     tags: ['strtok_r', 'string.h', 'thread-safe', 'tokenize'],
   },
   {
@@ -1517,14 +1549,19 @@ export const cProblems: Problem[] = [
     text: 'Pack an integer and a string into a binary buffer using memcpy',
     setup: '#include <string.h>\nchar buffer[100];\nint id = 42;\nchar name[] = "Test";',
     setupCode: '#include <string.h>\nchar buffer[100];\nint id = 42;\nchar name[] = "Test";',
-    expected: 'memcpy(buffer, &id, sizeof(int)); memcpy(buffer + sizeof(int), name, strlen(name) + 1);',
-    sample: 'int offset = 0;\nmemcpy(buffer + offset, &id, sizeof(int));\noffset += sizeof(int);\nmemcpy(buffer + offset, name, strlen(name) + 1);',
+    expected:
+      'memcpy(buffer, &id, sizeof(int)); memcpy(buffer + sizeof(int), name, strlen(name) + 1);',
+    sample:
+      'int offset = 0;\nmemcpy(buffer + offset, &id, sizeof(int));\noffset += sizeof(int);\nmemcpy(buffer + offset, name, strlen(name) + 1);',
     hints: [
       'Track current offset in buffer',
       'Use sizeof for type-safe offsets',
       'Include null terminator for strings (+1)',
     ],
-    validPatterns: [/memcpy\s*\(\s*buffer[^,]*,\s*&id\s*,\s*sizeof\s*\(\s*int\s*\)\s*\)/, /memcpy\s*\(\s*buffer\s*\+/],
+    validPatterns: [
+      /memcpy\s*\(\s*buffer[^,]*,\s*&id\s*,\s*sizeof\s*\(\s*int\s*\)\s*\)/,
+      /memcpy\s*\(\s*buffer\s*\+/,
+    ],
     tags: ['memcpy', 'buffer', 'packing', 'binary'],
   },
 ];

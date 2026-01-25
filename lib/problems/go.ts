@@ -1094,11 +1094,7 @@ export const goProblems: Problem[] = [
       'Append only elements that pass the filter',
       'This avoids extra allocation',
     ],
-    validPatterns: [
-      /numbers\s*\[\s*:\s*0\s*\]/,
-      /for\s+.*range\s+numbers/,
-      /n\s*%\s*2\s*==\s*0/,
-    ],
+    validPatterns: [/numbers\s*\[\s*:\s*0\s*\]/, /for\s+.*range\s+numbers/, /n\s*%\s*2\s*==\s*0/],
     tags: ['slice', 'filter', 'in-place'],
   },
   {
@@ -1307,7 +1303,8 @@ export const goProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Compare Maps for Equality',
     text: 'Use `maps.Equal()` to check if two maps are equal.',
-    setup: 'import "maps"\nm1 := map[string]int{"a": 1, "b": 2}\nm2 := map[string]int{"a": 1, "b": 2}',
+    setup:
+      'import "maps"\nm1 := map[string]int{"a": 1, "b": 2}\nm2 := map[string]int{"a": 1, "b": 2}',
     setupCode:
       'import "maps"\nm1 := map[string]int{"a": 1, "b": 2}\nm2 := map[string]int{"a": 1, "b": 2}',
     expected: true,
@@ -1355,13 +1352,10 @@ export const goProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Stable Sort Slice',
     text: 'Use `sort.SliceStable()` to sort by name length, preserving original order for equal lengths.',
-    setup:
-      'import "sort"\nnames := []string{"bob", "alice", "eve", "dan"}',
-    setupCode:
-      'import "sort"\nnames := []string{"bob", "alice", "eve", "dan"}',
+    setup: 'import "sort"\nnames := []string{"bob", "alice", "eve", "dan"}',
+    setupCode: 'import "sort"\nnames := []string{"bob", "alice", "eve", "dan"}',
     expected: ['bob', 'eve', 'dan', 'alice'],
-    sample:
-      'sort.SliceStable(names, func(i, j int) bool { return len(names[i]) < len(names[j]) })',
+    sample: 'sort.SliceStable(names, func(i, j int) bool { return len(names[i]) < len(names[j]) })',
     hints: ['SliceStable preserves original order', 'Equal elements keep relative position'],
     validPatterns: [/sort\.SliceStable\s*\(\s*names\s*,\s*func\s*\(/],
     tags: ['sort', 'SliceStable', 'stable'],
@@ -1462,7 +1456,7 @@ export const goProblems: Problem[] = [
     setupCode: 'import "strconv"\npi := 3.14159265359',
     expected: '3.14',
     sample: "strconv.FormatFloat(pi, 'f', 2, 64)",
-    hints: ["FormatFloat(f, fmt, prec, bitSize)", "'f' for decimal notation"],
+    hints: ['FormatFloat(f, fmt, prec, bitSize)', "'f' for decimal notation"],
     validPatterns: [/strconv\.FormatFloat\s*\(\s*pi\s*,\s*'f'\s*,\s*2\s*,\s*64\s*\)/],
     tags: ['strconv', 'FormatFloat', 'precision'],
   },
@@ -1669,10 +1663,7 @@ export const goProblems: Problem[] = [
     expected: '&lt;html&gt;content&lt;/html&gt;',
     sample: 'r := strings.NewReplacer("<", "&lt;", ">", "&gt;"); r.Replace(s)',
     hints: ['NewReplacer takes old/new pairs', 'Efficient for multiple replacements'],
-    validPatterns: [
-      /strings\.NewReplacer\s*\(/,
-      /\.Replace\s*\(\s*s\s*\)/,
-    ],
+    validPatterns: [/strings\.NewReplacer\s*\(/, /\.Replace\s*\(\s*s\s*\)/],
     tags: ['Replacer', 'strings', 'escape', 'html'],
   },
   {
@@ -1700,7 +1691,9 @@ export const goProblems: Problem[] = [
     expected: true,
     sample: 'bytes.Contains(data, []byte("world"))',
     hints: ['bytes.Contains works like strings.Contains', 'Second arg must be []byte'],
-    validPatterns: [/bytes\.Contains\s*\(\s*data\s*,\s*\[\s*\]\s*byte\s*\(\s*["']world["']\s*\)\s*\)/],
+    validPatterns: [
+      /bytes\.Contains\s*\(\s*data\s*,\s*\[\s*\]\s*byte\s*\(\s*["']world["']\s*\)\s*\)/,
+    ],
     tags: ['bytes', 'Contains', 'search'],
   },
   {
@@ -1779,10 +1772,13 @@ export const goProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Check Regex Match',
     text: 'Use `regexp.MatchString()` to check if the string matches the email pattern.',
-    setup: 'import "regexp"\nemail := "test@example.com"\npattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`',
-    setupCode: 'import "regexp"\nemail := "test@example.com"\npattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`',
+    setup:
+      'import "regexp"\nemail := "test@example.com"\npattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`',
+    setupCode:
+      'import "regexp"\nemail := "test@example.com"\npattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`',
     expected: true,
-    sample: 'matched, err := regexp.MatchString(pattern, email); if err != nil { panic(err) }; matched',
+    sample:
+      'matched, err := regexp.MatchString(pattern, email); if err != nil { panic(err) }; matched',
     hints: ['MatchString returns (bool, error)', 'Compile regex for repeated use'],
     validPatterns: [/regexp\.MatchString\s*\(\s*pattern\s*,\s*email\s*\)/],
     tags: ['regexp', 'MatchString', 'regex'],
@@ -1813,7 +1809,8 @@ export const goProblems: Problem[] = [
     setup: 'import "strings"\nvar b strings.Builder',
     setupCode: 'import "strings"\nvar b strings.Builder',
     expected: ['Hello', 'World'],
-    sample: 'b.WriteString("Hello"); s1 := b.String(); b.Reset(); b.WriteString("World"); s2 := b.String()',
+    sample:
+      'b.WriteString("Hello"); s1 := b.String(); b.Reset(); b.WriteString("World"); s2 := b.String()',
     hints: ['Reset() clears the builder', 'Allows reusing without new allocation'],
     validPatterns: [/\.WriteString\s*\(/, /\.Reset\s*\(\s*\)/, /\.String\s*\(\s*\)/],
     tags: ['Builder', 'Reset', 'strings', 'performance'],
@@ -1839,7 +1836,8 @@ export const goProblems: Problem[] = [
     title: 'Extract Regex Groups',
     text: 'Use `FindStringSubmatch()` to extract name and domain from the email.',
     setup: 'import "regexp"\nre := regexp.MustCompile(`(.+)@(.+)`)\nemail := "user@example.com"',
-    setupCode: 'import "regexp"\nre := regexp.MustCompile(`(.+)@(.+)`)\nemail := "user@example.com"',
+    setupCode:
+      'import "regexp"\nre := regexp.MustCompile(`(.+)@(.+)`)\nemail := "user@example.com"',
     expected: ['user@example.com', 'user', 'example.com'],
     sample: 're.FindStringSubmatch(email)',
     hints: ['Returns slice: [fullMatch, group1, group2, ...]', 'Index 0 is full match'],
@@ -1871,10 +1869,7 @@ export const goProblems: Problem[] = [
     expected: 'Hello World',
     sample: 'strings.Title(s)',
     hints: ['strings.Title is deprecated but works', 'For new code, use golang.org/x/text/cases'],
-    validPatterns: [
-      /strings\.Title\s*\(\s*s\s*\)/,
-      /cases\.Title/,
-    ],
+    validPatterns: [/strings\.Title\s*\(\s*s\s*\)/, /cases\.Title/],
     tags: ['strings', 'Title', 'case', 'deprecated'],
   },
 
@@ -2072,8 +2067,7 @@ export const goProblems: Problem[] = [
     setup: '// Create 3x4 matrix',
     setupCode: '// Create 3x4 matrix',
     expected: '3 rows, 4 columns each',
-    sample:
-      'matrix := make([][]int, 3); for i := range matrix { matrix[i] = make([]int, 4) }',
+    sample: 'matrix := make([][]int, 3); for i := range matrix { matrix[i] = make([]int, 4) }',
     hints: ['Create outer slice first', 'Initialize each row separately'],
     validPatterns: [
       /make\s*\(\s*\[\s*\]\s*\[\s*\]\s*int\s*,\s*3\s*\)/,
@@ -2118,12 +2112,8 @@ export const goProblems: Problem[] = [
     setup: 'import "slices"\nimport "cmp"\nwords := []string{"golang", "is", "awesome"}',
     setupCode: 'import "slices"\nimport "cmp"\nwords := []string{"golang", "is", "awesome"}',
     expected: ['is', 'golang', 'awesome'],
-    sample:
-      'slices.SortFunc(words, func(a, b string) int { return cmp.Compare(len(a), len(b)) })',
-    hints: [
-      'SortFunc takes comparison function',
-      'Return negative/zero/positive like cmp.Compare',
-    ],
+    sample: 'slices.SortFunc(words, func(a, b string) int { return cmp.Compare(len(a), len(b)) })',
+    hints: ['SortFunc takes comparison function', 'Return negative/zero/positive like cmp.Compare'],
     validPatterns: [/slices\.SortFunc\s*\(\s*words\s*,\s*func\s*\(/],
     tags: ['slices', 'SortFunc', 'custom', 'Go1.21'],
   },
@@ -2254,14 +2244,21 @@ export const goProblems: Problem[] = [
     text: 'Use `slices.Chunk()` to split the slice into chunks of size 3.',
     setup: 'import "slices"\nnumbers := []int{1, 2, 3, 4, 5, 6, 7, 8}',
     setupCode: 'import "slices"\nnumbers := []int{1, 2, 3, 4, 5, 6, 7, 8}',
-    expected: [[1, 2, 3], [4, 5, 6], [7, 8]],
+    expected: [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8],
+    ],
     sample: 'chunks := slices.Collect(slices.Chunk(numbers, 3))',
     hints: [
       'Chunk returns an iterator',
       'Use slices.Collect to get slice of slices',
       'Last chunk may be smaller',
     ],
-    validPatterns: [/slices\.Chunk\s*\(\s*numbers\s*,\s*3\s*\)/, /slices\.Collect\s*\(\s*slices\.Chunk/],
+    validPatterns: [
+      /slices\.Chunk\s*\(\s*numbers\s*,\s*3\s*\)/,
+      /slices\.Collect\s*\(\s*slices\.Chunk/,
+    ],
     tags: ['slices', 'Chunk', 'batch', 'iterator', 'Go1.23'],
   },
   {
@@ -2436,7 +2433,9 @@ export const goProblems: Problem[] = [
     expected: 'func (b *Builder) SetName(name string) *Builder',
     sample: 'func (b *Builder) SetName(name string) *Builder { b.name = name; return b }',
     hints: ['Return pointer to receiver for chaining', 'Allows b.SetName("x").SetAge(20)'],
-    validPatterns: [/func\s*\(\s*\w+\s+\*Builder\s*\)\s*SetName\s*\(\s*\w+\s+string\s*\)\s*\*Builder/],
+    validPatterns: [
+      /func\s*\(\s*\w+\s+\*Builder\s*\)\s*SetName\s*\(\s*\w+\s+string\s*\)\s*\*Builder/,
+    ],
     tags: ['method', 'chain', 'builder', 'pattern'],
   },
   {
@@ -2445,8 +2444,10 @@ export const goProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Defer Resource Cleanup',
     text: 'Use defer to ensure the file is closed after opening.',
-    setup: 'import "os"\nf, err := os.Open("file.txt")\nif err != nil { return err }\n// Defer close here',
-    setupCode: 'import "os"\nf, err := os.Open("file.txt")\nif err != nil { return err }\n// Defer close here',
+    setup:
+      'import "os"\nf, err := os.Open("file.txt")\nif err != nil { return err }\n// Defer close here',
+    setupCode:
+      'import "os"\nf, err := os.Open("file.txt")\nif err != nil { return err }\n// Defer close here',
     expected: 'defer f.Close()',
     sample: 'defer f.Close()',
     hints: ['defer executes when function returns', 'Place defer right after error check'],
@@ -2492,7 +2493,9 @@ export const goProblems: Problem[] = [
     expected: [1, 3, 5],
     sample: 'for i, n := range numbers { if i%2 == 0 { result = append(result, n) } }',
     hints: ['Use index to determine which elements to keep', 'Even indices are 0, 2, 4...'],
-    validPatterns: [/for\s+\w+\s*,\s*\w+\s*:=\s*range\s+numbers\s*\{[^}]*%\s*2\s*==\s*0[^}]*append/],
+    validPatterns: [
+      /for\s+\w+\s*,\s*\w+\s*:=\s*range\s+numbers\s*\{[^}]*%\s*2\s*==\s*0[^}]*append/,
+    ],
     tags: ['range', 'index', 'filter', 'pattern'],
   },
   {
@@ -2517,8 +2520,10 @@ export const goProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Enumerate with Custom Start Index',
     text: 'Create enumerated pairs starting from 1 instead of 0.',
-    setup: 'items := []string{"a", "b", "c"}\ntype Enum struct { Index int; Value string }\nvar result []Enum',
-    setupCode: 'items := []string{"a", "b", "c"}\ntype Enum struct { Index int; Value string }\nvar result []Enum',
+    setup:
+      'items := []string{"a", "b", "c"}\ntype Enum struct { Index int; Value string }\nvar result []Enum',
+    setupCode:
+      'items := []string{"a", "b", "c"}\ntype Enum struct { Index int; Value string }\nvar result []Enum',
     expected: [
       { Index: 1, Value: 'a' },
       { Index: 2, Value: 'b' },
@@ -2543,7 +2548,8 @@ export const goProblems: Problem[] = [
       { A: 3, B: 4 },
       { A: 4, B: 5 },
     ],
-    sample: 'for i := 0; i < len(numbers)-1; i++ { pairs = append(pairs, Pair{numbers[i], numbers[i+1]}) }',
+    sample:
+      'for i := 0; i < len(numbers)-1; i++ { pairs = append(pairs, Pair{numbers[i], numbers[i+1]}) }',
     hints: ['Stop at len-1 to avoid out of bounds', 'Access current and next element'],
     validPatterns: [/for\s+\w+\s*:=\s*0\s*;\s*\w+\s*<\s*len\s*\(\s*numbers\s*\)\s*-\s*1/],
     tags: ['range', 'window', 'pairs', 'pattern'],
@@ -2554,12 +2560,22 @@ export const goProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Group By Pattern',
     text: 'Group people by their age into a map of slices.',
-    setup: 'type Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 30}}\ngrouped := make(map[int][]Person)',
-    setupCode: 'type Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 30}}\ngrouped := make(map[int][]Person)',
-    expected: { 25: [{ Name: 'Bob', Age: 25 }], 30: [{ Name: 'Alice', Age: 30 }, { Name: 'Carol', Age: 30 }] },
+    setup:
+      'type Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 30}}\ngrouped := make(map[int][]Person)',
+    setupCode:
+      'type Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 30}}\ngrouped := make(map[int][]Person)',
+    expected: {
+      25: [{ Name: 'Bob', Age: 25 }],
+      30: [
+        { Name: 'Alice', Age: 30 },
+        { Name: 'Carol', Age: 30 },
+      ],
+    },
     sample: 'for _, p := range people { grouped[p.Age] = append(grouped[p.Age], p) }',
     hints: ['Use the grouping key as map key', 'Append to slice value in map'],
-    validPatterns: [/for\s*(?:_\s*,)?\s*\w+\s*:=\s*range\s+people\s*\{[^}]*grouped\s*\[\s*\w+\.Age\s*\]\s*=\s*append/],
+    validPatterns: [
+      /for\s*(?:_\s*,)?\s*\w+\s*:=\s*range\s+people\s*\{[^}]*grouped\s*\[\s*\w+\.Age\s*\]\s*=\s*append/,
+    ],
     tags: ['map', 'groupby', 'pattern', 'slice'],
   },
   {
@@ -2573,7 +2589,9 @@ export const goProblems: Problem[] = [
     expected: { 1: 'a', 2: 'b' },
     sample: 'for k, v := range m { inverted[v] = k }',
     hints: ['Iterate over original map', 'Use value as new key, key as new value'],
-    validPatterns: [/for\s+\w+\s*,\s*\w+\s*:=\s*range\s+m\s*\{[^}]*inverted\s*\[\s*\w+\s*\]\s*=\s*\w+/],
+    validPatterns: [
+      /for\s+\w+\s*,\s*\w+\s*:=\s*range\s+m\s*\{[^}]*inverted\s*\[\s*\w+\s*\]\s*=\s*\w+/,
+    ],
     tags: ['map', 'invert', 'range', 'pattern'],
   },
   {
@@ -2585,7 +2603,8 @@ export const goProblems: Problem[] = [
     setup: 'var v any = 42\nvar result string',
     setupCode: 'var v any = 42\nvar result string',
     expected: 'int',
-    sample: 'switch v.(type) { case int: result = "int"; case string: result = "string"; default: result = "unknown" }',
+    sample:
+      'switch v.(type) { case int: result = "int"; case string: result = "string"; default: result = "unknown" }',
     hints: ['Use switch v.(type)', 'Each case handles a specific type'],
     validPatterns: [/switch\s+\w+\.\(type\)\s*\{[^}]*case\s+int:/],
     tags: ['interface', 'type-switch', 'any', 'pattern'],
@@ -2600,11 +2619,15 @@ export const goProblems: Problem[] = [
     title: 'Remove Duplicates from Slice',
     text: 'Remove duplicate integers using a map to track seen values.',
     setup: 'numbers := []int{1, 2, 2, 3, 3, 3, 4}\nseen := make(map[int]bool)\nvar result []int',
-    setupCode: 'numbers := []int{1, 2, 2, 3, 3, 3, 4}\nseen := make(map[int]bool)\nvar result []int',
+    setupCode:
+      'numbers := []int{1, 2, 2, 3, 3, 3, 4}\nseen := make(map[int]bool)\nvar result []int',
     expected: [1, 2, 3, 4],
-    sample: 'for _, n := range numbers { if !seen[n] { seen[n] = true; result = append(result, n) } }',
+    sample:
+      'for _, n := range numbers { if !seen[n] { seen[n] = true; result = append(result, n) } }',
     hints: ['Use map to track seen elements', 'Only append if not seen before'],
-    validPatterns: [/for\s*(?:_\s*,)?\s*\w+\s*:=\s*range\s+numbers\s*\{[^}]*seen\s*\[\s*\w+\s*\][^}]*append/],
+    validPatterns: [
+      /for\s*(?:_\s*,)?\s*\w+\s*:=\s*range\s+numbers\s*\{[^}]*seen\s*\[\s*\w+\s*\][^}]*append/,
+    ],
     tags: ['slice', 'unique', 'dedupe', 'pattern'],
   },
   {
@@ -2615,10 +2638,17 @@ export const goProblems: Problem[] = [
     text: 'Split slice into chunks of size 3.',
     setup: 'numbers := []int{1, 2, 3, 4, 5, 6, 7, 8}\nchunkSize := 3\nvar chunks [][]int',
     setupCode: 'numbers := []int{1, 2, 3, 4, 5, 6, 7, 8}\nchunkSize := 3\nvar chunks [][]int',
-    expected: [[1, 2, 3], [4, 5, 6], [7, 8]],
-    sample: 'for i := 0; i < len(numbers); i += chunkSize { end := i + chunkSize; if end > len(numbers) { end = len(numbers) }; chunks = append(chunks, numbers[i:end]) }',
+    expected: [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8],
+    ],
+    sample:
+      'for i := 0; i < len(numbers); i += chunkSize { end := i + chunkSize; if end > len(numbers) { end = len(numbers) }; chunks = append(chunks, numbers[i:end]) }',
     hints: ['Iterate with step size equal to chunk size', 'Handle last chunk that may be smaller'],
-    validPatterns: [/for\s+\w+\s*:=\s*0\s*;\s*\w+\s*<\s*len\s*\(\s*numbers\s*\)\s*;\s*\w+\s*\+=\s*chunkSize/],
+    validPatterns: [
+      /for\s+\w+\s*:=\s*0\s*;\s*\w+\s*<\s*len\s*\(\s*numbers\s*\)\s*;\s*\w+\s*\+=\s*chunkSize/,
+    ],
     tags: ['slice', 'chunk', 'batch', 'pattern'],
   },
   {
@@ -2627,10 +2657,17 @@ export const goProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Zip Two Slices Together',
     text: 'Combine two slices into pairs (stop at shorter slice length).',
-    setup: 'a := []string{"x", "y", "z"}\nb := []int{1, 2, 3}\ntype Pair struct { S string; N int }\nvar result []Pair',
-    setupCode: 'a := []string{"x", "y", "z"}\nb := []int{1, 2, 3}\ntype Pair struct { S string; N int }\nvar result []Pair',
-    expected: [{ S: 'x', N: 1 }, { S: 'y', N: 2 }, { S: 'z', N: 3 }],
-    sample: 'n := len(a); if len(b) < n { n = len(b) }; for i := 0; i < n; i++ { result = append(result, Pair{a[i], b[i]}) }',
+    setup:
+      'a := []string{"x", "y", "z"}\nb := []int{1, 2, 3}\ntype Pair struct { S string; N int }\nvar result []Pair',
+    setupCode:
+      'a := []string{"x", "y", "z"}\nb := []int{1, 2, 3}\ntype Pair struct { S string; N int }\nvar result []Pair',
+    expected: [
+      { S: 'x', N: 1 },
+      { S: 'y', N: 2 },
+      { S: 'z', N: 3 },
+    ],
+    sample:
+      'n := len(a); if len(b) < n { n = len(b) }; for i := 0; i < n; i++ { result = append(result, Pair{a[i], b[i]}) }',
     hints: ['Find minimum length of both slices', 'Iterate using index to access both slices'],
     validPatterns: [/for\s+\w+\s*:=\s*0\s*;\s*\w+\s*<\s*\w+\s*;\s*\w+\+\+\s*\{[^}]*Pair\s*\{/],
     tags: ['slice', 'zip', 'combine', 'pattern'],
@@ -2641,10 +2678,14 @@ export const goProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Custom Error Type with Context',
     text: 'Define a custom error type that includes operation name and underlying error.',
-    setup: '// Define OpError struct with Op string and Err error fields\n// Implement Error() and Unwrap() methods',
-    setupCode: '// Define OpError struct with Op string and Err error fields\n// Implement Error() and Unwrap() methods',
-    expected: 'type OpError struct { Op string; Err error }; func (e *OpError) Error() string; func (e *OpError) Unwrap() error',
-    sample: 'type OpError struct { Op string; Err error }\nfunc (e *OpError) Error() string { return e.Op + ": " + e.Err.Error() }\nfunc (e *OpError) Unwrap() error { return e.Err }',
+    setup:
+      '// Define OpError struct with Op string and Err error fields\n// Implement Error() and Unwrap() methods',
+    setupCode:
+      '// Define OpError struct with Op string and Err error fields\n// Implement Error() and Unwrap() methods',
+    expected:
+      'type OpError struct { Op string; Err error }; func (e *OpError) Error() string; func (e *OpError) Unwrap() error',
+    sample:
+      'type OpError struct { Op string; Err error }\nfunc (e *OpError) Error() string { return e.Op + ": " + e.Err.Error() }\nfunc (e *OpError) Unwrap() error { return e.Err }',
     hints: ['Implement Error() for error interface', 'Implement Unwrap() for error chaining'],
     validPatterns: [
       /type\s+OpError\s+struct\s*\{[^}]*Op\s+string[^}]*Err\s+error/,
@@ -2658,8 +2699,10 @@ export const goProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Join Multiple Errors',
     text: 'Use errors.Join to combine multiple errors into one (Go 1.20+).',
-    setup: 'import "errors"\nerr1 := errors.New("error 1")\nerr2 := errors.New("error 2")\nerr3 := errors.New("error 3")',
-    setupCode: 'import "errors"\nerr1 := errors.New("error 1")\nerr2 := errors.New("error 2")\nerr3 := errors.New("error 3")',
+    setup:
+      'import "errors"\nerr1 := errors.New("error 1")\nerr2 := errors.New("error 2")\nerr3 := errors.New("error 3")',
+    setupCode:
+      'import "errors"\nerr1 := errors.New("error 1")\nerr2 := errors.New("error 2")\nerr3 := errors.New("error 3")',
     expected: 'combined error with all three',
     sample: 'errors.Join(err1, err2, err3)',
     hints: ['errors.Join combines multiple errors', 'Result works with errors.Is for any of them'],

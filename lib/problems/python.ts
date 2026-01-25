@@ -1782,9 +1782,7 @@ export const pythonProblems: Problem[] = [
     expected: ['elephant', 'butterfly'],
     sample: '[w for w in words if len(w) > 4]',
     hints: ['Use len() in the condition of your list comprehension'],
-    validPatterns: [
-      /\[\s*\w+\s+for\s+\w+\s+in\s+words\s+if\s+len\s*\(\s*\w+\s*\)\s*>\s*4\s*\]/,
-    ],
+    validPatterns: [/\[\s*\w+\s+for\s+\w+\s+in\s+words\s+if\s+len\s*\(\s*\w+\s*\)\s*>\s*4\s*\]/],
     tags: ['list-comprehension', 'filter', 'string'],
   },
   {
@@ -1889,10 +1887,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'data = {"name": "Alice", "age": 30}',
     expected: ['name: Alice', 'age: 30'],
     sample: '[f"{k}: {v}" for k, v in data.items()]',
-    hints: [
-      'Use items() to get key-value pairs',
-      'Unpack into k, v in the for clause',
-    ],
+    hints: ['Use items() to get key-value pairs', 'Unpack into k, v in the for clause'],
     validPatterns: [
       /\[\s*f["']\{\w+\}:\s*\{\w+\}["']\s+for\s+\w+\s*,\s*\w+\s+in\s+data\.items\s*\(\s*\)\s*\]/,
       /\[\s*\w+\s*\+\s*["']:\s*["']\s*\+\s*str\s*\(\s*\w+\s*\)\s+for\s+\w+\s*,\s*\w+\s+in\s+data\.items\s*\(\s*\)\s*\]/,
@@ -1944,9 +1939,7 @@ export const pythonProblems: Problem[] = [
       'dict.fromkeys() shares the same mutable object',
       'Use dict comprehension for independent lists',
     ],
-    validPatterns: [
-      /\{\s*\w+\s*:\s*\[\s*\]\s+for\s+\w+\s+in\s+keys\s*\}/,
-    ],
+    validPatterns: [/\{\s*\w+\s*:\s*\[\s*\]\s+for\s+\w+\s+in\s+keys\s*\}/],
     tags: ['dict-comprehension', 'initialization'],
   },
   {
@@ -1984,10 +1977,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'set1 < set2',
     hints: ['Use < operator for proper subset (not equal)', 'Or combine issubset with !='],
-    validPatterns: [
-      /set1\s*<\s*set2/,
-      /set1\.issubset\s*\(\s*set2\s*\)\s*and\s*set1\s*!=\s*set2/,
-    ],
+    validPatterns: [/set1\s*<\s*set2/, /set1\.issubset\s*\(\s*set2\s*\)\s*and\s*set1\s*!=\s*set2/],
     tags: ['set-method', 'subset', 'comparison'],
   },
   {
@@ -2016,8 +2006,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Check Superset with Operator',
     text: 'Check if all_skills contains all required_skills using operator',
-    setup: 'all_skills = {"python", "java", "sql", "docker", "git"}\nrequired_skills = {"python", "sql"}',
-    setupCode: 'all_skills = {"python", "java", "sql", "docker", "git"}\nrequired_skills = {"python", "sql"}',
+    setup:
+      'all_skills = {"python", "java", "sql", "docker", "git"}\nrequired_skills = {"python", "sql"}',
+    setupCode:
+      'all_skills = {"python", "java", "sql", "docker", "git"}\nrequired_skills = {"python", "sql"}',
     expected: true,
     sample: 'all_skills >= required_skills',
     hints: ['Use >= for superset check', 'Or use issuperset() method'],
@@ -2044,10 +2036,7 @@ export const pythonProblems: Problem[] = [
     expected: '00042',
     sample: 'num_str.zfill(5)',
     hints: ['Use zfill() to pad with leading zeros'],
-    validPatterns: [
-      /num_str\.zfill\s*\(\s*5\s*\)/,
-      /num_str\.rjust\s*\(\s*5\s*,\s*["']0["']\s*\)/,
-    ],
+    validPatterns: [/num_str\.zfill\s*\(\s*5\s*\)/, /num_str\.rjust\s*\(\s*5\s*,\s*["']0["']\s*\)/],
     tags: ['string-method', 'zfill', 'padding'],
   },
   {
@@ -2091,14 +2080,8 @@ export const pythonProblems: Problem[] = [
     setupCode: 'price = 1234.5',
     expected: '$1234.50',
     sample: 'f"${price:.2f}"',
-    hints: [
-      'Use :.2f format specifier for 2 decimal places',
-      'The $ is just a literal character',
-    ],
-    validPatterns: [
-      /f["']\$\{price:\.2f\}["']/,
-      /["']\$\{:\.2f\}["']\.format\s*\(\s*price\s*\)/,
-    ],
+    hints: ['Use :.2f format specifier for 2 decimal places', 'The $ is just a literal character'],
+    validPatterns: [/f["']\$\{price:\.2f\}["']/, /["']\$\{:\.2f\}["']\.format\s*\(\s*price\s*\)/],
     tags: ['f-string', 'formatting', 'numbers'],
   },
   {
@@ -2116,8 +2099,8 @@ export const pythonProblems: Problem[] = [
       'Index 0 gets the part before separator',
     ],
     validPatterns: [
-      /url\.partition\s*\(\s*["'][:\/]{3}["']\s*\)\s*\[\s*0\s*\]/,
-      /url\.split\s*\(\s*["'][:\/]{3}["']\s*\)\s*\[\s*0\s*\]/,
+      /url\.partition\s*\(\s*["'][:/]{3}["']\s*\)\s*\[\s*0\s*\]/,
+      /url\.split\s*\(\s*["'][:/]{3}["']\s*\)\s*\[\s*0\s*\]/,
     ],
     tags: ['string-method', 'partition', 'url'],
   },
@@ -2136,9 +2119,7 @@ export const pythonProblems: Problem[] = [
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'list(chain(a, b, c))',
     hints: ['chain() takes multiple iterables and yields items from each in order'],
-    validPatterns: [
-      /list\s*\(\s*chain\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)\s*\)/,
-    ],
+    validPatterns: [/list\s*\(\s*chain\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)\s*\)/],
     tags: ['itertools', 'chain'],
   },
   {
@@ -2159,9 +2140,7 @@ export const pythonProblems: Problem[] = [
       'combinations(iterable, r) gives r-length tuples in sorted order',
       'No repeated elements',
     ],
-    validPatterns: [
-      /list\s*\(\s*combinations\s*\(\s*items\s*,\s*2\s*\)\s*\)/,
-    ],
+    validPatterns: [/list\s*\(\s*combinations\s*\(\s*items\s*,\s*2\s*\)\s*\)/],
     tags: ['itertools', 'combinations'],
   },
   {
@@ -2185,9 +2164,7 @@ export const pythonProblems: Problem[] = [
       'permutations(iterable, r) gives r-length tuples, all orderings',
       'Order matters in permutations',
     ],
-    validPatterns: [
-      /list\s*\(\s*permutations\s*\(\s*items\s*,\s*2\s*\)\s*\)/,
-    ],
+    validPatterns: [/list\s*\(\s*permutations\s*\(\s*items\s*,\s*2\s*\)\s*\)/],
     tags: ['itertools', 'permutations'],
   },
   {
@@ -2232,10 +2209,7 @@ export const pythonProblems: Problem[] = [
       ['blue', 'L'],
     ],
     sample: 'list(product(colors, sizes))',
-    hints: [
-      'product() returns cartesian product of iterables',
-      'Equivalent to nested for loops',
-    ],
+    hints: ['product() returns cartesian product of iterables', 'Equivalent to nested for loops'],
     validPatterns: [
       /list\s*\(\s*product\s*\(\s*colors\s*,\s*sizes\s*\)\s*\)/,
       /\[\s*\(\s*\w+\s*,\s*\w+\s*\)\s+for\s+\w+\s+in\s+colors\s+for\s+\w+\s+in\s+sizes\s*\]/,
@@ -2276,10 +2250,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'nums = [1, 2, 3, 4, 5]',
     expected: [11, 12, 13, 14, 15],
     sample: 'list(map(lambda x: x + 10, nums))',
-    hints: [
-      'map() applies a function to each element',
-      'Convert the result to a list',
-    ],
+    hints: ['map() applies a function to each element', 'Convert the result to a list'],
     validPatterns: [
       /list\s*\(\s*map\s*\(\s*lambda\s+\w+\s*:\s*\w+\s*\+\s*10\s*,\s*nums\s*\)\s*\)/,
       /\[\s*\w+\s*\+\s*10\s+for\s+\w+\s+in\s+nums\s*\]/,
@@ -2357,10 +2328,7 @@ export const pythonProblems: Problem[] = [
       ['Charlie', 78],
     ],
     sample: 'list(zip(names, scores))',
-    hints: [
-      'zip() pairs elements from multiple iterables',
-      'Convert to list to see all pairs',
-    ],
+    hints: ['zip() pairs elements from multiple iterables', 'Convert to list to see all pairs'],
     validPatterns: [
       /list\s*\(\s*zip\s*\(\s*names\s*,\s*scores\s*\)\s*\)/,
       /\[\s*\(\s*\w+\s*,\s*\w+\s*\)\s+for\s+\w+\s*,\s*\w+\s+in\s+zip\s*\(\s*names\s*,\s*scores\s*\)\s*\]/,
@@ -2497,8 +2465,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Closure Counter',
     text: 'Create a closure that counts how many times it has been called. Call it 3 times and return the count.',
-    setup: 'def make_counter():\n    count = [0]\n    def counter():\n        count[0] += 1\n        return count[0]\n    return counter\n\nc = make_counter()',
-    setupCode: 'def make_counter():\n    count = [0]\n    def counter():\n        count[0] += 1\n        return count[0]\n    return counter\n\nc = make_counter()',
+    setup:
+      'def make_counter():\n    count = [0]\n    def counter():\n        count[0] += 1\n        return count[0]\n    return counter\n\nc = make_counter()',
+    setupCode:
+      'def make_counter():\n    count = [0]\n    def counter():\n        count[0] += 1\n        return count[0]\n    return counter\n\nc = make_counter()',
     expected: 3,
     sample: 'c(); c(); c()',
     hints: [
@@ -2585,8 +2555,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Operator Attrgetter',
     text: 'Use operator.attrgetter to extract the "name" attribute from objects',
-    setup: 'from operator import attrgetter\nfrom collections import namedtuple\nPerson = namedtuple("Person", ["name", "age"])\npeople = [Person("Alice", 30), Person("Bob", 25), Person("Charlie", 35)]',
-    setupCode: 'from operator import attrgetter\nfrom collections import namedtuple\nPerson = namedtuple("Person", ["name", "age"])\npeople = [Person("Alice", 30), Person("Bob", 25), Person("Charlie", 35)]',
+    setup:
+      'from operator import attrgetter\nfrom collections import namedtuple\nPerson = namedtuple("Person", ["name", "age"])\npeople = [Person("Alice", 30), Person("Bob", 25), Person("Charlie", 35)]',
+    setupCode:
+      'from operator import attrgetter\nfrom collections import namedtuple\nPerson = namedtuple("Person", ["name", "age"])\npeople = [Person("Alice", 30), Person("Bob", 25), Person("Charlie", 35)]',
     expected: ['Alice', 'Bob', 'Charlie'],
     sample: 'list(map(attrgetter("name"), people))',
     hints: [
@@ -2669,8 +2641,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'LRU Cache Fibonacci',
     text: 'Calculate fibonacci(30) using lru_cache decorated function',
-    setup: 'from functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)',
-    setupCode: 'from functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)',
+    setup:
+      'from functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)',
+    setupCode:
+      'from functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)',
     expected: 832040,
     sample: 'fib(30)',
     hints: [
@@ -2687,8 +2661,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Decorator with Wraps',
     text: 'Create a decorator that logs function calls while preserving function metadata',
-    setup: 'from functools import wraps\n\ndef logger(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        print(f"Calling {func.__name__}")\n        return func(*args, **kwargs)\n    return wrapper\n\n@logger\ndef greet(name):\n    """Greet someone by name."""\n    return f"Hello, {name}!"\n\n# Return the docstring of greet',
-    setupCode: 'from functools import wraps\n\ndef logger(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        print(f"Calling {func.__name__}")\n        return func(*args, **kwargs)\n    return wrapper\n\n@logger\ndef greet(name):\n    """Greet someone by name."""\n    return f"Hello, {name}!"',
+    setup:
+      'from functools import wraps\n\ndef logger(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        print(f"Calling {func.__name__}")\n        return func(*args, **kwargs)\n    return wrapper\n\n@logger\ndef greet(name):\n    """Greet someone by name."""\n    return f"Hello, {name}!"\n\n# Return the docstring of greet',
+    setupCode:
+      'from functools import wraps\n\ndef logger(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        print(f"Calling {func.__name__}")\n        return func(*args, **kwargs)\n    return wrapper\n\n@logger\ndef greet(name):\n    """Greet someone by name."""\n    return f"Hello, {name}!"',
     expected: 'Greet someone by name.',
     sample: 'greet.__doc__',
     hints: [
@@ -2728,8 +2704,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Partial with Multiple Args',
     text: 'Create a partial function for string formatting with a fixed template',
-    setup: 'from functools import partial\n\ndef format_greeting(greeting, name, punctuation):\n    return f"{greeting}, {name}{punctuation}"\n\n# Create hello_to that fixes greeting="Hello" and punctuation="!"',
-    setupCode: 'from functools import partial\n\ndef format_greeting(greeting, name, punctuation):\n    return f"{greeting}, {name}{punctuation}"',
+    setup:
+      'from functools import partial\n\ndef format_greeting(greeting, name, punctuation):\n    return f"{greeting}, {name}{punctuation}"\n\n# Create hello_to that fixes greeting="Hello" and punctuation="!"',
+    setupCode:
+      'from functools import partial\n\ndef format_greeting(greeting, name, punctuation):\n    return f"{greeting}, {name}{punctuation}"',
     expected: 'Hello, World!',
     sample: 'partial(format_greeting, "Hello", punctuation="!")(name="World")',
     hints: [
@@ -2749,8 +2727,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Higher Order Function Pipeline',
     text: 'Create and apply a pipeline that processes a number through multiple transformations',
-    setup: 'from functools import reduce\n\ndef pipeline(*funcs):\n    def inner(value):\n        return reduce(lambda acc, f: f(acc), funcs, value)\n    return inner\n\n# Create a pipeline: double -> add 10 -> square, and apply to 3',
-    setupCode: 'from functools import reduce\n\ndef pipeline(*funcs):\n    def inner(value):\n        return reduce(lambda acc, f: f(acc), funcs, value)\n    return inner',
+    setup:
+      'from functools import reduce\n\ndef pipeline(*funcs):\n    def inner(value):\n        return reduce(lambda acc, f: f(acc), funcs, value)\n    return inner\n\n# Create a pipeline: double -> add 10 -> square, and apply to 3',
+    setupCode:
+      'from functools import reduce\n\ndef pipeline(*funcs):\n    def inner(value):\n        return reduce(lambda acc, f: f(acc), funcs, value)\n    return inner',
     expected: 256,
     sample: 'pipeline(lambda x: x * 2, lambda x: x + 10, lambda x: x ** 2)(3)',
     hints: [
@@ -2802,14 +2782,8 @@ export const pythonProblems: Problem[] = [
     setupCode: 'nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]',
     expected: [1, 4, 7],
     sample: 'nums[1::3]',
-    hints: [
-      'Specify start index before the first colon',
-      'Step of 3 means every third element',
-    ],
-    validPatterns: [
-      /nums\s*\[\s*1\s*::\s*3\s*\]/,
-      /nums\s*\[\s*1\s*:\s*10\s*:\s*3\s*\]/,
-    ],
+    hints: ['Specify start index before the first colon', 'Step of 3 means every third element'],
+    validPatterns: [/nums\s*\[\s*1\s*::\s*3\s*\]/, /nums\s*\[\s*1\s*:\s*10\s*:\s*3\s*\]/],
     tags: ['slicing', 'step', 'basic'],
   },
   {
@@ -2826,10 +2800,7 @@ export const pythonProblems: Problem[] = [
       'Negative indices count from the end',
       '-1 is the last element, -3 is third from the end',
     ],
-    validPatterns: [
-      /nums\s*\[\s*-3\s*:\s*\]/,
-      /nums\s*\[\s*-3\s*:\s*None\s*\]/,
-    ],
+    validPatterns: [/nums\s*\[\s*-3\s*:\s*\]/, /nums\s*\[\s*-3\s*:\s*None\s*\]/],
     tags: ['slicing', 'negative-index', 'basic'],
   },
   {
@@ -2847,9 +2818,7 @@ export const pythonProblems: Problem[] = [
       'When step is negative, start should be greater than stop',
       'Stop is exclusive, so use index 1 to include index 2',
     ],
-    validPatterns: [
-      /nums\s*\[\s*6\s*:\s*1\s*:\s*-1\s*\]/,
-    ],
+    validPatterns: [/nums\s*\[\s*6\s*:\s*1\s*:\s*-1\s*\]/],
     tags: ['slicing', 'negative-step', 'intermediate'],
   },
   {
@@ -2866,10 +2835,7 @@ export const pythonProblems: Problem[] = [
       'Combine negative step with a larger magnitude',
       'Step of -2 goes backwards taking every other element',
     ],
-    validPatterns: [
-      /nums\s*\[\s*::\s*-2\s*\]/,
-      /nums\s*\[\s*-1\s*::\s*-2\s*\]/,
-    ],
+    validPatterns: [/nums\s*\[\s*::\s*-2\s*\]/, /nums\s*\[\s*-1\s*::\s*-2\s*\]/],
     tags: ['slicing', 'negative-step', 'intermediate'],
   },
 
@@ -2884,14 +2850,8 @@ export const pythonProblems: Problem[] = [
     setupCode: 'pattern = [1, 2, 3]',
     expected: [1, 2, 3, 1, 2, 3, 1, 2, 3],
     sample: 'pattern * 3',
-    hints: [
-      'Lists support the * operator for repetition',
-      'This creates a shallow copy repeated',
-    ],
-    validPatterns: [
-      /pattern\s*\*\s*3/,
-      /3\s*\*\s*pattern/,
-    ],
+    hints: ['Lists support the * operator for repetition', 'This creates a shallow copy repeated'],
+    validPatterns: [/pattern\s*\*\s*3/, /3\s*\*\s*pattern/],
     tags: ['list-multiplication', 'repetition', 'basic'],
   },
   {
@@ -2908,10 +2868,7 @@ export const pythonProblems: Problem[] = [
       'Use list multiplication to initialize with default values',
       'Multiply a single-element list by the desired length',
     ],
-    validPatterns: [
-      /\[\s*0\s*\]\s*\*\s*5/,
-      /5\s*\*\s*\[\s*0\s*\]/,
-    ],
+    validPatterns: [/\[\s*0\s*\]\s*\*\s*5/, /5\s*\*\s*\[\s*0\s*\]/],
     tags: ['list-multiplication', 'initialization', 'basic'],
   },
 
@@ -2930,9 +2887,7 @@ export const pythonProblems: Problem[] = [
       'Use the * operator to capture multiple elements',
       'Place * before the variable that should collect remaining items',
     ],
-    validPatterns: [
-      /\w+\s*,\s*\*\s*\w+\s*=\s*nums/,
-    ],
+    validPatterns: [/\w+\s*,\s*\*\s*\w+\s*=\s*nums/],
     tags: ['unpacking', 'starred-expression', 'intermediate'],
   },
   {
@@ -2949,9 +2904,7 @@ export const pythonProblems: Problem[] = [
       'The starred variable captures everything between named positions',
       'You can only have one starred variable in an unpacking',
     ],
-    validPatterns: [
-      /\w+\s*,\s*\*\s*\w+\s*,\s*\w+\s*=\s*nums/,
-    ],
+    validPatterns: [/\w+\s*,\s*\*\s*\w+\s*,\s*\w+\s*=\s*nums/],
     tags: ['unpacking', 'starred-expression', 'intermediate'],
   },
   {
@@ -2968,10 +2921,7 @@ export const pythonProblems: Problem[] = [
       'Use * to unpack each list inside a new list literal',
       'This is cleaner than using + for concatenation',
     ],
-    validPatterns: [
-      /\[\s*\*\s*a\s*,\s*\*\s*b\s*,\s*\*\s*c\s*\]/,
-      /a\s*\+\s*b\s*\+\s*c/,
-    ],
+    validPatterns: [/\[\s*\*\s*a\s*,\s*\*\s*b\s*,\s*\*\s*c\s*\]/, /a\s*\+\s*b\s*\+\s*c/],
     tags: ['unpacking', 'merge', 'intermediate'],
   },
 
@@ -3055,10 +3005,7 @@ export const pythonProblems: Problem[] = [
       'heapify transforms a list into a heap in-place',
       'The smallest element is always at index 0',
     ],
-    validPatterns: [
-      /heapq\.heapify\s*\(\s*nums\s*\)/,
-      /heapify\s*\(\s*nums\s*\)/,
-    ],
+    validPatterns: [/heapq\.heapify\s*\(\s*nums\s*\)/, /heapify\s*\(\s*nums\s*\)/],
     tags: ['heapq', 'heap', 'intermediate'],
   },
   {
@@ -3095,10 +3042,7 @@ export const pythonProblems: Problem[] = [
       'heappop removes and returns the smallest element',
       'Heap property is maintained after pop',
     ],
-    validPatterns: [
-      /heapq\.heappop\s*\(\s*heap\s*\)/,
-      /heappop\s*\(\s*heap\s*\)/,
-    ],
+    validPatterns: [/heapq\.heappop\s*\(\s*heap\s*\)/, /heappop\s*\(\s*heap\s*\)/],
     tags: ['heapq', 'heappop', 'intermediate'],
   },
   {
@@ -3155,10 +3099,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'from collections import deque\nd = deque([1, 2, 3, 4, 5])',
     expected: [0, 1, 2, 3, 4, 5, 6],
     sample: 'd.appendleft(0); d.append(6); list(d)',
-    hints: [
-      'appendleft adds to the left end in O(1)',
-      'append adds to the right end in O(1)',
-    ],
+    hints: ['appendleft adds to the left end in O(1)', 'append adds to the right end in O(1)'],
     validPatterns: [
       /d\.appendleft\s*\(\s*0\s*\).*d\.append\s*\(\s*6\s*\)/,
       /d\.append\s*\(\s*6\s*\).*d\.appendleft\s*\(\s*0\s*\)/,
@@ -3200,10 +3141,7 @@ export const pythonProblems: Problem[] = [
       'Negative n rotates to the left',
       'rotate() is more efficient than manual pop/append',
     ],
-    validPatterns: [
-      /d\.rotate\s*\(\s*2\s*\)/,
-      /d\.rotate\s*\(\s*-3\s*\)/,
-    ],
+    validPatterns: [/d\.rotate\s*\(\s*2\s*\)/, /d\.rotate\s*\(\s*-3\s*\)/],
     tags: ['deque', 'rotate', 'advanced'],
   },
 
@@ -3264,10 +3202,7 @@ export const pythonProblems: Problem[] = [
       'Check if each element is a list with isinstance()',
       'Base case: if not a list, return as single-element list',
     ],
-    validPatterns: [
-      /isinstance\s*\(\s*\w+\s*,\s*list\s*\)/,
-      /def\s+\w+\s*\(\s*\w+\s*\)/,
-    ],
+    validPatterns: [/isinstance\s*\(\s*\w+\s*,\s*list\s*\)/, /def\s+\w+\s*\(\s*\w+\s*\)/],
     tags: ['flattening', 'recursion', 'advanced'],
   },
   {
@@ -3286,11 +3221,7 @@ export const pythonProblems: Problem[] = [
       'yield from delegates to another generator',
       'Recursively yield from nested lists',
     ],
-    validPatterns: [
-      /yield\s+from/,
-      /yield\s+\w+/,
-      /def\s+\w+\s*\(\s*\w+\s*\)/,
-    ],
+    validPatterns: [/yield\s+from/, /yield\s+\w+/, /def\s+\w+\s*\(\s*\w+\s*\)/],
     tags: ['flattening', 'generator', 'yield-from', 'advanced'],
   },
 
@@ -3437,14 +3368,8 @@ export const pythonProblems: Problem[] = [
     setupCode: 'name = "Alice"',
     expected: 'Hello, Alice!',
     sample: 'f"Hello, {name}!"',
-    hints: [
-      'F-strings start with f before the quote',
-      'Use curly braces {} to embed variables',
-    ],
-    validPatterns: [
-      /f["']Hello,\s*\{name\}!["']/,
-      /f["']Hello, \{name\}!["']/,
-    ],
+    hints: ['F-strings start with f before the quote', 'Use curly braces {} to embed variables'],
+    validPatterns: [/f["']Hello,\s*\{name\}!["']/, /f["']Hello, \{name\}!["']/],
     tags: ['f-string', 'formatting', 'basic'],
   },
   {
@@ -3457,14 +3382,8 @@ export const pythonProblems: Problem[] = [
     setupCode: 'price = 19.5',
     expected: '$19.50',
     sample: 'f"${price:.2f}"',
-    hints: [
-      'Use :.2f for 2 decimal places',
-      'Format specifiers go after the colon inside braces',
-    ],
-    validPatterns: [
-      /f["']\$\{price:\.2f\}["']/,
-      /f["']\$\{price:0?\.2f\}["']/,
-    ],
+    hints: ['Use :.2f for 2 decimal places', 'Format specifiers go after the colon inside braces'],
+    validPatterns: [/f["']\$\{price:\.2f\}["']/, /f["']\$\{price:0?\.2f\}["']/],
     tags: ['f-string', 'formatting', 'number'],
   },
   {
@@ -3477,10 +3396,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'template = "My name is {} and I am {} years old"',
     expected: 'My name is Bob and I am 25 years old',
     sample: 'template.format("Bob", 25)',
-    hints: [
-      'The format() method replaces {} placeholders',
-      'Arguments are inserted in order',
-    ],
+    hints: ['The format() method replaces {} placeholders', 'Arguments are inserted in order'],
     validPatterns: [/template\.format\s*\(\s*["']Bob["']\s*,\s*25\s*\)/],
     tags: ['format', 'string-method', 'basic'],
   },
@@ -3494,10 +3410,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'name = "Charlie"\nscore = 95',
     expected: 'Charlie scored 95 points',
     sample: '"%s scored %d points" % (name, score)',
-    hints: [
-      '%s is for strings, %d is for integers',
-      'Use a tuple after % for multiple values',
-    ],
+    hints: ['%s is for strings, %d is for integers', 'Use a tuple after % for multiple values'],
     validPatterns: [
       /["']%s scored %d points["']\s*%\s*\(\s*name\s*,\s*score\s*\)/,
       /f["']\{name\} scored \{score\} points["']/,
@@ -3514,10 +3427,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'text = "Hello"',
     expected: "b'Hello'",
     sample: 'text.encode("utf-8")',
-    hints: [
-      'Use the encode() method with encoding name',
-      'UTF-8 is the most common encoding',
-    ],
+    hints: ['Use the encode() method with encoding name', 'UTF-8 is the most common encoding'],
     validPatterns: [/text\.encode\s*\(\s*["']utf-?8["']?\s*\)/i, /text\.encode\s*\(\s*\)/],
     tags: ['encode', 'bytes', 'unicode'],
   },
@@ -3531,10 +3441,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'data = b"Python"',
     expected: 'Python',
     sample: 'data.decode("utf-8")',
-    hints: [
-      'Use the decode() method on bytes',
-      'Specify the same encoding used to encode',
-    ],
+    hints: ['Use the decode() method on bytes', 'Specify the same encoding used to encode'],
     validPatterns: [/data\.decode\s*\(\s*["']utf-?8["']?\s*\)/i, /data\.decode\s*\(\s*\)/],
     tags: ['decode', 'bytes', 'unicode'],
   },
@@ -3565,10 +3472,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'text = "Python"',
     expected: '-------Python-------',
     sample: 'text.center(20, "-")',
-    hints: [
-      'Use center(width, fillchar) method',
-      'Second argument is the fill character',
-    ],
+    hints: ['Use center(width, fillchar) method', 'Second argument is the fill character'],
     validPatterns: [/text\.center\s*\(\s*20\s*,\s*["']-["']\s*\)/],
     tags: ['center', 'string-method', 'alignment'],
   },
@@ -3584,10 +3488,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'num = 42',
     expected: '0000000042',
     sample: 'f"{num:0>10}"',
-    hints: [
-      'Use :0>10 for right-align with zeros, width 10',
-      'Format: {value:fill align width}',
-    ],
+    hints: ['Use :0>10 for right-align with zeros, width 10', 'Format: {value:fill align width}'],
     validPatterns: [/f["']\{num:0>10\}["']/, /f["']\{num:010\}["']/, /f["']\{num:010d\}["']/],
     tags: ['f-string', 'formatting', 'alignment'],
   },
@@ -3601,10 +3502,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'import re\ntext = "Contact us at info@example.com or support@test.org"',
     expected: ['info@example.com', 'support@test.org'],
     sample: 're.findall(r"[\\w.-]+@[\\w.-]+", text)',
-    hints: [
-      'Use re.findall() to get all matches',
-      'Email pattern: word chars + @ + word chars',
-    ],
+    hints: ['Use re.findall() to get all matches', 'Email pattern: word chars + @ + word chars'],
     validPatterns: [/re\.findall\s*\(\s*r?["'][^"']*@[^"']*["']\s*,\s*text\s*\)/],
     tags: ['regex', 're-module', 'findall'],
   },
@@ -3635,10 +3533,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'import re\ntext = "Hello   World\\n\\tPython"',
     expected: ['Hello', 'World', 'Python'],
     sample: 're.split(r"\\s+", text)',
-    hints: [
-      'Use re.split() with a pattern',
-      '\\s+ matches one or more whitespace characters',
-    ],
+    hints: ['Use re.split() with a pattern', '\\s+ matches one or more whitespace characters'],
     validPatterns: [/re\.split\s*\(\s*r?["']\\s\+["']\s*,\s*text\s*\)/],
     tags: ['regex', 're-module', 'split'],
   },
@@ -3762,10 +3657,7 @@ export const pythonProblems: Problem[] = [
     setupCode: 'import re\ndate = "2024-03-15"',
     expected: { year: '2024', month: '03', day: '15' },
     sample: 're.match(r"(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})", date).groupdict()',
-    hints: [
-      'Use (?P<name>pattern) for named groups',
-      'Call groupdict() on the match object',
-    ],
+    hints: ['Use (?P<name>pattern) for named groups', 'Call groupdict() on the match object'],
     validPatterns: [
       /re\.match\s*\([^)]*\?P<year>[^)]*\)\.groupdict\s*\(\s*\)/,
       /re\.search\s*\([^)]*\?P<year>[^)]*\)\.groupdict\s*\(\s*\)/,
@@ -3807,8 +3699,8 @@ export const pythonProblems: Problem[] = [
       'Chain multiple lookaheads for multiple conditions',
     ],
     validPatterns: [
-      /bool\s*\(\s*re\.match\s*\(\s*r?["'].*\?\=.*["']\s*,\s*password\s*\)\s*\)/,
-      /re\.match\s*\(\s*r?["'].*\?\=.*["']\s*,\s*password\s*\)\s*is\s+not\s+None/,
+      /bool\s*\(\s*re\.match\s*\(\s*r?["'].*\?=.*["']\s*,\s*password\s*\)\s*\)/,
+      /re\.match\s*\(\s*r?["'].*\?=.*["']\s*,\s*password\s*\)\s*is\s+not\s+None/,
     ],
     tags: ['regex', 'lookahead', 'validation', 'advanced'],
   },
@@ -3822,8 +3714,7 @@ export const pythonProblems: Problem[] = [
       'import difflib\nold = ["line1", "line2", "line3"]\nnew = ["line1", "line2 modified", "line3", "line4"]',
     setupCode:
       'import difflib\nold = ["line1", "line2", "line3"]\nnew = ["line1", "line2 modified", "line3", "line4"]',
-    expected:
-      '--- \\n+++ \\n@@ -1,3 +1,4 @@\\n line1\\n-line2\\n+line2 modified\\n line3\\n+line4',
+    expected: '--- \\n+++ \\n@@ -1,3 +1,4 @@\\n line1\\n-line2\\n+line2 modified\\n line3\\n+line4',
     sample: '"\\n".join(difflib.unified_diff(old, new))',
     hints: [
       'Use difflib.unified_diff() for git-style diffs',
@@ -3884,8 +3775,7 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Sequence Matcher Ratio',
     text: 'Calculate the similarity ratio between two strings using SequenceMatcher',
-    setup:
-      'from difflib import SequenceMatcher\ns1 = "python programming"\ns2 = "python coding"',
+    setup: 'from difflib import SequenceMatcher\ns1 = "python programming"\ns2 = "python coding"',
     setupCode:
       'from difflib import SequenceMatcher\ns1 = "python programming"\ns2 = "python coding"',
     expected: 0.5806451612903226,
@@ -3924,7 +3814,10 @@ export const pythonProblems: Problem[] = [
     text: 'Find the 2 most common elements in the list using Counter',
     setup: 'from collections import Counter\nnums = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]',
     setupCode: 'from collections import Counter\nnums = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]',
-    expected: [[4, 4], [3, 3]],
+    expected: [
+      [4, 4],
+      [3, 3],
+    ],
     sample: 'Counter(nums).most_common(2)',
     hints: ['most_common(n) returns the n most frequent elements'],
     validPatterns: [/Counter\s*\(\s*nums\s*\)\.most_common\s*\(\s*2\s*\)/],
@@ -4020,8 +3913,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'defaultdict with List',
     text: 'Group names by their first letter using defaultdict(list)',
-    setup: 'from collections import defaultdict\nnames = ["Alice", "Bob", "Anna", "Charlie", "Amy"]\nresult = defaultdict(list)\nfor name in names:\n    result[name[0]].append(name)',
-    setupCode: 'from collections import defaultdict\nnames = ["Alice", "Bob", "Anna", "Charlie", "Amy"]\nresult = defaultdict(list)\nfor name in names:\n    result[name[0]].append(name)',
+    setup:
+      'from collections import defaultdict\nnames = ["Alice", "Bob", "Anna", "Charlie", "Amy"]\nresult = defaultdict(list)\nfor name in names:\n    result[name[0]].append(name)',
+    setupCode:
+      'from collections import defaultdict\nnames = ["Alice", "Bob", "Anna", "Charlie", "Amy"]\nresult = defaultdict(list)\nfor name in names:\n    result[name[0]].append(name)',
     expected: { A: ['Alice', 'Anna', 'Amy'], B: ['Bob'], C: ['Charlie'] },
     sample: 'dict(result)',
     hints: ['defaultdict(list) auto-creates empty lists'],
@@ -4034,8 +3929,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'defaultdict with Int',
     text: 'Count word occurrences using defaultdict(int)',
-    setup: 'from collections import defaultdict\nwords = ["a", "b", "a", "c", "b", "a"]\ncounts = defaultdict(int)\nfor w in words:\n    counts[w] += 1',
-    setupCode: 'from collections import defaultdict\nwords = ["a", "b", "a", "c", "b", "a"]\ncounts = defaultdict(int)\nfor w in words:\n    counts[w] += 1',
+    setup:
+      'from collections import defaultdict\nwords = ["a", "b", "a", "c", "b", "a"]\ncounts = defaultdict(int)\nfor w in words:\n    counts[w] += 1',
+    setupCode:
+      'from collections import defaultdict\nwords = ["a", "b", "a", "c", "b", "a"]\ncounts = defaultdict(int)\nfor w in words:\n    counts[w] += 1',
     expected: { a: 3, b: 2, c: 1 },
     sample: 'dict(counts)',
     hints: ['defaultdict(int) initializes missing keys to 0'],
@@ -4076,8 +3973,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Counter Arithmetic',
     text: 'Subtract inventory sold from inventory using Counter subtraction',
-    setup: 'from collections import Counter\ninventory = Counter({"apple": 10, "banana": 5, "cherry": 3})\nsold = Counter({"apple": 3, "banana": 2})',
-    setupCode: 'from collections import Counter\ninventory = Counter({"apple": 10, "banana": 5, "cherry": 3})\nsold = Counter({"apple": 3, "banana": 2})',
+    setup:
+      'from collections import Counter\ninventory = Counter({"apple": 10, "banana": 5, "cherry": 3})\nsold = Counter({"apple": 3, "banana": 2})',
+    setupCode:
+      'from collections import Counter\ninventory = Counter({"apple": 10, "banana": 5, "cherry": 3})\nsold = Counter({"apple": 3, "banana": 2})',
     expected: { apple: 7, banana: 3, cherry: 3 },
     sample: 'dict(inventory - sold)',
     hints: ['Counter supports arithmetic operations'],
@@ -4090,8 +3989,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'ChainMap for Config Layers',
     text: 'Create a layered config using ChainMap (user overrides defaults)',
-    setup: 'from collections import ChainMap\ndefaults = {"color": "blue", "size": "medium"}\nuser_prefs = {"color": "red"}',
-    setupCode: 'from collections import ChainMap\ndefaults = {"color": "blue", "size": "medium"}\nuser_prefs = {"color": "red"}',
+    setup:
+      'from collections import ChainMap\ndefaults = {"color": "blue", "size": "medium"}\nuser_prefs = {"color": "red"}',
+    setupCode:
+      'from collections import ChainMap\ndefaults = {"color": "blue", "size": "medium"}\nuser_prefs = {"color": "red"}',
     expected: { color: 'red', size: 'medium' },
     sample: 'dict(ChainMap(user_prefs, defaults))',
     hints: ['ChainMap searches maps in order'],
@@ -4109,7 +4010,9 @@ export const pythonProblems: Problem[] = [
     expected: { Alice: 'pass', Bob: 'fail', Charlie: 'pass', Diana: 'fail' },
     sample: '{k: ("pass" if v >= 60 else "fail") for k, v in scores.items()}',
     hints: ['Use ternary expression in dict comprehension'],
-    validPatterns: [/\{.*["']pass["'].*if.*else.*["']fail["'].*for.*in\s+scores\.items\s*\(\s*\)\s*\}/],
+    validPatterns: [
+      /\{.*["']pass["'].*if.*else.*["']fail["'].*for.*in\s+scores\.items\s*\(\s*\)\s*\}/,
+    ],
     tags: ['dict-comprehension', 'conditional'],
   },
   {
@@ -4119,7 +4022,8 @@ export const pythonProblems: Problem[] = [
     title: 'In-Place Update with |=',
     text: 'Update the config dict in-place with new settings using |=',
     setup: 'config = {"debug": False, "timeout": 30}\nnew_settings = {"timeout": 60, "retries": 3}',
-    setupCode: 'config = {"debug": False, "timeout": 30}\nnew_settings = {"timeout": 60, "retries": 3}',
+    setupCode:
+      'config = {"debug": False, "timeout": 30}\nnew_settings = {"timeout": 60, "retries": 3}',
     expected: { debug: false, timeout: 60, retries: 3 },
     sample: 'config |= new_settings; config',
     hints: ['Use |= for in-place dictionary merge (Python 3.9+)'],
@@ -4146,8 +4050,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Counter Total Count',
     text: 'Get the total count of all items in the Counter',
-    setup: 'from collections import Counter\ncounts = Counter({"apple": 5, "banana": 3, "cherry": 2})',
-    setupCode: 'from collections import Counter\ncounts = Counter({"apple": 5, "banana": 3, "cherry": 2})',
+    setup:
+      'from collections import Counter\ncounts = Counter({"apple": 5, "banana": 3, "cherry": 2})',
+    setupCode:
+      'from collections import Counter\ncounts = Counter({"apple": 5, "banana": 3, "cherry": 2})',
     expected: 10,
     sample: 'counts.total()',
     hints: ['Counter has a total() method (Python 3.10+)'],
@@ -4174,8 +4080,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'medium',
     title: 'OrderedDict Move to End',
     text: 'Move the "b" key to the end of the OrderedDict',
-    setup: 'from collections import OrderedDict\nod = OrderedDict([("a", 1), ("b", 2), ("c", 3)])\nod.move_to_end("b")',
-    setupCode: 'from collections import OrderedDict\nod = OrderedDict([("a", 1), ("b", 2), ("c", 3)])\nod.move_to_end("b")',
+    setup:
+      'from collections import OrderedDict\nod = OrderedDict([("a", 1), ("b", 2), ("c", 3)])\nod.move_to_end("b")',
+    setupCode:
+      'from collections import OrderedDict\nod = OrderedDict([("a", 1), ("b", 2), ("c", 3)])\nod.move_to_end("b")',
     expected: { a: 1, c: 3, b: 2 },
     sample: 'dict(od)',
     hints: ['OrderedDict has move_to_end() method'],
@@ -4188,8 +4096,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Deep Merge Dictionaries',
     text: 'Merge nested dictionaries recursively (nested values should merge, not replace)',
-    setup: 'def deep_merge(d1, d2):\n    result = d1.copy()\n    for k, v in d2.items():\n        if k in result and isinstance(result[k], dict) and isinstance(v, dict):\n            result[k] = deep_merge(result[k], v)\n        else:\n            result[k] = v\n    return result\nbase = {"a": {"x": 1, "y": 2}, "b": 3}\nupdate = {"a": {"y": 20, "z": 30}, "c": 4}',
-    setupCode: 'def deep_merge(d1, d2):\n    result = d1.copy()\n    for k, v in d2.items():\n        if k in result and isinstance(result[k], dict) and isinstance(v, dict):\n            result[k] = deep_merge(result[k], v)\n        else:\n            result[k] = v\n    return result\nbase = {"a": {"x": 1, "y": 2}, "b": 3}\nupdate = {"a": {"y": 20, "z": 30}, "c": 4}',
+    setup:
+      'def deep_merge(d1, d2):\n    result = d1.copy()\n    for k, v in d2.items():\n        if k in result and isinstance(result[k], dict) and isinstance(v, dict):\n            result[k] = deep_merge(result[k], v)\n        else:\n            result[k] = v\n    return result\nbase = {"a": {"x": 1, "y": 2}, "b": 3}\nupdate = {"a": {"y": 20, "z": 30}, "c": 4}',
+    setupCode:
+      'def deep_merge(d1, d2):\n    result = d1.copy()\n    for k, v in d2.items():\n        if k in result and isinstance(result[k], dict) and isinstance(v, dict):\n            result[k] = deep_merge(result[k], v)\n        else:\n            result[k] = v\n    return result\nbase = {"a": {"x": 1, "y": 2}, "b": 3}\nupdate = {"a": {"y": 20, "z": 30}, "c": 4}',
     expected: { a: { x: 1, y: 20, z: 30 }, b: 3, c: 4 },
     sample: 'deep_merge(base, update)',
     hints: ['Recursively merge when both values are dicts'],
@@ -4202,8 +4112,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Group and Aggregate Sales',
     text: 'Group sales by product and sum the amounts',
-    setup: 'from collections import defaultdict\nsales = [{"product": "A", "amount": 100}, {"product": "B", "amount": 200}, {"product": "A", "amount": 150}, {"product": "B", "amount": 50}]\nresult = defaultdict(int)\nfor s in sales:\n    result[s["product"]] += s["amount"]',
-    setupCode: 'from collections import defaultdict\nsales = [{"product": "A", "amount": 100}, {"product": "B", "amount": 200}, {"product": "A", "amount": 150}, {"product": "B", "amount": 50}]\nresult = defaultdict(int)\nfor s in sales:\n    result[s["product"]] += s["amount"]',
+    setup:
+      'from collections import defaultdict\nsales = [{"product": "A", "amount": 100}, {"product": "B", "amount": 200}, {"product": "A", "amount": 150}, {"product": "B", "amount": 50}]\nresult = defaultdict(int)\nfor s in sales:\n    result[s["product"]] += s["amount"]',
+    setupCode:
+      'from collections import defaultdict\nsales = [{"product": "A", "amount": 100}, {"product": "B", "amount": 200}, {"product": "A", "amount": 150}, {"product": "B", "amount": 50}]\nresult = defaultdict(int)\nfor s in sales:\n    result[s["product"]] += s["amount"]',
     expected: { A: 250, B: 250 },
     sample: 'dict(result)',
     hints: ['Use defaultdict(int) for summing'],
@@ -4216,8 +4128,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Transform JSON-like Data',
     text: 'Extract usernames from nested user data into a list',
-    setup: 'data = {"users": [{"id": 1, "profile": {"username": "alice"}}, {"id": 2, "profile": {"username": "bob"}}, {"id": 3, "profile": {"username": "charlie"}}]}',
-    setupCode: 'data = {"users": [{"id": 1, "profile": {"username": "alice"}}, {"id": 2, "profile": {"username": "bob"}}, {"id": 3, "profile": {"username": "charlie"}}]}',
+    setup:
+      'data = {"users": [{"id": 1, "profile": {"username": "alice"}}, {"id": 2, "profile": {"username": "bob"}}, {"id": 3, "profile": {"username": "charlie"}}]}',
+    setupCode:
+      'data = {"users": [{"id": 1, "profile": {"username": "alice"}}, {"id": 2, "profile": {"username": "bob"}}, {"id": 3, "profile": {"username": "charlie"}}]}',
     expected: ['alice', 'bob', 'charlie'],
     sample: '[u["profile"]["username"] for u in data["users"]]',
     hints: ['Access nested structure with bracket notation'],
@@ -4244,8 +4158,10 @@ export const pythonProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Pivot Data Structure',
     text: 'Pivot list of dicts to dict of lists by key',
-    setup: 'records = [{"name": "Alice", "score": 85}, {"name": "Bob", "score": 90}, {"name": "Charlie", "score": 78}]',
-    setupCode: 'records = [{"name": "Alice", "score": 85}, {"name": "Bob", "score": 90}, {"name": "Charlie", "score": 78}]',
+    setup:
+      'records = [{"name": "Alice", "score": 85}, {"name": "Bob", "score": 90}, {"name": "Charlie", "score": 78}]',
+    setupCode:
+      'records = [{"name": "Alice", "score": 85}, {"name": "Bob", "score": 90}, {"name": "Charlie", "score": 78}]',
     expected: { name: ['Alice', 'Bob', 'Charlie'], score: [85, 90, 78] },
     sample: '{k: [r[k] for r in records] for k in records[0].keys()}',
     hints: ['Get keys from first record'],

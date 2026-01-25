@@ -21,7 +21,10 @@ export const haskellProblems: Problem[] = [
     expected: [2, 4, 6, 8, 10],
     sample: 'map (*2) numbers',
     hints: ['Use map with a function that multiplies by 2', 'You can use (*2) as a section'],
-    validPatterns: [/map\s*\(\s*\*\s*2\s*\)\s*numbers/, /map\s*\(\s*\\x\s*->\s*x\s*\*\s*2\s*\)\s*numbers/],
+    validPatterns: [
+      /map\s*\(\s*\*\s*2\s*\)\s*numbers/,
+      /map\s*\(\s*\\x\s*->\s*x\s*\*\s*2\s*\)\s*numbers/,
+    ],
     tags: ['map', 'list', 'basic'],
   },
   {
@@ -35,7 +38,10 @@ export const haskellProblems: Problem[] = [
     expected: [1, 4, 9, 16, 25],
     sample: 'map (^2) numbers',
     hints: ['Use the exponentiation operator ^', 'Create a section with (^2)'],
-    validPatterns: [/map\s*\(\s*\^\s*2\s*\)\s*numbers/, /map\s*\(\s*\\x\s*->\s*x\s*\^\s*2\s*\)\s*numbers/],
+    validPatterns: [
+      /map\s*\(\s*\^\s*2\s*\)\s*numbers/,
+      /map\s*\(\s*\\x\s*->\s*x\s*\^\s*2\s*\)\s*numbers/,
+    ],
     tags: ['map', 'list', 'math'],
   },
   {
@@ -76,8 +82,15 @@ export const haskellProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: 15,
     sample: 'foldr (+) 0 numbers',
-    hints: ['foldr takes a binary function, initial value, and list', 'Use (+) as the combining function'],
-    validPatterns: [/foldr\s*\(\+\)\s*0\s+numbers/, /foldl\s*\(\+\)\s*0\s+numbers/, /sum\s+numbers/],
+    hints: [
+      'foldr takes a binary function, initial value, and list',
+      'Use (+) as the combining function',
+    ],
+    validPatterns: [
+      /foldr\s*\(\+\)\s*0\s+numbers/,
+      /foldl\s*\(\+\)\s*0\s+numbers/,
+      /sum\s+numbers/,
+    ],
     tags: ['foldr', 'fold', 'list'],
   },
   {
@@ -91,7 +104,11 @@ export const haskellProblems: Problem[] = [
     expected: 120,
     sample: 'foldl (*) 1 numbers',
     hints: ['Use 1 as the initial value for multiplication', 'foldl processes from left to right'],
-    validPatterns: [/foldl\s*\(\*\)\s*1\s+numbers/, /foldr\s*\(\*\)\s*1\s+numbers/, /product\s+numbers/],
+    validPatterns: [
+      /foldl\s*\(\*\)\s*1\s+numbers/,
+      /foldr\s*\(\*\)\s*1\s+numbers/,
+      /product\s+numbers/,
+    ],
     tags: ['foldl', 'fold', 'list'],
   },
   {
@@ -158,7 +175,11 @@ export const haskellProblems: Problem[] = [
     text: 'Use zip to pair elements from two lists',
     setup: 'names = ["Alice", "Bob", "Carol"]\nages = [25, 30, 35]',
     setupCode: 'names = ["Alice", "Bob", "Carol"]\nages = [25, 30, 35]',
-    expected: [['Alice', 25], ['Bob', 30], ['Carol', 35]],
+    expected: [
+      ['Alice', 25],
+      ['Bob', 30],
+      ['Carol', 35],
+    ],
     sample: 'zip names ages',
     hints: ['zip pairs corresponding elements', 'Result length matches shorter list'],
     validPatterns: [/zip\s+names\s+ages/],
@@ -174,7 +195,10 @@ export const haskellProblems: Problem[] = [
     setupCode: 'list1 = [1, 2, 3]\nlist2 = [10, 20, 30]',
     expected: [11, 22, 33],
     sample: 'zipWith (+) list1 list2',
-    hints: ['zipWith applies a function to corresponding pairs', 'Use (+) as the combining function'],
+    hints: [
+      'zipWith applies a function to corresponding pairs',
+      'Use (+) as the combining function',
+    ],
     validPatterns: [/zipWith\s*\(\+\)\s*list1\s+list2/],
     tags: ['zipWith', 'list', 'higher-order'],
   },
@@ -189,7 +213,10 @@ export const haskellProblems: Problem[] = [
     expected: [7, 9, 11],
     sample: 'filter (>5) numbers',
     hints: ['Use a section (>5) for comparison', 'Sections are partially applied operators'],
-    validPatterns: [/filter\s*\(\s*>\s*5\s*\)\s*numbers/, /filter\s*\(\s*\\x\s*->\s*x\s*>\s*5\s*\)\s*numbers/],
+    validPatterns: [
+      /filter\s*\(\s*>\s*5\s*\)\s*numbers/,
+      /filter\s*\(\s*\\x\s*->\s*x\s*>\s*5\s*\)\s*numbers/,
+    ],
     tags: ['filter', 'list', 'sections'],
   },
   {
@@ -305,7 +332,10 @@ export const haskellProblems: Problem[] = [
     expected: 'olleH dlroW',
     sample: 'unwords (map reverse (words sentence))',
     hints: ['Split into words, reverse each, rejoin', 'Combine words, map, and unwords'],
-    validPatterns: [/unwords\s*\(\s*map\s+reverse\s*\(\s*words\s+sentence\s*\)\s*\)/, /unwords\s*\.\s*map\s+reverse\s*\.\s*words/],
+    validPatterns: [
+      /unwords\s*\(\s*map\s+reverse\s*\(\s*words\s+sentence\s*\)\s*\)/,
+      /unwords\s*\.\s*map\s+reverse\s*\.\s*words/,
+    ],
     tags: ['words', 'unwords', 'map', 'reverse'],
   },
   {
@@ -347,7 +377,10 @@ export const haskellProblems: Problem[] = [
     expected: 'apple banana cherry date',
     sample: 'unwords (sort (words sentence))',
     hints: ['Import Data.List for sort', 'Split, sort, then rejoin'],
-    validPatterns: [/unwords\s*\(\s*sort\s*\(\s*words\s+sentence\s*\)\s*\)/, /unwords\s*\.\s*sort\s*\.\s*words/],
+    validPatterns: [
+      /unwords\s*\(\s*sort\s*\(\s*words\s+sentence\s*\)\s*\)/,
+      /unwords\s*\.\s*sort\s*\.\s*words/,
+    ],
     tags: ['words', 'sort', 'unwords', 'string'],
   },
   {
@@ -361,7 +394,10 @@ export const haskellProblems: Problem[] = [
     expected: 'awesome is Haskell',
     sample: 'unwords (reverse (words sentence))',
     hints: ['Split into words, reverse the list, rejoin', 'Use composition for elegance'],
-    validPatterns: [/unwords\s*\(\s*reverse\s*\(\s*words\s+sentence\s*\)\s*\)/, /unwords\s*\.\s*reverse\s*\.\s*words/],
+    validPatterns: [
+      /unwords\s*\(\s*reverse\s*\(\s*words\s+sentence\s*\)\s*\)/,
+      /unwords\s*\.\s*reverse\s*\.\s*words/,
+    ],
     tags: ['words', 'reverse', 'unwords', 'string'],
   },
 
@@ -379,7 +415,10 @@ export const haskellProblems: Problem[] = [
     expected: [3, 5, 7, 9, 11],
     sample: 'map ((+1) . (*2)) numbers',
     hints: ['Use (.) for function composition', 'Right function applies first'],
-    validPatterns: [/map\s*\(\s*\(\+1\)\s*\.\s*\(\*2\)\s*\)\s*numbers/, /map\s*\(\s*\\x\s*->\s*x\s*\*\s*2\s*\+\s*1\s*\)\s*numbers/],
+    validPatterns: [
+      /map\s*\(\s*\(\+1\)\s*\.\s*\(\*2\)\s*\)\s*numbers/,
+      /map\s*\(\s*\\x\s*->\s*x\s*\*\s*2\s*\+\s*1\s*\)\s*numbers/,
+    ],
     tags: ['composition', 'map', 'higher-order'],
   },
   {
@@ -407,7 +446,10 @@ export const haskellProblems: Problem[] = [
     expected: [4, 8, 12],
     sample: 'map (*2) (filter even numbers)',
     hints: ['First filter, then map', 'Or use composition with (.)'],
-    validPatterns: [/map\s*\(\*2\)\s*\(\s*filter\s+even\s+numbers\s*\)/, /map\s*\(\*2\)\s*\.\s*filter\s+even/],
+    validPatterns: [
+      /map\s*\(\*2\)\s*\(\s*filter\s+even\s+numbers\s*\)/,
+      /map\s*\(\*2\)\s*\.\s*filter\s+even/,
+    ],
     tags: ['composition', 'filter', 'map'],
   },
   {
@@ -421,7 +463,10 @@ export const haskellProblems: Problem[] = [
     expected: [4, 8, 12],
     sample: 'map (double . double) numbers',
     hints: ['Compose double with itself', 'Or use a lambda'],
-    validPatterns: [/map\s*\(\s*double\s*\.\s*double\s*\)\s*numbers/, /map\s*\(\s*\\x\s*->\s*double\s*\(\s*double\s+x\s*\)\s*\)\s*numbers/],
+    validPatterns: [
+      /map\s*\(\s*double\s*\.\s*double\s*\)\s*numbers/,
+      /map\s*\(\s*\\x\s*->\s*double\s*\(\s*double\s+x\s*\)\s*\)\s*numbers/,
+    ],
     tags: ['composition', 'higher-order'],
   },
   {
@@ -435,7 +480,10 @@ export const haskellProblems: Problem[] = [
     expected: 30,
     sample: '(sum . map (*2)) numbers',
     hints: ['Compose sum with map (*2)', 'Point-free omits the argument'],
-    validPatterns: [/\(\s*sum\s*\.\s*map\s*\(\*2\)\s*\)\s*numbers/, /sum\s*\(\s*map\s*\(\*2\)\s+numbers\s*\)/],
+    validPatterns: [
+      /\(\s*sum\s*\.\s*map\s*\(\*2\)\s*\)\s*numbers/,
+      /sum\s*\(\s*map\s*\(\*2\)\s+numbers\s*\)/,
+    ],
     tags: ['point-free', 'composition', 'higher-order'],
   },
   {
@@ -448,7 +496,10 @@ export const haskellProblems: Problem[] = [
     setupCode: 'pair = (3, 4)',
     expected: 7,
     sample: 'uncurry (+) pair',
-    hints: ['uncurry converts a curried function to work on tuples', 'It takes a function and a pair'],
+    hints: [
+      'uncurry converts a curried function to work on tuples',
+      'It takes a function and a pair',
+    ],
     validPatterns: [/uncurry\s*\(\+\)\s*pair/],
     tags: ['curry', 'uncurry', 'tuples'],
   },
@@ -505,7 +556,10 @@ export const haskellProblems: Problem[] = [
     expected: 30,
     sample: 'sum $ map (*2) numbers',
     hints: ['$ has low precedence and is right-associative', 'Avoids nested parentheses'],
-    validPatterns: [/sum\s*\$\s*map\s*\(\*2\)\s*numbers/, /sum\s*\(\s*map\s*\(\*2\)\s*numbers\s*\)/],
+    validPatterns: [
+      /sum\s*\$\s*map\s*\(\*2\)\s*numbers/,
+      /sum\s*\(\s*map\s*\(\*2\)\s*numbers\s*\)/,
+    ],
     tags: ['dollar', 'operators', 'higher-order'],
   },
 
@@ -522,7 +576,10 @@ export const haskellProblems: Problem[] = [
     setupCode: 'maybeVal = Just 42',
     expected: 42,
     sample: 'fromMaybe 0 maybeVal',
-    hints: ['fromMaybe takes a default and a Maybe', 'Returns the value if Just, default if Nothing'],
+    hints: [
+      'fromMaybe takes a default and a Maybe',
+      'Returns the value if Just, default if Nothing',
+    ],
     validPatterns: [/fromMaybe\s+0\s+maybeVal/],
     tags: ['maybe', 'fromMaybe', 'monads'],
   },
@@ -607,7 +664,10 @@ export const haskellProblems: Problem[] = [
     expected: 'Just 10',
     sample: 'start >>= (\\x -> safeDiv x 10)',
     hints: ['>>= is monadic bind', 'Chains computations that might fail'],
-    validPatterns: [/start\s*>>=\s*\(\s*\\x\s*->\s*safeDiv\s+x\s+10\s*\)/, /start\s*>>=\s*flip\s+safeDiv\s+10/],
+    validPatterns: [
+      /start\s*>>=\s*\(\s*\\x\s*->\s*safeDiv\s+x\s+10\s*\)/,
+      /start\s*>>=\s*flip\s+safeDiv\s+10/,
+    ],
     tags: ['bind', 'monad', 'maybe'],
   },
   {
@@ -631,7 +691,8 @@ export const haskellProblems: Problem[] = [
     title: 'Map Maybe with mapMaybe',
     text: 'Use mapMaybe to filter and transform in one step',
     setup: 'numbers = [1, 2, 3, 4, 5, 6]\nsafeEven x = if even x then Just (x * 2) else Nothing',
-    setupCode: 'numbers = [1, 2, 3, 4, 5, 6]\nsafeEven x = if even x then Just (x * 2) else Nothing',
+    setupCode:
+      'numbers = [1, 2, 3, 4, 5, 6]\nsafeEven x = if even x then Just (x * 2) else Nothing',
     expected: [4, 8, 12],
     sample: 'mapMaybe safeEven numbers',
     hints: ['mapMaybe combines map and catMaybes', 'Filters and transforms simultaneously'],
@@ -680,7 +741,10 @@ export const haskellProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5, 6]',
     expected: [4, 8, 12],
     sample: '[x * 2 | x <- numbers, even x]',
-    hints: ['Combine transformation in expression with filter guard', 'Guard comes after generator'],
+    hints: [
+      'Combine transformation in expression with filter guard',
+      'Guard comes after generator',
+    ],
     validPatterns: [/\[\s*x\s*\*\s*2\s*\|\s*x\s*<-\s*numbers\s*,\s*even\s+x\s*\]/],
     tags: ['list-comprehension', 'filter', 'transform'],
   },
@@ -692,7 +756,12 @@ export const haskellProblems: Problem[] = [
     text: 'Generate all pairs from two lists',
     setup: 'xs = [1, 2]\nys = [3, 4]',
     setupCode: 'xs = [1, 2]\nys = [3, 4]',
-    expected: [[1, 3], [1, 4], [2, 3], [2, 4]],
+    expected: [
+      [1, 3],
+      [1, 4],
+      [2, 3],
+      [2, 4],
+    ],
     sample: '[(x, y) | x <- xs, y <- ys]',
     hints: ['Use multiple generators', 'Each combination is generated'],
     validPatterns: [/\[\s*\(\s*x\s*,\s*y\s*\)\s*\|\s*x\s*<-\s*xs\s*,\s*y\s*<-\s*ys\s*\]/],
@@ -706,10 +775,15 @@ export const haskellProblems: Problem[] = [
     text: 'Generate Pythagorean triples up to 10',
     setup: 'limit = 10',
     setupCode: 'limit = 10',
-    expected: [[3, 4, 5], [6, 8, 10]],
+    expected: [
+      [3, 4, 5],
+      [6, 8, 10],
+    ],
     sample: '[(a,b,c) | c <- [1..limit], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2]',
     hints: ['Use three generators with constraints', 'Guard checks the Pythagorean property'],
-    validPatterns: [/\[\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)\s*\|.*a\s*\^\s*2\s*\+\s*b\s*\^\s*2\s*==\s*c\s*\^\s*2\s*\]/],
+    validPatterns: [
+      /\[\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)\s*\|.*a\s*\^\s*2\s*\+\s*b\s*\^\s*2\s*==\s*c\s*\^\s*2\s*\]/,
+    ],
     tags: ['list-comprehension', 'math', 'triples'],
   },
   {

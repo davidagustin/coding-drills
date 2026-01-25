@@ -101,7 +101,10 @@ export const perlProblems: Problem[] = [
     setupCode: 'my @numbers = (1, 2, 3, 4, 5);',
     expected: [5, 4, 3, 2, 1],
     sample: 'reverse @numbers',
-    hints: ['reverse returns elements in opposite order', 'reverse does not modify the original array'],
+    hints: [
+      'reverse returns elements in opposite order',
+      'reverse does not modify the original array',
+    ],
     validPatterns: [/reverse\s+@numbers/],
     tags: ['reverse', 'arrays'],
   },
@@ -166,7 +169,9 @@ export const perlProblems: Problem[] = [
     expected: ['is', 'hi', 'perl', 'awesome'],
     sample: 'sort { length($a) <=> length($b) } @words',
     hints: ['Compare lengths with <=>', 'length() returns string length'],
-    validPatterns: [/sort\s*\{\s*length\s*\(\s*\$a\s*\)\s*<=>\s*length\s*\(\s*\$b\s*\)\s*\}\s*@words/],
+    validPatterns: [
+      /sort\s*\{\s*length\s*\(\s*\$a\s*\)\s*<=>\s*length\s*\(\s*\$b\s*\)\s*\}\s*@words/,
+    ],
     tags: ['sort', 'arrays', 'length'],
   },
 
@@ -462,7 +467,7 @@ export const perlProblems: Problem[] = [
     expected: { a: 1, b: 3, c: 4 },
     sample: '(%h1, %h2)',
     hints: ['Later values override earlier ones', 'Combine hashes in a list'],
-    validPatterns: [/\(\s*%h1\s*,\s*%h2\s*\)/, /\%h1\s*,\s*%h2/],
+    validPatterns: [/\(\s*%h1\s*,\s*%h2\s*\)/, /%h1\s*,\s*%h2/],
     tags: ['merge', 'hashes'],
   },
 

@@ -1214,8 +1214,7 @@ export const javaProblems: Problem[] = [
     setup: 'List<String> words = Arrays.asList("apple", "banana", "cherry");',
     setupCode: 'List<String> words = Arrays.asList("apple", "banana", "cherry");',
     expected: { apple: 5, banana: 6, cherry: 6 },
-    sample:
-      'words.stream().collect(Collectors.toMap(Function.identity(), String::length))',
+    sample: 'words.stream().collect(Collectors.toMap(Function.identity(), String::length))',
     hints: [
       'Use Collectors.toMap(keyMapper, valueMapper)',
       'Function.identity() returns the element itself as the key',
@@ -1233,10 +1232,10 @@ export const javaProblems: Problem[] = [
     title: 'GroupingBy with Downstream Collector',
     text: 'Group by string length and count elements in each group',
     setup: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
-    setupCode: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
+    setupCode:
+      'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
     expected: { 3: 4, 7: 1, 8: 1 },
-    sample:
-      'words.stream().collect(Collectors.groupingBy(String::length, Collectors.counting()))',
+    sample: 'words.stream().collect(Collectors.groupingBy(String::length, Collectors.counting()))',
     hints: [
       'Use groupingBy with a downstream collector',
       'Collectors.counting() counts elements in each group',
@@ -1676,13 +1675,10 @@ export const javaProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Iterate Map with forEach',
     text: 'Print all key-value pairs using forEach (returns void)',
-    setup:
-      'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 1);\nmap.put("b", 2);',
-    setupCode:
-      'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 1);\nmap.put("b", 2);',
+    setup: 'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 1);\nmap.put("b", 2);',
+    setupCode: 'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 1);\nmap.put("b", 2);',
     expected: null,
-    sample:
-      'map.forEach((k, v) -> System.out.println(k + "=" + v)); // prints each entry',
+    sample: 'map.forEach((k, v) -> System.out.println(k + "=" + v)); // prints each entry',
     hints: [
       'Use forEach(BiConsumer) to iterate over map entries',
       'BiConsumer receives key and value as parameters',
@@ -2015,8 +2011,13 @@ export const javaProblems: Problem[] = [
     text: 'Create and initialize a 3x3 matrix with row*10 + col values',
     setup: '// Create a 3x3 int matrix',
     setupCode: '// Create a 3x3 int matrix',
-    expected: [[0, 1, 2], [10, 11, 12], [20, 21, 22]],
-    sample: 'int[][] matrix = new int[3][3];\nfor (int i = 0; i < 3; i++)\n  for (int j = 0; j < 3; j++)\n    matrix[i][j] = i * 10 + j;',
+    expected: [
+      [0, 1, 2],
+      [10, 11, 12],
+      [20, 21, 22],
+    ],
+    sample:
+      'int[][] matrix = new int[3][3];\nfor (int i = 0; i < 3; i++)\n  for (int j = 0; j < 3; j++)\n    matrix[i][j] = i * 10 + j;',
     hints: [
       'Use new int[rows][cols] to create 2D array',
       'Access elements with matrix[row][col]',
@@ -2073,7 +2074,8 @@ export const javaProblems: Problem[] = [
     setup: '// Call: sum(1, 2, 3, 4, 5)',
     setupCode: '// Call: sum(1, 2, 3, 4, 5)',
     expected: 15,
-    sample: 'public int sum(int... nums) {\n  return Arrays.stream(nums).sum();\n}\n// sum(1, 2, 3, 4, 5) returns 15',
+    sample:
+      'public int sum(int... nums) {\n  return Arrays.stream(nums).sum();\n}\n// sum(1, 2, 3, 4, 5) returns 15',
     hints: [
       'Use int... for varargs parameter',
       'Varargs is treated as an array inside the method',
@@ -2135,7 +2137,8 @@ export const javaProblems: Problem[] = [
     setup: '// Create jagged array with rows of length 1, 2, 3',
     setupCode: '// Create jagged array with rows of length 1, 2, 3',
     expected: [[0], [0, 0], [0, 0, 0]],
-    sample: 'int[][] jagged = new int[3][];\nfor (int i = 0; i < 3; i++) {\n  jagged[i] = new int[i + 1];\n}',
+    sample:
+      'int[][] jagged = new int[3][];\nfor (int i = 0; i < 3; i++) {\n  jagged[i] = new int[i + 1];\n}',
     hints: [
       'First create outer array with row count only',
       'Then create each inner array with desired length',
@@ -2312,10 +2315,10 @@ export const javaProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Character to Uppercase',
     text: 'Convert the character "a" to uppercase',
-    setup: 'char ch = \'a\';',
-    setupCode: 'char ch = \'a\';',
+    setup: "char ch = 'a';",
+    setupCode: "char ch = 'a';",
     expected: 'A',
-    sample: 'Character.toUpperCase(ch) // returns \'A\'',
+    sample: "Character.toUpperCase(ch) // returns 'A'",
     hints: [
       'Use Character.toUpperCase(char) for single character conversion',
       'Returns the same character if already uppercase or not a letter',
@@ -2507,8 +2510,7 @@ export const javaProblems: Problem[] = [
     setup: 'String email = "test@example.com";\nimport java.util.regex.*;',
     setupCode: 'String email = "test@example.com";\nimport java.util.regex.*;',
     expected: true,
-    sample:
-      'Pattern.compile("^[\\\\w.-]+@[\\\\w.-]+\\\\.[a-zA-Z]{2,}$").matcher(email).matches()',
+    sample: 'Pattern.compile("^[\\\\w.-]+@[\\\\w.-]+\\\\.[a-zA-Z]{2,}$").matcher(email).matches()',
     hints: [
       'Use matches() to check if ENTIRE string matches the pattern',
       'Different from find() which looks for any matching subsequence',
@@ -2524,13 +2526,10 @@ export const javaProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Extract Groups with Matcher',
     text: 'Extract the domain from an email address using regex groups',
-    setup:
-      'String email = "user@example.com";\nPattern p = Pattern.compile("@(.+)$");',
-    setupCode:
-      'String email = "user@example.com";\nPattern p = Pattern.compile("@(.+)$");',
+    setup: 'String email = "user@example.com";\nPattern p = Pattern.compile("@(.+)$");',
+    setupCode: 'String email = "user@example.com";\nPattern p = Pattern.compile("@(.+)$");',
     expected: 'example.com',
-    sample:
-      'Matcher m = p.matcher(email); m.find(); m.group(1) // returns "example.com"',
+    sample: 'Matcher m = p.matcher(email); m.find(); m.group(1) // returns "example.com"',
     hints: [
       'Use parentheses in regex to define capture groups',
       'group(0) is entire match, group(1) is first capture group',
@@ -2549,8 +2548,7 @@ export const javaProblems: Problem[] = [
     setup: 'String str = "istanbul";\nimport java.util.Locale;',
     setupCode: 'String str = "istanbul";\nimport java.util.Locale;',
     expected: 'ISTANBUL',
-    sample:
-      'str.toUpperCase(new Locale("tr", "TR")) // returns "ISTANBUL" with dotted I',
+    sample: 'str.toUpperCase(new Locale("tr", "TR")) // returns "ISTANBUL" with dotted I',
     hints: [
       'Use toUpperCase(Locale) for locale-aware conversion',
       'Turkish has special rules: i -> I with dot, I -> i without dot',
@@ -2571,8 +2569,7 @@ export const javaProblems: Problem[] = [
     setupCode:
       'String s1 = "Acker";\nString s2 = "Adam";\nimport java.text.Collator;\nimport java.util.Locale;',
     expected: -1,
-    sample:
-      'Collator.getInstance(Locale.GERMAN).compare(s1, s2) // negative if s1 < s2',
+    sample: 'Collator.getInstance(Locale.GERMAN).compare(s1, s2) // negative if s1 < s2',
     hints: [
       'Use Collator for locale-aware string comparison',
       'Different locales have different sorting rules',
@@ -2592,7 +2589,8 @@ export const javaProblems: Problem[] = [
     text: 'Create a text block for HTML and format with variables (Java 15+)',
     setup: 'String title = "Welcome";\nString body = "Hello, World!";',
     setupCode: 'String title = "Welcome";\nString body = "Hello, World!";',
-    expected: '<html>\n  <head><title>Welcome</title></head>\n  <body>Hello, World!</body>\n</html>',
+    expected:
+      '<html>\n  <head><title>Welcome</title></head>\n  <body>Hello, World!</body>\n</html>',
     sample: `"""
 <html>
   <head><title>%s</title></head>
@@ -2620,8 +2618,7 @@ export const javaProblems: Problem[] = [
     setupCode:
       'String str = "hello world java";\nimport java.util.regex.*;\nimport java.util.function.Function;',
     expected: 'HELLO WORLD JAVA',
-    sample:
-      'Pattern.compile("\\\\w+").matcher(str).replaceAll(m -> m.group().toUpperCase())',
+    sample: 'Pattern.compile("\\\\w+").matcher(str).replaceAll(m -> m.group().toUpperCase())',
     hints: [
       'Matcher.replaceAll(Function<MatchResult, String>) provides dynamic replacement (Java 9+)',
       'Function receives MatchResult with access to matched text and groups',
@@ -2640,8 +2637,7 @@ export const javaProblems: Problem[] = [
     setup: 'String str = "one1two2three3four";',
     setupCode: 'String str = "one1two2three3four";',
     expected: ['one', '1', 'two', '2', 'three', '3', 'four'],
-    sample:
-      'str.split("(?<=\\\\d)|(?=\\\\d)") // splits around digits, keeping them',
+    sample: 'str.split("(?<=\\\\d)|(?=\\\\d)") // splits around digits, keeping them',
     hints: [
       'Use lookahead (?=X) and lookbehind (?<=X) for zero-width splits',
       '(?<=\\d) matches position after digit, (?=\\d) before digit',
@@ -2657,10 +2653,8 @@ export const javaProblems: Problem[] = [
     difficulty: 'hard',
     title: 'StringBuffer Thread-Safe Operations',
     text: 'Use StringBuffer for thread-safe string building in concurrent context',
-    setup:
-      'StringBuffer sb = new StringBuffer();\n// Simulate concurrent access',
-    setupCode:
-      'StringBuffer sb = new StringBuffer();\n// Simulate concurrent access',
+    setup: 'StringBuffer sb = new StringBuffer();\n// Simulate concurrent access',
+    setupCode: 'StringBuffer sb = new StringBuffer();\n// Simulate concurrent access',
     expected: 'ABC',
     sample: `synchronized(sb) {
   sb.append("A").append("B").append("C");
@@ -2871,8 +2865,7 @@ text.lines()
     difficulty: 'medium',
     title: 'TreeSet SubSet Range',
     text: 'Get a view of elements from 3 (inclusive) to 8 (exclusive)',
-    setup:
-      'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));',
+    setup: 'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));',
     setupCode:
       'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));',
     expected: [3, 4, 5, 6, 7],
@@ -2960,8 +2953,7 @@ text.lines()
     setupCode:
       'TreeMap<Integer, String> map = new TreeMap<>();\nmap.put(2, "two");\nmap.put(4, "four");\nmap.put(8, "eight");\nmap.put(10, "ten");',
     expected: { floorKey: 4, ceilingKey: 8 },
-    sample:
-      'map.floorEntry(6).getKey() // returns 4\nmap.ceilingEntry(6).getKey() // returns 8',
+    sample: 'map.floorEntry(6).getKey() // returns 4\nmap.ceilingEntry(6).getKey() // returns 8',
     hints: [
       'floorEntry(k) returns entry with greatest key <= k',
       'ceilingEntry(k) returns entry with smallest key >= k',
@@ -2979,10 +2971,8 @@ text.lines()
     difficulty: 'easy',
     title: 'LinkedHashMap Access Order',
     text: 'Create a LinkedHashMap with access-order (LRU cache behavior)',
-    setup:
-      '// Create access-ordered LinkedHashMap with initial capacity 16, load factor 0.75',
-    setupCode:
-      '// Create access-ordered LinkedHashMap with initial capacity 16, load factor 0.75',
+    setup: '// Create access-ordered LinkedHashMap with initial capacity 16, load factor 0.75',
+    setupCode: '// Create access-ordered LinkedHashMap with initial capacity 16, load factor 0.75',
     expected: 'access-ordered map',
     sample: 'new LinkedHashMap<>(16, 0.75f, true) // true enables access-order',
     hints: [
@@ -3104,10 +3094,8 @@ text.lines()
     difficulty: 'medium',
     title: 'Deque PeekFirst and PeekLast',
     text: 'Peek at both ends of the deque without removing',
-    setup:
-      'Deque<String> deque = new ArrayDeque<>(Arrays.asList("first", "middle", "last"));',
-    setupCode:
-      'Deque<String> deque = new ArrayDeque<>(Arrays.asList("first", "middle", "last"));',
+    setup: 'Deque<String> deque = new ArrayDeque<>(Arrays.asList("first", "middle", "last"));',
+    setupCode: 'Deque<String> deque = new ArrayDeque<>(Arrays.asList("first", "middle", "last"));',
     expected: { first: 'first', last: 'last' },
     sample: 'deque.peekFirst() // returns "first"\ndeque.peekLast() // returns "last"',
     hints: [
@@ -3297,8 +3285,10 @@ text.lines()
     difficulty: 'easy',
     title: 'Stream Concatenation',
     text: 'Concatenate two streams into one',
-    setup: 'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
-    setupCode: 'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
+    setup:
+      'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
+    setupCode:
+      'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'Stream.concat(list1.stream(), list2.stream()).collect(Collectors.toList())',
     hints: [
@@ -3357,7 +3347,8 @@ text.lines()
     setup: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);',
     setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);',
     expected: [2, 4],
-    sample: 'nums.stream().filter(n -> n % 2 == 0).peek(System.out::println).collect(Collectors.toList())',
+    sample:
+      'nums.stream().filter(n -> n % 2 == 0).peek(System.out::println).collect(Collectors.toList())',
     hints: [
       'peek() is for debugging - performs action without modifying stream',
       'peek() is an intermediate operation, needs a terminal operation',
@@ -3435,7 +3426,8 @@ text.lines()
     setup: 'List<String> words = Arrays.asList("Hi", "Bye");',
     setupCode: 'List<String> words = Arrays.asList("Hi", "Bye");',
     expected: ['H', 'i', 'B', 'y', 'e'],
-    sample: 'words.stream().flatMap(s -> s.chars().mapToObj(c -> String.valueOf((char)c))).collect(Collectors.toList())',
+    sample:
+      'words.stream().flatMap(s -> s.chars().mapToObj(c -> String.valueOf((char)c))).collect(Collectors.toList())',
     hints: [
       'String.chars() returns IntStream of character codes',
       'Use mapToObj to convert int to Character or String',
@@ -3509,7 +3501,8 @@ text.lines()
     title: 'Grouping with Downstream Counting',
     text: 'Group strings by length and count elements in each group',
     setup: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
-    setupCode: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
+    setupCode:
+      'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
     expected: { 3: 4, 7: 1, 8: 1 },
     sample: 'words.stream().collect(Collectors.groupingBy(String::length, Collectors.counting()))',
     hints: [
@@ -3530,7 +3523,8 @@ text.lines()
     setup: '// Generate squares: 1, 4, 9, 16, 25',
     setupCode: '// Generate squares: 1, 4, 9, 16, 25',
     expected: [1, 4, 9, 16, 25],
-    sample: 'IntStream.iterate(1, n -> n + 1).limit(5).map(n -> n * n).boxed().collect(Collectors.toList())',
+    sample:
+      'IntStream.iterate(1, n -> n + 1).limit(5).map(n -> n * n).boxed().collect(Collectors.toList())',
     hints: [
       'IntStream.iterate(seed, unaryOperator) generates infinite stream',
       'Must use limit() to make it finite',
@@ -3546,8 +3540,10 @@ text.lines()
     difficulty: 'medium',
     title: 'FlatMapToInt',
     text: 'Flatten nested integer lists and calculate sum',
-    setup: 'List<List<Integer>> nested = Arrays.asList(\n  Arrays.asList(1, 2),\n  Arrays.asList(3, 4),\n  Arrays.asList(5)\n);',
-    setupCode: 'List<List<Integer>> nested = Arrays.asList(\n  Arrays.asList(1, 2),\n  Arrays.asList(3, 4),\n  Arrays.asList(5)\n);',
+    setup:
+      'List<List<Integer>> nested = Arrays.asList(\n  Arrays.asList(1, 2),\n  Arrays.asList(3, 4),\n  Arrays.asList(5)\n);',
+    setupCode:
+      'List<List<Integer>> nested = Arrays.asList(\n  Arrays.asList(1, 2),\n  Arrays.asList(3, 4),\n  Arrays.asList(5)\n);',
     expected: 15,
     sample: 'nested.stream().flatMapToInt(list -> list.stream().mapToInt(Integer::intValue)).sum()',
     hints: [
@@ -3565,8 +3561,10 @@ text.lines()
     difficulty: 'medium',
     title: 'Collectors.toMap with Merge Function',
     text: 'Create a map counting word occurrences (handle duplicates)',
-    setup: 'List<String> words = Arrays.asList("apple", "banana", "apple", "cherry", "banana", "apple");',
-    setupCode: 'List<String> words = Arrays.asList("apple", "banana", "apple", "cherry", "banana", "apple");',
+    setup:
+      'List<String> words = Arrays.asList("apple", "banana", "apple", "cherry", "banana", "apple");',
+    setupCode:
+      'List<String> words = Arrays.asList("apple", "banana", "apple", "cherry", "banana", "apple");',
     expected: { apple: 3, banana: 2, cherry: 1 },
     sample: 'words.stream().collect(Collectors.toMap(w -> w, w -> 1, Integer::sum))',
     hints: [
@@ -3574,7 +3572,11 @@ text.lines()
       'mergeFunction handles duplicate keys',
       'Integer::sum adds values when keys collide',
     ],
-    validPatterns: [/\.stream\(\)/, /Collectors\.toMap\(/, /Integer::sum|\(\s*a\s*,\s*b\s*\)\s*->\s*a\s*\+\s*b/],
+    validPatterns: [
+      /\.stream\(\)/,
+      /Collectors\.toMap\(/,
+      /Integer::sum|\(\s*a\s*,\s*b\s*\)\s*->\s*a\s*\+\s*b/,
+    ],
     tags: ['Stream', 'Collectors', 'toMap', 'merge', 'frequency'],
   },
 
@@ -3606,7 +3608,8 @@ text.lines()
     setup: 'List<String> words = Arrays.asList("apple", "ant", "banana", "bear", "cherry");',
     setupCode: 'List<String> words = Arrays.asList("apple", "ant", "banana", "bear", "cherry");',
     expected: { a: [5, 3], b: [6, 4], c: [6] },
-    sample: 'words.stream().collect(Collectors.groupingBy(s -> s.charAt(0), Collectors.mapping(String::length, Collectors.toList())))',
+    sample:
+      'words.stream().collect(Collectors.groupingBy(s -> s.charAt(0), Collectors.mapping(String::length, Collectors.toList())))',
     hints: [
       'Use Collectors.mapping() as downstream collector',
       'mapping(mapper, downstream) transforms before collecting',
@@ -3627,7 +3630,8 @@ text.lines()
     setup: 'List<Integer> ages = Arrays.asList(25, 30, 35, 40, 45);',
     setupCode: 'List<Integer> ages = Arrays.asList(25, 30, 35, 40, 45);',
     expected: { count: 5, sum: 175, min: 25, average: 35.0, max: 45 },
-    sample: 'ages.stream().collect(Collectors.summarizingInt(Integer::intValue)) // returns IntSummaryStatistics',
+    sample:
+      'ages.stream().collect(Collectors.summarizingInt(Integer::intValue)) // returns IntSummaryStatistics',
     hints: [
       'Collectors.summarizingInt returns IntSummaryStatistics',
       'Contains getCount(), getSum(), getMin(), getAverage(), getMax()',
@@ -3646,7 +3650,8 @@ text.lines()
     setup: 'List<Integer> nums = Arrays.asList(10, 20, 30, 40);',
     setupCode: 'List<Integer> nums = Arrays.asList(10, 20, 30, 40);',
     expected: { sum: 100, count: 4 },
-    sample: 'nums.stream().collect(Collectors.teeing(\n  Collectors.summingInt(Integer::intValue),\n  Collectors.counting(),\n  (sum, count) -> Map.of("sum", sum, "count", count)\n))',
+    sample:
+      'nums.stream().collect(Collectors.teeing(\n  Collectors.summingInt(Integer::intValue),\n  Collectors.counting(),\n  (sum, count) -> Map.of("sum", sum, "count", count)\n))',
     hints: [
       'Collectors.teeing combines two collectors and merges results',
       'Takes two collectors and a BiFunction merger',
@@ -3662,10 +3667,13 @@ text.lines()
     difficulty: 'hard',
     title: 'Complex Pipeline - Top N Longest',
     text: 'Find the top 3 longest words that start with a vowel, sorted by length descending',
-    setup: 'List<String> words = Arrays.asList("elephant", "ant", "umbrella", "igloo", "orange", "apple", "ice", "ear");',
-    setupCode: 'List<String> words = Arrays.asList("elephant", "ant", "umbrella", "igloo", "orange", "apple", "ice", "ear");',
+    setup:
+      'List<String> words = Arrays.asList("elephant", "ant", "umbrella", "igloo", "orange", "apple", "ice", "ear");',
+    setupCode:
+      'List<String> words = Arrays.asList("elephant", "ant", "umbrella", "igloo", "orange", "apple", "ice", "ear");',
     expected: ['elephant', 'umbrella', 'orange'],
-    sample: 'words.stream()\n  .filter(w -> "aeiouAEIOU".indexOf(w.charAt(0)) >= 0)\n  .sorted(Comparator.comparingInt(String::length).reversed())\n  .limit(3)\n  .collect(Collectors.toList())',
+    sample:
+      'words.stream()\n  .filter(w -> "aeiouAEIOU".indexOf(w.charAt(0)) >= 0)\n  .sorted(Comparator.comparingInt(String::length).reversed())\n  .limit(3)\n  .collect(Collectors.toList())',
     hints: [
       'Chain filter, sorted, limit in the right order',
       'Comparator.comparingInt().reversed() for descending order',
@@ -3681,13 +3689,16 @@ text.lines()
     difficulty: 'hard',
     title: 'Nested GroupingBy',
     text: 'Group employees by department, then by salary range (high >50k, low <=50k)',
-    setup: 'record Employee(String name, String dept, int salary) {}\nList<Employee> employees = Arrays.asList(\n  new Employee("Alice", "IT", 60000),\n  new Employee("Bob", "IT", 45000),\n  new Employee("Carol", "HR", 55000),\n  new Employee("Dave", "HR", 40000)\n);',
-    setupCode: 'record Employee(String name, String dept, int salary) {}\nList<Employee> employees = Arrays.asList(\n  new Employee("Alice", "IT", 60000),\n  new Employee("Bob", "IT", 45000),\n  new Employee("Carol", "HR", 55000),\n  new Employee("Dave", "HR", 40000)\n);',
+    setup:
+      'record Employee(String name, String dept, int salary) {}\nList<Employee> employees = Arrays.asList(\n  new Employee("Alice", "IT", 60000),\n  new Employee("Bob", "IT", 45000),\n  new Employee("Carol", "HR", 55000),\n  new Employee("Dave", "HR", 40000)\n);',
+    setupCode:
+      'record Employee(String name, String dept, int salary) {}\nList<Employee> employees = Arrays.asList(\n  new Employee("Alice", "IT", 60000),\n  new Employee("Bob", "IT", 45000),\n  new Employee("Carol", "HR", 55000),\n  new Employee("Dave", "HR", 40000)\n);',
     expected: {
       IT: { high: ['Alice'], low: ['Bob'] },
       HR: { high: ['Carol'], low: ['Dave'] },
     },
-    sample: 'employees.stream().collect(\n  Collectors.groupingBy(Employee::dept,\n    Collectors.groupingBy(e -> e.salary() > 50000 ? "high" : "low",\n      Collectors.mapping(Employee::name, Collectors.toList())\n    )\n  )\n)',
+    sample:
+      'employees.stream().collect(\n  Collectors.groupingBy(Employee::dept,\n    Collectors.groupingBy(e -> e.salary() > 50000 ? "high" : "low",\n      Collectors.mapping(Employee::name, Collectors.toList())\n    )\n  )\n)',
     hints: [
       'Nest groupingBy collectors for multi-level grouping',
       'Use ternary operator for salary classification',
@@ -3706,7 +3717,8 @@ text.lines()
     setup: 'List<Integer> nums = Arrays.asList(5, 2, 9, 1, 7, 3, 8);',
     setupCode: 'List<Integer> nums = Arrays.asList(5, 2, 9, 1, 7, 3, 8);',
     expected: 8,
-    sample: 'nums.stream()\n  .sorted(Comparator.reverseOrder())\n  .skip(1)\n  .findFirst()\n  .orElse(null)',
+    sample:
+      'nums.stream()\n  .sorted(Comparator.reverseOrder())\n  .skip(1)\n  .findFirst()\n  .orElse(null)',
     hints: [
       'Sort in descending order using Comparator.reverseOrder()',
       'skip(1) skips the largest element',

@@ -46,10 +46,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var numbers = [1, 2, 3, 4, 5];',
     expected: [1, 4, 9, 16, 25],
     sample: 'numbers.map((n) => n * n).toList()',
-    hints: [
-      'map() transforms each element',
-      'Returns an Iterable - use toList() to get a List',
-    ],
+    hints: ['map() transforms each element', 'Returns an Iterable - use toList() to get a List'],
     validPatterns: [/\.map\s*\(/],
     tags: ['map', 'transform', 'lists'],
   },
@@ -82,10 +79,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var numbers = [5, 2, 8, 1, 9, 3];',
     expected: [1, 2, 3, 5, 8, 9],
     sample: 'numbers.sort(); // modifies in place',
-    hints: [
-      'sort() modifies the list in place',
-      'For a sorted copy, use [...numbers]..sort()',
-    ],
+    hints: ['sort() modifies the list in place', 'For a sorted copy, use [...numbers]..sort()'],
     validPatterns: [/\.sort\s*\(/],
     tags: ['sort', 'order', 'lists'],
   },
@@ -100,10 +94,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var numbers = [1, 2, 3, 4, 5];',
     expected: [5, 4, 3, 2, 1],
     sample: 'numbers.reversed.toList()',
-    hints: [
-      'reversed returns an Iterable, not a List',
-      'Use toList() to convert to a List',
-    ],
+    hints: ['reversed returns an Iterable, not a List', 'Use toList() to convert to a List'],
     validPatterns: [/\.reversed/],
     tags: ['reversed', 'order', 'lists'],
   },
@@ -133,10 +124,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var fruits = ["apple", "banana", "cherry"];',
     expected: 'apple',
     sample: 'fruits.first',
-    hints: [
-      'first is a property, not a method',
-      'Throws StateError if list is empty',
-    ],
+    hints: ['first is a property, not a method', 'Throws StateError if list is empty'],
     validPatterns: [/\.first(?!\()/],
     tags: ['first', 'access', 'lists'],
   },
@@ -151,10 +139,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var fruits = ["apple", "banana", "cherry"];',
     expected: 'cherry',
     sample: 'fruits.last',
-    hints: [
-      'last is a property, not a method',
-      'Throws StateError if list is empty',
-    ],
+    hints: ['last is a property, not a method', 'Throws StateError if list is empty'],
     validPatterns: [/\.last(?!\()/],
     tags: ['last', 'access', 'lists'],
   },
@@ -169,10 +154,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var numbers = [1, 2, 3, 4, 5, 6, 7];',
     expected: [1, 2, 3],
     sample: 'numbers.take(3).toList()',
-    hints: [
-      'take() returns an Iterable',
-      'If count exceeds length, returns all elements',
-    ],
+    hints: ['take() returns an Iterable', 'If count exceeds length, returns all elements'],
     validPatterns: [/\.take\s*\(\s*3\s*\)/],
     tags: ['take', 'slice', 'lists'],
   },
@@ -187,10 +169,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var numbers = [1, 2, 3, 4, 5];',
     expected: [3, 4, 5],
     sample: 'numbers.skip(2).toList()',
-    hints: [
-      'skip() returns an Iterable',
-      'If count exceeds length, returns empty Iterable',
-    ],
+    hints: ['skip() returns an Iterable', 'If count exceeds length, returns empty Iterable'],
     validPatterns: [/\.skip\s*\(\s*2\s*\)/],
     tags: ['skip', 'slice', 'lists'],
   },
@@ -299,7 +278,10 @@ export const dartProblems: Problem[] = [
     setupCode: 'var text = "   hello world   ";',
     expected: 'hello world',
     sample: 'text.trim()',
-    hints: ['trim() removes leading and trailing whitespace', 'Use trimLeft() or trimRight() for one side'],
+    hints: [
+      'trim() removes leading and trailing whitespace',
+      'Use trimLeft() or trimRight() for one side',
+    ],
     validPatterns: [/\.trim\s*\(\s*\)/],
     tags: ['trim', 'whitespace', 'strings'],
   },
@@ -456,10 +438,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var scores = {"Alice": 90, "Bob": 85};',
     expected: { Alice: 95, Bob: 85 },
     sample: 'scores.update("Alice", (value) => 95)',
-    hints: [
-      'update() takes a key and an update function',
-      'Can provide ifAbsent for missing keys',
-    ],
+    hints: ['update() takes a key and an update function', 'Can provide ifAbsent for missing keys'],
     validPatterns: [/\.update\s*\(\s*["']Alice["']/],
     tags: ['update', 'modify', 'maps'],
   },
@@ -477,10 +456,7 @@ export const dartProblems: Problem[] = [
       ['b', 2],
     ],
     sample: 'data.entries.map((e) => [e.key, e.value]).toList()',
-    hints: [
-      'entries returns Iterable<MapEntry>',
-      'Each MapEntry has key and value properties',
-    ],
+    hints: ['entries returns Iterable<MapEntry>', 'Each MapEntry has key and value properties'],
     validPatterns: [/\.entries/],
     tags: ['entries', 'iterate', 'maps'],
   },
@@ -513,10 +489,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var scores = {"Alice": 45, "Bob": 78, "Charlie": 92, "Diana": 30};',
     expected: { Bob: 78, Charlie: 92 },
     sample: 'Map.fromEntries(scores.entries.where((e) => e.value > 50))',
-    hints: [
-      'Filter entries using where()',
-      'Convert back to Map using Map.fromEntries()',
-    ],
+    hints: ['Filter entries using where()', 'Convert back to Map using Map.fromEntries()'],
     validPatterns: [/\.entries\.where\s*\(/],
     tags: ['filter', 'where', 'maps'],
   },
@@ -610,7 +583,10 @@ export const dartProblems: Problem[] = [
     setupCode: 'var set1 = {1, 2, 3, 4};\nvar set2 = {3, 4, 5, 6};',
     expected: [1, 2],
     sample: 'set1.difference(set2)',
-    hints: ['difference() returns a new Set', 'Order matters: set1.difference(set2) != set2.difference(set1)'],
+    hints: [
+      'difference() returns a new Set',
+      'Order matters: set1.difference(set2) != set2.difference(set1)',
+    ],
     validPatterns: [/\.difference\s*\(\s*set2\s*\)/],
     tags: ['difference', 'subtract', 'sets'],
   },
@@ -655,10 +631,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var set1 = {1, 2, 3};\nvar set2 = {2, 3, 4};',
     expected: [1, 4],
     sample: 'set1.difference(set2).union(set2.difference(set1))',
-    hints: [
-      'Symmetric difference = (A - B) union (B - A)',
-      'Elements in A or B but not both',
-    ],
+    hints: ['Symmetric difference = (A - B) union (B - A)', 'Elements in A or B but not both'],
     validPatterns: [/\.difference\s*\(.*\)\.union\s*\(/],
     tags: ['difference', 'union', 'symmetric', 'sets'],
   },
@@ -722,7 +695,10 @@ export const dartProblems: Problem[] = [
     setupCode: 'String? name = null;',
     expected: 'Unknown',
     sample: 'name ?? "Unknown"',
-    hints: ['?? returns the right side if left is null', 'Short-circuits: right side only evaluated if needed'],
+    hints: [
+      '?? returns the right side if left is null',
+      'Short-circuits: right side only evaluated if needed',
+    ],
     validPatterns: [/\?\?\s*["']Unknown["']/],
     tags: ['??', 'default', 'null-safety'],
   },
@@ -752,10 +728,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'Map<String, dynamic>? user = {"profile": {"name": "Alice"}};',
     expected: 'Alice',
     sample: 'user?["profile"]?["name"]',
-    hints: [
-      'Chain ?. for nested access',
-      'Any null in the chain returns null',
-    ],
+    hints: ['Chain ?. for nested access', 'Any null in the chain returns null'],
     validPatterns: [/\?\[.*\]\?\[/],
     tags: ['?.', 'chain', 'nested', 'null-safety'],
   },
@@ -803,10 +776,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'String? name = "Alice";',
     expected: 5,
     sample: 'name!.length',
-    hints: [
-      '! asserts the value is not null',
-      'Throws if value is actually null - use carefully',
-    ],
+    hints: ['! asserts the value is not null', 'Throws if value is actually null - use carefully'],
     validPatterns: [/!\s*\.length/],
     tags: ['!', 'assertion', 'null-safety'],
   },
@@ -839,10 +809,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'List<int>? moreNumbers = [4, 5, 6];\nvar numbers = [1, 2, 3];',
     expected: [1, 2, 3, 4, 5, 6],
     sample: '[...numbers, ...?moreNumbers]',
-    hints: [
-      '...? is the null-aware spread operator',
-      'Spreads nothing if the list is null',
-    ],
+    hints: ['...? is the null-aware spread operator', 'Spreads nothing if the list is null'],
     validPatterns: [/\.\.\.\?/],
     tags: ['...?', 'spread', 'null-safety'],
   },
@@ -879,10 +846,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var words = ["cat", "elephant", "dog", "butterfly"];',
     expected: ['butterfly', 'elephant', 'cat', 'dog'],
     sample: 'words..sort((a, b) => b.length.compareTo(a.length))',
-    hints: [
-      'sort() accepts a compare function',
-      'Reverse comparison order for descending',
-    ],
+    hints: ['sort() accepts a compare function', 'Reverse comparison order for descending'],
     validPatterns: [/\.sort\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)/],
     tags: ['sort', 'comparator', 'custom'],
   },
@@ -897,10 +861,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var nested = [[1, 2], [3, 4], [5, 6]];',
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'nested.expand((list) => list).toList()',
-    hints: [
-      'expand() flattens one level of nesting',
-      'Similar to flatMap in other languages',
-    ],
+    hints: ['expand() flattens one level of nesting', 'Similar to flatMap in other languages'],
     validPatterns: [/\.expand\s*\(/],
     tags: ['expand', 'flatten', 'lists'],
   },
@@ -915,10 +876,7 @@ export const dartProblems: Problem[] = [
     setupCode: 'var numbers = [1, 3, 5, 7, 9, 11];',
     expected: 7,
     sample: 'numbers.firstWhere((n) => n > 5)',
-    hints: [
-      'firstWhere throws if no match found',
-      'Use orElse parameter for a default value',
-    ],
+    hints: ['firstWhere throws if no match found', 'Use orElse parameter for a default value'],
     validPatterns: [/\.firstWhere\s*\(/],
     tags: ['firstWhere', 'find', 'search'],
   },
@@ -1119,8 +1077,7 @@ export const dartProblems: Problem[] = [
     setup: 'final buffer = StringBuffer();',
     setupCode: 'final buffer = StringBuffer();',
     expected: 'Hello, World!',
-    sample:
-      '(buffer..write("Hello")..write(", ")..write("World!")).toString()',
+    sample: '(buffer..write("Hello")..write(", ")..write("World!")).toString()',
     hints: [
       'Cascade returns the object, not method return values',
       'Chain multiple write() calls with cascades',
@@ -1193,10 +1150,7 @@ export const dartProblems: Problem[] = [
       'Prevents null errors when spreading nullable lists',
       'The ? comes after the three dots',
     ],
-    validPatterns: [
-      /\[\s*\.\.\.listA\s*,\s*\.\.\.\?\s*listB\s*\]/,
-      /\.\.\.\?listB/,
-    ],
+    validPatterns: [/\[\s*\.\.\.listA\s*,\s*\.\.\.\?\s*listB\s*\]/, /\.\.\.\?listB/],
     tags: ['spread', 'null-aware', 'nullable', 'safe'],
   },
 
@@ -1206,7 +1160,8 @@ export const dartProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Spread in Map Literal',
     text: 'Use spread to merge two maps into one.',
-    setup: 'final defaults = {"theme": "light", "fontSize": 14};\nfinal overrides = {"theme": "dark"};',
+    setup:
+      'final defaults = {"theme": "light", "fontSize": 14};\nfinal overrides = {"theme": "dark"};',
     setupCode:
       'final defaults = {"theme": "light", "fontSize": 14};\nfinal overrides = {"theme": "dark"};',
     expected: { theme: 'dark', fontSize: 14 },
@@ -1216,7 +1171,10 @@ export const dartProblems: Problem[] = [
       'Later entries override earlier ones for duplicate keys',
       'Useful for merging configuration objects',
     ],
-    validPatterns: [/\{\s*\.\.\.defaults\s*,\s*\.\.\.overrides\s*\}/, /\.\.\.defaults.*\.\.\.overrides/],
+    validPatterns: [
+      /\{\s*\.\.\.defaults\s*,\s*\.\.\.overrides\s*\}/,
+      /\.\.\.defaults.*\.\.\.overrides/,
+    ],
     tags: ['spread', 'map', 'merge', 'configuration'],
   },
 
@@ -1261,10 +1219,7 @@ export const dartProblems: Problem[] = [
       'The loop variable is available for the element expression',
       'More concise than List.generate() for simple cases',
     ],
-    validPatterns: [
-      /\[\s*for\s*\([^)]+\)\s*[^]]+\*\s*[^]]+\]/,
-      /for\s*\(.*i\s*\*\s*i/,
-    ],
+    validPatterns: [/\[\s*for\s*\([^)]+\)\s*.+\*\s*.+\]/, /for\s*\(.*i\s*\*\s*i/],
     tags: ['collection-for', 'loop', 'generation', 'squares'],
   },
 
@@ -1282,8 +1237,7 @@ export const dartProblems: Problem[] = [
       [2, 1, 2],
       [2, 2, 4],
     ],
-    sample:
-      '[for (var i = 1; i <= 2; i++) for (var j = 1; j <= 2; j++) [i, j, i * j]]',
+    sample: '[for (var i = 1; i <= 2; i++) for (var j = 1; j <= 2; j++) [i, j, i * j]]',
     hints: [
       'Multiple for expressions can be nested',
       'Inner loop iterates completely for each outer iteration',
@@ -1302,8 +1256,7 @@ export const dartProblems: Problem[] = [
     setup: 'final numbers = [1, 2, 3, 4, 5];',
     setupCode: 'final numbers = [1, 2, 3, 4, 5];',
     expected: ['odd', 'even', 'odd', 'even', 'odd'],
-    sample:
-      '[for (var n in numbers) if (n % 2 == 0) "even" else "odd"]',
+    sample: '[for (var n in numbers) if (n % 2 == 0) "even" else "odd"]',
     hints: [
       'Collection if can have an else clause',
       'Combine with for to transform each element',
@@ -1332,10 +1285,7 @@ export const dartProblems: Problem[] = [
       'Each MapEntry has key and value properties',
       'Use string interpolation to format the output',
     ],
-    validPatterns: [
-      /\.entries\.map\s*\([^)]+\)\s*\.toList\s*\(\s*\)/,
-      /entries\.map/,
-    ],
+    validPatterns: [/\.entries\.map\s*\([^)]+\)\s*\.toList\s*\(\s*\)/, /entries\.map/],
     tags: ['map', 'entries', 'iteration', 'transformation'],
   },
 
@@ -1585,10 +1535,8 @@ export const dartProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Stream with asyncMap',
     text: 'Use asyncMap to perform async transformations on stream elements.',
-    setup:
-      'Future<String> fetchName(int id) async => "User$id";\nfinal ids = [1, 2, 3];',
-    setupCode:
-      'Future<String> fetchName(int id) async => "User$id";\nfinal ids = [1, 2, 3];',
+    setup: 'Future<String> fetchName(int id) async => "User$id";\nfinal ids = [1, 2, 3];',
+    setupCode: 'Future<String> fetchName(int id) async => "User$id";\nfinal ids = [1, 2, 3];',
     expected: ['User1', 'User2', 'User3'],
     sample: 'await Stream.fromIterable(ids).asyncMap(fetchName).toList()',
     hints: [
@@ -1613,8 +1561,7 @@ export const dartProblems: Problem[] = [
     setup: '// Create a delayed computation',
     setupCode: '// Create a delayed computation',
     expected: 42,
-    sample:
-      'await Future.delayed(Duration(milliseconds: 100), () => 42)',
+    sample: 'await Future.delayed(Duration(milliseconds: 100), () => 42)',
     hints: [
       'Future.delayed takes a Duration and an optional computation',
       'The computation runs after the delay',
@@ -1660,8 +1607,7 @@ export const dartProblems: Problem[] = [
     title: 'groupBy Using fold',
     text: 'Group a list of words by their first letter using fold().',
     setup: 'final words = ["apple", "banana", "apricot", "blueberry", "cherry"];',
-    setupCode:
-      'final words = ["apple", "banana", "apricot", "blueberry", "cherry"];',
+    setupCode: 'final words = ["apple", "banana", "apricot", "blueberry", "cherry"];',
     expected: { a: ['apple', 'apricot'], b: ['banana', 'blueberry'], c: ['cherry'] },
     sample:
       'words.fold<Map<String, List<String>>>({}, (map, word) {\n  (map[word[0]] ??= []).add(word);\n  return map;\n})',

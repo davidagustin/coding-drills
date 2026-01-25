@@ -1276,7 +1276,8 @@ export const phpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Filter with Callback Key',
     text: 'Filter the array to keep only items where the key starts with "user_"',
-    setup: '$data = ["user_name" => "John", "user_email" => "john@example.com", "admin_role" => "super", "user_age" => 25];',
+    setup:
+      '$data = ["user_name" => "John", "user_email" => "john@example.com", "admin_role" => "super", "user_age" => 25];',
     setupCode:
       '$data = ["user_name" => "John", "user_email" => "john@example.com", "admin_role" => "super", "user_age" => 25];',
     expected: { user_name: 'John', user_email: 'john@example.com', user_age: 25 },
@@ -1298,10 +1299,7 @@ export const phpProblems: Problem[] = [
     expected: { item_a: 2, item_b: 4, item_c: 6 },
     sample:
       'array_combine(array_map(fn($k) => "item_" . $k, array_keys($nums)), array_map(fn($v) => $v * 2, $nums))',
-    hints: [
-      'Use array_combine to pair new keys with new values',
-      'Use array_keys to get the keys',
-    ],
+    hints: ['Use array_combine to pair new keys with new values', 'Use array_keys to get the keys'],
     validPatterns: [
       /array_combine\s*\(\s*array_map\s*\(\s*fn\s*\(\s*\$\w+\s*\)\s*=>\s*['"]item_['"]\s*\.\s*\$\w+\s*,\s*array_keys\s*\(\s*\$nums\s*\)\s*\)\s*,\s*array_map/,
     ],
@@ -1358,9 +1356,7 @@ export const phpProblems: Problem[] = [
       'Use null coalescing to handle missing keys',
       'Build up the result array with spread operator',
     ],
-    validPatterns: [
-      /array_reduce\s*\(\s*\$products\s*,\s*fn\s*\(\s*\$\w+\s*,\s*\$\w+\s*\)\s*=>/,
-    ],
+    validPatterns: [/array_reduce\s*\(\s*\$products\s*,\s*fn\s*\(\s*\$\w+\s*,\s*\$\w+\s*\)\s*=>/],
     tags: ['array_reduce', 'grouping', 'aggregation'],
   },
 
@@ -1409,7 +1405,7 @@ export const phpProblems: Problem[] = [
     sample: 'sprintf("$%s", number_format($price, 2))',
     hints: ['Use number_format for comma separators, then sprintf for the dollar sign'],
     validPatterns: [
-      /sprintf\s*\(\s*['"\$%s'"]\s*,\s*number_format\s*\(\s*\$price\s*,\s*2\s*\)\s*\)/,
+      /sprintf\s*\(\s*['"$%s'"]\s*,\s*number_format\s*\(\s*\$price\s*,\s*2\s*\)\s*\)/,
       /'\$'\s*\.\s*number_format\s*\(\s*\$price\s*,\s*2\s*\)/,
     ],
     tags: ['sprintf', 'number_format'],
@@ -1522,9 +1518,7 @@ export const phpProblems: Problem[] = [
       'Use array_multisort with array_column to extract sort columns',
       'Pass the original array last to be sorted',
     ],
-    validPatterns: [
-      /array_multisort\s*\(\s*array_column\s*\(\s*\$users\s*,\s*['"]role['"]\s*\)/,
-    ],
+    validPatterns: [/array_multisort\s*\(\s*array_column\s*\(\s*\$users\s*,\s*['"]role['"]\s*\)/],
     tags: ['array_multisort', 'array_column', 'multi-sort'],
   },
   {
@@ -1599,7 +1593,8 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Find Keys by Value',
     text: 'Find all keys where the value is "admin"',
-    setup: '$roles = ["alice" => "admin", "bob" => "user", "charlie" => "admin", "dave" => "guest"];',
+    setup:
+      '$roles = ["alice" => "admin", "bob" => "user", "charlie" => "admin", "dave" => "guest"];',
     setupCode:
       '$roles = ["alice" => "admin", "bob" => "user", "charlie" => "admin", "dave" => "guest"];',
     expected: ['alice', 'charlie'],
@@ -1657,7 +1652,8 @@ export const phpProblems: Problem[] = [
     setup: '$data = ["url" => "https://example.com/path", "name" => "Test"];',
     setupCode: '$data = ["url" => "https://example.com/path", "name" => "Test"];',
     expected: '{\n    "url": "https://example.com/path",\n    "name": "Test"\n}',
-    sample: 'json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)',
+    sample:
+      'json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)',
     hints: ['Combine multiple flags with bitwise OR (|)'],
     validPatterns: [
       /json_encode\s*\(\s*\$data\s*,\s*JSON_PRETTY_PRINT\s*\|\s*JSON_UNESCAPED_SLASHES/,
@@ -1705,7 +1701,8 @@ export const phpProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Recursive JSON Transform',
     text: 'Decode nested JSON, convert all keys to snake_case using array_walk_recursive pattern',
-    setup: '$json = \'{"firstName":"John","lastName":"Doe","contactInfo":{"phoneNumber":"555-1234"}}\';',
+    setup:
+      '$json = \'{"firstName":"John","lastName":"Doe","contactInfo":{"phoneNumber":"555-1234"}}\';',
     setupCode:
       '$json = \'{"firstName":"John","lastName":"Doe","contactInfo":{"phoneNumber":"555-1234"}}\';',
     expected: {
@@ -1714,7 +1711,7 @@ export const phpProblems: Problem[] = [
       contact_info: { phone_number: '555-1234' },
     },
     sample:
-      'json_decode(preg_replace_callback("/\"([^\"]+)\":/", fn($m) => \'"\' . strtolower(preg_replace("/([A-Z])/", "_$1", $m[1])) . \'":\', $json), true)',
+      'json_decode(preg_replace_callback("/"([^"]+)":/", fn($m) => \'"\' . strtolower(preg_replace("/([A-Z])/", "_$1", $m[1])) . \'":\', $json), true)',
     hints: [
       'Use preg_replace_callback to transform keys before decoding',
       'Or decode first and recursively transform the array',
@@ -1756,10 +1753,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello World Php',
     sample: 'ucwords($str)',
     hints: ['Use ucwords to capitalize the first letter of each word'],
-    validPatterns: [
-      /ucwords\s*\(\s*\$str\s*\)/,
-      /ucwords\s*\(\s*['"]hello world php['"]\s*\)/,
-    ],
+    validPatterns: [/ucwords\s*\(\s*\$str\s*\)/, /ucwords\s*\(\s*['"]hello world php['"]\s*\)/],
     tags: ['ucwords', 'case-conversion'],
   },
   {
@@ -1773,10 +1767,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello world',
     sample: 'ucfirst($str)',
     hints: ['Use ucfirst to capitalize only the first character'],
-    validPatterns: [
-      /ucfirst\s*\(\s*\$str\s*\)/,
-      /ucfirst\s*\(\s*['"]hello world['"]\s*\)/,
-    ],
+    validPatterns: [/ucfirst\s*\(\s*\$str\s*\)/, /ucfirst\s*\(\s*['"]hello world['"]\s*\)/],
     tags: ['ucfirst', 'case-conversion'],
   },
   {
@@ -1790,10 +1781,7 @@ export const phpProblems: Problem[] = [
     expected: 'hello World',
     sample: 'lcfirst($str)',
     hints: ['Use lcfirst to lowercase only the first character'],
-    validPatterns: [
-      /lcfirst\s*\(\s*\$str\s*\)/,
-      /lcfirst\s*\(\s*['"]Hello World['"]\s*\)/,
-    ],
+    validPatterns: [/lcfirst\s*\(\s*\$str\s*\)/, /lcfirst\s*\(\s*['"]Hello World['"]\s*\)/],
     tags: ['lcfirst', 'case-conversion'],
   },
   {
@@ -1824,9 +1812,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello World',
     sample: 'strip_tags($html)',
     hints: ['Use strip_tags to remove all HTML and PHP tags'],
-    validPatterns: [
-      /strip_tags\s*\(\s*\$html\s*\)/,
-    ],
+    validPatterns: [/strip_tags\s*\(\s*\$html\s*\)/],
     tags: ['strip_tags', 'html'],
   },
   {
@@ -1857,9 +1843,7 @@ export const phpProblems: Problem[] = [
     expected: 0,
     sample: 'strcasecmp($str1, $str2)',
     hints: ['Use strcasecmp for case-insensitive comparison (returns 0 if equal)'],
-    validPatterns: [
-      /strcasecmp\s*\(\s*\$str1\s*,\s*\$str2\s*\)/,
-    ],
+    validPatterns: [/strcasecmp\s*\(\s*\$str1\s*,\s*\$str2\s*\)/],
     tags: ['strcasecmp', 'comparison'],
   },
 
@@ -1875,9 +1859,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello PHP!',
     sample: 'substr_replace($str, "PHP", 6, 5)',
     hints: ['Use substr_replace with position and length parameters'],
-    validPatterns: [
-      /substr_replace\s*\(\s*\$str\s*,\s*['"]PHP['"]\s*,\s*6\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/substr_replace\s*\(\s*\$str\s*,\s*['"]PHP['"]\s*,\s*6\s*,\s*5\s*\)/],
     tags: ['substr_replace', 'manipulation'],
   },
   {
@@ -1891,9 +1873,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello Beautiful World!',
     sample: 'substr_replace($str, "Beautiful ", 6, 0)',
     hints: ['Use substr_replace with length 0 to insert without removing'],
-    validPatterns: [
-      /substr_replace\s*\(\s*\$str\s*,\s*['"]Beautiful\s*['"]\s*,\s*6\s*,\s*0\s*\)/,
-    ],
+    validPatterns: [/substr_replace\s*\(\s*\$str\s*,\s*['"]Beautiful\s*['"]\s*,\s*6\s*,\s*0\s*\)/],
     tags: ['substr_replace', 'insert'],
   },
   {
@@ -1940,9 +1920,7 @@ export const phpProblems: Problem[] = [
     expected: 'john.doe@example.com',
     sample: 'preg_match("/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/", $text, $m); $m[0]',
     hints: ['Use preg_match with email regex pattern'],
-    validPatterns: [
-      /preg_match\s*\(\s*['"]\/.*@.*\/['"]/,
-    ],
+    validPatterns: [/preg_match\s*\(\s*['"]\/.*@.*\/['"]/],
     tags: ['preg_match', 'regex', 'email'],
   },
   {
@@ -1973,9 +1951,7 @@ export const phpProblems: Problem[] = [
     expected: ['apple', 'banana', 'cherry', 'date'],
     sample: 'preg_split("/[,;|]/", $str)',
     hints: ['Use preg_split with character class for multiple delimiters'],
-    validPatterns: [
-      /preg_split\s*\(\s*['"]\/\[,;\|?\]\/['"]\s*,\s*\$str\s*\)/,
-    ],
+    validPatterns: [/preg_split\s*\(\s*['"]\/\[,;\|?\]\/['"]\s*,\s*\$str\s*\)/],
     tags: ['preg_split', 'regex'],
   },
   {
@@ -1989,9 +1965,7 @@ export const phpProblems: Problem[] = [
     expected: 80,
     sample: 'similar_text($str1, $str2, $percent); round($percent)',
     hints: ['Use similar_text with third parameter to get percentage'],
-    validPatterns: [
-      /similar_text\s*\(\s*\$str1\s*,\s*\$str2\s*,\s*\$\w+\s*\)/,
-    ],
+    validPatterns: [/similar_text\s*\(\s*\$str1\s*,\s*\$str2\s*,\s*\$\w+\s*\)/],
     tags: ['similar_text', 'comparison'],
   },
   {
@@ -2022,9 +1996,7 @@ export const phpProblems: Problem[] = [
     expected: 'World',
     sample: 'mb_substr($str, 7, 5)',
     hints: ['Use mb_substr for multibyte-safe substring extraction'],
-    validPatterns: [
-      /mb_substr\s*\(\s*\$str\s*,\s*7\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/mb_substr\s*\(\s*\$str\s*,\s*7\s*,\s*5\s*\)/],
     tags: ['mb_substr', 'multibyte'],
   },
   {
@@ -2038,9 +2010,7 @@ export const phpProblems: Problem[] = [
     expected: 'Name: John, City: NYC',
     sample: 'vsprintf($format, $values)',
     hints: ['Use vsprintf when arguments are in an array'],
-    validPatterns: [
-      /vsprintf\s*\(\s*\$format\s*,\s*\$values\s*\)/,
-    ],
+    validPatterns: [/vsprintf\s*\(\s*\$format\s*,\s*\$values\s*\)/],
     tags: ['vsprintf', 'formatting'],
   },
   {
@@ -2054,9 +2024,7 @@ export const phpProblems: Problem[] = [
     expected: -1,
     sample: 'strcmp($str1, $str2) < 0 ? -1 : (strcmp($str1, $str2) > 0 ? 1 : 0)',
     hints: ['strcmp returns negative if first string is less, positive if greater, 0 if equal'],
-    validPatterns: [
-      /strcmp\s*\(\s*\$str1\s*,\s*\$str2\s*\)/,
-    ],
+    validPatterns: [/strcmp\s*\(\s*\$str1\s*,\s*\$str2\s*\)/],
     tags: ['strcmp', 'comparison'],
   },
 
@@ -2089,9 +2057,7 @@ export const phpProblems: Problem[] = [
     expected: ['https://example.com', 'http://test.org'],
     sample: 'preg_match_all("/https?:\\/\\/[^\\s]+/", $text, $matches); $matches[0]',
     hints: ['Use preg_match_all to find all matches', 'Use https? to match both http and https'],
-    validPatterns: [
-      /preg_match_all\s*\(\s*['"]\/https?\??:\\?\/\\?\//,
-    ],
+    validPatterns: [/preg_match_all\s*\(\s*['"]\/https?\??:\\?\/\\?\//],
     tags: ['preg_match_all', 'regex', 'url'],
   },
   {
@@ -2270,10 +2236,7 @@ export const phpProblems: Problem[] = [
     expected: { first: 'a', last: 'd' },
     sample: '["first" => array_key_first($data), "last" => array_key_last($data)]',
     hints: ['Use array_key_first and array_key_last (PHP 7.3+)'],
-    validPatterns: [
-      /array_key_first\s*\(\s*\$data\s*\)/,
-      /array_key_last\s*\(\s*\$data\s*\)/,
-    ],
+    validPatterns: [/array_key_first\s*\(\s*\$data\s*\)/, /array_key_last\s*\(\s*\$data\s*\)/],
     tags: ['array_key_first', 'array_key_last', 'keys'],
   },
 
@@ -2399,9 +2362,7 @@ export const phpProblems: Problem[] = [
     expected: { 101: 'alice@test.com', 102: 'bob@test.com' },
     sample: 'array_column($users, "email", "id")',
     hints: ['Use array_column with third parameter to specify index key'],
-    validPatterns: [
-      /array_column\s*\(\s*\$users\s*,\s*['"]email['"]\s*,\s*['"]id['"]\s*\)/,
-    ],
+    validPatterns: [/array_column\s*\(\s*\$users\s*,\s*['"]email['"]\s*,\s*['"]id['"]\s*\)/],
     tags: ['array_column', 'multidimensional', 'extraction'],
   },
   {
@@ -2466,8 +2427,7 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Walk Recursive Uppercase',
     text: 'Use array_walk_recursive to convert all string values to uppercase',
-    setup:
-      '$data = ["name" => "john", "address" => ["city" => "new york", "country" => "usa"]];',
+    setup: '$data = ["name" => "john", "address" => ["city" => "new york", "country" => "usa"]];',
     setupCode:
       '$data = ["name" => "john", "address" => ["city" => "new york", "country" => "usa"]];',
     expected: { name: 'JOHN', address: { city: 'NEW YORK', country: 'USA' } },
@@ -2495,8 +2455,7 @@ export const phpProblems: Problem[] = [
       { name: 'Widget', price: 25 },
       { name: 'Tool', price: 15 },
     ],
-    sample:
-      'array_multisort(array_column($products, "price"), SORT_DESC, $products); $products',
+    sample: 'array_multisort(array_column($products, "price"), SORT_DESC, $products); $products',
     hints: ['Use array_multisort with array_column to sort by a specific column'],
     validPatterns: [
       /array_multisort\s*\(\s*array_column\s*\(\s*\$products\s*,\s*['"]price['"]\s*\)\s*,\s*SORT_DESC\s*,\s*\$products\s*\)/,
@@ -2514,8 +2473,7 @@ export const phpProblems: Problem[] = [
     setup: '$have = ["Apple", "BANANA", "Cherry"]; $exclude = ["apple", "cherry"];',
     setupCode: '$have = ["Apple", "BANANA", "Cherry"]; $exclude = ["apple", "cherry"];',
     expected: ['BANANA'],
-    sample:
-      'array_values(array_udiff($have, $exclude, fn($a, $b) => strcasecmp($a, $b)))',
+    sample: 'array_values(array_udiff($have, $exclude, fn($a, $b) => strcasecmp($a, $b)))',
     hints: [
       'Use array_udiff with a custom comparison callback',
       'strcasecmp performs case-insensitive string comparison',
@@ -2542,9 +2500,7 @@ export const phpProblems: Problem[] = [
       'Use array_reduce to accumulate grouped totals',
       'Use null coalescing (??) to initialize missing keys',
     ],
-    validPatterns: [
-      /array_reduce\s*\(\s*\$transactions\s*,\s*fn\s*\(\s*\$\w+\s*,\s*\$\w+\s*\)/,
-    ],
+    validPatterns: [/array_reduce\s*\(\s*\$transactions\s*,\s*fn\s*\(\s*\$\w+\s*,\s*\$\w+\s*\)/],
     tags: ['array_reduce', 'grouping', 'aggregation'],
   },
   {
@@ -2596,10 +2552,8 @@ export const phpProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Transform Keys to Snake Case',
     text: 'Convert all camelCase keys to snake_case using array manipulation',
-    setup:
-      '$data = ["firstName" => "John", "lastName" => "Doe", "phoneNumber" => "555-1234"];',
-    setupCode:
-      '$data = ["firstName" => "John", "lastName" => "Doe", "phoneNumber" => "555-1234"];',
+    setup: '$data = ["firstName" => "John", "lastName" => "Doe", "phoneNumber" => "555-1234"];',
+    setupCode: '$data = ["firstName" => "John", "lastName" => "Doe", "phoneNumber" => "555-1234"];',
     expected: { first_name: 'John', last_name: 'Doe', phone_number: '555-1234' },
     sample:
       'array_combine(array_map(fn($k) => strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $k)), array_keys($data)), array_values($data))',

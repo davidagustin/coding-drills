@@ -96,7 +96,9 @@ export const luaProblems: Problem[] = [
     expected: [9, 8, 5, 2, 1],
     sample: 'table.sort(numbers, function(a, b) return a > b end); return numbers',
     hints: ['table.sort(t, comp) uses custom comparison', 'Return true if a should come before b'],
-    validPatterns: [/table\.sort\s*\(\s*numbers\s*,\s*function\s*\(\s*\w+\s*,\s*\w+\s*\)\s*return\s+\w+\s*>\s*\w+/],
+    validPatterns: [
+      /table\.sort\s*\(\s*numbers\s*,\s*function\s*\(\s*\w+\s*,\s*\w+\s*\)\s*return\s+\w+\s*>\s*\w+/,
+    ],
     tags: ['table.sort', 'descending', 'comparator'],
   },
   {
@@ -110,7 +112,9 @@ export const luaProblems: Problem[] = [
     expected: ['hi', 'cat', 'apple', 'banana'],
     sample: 'table.sort(words, function(a, b) return #a < #b end); return words',
     hints: ['Use # operator to get string length', 'Compare lengths in the function'],
-    validPatterns: [/table\.sort\s*\(\s*words\s*,\s*function\s*\(\s*\w+\s*,\s*\w+\s*\)\s*return\s+#\w+\s*<\s*#\w+/],
+    validPatterns: [
+      /table\.sort\s*\(\s*words\s*,\s*function\s*\(\s*\w+\s*,\s*\w+\s*\)\s*return\s+#\w+\s*<\s*#\w+/,
+    ],
     tags: ['table.sort', 'length', 'strings'],
   },
 
@@ -168,7 +172,8 @@ export const luaProblems: Problem[] = [
     setup: 'local numbers = {1, 2, 3, 4, 5}',
     setupCode: 'local numbers = {1, 2, 3, 4, 5}',
     expected: [5, 4, 3, 2, 1],
-    sample: 'for i = 1, math.floor(#numbers / 2) do numbers[i], numbers[#numbers - i + 1] = numbers[#numbers - i + 1], numbers[i] end; return numbers',
+    sample:
+      'for i = 1, math.floor(#numbers / 2) do numbers[i], numbers[#numbers - i + 1] = numbers[#numbers - i + 1], numbers[i] end; return numbers',
     hints: ['Swap elements from ends toward middle', 'Use multiple assignment for swapping'],
     validPatterns: [/numbers\[.*\]\s*,\s*numbers\[.*\]\s*=\s*numbers\[.*\]\s*,\s*numbers\[.*\]/],
     tags: ['table', 'reverse', 'swap'],
@@ -206,7 +211,10 @@ export const luaProblems: Problem[] = [
     expected: 'hello',
     sample: 'return string.sub(text, 1, 5)',
     hints: ['string.sub(s, i, j) extracts substring', 'Lua strings are 1-indexed'],
-    validPatterns: [/string\.sub\s*\(\s*text\s*,\s*1\s*,\s*5\s*\)/, /text:sub\s*\(\s*1\s*,\s*5\s*\)/],
+    validPatterns: [
+      /string\.sub\s*\(\s*text\s*,\s*1\s*,\s*5\s*\)/,
+      /text:sub\s*\(\s*1\s*,\s*5\s*\)/,
+    ],
     tags: ['string.sub', 'substring'],
   },
   {
@@ -266,7 +274,10 @@ export const luaProblems: Problem[] = [
     expected: 7,
     sample: 'local start = string.find(text, "world"); return start',
     hints: ['string.find returns start and end positions', 'Returns nil if not found'],
-    validPatterns: [/string\.find\s*\(\s*text\s*,\s*["']world["']\s*\)/, /text:find\s*\(\s*["']world["']\s*\)/],
+    validPatterns: [
+      /string\.find\s*\(\s*text\s*,\s*["']world["']\s*\)/,
+      /text:find\s*\(\s*["']world["']\s*\)/,
+    ],
     tags: ['string.find', 'search'],
   },
   {
@@ -296,7 +307,10 @@ export const luaProblems: Problem[] = [
     expected: 'hello_world_lua',
     sample: 'return (string.gsub(text, " ", "_"))',
     hints: ['string.gsub replaces all occurrences', 'Returns new string and count'],
-    validPatterns: [/string\.gsub\s*\(\s*text\s*,\s*["'] ["']\s*,\s*["']_["']\s*\)/, /text:gsub\s*\(\s*["'] ["']\s*,\s*["']_["']\s*\)/],
+    validPatterns: [
+      /string\.gsub\s*\(\s*text\s*,\s*["'] ["']\s*,\s*["']_["']\s*\)/,
+      /text:gsub\s*\(\s*["'] ["']\s*,\s*["']_["']\s*\)/,
+    ],
     tags: ['string.gsub', 'replace'],
   },
   {
@@ -326,7 +340,10 @@ export const luaProblems: Problem[] = [
     expected: '42',
     sample: 'return string.match(text, "%d+")',
     hints: ['string.match returns captured text', '%d+ matches one or more digits'],
-    validPatterns: [/string\.match\s*\(\s*text\s*,\s*["']%d\+["']\s*\)/, /text:match\s*\(\s*["']%d\+["']\s*\)/],
+    validPatterns: [
+      /string\.match\s*\(\s*text\s*,\s*["']%d\+["']\s*\)/,
+      /text:match\s*\(\s*["']%d\+["']\s*\)/,
+    ],
     tags: ['string.match', 'pattern'],
   },
 
@@ -342,7 +359,9 @@ export const luaProblems: Problem[] = [
     expected: 'Name: Alice, Age: 25',
     sample: 'return string.format("Name: %s, Age: %d", name, age)',
     hints: ['%s for strings, %d for integers', 'Similar to C printf format'],
-    validPatterns: [/string\.format\s*\(\s*["']Name:\s*%s,\s*Age:\s*%d["']\s*,\s*name\s*,\s*age\s*\)/],
+    validPatterns: [
+      /string\.format\s*\(\s*["']Name:\s*%s,\s*Age:\s*%d["']\s*,\s*name\s*,\s*age\s*\)/,
+    ],
     tags: ['string.format', 'sprintf'],
   },
   {
@@ -608,7 +627,8 @@ export const luaProblems: Problem[] = [
     setup: 'local numbers = {1, 2, 3, 4}',
     setupCode: 'local numbers = {1, 2, 3, 4}',
     expected: [2, 4, 6, 8],
-    sample: 'local result = {}; for i, v in ipairs(numbers) do result[i] = v * 2 end; return result',
+    sample:
+      'local result = {}; for i, v in ipairs(numbers) do result[i] = v * 2 end; return result',
     hints: ['Create a new table for results', 'Use the index to set values'],
     validPatterns: [/ipairs\s*\(\s*numbers\s*\)/],
     tags: ['ipairs', 'transform'],
@@ -682,7 +702,8 @@ export const luaProblems: Problem[] = [
     setup: 'local numbers = {1, 2, 3, 4, 5, 6}',
     setupCode: 'local numbers = {1, 2, 3, 4, 5, 6}',
     expected: [2, 4, 6],
-    sample: 'local result = {}; for _, v in ipairs(numbers) do if v % 2 == 0 then table.insert(result, v) end end; return result',
+    sample:
+      'local result = {}; for _, v in ipairs(numbers) do if v % 2 == 0 then table.insert(result, v) end end; return result',
     hints: ['Check if each value is even', 'Use table.insert for matching values'],
     validPatterns: [/ipairs\s*\(\s*numbers\s*\)/, /v\s*%\s*2\s*==\s*0/],
     tags: ['ipairs', 'filter', 'even'],
@@ -704,7 +725,10 @@ export const luaProblems: Problem[] = [
     expected: '12345',
     sample: 'return string.match(text, "%d+")',
     hints: ['%d matches any digit', '+ means one or more'],
-    validPatterns: [/string\.match\s*\(\s*text\s*,\s*["']%d\+["']\s*\)/, /text:match\s*\(\s*["']%d\+["']\s*\)/],
+    validPatterns: [
+      /string\.match\s*\(\s*text\s*,\s*["']%d\+["']\s*\)/,
+      /text:match\s*\(\s*["']%d\+["']\s*\)/,
+    ],
     tags: ['pattern', 'digits'],
   },
   {
@@ -718,7 +742,10 @@ export const luaProblems: Problem[] = [
     expected: 'Hello',
     sample: 'return string.match(text, "%a+")',
     hints: ['%a matches any letter', '+ means one or more'],
-    validPatterns: [/string\.match\s*\(\s*text\s*,\s*["']%a\+["']\s*\)/, /text:match\s*\(\s*["']%a\+["']\s*\)/],
+    validPatterns: [
+      /string\.match\s*\(\s*text\s*,\s*["']%a\+["']\s*\)/,
+      /text:match\s*\(\s*["']%a\+["']\s*\)/,
+    ],
     tags: ['pattern', 'letters'],
   },
 
@@ -762,9 +789,13 @@ export const luaProblems: Problem[] = [
     setup: 'local text = "hello world lua programming"',
     setupCode: 'local text = "hello world lua programming"',
     expected: ['hello', 'world', 'lua', 'programming'],
-    sample: 'local words = {}; for word in string.gmatch(text, "%w+") do table.insert(words, word) end; return words',
+    sample:
+      'local words = {}; for word in string.gmatch(text, "%w+") do table.insert(words, word) end; return words',
     hints: ['gmatch returns an iterator', 'Use for loop to collect matches'],
-    validPatterns: [/string\.gmatch\s*\(\s*text\s*,\s*["']%w\+["']\s*\)/, /text:gmatch\s*\(\s*["']%w\+["']\s*\)/],
+    validPatterns: [
+      /string\.gmatch\s*\(\s*text\s*,\s*["']%w\+["']\s*\)/,
+      /text:gmatch\s*\(\s*["']%w\+["']\s*\)/,
+    ],
     tags: ['pattern', 'gmatch', 'iterator'],
   },
   {

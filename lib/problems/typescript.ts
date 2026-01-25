@@ -1074,7 +1074,10 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const value: number[] | number = [1, 2, 3, 4, 5];',
     expected: 5,
     sample: 'Array.isArray(value) ? value.length : 0',
-    hints: ['Array.isArray is preferred over instanceof Array', 'Works across different realms/frames'],
+    hints: [
+      'Array.isArray is preferred over instanceof Array',
+      'Works across different realms/frames',
+    ],
     validPatterns: [/Array\.isArray\s*\(\s*value\s*\)|value\s+instanceof\s+Array/, /\.length/],
     tags: ['type-guard', 'instanceof', 'array'],
   },
@@ -1109,7 +1112,10 @@ export const typescriptProblems: Problem[] = [
       'interface Bird { fly: () => void; species: string; }\ninterface Fish { swim: () => void; species: string; }\nfunction isBird(animal: Bird | Fish): animal is Bird { return "fly" in animal; }\nconst animals: (Bird | Fish)[] = [{fly: () => {}, species: "Eagle"}, {swim: () => {}, species: "Salmon"}, {fly: () => {}, species: "Sparrow"}];',
     expected: ['Eagle', 'Sparrow'],
     sample: 'animals.filter(isBird).map(b => b.species)',
-    hints: ['Custom type guards use "x is Type" syntax', 'filter with type guard narrows array type'],
+    hints: [
+      'Custom type guards use "x is Type" syntax',
+      'filter with type guard narrows array type',
+    ],
     validPatterns: [/\.filter\s*\(\s*isBird\s*\)/, /\.map\s*\(/],
     tags: ['type-guard', 'custom', 'filter'],
   },
@@ -1163,10 +1169,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function greet(name: string, age: number): string { return `${name} is ${age}`; }',
     expected: ['Alice', 30],
     sample: '(["Alice", 30] as Parameters<typeof greet>)',
-    hints: [
-      'Parameters<T> returns a tuple of parameter types',
-      'Useful for forwarding arguments',
-    ],
+    hints: ['Parameters<T> returns a tuple of parameter types', 'Useful for forwarding arguments'],
     validPatterns: [/Parameters\s*<\s*typeof\s+greet\s*>/],
     tags: ['utility-types', 'parameters'],
   },
@@ -1180,10 +1183,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const promise: Promise<{ data: string }> = Promise.resolve({ data: "hello" });',
     expected: { data: 'result' },
     sample: '({ data: "result" } as Awaited<typeof promise>)',
-    hints: [
-      'Awaited<T> unwraps Promise types recursively',
-      'Works with nested promises too',
-    ],
+    hints: ['Awaited<T> unwraps Promise types recursively', 'Works with nested promises too'],
     validPatterns: [/Awaited\s*<\s*typeof\s+promise\s*>/],
     tags: ['utility-types', 'awaited', 'promise'],
   },
@@ -1196,11 +1196,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";',
     setupCode: 'type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";',
     expected: { GET: 'get', POST: 'post', PUT: 'put', DELETE: 'delete' },
-    sample: '({ GET: "get", POST: "post", PUT: "put", DELETE: "delete" } as Record<HttpMethod, string>)',
-    hints: [
-      'Record enforces all keys from the union',
-      'Missing keys will cause a type error',
-    ],
+    sample:
+      '({ GET: "get", POST: "post", PUT: "put", DELETE: "delete" } as Record<HttpMethod, string>)',
+    hints: ['Record enforces all keys from the union', 'Missing keys will cause a type error'],
     validPatterns: [/Record\s*<\s*HttpMethod\s*,\s*string\s*>/],
     tags: ['utility-types', 'record', 'union'],
   },
@@ -1216,10 +1214,7 @@ export const typescriptProblems: Problem[] = [
       'interface FullUser { id: number; name: string; password: string; secretKey: string; }\nconst user: FullUser = { id: 1, name: "Alice", password: "secret", secretKey: "key123" };',
     expected: { id: 1, name: 'Alice' },
     sample: '(({ id, name }) => ({ id, name }))(user) as Omit<FullUser, "password" | "secretKey">',
-    hints: [
-      'Omit accepts a union of keys to remove',
-      'Use | to combine multiple keys',
-    ],
+    hints: ['Omit accepts a union of keys to remove', 'Use | to combine multiple keys'],
     validPatterns: [/Omit\s*<\s*FullUser\s*,\s*["']password["']\s*\|\s*["']secretKey["']\s*>/],
     tags: ['utility-types', 'omit'],
   },
@@ -1253,10 +1248,7 @@ export const typescriptProblems: Problem[] = [
       'function toMap<K extends string, V>(obj: Record<K, V>): Map<K, V> { return new Map(Object.entries(obj) as [K, V][]); }\nconst scores = { alice: 100, bob: 85 };',
     expected: { alice: 100, bob: 85 },
     sample: 'Object.fromEntries(toMap(scores))',
-    hints: [
-      'Generic constraints can use extends',
-      'K extends string ensures keys are strings',
-    ],
+    hints: ['Generic constraints can use extends', 'K extends string ensures keys are strings'],
     validPatterns: [/toMap\s*\(\s*scores\s*\)/],
     tags: ['generics', 'map', 'record'],
   },
@@ -1266,8 +1258,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Tuple Swap',
     text: 'Use the swap function to reverse the tuple elements',
-    setup: 'function swap<A, B>(tuple: [A, B]): [B, A] { return [tuple[1], tuple[0]]; }\nconst pair: [string, number] = ["hello", 42];',
-    setupCode: 'function swap<A, B>(tuple: [A, B]): [B, A] { return [tuple[1], tuple[0]]; }\nconst pair: [string, number] = ["hello", 42];',
+    setup:
+      'function swap<A, B>(tuple: [A, B]): [B, A] { return [tuple[1], tuple[0]]; }\nconst pair: [string, number] = ["hello", 42];',
+    setupCode:
+      'function swap<A, B>(tuple: [A, B]): [B, A] { return [tuple[1], tuple[0]]; }\nconst pair: [string, number] = ["hello", 42];',
     expected: [42, 'hello'],
     sample: 'swap(pair)',
     hints: ['Multiple type parameters can be used', 'Tuple types preserve position'],
@@ -1299,10 +1293,8 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic with Default Type',
     text: 'Call the createContainer function without explicit type (uses default)',
-    setup:
-      'function createContainer<T = string>(value: T): { value: T } { return { value }; }',
-    setupCode:
-      'function createContainer<T = string>(value: T): { value: T } { return { value }; }',
+    setup: 'function createContainer<T = string>(value: T): { value: T } { return { value }; }',
+    setupCode: 'function createContainer<T = string>(value: T): { value: T } { return { value }; }',
     expected: { value: 'hello' },
     sample: 'createContainer("hello")',
     hints: ['Default type parameters use = syntax', 'Inferred type takes precedence over default'],
@@ -1319,8 +1311,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'keyof Type Operator',
     text: 'Use keyof to get a valid key for the user object',
-    setup: 'interface User { name: string; age: number; email: string; }\nconst user: User = { name: "Alice", age: 30, email: "alice@example.com" };',
-    setupCode: 'interface User { name: string; age: number; email: string; }\nconst user: User = { name: "Alice", age: 30, email: "alice@example.com" };',
+    setup:
+      'interface User { name: string; age: number; email: string; }\nconst user: User = { name: "Alice", age: 30, email: "alice@example.com" };',
+    setupCode:
+      'interface User { name: string; age: number; email: string; }\nconst user: User = { name: "Alice", age: 30, email: "alice@example.com" };',
     expected: 'Alice',
     sample: 'user["name" as keyof User]',
     hints: ['keyof creates a union of property names', 'Result is "name" | "age" | "email"'],
@@ -1373,7 +1367,8 @@ export const typescriptProblems: Problem[] = [
     setupCode:
       'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };\ninterface Person { name: string; age: number; }',
     expected: { getName: 'Alice', getAge: 30 },
-    sample: '({ getName: () => "Alice", getAge: () => 30 } as Getters<Person>).getName() + (({ getName: () => "Alice", getAge: () => 30 } as Getters<Person>).getAge())',
+    sample:
+      '({ getName: () => "Alice", getAge: () => 30 } as Getters<Person>).getName() + (({ getName: () => "Alice", getAge: () => 30 } as Getters<Person>).getAge())',
     hints: [
       'Key remapping uses "as" clause in mapped types',
       'Template literal types transform key names',
@@ -1407,8 +1402,7 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Basic Conditional Type',
     text: 'Use the IsString type to check the type and return the appropriate value',
-    setup:
-      'type IsString<T> = T extends string ? "yes" : "no";\ntype Result = IsString<"hello">;',
+    setup: 'type IsString<T> = T extends string ? "yes" : "no";\ntype Result = IsString<"hello">;',
     setupCode:
       'type IsString<T> = T extends string ? "yes" : "no";\ntype Result = IsString<"hello">;',
     expected: 'yes',
@@ -1451,10 +1445,7 @@ export const typescriptProblems: Problem[] = [
       'type NonNull<T> = T extends null | undefined ? never : T;\ntype MaybeString = string | null | undefined;\ntype JustString = NonNull<MaybeString>;',
     expected: 'hello',
     sample: '("hello" as JustString)',
-    hints: [
-      'Conditional types distribute over unions',
-      'never in a union disappears',
-    ],
+    hints: ['Conditional types distribute over unions', 'never in a union disappears'],
     validPatterns: [/as\s+JustString/, /["']hello["']/],
     tags: ['conditional-types', 'union'],
   },
@@ -1550,10 +1541,7 @@ export const typescriptProblems: Problem[] = [
       'type ExtractParam<T extends string> = T extends `${string}:${infer P}` ? P : never;\ntype Route = "/users/:id";\ntype Param = ExtractParam<Route>;\nconst param: Param = "id";',
     expected: 'id',
     sample: 'param',
-    hints: [
-      'infer can capture parts of template literal types',
-      'Useful for type-safe routing',
-    ],
+    hints: ['infer can capture parts of template literal types', 'Useful for type-safe routing'],
     validPatterns: [/param/],
     tags: ['template-literal', 'infer', 'routing'],
   },
@@ -1611,10 +1599,7 @@ export const typescriptProblems: Problem[] = [
       'type Paths<T> = T extends object ? { [K in keyof T]: K extends string ? K | `${K}.${Paths<T[K]> & string}` : never }[keyof T] : never;\ninterface User { name: string; address: { city: string } }\ntype UserPaths = Paths<User>;\nconst path: UserPaths = "address.city";',
     expected: 'address.city',
     sample: 'path',
-    hints: [
-      'Recursive types can generate nested paths',
-      'Template literals join keys with dots',
-    ],
+    hints: ['Recursive types can generate nested paths', 'Template literals join keys with dots'],
     validPatterns: [/path/],
     tags: ['recursive-types', 'template-literal', 'paths'],
   },
@@ -1630,10 +1615,7 @@ export const typescriptProblems: Problem[] = [
       'type LinkedList<T> = { value: T; next: LinkedList<T> | null };\nconst list: LinkedList<number> = { value: 1, next: { value: 2, next: { value: 3, next: null } } };',
     expected: 1,
     sample: 'list.value',
-    hints: [
-      'Recursive types can reference themselves',
-      'null terminates the recursion at runtime',
-    ],
+    hints: ['Recursive types can reference themselves', 'null terminates the recursion at runtime'],
     validPatterns: [/list\.value/],
     tags: ['recursive-types', 'data-structures', 'linked-list'],
   },
@@ -1672,10 +1654,7 @@ export const typescriptProblems: Problem[] = [
       'type Instance<T> = T extends new (...args: unknown[]) => infer I ? I : never;\nclass User { name = "Alice"; }\ntype UserInstance = Instance<typeof User>;\nconst user: UserInstance = new User();',
     expected: 'Alice',
     sample: 'user.name',
-    hints: [
-      'infer I captures what the constructor returns',
-      'Similar to built-in InstanceType<T>',
-    ],
+    hints: ['infer I captures what the constructor returns', 'Similar to built-in InstanceType<T>'],
     validPatterns: [/user\.name/],
     tags: ['infer', 'instance', 'class'],
   },
@@ -1691,10 +1670,7 @@ export const typescriptProblems: Problem[] = [
       'type ThisParam<T> = T extends (this: infer U, ...args: unknown[]) => unknown ? U : never;\nfunction greet(this: { name: string }) { return this.name; }\ntype Context = ThisParam<typeof greet>;\nconst ctx: Context = { name: "World" };',
     expected: 'World',
     sample: 'ctx.name',
-    hints: [
-      'Functions can have a typed this parameter',
-      'infer extracts the this type',
-    ],
+    hints: ['Functions can have a typed this parameter', 'infer extracts the this type'],
     validPatterns: [/ctx\.name/],
     tags: ['infer', 'this', 'function'],
   },
@@ -1836,10 +1812,7 @@ export const typescriptProblems: Problem[] = [
       'function getLength(value: string | null): number { if (value === null) return 0; return value.length; }\nconst result = getLength("hello");',
     expected: 5,
     sample: 'result',
-    hints: [
-      'Null checks narrow the type to non-null',
-      'After the check, value is just string',
-    ],
+    hints: ['Null checks narrow the type to non-null', 'After the check, value is just string'],
     validPatterns: [/result/],
     tags: ['type-narrowing', 'null', 'control-flow'],
   },
@@ -1897,10 +1870,7 @@ export const typescriptProblems: Problem[] = [
       'type Immutable<T> = { readonly [K in keyof T]: T[K] };\ninterface User { name: string; age: number; }\nconst user: Immutable<User> = { name: "Alice", age: 30 };',
     expected: 'Alice',
     sample: 'user.name',
-    hints: [
-      'Mapped types can add readonly modifier',
-      'Equivalent to built-in Readonly<T>',
-    ],
+    hints: ['Mapped types can add readonly modifier', 'Equivalent to built-in Readonly<T>'],
     validPatterns: [/user\.name/],
     tags: ['readonly', 'mapped-types', 'immutable'],
   },
@@ -1939,10 +1909,7 @@ export const typescriptProblems: Problem[] = [
       'const data: unknown = { name: "Alice", age: 30 };\ninterface User { name: string; age: number; }',
     expected: 'Alice',
     sample: '(data as User).name',
-    hints: [
-      'Type assertions override the compiler',
-      'Use when you know more than TypeScript',
-    ],
+    hints: ['Type assertions override the compiler', 'Use when you know more than TypeScript'],
     validPatterns: [/\(\s*data\s+as\s+User\s*\)\.name/],
     tags: ['type-assertion', 'unknown', 'as'],
   },
@@ -1958,10 +1925,7 @@ export const typescriptProblems: Problem[] = [
       'interface User { name: string; }\nfunction isUser(obj: unknown): obj is User { return typeof obj === "object" && obj !== null && "name" in obj && typeof (obj as User).name === "string"; }\nconst data: unknown = { name: "Alice" };',
     expected: true,
     sample: 'isUser(data)',
-    hints: [
-      'Type guards provide runtime validation',
-      'Safer than assertions for external data',
-    ],
+    hints: ['Type guards provide runtime validation', 'Safer than assertions for external data'],
     validPatterns: [/isUser\s*\(\s*data\s*\)/],
     tags: ['type-guard', 'type-assertion', 'runtime'],
   },
@@ -2000,10 +1964,7 @@ export const typescriptProblems: Problem[] = [
       'function mapArray<T, U>(arr: T[], fn: (item: T) => U): U[] { return arr.map(fn); }\nconst numbers: number[] = [1, 2, 3, 4, 5];',
     expected: ['1', '2', '3', '4', '5'],
     sample: 'mapArray(numbers, (n) => String(n))',
-    hints: [
-      'Generic functions infer types from arguments',
-      'T is inferred as number, U as string',
-    ],
+    hints: ['Generic functions infer types from arguments', 'T is inferred as number, U as string'],
     validPatterns: [/mapArray\s*\(\s*numbers/, /String\s*\(\s*n\s*\)|\.toString\s*\(\s*\)/],
     tags: ['generics', 'map', 'type-inference', 'typed-array'],
   },
@@ -2019,10 +1980,7 @@ export const typescriptProblems: Problem[] = [
       'function filterArray<T>(arr: T[], predicate: (item: T) => boolean): T[] { return arr.filter(predicate); }\nconst nums: number[] = [1, 2, 3, 4, 5, 6];',
     expected: [2, 4, 6],
     sample: 'filterArray(nums, (n) => n % 2 === 0)',
-    hints: [
-      'Predicate returns boolean for filtering',
-      'Result type is same as input array type',
-    ],
+    hints: ['Predicate returns boolean for filtering', 'Result type is same as input array type'],
     validPatterns: [/filterArray\s*\(\s*nums/, /%\s*2\s*===?\s*0/],
     tags: ['generics', 'filter', 'predicate', 'typed-array'],
   },
@@ -2058,10 +2016,7 @@ export const typescriptProblems: Problem[] = [
       'function findOrDefault<T>(arr: T[], predicate: (item: T) => boolean, defaultValue: T): T { return arr.find(predicate) ?? defaultValue; }\ninterface User { id: number; name: string; }\nconst users: User[] = [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }];\nconst defaultUser: User = { id: 0, name: "Guest" };',
     expected: { id: 0, name: 'Guest' },
     sample: 'findOrDefault(users, (u) => u.id === 99, defaultUser)',
-    hints: [
-      'Nullish coalescing (??) provides the default',
-      'Return type is T, not T | undefined',
-    ],
+    hints: ['Nullish coalescing (??) provides the default', 'Return type is T, not T | undefined'],
     validPatterns: [/findOrDefault\s*\(\s*users/, /defaultUser/],
     tags: ['generics', 'find', 'default', 'typed-array'],
   },
@@ -2115,10 +2070,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const frozen: ReadonlyArray<number> = [10, 20, 30];',
     expected: [10, 20, 30, 40],
     sample: '[...frozen, 40]',
-    hints: [
-      'Spread creates a new mutable array',
-      'The new array is number[], not ReadonlyArray',
-    ],
+    hints: ['Spread creates a new mutable array', 'The new array is number[], not ReadonlyArray'],
     validPatterns: [/\[\s*\.\.\.frozen\s*,\s*40\s*\]/],
     tags: ['readonly', 'spread', 'mutable', 'typed-array'],
   },
@@ -2174,10 +2126,7 @@ export const typescriptProblems: Problem[] = [
       'type VarArgs = [first: string, ...rest: number[]];\nconst args: VarArgs = ["sum", 1, 2, 3, 4, 5];',
     expected: 15,
     sample: 'args.slice(1).reduce((a, b) => (a as number) + (b as number), 0)',
-    hints: [
-      'Rest element captures remaining items',
-      'First element is string, rest are numbers',
-    ],
+    hints: ['Rest element captures remaining items', 'First element is string, rest are numbers'],
     validPatterns: [/args\.slice\s*\(\s*1\s*\)/, /\.reduce\s*\(/],
     tags: ['tuple', 'rest', 'variadic', 'typed-array'],
   },
@@ -2206,16 +2155,11 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Tuple Destructuring with Types',
     text: 'Destructure a tuple and use the typed values',
-    setup:
-      'const point: [x: number, y: number, label: string] = [10, 20, "origin"];',
-    setupCode:
-      'const point: [x: number, y: number, label: string] = [10, 20, "origin"];',
+    setup: 'const point: [x: number, y: number, label: string] = [10, 20, "origin"];',
+    setupCode: 'const point: [x: number, y: number, label: string] = [10, 20, "origin"];',
     expected: { x: 10, y: 20, label: 'origin' },
     sample: '(([x, y, label]) => ({ x, y, label }))(point)',
-    hints: [
-      'Named tuple elements improve readability',
-      'Destructuring preserves individual types',
-    ],
+    hints: ['Named tuple elements improve readability', 'Destructuring preserves individual types'],
     validPatterns: [/\[\s*x\s*,\s*y\s*,\s*label\s*\]/, /\(\s*point\s*\)/],
     tags: ['tuple', 'destructuring', 'named-elements', 'typed-array'],
   },
@@ -2231,10 +2175,7 @@ export const typescriptProblems: Problem[] = [
       'type Length<T extends readonly unknown[]> = T["length"];\nconst tuple = [1, 2, 3, 4, 5] as const;\ntype TupleLength = Length<typeof tuple>;',
     expected: 5,
     sample: '(5 as TupleLength)',
-    hints: [
-      'Tuple types have a literal length property',
-      'as const creates a readonly tuple type',
-    ],
+    hints: ['Tuple types have a literal length property', 'as const creates a readonly tuple type'],
     validPatterns: [/as\s+TupleLength/, /5/],
     tags: ['tuple', 'length', 'type-level', 'typed-array'],
   },
@@ -2273,10 +2214,7 @@ export const typescriptProblems: Problem[] = [
       'type Pair<T> = [T, T];\nfunction isPair<T>(arr: T[]): arr is Pair<T> { return arr.length === 2; }\nconst coords: number[] = [10, 20];',
     expected: 30,
     sample: 'isPair(coords) ? coords[0] + coords[1] : 0',
-    hints: [
-      'Pair type is a 2-element tuple',
-      'After guard, both indices are safely accessible',
-    ],
+    hints: ['Pair type is a 2-element tuple', 'After guard, both indices are safely accessible'],
     validPatterns: [
       /isPair\s*\(\s*coords\s*\)/,
       /coords\s*\[\s*0\s*\]\s*\+\s*coords\s*\[\s*1\s*\]/,
@@ -2319,10 +2257,7 @@ export const typescriptProblems: Problem[] = [
     expected: { A1: 'Widget', B2: 'Gadget' },
     sample:
       'Object.fromEntries(products.reduce<Map<string, string>>((map, p) => map.set(p.sku, p.name), new Map()))',
-    hints: [
-      'reduce<Map<K,V>> specifies accumulator type',
-      'Map.set returns the Map for chaining',
-    ],
+    hints: ['reduce<Map<K,V>> specifies accumulator type', 'Map.set returns the Map for chaining'],
     validPatterns: [/\.reduce\s*<\s*Map\s*</, /\.set\s*\(\s*p\.sku/],
     tags: ['reduce', 'map', 'generics', 'typed-array'],
   },
@@ -2353,12 +2288,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const items: string[] = ["a", "b", "a", "c", "b", "d", "a"];',
     setupCode: 'const items: string[] = ["a", "b", "a", "c", "b", "d", "a"];',
     expected: ['a', 'b', 'c', 'd'],
-    sample:
-      'items.reduce<string[]>((acc, item) => acc.includes(item) ? acc : [...acc, item], [])',
-    hints: [
-      'Check if item already exists before adding',
-      'Alternative: [...new Set(items)]',
-    ],
+    sample: 'items.reduce<string[]>((acc, item) => acc.includes(item) ? acc : [...acc, item], [])',
+    hints: ['Check if item already exists before adding', 'Alternative: [...new Set(items)]'],
     validPatterns: [/\.reduce\s*<\s*string\s*\[\s*\]\s*>/, /\.includes\s*\(\s*item\s*\)/],
     tags: ['reduce', 'unique', 'dedup', 'typed-array'],
   },
@@ -2479,10 +2410,7 @@ export const typescriptProblems: Problem[] = [
       'class CustomError extends Error { code: number = 0; }\nconst items: (string | Error | CustomError)[] = ["text", new Error("err"), new CustomError("custom")];',
     expected: ['err', 'custom'],
     sample: 'items.filter((x): x is Error => x instanceof Error).map(e => e.message)',
-    hints: [
-      'instanceof checks class hierarchy',
-      'CustomError extends Error, so both match',
-    ],
+    hints: ['instanceof checks class hierarchy', 'CustomError extends Error, so both match'],
     validPatterns: [/\.filter\s*\(\s*\([^)]*\)\s*:\s*\w+\s+is\s+Error/, /instanceof\s+Error/],
     tags: ['filter', 'type-predicate', 'instanceof', 'typed-array'],
   },
@@ -2519,10 +2447,7 @@ export const typescriptProblems: Problem[] = [
     expected: [10, 30],
     sample:
       'events.filter((e): e is Extract<Event, { type: "click" }> => e.type === "click").map(e => e.x)',
-    hints: [
-      'Extract pulls specific variant from union',
-      'After filter, only click events remain',
-    ],
+    hints: ['Extract pulls specific variant from union', 'After filter, only click events remain'],
     validPatterns: [
       /\.filter\s*\(\s*\([^)]*\)\s*:\s*\w+\s+is\s+Extract/,
       /type\s*===?\s*["']click["']/,
@@ -2542,10 +2467,7 @@ export const typescriptProblems: Problem[] = [
     expected: ['Alice', 'Dave'],
     sample:
       'users.filter((u): u is User & { name: string } => u.name !== undefined).filter((u): u is User & { name: string; verified: true } => u.verified === true).map(u => u.name)',
-    hints: [
-      'Each filter narrows the type further',
-      'Intersection types accumulate requirements',
-    ],
+    hints: ['Each filter narrows the type further', 'Intersection types accumulate requirements'],
     validPatterns: [/\.filter\s*\([^)]+\)\.filter\s*\(/, /u\s+is\s+User\s*&/],
     tags: ['filter', 'chaining', 'progressive-narrowing', 'typed-array'],
   },
@@ -2579,10 +2501,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import multiply from ./math',
     expected: 'import { multiply } from "./math";',
     sample: 'import { multiply } from "./math";',
-    hints: [
-      'Use curly braces for named imports',
-      'The module path should be in quotes',
-    ],
+    hints: ['Use curly braces for named imports', 'The module path should be in quotes'],
     tags: ['modules', 'import', 'named-import'],
   },
   {
@@ -2595,10 +2514,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'class Calculator { add(a: number, b: number) { return a + b; } }',
     expected: 'export default Calculator',
     sample: 'export default Calculator;',
-    hints: [
-      'Use export default for the main export',
-      'Only one default export per module',
-    ],
+    hints: ['Use export default for the main export', 'Only one default export per module'],
     tags: ['modules', 'export', 'default-export'],
   },
   {
@@ -2611,10 +2527,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import default Calculator',
     expected: 'import Calculator from "./Calculator";',
     sample: 'import Calculator from "./Calculator";',
-    hints: [
-      'Default imports do not use curly braces',
-      'You can name the import anything you want',
-    ],
+    hints: ['Default imports do not use curly braces', 'You can name the import anything you want'],
     tags: ['modules', 'import', 'default-import'],
   },
   {
@@ -2643,10 +2556,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Export a Point type',
     expected: 'export type Point = { x: number; y: number };',
     sample: 'export type Point = { x: number; y: number };',
-    hints: [
-      'Use export type for type exports',
-      'Type aliases use the type keyword',
-    ],
+    hints: ['Use export type for type exports', 'Type aliases use the type keyword'],
     tags: ['modules', 'export', 'type-export'],
   },
   {
@@ -2659,10 +2569,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Export a Config interface',
     expected: 'export interface Config { name: string; }',
     sample: 'export interface Config { name: string; }',
-    hints: [
-      'Interfaces can be exported directly',
-      'Use the export keyword before interface',
-    ],
+    hints: ['Interfaces can be exported directly', 'Use the export keyword before interface'],
     tags: ['modules', 'export', 'interface-export'],
   },
   {
@@ -2675,10 +2582,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import utils as helpers',
     expected: 'import { utils as helpers } from "./utilities";',
     sample: 'import { utils as helpers } from "./utilities";',
-    hints: [
-      'Use the as keyword to rename imports',
-      'The original name comes before as',
-    ],
+    hints: ['Use the as keyword to rename imports', 'The original name comes before as'],
     tags: ['modules', 'import', 'alias'],
   },
   {
@@ -2691,10 +2595,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import everything as MathUtils',
     expected: 'import * as MathUtils from "./math";',
     sample: 'import * as MathUtils from "./math";',
-    hints: [
-      'Use * as to import everything',
-      'Access exports via MathUtils.functionName',
-    ],
+    hints: ['Use * as to import everything', 'Access exports via MathUtils.functionName'],
     tags: ['modules', 'import', 'namespace-import'],
   },
   {
@@ -2707,10 +2608,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Re-export format from ./formatter',
     expected: 'export { format } from "./formatter";',
     sample: 'export { format } from "./formatter";',
-    hints: [
-      'Combine export and from in one statement',
-      'No import keyword needed for re-exports',
-    ],
+    hints: ['Combine export and from in one statement', 'No import keyword needed for re-exports'],
     tags: ['modules', 'export', 're-export'],
   },
   {
@@ -2723,10 +2621,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare VERSION exists globally',
     expected: 'declare const VERSION: string;',
     sample: 'declare const VERSION: string;',
-    hints: [
-      'Use declare for ambient declarations',
-      'No value assignment in ambient declarations',
-    ],
+    hints: ['Use declare for ambient declarations', 'No value assignment in ambient declarations'],
     tags: ['declarations', 'declare', 'ambient'],
   },
   {
@@ -2755,10 +2650,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Export PI constant',
     expected: 'export const PI = 3.14159;',
     sample: 'export const PI = 3.14159;',
-    hints: [
-      'Use export const for constant exports',
-      'TypeScript infers the type from the value',
-    ],
+    hints: ['Use export const for constant exports', 'TypeScript infers the type from the value'],
     tags: ['modules', 'export', 'constant'],
   },
   {
@@ -2771,10 +2663,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import multiple functions',
     expected: 'import { add, subtract, multiply } from "./math";',
     sample: 'import { add, subtract, multiply } from "./math";',
-    hints: [
-      'Separate multiple imports with commas',
-      'All names go inside the curly braces',
-    ],
+    hints: ['Separate multiple imports with commas', 'All names go inside the curly braces'],
     tags: ['modules', 'import', 'multiple'],
   },
   {
@@ -2803,10 +2692,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare Logger class',
     expected: 'declare class Logger { log(message: string): void; }',
     sample: 'declare class Logger { log(message: string): void; }',
-    hints: [
-      'declare class defines class shape only',
-      'Methods have signatures but no body',
-    ],
+    hints: ['declare class defines class shape only', 'Methods have signatures but no body'],
     tags: ['declarations', 'declare', 'class'],
   },
   {
@@ -2835,10 +2721,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Re-export types only',
     expected: 'export type { UserType, ConfigType } from "./types";',
     sample: 'export type { UserType, ConfigType } from "./types";',
-    hints: [
-      'Use export type for type-only re-exports',
-      'These are erased at compile time',
-    ],
+    hints: ['Use export type for type-only re-exports', 'These are erased at compile time'],
     tags: ['modules', 'export', 'type-only-export'],
   },
   {
@@ -2897,12 +2780,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a Box interface and a Box namespace that adds a create function',
     setup: '// Merge interface and namespace',
     setupCode: '// Merge interface and namespace',
-    expected: 'interface Box { width: number; height: number; }\nnamespace Box { export function create(): Box { return { width: 0, height: 0 }; } }',
-    sample: 'interface Box { width: number; height: number; }\nnamespace Box { export function create(): Box { return { width: 0, height: 0 }; } }',
-    hints: [
-      'Same name allows declaration merging',
-      'Namespace adds static members to interface',
-    ],
+    expected:
+      'interface Box { width: number; height: number; }\nnamespace Box { export function create(): Box { return { width: 0, height: 0 }; } }',
+    sample:
+      'interface Box { width: number; height: number; }\nnamespace Box { export function create(): Box { return { width: 0, height: 0 }; } }',
+    hints: ['Same name allows declaration merging', 'Namespace adds static members to interface'],
     tags: ['namespaces', 'declaration-merging', 'interface'],
   },
   {
@@ -2929,12 +2811,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a module for *.css files that exports a default object with className strings',
     setup: '// Declare CSS module type',
     setupCode: '// Declare CSS module type',
-    expected: 'declare module "*.css" { const classes: { [key: string]: string }; export default classes; }',
-    sample: 'declare module "*.css" { const classes: { [key: string]: string }; export default classes; }',
-    hints: [
-      'Use wildcard patterns for file types',
-      'Default export for CSS modules',
-    ],
+    expected:
+      'declare module "*.css" { const classes: { [key: string]: string }; export default classes; }',
+    sample:
+      'declare module "*.css" { const classes: { [key: string]: string }; export default classes; }',
+    hints: ['Use wildcard patterns for file types', 'Default export for CSS modules'],
     tags: ['declarations', 'ambient-module', 'wildcard'],
   },
   {
@@ -2947,10 +2828,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Re-export default as named',
     expected: 'export { default as ButtonComponent } from "./Button";',
     sample: 'export { default as ButtonComponent } from "./Button";',
-    hints: [
-      'Use default as to rename default exports',
-      'This converts default to named export',
-    ],
+    hints: ['Use default as to rename default exports', 'This converts default to named export'],
     tags: ['modules', 're-export', 'alias'],
   },
   {
@@ -2979,10 +2857,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Reference node types',
     expected: '/// <reference types="node" />',
     sample: '/// <reference types="node" />',
-    hints: [
-      'Use reference types for @types packages',
-      'Omit the @types/ prefix',
-    ],
+    hints: ['Use reference types for @types packages', 'Omit the @types/ prefix'],
     tags: ['declarations', 'triple-slash', 'types-package'],
   },
   {
@@ -2995,10 +2870,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Re-export everything',
     expected: 'export * from "./helpers";',
     sample: 'export * from "./helpers";',
-    hints: [
-      'Use export * to re-export all named exports',
-      'Does not include default export',
-    ],
+    hints: ['Use export * to re-export all named exports', 'Does not include default export'],
     tags: ['modules', 're-export', 'barrel'],
   },
   {
@@ -3011,10 +2883,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Re-export all as namespace',
     expected: 'export * as Validators from "./validators";',
     sample: 'export * as Validators from "./validators";',
-    hints: [
-      'export * as creates a namespace export',
-      'Access via Validators.functionName',
-    ],
+    hints: ['export * as creates a namespace export', 'Access via Validators.functionName'],
     tags: ['modules', 're-export', 'namespace'],
   },
   {
@@ -3025,8 +2894,10 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a module "my-lib" that exports a Config interface and configure function',
     setup: '// Declare my-lib module',
     setupCode: '// Declare my-lib module',
-    expected: 'declare module "my-lib" { export interface Config { name: string; } export function configure(config: Config): void; }',
-    sample: 'declare module "my-lib" { export interface Config { name: string; } export function configure(config: Config): void; }',
+    expected:
+      'declare module "my-lib" { export interface Config { name: string; } export function configure(config: Config): void; }',
+    sample:
+      'declare module "my-lib" { export interface Config { name: string; } export function configure(config: Config): void; }',
     hints: [
       'Use declare module for ambient modules',
       'Export interfaces and functions normally inside',
@@ -3041,12 +2912,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a namespace App with nested namespace Utils containing a format function',
     setup: '// Create nested namespaces',
     setupCode: '// Create nested namespaces',
-    expected: 'namespace App { export namespace Utils { export function format(s: string): string { return s.trim(); } } }',
-    sample: 'namespace App { export namespace Utils { export function format(s: string): string { return s.trim(); } } }',
-    hints: [
-      'Namespaces can be nested',
-      'Export inner namespace to make it accessible',
-    ],
+    expected:
+      'namespace App { export namespace Utils { export function format(s: string): string { return s.trim(); } } }',
+    sample:
+      'namespace App { export namespace Utils { export function format(s: string): string { return s.trim(); } } }',
+    hints: ['Namespaces can be nested', 'Export inner namespace to make it accessible'],
     tags: ['namespaces', 'nested', 'organization'],
   },
   {
@@ -3059,10 +2929,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare gtag function globally',
     expected: 'declare function gtag(command: string, ...args: unknown[]): void;',
     sample: 'declare function gtag(command: string, ...args: unknown[]): void;',
-    hints: [
-      'Global functions use declare function',
-      'Rest parameters handle variable arguments',
-    ],
+    hints: ['Global functions use declare function', 'Rest parameters handle variable arguments'],
     tags: ['declarations', 'global', 'function'],
   },
   {
@@ -3075,10 +2942,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import value and type separately',
     expected: 'import { User, type UserProps } from "./user";',
     sample: 'import { User, type UserProps } from "./user";',
-    hints: [
-      'Use type keyword inline for individual imports',
-      'Mixes value and type imports',
-    ],
+    hints: ['Use type keyword inline for individual imports', 'Mixes value and type imports'],
     tags: ['modules', 'import', 'inline-type'],
   },
   {
@@ -3089,12 +2953,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a namespace Shapes with an exported Circle class',
     setup: '// Create Shapes namespace',
     setupCode: '// Create Shapes namespace',
-    expected: 'namespace Shapes { export class Circle { constructor(public radius: number) {} area() { return Math.PI * this.radius ** 2; } } }',
-    sample: 'namespace Shapes { export class Circle { constructor(public radius: number) {} area() { return Math.PI * this.radius ** 2; } } }',
-    hints: [
-      'Classes can be exported from namespaces',
-      'Access via Shapes.Circle',
-    ],
+    expected:
+      'namespace Shapes { export class Circle { constructor(public radius: number) {} area() { return Math.PI * this.radius ** 2; } } }',
+    sample:
+      'namespace Shapes { export class Circle { constructor(public radius: number) {} area() { return Math.PI * this.radius ** 2; } } }',
+    hints: ['Classes can be exported from namespaces', 'Access via Shapes.Circle'],
     tags: ['namespaces', 'class', 'export'],
   },
   {
@@ -3123,10 +2986,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Type for dynamic import',
     expected: 'type ButtonModule = typeof import("./Button");',
     sample: 'type ButtonModule = typeof import("./Button");',
-    hints: [
-      'typeof import() gets the module type',
-      'Useful for lazy loading type checking',
-    ],
+    hints: ['typeof import() gets the module type', 'Useful for lazy loading type checking'],
     tags: ['modules', 'dynamic-import', 'typeof'],
   },
   {
@@ -3139,10 +2999,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'interface Analytics { track(event: string): void; }',
     expected: 'declare global { interface Window { analytics: Analytics; } }',
     sample: 'declare global { interface Window { analytics: Analytics; } }',
-    hints: [
-      'Window is a global interface',
-      'Use declare global to extend it',
-    ],
+    hints: ['Window is a global interface', 'Use declare global to extend it'],
     tags: ['declarations', 'global', 'window'],
   },
   {
@@ -3155,10 +3012,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'export function getData(): Promise<string[]> { return Promise.resolve([]); }',
     expected: 'export type DataResult = Awaited<ReturnType<typeof getData>>;',
     sample: 'export type DataResult = Awaited<ReturnType<typeof getData>>;',
-    hints: [
-      'Use ReturnType to extract function return type',
-      'Awaited unwraps Promise types',
-    ],
+    hints: ['Use ReturnType to extract function return type', 'Awaited unwraps Promise types'],
     tags: ['modules', 'export', 'utility-types'],
   },
   {
@@ -3171,10 +3025,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare ENV variable',
     expected: 'declare const ENV: "development" | "staging" | "production";',
     sample: 'declare const ENV: "development" | "staging" | "production";',
-    hints: [
-      'Use literal union types for specific values',
-      'declare const for immutable globals',
-    ],
+    hints: ['Use literal union types for specific values', 'declare const for immutable globals'],
     tags: ['declarations', 'ambient', 'literal-types'],
   },
   {
@@ -3183,14 +3034,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Namespace Alias',
     text: 'Create an alias IO for the deeply nested App.Services.IO namespace',
-    setup: 'namespace App { export namespace Services { export namespace IO { export function read(): string { return ""; } } } }',
-    setupCode: 'namespace App { export namespace Services { export namespace IO { export function read(): string { return ""; } } } }',
+    setup:
+      'namespace App { export namespace Services { export namespace IO { export function read(): string { return ""; } } } }',
+    setupCode:
+      'namespace App { export namespace Services { export namespace IO { export function read(): string { return ""; } } } }',
     expected: 'import IO = App.Services.IO;',
     sample: 'import IO = App.Services.IO;',
-    hints: [
-      'import = creates namespace aliases',
-      'Simplifies access to nested namespaces',
-    ],
+    hints: ['import = creates namespace aliases', 'Simplifies access to nested namespaces'],
     tags: ['namespaces', 'alias', 'import'],
   },
   {
@@ -3203,10 +3053,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import JSON with assertion',
     expected: 'import data from "./config.json" with { type: "json" };',
     sample: 'import data from "./config.json" with { type: "json" };',
-    hints: [
-      'Import attributes use with clause',
-      'type: "json" asserts JSON module type',
-    ],
+    hints: ['Import attributes use with clause', 'type: "json" asserts JSON module type'],
     tags: ['modules', 'import', 'assertion'],
   },
   {
@@ -3219,10 +3066,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare PNG module',
     expected: 'declare module "*.png" { const src: string; export default src; }',
     sample: 'declare module "*.png" { const src: string; export default src; }',
-    hints: [
-      'Image imports typically resolve to URLs',
-      'Use wildcard for file extensions',
-    ],
+    hints: ['Image imports typically resolve to URLs', 'Use wildcard for file extensions'],
     tags: ['declarations', 'ambient-module', 'assets'],
   },
   {
@@ -3233,12 +3077,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Augment lodash to add a custom mixin function called deepFreeze',
     setup: '// Augment lodash module',
     setupCode: '// Augment lodash module',
-    expected: 'declare module "lodash" { interface LoDashStatic { deepFreeze<T>(obj: T): Readonly<T>; } }',
-    sample: 'declare module "lodash" { interface LoDashStatic { deepFreeze<T>(obj: T): Readonly<T>; } }',
-    hints: [
-      'Find the main interface to extend',
-      'LoDashStatic is the main lodash type',
-    ],
+    expected:
+      'declare module "lodash" { interface LoDashStatic { deepFreeze<T>(obj: T): Readonly<T>; } }',
+    sample:
+      'declare module "lodash" { interface LoDashStatic { deepFreeze<T>(obj: T): Readonly<T>; } }',
+    hints: ['Find the main interface to extend', 'LoDashStatic is the main lodash type'],
     tags: ['modules', 'augmentation', 'third-party'],
   },
   {
@@ -3249,8 +3092,10 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a global fetch function with overloads for string and Request input',
     setup: '// Declare fetch overloads',
     setupCode: '// Declare fetch overloads',
-    expected: 'declare function fetch(url: string, init?: RequestInit): Promise<Response>;\ndeclare function fetch(input: Request, init?: RequestInit): Promise<Response>;',
-    sample: 'declare function fetch(url: string, init?: RequestInit): Promise<Response>;\ndeclare function fetch(input: Request, init?: RequestInit): Promise<Response>;',
+    expected:
+      'declare function fetch(url: string, init?: RequestInit): Promise<Response>;\ndeclare function fetch(input: Request, init?: RequestInit): Promise<Response>;',
+    sample:
+      'declare function fetch(url: string, init?: RequestInit): Promise<Response>;\ndeclare function fetch(input: Request, init?: RequestInit): Promise<Response>;',
     hints: [
       'Multiple declare function statements for overloads',
       'Each overload has different parameter types',
@@ -3265,12 +3110,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create an Animal class and namespace that adds a static fromJSON factory method',
     setup: '// Merge class with namespace',
     setupCode: '// Merge class with namespace',
-    expected: 'class Animal { constructor(public name: string) {} }\nnamespace Animal { export function fromJSON(json: string): Animal { const data = JSON.parse(json); return new Animal(data.name); } }',
-    sample: 'class Animal { constructor(public name: string) {} }\nnamespace Animal { export function fromJSON(json: string): Animal { const data = JSON.parse(json); return new Animal(data.name); } }',
-    hints: [
-      'Namespaces merge with classes of same name',
-      'Adds static-like methods to the class',
-    ],
+    expected:
+      'class Animal { constructor(public name: string) {} }\nnamespace Animal { export function fromJSON(json: string): Animal { const data = JSON.parse(json); return new Animal(data.name); } }',
+    sample:
+      'class Animal { constructor(public name: string) {} }\nnamespace Animal { export function fromJSON(json: string): Animal { const data = JSON.parse(json); return new Animal(data.name); } }',
+    hints: ['Namespaces merge with classes of same name', 'Adds static-like methods to the class'],
     tags: ['namespaces', 'declaration-merging', 'class'],
   },
   {
@@ -3281,12 +3125,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a barrel file that re-exports and renames generically typed components',
     setup: '// Re-export with generic type preservation',
     setupCode: '// Re-export with generic type preservation',
-    expected: 'export { List as GenericList } from "./List";\nexport type { ListProps as GenericListProps } from "./List";',
-    sample: 'export { List as GenericList } from "./List";\nexport type { ListProps as GenericListProps } from "./List";',
-    hints: [
-      'Generics are preserved in re-exports',
-      'Separate value and type re-exports',
-    ],
+    expected:
+      'export { List as GenericList } from "./List";\nexport type { ListProps as GenericListProps } from "./List";',
+    sample:
+      'export { List as GenericList } from "./List";\nexport type { ListProps as GenericListProps } from "./List";',
+    hints: ['Generics are preserved in re-exports', 'Separate value and type re-exports'],
     tags: ['modules', 're-export', 'generics'],
   },
   {
@@ -3297,12 +3140,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a module "typed-storage" with get/set methods that preserve types',
     setup: '// Declare typed-storage module',
     setupCode: '// Declare typed-storage module',
-    expected: 'declare module "typed-storage" { export function get<T>(key: string): T | null; export function set<T>(key: string, value: T): void; }',
-    sample: 'declare module "typed-storage" { export function get<T>(key: string): T | null; export function set<T>(key: string, value: T): void; }',
-    hints: [
-      'Generic functions work in module declarations',
-      'Type parameter flows through usage',
-    ],
+    expected:
+      'declare module "typed-storage" { export function get<T>(key: string): T | null; export function set<T>(key: string, value: T): void; }',
+    sample:
+      'declare module "typed-storage" { export function get<T>(key: string): T | null; export function set<T>(key: string, value: T): void; }',
+    hints: ['Generic functions work in module declarations', 'Type parameter flows through usage'],
     tags: ['declarations', 'ambient-module', 'generics'],
   },
   {
@@ -3313,12 +3155,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Augment process.env to have strictly typed environment variables',
     setup: '// Type process.env variables',
     setupCode: '// Type process.env variables',
-    expected: 'declare global { namespace NodeJS { interface ProcessEnv { NODE_ENV: "development" | "production" | "test"; PORT?: string; DATABASE_URL: string; } } }',
-    sample: 'declare global { namespace NodeJS { interface ProcessEnv { NODE_ENV: "development" | "production" | "test"; PORT?: string; DATABASE_URL: string; } } }',
-    hints: [
-      'ProcessEnv is in NodeJS namespace',
-      'Use literal types for known values',
-    ],
+    expected:
+      'declare global { namespace NodeJS { interface ProcessEnv { NODE_ENV: "development" | "production" | "test"; PORT?: string; DATABASE_URL: string; } } }',
+    sample:
+      'declare global { namespace NodeJS { interface ProcessEnv { NODE_ENV: "development" | "production" | "test"; PORT?: string; DATABASE_URL: string; } } }',
+    hints: ['ProcessEnv is in NodeJS namespace', 'Use literal types for known values'],
     tags: ['modules', 'global-augmentation', 'node'],
   },
   {
@@ -3329,12 +3170,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a Status enum and merge with namespace to add helper functions',
     setup: '// Merge enum with namespace',
     setupCode: '// Merge enum with namespace',
-    expected: 'enum Status { Pending, Active, Completed }\nnamespace Status { export function isTerminal(status: Status): boolean { return status === Status.Completed; } }',
-    sample: 'enum Status { Pending, Active, Completed }\nnamespace Status { export function isTerminal(status: Status): boolean { return status === Status.Completed; } }',
-    hints: [
-      'Enums can merge with namespaces',
-      'Adds utility functions to enum',
-    ],
+    expected:
+      'enum Status { Pending, Active, Completed }\nnamespace Status { export function isTerminal(status: Status): boolean { return status === Status.Completed; } }',
+    sample:
+      'enum Status { Pending, Active, Completed }\nnamespace Status { export function isTerminal(status: Status): boolean { return status === Status.Completed; } }',
+    hints: ['Enums can merge with namespaces', 'Adds utility functions to enum'],
     tags: ['namespaces', 'declaration-merging', 'enum'],
   },
   {
@@ -3345,12 +3185,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an ambient interface for a jQuery-like library with chainable methods',
     setup: '// Declare jQuery-like interface',
     setupCode: '// Declare jQuery-like interface',
-    expected: 'declare interface JQuery<T = HTMLElement> { addClass(className: string): this; removeClass(className: string): this; on(event: string, handler: (e: Event) => void): this; find(selector: string): JQuery<T>; }',
-    sample: 'declare interface JQuery<T = HTMLElement> { addClass(className: string): this; removeClass(className: string): this; on(event: string, handler: (e: Event) => void): this; find(selector: string): JQuery<T>; }',
-    hints: [
-      'Use this return type for chaining',
-      'Generic parameter for element type',
-    ],
+    expected:
+      'declare interface JQuery<T = HTMLElement> { addClass(className: string): this; removeClass(className: string): this; on(event: string, handler: (e: Event) => void): this; find(selector: string): JQuery<T>; }',
+    sample:
+      'declare interface JQuery<T = HTMLElement> { addClass(className: string): this; removeClass(className: string): this; on(event: string, handler: (e: Event) => void): this; find(selector: string): JQuery<T>; }',
+    hints: ['Use this return type for chaining', 'Generic parameter for element type'],
     tags: ['declarations', 'interface', 'chainable'],
   },
   {
@@ -3395,10 +3234,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare ID type',
     expected: 'declare type ID = string;',
     sample: 'declare type ID = string;',
-    hints: [
-      'declare type creates ambient type aliases',
-      'Useful in .d.ts files',
-    ],
+    hints: ['declare type creates ambient type aliases', 'Useful in .d.ts files'],
     tags: ['declarations', 'type-alias', 'ambient'],
   },
   {
@@ -3411,10 +3247,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Export Color enum',
     expected: 'export enum Color { Red, Green, Blue }',
     sample: 'export enum Color { Red, Green, Blue }',
-    hints: [
-      'Enums can be exported directly',
-      'Values are auto-numbered from 0',
-    ],
+    hints: ['Enums can be exported directly', 'Values are auto-numbered from 0'],
     tags: ['modules', 'export', 'enum'],
   },
   {
@@ -3427,10 +3260,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import Status enum',
     expected: 'import { Status } from "./status";',
     sample: 'import { Status } from "./status";',
-    hints: [
-      'Enums are imported like regular values',
-      'They are both types and values',
-    ],
+    hints: ['Enums are imported like regular values', 'They are both types and values'],
     tags: ['modules', 'import', 'enum'],
   },
   {
@@ -3443,10 +3273,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare Point interface',
     expected: 'declare interface Point { x: number; y: number; }',
     sample: 'declare interface Point { x: number; y: number; }',
-    hints: [
-      'declare interface for ambient interfaces',
-      'Commonly used in .d.ts files',
-    ],
+    hints: ['declare interface for ambient interfaces', 'Commonly used in .d.ts files'],
     tags: ['declarations', 'interface', 'ambient'],
   },
   {
@@ -3459,10 +3286,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function _helper() { return "help"; }',
     expected: 'export { _helper as publicHelper };',
     sample: 'export { _helper as publicHelper };',
-    hints: [
-      'Use as to rename during export',
-      'Internal names can be hidden',
-    ],
+    hints: ['Use as to rename during export', 'Internal names can be hidden'],
     tags: ['modules', 'export', 'alias'],
   },
   {
@@ -3475,10 +3299,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import Config as type',
     expected: 'import { type Config } from "./config";',
     sample: 'import { type Config } from "./config";',
-    hints: [
-      'type modifier before the import name',
-      'Erased during compilation',
-    ],
+    hints: ['type modifier before the import name', 'Erased during compilation'],
     tags: ['modules', 'import', 'inline-type'],
   },
   {
@@ -3491,10 +3312,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'interface User { name: string; }',
     expected: 'declare let currentUser: User | null;',
     sample: 'declare let currentUser: User | null;',
-    hints: [
-      'Use declare let for mutable globals',
-      'Union with null for nullable variables',
-    ],
+    hints: ['Use declare let for mutable globals', 'Union with null for nullable variables'],
     tags: ['declarations', 'declare', 'let'],
   },
   {
@@ -3507,10 +3325,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Re-export default as named',
     expected: 'export { default as ModalDialog } from "./Modal";',
     sample: 'export { default as ModalDialog } from "./Modal";',
-    hints: [
-      'default can be used as identifier in re-exports',
-      'Converts default to named export',
-    ],
+    hints: ['default can be used as identifier in re-exports', 'Converts default to named export'],
     tags: ['modules', 're-export', 'default-to-named'],
   },
   {
@@ -3521,12 +3336,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a namespace API with an exported Response interface',
     setup: '// Create API namespace',
     setupCode: '// Create API namespace',
-    expected: 'namespace API { export interface Response<T> { data: T; status: number; message: string; } }',
-    sample: 'namespace API { export interface Response<T> { data: T; status: number; message: string; } }',
-    hints: [
-      'Interfaces can be exported from namespaces',
-      'Generics work inside namespaces',
-    ],
+    expected:
+      'namespace API { export interface Response<T> { data: T; status: number; message: string; } }',
+    sample:
+      'namespace API { export interface Response<T> { data: T; status: number; message: string; } }',
+    hints: ['Interfaces can be exported from namespaces', 'Generics work inside namespaces'],
     tags: ['namespaces', 'interface', 'generics'],
   },
   {
@@ -3539,10 +3353,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Augment Array',
     expected: 'declare global { interface Array<T> { last(): T | undefined; } }',
     sample: 'declare global { interface Array<T> { last(): T | undefined; } }',
-    hints: [
-      'Array is a global generic interface',
-      'Use declare global to extend',
-    ],
+    hints: ['Array is a global generic interface', 'Use declare global to extend'],
     tags: ['modules', 'global-augmentation', 'array'],
   },
   {
@@ -3553,12 +3364,10 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an ambient class Math with static methods abs and sqrt',
     setup: '// Declare Math class',
     setupCode: '// Declare Math class',
-    expected: 'declare class Math { static abs(x: number): number; static sqrt(x: number): number; }',
+    expected:
+      'declare class Math { static abs(x: number): number; static sqrt(x: number): number; }',
     sample: 'declare class Math { static abs(x: number): number; static sqrt(x: number): number; }',
-    hints: [
-      'Static members use static keyword',
-      'No implementation in ambient declarations',
-    ],
+    hints: ['Static members use static keyword', 'No implementation in ambient declarations'],
     tags: ['declarations', 'class', 'static'],
   },
   {
@@ -3571,10 +3380,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Import JSON with types',
     expected: 'import config from "./config.json";\ntype ConfigType = typeof config;',
     sample: 'import config from "./config.json";\ntype ConfigType = typeof config;',
-    hints: [
-      'Enable resolveJsonModule in tsconfig',
-      'typeof extracts the inferred type',
-    ],
+    hints: ['Enable resolveJsonModule in tsconfig', 'typeof extracts the inferred type'],
     tags: ['modules', 'import', 'json'],
   },
   {
@@ -3585,12 +3391,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Merge a Vehicle interface with a Vehicle namespace containing a create function',
     setup: '// Merge Vehicle interface and namespace',
     setupCode: '// Merge Vehicle interface and namespace',
-    expected: 'interface Vehicle { wheels: number; brand: string; }\nnamespace Vehicle { export function create(brand: string, wheels: number): Vehicle { return { brand, wheels }; } }',
-    sample: 'interface Vehicle { wheels: number; brand: string; }\nnamespace Vehicle { export function create(brand: string, wheels: number): Vehicle { return { brand, wheels }; } }',
-    hints: [
-      'Same name enables merging',
-      'Namespace adds static utilities',
-    ],
+    expected:
+      'interface Vehicle { wheels: number; brand: string; }\nnamespace Vehicle { export function create(brand: string, wheels: number): Vehicle { return { brand, wheels }; } }',
+    sample:
+      'interface Vehicle { wheels: number; brand: string; }\nnamespace Vehicle { export function create(brand: string, wheels: number): Vehicle { return { brand, wheels }; } }',
+    hints: ['Same name enables merging', 'Namespace adds static utilities'],
     tags: ['namespaces', 'declaration-merging', 'factory'],
   },
   {
@@ -3603,10 +3408,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare constructor type',
     expected: 'declare type Constructor<T> = new (...args: unknown[]) => T;',
     sample: 'declare type Constructor<T> = new (...args: unknown[]) => T;',
-    hints: [
-      'new keyword in type indicates constructor',
-      'Generic for return instance type',
-    ],
+    hints: ['new keyword in type indicates constructor', 'Generic for return instance type'],
     tags: ['declarations', 'constructor', 'generics'],
   },
   {
@@ -3619,10 +3421,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'export const Config = { debug: true, version: "1.0", maxRetries: 3 };',
     expected: 'export type ConfigKeys = keyof typeof Config;',
     sample: 'export type ConfigKeys = keyof typeof Config;',
-    hints: [
-      'typeof gets the type of a value',
-      'keyof extracts the keys as a union',
-    ],
+    hints: ['typeof gets the type of a value', 'keyof extracts the keys as a union'],
     tags: ['modules', 'export', 'keyof'],
   },
   {
@@ -3635,10 +3434,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare Dictionary interface',
     expected: 'declare interface NumberDict { [key: string]: number; }',
     sample: 'declare interface NumberDict { [key: string]: number; }',
-    hints: [
-      'Index signature uses [key: type]: valueType',
-      'All string keys map to numbers',
-    ],
+    hints: ['Index signature uses [key: type]: valueType', 'All string keys map to numbers'],
     tags: ['declarations', 'interface', 'index-signature'],
   },
   {
@@ -3651,10 +3447,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// In .d.ts file: declare @utils module',
     expected: 'declare module "@utils" { export * from "./src/utils"; }',
     sample: 'declare module "@utils" { export * from "./src/utils"; }',
-    hints: [
-      'Path aliases need module declarations',
-      'Re-export actual module contents',
-    ],
+    hints: ['Path aliases need module declarations', 'Re-export actual module contents'],
     tags: ['modules', 'path-alias', 'declaration'],
   },
   {
@@ -3665,12 +3458,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a namespace Http with Status type and StatusCode interface',
     setup: '// Create Http namespace with types',
     setupCode: '// Create Http namespace with types',
-    expected: 'namespace Http { export type Status = "success" | "error" | "pending"; export interface StatusCode { code: number; message: string; } }',
-    sample: 'namespace Http { export type Status = "success" | "error" | "pending"; export interface StatusCode { code: number; message: string; } }',
-    hints: [
-      'Types and interfaces work in namespaces',
-      'Export makes them accessible outside',
-    ],
+    expected:
+      'namespace Http { export type Status = "success" | "error" | "pending"; export interface StatusCode { code: number; message: string; } }',
+    sample:
+      'namespace Http { export type Status = "success" | "error" | "pending"; export interface StatusCode { code: number; message: string; } }',
+    hints: ['Types and interfaces work in namespaces', 'Export makes them accessible outside'],
     tags: ['namespaces', 'types', 'interface'],
   },
   {
@@ -3683,10 +3475,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Reference ES2015 lib',
     expected: '/// <reference lib="es2015" />',
     sample: '/// <reference lib="es2015" />',
-    hints: [
-      'lib references include built-in type libs',
-      'Corresponds to tsconfig lib options',
-    ],
+    hints: ['lib references include built-in type libs', 'Corresponds to tsconfig lib options'],
     tags: ['declarations', 'triple-slash', 'lib'],
   },
   {
@@ -3699,10 +3488,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Type import.meta',
     expected: 'interface ImportMeta { env: { MODE: string; BASE_URL: string }; }',
     sample: 'interface ImportMeta { env: { MODE: string; BASE_URL: string }; }',
-    hints: [
-      'ImportMeta is a special global interface',
-      'Used by bundlers like Vite',
-    ],
+    hints: ['ImportMeta is a special global interface', 'Used by bundlers like Vite'],
     tags: ['modules', 'import-meta', 'interface'],
   },
   {
@@ -3713,12 +3499,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an interface for a function that is also an object with methods',
     setup: '// Declare callable with properties',
     setupCode: '// Declare callable with properties',
-    expected: 'declare interface Logger { (message: string): void; level: "info" | "warn" | "error"; setLevel(level: Logger["level"]): void; }',
-    sample: 'declare interface Logger { (message: string): void; level: "info" | "warn" | "error"; setLevel(level: Logger["level"]): void; }',
-    hints: [
-      'Call signature makes interface callable',
-      'Add properties and methods as normal',
-    ],
+    expected:
+      'declare interface Logger { (message: string): void; level: "info" | "warn" | "error"; setLevel(level: Logger["level"]): void; }',
+    sample:
+      'declare interface Logger { (message: string): void; level: "info" | "warn" | "error"; setLevel(level: Logger["level"]): void; }',
+    hints: ['Call signature makes interface callable', 'Add properties and methods as normal'],
     tags: ['declarations', 'interface', 'callable'],
   },
   {
@@ -3729,8 +3514,10 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a plugin system where plugins augment a Plugin interface',
     setup: 'interface Plugin { name: string; }',
     setupCode: 'interface Plugin { name: string; }',
-    expected: 'declare module "./core" { interface Plugin { hooks?: { beforeRun?: () => void; afterRun?: () => void }; } }',
-    sample: 'declare module "./core" { interface Plugin { hooks?: { beforeRun?: () => void; afterRun?: () => void }; } }',
+    expected:
+      'declare module "./core" { interface Plugin { hooks?: { beforeRun?: () => void; afterRun?: () => void }; } }',
+    sample:
+      'declare module "./core" { interface Plugin { hooks?: { beforeRun?: () => void; afterRun?: () => void }; } }',
     hints: [
       'Module augmentation extends existing interfaces',
       'Properties are merged into the interface',
@@ -3745,12 +3532,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a function foo and namespace foo that adds configuration',
     setup: '// Merge function with namespace',
     setupCode: '// Merge function with namespace',
-    expected: 'function foo(x: number): number { return x * foo.multiplier; }\nnamespace foo { export let multiplier = 2; export function reset() { multiplier = 2; } }',
-    sample: 'function foo(x: number): number { return x * foo.multiplier; }\nnamespace foo { export let multiplier = 2; export function reset() { multiplier = 2; } }',
-    hints: [
-      'Functions can merge with namespaces',
-      'Adds properties to the function object',
-    ],
+    expected:
+      'function foo(x: number): number { return x * foo.multiplier; }\nnamespace foo { export let multiplier = 2; export function reset() { multiplier = 2; } }',
+    sample:
+      'function foo(x: number): number { return x * foo.multiplier; }\nnamespace foo { export let multiplier = 2; export function reset() { multiplier = 2; } }',
+    hints: ['Functions can merge with namespaces', 'Adds properties to the function object'],
     tags: ['namespaces', 'declaration-merging', 'function'],
   },
   {
@@ -3761,12 +3547,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an ambient type that makes all properties of T optional and readonly',
     setup: '// Declare DeepPartial type',
     setupCode: '// Declare DeepPartial type',
-    expected: 'declare type DeepReadonlyPartial<T> = { readonly [P in keyof T]?: T[P] extends object ? DeepReadonlyPartial<T[P]> : T[P]; };',
-    sample: 'declare type DeepReadonlyPartial<T> = { readonly [P in keyof T]?: T[P] extends object ? DeepReadonlyPartial<T[P]> : T[P]; };',
-    hints: [
-      'Mapped types iterate over keys',
-      'Recursive for nested objects',
-    ],
+    expected:
+      'declare type DeepReadonlyPartial<T> = { readonly [P in keyof T]?: T[P] extends object ? DeepReadonlyPartial<T[P]> : T[P]; };',
+    sample:
+      'declare type DeepReadonlyPartial<T> = { readonly [P in keyof T]?: T[P] extends object ? DeepReadonlyPartial<T[P]> : T[P]; };',
+    hints: ['Mapped types iterate over keys', 'Recursive for nested objects'],
     tags: ['declarations', 'mapped-types', 'recursive'],
   },
   {
@@ -3777,12 +3562,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Export different types based on a configuration type parameter',
     setup: 'interface Config { strict: boolean; }',
     setupCode: 'interface Config { strict: boolean; }',
-    expected: 'export type ApiResponse<C extends Config> = C["strict"] extends true ? { data: unknown; errors: never } : { data: unknown; errors?: string[] };',
-    sample: 'export type ApiResponse<C extends Config> = C["strict"] extends true ? { data: unknown; errors: never } : { data: unknown; errors?: string[] };',
-    hints: [
-      'Conditional types use extends',
-      'Index access reads config properties',
-    ],
+    expected:
+      'export type ApiResponse<C extends Config> = C["strict"] extends true ? { data: unknown; errors: never } : { data: unknown; errors?: string[] };',
+    sample:
+      'export type ApiResponse<C extends Config> = C["strict"] extends true ? { data: unknown; errors: never } : { data: unknown; errors?: string[] };',
+    hints: ['Conditional types use extends', 'Index access reads config properties'],
     tags: ['modules', 'export', 'conditional-types'],
   },
   {
@@ -3793,12 +3577,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a createElement function with overloads for different tag names',
     setup: '// Declare createElement overloads',
     setupCode: '// Declare createElement overloads',
-    expected: 'declare function createElement(tag: "div"): HTMLDivElement;\ndeclare function createElement(tag: "span"): HTMLSpanElement;\ndeclare function createElement(tag: string): HTMLElement;',
-    sample: 'declare function createElement(tag: "div"): HTMLDivElement;\ndeclare function createElement(tag: "span"): HTMLSpanElement;\ndeclare function createElement(tag: string): HTMLElement;',
-    hints: [
-      'Literal type overloads come first',
-      'General string overload is last',
-    ],
+    expected:
+      'declare function createElement(tag: "div"): HTMLDivElement;\ndeclare function createElement(tag: "span"): HTMLSpanElement;\ndeclare function createElement(tag: string): HTMLElement;',
+    sample:
+      'declare function createElement(tag: "div"): HTMLDivElement;\ndeclare function createElement(tag: "span"): HTMLSpanElement;\ndeclare function createElement(tag: string): HTMLElement;',
+    hints: ['Literal type overloads come first', 'General string overload is last'],
     tags: ['declarations', 'overloads', 'dom'],
   },
   {
@@ -3809,12 +3592,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Augment the global NodeJS namespace to add custom process properties',
     setup: '// Augment NodeJS namespace',
     setupCode: '// Augment NodeJS namespace',
-    expected: 'declare namespace NodeJS { interface Process { customProperty: string; customMethod(): void; } }',
-    sample: 'declare namespace NodeJS { interface Process { customProperty: string; customMethod(): void; } }',
-    hints: [
-      'NodeJS is a global namespace',
-      'Process interface can be extended',
-    ],
+    expected:
+      'declare namespace NodeJS { interface Process { customProperty: string; customMethod(): void; } }',
+    sample:
+      'declare namespace NodeJS { interface Process { customProperty: string; customMethod(): void; } }',
+    hints: ['NodeJS is a global namespace', 'Process interface can be extended'],
     tags: ['namespaces', 'ambient', 'node'],
   },
   {
@@ -3825,12 +3607,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a module pattern for locale files using template literals',
     setup: '// Declare locale module pattern',
     setupCode: '// Declare locale module pattern',
-    expected: 'declare module `./locales/${string}.json` { const translations: Record<string, string>; export default translations; }',
-    sample: 'declare module `./locales/${string}.json` { const translations: Record<string, string>; export default translations; }',
-    hints: [
-      'Template literal modules match patterns',
-      'Useful for dynamic file imports',
-    ],
+    expected:
+      'declare module `./locales/${string}.json` { const translations: Record<string, string>; export default translations; }',
+    sample:
+      'declare module `./locales/${string}.json` { const translations: Record<string, string>; export default translations; }',
+    hints: ['Template literal modules match patterns', 'Useful for dynamic file imports'],
     tags: ['modules', 'ambient-module', 'template-literal'],
   },
   {
@@ -3841,12 +3622,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an interface that acts as both a function and a constructor',
     setup: '// Declare hybrid function/constructor',
     setupCode: '// Declare hybrid function/constructor',
-    expected: 'declare interface DateConstructor { (): string; new (): Date; parse(s: string): number; UTC(...values: number[]): number; }',
-    sample: 'declare interface DateConstructor { (): string; new (): Date; parse(s: string): number; UTC(...values: number[]): number; }',
-    hints: [
-      'Call signature for function behavior',
-      'Construct signature for new behavior',
-    ],
+    expected:
+      'declare interface DateConstructor { (): string; new (): Date; parse(s: string): number; UTC(...values: number[]): number; }',
+    sample:
+      'declare interface DateConstructor { (): string; new (): Date; parse(s: string): number; UTC(...values: number[]): number; }',
+    hints: ['Call signature for function behavior', 'Construct signature for new behavior'],
     tags: ['declarations', 'interface', 'hybrid'],
   },
   {
@@ -3857,8 +3637,10 @@ export const typescriptProblems: Problem[] = [
     text: 'Type a module federation remote module declaration',
     setup: '// Type federated module',
     setupCode: '// Type federated module',
-    expected: 'declare module "remote/Button" { import { FC } from "react"; interface ButtonProps { label: string; onClick: () => void; } const Button: FC<ButtonProps>; export default Button; }',
-    sample: 'declare module "remote/Button" { import { FC } from "react"; interface ButtonProps { label: string; onClick: () => void; } const Button: FC<ButtonProps>; export default Button; }',
+    expected:
+      'declare module "remote/Button" { import { FC } from "react"; interface ButtonProps { label: string; onClick: () => void; } const Button: FC<ButtonProps>; export default Button; }',
+    sample:
+      'declare module "remote/Button" { import { FC } from "react"; interface ButtonProps { label: string; onClick: () => void; } const Button: FC<ButtonProps>; export default Button; }',
     hints: [
       'Federated modules need explicit declarations',
       'Import types inside module declaration',
@@ -3873,12 +3655,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Augment globalThis to add a custom app configuration',
     setup: 'interface AppConfig { name: string; version: string; }',
     setupCode: 'interface AppConfig { name: string; version: string; }',
-    expected: 'declare global { var __APP_CONFIG__: AppConfig; interface globalThis { __APP_CONFIG__: AppConfig; } }',
-    sample: 'declare global { var __APP_CONFIG__: AppConfig; interface globalThis { __APP_CONFIG__: AppConfig; } }',
-    hints: [
-      'globalThis interface for global properties',
-      'var declaration for runtime existence',
-    ],
+    expected:
+      'declare global { var __APP_CONFIG__: AppConfig; interface globalThis { __APP_CONFIG__: AppConfig; } }',
+    sample:
+      'declare global { var __APP_CONFIG__: AppConfig; interface globalThis { __APP_CONFIG__: AppConfig; } }',
+    hints: ['globalThis interface for global properties', 'var declaration for runtime existence'],
     tags: ['namespaces', 'global-this', 'augmentation'],
   },
   {
@@ -3889,8 +3670,10 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a branded type for validated email strings',
     setup: '// Declare ValidatedEmail type',
     setupCode: '// Declare ValidatedEmail type',
-    expected: 'declare const __brand: unique symbol;\ndeclare type ValidatedEmail = string & { readonly [__brand]: "ValidatedEmail" };',
-    sample: 'declare const __brand: unique symbol;\ndeclare type ValidatedEmail = string & { readonly [__brand]: "ValidatedEmail" };',
+    expected:
+      'declare const __brand: unique symbol;\ndeclare type ValidatedEmail = string & { readonly [__brand]: "ValidatedEmail" };',
+    sample:
+      'declare const __brand: unique symbol;\ndeclare type ValidatedEmail = string & { readonly [__brand]: "ValidatedEmail" };',
     hints: [
       'Branded types use intersection with unique symbol',
       'Prevents accidental type widening',
@@ -3903,14 +3686,15 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Infer Module Export Type',
     text: 'Create a type that extracts all exported types from a module',
-    setup: 'export const value = 1;\nexport type Type = string;\nexport interface Interface { x: number; }',
-    setupCode: 'export const value = 1;\nexport type Type = string;\nexport interface Interface { x: number; }',
-    expected: 'type ModuleExports = typeof import("./module");\ntype ExportedTypes = ModuleExports[keyof ModuleExports];',
-    sample: 'type ModuleExports = typeof import("./module");\ntype ExportedTypes = ModuleExports[keyof ModuleExports];',
-    hints: [
-      'typeof import gets module namespace type',
-      'Index with keyof for all exports',
-    ],
+    setup:
+      'export const value = 1;\nexport type Type = string;\nexport interface Interface { x: number; }',
+    setupCode:
+      'export const value = 1;\nexport type Type = string;\nexport interface Interface { x: number; }',
+    expected:
+      'type ModuleExports = typeof import("./module");\ntype ExportedTypes = ModuleExports[keyof ModuleExports];',
+    sample:
+      'type ModuleExports = typeof import("./module");\ntype ExportedTypes = ModuleExports[keyof ModuleExports];',
+    hints: ['typeof import gets module namespace type', 'Index with keyof for all exports'],
     tags: ['modules', 'typeof-import', 'inference'],
   },
   {
@@ -3921,12 +3705,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a function that explicitly types its this context',
     setup: '// Declare function with this type',
     setupCode: '// Declare function with this type',
-    expected: 'declare interface Component { name: string; }\ndeclare function getName(this: Component): string;',
-    sample: 'declare interface Component { name: string; }\ndeclare function getName(this: Component): string;',
-    hints: [
-      'this parameter is a fake first parameter',
-      'Enforces correct call context',
-    ],
+    expected:
+      'declare interface Component { name: string; }\ndeclare function getName(this: Component): string;',
+    sample:
+      'declare interface Component { name: string; }\ndeclare function getName(this: Component): string;',
+    hints: ['this parameter is a fake first parameter', 'Enforces correct call context'],
     tags: ['declarations', 'this', 'context'],
   },
   {
@@ -3953,12 +3736,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a namespace Constants with readonly exported values',
     setup: '// Create Constants namespace',
     setupCode: '// Create Constants namespace',
-    expected: 'namespace Constants { export const API_URL = "https://api.example.com" as const; export const TIMEOUT = 5000 as const; export const RETRIES = 3 as const; }',
-    sample: 'namespace Constants { export const API_URL = "https://api.example.com" as const; export const TIMEOUT = 5000 as const; export const RETRIES = 3 as const; }',
-    hints: [
-      'as const makes values literal types',
-      'Exports are accessible via namespace',
-    ],
+    expected:
+      'namespace Constants { export const API_URL = "https://api.example.com" as const; export const TIMEOUT = 5000 as const; export const RETRIES = 3 as const; }',
+    sample:
+      'namespace Constants { export const API_URL = "https://api.example.com" as const; export const TIMEOUT = 5000 as const; export const RETRIES = 3 as const; }',
+    hints: ['as const makes values literal types', 'Exports are accessible via namespace'],
     tags: ['namespaces', 'constants', 'as-const'],
   },
   {
@@ -3969,12 +3751,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an ambient abstract class Shape with abstract area method',
     setup: '// Declare abstract Shape',
     setupCode: '// Declare abstract Shape',
-    expected: 'declare abstract class Shape { abstract area(): number; abstract perimeter(): number; name: string; }',
-    sample: 'declare abstract class Shape { abstract area(): number; abstract perimeter(): number; name: string; }',
-    hints: [
-      'Abstract classes cannot be instantiated',
-      'Abstract methods have no implementation',
-    ],
+    expected:
+      'declare abstract class Shape { abstract area(): number; abstract perimeter(): number; name: string; }',
+    sample:
+      'declare abstract class Shape { abstract area(): number; abstract perimeter(): number; name: string; }',
+    hints: ['Abstract classes cannot be instantiated', 'Abstract methods have no implementation'],
     tags: ['declarations', 'abstract', 'class'],
   },
   {
@@ -3985,12 +3766,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create an index barrel file that re-exports from multiple modules',
     setup: '// Barrel file exports',
     setupCode: '// Barrel file exports',
-    expected: 'export * from "./user";\nexport * from "./product";\nexport * from "./order";\nexport { default as utils } from "./utils";',
-    sample: 'export * from "./user";\nexport * from "./product";\nexport * from "./order";\nexport { default as utils } from "./utils";',
-    hints: [
-      'Barrel files centralize exports',
-      'Mix export * with named re-exports',
-    ],
+    expected:
+      'export * from "./user";\nexport * from "./product";\nexport * from "./order";\nexport { default as utils } from "./utils";',
+    sample:
+      'export * from "./user";\nexport * from "./product";\nexport * from "./order";\nexport { default as utils } from "./utils";',
+    hints: ['Barrel files centralize exports', 'Mix export * with named re-exports'],
     tags: ['modules', 'barrel', 're-export'],
   },
   {
@@ -4001,12 +3781,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a function type that accepts variadic tuple parameters',
     setup: '// Declare variadic function',
     setupCode: '// Declare variadic function',
-    expected: 'declare function concat<T extends unknown[], U extends unknown[]>(arr1: [...T], arr2: [...U]): [...T, ...U];',
-    sample: 'declare function concat<T extends unknown[], U extends unknown[]>(arr1: [...T], arr2: [...U]): [...T, ...U];',
-    hints: [
-      'Spread in tuples for variadic types',
-      'Preserves tuple element types',
-    ],
+    expected:
+      'declare function concat<T extends unknown[], U extends unknown[]>(arr1: [...T], arr2: [...U]): [...T, ...U];',
+    sample:
+      'declare function concat<T extends unknown[], U extends unknown[]>(arr1: [...T], arr2: [...U]): [...T, ...U];',
+    hints: ['Spread in tuples for variadic types', 'Preserves tuple element types'],
     tags: ['declarations', 'variadic-tuple', 'generics'],
   },
   {
@@ -4017,12 +3796,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a type for nested module structure with self-referencing exports',
     setup: '// Type nested modules',
     setupCode: '// Type nested modules',
-    expected: 'interface ModuleTree { [key: string]: ModuleTree | ((...args: unknown[]) => unknown); }\ndeclare const modules: ModuleTree;',
-    sample: 'interface ModuleTree { [key: string]: ModuleTree | ((...args: unknown[]) => unknown); }\ndeclare const modules: ModuleTree;',
-    hints: [
-      'Recursive interfaces for tree structures',
-      'Union with function type for leaves',
-    ],
+    expected:
+      'interface ModuleTree { [key: string]: ModuleTree | ((...args: unknown[]) => unknown); }\ndeclare const modules: ModuleTree;',
+    sample:
+      'interface ModuleTree { [key: string]: ModuleTree | ((...args: unknown[]) => unknown); }\ndeclare const modules: ModuleTree;',
+    hints: ['Recursive interfaces for tree structures', 'Union with function type for leaves'],
     tags: ['modules', 'recursive', 'interface'],
   },
   {
@@ -4033,12 +3811,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a namespace Collections with generic Stack and Queue classes',
     setup: '// Create Collections namespace',
     setupCode: '// Create Collections namespace',
-    expected: 'namespace Collections { export class Stack<T> { private items: T[] = []; push(item: T): void { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } } export class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } } }',
-    sample: 'namespace Collections { export class Stack<T> { private items: T[] = []; push(item: T): void { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } } export class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } } }',
-    hints: [
-      'Generic classes work in namespaces',
-      'Type parameter scoped to class',
-    ],
+    expected:
+      'namespace Collections { export class Stack<T> { private items: T[] = []; push(item: T): void { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } } export class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } } }',
+    sample:
+      'namespace Collections { export class Stack<T> { private items: T[] = []; push(item: T): void { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } } export class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } } }',
+    hints: ['Generic classes work in namespaces', 'Type parameter scoped to class'],
     tags: ['namespaces', 'generics', 'data-structures'],
   },
   {
@@ -4049,12 +3826,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an assertion function that narrows types',
     setup: '// Declare assertion function',
     setupCode: '// Declare assertion function',
-    expected: 'declare function assertIsString(value: unknown): asserts value is string;\ndeclare function assertNonNull<T>(value: T): asserts value is NonNullable<T>;',
-    sample: 'declare function assertIsString(value: unknown): asserts value is string;\ndeclare function assertNonNull<T>(value: T): asserts value is NonNullable<T>;',
-    hints: [
-      'asserts keyword for assertion functions',
-      'Narrows type after function call',
-    ],
+    expected:
+      'declare function assertIsString(value: unknown): asserts value is string;\ndeclare function assertNonNull<T>(value: T): asserts value is NonNullable<T>;',
+    sample:
+      'declare function assertIsString(value: unknown): asserts value is string;\ndeclare function assertNonNull<T>(value: T): asserts value is NonNullable<T>;',
+    hints: ['asserts keyword for assertion functions', 'Narrows type after function call'],
     tags: ['declarations', 'assertion', 'type-narrowing'],
   },
   {
@@ -4065,12 +3841,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare a module that exports unique symbols as keys',
     setup: '// Declare symbol-keyed module',
     setupCode: '// Declare symbol-keyed module',
-    expected: 'declare module "symbols" { export const ID: unique symbol; export const NAME: unique symbol; export interface Identifiable { [ID]: string; [NAME]: string; } }',
-    sample: 'declare module "symbols" { export const ID: unique symbol; export const NAME: unique symbol; export interface Identifiable { [ID]: string; [NAME]: string; } }',
-    hints: [
-      'unique symbol for distinct symbol types',
-      'Computed properties with symbol keys',
-    ],
+    expected:
+      'declare module "symbols" { export const ID: unique symbol; export const NAME: unique symbol; export interface Identifiable { [ID]: string; [NAME]: string; } }',
+    sample:
+      'declare module "symbols" { export const ID: unique symbol; export const NAME: unique symbol; export interface Identifiable { [ID]: string; [NAME]: string; } }',
+    hints: ['unique symbol for distinct symbol types', 'Computed properties with symbol keys'],
     tags: ['modules', 'symbol', 'unique'],
   },
   {
@@ -4083,10 +3858,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: '// Declare readonly roles array',
     expected: 'declare const ROLES: readonly ["admin", "user", "guest"];',
     sample: 'declare const ROLES: readonly ["admin", "user", "guest"];',
-    hints: [
-      'readonly tuple for immutable arrays',
-      'Literal types preserve exact values',
-    ],
+    hints: ['readonly tuple for immutable arrays', 'Literal types preserve exact values'],
     tags: ['declarations', 'readonly', 'tuple'],
   },
   {
@@ -4099,10 +3871,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const config = { env: "prod", debug: false } as const;',
     expected: 'export type Config = typeof config;',
     sample: 'export type Config = typeof config;',
-    hints: [
-      'as const makes properties readonly literals',
-      'typeof extracts the narrowed type',
-    ],
+    hints: ['as const makes properties readonly literals', 'typeof extracts the narrowed type'],
     tags: ['modules', 'export', 'as-const'],
   },
   {
@@ -4113,12 +3882,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a namespace Utils with add and multiply functions',
     setup: '// Create Utils namespace',
     setupCode: '// Create Utils namespace',
-    expected: 'namespace Utils { export function add(a: number, b: number): number { return a + b; } export function multiply(a: number, b: number): number { return a * b; } }',
-    sample: 'namespace Utils { export function add(a: number, b: number): number { return a + b; } export function multiply(a: number, b: number): number { return a * b; } }',
-    hints: [
-      'namespace groups related functions',
-      'export makes functions accessible',
-    ],
+    expected:
+      'namespace Utils { export function add(a: number, b: number): number { return a + b; } export function multiply(a: number, b: number): number { return a * b; } }',
+    sample:
+      'namespace Utils { export function add(a: number, b: number): number { return a + b; } export function multiply(a: number, b: number): number { return a * b; } }',
+    hints: ['namespace groups related functions', 'export makes functions accessible'],
     tags: ['namespaces', 'basic', 'functions'],
   },
   {
@@ -4129,12 +3897,11 @@ export const typescriptProblems: Problem[] = [
     text: 'Declare an interface with typed getters and setters',
     setup: '// Declare interface with accessors',
     setupCode: '// Declare interface with accessors',
-    expected: 'declare interface Person { get name(): string; set name(value: string); get age(): number; readonly id: string; }',
-    sample: 'declare interface Person { get name(): string; set name(value: string); get age(): number; readonly id: string; }',
-    hints: [
-      'get/set keywords for accessors',
-      'readonly for get-only properties',
-    ],
+    expected:
+      'declare interface Person { get name(): string; set name(value: string); get age(): number; readonly id: string; }',
+    sample:
+      'declare interface Person { get name(): string; set name(value: string); get age(): number; readonly id: string; }',
+    hints: ['get/set keywords for accessors', 'readonly for get-only properties'],
     tags: ['declarations', 'interface', 'accessors'],
   },
   {
@@ -4145,8 +3912,10 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a complete module declaration with types, values, and namespace',
     setup: '// Complete module system',
     setupCode: '// Complete module system',
-    expected: 'declare module "complete-lib" { export interface Options { timeout: number; retries: number; } export type Status = "idle" | "loading" | "success" | "error"; export function init(options: Options): void; export function getStatus(): Status; export namespace internal { export function reset(): void; export const version: string; } export default { init, getStatus }; }',
-    sample: 'declare module "complete-lib" { export interface Options { timeout: number; retries: number; } export type Status = "idle" | "loading" | "success" | "error"; export function init(options: Options): void; export function getStatus(): Status; export namespace internal { export function reset(): void; export const version: string; } export default { init, getStatus }; }',
+    expected:
+      'declare module "complete-lib" { export interface Options { timeout: number; retries: number; } export type Status = "idle" | "loading" | "success" | "error"; export function init(options: Options): void; export function getStatus(): Status; export namespace internal { export function reset(): void; export const version: string; } export default { init, getStatus }; }',
+    sample:
+      'declare module "complete-lib" { export interface Options { timeout: number; retries: number; } export type Status = "idle" | "loading" | "success" | "error"; export function init(options: Options): void; export function getStatus(): Status; export namespace internal { export function reset(): void; export const version: string; } export default { init, getStatus }; }',
     hints: [
       'Combine interfaces, types, functions, and namespaces',
       'Default export for main API surface',
@@ -4198,7 +3967,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const words = ["hello", "world", "typescript"];',
     setupCode: 'const words = ["hello", "world", "typescript"];',
     expected: 'typescript',
-    sample: 'function last<T>(arr: T[]): T | undefined { return arr[arr.length - 1]; }\nlast(words)',
+    sample:
+      'function last<T>(arr: T[]): T | undefined { return arr[arr.length - 1]; }\nlast(words)',
     hints: [
       'Access the last element using arr.length - 1',
       'Generic type T preserves the element type',
@@ -4214,11 +3984,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const a = "name"; const b = 42;',
     setupCode: 'const a = "name"; const b = 42;',
     expected: ['name', 42],
-    sample: 'function pair<T, U>(first: T, second: U): [T, U] { return [first, second]; }\npair(a, b)',
-    hints: [
-      'Use two type parameters T and U',
-      'Return type is a tuple [T, U]',
-    ],
+    sample:
+      'function pair<T, U>(first: T, second: U): [T, U] { return [first, second]; }\npair(a, b)',
+    hints: ['Use two type parameters T and U', 'Return type is a tuple [T, U]'],
     tags: ['generics', 'functions', 'tuples', 'multiple-type-params'],
   },
   {
@@ -4230,11 +3998,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const original: [number, string] = [1, "one"];',
     setupCode: 'const original: [number, string] = [1, "one"];',
     expected: ['one', 1],
-    sample: 'function swap<T, U>(pair: [T, U]): [U, T] { return [pair[1], pair[0]]; }\nswap(original)',
-    hints: [
-      'Input is [T, U], output should be [U, T]',
-      'Destructure or index to swap elements',
-    ],
+    sample:
+      'function swap<T, U>(pair: [T, U]): [U, T] { return [pair[1], pair[0]]; }\nswap(original)',
+    hints: ['Input is [T, U], output should be [U, T]', 'Destructure or index to swap elements'],
     tags: ['generics', 'functions', 'tuples'],
   },
   {
@@ -4247,10 +4013,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const data = "wrapped";',
     expected: { value: 'wrapped' },
     sample: 'function wrap<T>(value: T): { value: T } { return { value }; }\nwrap(data)',
-    hints: [
-      'Return an object with a value property',
-      'The value property type should be T',
-    ],
+    hints: ['Return an object with a value property', 'The value property type should be T'],
     tags: ['generics', 'functions', 'objects'],
   },
   {
@@ -4263,10 +4026,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const items = [1, 2, 3, 4, 5];',
     expected: 5,
     sample: 'function len<T>(arr: T[]): number { return arr.length; }\nlen(items)',
-    hints: [
-      'Generic preserves array element type info',
-      'Return type is always number',
-    ],
+    hints: ['Generic preserves array element type info', 'Return type is always number'],
     tags: ['generics', 'functions', 'arrays'],
   },
   {
@@ -4278,11 +4038,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const maybeValue: string | null = null; const defaultVal = "default";',
     setupCode: 'const maybeValue: string | null = null; const defaultVal = "default";',
     expected: 'default',
-    sample: 'function withDefault<T>(value: T | null | undefined, defaultValue: T): T { return value ?? defaultValue; }\nwithDefault(maybeValue, defaultVal)',
-    hints: [
-      'Use nullish coalescing operator ??',
-      'Both value and default should have same type T',
-    ],
+    sample:
+      'function withDefault<T>(value: T | null | undefined, defaultValue: T): T { return value ?? defaultValue; }\nwithDefault(maybeValue, defaultVal)',
+    hints: ['Use nullish coalescing operator ??', 'Both value and default should have same type T'],
     tags: ['generics', 'functions', 'nullish'],
   },
   {
@@ -4294,11 +4052,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const count = 3; const item = "x";',
     setupCode: 'const count = 3; const item = "x";',
     expected: ['x', 'x', 'x'],
-    sample: 'function fill<T>(n: number, value: T): T[] { return Array(n).fill(value); }\nfill(count, item)',
-    hints: [
-      'Use Array(n).fill(value)',
-      'Return type is T[]',
-    ],
+    sample:
+      'function fill<T>(n: number, value: T): T[] { return Array(n).fill(value); }\nfill(count, item)',
+    hints: ['Use Array(n).fill(value)', 'Return type is T[]'],
     tags: ['generics', 'functions', 'arrays'],
   },
   {
@@ -4311,10 +4067,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const original = [1, 2, 3];',
     expected: [3, 2, 1],
     sample: 'function reverse<T>(arr: T[]): T[] { return [...arr].reverse(); }\nreverse(original)',
-    hints: [
-      'Spread the array first to avoid mutation',
-      'Then call reverse() on the copy',
-    ],
+    hints: ['Spread the array first to avoid mutation', 'Then call reverse() on the copy'],
     tags: ['generics', 'functions', 'arrays', 'immutable'],
   },
 
@@ -4346,11 +4099,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface ApiResponse<T> { data: T; status: number; }',
     setupCode: 'interface ApiResponse<T> { data: T; status: number; }',
     expected: { data: { name: 'Alice' }, status: 200 },
-    sample: 'const response: ApiResponse<{ name: string }> = { data: { name: "Alice" }, status: 200 };\nresponse',
-    hints: [
-      'The data property type is determined by T',
-      'Status is always a number',
-    ],
+    sample:
+      'const response: ApiResponse<{ name: string }> = { data: { name: "Alice" }, status: 200 };\nresponse',
+    hints: ['The data property type is determined by T', 'Status is always a number'],
     tags: ['generics', 'interfaces', 'api'],
   },
   {
@@ -4414,7 +4165,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const str = "hello"; const arr = [1, 2, 3];',
     setupCode: 'const str = "hello"; const arr = [1, 2, 3];',
     expected: 5,
-    sample: 'function getLength<T extends { length: number }>(arg: T): number { return arg.length; }\ngetLength(str)',
+    sample:
+      'function getLength<T extends { length: number }>(arg: T): number { return arg.length; }\ngetLength(str)',
     hints: [
       'Use extends to constrain T to types with length',
       'Both strings and arrays have length property',
@@ -4430,7 +4182,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const person = { name: "Alice", age: 30 };',
     setupCode: 'const person = { name: "Alice", age: 30 };',
     expected: 'Alice',
-    sample: 'function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] { return obj[key]; }\ngetProperty(person, "name")',
+    sample:
+      'function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] { return obj[key]; }\ngetProperty(person, "name")',
     hints: [
       'K extends keyof T constrains K to valid keys of T',
       'Return type T[K] is the type of that property',
@@ -4462,11 +4215,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const nums1 = [1, 2]; const nums2 = [3, 4];',
     setupCode: 'const nums1 = [1, 2]; const nums2 = [3, 4];',
     expected: [1, 2, 3, 4],
-    sample: 'function merge<T>(arr1: T[], arr2: T[]): T[] { return [...arr1, ...arr2]; }\nmerge(nums1, nums2)',
-    hints: [
-      'Both arrays must have the same element type T',
-      'Spread both arrays into a new array',
-    ],
+    sample:
+      'function merge<T>(arr1: T[], arr2: T[]): T[] { return [...arr1, ...arr2]; }\nmerge(nums1, nums2)',
+    hints: ['Both arrays must have the same element type T', 'Spread both arrays into a new array'],
     tags: ['generics', 'constraints', 'arrays'],
   },
   {
@@ -4478,11 +4229,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const obj = { x: 10, y: 20 };',
     setupCode: 'const obj = { x: 10, y: 20 };',
     expected: ['x', 'y'],
-    sample: 'function keys<T extends object>(obj: T): (keyof T)[] { return Object.keys(obj) as (keyof T)[]; }\nkeys(obj)',
-    hints: [
-      'T extends object excludes primitive types',
-      'Cast Object.keys result to (keyof T)[]',
-    ],
+    sample:
+      'function keys<T extends object>(obj: T): (keyof T)[] { return Object.keys(obj) as (keyof T)[]; }\nkeys(obj)',
+    hints: ['T extends object excludes primitive types', 'Cast Object.keys result to (keyof T)[]'],
     tags: ['generics', 'constraints', 'objects'],
   },
   {
@@ -4494,7 +4243,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'class Point { constructor(public x: number, public y: number) {} }',
     setupCode: 'class Point { constructor(public x: number, public y: number) {} }',
     expected: { x: 5, y: 10 },
-    sample: 'function create<T>(ctor: new (x: number, y: number) => T, x: number, y: number): T { return new ctor(x, y); }\ncreate(Point, 5, 10)',
+    sample:
+      'function create<T>(ctor: new (x: number, y: number) => T, x: number, y: number): T { return new ctor(x, y); }\ncreate(Point, 5, 10)',
     hints: [
       'Use new (...args) => T to represent a constructor',
       'The constraint ensures ctor can be called with new',
@@ -4507,14 +4257,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Multiple Constraints',
     text: 'Create a generic function with multiple constraints using intersection',
-    setup: 'interface Named { name: string; }\ninterface Aged { age: number; }\nconst person = { name: "Bob", age: 25 };',
-    setupCode: 'interface Named { name: string; }\ninterface Aged { age: number; }\nconst person = { name: "Bob", age: 25 };',
+    setup:
+      'interface Named { name: string; }\ninterface Aged { age: number; }\nconst person = { name: "Bob", age: 25 };',
+    setupCode:
+      'interface Named { name: string; }\ninterface Aged { age: number; }\nconst person = { name: "Bob", age: 25 };',
     expected: 'Bob is 25 years old',
-    sample: 'function describe<T extends Named & Aged>(entity: T): string { return `${entity.name} is ${entity.age} years old`; }\ndescribe(person)',
-    hints: [
-      'Use & to combine multiple constraints',
-      'T must have both name and age properties',
-    ],
+    sample:
+      'function describe<T extends Named & Aged>(entity: T): string { return `${entity.name} is ${entity.age} years old`; }\ndescribe(person)',
+    hints: ['Use & to combine multiple constraints', 'T must have both name and age properties'],
     tags: ['generics', 'constraints', 'intersection'],
   },
 
@@ -4546,11 +4296,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type EventHandler<E = Event> = (event: E) => void;',
     setupCode: 'type EventHandler<E = Event> = (event: E) => void;',
     expected: 'function',
-    sample: 'const handler: EventHandler<MouseEvent> = (e) => console.log(e.clientX);\ntypeof handler',
-    hints: [
-      'Default type is Event',
-      'Can be overridden with specific event type',
-    ],
+    sample:
+      'const handler: EventHandler<MouseEvent> = (e) => console.log(e.clientX);\ntypeof handler',
+    hints: ['Default type is Event', 'Can be overridden with specific event type'],
     tags: ['generics', 'default-type', 'events'],
   },
   {
@@ -4562,11 +4310,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type State<T = {}> = { current: T; previous: T | null };',
     setupCode: 'type State<T = {}> = { current: T; previous: T | null };',
     expected: { current: { count: 0 }, previous: null },
-    sample: 'const state: State<{ count: number }> = { current: { count: 0 }, previous: null };\nstate',
-    hints: [
-      'Default type is empty object {}',
-      'Can be specialized with specific state shape',
-    ],
+    sample:
+      'const state: State<{ count: number }> = { current: { count: 0 }, previous: null };\nstate',
+    hints: ['Default type is empty object {}', 'Can be specialized with specific state shape'],
     tags: ['generics', 'default-type', 'state'],
   },
   {
@@ -4615,10 +4361,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function firstElement<T>(arr: T[]): T | undefined { return arr[0]; }',
     expected: 1,
     sample: 'firstElement([1, 2, 3])',
-    hints: [
-      'T is inferred as number from the array literal',
-      'Works with any array type',
-    ],
+    hints: ['T is inferred as number from the array literal', 'Works with any array type'],
     tags: ['generics', 'inference', 'arrays'],
   },
   {
@@ -4627,14 +4370,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Inference from Multiple Args',
     text: 'Infer type from multiple arguments of the same type',
-    setup: 'function longest<T extends { length: number }>(a: T, b: T): T { return a.length >= b.length ? a : b; }',
-    setupCode: 'function longest<T extends { length: number }>(a: T, b: T): T { return a.length >= b.length ? a : b; }',
+    setup:
+      'function longest<T extends { length: number }>(a: T, b: T): T { return a.length >= b.length ? a : b; }',
+    setupCode:
+      'function longest<T extends { length: number }>(a: T, b: T): T { return a.length >= b.length ? a : b; }',
     expected: 'longer',
     sample: 'longest("hi", "longer")',
-    hints: [
-      'Both arguments must be of the same type T',
-      'T is inferred from the common type',
-    ],
+    hints: ['Both arguments must be of the same type T', 'T is inferred from the common type'],
     tags: ['generics', 'inference', 'constraints'],
   },
   {
@@ -4647,10 +4389,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function map<T, U>(arr: T[], fn: (item: T) => U): U[] { return arr.map(fn); }',
     expected: [2, 4, 6],
     sample: 'map([1, 2, 3], x => x * 2)',
-    hints: [
-      'T is inferred from the array elements',
-      'U is inferred from the callback return type',
-    ],
+    hints: ['T is inferred from the array elements', 'U is inferred from the callback return type'],
     tags: ['generics', 'inference', 'callbacks'],
   },
 
@@ -4683,10 +4422,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Flatten<T> = T extends (infer U)[] ? U : T;',
     expected: 42,
     sample: 'const val: Flatten<number[]> = 42;\nval',
-    hints: [
-      'Use infer to extract the array element type',
-      'Returns T unchanged if not an array',
-    ],
+    hints: ['Use infer to extract the array element type', 'Returns T unchanged if not an array'],
     tags: ['generics', 'conditional-types', 'infer'],
   },
   {
@@ -4699,10 +4435,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type GetReturnType<T> = T extends (...args: any[]) => infer R ? R : never;',
     expected: 'number',
     sample: 'type Fn = () => number;\nconst returnType: GetReturnType<Fn> = 42;\ntypeof returnType',
-    hints: [
-      'Use infer R to capture the return type',
-      'Pattern matches function signature',
-    ],
+    hints: ['Use infer R to capture the return type', 'Pattern matches function signature'],
     tags: ['generics', 'conditional-types', 'infer', 'functions'],
   },
   {
@@ -4712,13 +4445,12 @@ export const typescriptProblems: Problem[] = [
     title: 'Conditional Type for Parameters',
     text: 'Create a type that extracts the first parameter type of a function',
     setup: 'type FirstParam<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;',
-    setupCode: 'type FirstParam<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;',
+    setupCode:
+      'type FirstParam<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;',
     expected: 'hello',
-    sample: 'type Fn = (s: string, n: number) => void;\nconst param: FirstParam<Fn> = "hello";\nparam',
-    hints: [
-      'Use infer F to capture the first parameter',
-      'Rest parameters handle remaining args',
-    ],
+    sample:
+      'type Fn = (s: string, n: number) => void;\nconst param: FirstParam<Fn> = "hello";\nparam',
+    hints: ['Use infer F to capture the first parameter', 'Rest parameters handle remaining args'],
     tags: ['generics', 'conditional-types', 'infer', 'parameters'],
   },
   {
@@ -4759,14 +4491,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Conditional Type with infer in Nested Position',
     text: 'Extract the promise value type from a nested Promise',
-    setup: 'type UnwrapPromise<T> = T extends Promise<infer U> ? (U extends Promise<infer V> ? V : U) : T;',
-    setupCode: 'type UnwrapPromise<T> = T extends Promise<infer U> ? (U extends Promise<infer V> ? V : U) : T;',
+    setup:
+      'type UnwrapPromise<T> = T extends Promise<infer U> ? (U extends Promise<infer V> ? V : U) : T;',
+    setupCode:
+      'type UnwrapPromise<T> = T extends Promise<infer U> ? (U extends Promise<infer V> ? V : U) : T;',
     expected: 'resolved',
-    sample: 'type Nested = Promise<Promise<string>>;\nconst val: UnwrapPromise<Nested> = "resolved";\nval',
-    hints: [
-      'Check for Promise wrapper recursively',
-      'Nested infer unwraps multiple layers',
-    ],
+    sample:
+      'type Nested = Promise<Promise<string>>;\nconst val: UnwrapPromise<Nested> = "resolved";\nval',
+    hints: ['Check for Promise wrapper recursively', 'Nested infer unwraps multiple layers'],
     tags: ['generics', 'conditional-types', 'infer', 'promise'],
   },
 
@@ -4782,11 +4514,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyPartial<T> = { [K in keyof T]?: T[K] };',
     setupCode: 'type MyPartial<T> = { [K in keyof T]?: T[K] };',
     expected: { name: 'Alice' },
-    sample: 'interface User { name: string; age: number; }\nconst partial: MyPartial<User> = { name: "Alice" };\npartial',
-    hints: [
-      '[K in keyof T] iterates over all keys',
-      '? makes each property optional',
-    ],
+    sample:
+      'interface User { name: string; age: number; }\nconst partial: MyPartial<User> = { name: "Alice" };\npartial',
+    hints: ['[K in keyof T] iterates over all keys', '? makes each property optional'],
     tags: ['generics', 'mapped-types'],
   },
   {
@@ -4798,11 +4528,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyReadonly<T> = { readonly [K in keyof T]: T[K] };',
     setupCode: 'type MyReadonly<T> = { readonly [K in keyof T]: T[K] };',
     expected: { x: 10, y: 20 },
-    sample: 'interface Point { x: number; y: number; }\nconst p: MyReadonly<Point> = { x: 10, y: 20 };\np',
-    hints: [
-      'Add readonly modifier before property',
-      'Properties cannot be reassigned',
-    ],
+    sample:
+      'interface Point { x: number; y: number; }\nconst p: MyReadonly<Point> = { x: 10, y: 20 };\np',
+    hints: ['Add readonly modifier before property', 'Properties cannot be reassigned'],
     tags: ['generics', 'mapped-types', 'readonly'],
   },
   {
@@ -4814,11 +4542,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Mutable<T> = { -readonly [K in keyof T]: T[K] };',
     setupCode: 'type Mutable<T> = { -readonly [K in keyof T]: T[K] };',
     expected: { x: 5, y: 15 },
-    sample: 'interface ReadonlyPoint { readonly x: number; readonly y: number; }\nconst p: Mutable<ReadonlyPoint> = { x: 5, y: 15 };\np.x = 5;\np',
-    hints: [
-      '-readonly removes the readonly modifier',
-      'Properties become mutable',
-    ],
+    sample:
+      'interface ReadonlyPoint { readonly x: number; readonly y: number; }\nconst p: Mutable<ReadonlyPoint> = { x: 5, y: 15 };\np.x = 5;\np',
+    hints: ['-readonly removes the readonly modifier', 'Properties become mutable'],
     tags: ['generics', 'mapped-types', 'mutable'],
   },
   {
@@ -4830,11 +4556,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyRequired<T> = { [K in keyof T]-?: T[K] };',
     setupCode: 'type MyRequired<T> = { [K in keyof T]-?: T[K] };',
     expected: { name: 'Bob', age: 30 },
-    sample: 'interface PartialUser { name?: string; age?: number; }\nconst user: MyRequired<PartialUser> = { name: "Bob", age: 30 };\nuser',
-    hints: [
-      '-? removes the optional modifier',
-      'All properties become required',
-    ],
+    sample:
+      'interface PartialUser { name?: string; age?: number; }\nconst user: MyRequired<PartialUser> = { name: "Bob", age: 30 };\nuser',
+    hints: ['-? removes the optional modifier', 'All properties become required'],
     tags: ['generics', 'mapped-types', 'required'],
   },
   {
@@ -4846,11 +4570,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Flags<T> = { [K in keyof T]: boolean };',
     setupCode: 'type Flags<T> = { [K in keyof T]: boolean };',
     expected: { name: true, age: false },
-    sample: 'interface User { name: string; age: number; }\nconst flags: Flags<User> = { name: true, age: false };\nflags',
-    hints: [
-      'Replace T[K] with boolean',
-      'All values become booleans',
-    ],
+    sample:
+      'interface User { name: string; age: number; }\nconst flags: Flags<User> = { name: true, age: false };\nflags',
+    hints: ['Replace T[K] with boolean', 'All values become booleans'],
     tags: ['generics', 'mapped-types', 'transformation'],
   },
   {
@@ -4859,14 +4581,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Mapped Type with Filtering',
     text: 'Create a mapped type that extracts only string properties',
-    setup: 'type StringProperties<T> = { [K in keyof T as T[K] extends string ? K : never]: T[K] };',
-    setupCode: 'type StringProperties<T> = { [K in keyof T as T[K] extends string ? K : never]: T[K] };',
+    setup:
+      'type StringProperties<T> = { [K in keyof T as T[K] extends string ? K : never]: T[K] };',
+    setupCode:
+      'type StringProperties<T> = { [K in keyof T as T[K] extends string ? K : never]: T[K] };',
     expected: { name: 'Alice', email: 'alice@test.com' },
-    sample: 'interface User { name: string; age: number; email: string; }\nconst strings: StringProperties<User> = { name: "Alice", email: "alice@test.com" };\nstrings',
-    hints: [
-      'Use as clause with conditional type',
-      'never keys are filtered out',
-    ],
+    sample:
+      'interface User { name: string; age: number; email: string; }\nconst strings: StringProperties<User> = { name: "Alice", email: "alice@test.com" };\nstrings',
+    hints: ['Use as clause with conditional type', 'never keys are filtered out'],
     tags: ['generics', 'mapped-types', 'filtering', 'key-remapping'],
   },
   {
@@ -4875,14 +4597,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Mapped Type Deep Readonly',
     text: 'Create a recursive mapped type for deep readonly',
-    setup: 'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
-    setupCode: 'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
+    setup:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
+    setupCode:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
     expected: { user: { name: 'Alice' } },
-    sample: 'interface Data { user: { name: string } }\nconst data: DeepReadonly<Data> = { user: { name: "Alice" } };\ndata',
-    hints: [
-      'Recursively apply readonly to nested objects',
-      'Check if property extends object',
-    ],
+    sample:
+      'interface Data { user: { name: string } }\nconst data: DeepReadonly<Data> = { user: { name: "Alice" } };\ndata',
+    hints: ['Recursively apply readonly to nested objects', 'Check if property extends object'],
     tags: ['generics', 'mapped-types', 'deep-readonly', 'recursive'],
   },
 
@@ -4898,11 +4620,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type UppercaseKeys<T> = { [K in keyof T as Uppercase<string & K>]: T[K] };',
     setupCode: 'type UppercaseKeys<T> = { [K in keyof T as Uppercase<string & K>]: T[K] };',
     expected: { NAME: 'Alice', AGE: 30 },
-    sample: 'interface User { name: string; age: number; }\nconst upper: UppercaseKeys<User> = { NAME: "Alice", AGE: 30 };\nupper',
-    hints: [
-      'Use as clause to remap keys',
-      'Uppercase<string & K> transforms key to uppercase',
-    ],
+    sample:
+      'interface User { name: string; age: number; }\nconst upper: UppercaseKeys<User> = { NAME: "Alice", AGE: 30 };\nupper',
+    hints: ['Use as clause to remap keys', 'Uppercase<string & K> transforms key to uppercase'],
     tags: ['generics', 'key-remapping', 'template-literal'],
   },
   {
@@ -4912,13 +4632,12 @@ export const typescriptProblems: Problem[] = [
     title: 'Key Remapping with Prefix',
     text: 'Create a mapped type that prefixes all keys with "get"',
     setup: 'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };',
-    setupCode: 'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };',
+    setupCode:
+      'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };',
     expected: 'function',
-    sample: 'interface User { name: string; }\nconst getters: Getters<User> = { getName: () => "Alice" };\ntypeof getters.getName',
-    hints: [
-      'Template literal creates new key name',
-      'Capitalize ensures proper camelCase',
-    ],
+    sample:
+      'interface User { name: string; }\nconst getters: Getters<User> = { getName: () => "Alice" };\ntypeof getters.getName',
+    hints: ['Template literal creates new key name', 'Capitalize ensures proper camelCase'],
     tags: ['generics', 'key-remapping', 'getters'],
   },
   {
@@ -4927,14 +4646,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Key Remapping with Setter Pattern',
     text: 'Create a mapped type that creates setters for all properties',
-    setup: 'type Setters<T> = { [K in keyof T as `set${Capitalize<string & K>}`]: (value: T[K]) => void };',
-    setupCode: 'type Setters<T> = { [K in keyof T as `set${Capitalize<string & K>}`]: (value: T[K]) => void };',
+    setup:
+      'type Setters<T> = { [K in keyof T as `set${Capitalize<string & K>}`]: (value: T[K]) => void };',
+    setupCode:
+      'type Setters<T> = { [K in keyof T as `set${Capitalize<string & K>}`]: (value: T[K]) => void };',
     expected: 'function',
-    sample: 'interface User { name: string; }\nconst setters: Setters<User> = { setName: (v) => console.log(v) };\ntypeof setters.setName',
-    hints: [
-      'Setter function takes value of property type',
-      'Returns void as setters typically do',
-    ],
+    sample:
+      'interface User { name: string; }\nconst setters: Setters<User> = { setName: (v) => console.log(v) };\ntypeof setters.setName',
+    hints: ['Setter function takes value of property type', 'Returns void as setters typically do'],
     tags: ['generics', 'key-remapping', 'setters'],
   },
   {
@@ -4943,14 +4662,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Key Remapping Filter and Transform',
     text: 'Create a type that only keeps function properties and prefixes them with "call"',
-    setup: 'type CallableMethods<T> = { [K in keyof T as T[K] extends Function ? `call${Capitalize<string & K>}` : never]: T[K] };',
-    setupCode: 'type CallableMethods<T> = { [K in keyof T as T[K] extends Function ? `call${Capitalize<string & K>}` : never]: T[K] };',
+    setup:
+      'type CallableMethods<T> = { [K in keyof T as T[K] extends Function ? `call${Capitalize<string & K>}` : never]: T[K] };',
+    setupCode:
+      'type CallableMethods<T> = { [K in keyof T as T[K] extends Function ? `call${Capitalize<string & K>}` : never]: T[K] };',
     expected: 'function',
-    sample: 'interface Obj { name: string; greet: () => string; }\nconst callable: CallableMethods<Obj> = { callGreet: () => "hi" };\ntypeof callable.callGreet',
-    hints: [
-      'Filter with conditional type in as clause',
-      'Only function properties are kept',
-    ],
+    sample:
+      'interface Obj { name: string; greet: () => string; }\nconst callable: CallableMethods<Obj> = { callGreet: () => "hi" };\ntypeof callable.callGreet',
+    hints: ['Filter with conditional type in as clause', 'Only function properties are kept'],
     tags: ['generics', 'key-remapping', 'filtering', 'functions'],
   },
 
@@ -4967,10 +4686,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type EventName<T extends string> = `on${Capitalize<T>}`;',
     expected: 'onClick',
     sample: 'const event: EventName<"click"> = "onClick";\nevent',
-    hints: [
-      'Template literal types use backticks',
-      'Capitalize transforms first letter',
-    ],
+    hints: ['Template literal types use backticks', 'Capitalize transforms first letter'],
     tags: ['generics', 'template-literal'],
   },
   {
@@ -5011,14 +4727,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Template Literal Split Type',
     text: 'Create a type that splits a string at a delimiter',
-    setup: 'type Split<S extends string, D extends string> = S extends `${infer H}${D}${infer T}` ? [H, ...Split<T, D>] : [S];',
-    setupCode: 'type Split<S extends string, D extends string> = S extends `${infer H}${D}${infer T}` ? [H, ...Split<T, D>] : [S];',
+    setup:
+      'type Split<S extends string, D extends string> = S extends `${infer H}${D}${infer T}` ? [H, ...Split<T, D>] : [S];',
+    setupCode:
+      'type Split<S extends string, D extends string> = S extends `${infer H}${D}${infer T}` ? [H, ...Split<T, D>] : [S];',
     expected: ['a', 'b', 'c'],
     sample: 'const parts: Split<"a-b-c", "-"> = ["a", "b", "c"];\nparts',
-    hints: [
-      'Recursively match and split string',
-      'Base case returns single element array',
-    ],
+    hints: ['Recursively match and split string', 'Base case returns single element array'],
     tags: ['generics', 'template-literal', 'recursive', 'split'],
   },
   {
@@ -5027,8 +4742,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Template Literal Join Type',
     text: 'Create a type that joins tuple elements with a delimiter',
-    setup: 'type Join<T extends string[], D extends string> = T extends [infer F extends string, ...infer R extends string[]] ? R["length"] extends 0 ? F : `${F}${D}${Join<R, D>}` : "";',
-    setupCode: 'type Join<T extends string[], D extends string> = T extends [infer F extends string, ...infer R extends string[]] ? R["length"] extends 0 ? F : `${F}${D}${Join<R, D>}` : "";',
+    setup:
+      'type Join<T extends string[], D extends string> = T extends [infer F extends string, ...infer R extends string[]] ? R["length"] extends 0 ? F : `${F}${D}${Join<R, D>}` : "";',
+    setupCode:
+      'type Join<T extends string[], D extends string> = T extends [infer F extends string, ...infer R extends string[]] ? R["length"] extends 0 ? F : `${F}${D}${Join<R, D>}` : "";',
     expected: 'a-b-c',
     sample: 'const joined: Join<["a", "b", "c"], "-"> = "a-b-c";\njoined',
     hints: [
@@ -5047,14 +4764,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Covariance in Return Types',
     text: 'Demonstrate covariance with function return types',
-    setup: 'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalFactory = () => Animal;\ntype DogFactory = () => Dog;',
-    setupCode: 'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalFactory = () => Animal;\ntype DogFactory = () => Dog;',
+    setup:
+      'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalFactory = () => Animal;\ntype DogFactory = () => Dog;',
+    setupCode:
+      'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalFactory = () => Animal;\ntype DogFactory = () => Dog;',
     expected: { name: 'Rex', breed: 'German Shepherd' },
-    sample: 'const dogFactory: DogFactory = () => ({ name: "Rex", breed: "German Shepherd" });\nconst animalFactory: AnimalFactory = dogFactory;\nanimalFactory()',
-    hints: [
-      'Return types are covariant',
-      'DogFactory is assignable to AnimalFactory',
-    ],
+    sample:
+      'const dogFactory: DogFactory = () => ({ name: "Rex", breed: "German Shepherd" });\nconst animalFactory: AnimalFactory = dogFactory;\nanimalFactory()',
+    hints: ['Return types are covariant', 'DogFactory is assignable to AnimalFactory'],
     tags: ['generics', 'variance', 'covariance'],
   },
   {
@@ -5063,10 +4780,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Contravariance in Parameters',
     text: 'Demonstrate contravariance with function parameters',
-    setup: 'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalHandler = (animal: Animal) => void;\ntype DogHandler = (dog: Dog) => void;',
-    setupCode: 'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalHandler = (animal: Animal) => void;\ntype DogHandler = (dog: Dog) => void;',
+    setup:
+      'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalHandler = (animal: Animal) => void;\ntype DogHandler = (dog: Dog) => void;',
+    setupCode:
+      'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\ntype AnimalHandler = (animal: Animal) => void;\ntype DogHandler = (dog: Dog) => void;',
     expected: 'handled',
-    sample: 'const animalHandler: AnimalHandler = (a) => console.log(a.name);\nconst handler: DogHandler = animalHandler;\n"handled"',
+    sample:
+      'const animalHandler: AnimalHandler = (a) => console.log(a.name);\nconst handler: DogHandler = animalHandler;\n"handled"',
     hints: [
       'Parameter types are contravariant',
       'AnimalHandler can be used where DogHandler is expected',
@@ -5079,8 +4799,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Invariant Generic Type',
     text: 'Create an invariant container type',
-    setup: 'class Container<T> { private value: T; constructor(value: T) { this.value = value; } get(): T { return this.value; } set(value: T) { this.value = value; } }',
-    setupCode: 'class Container<T> { private value: T; constructor(value: T) { this.value = value; } get(): T { return this.value; } set(value: T) { this.value = value; } }',
+    setup:
+      'class Container<T> { private value: T; constructor(value: T) { this.value = value; } get(): T { return this.value; } set(value: T) { this.value = value; } }',
+    setupCode:
+      'class Container<T> { private value: T; constructor(value: T) { this.value = value; } get(): T { return this.value; } set(value: T) { this.value = value; } }',
     expected: 42,
     sample: 'const container = new Container(42);\ncontainer.get()',
     hints: [
@@ -5099,10 +4821,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Basic Generic Class',
     text: 'Create a generic Stack class with push and pop methods',
-    setup: 'class Stack<T> { private items: T[] = []; push(item: T) { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } }',
-    setupCode: 'class Stack<T> { private items: T[] = []; push(item: T) { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } }',
+    setup:
+      'class Stack<T> { private items: T[] = []; push(item: T) { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } }',
+    setupCode:
+      'class Stack<T> { private items: T[] = []; push(item: T) { this.items.push(item); } pop(): T | undefined { return this.items.pop(); } }',
     expected: 3,
-    sample: 'const stack = new Stack<number>();\nstack.push(1);\nstack.push(2);\nstack.push(3);\nstack.pop()',
+    sample:
+      'const stack = new Stack<number>();\nstack.push(1);\nstack.push(2);\nstack.push(3);\nstack.pop()',
     hints: [
       'Generic class maintains type safety for its contents',
       'T is determined when instantiating',
@@ -5115,14 +4840,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Queue Class',
     text: 'Create a generic Queue class with enqueue and dequeue methods',
-    setup: 'class Queue<T> { private items: T[] = []; enqueue(item: T) { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } }',
-    setupCode: 'class Queue<T> { private items: T[] = []; enqueue(item: T) { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } }',
+    setup:
+      'class Queue<T> { private items: T[] = []; enqueue(item: T) { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } }',
+    setupCode:
+      'class Queue<T> { private items: T[] = []; enqueue(item: T) { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } }',
     expected: 'first',
-    sample: 'const queue = new Queue<string>();\nqueue.enqueue("first");\nqueue.enqueue("second");\nqueue.dequeue()',
-    hints: [
-      'Queue is FIFO (first in, first out)',
-      'Use shift() to remove from front',
-    ],
+    sample:
+      'const queue = new Queue<string>();\nqueue.enqueue("first");\nqueue.enqueue("second");\nqueue.dequeue()',
+    hints: ['Queue is FIFO (first in, first out)', 'Use shift() to remove from front'],
     tags: ['generics', 'class', 'queue'],
   },
   {
@@ -5131,10 +4856,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Repository Class',
     text: 'Create a generic repository class for CRUD operations',
-    setup: 'class Repository<T extends { id: number }> {\n  private items: T[] = [];\n  add(item: T) { this.items.push(item); }\n  findById(id: number): T | undefined { return this.items.find(i => i.id === id); }\n  getAll(): T[] { return [...this.items]; }\n}',
-    setupCode: 'class Repository<T extends { id: number }> {\n  private items: T[] = [];\n  add(item: T) { this.items.push(item); }\n  findById(id: number): T | undefined { return this.items.find(i => i.id === id); }\n  getAll(): T[] { return [...this.items]; }\n}',
+    setup:
+      'class Repository<T extends { id: number }> {\n  private items: T[] = [];\n  add(item: T) { this.items.push(item); }\n  findById(id: number): T | undefined { return this.items.find(i => i.id === id); }\n  getAll(): T[] { return [...this.items]; }\n}',
+    setupCode:
+      'class Repository<T extends { id: number }> {\n  private items: T[] = [];\n  add(item: T) { this.items.push(item); }\n  findById(id: number): T | undefined { return this.items.find(i => i.id === id); }\n  getAll(): T[] { return [...this.items]; }\n}',
     expected: { id: 1, name: 'Alice' },
-    sample: 'interface User { id: number; name: string; }\nconst repo = new Repository<User>();\nrepo.add({ id: 1, name: "Alice" });\nrepo.findById(1)',
+    sample:
+      'interface User { id: number; name: string; }\nconst repo = new Repository<User>();\nrepo.add({ id: 1, name: "Alice" });\nrepo.findById(1)',
     hints: [
       'Constraint T extends { id: number } ensures id property exists',
       'findById can safely access id on items',
@@ -5147,10 +4875,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Observable Class',
     text: 'Create a generic Observable class with subscribe and notify',
-    setup: 'class Observable<T> {\n  private observers: ((value: T) => void)[] = [];\n  subscribe(observer: (value: T) => void) { this.observers.push(observer); }\n  notify(value: T) { this.observers.forEach(o => o(value)); }\n}',
-    setupCode: 'class Observable<T> {\n  private observers: ((value: T) => void)[] = [];\n  subscribe(observer: (value: T) => void) { this.observers.push(observer); }\n  notify(value: T) { this.observers.forEach(o => o(value)); }\n}',
+    setup:
+      'class Observable<T> {\n  private observers: ((value: T) => void)[] = [];\n  subscribe(observer: (value: T) => void) { this.observers.push(observer); }\n  notify(value: T) { this.observers.forEach(o => o(value)); }\n}',
+    setupCode:
+      'class Observable<T> {\n  private observers: ((value: T) => void)[] = [];\n  subscribe(observer: (value: T) => void) { this.observers.push(observer); }\n  notify(value: T) { this.observers.forEach(o => o(value)); }\n}',
     expected: 'notified',
-    sample: 'const obs = new Observable<string>();\nlet result = "";\nobs.subscribe(v => result = v);\nobs.notify("notified");\nresult',
+    sample:
+      'const obs = new Observable<string>();\nlet result = "";\nobs.subscribe(v => result = v);\nobs.notify("notified");\nresult',
     hints: [
       'Observers are callbacks that receive values of type T',
       'notify calls all registered observers',
@@ -5163,10 +4894,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic State Machine Class',
     text: 'Create a generic state machine with typed transitions',
-    setup: 'class StateMachine<S extends string, E extends string> {\n  constructor(private state: S, private transitions: Record<S, Partial<Record<E, S>>>) {}\n  getState(): S { return this.state; }\n  dispatch(event: E): S {\n    const nextState = this.transitions[this.state]?.[event];\n    if (nextState) this.state = nextState;\n    return this.state;\n  }\n}',
-    setupCode: 'class StateMachine<S extends string, E extends string> {\n  constructor(private state: S, private transitions: Record<S, Partial<Record<E, S>>>) {}\n  getState(): S { return this.state; }\n  dispatch(event: E): S {\n    const nextState = this.transitions[this.state]?.[event];\n    if (nextState) this.state = nextState;\n    return this.state;\n  }\n}',
+    setup:
+      'class StateMachine<S extends string, E extends string> {\n  constructor(private state: S, private transitions: Record<S, Partial<Record<E, S>>>) {}\n  getState(): S { return this.state; }\n  dispatch(event: E): S {\n    const nextState = this.transitions[this.state]?.[event];\n    if (nextState) this.state = nextState;\n    return this.state;\n  }\n}',
+    setupCode:
+      'class StateMachine<S extends string, E extends string> {\n  constructor(private state: S, private transitions: Record<S, Partial<Record<E, S>>>) {}\n  getState(): S { return this.state; }\n  dispatch(event: E): S {\n    const nextState = this.transitions[this.state]?.[event];\n    if (nextState) this.state = nextState;\n    return this.state;\n  }\n}',
     expected: 'green',
-    sample: 'type Light = "red" | "yellow" | "green";\ntype Event = "next";\nconst sm = new StateMachine<Light, Event>("red", { red: { next: "green" }, green: { next: "yellow" }, yellow: { next: "red" } });\nsm.dispatch("next")',
+    sample:
+      'type Light = "red" | "yellow" | "green";\ntype Event = "next";\nconst sm = new StateMachine<Light, Event>("red", { red: { next: "green" }, green: { next: "yellow" }, yellow: { next: "red" } });\nsm.dispatch("next")',
     hints: [
       'S is constrained to string union for states',
       'Transitions map current state to events to next state',
@@ -5186,11 +4920,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyPick<T, K extends keyof T> = { [P in K]: T[P] };',
     setupCode: 'type MyPick<T, K extends keyof T> = { [P in K]: T[P] };',
     expected: { name: 'Alice' },
-    sample: 'interface User { name: string; age: number; email: string; }\nconst picked: MyPick<User, "name"> = { name: "Alice" };\npicked',
-    hints: [
-      'K extends keyof T ensures K is valid key of T',
-      'Iterate only over keys in K',
-    ],
+    sample:
+      'interface User { name: string; age: number; email: string; }\nconst picked: MyPick<User, "name"> = { name: "Alice" };\npicked',
+    hints: ['K extends keyof T ensures K is valid key of T', 'Iterate only over keys in K'],
     tags: ['generics', 'utility-types', 'pick'],
   },
   {
@@ -5202,11 +4934,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyOmit<T, K extends keyof T> = { [P in Exclude<keyof T, K>]: T[P] };',
     setupCode: 'type MyOmit<T, K extends keyof T> = { [P in Exclude<keyof T, K>]: T[P] };',
     expected: { age: 30, email: 'test@test.com' },
-    sample: 'interface User { name: string; age: number; email: string; }\nconst omitted: MyOmit<User, "name"> = { age: 30, email: "test@test.com" };\nomitted',
-    hints: [
-      'Use Exclude to remove K from keyof T',
-      'Iterate over remaining keys',
-    ],
+    sample:
+      'interface User { name: string; age: number; email: string; }\nconst omitted: MyOmit<User, "name"> = { age: 30, email: "test@test.com" };\nomitted',
+    hints: ['Use Exclude to remove K from keyof T', 'Iterate over remaining keys'],
     tags: ['generics', 'utility-types', 'omit'],
   },
   {
@@ -5234,11 +4964,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyExclude<T, U> = T extends U ? never : T;',
     setupCode: 'type MyExclude<T, U> = T extends U ? never : T;',
     expected: 'c',
-    sample: 'type ABC = "a" | "b" | "c";\nconst excluded: MyExclude<ABC, "a" | "b"> = "c";\nexcluded',
-    hints: [
-      'Distributive conditional type over union',
-      'Returns never for excluded types',
-    ],
+    sample:
+      'type ABC = "a" | "b" | "c";\nconst excluded: MyExclude<ABC, "a" | "b"> = "c";\nexcluded',
+    hints: ['Distributive conditional type over union', 'Returns never for excluded types'],
     tags: ['generics', 'utility-types', 'exclude', 'conditional-types'],
   },
   {
@@ -5250,11 +4978,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyExtract<T, U> = T extends U ? T : never;',
     setupCode: 'type MyExtract<T, U> = T extends U ? T : never;',
     expected: 'a',
-    sample: 'type ABC = "a" | "b" | "c";\nconst extracted: MyExtract<ABC, "a" | "d"> = "a";\nextracted',
-    hints: [
-      'Opposite of Exclude',
-      'Keeps types that extend U',
-    ],
+    sample:
+      'type ABC = "a" | "b" | "c";\nconst extracted: MyExtract<ABC, "a" | "d"> = "a";\nextracted',
+    hints: ['Opposite of Exclude', 'Keeps types that extend U'],
     tags: ['generics', 'utility-types', 'extract', 'conditional-types'],
   },
   {
@@ -5266,11 +4992,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyNonNullable<T> = T extends null | undefined ? never : T;',
     setupCode: 'type MyNonNullable<T> = T extends null | undefined ? never : T;',
     expected: 'hello',
-    sample: 'type MaybeString = string | null | undefined;\nconst value: MyNonNullable<MaybeString> = "hello";\nvalue',
-    hints: [
-      'Exclude null and undefined from union',
-      'Distributive conditional type does the work',
-    ],
+    sample:
+      'type MaybeString = string | null | undefined;\nconst value: MyNonNullable<MaybeString> = "hello";\nvalue',
+    hints: ['Exclude null and undefined from union', 'Distributive conditional type does the work'],
     tags: ['generics', 'utility-types', 'non-nullable', 'conditional-types'],
   },
   {
@@ -5279,14 +5003,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Implement Parameters Utility Type',
     text: 'Create your own Parameters utility type',
-    setup: 'type MyParameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;',
-    setupCode: 'type MyParameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;',
+    setup:
+      'type MyParameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;',
+    setupCode:
+      'type MyParameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;',
     expected: ['hello', 42],
-    sample: 'type Fn = (a: string, b: number) => void;\nconst params: MyParameters<Fn> = ["hello", 42];\nparams',
-    hints: [
-      'Use infer to capture the args tuple',
-      'Constraint ensures T is a function',
-    ],
+    sample:
+      'type Fn = (a: string, b: number) => void;\nconst params: MyParameters<Fn> = ["hello", 42];\nparams',
+    hints: ['Use infer to capture the args tuple', 'Constraint ensures T is a function'],
     tags: ['generics', 'utility-types', 'parameters', 'infer'],
   },
   {
@@ -5295,10 +5019,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Implement ConstructorParameters Utility Type',
     text: 'Create your own ConstructorParameters utility type',
-    setup: 'type MyConstructorParams<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;',
-    setupCode: 'type MyConstructorParams<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;',
+    setup:
+      'type MyConstructorParams<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;',
+    setupCode:
+      'type MyConstructorParams<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;',
     expected: ['Alice', 30],
-    sample: 'class User { constructor(public name: string, public age: number) {} }\nconst args: MyConstructorParams<typeof User> = ["Alice", 30];\nargs',
+    sample:
+      'class User { constructor(public name: string, public age: number) {} }\nconst args: MyConstructorParams<typeof User> = ["Alice", 30];\nargs',
     hints: [
       'Use new (...args) => any for constructor type',
       'infer P captures constructor parameters',
@@ -5311,10 +5038,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Implement InstanceType Utility Type',
     text: 'Create your own InstanceType utility type',
-    setup: 'type MyInstanceType<T extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : never;',
-    setupCode: 'type MyInstanceType<T extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : never;',
+    setup:
+      'type MyInstanceType<T extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : never;',
+    setupCode:
+      'type MyInstanceType<T extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : never;',
     expected: { name: 'Bob', age: 25 },
-    sample: 'class User { constructor(public name: string, public age: number) {} }\nconst user: MyInstanceType<typeof User> = new User("Bob", 25);\nuser',
+    sample:
+      'class User { constructor(public name: string, public age: number) {} }\nconst user: MyInstanceType<typeof User> = new User("Bob", 25);\nuser',
     hints: [
       'infer R captures the return type of constructor',
       'Returns the instance type of the class',
@@ -5335,10 +5065,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type TupleToUnion<T extends readonly any[]> = T[number];',
     expected: 1,
     sample: 'type Tuple = [1, 2, 3];\nconst value: TupleToUnion<Tuple> = 1;\nvalue',
-    hints: [
-      'T[number] indexes into tuple with number',
-      'Returns union of all element types',
-    ],
+    hints: ['T[number] indexes into tuple with number', 'Returns union of all element types'],
     tags: ['generics', 'tuple', 'union'],
   },
   {
@@ -5347,10 +5074,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Union to Intersection',
     text: 'Create a type that converts a union to an intersection',
-    setup: 'type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (x: infer I) => void ? I : never;',
-    setupCode: 'type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (x: infer I) => void ? I : never;',
+    setup:
+      'type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (x: infer I) => void ? I : never;',
+    setupCode:
+      'type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (x: infer I) => void ? I : never;',
     expected: { a: 1, b: 2 },
-    sample: 'type Union = { a: number } | { b: number };\nconst obj: UnionToIntersection<Union> = { a: 1, b: 2 };\nobj',
+    sample:
+      'type Union = { a: number } | { b: number };\nconst obj: UnionToIntersection<Union> = { a: 1, b: 2 };\nobj',
     hints: [
       'Uses contravariant position to force intersection',
       'Function parameters are contravariant',
@@ -5367,10 +5097,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Promisify<T> = T extends Promise<any> ? T : Promise<T>;',
     expected: 'resolved',
     sample: 'const p: Promisify<string> = Promise.resolve("resolved");\np.then(v => v)',
-    hints: [
-      'Check if already a Promise',
-      'Wrap in Promise if not',
-    ],
+    hints: ['Check if already a Promise', 'Wrap in Promise if not'],
     tags: ['generics', 'promise', 'conditional-types'],
   },
   {
@@ -5382,11 +5109,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyAwaited<T> = T extends Promise<infer U> ? MyAwaited<U> : T;',
     setupCode: 'type MyAwaited<T> = T extends Promise<infer U> ? MyAwaited<U> : T;',
     expected: 'value',
-    sample: 'type Nested = Promise<Promise<Promise<string>>>;\nconst value: MyAwaited<Nested> = "value";\nvalue',
-    hints: [
-      'Recursively unwrap Promise layers',
-      'Stop when no longer a Promise',
-    ],
+    sample:
+      'type Nested = Promise<Promise<Promise<string>>>;\nconst value: MyAwaited<Nested> = "value";\nvalue',
+    hints: ['Recursively unwrap Promise layers', 'Stop when no longer a Promise'],
     tags: ['generics', 'promise', 'recursive', 'awaited'],
   },
   {
@@ -5396,13 +5121,12 @@ export const typescriptProblems: Problem[] = [
     title: 'Generic DeepPartial',
     text: 'Create a type that makes all properties optional recursively',
     setup: 'type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;',
-    setupCode: 'type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;',
+    setupCode:
+      'type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;',
     expected: { user: { name: 'Alice' } },
-    sample: 'interface Data { user: { name: string; age: number } }\nconst partial: DeepPartial<Data> = { user: { name: "Alice" } };\npartial',
-    hints: [
-      'Recursively apply Partial to nested objects',
-      'Base case for non-objects returns T',
-    ],
+    sample:
+      'interface Data { user: { name: string; age: number } }\nconst partial: DeepPartial<Data> = { user: { name: "Alice" } };\npartial',
+    hints: ['Recursively apply Partial to nested objects', 'Base case for non-objects returns T'],
     tags: ['generics', 'deep-partial', 'recursive', 'mapped-types'],
   },
   {
@@ -5411,14 +5135,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Paths Type',
     text: 'Create a type that generates all dot-notation paths of an object',
-    setup: 'type Paths<T> = T extends object ? { [K in keyof T]: K extends string ? T[K] extends object ? K | `${K}.${Paths<T[K]> & string}` : K : never }[keyof T] : never;',
-    setupCode: 'type Paths<T> = T extends object ? { [K in keyof T]: K extends string ? T[K] extends object ? K | `${K}.${Paths<T[K]> & string}` : K : never }[keyof T] : never;',
+    setup:
+      'type Paths<T> = T extends object ? { [K in keyof T]: K extends string ? T[K] extends object ? K | `${K}.${Paths<T[K]> & string}` : K : never }[keyof T] : never;',
+    setupCode:
+      'type Paths<T> = T extends object ? { [K in keyof T]: K extends string ? T[K] extends object ? K | `${K}.${Paths<T[K]> & string}` : K : never }[keyof T] : never;',
     expected: 'user.name',
-    sample: 'interface Data { user: { name: string; age: number } }\nconst path: Paths<Data> = "user.name";\npath',
-    hints: [
-      'Recursively build paths for nested objects',
-      'Use template literal for dot notation',
-    ],
+    sample:
+      'interface Data { user: { name: string; age: number } }\nconst path: Paths<Data> = "user.name";\npath',
+    hints: ['Recursively build paths for nested objects', 'Use template literal for dot notation'],
     tags: ['generics', 'paths', 'recursive', 'template-literal'],
   },
   {
@@ -5427,14 +5151,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Get Type by Path',
     text: 'Create a type that gets nested property type by dot-notation path',
-    setup: 'type Get<T, P extends string> = P extends `${infer K}.${infer Rest}` ? K extends keyof T ? Get<T[K], Rest> : never : P extends keyof T ? T[P] : never;',
-    setupCode: 'type Get<T, P extends string> = P extends `${infer K}.${infer Rest}` ? K extends keyof T ? Get<T[K], Rest> : never : P extends keyof T ? T[P] : never;',
+    setup:
+      'type Get<T, P extends string> = P extends `${infer K}.${infer Rest}` ? K extends keyof T ? Get<T[K], Rest> : never : P extends keyof T ? T[P] : never;',
+    setupCode:
+      'type Get<T, P extends string> = P extends `${infer K}.${infer Rest}` ? K extends keyof T ? Get<T[K], Rest> : never : P extends keyof T ? T[P] : never;',
     expected: 'Alice',
-    sample: 'interface Data { user: { name: string } }\nconst name: Get<Data, "user.name"> = "Alice";\nname',
-    hints: [
-      'Split path at first dot',
-      'Recursively traverse object structure',
-    ],
+    sample:
+      'interface Data { user: { name: string } }\nconst name: Get<Data, "user.name"> = "Alice";\nname',
+    hints: ['Split path at first dot', 'Recursively traverse object structure'],
     tags: ['generics', 'paths', 'recursive', 'template-literal'],
   },
   {
@@ -5443,14 +5167,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Array Element Type',
     text: 'Create a type that extracts the element type from an array',
-    setup: 'type ElementType<T extends readonly any[]> = T extends readonly (infer E)[] ? E : never;',
-    setupCode: 'type ElementType<T extends readonly any[]> = T extends readonly (infer E)[] ? E : never;',
+    setup:
+      'type ElementType<T extends readonly any[]> = T extends readonly (infer E)[] ? E : never;',
+    setupCode:
+      'type ElementType<T extends readonly any[]> = T extends readonly (infer E)[] ? E : never;',
     expected: 42,
     sample: 'type NumArray = number[];\nconst element: ElementType<NumArray> = 42;\nelement',
-    hints: [
-      'Use infer to capture element type',
-      'Works with both regular and readonly arrays',
-    ],
+    hints: ['Use infer to capture element type', 'Works with both regular and readonly arrays'],
     tags: ['generics', 'arrays', 'infer', 'element-type'],
   },
   {
@@ -5463,10 +5186,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type TupleLength<T extends readonly any[]> = T["length"];',
     expected: 3,
     sample: 'type Triple = [1, 2, 3];\nconst len: TupleLength<Triple> = 3;\nlen',
-    hints: [
-      'Tuple types have literal length type',
-      'Access with ["length"]',
-    ],
+    hints: ['Tuple types have literal length type', 'Access with ["length"]'],
     tags: ['generics', 'tuple', 'length'],
   },
   {
@@ -5479,10 +5199,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Push<T extends any[], E> = [...T, E];',
     expected: [1, 2, 3],
     sample: 'type Pair = [1, 2];\nconst triple: Push<Pair, 3> = [1, 2, 3];\ntriple',
-    hints: [
-      'Use spread operator in tuple type',
-      'Append E at the end',
-    ],
+    hints: ['Use spread operator in tuple type', 'Append E at the end'],
     tags: ['generics', 'tuple', 'spread'],
   },
   {
@@ -5495,10 +5212,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Unshift<T extends any[], E> = [E, ...T];',
     expected: [0, 1, 2],
     sample: 'type Pair = [1, 2];\nconst triple: Unshift<Pair, 0> = [0, 1, 2];\ntriple',
-    hints: [
-      'Place E before spread of T',
-      'Creates new tuple with E first',
-    ],
+    hints: ['Place E before spread of T', 'Creates new tuple with E first'],
     tags: ['generics', 'tuple', 'spread'],
   },
   {
@@ -5511,10 +5225,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Pop<T extends any[]> = T extends [...infer R, any] ? R : never;',
     expected: [1, 2],
     sample: 'type Triple = [1, 2, 3];\nconst pair: Pop<Triple> = [1, 2];\npair',
-    hints: [
-      'Use infer with rest pattern',
-      'Capture all but last element',
-    ],
+    hints: ['Use infer with rest pattern', 'Capture all but last element'],
     tags: ['generics', 'tuple', 'infer', 'spread'],
   },
   {
@@ -5527,10 +5238,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Shift<T extends any[]> = T extends [any, ...infer R] ? R : never;',
     expected: [2, 3],
     sample: 'type Triple = [1, 2, 3];\nconst pair: Shift<Triple> = [2, 3];\npair',
-    hints: [
-      'Match first element and rest',
-      'Return rest elements',
-    ],
+    hints: ['Match first element and rest', 'Return rest elements'],
     tags: ['generics', 'tuple', 'infer', 'spread'],
   },
 
@@ -5546,11 +5254,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'function getValue<T extends string>(key: T): T extends "count" ? number : string;',
     setupCode: 'function getValue<T extends string>(key: T): T extends "count" ? number : string;',
     expected: 'value',
-    sample: 'function getValue<T extends string>(key: T): any { return key === "count" ? 42 : "value"; }\ngetValue("name")',
-    hints: [
-      'Conditional return type based on key',
-      'Implementation must handle all cases',
-    ],
+    sample:
+      'function getValue<T extends string>(key: T): any { return key === "count" ? 42 : "value"; }\ngetValue("name")',
+    hints: ['Conditional return type based on key', 'Implementation must handle all cases'],
     tags: ['generics', 'overloads', 'conditional-types'],
   },
   {
@@ -5559,10 +5265,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Type-Safe Event Emitter',
     text: 'Create a type-safe event emitter with generic event map',
-    setup: 'type EventMap = { click: { x: number; y: number }; input: { value: string } };\nclass Emitter<T extends Record<string, any>> {\n  on<K extends keyof T>(event: K, handler: (data: T[K]) => void) {}\n  emit<K extends keyof T>(event: K, data: T[K]) {}\n}',
-    setupCode: 'type EventMap = { click: { x: number; y: number }; input: { value: string } };\nclass Emitter<T extends Record<string, any>> {\n  on<K extends keyof T>(event: K, handler: (data: T[K]) => void) {}\n  emit<K extends keyof T>(event: K, data: T[K]) {}\n}',
+    setup:
+      'type EventMap = { click: { x: number; y: number }; input: { value: string } };\nclass Emitter<T extends Record<string, any>> {\n  on<K extends keyof T>(event: K, handler: (data: T[K]) => void) {}\n  emit<K extends keyof T>(event: K, data: T[K]) {}\n}',
+    setupCode:
+      'type EventMap = { click: { x: number; y: number }; input: { value: string } };\nclass Emitter<T extends Record<string, any>> {\n  on<K extends keyof T>(event: K, handler: (data: T[K]) => void) {}\n  emit<K extends keyof T>(event: K, data: T[K]) {}\n}',
     expected: 'object',
-    sample: 'const emitter = new Emitter<EventMap>();\nemitter.on("click", (data) => console.log(data.x));\ntypeof emitter',
+    sample:
+      'const emitter = new Emitter<EventMap>();\nemitter.on("click", (data) => console.log(data.x));\ntypeof emitter',
     hints: [
       'K extends keyof T ensures valid event name',
       'T[K] gives the data type for that event',
@@ -5579,14 +5288,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Builder Pattern',
     text: 'Create a generic builder that accumulates properties',
-    setup: 'class Builder<T extends object = {}> {\n  private obj: T = {} as T;\n  with<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> {\n    (this.obj as any)[key] = value;\n    return this as any;\n  }\n  build(): T { return this.obj; }\n}',
-    setupCode: 'class Builder<T extends object = {}> {\n  private obj: T = {} as T;\n  with<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> {\n    (this.obj as any)[key] = value;\n    return this as any;\n  }\n  build(): T { return this.obj; }\n}',
+    setup:
+      'class Builder<T extends object = {}> {\n  private obj: T = {} as T;\n  with<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> {\n    (this.obj as any)[key] = value;\n    return this as any;\n  }\n  build(): T { return this.obj; }\n}',
+    setupCode:
+      'class Builder<T extends object = {}> {\n  private obj: T = {} as T;\n  with<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> {\n    (this.obj as any)[key] = value;\n    return this as any;\n  }\n  build(): T { return this.obj; }\n}',
     expected: { name: 'Alice', age: 30 },
     sample: 'const result = new Builder().with("name", "Alice").with("age", 30).build();\nresult',
-    hints: [
-      'Each with() call extends the type',
-      'Return type includes new property',
-    ],
+    hints: ['Each with() call extends the type', 'Return type includes new property'],
     tags: ['generics', 'builder', 'fluent-api'],
   },
   {
@@ -5595,14 +5303,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Type-Safe Query Builder',
     text: 'Create a query builder with type-safe field selection',
-    setup: 'class QueryBuilder<T, S extends keyof T = keyof T> {\n  constructor(private fields: S[] = []) {}\n  select<K extends keyof T>(...fields: K[]): QueryBuilder<T, K> {\n    return new QueryBuilder(fields);\n  }\n  getFields(): S[] { return this.fields; }\n}',
-    setupCode: 'class QueryBuilder<T, S extends keyof T = keyof T> {\n  constructor(private fields: S[] = []) {}\n  select<K extends keyof T>(...fields: K[]): QueryBuilder<T, K> {\n    return new QueryBuilder(fields);\n  }\n  getFields(): S[] { return this.fields; }\n}',
+    setup:
+      'class QueryBuilder<T, S extends keyof T = keyof T> {\n  constructor(private fields: S[] = []) {}\n  select<K extends keyof T>(...fields: K[]): QueryBuilder<T, K> {\n    return new QueryBuilder(fields);\n  }\n  getFields(): S[] { return this.fields; }\n}',
+    setupCode:
+      'class QueryBuilder<T, S extends keyof T = keyof T> {\n  constructor(private fields: S[] = []) {}\n  select<K extends keyof T>(...fields: K[]): QueryBuilder<T, K> {\n    return new QueryBuilder(fields);\n  }\n  getFields(): S[] { return this.fields; }\n}',
     expected: ['name', 'email'],
-    sample: 'interface User { name: string; age: number; email: string }\nconst qb = new QueryBuilder<User>().select("name", "email");\nqb.getFields()',
-    hints: [
-      'Track selected fields in type parameter S',
-      'select() narrows the available fields',
-    ],
+    sample:
+      'interface User { name: string; age: number; email: string }\nconst qb = new QueryBuilder<User>().select("name", "email");\nqb.getFields()',
+    hints: ['Track selected fields in type parameter S', 'select() narrows the available fields'],
     tags: ['generics', 'builder', 'query', 'type-safe'],
   },
 
@@ -5615,8 +5323,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Functor Interface',
     text: 'Create a generic Functor-like interface with map',
-    setup: 'interface Functor<T> {\n  map<U>(fn: (value: T) => U): Functor<U>;\n}\nclass Box<T> implements Functor<T> {\n  constructor(public value: T) {}\n  map<U>(fn: (value: T) => U): Box<U> { return new Box(fn(this.value)); }\n}',
-    setupCode: 'interface Functor<T> {\n  map<U>(fn: (value: T) => U): Functor<U>;\n}\nclass Box<T> implements Functor<T> {\n  constructor(public value: T) {}\n  map<U>(fn: (value: T) => U): Box<U> { return new Box(fn(this.value)); }\n}',
+    setup:
+      'interface Functor<T> {\n  map<U>(fn: (value: T) => U): Functor<U>;\n}\nclass Box<T> implements Functor<T> {\n  constructor(public value: T) {}\n  map<U>(fn: (value: T) => U): Box<U> { return new Box(fn(this.value)); }\n}',
+    setupCode:
+      'interface Functor<T> {\n  map<U>(fn: (value: T) => U): Functor<U>;\n}\nclass Box<T> implements Functor<T> {\n  constructor(public value: T) {}\n  map<U>(fn: (value: T) => U): Box<U> { return new Box(fn(this.value)); }\n}',
     expected: { value: 10 },
     sample: 'const box = new Box(5).map(x => x * 2);\nbox',
     hints: [
@@ -5631,8 +5341,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Monad-like Interface',
     text: 'Create a generic Maybe monad with map and flatMap',
-    setup: 'class Maybe<T> {\n  constructor(private value: T | null) {}\n  static of<T>(value: T): Maybe<T> { return new Maybe(value); }\n  static none<T>(): Maybe<T> { return new Maybe<T>(null); }\n  map<U>(fn: (value: T) => U): Maybe<U> {\n    return this.value === null ? Maybe.none() : Maybe.of(fn(this.value));\n  }\n  flatMap<U>(fn: (value: T) => Maybe<U>): Maybe<U> {\n    return this.value === null ? Maybe.none() : fn(this.value);\n  }\n  getOrElse(defaultValue: T): T { return this.value ?? defaultValue; }\n}',
-    setupCode: 'class Maybe<T> {\n  constructor(private value: T | null) {}\n  static of<T>(value: T): Maybe<T> { return new Maybe(value); }\n  static none<T>(): Maybe<T> { return new Maybe<T>(null); }\n  map<U>(fn: (value: T) => U): Maybe<U> {\n    return this.value === null ? Maybe.none() : Maybe.of(fn(this.value));\n  }\n  flatMap<U>(fn: (value: T) => Maybe<U>): Maybe<U> {\n    return this.value === null ? Maybe.none() : fn(this.value);\n  }\n  getOrElse(defaultValue: T): T { return this.value ?? defaultValue; }\n}',
+    setup:
+      'class Maybe<T> {\n  constructor(private value: T | null) {}\n  static of<T>(value: T): Maybe<T> { return new Maybe(value); }\n  static none<T>(): Maybe<T> { return new Maybe<T>(null); }\n  map<U>(fn: (value: T) => U): Maybe<U> {\n    return this.value === null ? Maybe.none() : Maybe.of(fn(this.value));\n  }\n  flatMap<U>(fn: (value: T) => Maybe<U>): Maybe<U> {\n    return this.value === null ? Maybe.none() : fn(this.value);\n  }\n  getOrElse(defaultValue: T): T { return this.value ?? defaultValue; }\n}',
+    setupCode:
+      'class Maybe<T> {\n  constructor(private value: T | null) {}\n  static of<T>(value: T): Maybe<T> { return new Maybe(value); }\n  static none<T>(): Maybe<T> { return new Maybe<T>(null); }\n  map<U>(fn: (value: T) => U): Maybe<U> {\n    return this.value === null ? Maybe.none() : Maybe.of(fn(this.value));\n  }\n  flatMap<U>(fn: (value: T) => Maybe<U>): Maybe<U> {\n    return this.value === null ? Maybe.none() : fn(this.value);\n  }\n  getOrElse(defaultValue: T): T { return this.value ?? defaultValue; }\n}',
     expected: 10,
     sample: 'Maybe.of(5).map(x => x * 2).getOrElse(0)',
     hints: [
@@ -5651,14 +5363,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Recursive JSON Type',
     text: 'Create a recursive type for JSON values',
-    setup: 'type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };',
-    setupCode: 'type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };',
+    setup:
+      'type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };',
+    setupCode:
+      'type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };',
     expected: { name: 'Alice', scores: [1, 2, 3] },
     sample: 'const json: JSONValue = { name: "Alice", scores: [1, 2, 3] };\njson',
-    hints: [
-      'JSONValue references itself recursively',
-      'Covers all valid JSON structures',
-    ],
+    hints: ['JSONValue references itself recursively', 'Covers all valid JSON structures'],
     tags: ['generics', 'recursive', 'json'],
   },
   {
@@ -5669,12 +5380,16 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a generic recursive tree type with typed nodes',
     setup: 'interface TreeNode<T> { value: T; children: TreeNode<T>[]; }',
     setupCode: 'interface TreeNode<T> { value: T; children: TreeNode<T>[]; }',
-    expected: { value: 1, children: [{ value: 2, children: [] }, { value: 3, children: [] }] },
-    sample: 'const tree: TreeNode<number> = { value: 1, children: [{ value: 2, children: [] }, { value: 3, children: [] }] };\ntree',
-    hints: [
-      'TreeNode references itself for children',
-      'Each node has value of type T',
-    ],
+    expected: {
+      value: 1,
+      children: [
+        { value: 2, children: [] },
+        { value: 3, children: [] },
+      ],
+    },
+    sample:
+      'const tree: TreeNode<number> = { value: 1, children: [{ value: 2, children: [] }, { value: 3, children: [] }] };\ntree',
+    hints: ['TreeNode references itself for children', 'Each node has value of type T'],
     tags: ['generics', 'recursive', 'tree'],
   },
   {
@@ -5687,10 +5402,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type DeepFlatten<T> = T extends (infer U)[] ? DeepFlatten<U> : T;',
     expected: 42,
     sample: 'type Nested = number[][][];\nconst flat: DeepFlatten<Nested> = 42;\nflat',
-    hints: [
-      'Recursively unwrap array layers',
-      'Stop when no longer an array',
-    ],
+    hints: ['Recursively unwrap array layers', 'Stop when no longer an array'],
     tags: ['generics', 'recursive', 'flatten', 'arrays'],
   },
 
@@ -5735,14 +5447,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic CamelCase Type',
     text: 'Create a type that converts snake_case to camelCase',
-    setup: 'type CamelCase<S extends string> = S extends `${infer P}_${infer R}` ? `${Lowercase<P>}${Capitalize<CamelCase<R>>}` : Lowercase<S>;',
-    setupCode: 'type CamelCase<S extends string> = S extends `${infer P}_${infer R}` ? `${Lowercase<P>}${Capitalize<CamelCase<R>>}` : Lowercase<S>;',
+    setup:
+      'type CamelCase<S extends string> = S extends `${infer P}_${infer R}` ? `${Lowercase<P>}${Capitalize<CamelCase<R>>}` : Lowercase<S>;',
+    setupCode:
+      'type CamelCase<S extends string> = S extends `${infer P}_${infer R}` ? `${Lowercase<P>}${Capitalize<CamelCase<R>>}` : Lowercase<S>;',
     expected: 'helloWorld',
     sample: 'const camel: CamelCase<"hello_world"> = "helloWorld";\ncamel',
-    hints: [
-      'Split at underscore recursively',
-      'Capitalize subsequent parts',
-    ],
+    hints: ['Split at underscore recursively', 'Capitalize subsequent parts'],
     tags: ['generics', 'template-literal', 'camelCase', 'recursive'],
   },
   {
@@ -5751,14 +5462,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic SnakeCase Type',
     text: 'Create a type that converts camelCase to snake_case',
-    setup: 'type SnakeCase<S extends string> = S extends `${infer C}${infer R}` ? C extends Uppercase<C> ? `_${Lowercase<C>}${SnakeCase<R>}` : `${C}${SnakeCase<R>}` : S;',
-    setupCode: 'type SnakeCase<S extends string> = S extends `${infer C}${infer R}` ? C extends Uppercase<C> ? `_${Lowercase<C>}${SnakeCase<R>}` : `${C}${SnakeCase<R>}` : S;',
+    setup:
+      'type SnakeCase<S extends string> = S extends `${infer C}${infer R}` ? C extends Uppercase<C> ? `_${Lowercase<C>}${SnakeCase<R>}` : `${C}${SnakeCase<R>}` : S;',
+    setupCode:
+      'type SnakeCase<S extends string> = S extends `${infer C}${infer R}` ? C extends Uppercase<C> ? `_${Lowercase<C>}${SnakeCase<R>}` : `${C}${SnakeCase<R>}` : S;',
     expected: 'hello_world',
     sample: 'const snake: SnakeCase<"helloWorld"> = "hello_world";\nsnake',
-    hints: [
-      'Check each character for uppercase',
-      'Insert underscore before uppercase letters',
-    ],
+    hints: ['Check each character for uppercase', 'Insert underscore before uppercase letters'],
     tags: ['generics', 'template-literal', 'snake_case', 'recursive'],
   },
 
@@ -5774,11 +5484,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type ThisType<T> = T extends (this: infer U, ...args: any[]) => any ? U : never;',
     setupCode: 'type ThisType<T> = T extends (this: infer U, ...args: any[]) => any ? U : never;',
     expected: { name: 'test' },
-    sample: 'type Fn = (this: { name: string }) => void;\nconst thisArg: ThisType<Fn> = { name: "test" };\nthisArg',
-    hints: [
-      'Use infer in this position',
-      'Captures the this parameter type',
-    ],
+    sample:
+      'type Fn = (this: { name: string }) => void;\nconst thisArg: ThisType<Fn> = { name: "test" };\nthisArg',
+    hints: ['Use infer in this position', 'Captures the this parameter type'],
     tags: ['generics', 'infer', 'this', 'functions'],
   },
   {
@@ -5787,14 +5495,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Strict Object Keys',
     text: 'Create a type that enforces exact object shape (no extra properties at type level)',
-    setup: 'type Exact<T, Shape> = T extends Shape ? Exclude<keyof T, keyof Shape> extends never ? T : never : never;',
-    setupCode: 'type Exact<T, Shape> = T extends Shape ? Exclude<keyof T, keyof Shape> extends never ? T : never : never;',
+    setup:
+      'type Exact<T, Shape> = T extends Shape ? Exclude<keyof T, keyof Shape> extends never ? T : never : never;',
+    setupCode:
+      'type Exact<T, Shape> = T extends Shape ? Exclude<keyof T, keyof Shape> extends never ? T : never : never;',
     expected: { name: 'Alice' },
-    sample: 'interface Shape { name: string }\nfunction create<T>(obj: Exact<T, Shape> & Shape): Shape { return obj; }\nconst result = create({ name: "Alice" });\nresult',
-    hints: [
-      'Check that T has no extra keys beyond Shape',
-      'Exclude finds extra keys',
-    ],
+    sample:
+      'interface Shape { name: string }\nfunction create<T>(obj: Exact<T, Shape> & Shape): Shape { return obj; }\nconst result = create({ name: "Alice" });\nresult',
+    hints: ['Check that T has no extra keys beyond Shape', 'Exclude finds extra keys'],
     tags: ['generics', 'exact', 'strict', 'objects'],
   },
   {
@@ -5803,14 +5511,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Merge Objects Type',
     text: 'Create a type that deeply merges two object types',
-    setup: 'type Merge<A, B> = { [K in keyof A | keyof B]: K extends keyof B ? K extends keyof A ? A[K] extends object ? B[K] extends object ? Merge<A[K], B[K]> : B[K] : B[K] : B[K] : K extends keyof A ? A[K] : never };',
-    setupCode: 'type Merge<A, B> = { [K in keyof A | keyof B]: K extends keyof B ? K extends keyof A ? A[K] extends object ? B[K] extends object ? Merge<A[K], B[K]> : B[K] : B[K] : B[K] : K extends keyof A ? A[K] : never };',
+    setup:
+      'type Merge<A, B> = { [K in keyof A | keyof B]: K extends keyof B ? K extends keyof A ? A[K] extends object ? B[K] extends object ? Merge<A[K], B[K]> : B[K] : B[K] : B[K] : K extends keyof A ? A[K] : never };',
+    setupCode:
+      'type Merge<A, B> = { [K in keyof A | keyof B]: K extends keyof B ? K extends keyof A ? A[K] extends object ? B[K] extends object ? Merge<A[K], B[K]> : B[K] : B[K] : B[K] : K extends keyof A ? A[K] : never };',
     expected: { a: 1, b: { c: 2, d: 3 } },
-    sample: 'type A = { a: number; b: { c: number } };\ntype B = { b: { d: number } };\nconst merged: Merge<A, B> = { a: 1, b: { c: 2, d: 3 } };\nmerged',
-    hints: [
-      'Iterate over keys from both types',
-      'Recursively merge nested objects',
-    ],
+    sample:
+      'type A = { a: number; b: { c: number } };\ntype B = { b: { d: number } };\nconst merged: Merge<A, B> = { a: 1, b: { c: 2, d: 3 } };\nmerged',
+    hints: ['Iterate over keys from both types', 'Recursively merge nested objects'],
     tags: ['generics', 'merge', 'deep', 'recursive'],
   },
   {
@@ -5819,10 +5527,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Branded Types',
     text: 'Create branded types for type-safe IDs',
-    setup: 'type Brand<T, B> = T & { __brand: B };\ntype UserId = Brand<number, "UserId">;\ntype PostId = Brand<number, "PostId">;',
-    setupCode: 'type Brand<T, B> = T & { __brand: B };\ntype UserId = Brand<number, "UserId">;\ntype PostId = Brand<number, "PostId">;',
+    setup:
+      'type Brand<T, B> = T & { __brand: B };\ntype UserId = Brand<number, "UserId">;\ntype PostId = Brand<number, "PostId">;',
+    setupCode:
+      'type Brand<T, B> = T & { __brand: B };\ntype UserId = Brand<number, "UserId">;\ntype PostId = Brand<number, "PostId">;',
     expected: 123,
-    sample: 'function createUserId(id: number): UserId { return id as UserId; }\nfunction getUserById(id: UserId): number { return id; }\nconst userId = createUserId(123);\ngetUserById(userId)',
+    sample:
+      'function createUserId(id: number): UserId { return id as UserId; }\nfunction getUserById(id: UserId): number { return id; }\nconst userId = createUserId(123);\ngetUserById(userId)',
     hints: [
       'Brand adds a phantom property for type safety',
       'UserId and PostId are incompatible despite both being numbers',
@@ -5859,10 +5570,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function first<T>(arr: T[]): T | undefined { return arr[0]; }',
     expected: 'hello',
     sample: 'first(["hello", "world"])',
-    hints: [
-      'Use T[] for array of generic type',
-      'Return T | undefined for empty array safety',
-    ],
+    hints: ['Use T[] for array of generic type', 'Return T | undefined for empty array safety'],
     tags: ['generics', 'arrays', 'functions'],
   },
   {
@@ -5875,10 +5583,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function last<T>(arr: T[]): T | undefined { return arr[arr.length - 1]; }',
     expected: 3,
     sample: 'last([1, 2, 3])',
-    hints: [
-      'Access array at length - 1',
-      'Handle empty array with undefined return type',
-    ],
+    hints: ['Access array at length - 1', 'Handle empty array with undefined return type'],
     tags: ['generics', 'arrays', 'functions'],
   },
   {
@@ -5891,10 +5596,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function pair<T, U>(a: T, b: U): [T, U] { return [a, b]; }',
     expected: ['hello', 42],
     sample: 'pair("hello", 42)',
-    hints: [
-      'Use two type parameters for different types',
-      'Return a tuple type [T, U]',
-    ],
+    hints: ['Use two type parameters for different types', 'Return a tuple type [T, U]'],
     tags: ['generics', 'tuples', 'functions'],
   },
   {
@@ -5907,10 +5609,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function swap<T, U>(pair: [T, U]): [U, T] { return [pair[1], pair[0]]; }',
     expected: [2, 'a'],
     sample: 'swap(["a", 2])',
-    hints: [
-      'Input is [T, U], output is [U, T]',
-      'Return elements in reverse order',
-    ],
+    hints: ['Input is [T, U], output is [U, T]', 'Return elements in reverse order'],
     tags: ['generics', 'tuples', 'functions'],
   },
   {
@@ -5923,10 +5622,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function wrapInArray<T>(value: T): T[] { return [value]; }',
     expected: [5],
     sample: 'wrapInArray(5)',
-    hints: [
-      'Return type is T[] (array of T)',
-      'Wrap single value in array literal',
-    ],
+    hints: ['Return type is T[] (array of T)', 'Wrap single value in array literal'],
     tags: ['generics', 'arrays', 'functions'],
   },
   {
@@ -5939,10 +5635,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function repeat<T>(value: T, n: number): T[] { return Array(n).fill(value); }',
     expected: ['x', 'x', 'x'],
     sample: 'repeat("x", 3)',
-    hints: [
-      'Use Array(n).fill() to create repeated values',
-      'Return type is T[]',
-    ],
+    hints: ['Use Array(n).fill() to create repeated values', 'Return type is T[]'],
     tags: ['generics', 'arrays', 'functions'],
   },
   {
@@ -5951,14 +5644,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Nullable Type',
     text: 'Create a generic function that returns value or null based on condition',
-    setup: 'function nullable<T>(value: T, isNull: boolean): T | null { return isNull ? null : value; }',
-    setupCode: 'function nullable<T>(value: T, isNull: boolean): T | null { return isNull ? null : value; }',
+    setup:
+      'function nullable<T>(value: T, isNull: boolean): T | null { return isNull ? null : value; }',
+    setupCode:
+      'function nullable<T>(value: T, isNull: boolean): T | null { return isNull ? null : value; }',
     expected: null,
     sample: 'nullable("test", true)',
-    hints: [
-      'Return type is T | null union',
-      'Use ternary to conditionally return null',
-    ],
+    hints: ['Return type is T | null union', 'Use ternary to conditionally return null'],
     tags: ['generics', 'nullable', 'functions'],
   },
   {
@@ -5967,14 +5659,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Default Value',
     text: 'Create a generic function that returns value or default if null/undefined',
-    setup: 'function withDefault<T>(value: T | null | undefined, defaultVal: T): T { return value ?? defaultVal; }',
-    setupCode: 'function withDefault<T>(value: T | null | undefined, defaultVal: T): T { return value ?? defaultVal; }',
+    setup:
+      'function withDefault<T>(value: T | null | undefined, defaultVal: T): T { return value ?? defaultVal; }',
+    setupCode:
+      'function withDefault<T>(value: T | null | undefined, defaultVal: T): T { return value ?? defaultVal; }',
     expected: 'default',
     sample: 'withDefault(null, "default")',
-    hints: [
-      'Use nullish coalescing operator ??',
-      'Both value and default share same type T',
-    ],
+    hints: ['Use nullish coalescing operator ??', 'Both value and default share same type T'],
     tags: ['generics', 'nullish', 'functions'],
   },
   {
@@ -5987,10 +5678,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function len<T>(arr: T[]): number { return arr.length; }',
     expected: 4,
     sample: 'len([1, 2, 3, 4])',
-    hints: [
-      'Access .length property on array',
-      'Return type is number, not generic',
-    ],
+    hints: ['Access .length property on array', 'Return type is number, not generic'],
     tags: ['generics', 'arrays', 'functions'],
   },
 
@@ -6003,14 +5691,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Constrained to Object with Length',
     text: 'Create a function that accepts only values with a length property',
-    setup: 'function getLength<T extends { length: number }>(obj: T): number { return obj.length; }',
-    setupCode: 'function getLength<T extends { length: number }>(obj: T): number { return obj.length; }',
+    setup:
+      'function getLength<T extends { length: number }>(obj: T): number { return obj.length; }',
+    setupCode:
+      'function getLength<T extends { length: number }>(obj: T): number { return obj.length; }',
     expected: 5,
     sample: 'getLength("hello")',
-    hints: [
-      'Use extends to constrain the type',
-      'Constraint requires length: number property',
-    ],
+    hints: ['Use extends to constrain the type', 'Constraint requires length: number property'],
     tags: ['generics', 'constraints', 'extends'],
   },
   {
@@ -6023,10 +5710,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function getProp<T, K extends keyof T>(obj: T, key: K): T[K] { return obj[key]; }',
     expected: 'Alice',
     sample: 'getProp({ name: "Alice", age: 30 }, "name")',
-    hints: [
-      'K extends keyof T constrains to valid keys',
-      'Return type T[K] is the property type',
-    ],
+    hints: ['K extends keyof T constrains to valid keys', 'Return type T[K] is the property type'],
     tags: ['generics', 'constraints', 'keyof'],
   },
   {
@@ -6039,10 +5723,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function double<T extends number>(value: T): number { return value * 2; }',
     expected: 10,
     sample: 'double(5)',
-    hints: [
-      'T extends number restricts to numeric types',
-      'Arithmetic operations are allowed',
-    ],
+    hints: ['T extends number restricts to numeric types', 'Arithmetic operations are allowed'],
     tags: ['generics', 'constraints', 'number'],
   },
   {
@@ -6051,14 +5732,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Constrained to Function Type',
     text: 'Create a function that calls a callback and returns its result',
-    setup: 'function call<T extends (...args: any[]) => any>(fn: T): ReturnType<T> { return fn(); }',
-    setupCode: 'function call<T extends (...args: any[]) => any>(fn: T): ReturnType<T> { return fn(); }',
+    setup:
+      'function call<T extends (...args: any[]) => any>(fn: T): ReturnType<T> { return fn(); }',
+    setupCode:
+      'function call<T extends (...args: any[]) => any>(fn: T): ReturnType<T> { return fn(); }',
     expected: 42,
     sample: 'call(() => 42)',
-    hints: [
-      'Constrain T to function type',
-      'Use ReturnType utility for return type',
-    ],
+    hints: ['Constrain T to function type', 'Use ReturnType utility for return type'],
     tags: ['generics', 'constraints', 'functions'],
   },
   {
@@ -6071,10 +5751,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function flatten<T extends any[]>(arr: T[]): T[number][] { return arr.flat(); }',
     expected: [1, 2, 3, 4],
     sample: 'flatten([[1, 2], [3, 4]])',
-    hints: [
-      'T extends any[] constrains to arrays',
-      'T[number] gets element type of array',
-    ],
+    hints: ['T extends any[] constrains to arrays', 'T[number] gets element type of array'],
     tags: ['generics', 'constraints', 'arrays'],
   },
   {
@@ -6083,14 +5760,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Multiple Constraints with Intersection',
     text: 'Create a function that requires both name and id properties',
-    setup: 'function identify<T extends { name: string } & { id: number }>(obj: T): string { return `${obj.id}: ${obj.name}`; }',
-    setupCode: 'function identify<T extends { name: string } & { id: number }>(obj: T): string { return `${obj.id}: ${obj.name}`; }',
+    setup:
+      'function identify<T extends { name: string } & { id: number }>(obj: T): string { return `${obj.id}: ${obj.name}`; }',
+    setupCode:
+      'function identify<T extends { name: string } & { id: number }>(obj: T): string { return `${obj.id}: ${obj.name}`; }',
     expected: '1: Alice',
     sample: 'identify({ id: 1, name: "Alice" })',
-    hints: [
-      'Use & to combine constraints',
-      'Object must have both properties',
-    ],
+    hints: ['Use & to combine constraints', 'Object must have both properties'],
     tags: ['generics', 'constraints', 'intersection'],
   },
   {
@@ -6099,14 +5775,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Constrained Generic with Default',
     text: 'Create a function with a constrained generic that has a default type',
-    setup: 'function createArray<T extends object = { value: number }>(item: T): T[] { return [item]; }',
-    setupCode: 'function createArray<T extends object = { value: number }>(item: T): T[] { return [item]; }',
+    setup:
+      'function createArray<T extends object = { value: number }>(item: T): T[] { return [item]; }',
+    setupCode:
+      'function createArray<T extends object = { value: number }>(item: T): T[] { return [item]; }',
     expected: [{ value: 10 }],
     sample: 'createArray({ value: 10 })',
-    hints: [
-      'Use = after extends for default type',
-      'Default applies when type not specified',
-    ],
+    hints: ['Use = after extends for default type', 'Default applies when type not specified'],
     tags: ['generics', 'constraints', 'default'],
   },
   {
@@ -6115,14 +5790,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Recursive Constraint',
     text: 'Create a type that constrains to objects with nested same structure',
-    setup: 'type TreeNode<T> = { value: T; children?: TreeNode<T>[] };\nfunction sumTree(node: TreeNode<number>): number { return node.value + (node.children?.reduce((s, c) => s + sumTree(c), 0) ?? 0); }',
-    setupCode: 'type TreeNode<T> = { value: T; children?: TreeNode<T>[] };\nfunction sumTree(node: TreeNode<number>): number { return node.value + (node.children?.reduce((s, c) => s + sumTree(c), 0) ?? 0); }',
+    setup:
+      'type TreeNode<T> = { value: T; children?: TreeNode<T>[] };\nfunction sumTree(node: TreeNode<number>): number { return node.value + (node.children?.reduce((s, c) => s + sumTree(c), 0) ?? 0); }',
+    setupCode:
+      'type TreeNode<T> = { value: T; children?: TreeNode<T>[] };\nfunction sumTree(node: TreeNode<number>): number { return node.value + (node.children?.reduce((s, c) => s + sumTree(c), 0) ?? 0); }',
     expected: 6,
     sample: 'sumTree({ value: 1, children: [{ value: 2 }, { value: 3 }] })',
-    hints: [
-      'TreeNode references itself in children',
-      'Recursive types allow nested structures',
-    ],
+    hints: ['TreeNode references itself in children', 'Recursive types allow nested structures'],
     tags: ['generics', 'constraints', 'recursive'],
   },
   {
@@ -6131,14 +5805,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Constrained to String Type',
     text: 'Create a function that only accepts string types and returns uppercase',
-    setup: 'function upper<T extends string>(str: T): Uppercase<T> { return str.toUpperCase() as Uppercase<T>; }',
-    setupCode: 'function upper<T extends string>(str: T): Uppercase<T> { return str.toUpperCase() as Uppercase<T>; }',
+    setup:
+      'function upper<T extends string>(str: T): Uppercase<T> { return str.toUpperCase() as Uppercase<T>; }',
+    setupCode:
+      'function upper<T extends string>(str: T): Uppercase<T> { return str.toUpperCase() as Uppercase<T>; }',
     expected: 'HELLO',
     sample: 'upper("hello")',
-    hints: [
-      'T extends string constrains to strings',
-      'Uppercase<T> is a template literal type',
-    ],
+    hints: ['T extends string constrains to strings', 'Uppercase<T> is a template literal type'],
     tags: ['generics', 'constraints', 'string'],
   },
   {
@@ -6147,14 +5820,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Constrained to Promise Type',
     text: 'Create a function that unwraps a Promise type',
-    setup: 'async function unwrap<T extends Promise<any>>(promise: T): Promise<Awaited<T>> { return await promise; }',
-    setupCode: 'async function unwrap<T extends Promise<any>>(promise: T): Promise<Awaited<T>> { return await promise; }',
+    setup:
+      'async function unwrap<T extends Promise<any>>(promise: T): Promise<Awaited<T>> { return await promise; }',
+    setupCode:
+      'async function unwrap<T extends Promise<any>>(promise: T): Promise<Awaited<T>> { return await promise; }',
     expected: 'resolved',
     sample: 'await unwrap(Promise.resolve("resolved"))',
-    hints: [
-      'Constrain T to Promise type',
-      'Awaited extracts the resolved type',
-    ],
+    hints: ['Constrain T to Promise type', 'Awaited extracts the resolved type'],
     tags: ['generics', 'constraints', 'promise'],
   },
 
@@ -6168,7 +5840,8 @@ export const typescriptProblems: Problem[] = [
     title: 'Generic Container Interface',
     text: 'Create a generic container interface that holds a value',
     setup: 'interface Container<T> { value: T; }\nconst box: Container<number> = { value: 42 };',
-    setupCode: 'interface Container<T> { value: T; }\nconst box: Container<number> = { value: 42 };',
+    setupCode:
+      'interface Container<T> { value: T; }\nconst box: Container<number> = { value: 42 };',
     expected: 42,
     sample: 'box.value',
     hints: [
@@ -6183,14 +5856,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Result Interface',
     text: 'Create a generic Result interface for success/error handling',
-    setup: 'interface Result<T, E> { success: boolean; data?: T; error?: E; }\nconst result: Result<string, Error> = { success: true, data: "done" };',
-    setupCode: 'interface Result<T, E> { success: boolean; data?: T; error?: E; }\nconst result: Result<string, Error> = { success: true, data: "done" };',
+    setup:
+      'interface Result<T, E> { success: boolean; data?: T; error?: E; }\nconst result: Result<string, Error> = { success: true, data: "done" };',
+    setupCode:
+      'interface Result<T, E> { success: boolean; data?: T; error?: E; }\nconst result: Result<string, Error> = { success: true, data: "done" };',
     expected: 'done',
     sample: 'result.data',
-    hints: [
-      'Use two type parameters for data and error',
-      'Optional properties with ? modifier',
-    ],
+    hints: ['Use two type parameters for data and error', 'Optional properties with ? modifier'],
     tags: ['generics', 'interfaces', 'result'],
   },
   {
@@ -6199,14 +5871,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Repository Interface',
     text: 'Create a generic repository interface for CRUD operations',
-    setup: 'interface Repository<T, ID> { findById(id: ID): T | null; save(item: T): void; }\nclass UserRepo implements Repository<{name: string}, number> { private users: {name: string}[] = []; findById(id: number) { return this.users[id] ?? null; } save(item: {name: string}) { this.users.push(item); } }',
-    setupCode: 'interface Repository<T, ID> { findById(id: ID): T | null; save(item: T): void; }\nclass UserRepo implements Repository<{name: string}, number> { private users: {name: string}[] = []; findById(id: number) { return this.users[id] ?? null; } save(item: {name: string}) { this.users.push(item); } }',
+    setup:
+      'interface Repository<T, ID> { findById(id: ID): T | null; save(item: T): void; }\nclass UserRepo implements Repository<{name: string}, number> { private users: {name: string}[] = []; findById(id: number) { return this.users[id] ?? null; } save(item: {name: string}) { this.users.push(item); } }',
+    setupCode:
+      'interface Repository<T, ID> { findById(id: ID): T | null; save(item: T): void; }\nclass UserRepo implements Repository<{name: string}, number> { private users: {name: string}[] = []; findById(id: number) { return this.users[id] ?? null; } save(item: {name: string}) { this.users.push(item); } }',
     expected: { name: 'Alice' },
     sample: 'const repo = new UserRepo();\nrepo.save({ name: "Alice" });\nrepo.findById(0)',
-    hints: [
-      'T is entity type, ID is identifier type',
-      'Methods use generic types in signatures',
-    ],
+    hints: ['T is entity type, ID is identifier type', 'Methods use generic types in signatures'],
     tags: ['generics', 'interfaces', 'repository'],
   },
   {
@@ -6215,8 +5886,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Comparable Interface',
     text: 'Create a generic Comparable interface for sorting',
-    setup: 'interface Comparable<T> { compareTo(other: T): number; }\nclass Num implements Comparable<Num> { constructor(public val: number) {} compareTo(other: Num) { return this.val - other.val; } }',
-    setupCode: 'interface Comparable<T> { compareTo(other: T): number; }\nclass Num implements Comparable<Num> { constructor(public val: number) {} compareTo(other: Num) { return this.val - other.val; } }',
+    setup:
+      'interface Comparable<T> { compareTo(other: T): number; }\nclass Num implements Comparable<Num> { constructor(public val: number) {} compareTo(other: Num) { return this.val - other.val; } }',
+    setupCode:
+      'interface Comparable<T> { compareTo(other: T): number; }\nclass Num implements Comparable<Num> { constructor(public val: number) {} compareTo(other: Num) { return this.val - other.val; } }',
     expected: -1,
     sample: 'new Num(5).compareTo(new Num(10))',
     hints: [
@@ -6231,14 +5904,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Stack Interface',
     text: 'Create a generic Stack interface with push, pop, and peek',
-    setup: 'interface Stack<T> { push(item: T): void; pop(): T | undefined; peek(): T | undefined; }\nconst stack: Stack<number> = { items: [] as number[], push(item) { this.items.push(item); }, pop() { return this.items.pop(); }, peek() { return this.items[this.items.length - 1]; } };',
-    setupCode: 'interface Stack<T> { push(item: T): void; pop(): T | undefined; peek(): T | undefined; }\nconst stack: Stack<number> = { items: [] as number[], push(item) { this.items.push(item); }, pop() { return this.items.pop(); }, peek() { return this.items[this.items.length - 1]; } };',
+    setup:
+      'interface Stack<T> { push(item: T): void; pop(): T | undefined; peek(): T | undefined; }\nconst stack: Stack<number> = { items: [] as number[], push(item) { this.items.push(item); }, pop() { return this.items.pop(); }, peek() { return this.items[this.items.length - 1]; } };',
+    setupCode:
+      'interface Stack<T> { push(item: T): void; pop(): T | undefined; peek(): T | undefined; }\nconst stack: Stack<number> = { items: [] as number[], push(item) { this.items.push(item); }, pop() { return this.items.pop(); }, peek() { return this.items[this.items.length - 1]; } };',
     expected: 3,
     sample: 'stack.push(1); stack.push(2); stack.push(3); stack.peek()',
-    hints: [
-      'Stack operations use same type T',
-      'pop and peek return T | undefined for empty',
-    ],
+    hints: ['Stack operations use same type T', 'pop and peek return T | undefined for empty'],
     tags: ['generics', 'interfaces', 'stack'],
   },
   {
@@ -6247,14 +5919,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Event Emitter Interface',
     text: 'Create a generic event emitter interface with typed events',
-    setup: 'interface EventEmitter<E extends Record<string, any>> { on<K extends keyof E>(event: K, cb: (data: E[K]) => void): void; emit<K extends keyof E>(event: K, data: E[K]): void; }\ntype Events = { click: { x: number; y: number }; load: string };\nconst emitter: EventEmitter<Events> & { handlers: any } = { handlers: {}, on(e, cb) { this.handlers[e] = cb; }, emit(e, data) { this.handlers[e]?.(data); } };',
-    setupCode: 'interface EventEmitter<E extends Record<string, any>> { on<K extends keyof E>(event: K, cb: (data: E[K]) => void): void; emit<K extends keyof E>(event: K, data: E[K]): void; }\ntype Events = { click: { x: number; y: number }; load: string };\nconst emitter: EventEmitter<Events> & { handlers: any } = { handlers: {}, on(e, cb) { this.handlers[e] = cb; }, emit(e, data) { this.handlers[e]?.(data); } };',
+    setup:
+      'interface EventEmitter<E extends Record<string, any>> { on<K extends keyof E>(event: K, cb: (data: E[K]) => void): void; emit<K extends keyof E>(event: K, data: E[K]): void; }\ntype Events = { click: { x: number; y: number }; load: string };\nconst emitter: EventEmitter<Events> & { handlers: any } = { handlers: {}, on(e, cb) { this.handlers[e] = cb; }, emit(e, data) { this.handlers[e]?.(data); } };',
+    setupCode:
+      'interface EventEmitter<E extends Record<string, any>> { on<K extends keyof E>(event: K, cb: (data: E[K]) => void): void; emit<K extends keyof E>(event: K, data: E[K]): void; }\ntype Events = { click: { x: number; y: number }; load: string };\nconst emitter: EventEmitter<Events> & { handlers: any } = { handlers: {}, on(e, cb) { this.handlers[e] = cb; }, emit(e, data) { this.handlers[e]?.(data); } };',
     expected: { x: 10, y: 20 },
-    sample: 'let result: any;\nemitter.on("click", (data) => { result = data; });\nemitter.emit("click", { x: 10, y: 20 });\nresult',
-    hints: [
-      'E maps event names to payload types',
-      'K extends keyof E constrains to valid events',
-    ],
+    sample:
+      'let result: any;\nemitter.on("click", (data) => { result = data; });\nemitter.emit("click", { x: 10, y: 20 });\nresult',
+    hints: ['E maps event names to payload types', 'K extends keyof E constrains to valid events'],
     tags: ['generics', 'interfaces', 'events'],
   },
 
@@ -6268,13 +5940,11 @@ export const typescriptProblems: Problem[] = [
     title: 'Generic Box Class',
     text: 'Create a generic Box class that wraps a value',
     setup: 'class Box<T> { constructor(public value: T) {} getValue(): T { return this.value; } }',
-    setupCode: 'class Box<T> { constructor(public value: T) {} getValue(): T { return this.value; } }',
+    setupCode:
+      'class Box<T> { constructor(public value: T) {} getValue(): T { return this.value; } }',
     expected: 'hello',
     sample: 'new Box("hello").getValue()',
-    hints: [
-      'Class takes type parameter after name',
-      'Constructor and methods use the type T',
-    ],
+    hints: ['Class takes type parameter after name', 'Constructor and methods use the type T'],
     tags: ['generics', 'classes', 'box'],
   },
   {
@@ -6283,14 +5953,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Pair Class',
     text: 'Create a generic Pair class holding two values of different types',
-    setup: 'class Pair<T, U> { constructor(public first: T, public second: U) {} toArray(): [T, U] { return [this.first, this.second]; } }',
-    setupCode: 'class Pair<T, U> { constructor(public first: T, public second: U) {} toArray(): [T, U] { return [this.first, this.second]; } }',
+    setup:
+      'class Pair<T, U> { constructor(public first: T, public second: U) {} toArray(): [T, U] { return [this.first, this.second]; } }',
+    setupCode:
+      'class Pair<T, U> { constructor(public first: T, public second: U) {} toArray(): [T, U] { return [this.first, this.second]; } }',
     expected: ['name', 42],
     sample: 'new Pair("name", 42).toArray()',
-    hints: [
-      'Use two type parameters T and U',
-      'Return tuple type [T, U] from toArray',
-    ],
+    hints: ['Use two type parameters T and U', 'Return tuple type [T, U] from toArray'],
     tags: ['generics', 'classes', 'pair'],
   },
   {
@@ -6299,14 +5968,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Queue Class',
     text: 'Create a generic Queue class with enqueue and dequeue',
-    setup: 'class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } size(): number { return this.items.length; } }',
-    setupCode: 'class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } size(): number { return this.items.length; } }',
+    setup:
+      'class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } size(): number { return this.items.length; } }',
+    setupCode:
+      'class Queue<T> { private items: T[] = []; enqueue(item: T): void { this.items.push(item); } dequeue(): T | undefined { return this.items.shift(); } size(): number { return this.items.length; } }',
     expected: 'first',
-    sample: 'const q = new Queue<string>();\nq.enqueue("first");\nq.enqueue("second");\nq.dequeue()',
-    hints: [
-      'Use array as internal storage',
-      'shift() removes and returns first element',
-    ],
+    sample:
+      'const q = new Queue<string>();\nq.enqueue("first");\nq.enqueue("second");\nq.dequeue()',
+    hints: ['Use array as internal storage', 'shift() removes and returns first element'],
     tags: ['generics', 'classes', 'queue'],
   },
   {
@@ -6315,14 +5984,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic LinkedList Node',
     text: 'Create a generic LinkedList node class',
-    setup: 'class ListNode<T> { next: ListNode<T> | null = null; constructor(public value: T) {} append(val: T): ListNode<T> { const node = new ListNode(val); this.next = node; return node; } }',
-    setupCode: 'class ListNode<T> { next: ListNode<T> | null = null; constructor(public value: T) {} append(val: T): ListNode<T> { const node = new ListNode(val); this.next = node; return node; } }',
+    setup:
+      'class ListNode<T> { next: ListNode<T> | null = null; constructor(public value: T) {} append(val: T): ListNode<T> { const node = new ListNode(val); this.next = node; return node; } }',
+    setupCode:
+      'class ListNode<T> { next: ListNode<T> | null = null; constructor(public value: T) {} append(val: T): ListNode<T> { const node = new ListNode(val); this.next = node; return node; } }',
     expected: 2,
     sample: 'const head = new ListNode(1);\nhead.append(2);\nhead.next?.value',
-    hints: [
-      'Self-referential: next is ListNode<T> | null',
-      'Recursive structure for linked list',
-    ],
+    hints: ['Self-referential: next is ListNode<T> | null', 'Recursive structure for linked list'],
     tags: ['generics', 'classes', 'linkedlist'],
   },
   {
@@ -6331,14 +5999,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Cache Class',
     text: 'Create a generic Cache class with get, set, and has methods',
-    setup: 'class Cache<K, V> { private store = new Map<K, V>(); get(key: K): V | undefined { return this.store.get(key); } set(key: K, value: V): void { this.store.set(key, value); } has(key: K): boolean { return this.store.has(key); } }',
-    setupCode: 'class Cache<K, V> { private store = new Map<K, V>(); get(key: K): V | undefined { return this.store.get(key); } set(key: K, value: V): void { this.store.set(key, value); } has(key: K): boolean { return this.store.has(key); } }',
+    setup:
+      'class Cache<K, V> { private store = new Map<K, V>(); get(key: K): V | undefined { return this.store.get(key); } set(key: K, value: V): void { this.store.set(key, value); } has(key: K): boolean { return this.store.has(key); } }',
+    setupCode:
+      'class Cache<K, V> { private store = new Map<K, V>(); get(key: K): V | undefined { return this.store.get(key); } set(key: K, value: V): void { this.store.set(key, value); } has(key: K): boolean { return this.store.has(key); } }',
     expected: 'value1',
-    sample: 'const cache = new Cache<string, string>();\ncache.set("key1", "value1");\ncache.get("key1")',
-    hints: [
-      'Use Map<K, V> for internal storage',
-      'Two type parameters: K for key, V for value',
-    ],
+    sample:
+      'const cache = new Cache<string, string>();\ncache.set("key1", "value1");\ncache.get("key1")',
+    hints: ['Use Map<K, V> for internal storage', 'Two type parameters: K for key, V for value'],
     tags: ['generics', 'classes', 'cache'],
   },
   {
@@ -6347,14 +6015,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Observable Class',
     text: 'Create a generic Observable class with subscribe and notify',
-    setup: 'class Observable<T> { private observers: ((value: T) => void)[] = []; subscribe(fn: (value: T) => void): () => void { this.observers.push(fn); return () => { this.observers = this.observers.filter(o => o !== fn); }; } notify(value: T): void { this.observers.forEach(fn => fn(value)); } }',
-    setupCode: 'class Observable<T> { private observers: ((value: T) => void)[] = []; subscribe(fn: (value: T) => void): () => void { this.observers.push(fn); return () => { this.observers = this.observers.filter(o => o !== fn); }; } notify(value: T): void { this.observers.forEach(fn => fn(value)); } }',
+    setup:
+      'class Observable<T> { private observers: ((value: T) => void)[] = []; subscribe(fn: (value: T) => void): () => void { this.observers.push(fn); return () => { this.observers = this.observers.filter(o => o !== fn); }; } notify(value: T): void { this.observers.forEach(fn => fn(value)); } }',
+    setupCode:
+      'class Observable<T> { private observers: ((value: T) => void)[] = []; subscribe(fn: (value: T) => void): () => void { this.observers.push(fn); return () => { this.observers = this.observers.filter(o => o !== fn); }; } notify(value: T): void { this.observers.forEach(fn => fn(value)); } }',
     expected: 'hello',
-    sample: 'const obs = new Observable<string>();\nlet result = "";\nobs.subscribe(v => { result = v; });\nobs.notify("hello");\nresult',
-    hints: [
-      'Observers are functions taking T',
-      'subscribe returns unsubscribe function',
-    ],
+    sample:
+      'const obs = new Observable<string>();\nlet result = "";\nobs.subscribe(v => { result = v; });\nobs.notify("hello");\nresult',
+    hints: ['Observers are functions taking T', 'subscribe returns unsubscribe function'],
     tags: ['generics', 'classes', 'observable'],
   },
 
@@ -6367,14 +6035,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Default Type Parameter Basic',
     text: 'Create a generic type with a default type parameter',
-    setup: 'type Container<T = string> = { value: T };\nconst container: Container = { value: "default" };',
-    setupCode: 'type Container<T = string> = { value: T };\nconst container: Container = { value: "default" };',
+    setup:
+      'type Container<T = string> = { value: T };\nconst container: Container = { value: "default" };',
+    setupCode:
+      'type Container<T = string> = { value: T };\nconst container: Container = { value: "default" };',
     expected: 'default',
     sample: 'container.value',
-    hints: [
-      'Use = after type parameter for default',
-      'Default is used when type not specified',
-    ],
+    hints: ['Use = after type parameter for default', 'Default is used when type not specified'],
     tags: ['generics', 'default', 'type-parameter'],
   },
   {
@@ -6383,14 +6050,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Default Type with Override',
     text: 'Use a generic type with an explicit type overriding the default',
-    setup: 'type Response<T = any> = { data: T; status: number };\nconst resp: Response<number[]> = { data: [1, 2, 3], status: 200 };',
-    setupCode: 'type Response<T = any> = { data: T; status: number };\nconst resp: Response<number[]> = { data: [1, 2, 3], status: 200 };',
+    setup:
+      'type Response<T = any> = { data: T; status: number };\nconst resp: Response<number[]> = { data: [1, 2, 3], status: 200 };',
+    setupCode:
+      'type Response<T = any> = { data: T; status: number };\nconst resp: Response<number[]> = { data: [1, 2, 3], status: 200 };',
     expected: [1, 2, 3],
     sample: 'resp.data',
-    hints: [
-      'Default is any, but we specify number[]',
-      'Explicit type overrides the default',
-    ],
+    hints: ['Default is any, but we specify number[]', 'Explicit type overrides the default'],
     tags: ['generics', 'default', 'override'],
   },
   {
@@ -6399,14 +6065,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Multiple Defaults',
     text: 'Create a type with multiple default type parameters',
-    setup: 'type ApiResponse<T = unknown, E = Error> = { data?: T; error?: E; ok: boolean };\nconst success: ApiResponse<string> = { data: "result", ok: true };',
-    setupCode: 'type ApiResponse<T = unknown, E = Error> = { data?: T; error?: E; ok: boolean };\nconst success: ApiResponse<string> = { data: "result", ok: true };',
+    setup:
+      'type ApiResponse<T = unknown, E = Error> = { data?: T; error?: E; ok: boolean };\nconst success: ApiResponse<string> = { data: "result", ok: true };',
+    setupCode:
+      'type ApiResponse<T = unknown, E = Error> = { data?: T; error?: E; ok: boolean };\nconst success: ApiResponse<string> = { data: "result", ok: true };',
     expected: 'result',
     sample: 'success.data',
-    hints: [
-      'Each parameter can have its own default',
-      'Later defaults use earlier parameters',
-    ],
+    hints: ['Each parameter can have its own default', 'Later defaults use earlier parameters'],
     tags: ['generics', 'default', 'multiple'],
   },
   {
@@ -6415,14 +6080,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Default Depends on Previous',
     text: 'Create a type where default depends on a previous type parameter',
-    setup: 'type KeyValue<K extends string = string, V = K> = { key: K; value: V };\nconst kv: KeyValue = { key: "test", value: "test" };',
-    setupCode: 'type KeyValue<K extends string = string, V = K> = { key: K; value: V };\nconst kv: KeyValue = { key: "test", value: "test" };',
+    setup:
+      'type KeyValue<K extends string = string, V = K> = { key: K; value: V };\nconst kv: KeyValue = { key: "test", value: "test" };',
+    setupCode:
+      'type KeyValue<K extends string = string, V = K> = { key: K; value: V };\nconst kv: KeyValue = { key: "test", value: "test" };',
     expected: 'test',
     sample: 'kv.value',
-    hints: [
-      'V = K means V defaults to same type as K',
-      'Dependencies between type parameters',
-    ],
+    hints: ['V = K means V defaults to same type as K', 'Dependencies between type parameters'],
     tags: ['generics', 'default', 'dependent'],
   },
 
@@ -6439,10 +6103,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function echo<T>(value: T): T { return value; }',
     expected: true,
     sample: 'echo(true)',
-    hints: [
-      'No need to specify <boolean>',
-      'Type inferred from argument value',
-    ],
+    hints: ['No need to specify <boolean>', 'Type inferred from argument value'],
     tags: ['generics', 'inference', 'arguments'],
   },
   {
@@ -6455,10 +6116,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function head<T>(arr: T[]): T | undefined { return arr[0]; }',
     expected: 1,
     sample: 'head([1, 2, 3])',
-    hints: [
-      'T is inferred as number from [1, 2, 3]',
-      'Array literal provides inference context',
-    ],
+    hints: ['T is inferred as number from [1, 2, 3]', 'Array literal provides inference context'],
     tags: ['generics', 'inference', 'arrays'],
   },
   {
@@ -6471,10 +6129,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function merge<T>(a: T, b: T): T[] { return [a, b]; }',
     expected: [1, 2],
     sample: 'merge(1, 2)',
-    hints: [
-      'Both arguments must be same type T',
-      'TypeScript finds common type',
-    ],
+    hints: ['Both arguments must be same type T', 'TypeScript finds common type'],
     tags: ['generics', 'inference', 'multiple'],
   },
   {
@@ -6487,10 +6142,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function create<T>(): T[] { return []; }',
     expected: true,
     sample: 'const nums: number[] = create();\nArray.isArray(nums)',
-    hints: [
-      'Return type annotation provides context',
-      'T inferred as number from context',
-    ],
+    hints: ['Return type annotation provides context', 'T inferred as number from context'],
     tags: ['generics', 'inference', 'context'],
   },
   {
@@ -6499,14 +6151,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Infer Object Property Types',
     text: 'Infer types from object literal properties',
-    setup: 'function keys<T extends object>(obj: T): (keyof T)[] { return Object.keys(obj) as (keyof T)[]; }',
-    setupCode: 'function keys<T extends object>(obj: T): (keyof T)[] { return Object.keys(obj) as (keyof T)[]; }',
+    setup:
+      'function keys<T extends object>(obj: T): (keyof T)[] { return Object.keys(obj) as (keyof T)[]; }',
+    setupCode:
+      'function keys<T extends object>(obj: T): (keyof T)[] { return Object.keys(obj) as (keyof T)[]; }',
     expected: ['a', 'b'],
     sample: 'keys({ a: 1, b: 2 })',
-    hints: [
-      'T inferred as { a: number; b: number }',
-      'keyof T gives "a" | "b"',
-    ],
+    hints: ['T inferred as { a: number; b: number }', 'keyof T gives "a" | "b"'],
     tags: ['generics', 'inference', 'objects'],
   },
   {
@@ -6519,10 +6170,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function map<T, U>(arr: T[], fn: (item: T) => U): U[] { return arr.map(fn); }',
     expected: [2, 4, 6],
     sample: 'map([1, 2, 3], x => x * 2)',
-    hints: [
-      'T inferred from array, U from callback return',
-      'x is inferred as number',
-    ],
+    hints: ['T inferred from array, U from callback return', 'x is inferred as number'],
     tags: ['generics', 'inference', 'callbacks'],
   },
   {
@@ -6555,10 +6203,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type IsString<T> = T extends string ? true : false;',
     expected: true,
     sample: 'const result: IsString<"hello"> = true;\nresult',
-    hints: [
-      'Use extends for type condition',
-      'Ternary-like syntax for conditional types',
-    ],
+    hints: ['Use extends for type condition', 'Ternary-like syntax for conditional types'],
     tags: ['generics', 'conditional', 'extends'],
   },
   {
@@ -6567,14 +6212,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Conditional Return Type',
     text: 'Create a function with conditional return type',
-    setup: 'function process<T>(value: T): T extends string ? number : string { return (typeof value === "string" ? value.length : String(value)) as any; }',
-    setupCode: 'function process<T>(value: T): T extends string ? number : string { return (typeof value === "string" ? value.length : String(value)) as any; }',
+    setup:
+      'function process<T>(value: T): T extends string ? number : string { return (typeof value === "string" ? value.length : String(value)) as any; }',
+    setupCode:
+      'function process<T>(value: T): T extends string ? number : string { return (typeof value === "string" ? value.length : String(value)) as any; }',
     expected: 5,
     sample: 'process("hello")',
-    hints: [
-      'Return type depends on input type',
-      'String input returns length (number)',
-    ],
+    hints: ['Return type depends on input type', 'String input returns length (number)'],
     tags: ['generics', 'conditional', 'return-type'],
   },
   {
@@ -6587,10 +6231,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type MyExclude<T, U> = T extends U ? never : T;',
     expected: 'a',
     sample: 'const val: MyExclude<"a" | "b" | "c", "b" | "c"> = "a";\nval',
-    hints: [
-      'Conditional distributes over unions',
-      'never removes type from union',
-    ],
+    hints: ['Conditional distributes over unions', 'never removes type from union'],
     tags: ['generics', 'conditional', 'exclude'],
   },
   {
@@ -6603,10 +6244,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type MyExtract<T, U> = T extends U ? T : never;',
     expected: 'b',
     sample: 'const val: MyExtract<"a" | "b" | "c", "b" | "d"> = "b";\nval',
-    hints: [
-      'Opposite of Exclude logic',
-      'Keeps types that match U',
-    ],
+    hints: ['Opposite of Exclude logic', 'Keeps types that match U'],
     tags: ['generics', 'conditional', 'extract'],
   },
   {
@@ -6619,10 +6257,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type MyNonNullable<T> = T extends null | undefined ? never : T;',
     expected: 'value',
     sample: 'const val: MyNonNullable<string | null | undefined> = "value";\nval',
-    hints: [
-      'Exclude null and undefined',
-      'Uses conditional distribution',
-    ],
+    hints: ['Exclude null and undefined', 'Uses conditional distribution'],
     tags: ['generics', 'conditional', 'nonnullable'],
   },
   {
@@ -6635,10 +6270,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Flatten<T> = T extends (infer U)[] ? Flatten<U> : T;',
     expected: 1,
     sample: 'const val: Flatten<number[][][]> = 1;\nval',
-    hints: [
-      'Recursively check for array type',
-      'infer U gets element type',
-    ],
+    hints: ['Recursively check for array type', 'infer U gets element type'],
     tags: ['generics', 'conditional', 'flatten', 'recursive'],
   },
   {
@@ -6651,10 +6283,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type ToArray<T> = T extends any ? T[] : never;',
     expected: [1],
     sample: 'const val: ToArray<string | number> = [1];\nval',
-    hints: [
-      'Distributes: ToArray<A | B> = A[] | B[]',
-      'Each union member processed separately',
-    ],
+    hints: ['Distributes: ToArray<A | B> = A[] | B[]', 'Each union member processed separately'],
     tags: ['generics', 'conditional', 'distributive'],
   },
 
@@ -6671,10 +6300,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type ElementOf<T> = T extends (infer E)[] ? E : never;',
     expected: 'test',
     sample: 'const val: ElementOf<string[]> = "test";\nval',
-    hints: [
-      'infer E captures the element type',
-      'Pattern matches array structure',
-    ],
+    hints: ['infer E captures the element type', 'Pattern matches array structure'],
     tags: ['generics', 'infer', 'array'],
   },
   {
@@ -6687,10 +6313,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type MyReturnType<T> = T extends (...args: any[]) => infer R ? R : never;',
     expected: 42,
     sample: 'type Fn = () => number;\nconst val: MyReturnType<Fn> = 42;\nval',
-    hints: [
-      'infer R captures the return type',
-      'Pattern matches function signature',
-    ],
+    hints: ['infer R captures the return type', 'Pattern matches function signature'],
     tags: ['generics', 'infer', 'return-type'],
   },
   {
@@ -6702,11 +6325,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyParameters<T> = T extends (...args: infer P) => any ? P : never;',
     setupCode: 'type MyParameters<T> = T extends (...args: infer P) => any ? P : never;',
     expected: ['hello', 42],
-    sample: 'type Fn = (a: string, b: number) => void;\nconst params: MyParameters<Fn> = ["hello", 42];\nparams',
-    hints: [
-      'infer P captures parameter tuple',
-      'Rest parameter pattern in signature',
-    ],
+    sample:
+      'type Fn = (a: string, b: number) => void;\nconst params: MyParameters<Fn> = ["hello", 42];\nparams',
+    hints: ['infer P captures parameter tuple', 'Rest parameter pattern in signature'],
     tags: ['generics', 'infer', 'parameters'],
   },
   {
@@ -6719,10 +6340,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Unpromise<T> = T extends Promise<infer U> ? U : T;',
     expected: 'resolved',
     sample: 'const val: Unpromise<Promise<string>> = "resolved";\nval',
-    hints: [
-      'infer U captures Promise generic type',
-      'Non-promise types pass through',
-    ],
+    hints: ['infer U captures Promise generic type', 'Non-promise types pass through'],
     tags: ['generics', 'infer', 'promise'],
   },
   {
@@ -6734,11 +6352,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type FirstArg<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;',
     setupCode: 'type FirstArg<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;',
     expected: 'first',
-    sample: 'type Fn = (a: string, b: number, c: boolean) => void;\nconst val: FirstArg<Fn> = "first";\nval',
-    hints: [
-      'Pattern match first parameter separately',
-      'Rest collects remaining parameters',
-    ],
+    sample:
+      'type Fn = (a: string, b: number, c: boolean) => void;\nconst val: FirstArg<Fn> = "first";\nval',
+    hints: ['Pattern match first parameter separately', 'Rest collects remaining parameters'],
     tags: ['generics', 'infer', 'first-arg'],
   },
   {
@@ -6750,11 +6366,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type InstanceOf<T> = T extends new (...args: any[]) => infer I ? I : never;',
     setupCode: 'type InstanceOf<T> = T extends new (...args: any[]) => infer I ? I : never;',
     expected: { name: 'test' },
-    sample: 'class Foo { name = "test"; }\nconst instance: InstanceOf<typeof Foo> = new Foo();\n({ name: instance.name })',
-    hints: [
-      'new keyword indicates constructor',
-      'infer I captures instance type',
-    ],
+    sample:
+      'class Foo { name = "test"; }\nconst instance: InstanceOf<typeof Foo> = new Foo();\n({ name: instance.name })',
+    hints: ['new keyword indicates constructor', 'infer I captures instance type'],
     tags: ['generics', 'infer', 'constructor'],
   },
   {
@@ -6767,10 +6381,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;',
     expected: true,
     sample: 'const val: Last<[string, number, boolean]> = true;\nval',
-    hints: [
-      'Spread infer captures all but last',
-      'L captures the last element',
-    ],
+    hints: ['Spread infer captures all but last', 'L captures the last element'],
     tags: ['generics', 'infer', 'tuple', 'last'],
   },
   {
@@ -6783,10 +6394,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type First<T extends any[]> = T extends [infer F, ...infer _] ? F : never;',
     expected: 'first',
     sample: 'const val: First<[string, number, boolean]> = "first";\nval',
-    hints: [
-      'F captures first element',
-      'Spread infer captures the rest',
-    ],
+    hints: ['F captures first element', 'Spread infer captures the rest'],
     tags: ['generics', 'infer', 'tuple', 'first'],
   },
 
@@ -6802,11 +6410,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyPartial<T> = { [K in keyof T]?: T[K] };',
     setupCode: 'type MyPartial<T> = { [K in keyof T]?: T[K] };',
     expected: { name: 'Alice' },
-    sample: 'type Person = { name: string; age: number };\nconst partial: MyPartial<Person> = { name: "Alice" };\npartial',
-    hints: [
-      'K in keyof T iterates over keys',
-      '? makes each property optional',
-    ],
+    sample:
+      'type Person = { name: string; age: number };\nconst partial: MyPartial<Person> = { name: "Alice" };\npartial',
+    hints: ['K in keyof T iterates over keys', '? makes each property optional'],
     tags: ['generics', 'mapped-types', 'partial'],
   },
   {
@@ -6818,11 +6424,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyRequired<T> = { [K in keyof T]-?: T[K] };',
     setupCode: 'type MyRequired<T> = { [K in keyof T]-?: T[K] };',
     expected: { name: 'Bob', age: 25 },
-    sample: 'type Person = { name?: string; age?: number };\nconst required: MyRequired<Person> = { name: "Bob", age: 25 };\nrequired',
-    hints: [
-      '-? removes optional modifier',
-      'All properties become required',
-    ],
+    sample:
+      'type Person = { name?: string; age?: number };\nconst required: MyRequired<Person> = { name: "Bob", age: 25 };\nrequired',
+    hints: ['-? removes optional modifier', 'All properties become required'],
     tags: ['generics', 'mapped-types', 'required'],
   },
   {
@@ -6834,11 +6438,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyReadonly<T> = { readonly [K in keyof T]: T[K] };',
     setupCode: 'type MyReadonly<T> = { readonly [K in keyof T]: T[K] };',
     expected: 42,
-    sample: 'type Data = { value: number };\nconst data: MyReadonly<Data> = { value: 42 };\ndata.value',
-    hints: [
-      'readonly modifier prevents reassignment',
-      'Applied to each property',
-    ],
+    sample:
+      'type Data = { value: number };\nconst data: MyReadonly<Data> = { value: 42 };\ndata.value',
+    hints: ['readonly modifier prevents reassignment', 'Applied to each property'],
     tags: ['generics', 'mapped-types', 'readonly'],
   },
   {
@@ -6850,11 +6452,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyPick<T, K extends keyof T> = { [P in K]: T[P] };',
     setupCode: 'type MyPick<T, K extends keyof T> = { [P in K]: T[P] };',
     expected: { name: 'Alice' },
-    sample: 'type Person = { name: string; age: number; email: string };\nconst picked: MyPick<Person, "name"> = { name: "Alice" };\npicked',
-    hints: [
-      'K extends keyof T constrains to valid keys',
-      'Only iterate over specified keys',
-    ],
+    sample:
+      'type Person = { name: string; age: number; email: string };\nconst picked: MyPick<Person, "name"> = { name: "Alice" };\npicked',
+    hints: ['K extends keyof T constrains to valid keys', 'Only iterate over specified keys'],
     tags: ['generics', 'mapped-types', 'pick'],
   },
   {
@@ -6866,11 +6466,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MyOmit<T, K extends keyof T> = { [P in Exclude<keyof T, K>]: T[P] };',
     setupCode: 'type MyOmit<T, K extends keyof T> = { [P in Exclude<keyof T, K>]: T[P] };',
     expected: { age: 30 },
-    sample: 'type Person = { name: string; age: number };\nconst omitted: MyOmit<Person, "name"> = { age: 30 };\nomitted',
-    hints: [
-      'Use Exclude to remove keys',
-      'Iterate over remaining keys',
-    ],
+    sample:
+      'type Person = { name: string; age: number };\nconst omitted: MyOmit<Person, "name"> = { age: 30 };\nomitted',
+    hints: ['Use Exclude to remove keys', 'Iterate over remaining keys'],
     tags: ['generics', 'mapped-types', 'omit'],
   },
   {
@@ -6883,10 +6481,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type MyRecord<K extends string, V> = { [P in K]: V };',
     expected: { a: 1, b: 1 },
     sample: 'const record: MyRecord<"a" | "b", number> = { a: 1, b: 1 };\nrecord',
-    hints: [
-      'K is a union of keys',
-      'All keys map to same value type V',
-    ],
+    hints: ['K is a union of keys', 'All keys map to same value type V'],
     tags: ['generics', 'mapped-types', 'record'],
   },
   {
@@ -6898,11 +6493,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Nullable<T> = { [K in keyof T]: T[K] | null };',
     setupCode: 'type Nullable<T> = { [K in keyof T]: T[K] | null };',
     expected: { name: null, age: 25 },
-    sample: 'type Person = { name: string; age: number };\nconst nullable: Nullable<Person> = { name: null, age: 25 };\nnullable',
-    hints: [
-      'Add | null to each property type',
-      'Original type preserved in union',
-    ],
+    sample:
+      'type Person = { name: string; age: number };\nconst nullable: Nullable<Person> = { name: null, age: 25 };\nnullable',
+    hints: ['Add | null to each property type', 'Original type preserved in union'],
     tags: ['generics', 'mapped-types', 'nullable'],
   },
   {
@@ -6912,13 +6505,12 @@ export const typescriptProblems: Problem[] = [
     title: 'Key Remapping Mapped Type',
     text: 'Create a mapped type that prefixes all keys',
     setup: 'type Prefixed<T, P extends string> = { [K in keyof T as `${P}${K & string}`]: T[K] };',
-    setupCode: 'type Prefixed<T, P extends string> = { [K in keyof T as `${P}${K & string}`]: T[K] };',
+    setupCode:
+      'type Prefixed<T, P extends string> = { [K in keyof T as `${P}${K & string}`]: T[K] };',
     expected: { get_name: 'Alice' },
-    sample: 'type Person = { name: string };\nconst prefixed: Prefixed<Person, "get_"> = { get_name: "Alice" };\nprefixed',
-    hints: [
-      'Use as clause for key remapping',
-      'Template literal creates new key',
-    ],
+    sample:
+      'type Person = { name: string };\nconst prefixed: Prefixed<Person, "get_"> = { get_name: "Alice" };\nprefixed',
+    hints: ['Use as clause for key remapping', 'Template literal creates new key'],
     tags: ['generics', 'mapped-types', 'key-remapping'],
   },
   {
@@ -6928,9 +6520,11 @@ export const typescriptProblems: Problem[] = [
     title: 'Getters Mapped Type',
     text: 'Create a mapped type that converts properties to getter methods',
     setup: 'type Getters<T> = { [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K] };',
-    setupCode: 'type Getters<T> = { [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K] };',
+    setupCode:
+      'type Getters<T> = { [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K] };',
     expected: 'Alice',
-    sample: 'type Person = { name: string };\nconst getters: Getters<Person> = { getName: () => "Alice" };\ngetters.getName()',
+    sample:
+      'type Person = { name: string };\nconst getters: Getters<Person> = { getName: () => "Alice" };\ngetters.getName()',
     hints: [
       'Capitalize transforms first letter',
       'Property becomes function returning original type',
@@ -6943,14 +6537,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Deep Readonly Mapped Type',
     text: 'Create a recursive mapped type that makes all nested properties readonly',
-    setup: 'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
-    setupCode: 'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
+    setup:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
+    setupCode:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
     expected: 'nested',
-    sample: 'type Data = { a: { b: string } };\nconst data: DeepReadonly<Data> = { a: { b: "nested" } };\ndata.a.b',
-    hints: [
-      'Recursively apply for object properties',
-      'Base case for non-object types',
-    ],
+    sample:
+      'type Data = { a: { b: string } };\nconst data: DeepReadonly<Data> = { a: { b: "nested" } };\ndata.a.b',
+    hints: ['Recursively apply for object properties', 'Base case for non-object types'],
     tags: ['generics', 'mapped-types', 'deep', 'readonly'],
   },
 
@@ -6967,10 +6561,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Concat<T extends any[], U extends any[]> = [...T, ...U];',
     expected: [1, 2, 'a', 'b'],
     sample: 'const result: Concat<[1, 2], ["a", "b"]> = [1, 2, "a", "b"];\nresult',
-    hints: [
-      'Spread both tuples into new tuple',
-      'Order is preserved',
-    ],
+    hints: ['Spread both tuples into new tuple', 'Order is preserved'],
     tags: ['generics', 'variadic', 'tuple', 'concat'],
   },
   {
@@ -6983,10 +6574,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Push<T extends any[], E> = [...T, E];',
     expected: [1, 2, 3],
     sample: 'const result: Push<[1, 2], 3> = [1, 2, 3];\nresult',
-    hints: [
-      'Spread existing tuple, add new element',
-      'E is appended at the end',
-    ],
+    hints: ['Spread existing tuple, add new element', 'E is appended at the end'],
     tags: ['generics', 'variadic', 'tuple', 'push'],
   },
   {
@@ -6999,10 +6587,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Unshift<T extends any[], E> = [E, ...T];',
     expected: [0, 1, 2],
     sample: 'const result: Unshift<[1, 2], 0> = [0, 1, 2];\nresult',
-    hints: [
-      'New element first, then spread tuple',
-      'E is prepended at the start',
-    ],
+    hints: ['New element first, then spread tuple', 'E is prepended at the start'],
     tags: ['generics', 'variadic', 'tuple', 'unshift'],
   },
   {
@@ -7015,10 +6600,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Pop<T extends any[]> = T extends [...infer R, any] ? R : never;',
     expected: [1, 2],
     sample: 'const result: Pop<[1, 2, 3]> = [1, 2];\nresult',
-    hints: [
-      'Use infer with spread to capture all but last',
-      'any matches the last element',
-    ],
+    hints: ['Use infer with spread to capture all but last', 'any matches the last element'],
     tags: ['generics', 'variadic', 'tuple', 'pop'],
   },
   {
@@ -7031,10 +6613,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Shift<T extends any[]> = T extends [any, ...infer R] ? R : never;',
     expected: [2, 3],
     sample: 'const result: Shift<[1, 2, 3]> = [2, 3];\nresult',
-    hints: [
-      'Match first element as any',
-      'Infer rest of tuple',
-    ],
+    hints: ['Match first element as any', 'Infer rest of tuple'],
     tags: ['generics', 'variadic', 'tuple', 'shift'],
   },
   {
@@ -7047,10 +6626,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type Length<T extends any[]> = T["length"];',
     expected: 3,
     sample: 'const len: Length<[1, 2, 3]> = 3;\nlen',
-    hints: [
-      'Tuple types have literal length',
-      'Access length property of tuple type',
-    ],
+    hints: ['Tuple types have literal length', 'Access length property of tuple type'],
     tags: ['generics', 'variadic', 'tuple', 'length'],
   },
   {
@@ -7059,14 +6635,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Variadic Function Parameters',
     text: 'Create a function that accepts variadic tuple parameters',
-    setup: 'function combine<T extends any[], U extends any[]>(a: [...T], b: [...U]): [...T, ...U] { return [...a, ...b]; }',
-    setupCode: 'function combine<T extends any[], U extends any[]>(a: [...T], b: [...U]): [...T, ...U] { return [...a, ...b]; }',
+    setup:
+      'function combine<T extends any[], U extends any[]>(a: [...T], b: [...U]): [...T, ...U] { return [...a, ...b]; }',
+    setupCode:
+      'function combine<T extends any[], U extends any[]>(a: [...T], b: [...U]): [...T, ...U] { return [...a, ...b]; }',
     expected: [1, 'a', true, 2],
     sample: 'combine([1, "a"], [true, 2])',
-    hints: [
-      'Spread operator in function signature',
-      'Return type combines both tuples',
-    ],
+    hints: ['Spread operator in function signature', 'Return type combines both tuples'],
     tags: ['generics', 'variadic', 'functions'],
   },
 
@@ -7079,14 +6654,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Type Alias',
     text: 'Create a generic type alias for a callback function',
-    setup: 'type Callback<T> = (value: T) => void;\nconst logNum: Callback<number> = (n) => console.log(n);',
-    setupCode: 'type Callback<T> = (value: T) => void;\nconst logNum: Callback<number> = (n) => console.log(n);',
+    setup:
+      'type Callback<T> = (value: T) => void;\nconst logNum: Callback<number> = (n) => console.log(n);',
+    setupCode:
+      'type Callback<T> = (value: T) => void;\nconst logNum: Callback<number> = (n) => console.log(n);',
     expected: 'function',
     sample: 'typeof logNum',
-    hints: [
-      'Type alias can be generic',
-      'T is used in function parameter',
-    ],
+    hints: ['Type alias can be generic', 'T is used in function parameter'],
     tags: ['generics', 'type-alias', 'callback'],
   },
   {
@@ -7098,11 +6672,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Result<T> = { ok: true; value: T } | { ok: false; error: string };',
     setupCode: 'type Result<T> = { ok: true; value: T } | { ok: false; error: string };',
     expected: 42,
-    sample: 'const success: Result<number> = { ok: true, value: 42 };\nsuccess.ok ? success.value : 0',
-    hints: [
-      'Union of success and failure cases',
-      'Discriminated union with ok property',
-    ],
+    sample:
+      'const success: Result<number> = { ok: true, value: 42 };\nsuccess.ok ? success.value : 0',
+    hints: ['Union of success and failure cases', 'Discriminated union with ok property'],
     tags: ['generics', 'union', 'result'],
   },
   {
@@ -7111,14 +6683,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Builder Pattern',
     text: 'Create a generic builder that chains method calls',
-    setup: 'class Builder<T extends object> { private obj: T = {} as T; set<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> { (this.obj as any)[key] = value; return this as any; } build(): T { return this.obj; } }',
-    setupCode: 'class Builder<T extends object> { private obj: T = {} as T; set<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> { (this.obj as any)[key] = value; return this as any; } build(): T { return this.obj; } }',
+    setup:
+      'class Builder<T extends object> { private obj: T = {} as T; set<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> { (this.obj as any)[key] = value; return this as any; } build(): T { return this.obj; } }',
+    setupCode:
+      'class Builder<T extends object> { private obj: T = {} as T; set<K extends string, V>(key: K, value: V): Builder<T & Record<K, V>> { (this.obj as any)[key] = value; return this as any; } build(): T { return this.obj; } }',
     expected: { name: 'test', age: 25 },
     sample: 'new Builder().set("name", "test").set("age", 25).build()',
-    hints: [
-      'Each set call expands the type',
-      'Returns new Builder with extended type',
-    ],
+    hints: ['Each set call expands the type', 'Returns new Builder with extended type'],
     tags: ['generics', 'builder', 'pattern'],
   },
   {
@@ -7127,14 +6698,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Singleton Pattern',
     text: 'Create a generic singleton factory',
-    setup: 'function singleton<T>(create: () => T): () => T { let instance: T | null = null; return () => { if (instance === null) instance = create(); return instance; }; }',
-    setupCode: 'function singleton<T>(create: () => T): () => T { let instance: T | null = null; return () => { if (instance === null) instance = create(); return instance; }; }',
+    setup:
+      'function singleton<T>(create: () => T): () => T { let instance: T | null = null; return () => { if (instance === null) instance = create(); return instance; }; }',
+    setupCode:
+      'function singleton<T>(create: () => T): () => T { let instance: T | null = null; return () => { if (instance === null) instance = create(); return instance; }; }',
     expected: true,
     sample: 'const getConfig = singleton(() => ({ debug: true }));\ngetConfig() === getConfig()',
-    hints: [
-      'Factory returns same instance always',
-      'Lazy initialization on first call',
-    ],
+    hints: ['Factory returns same instance always', 'Lazy initialization on first call'],
     tags: ['generics', 'singleton', 'pattern'],
   },
   {
@@ -7143,14 +6713,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Memoization',
     text: 'Create a generic memoization function',
-    setup: 'function memoize<T extends (...args: any[]) => any>(fn: T): T { const cache = new Map<string, ReturnType<T>>(); return ((...args: Parameters<T>) => { const key = JSON.stringify(args); if (!cache.has(key)) cache.set(key, fn(...args)); return cache.get(key)!; }) as T; }',
-    setupCode: 'function memoize<T extends (...args: any[]) => any>(fn: T): T { const cache = new Map<string, ReturnType<T>>(); return ((...args: Parameters<T>) => { const key = JSON.stringify(args); if (!cache.has(key)) cache.set(key, fn(...args)); return cache.get(key)!; }) as T; }',
+    setup:
+      'function memoize<T extends (...args: any[]) => any>(fn: T): T { const cache = new Map<string, ReturnType<T>>(); return ((...args: Parameters<T>) => { const key = JSON.stringify(args); if (!cache.has(key)) cache.set(key, fn(...args)); return cache.get(key)!; }) as T; }',
+    setupCode:
+      'function memoize<T extends (...args: any[]) => any>(fn: T): T { const cache = new Map<string, ReturnType<T>>(); return ((...args: Parameters<T>) => { const key = JSON.stringify(args); if (!cache.has(key)) cache.set(key, fn(...args)); return cache.get(key)!; }) as T; }',
     expected: 8,
     sample: 'const cube = memoize((n: number) => n ** 3);\ncube(2)',
-    hints: [
-      'Cache results by stringified args',
-      'Return cached value if available',
-    ],
+    hints: ['Cache results by stringified args', 'Return cached value if available'],
     tags: ['generics', 'memoize', 'pattern'],
   },
   {
@@ -7159,14 +6728,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Pipe Function',
     text: 'Create a generic pipe function that composes functions left to right',
-    setup: 'function pipe<A, B>(f: (a: A) => B): (a: A) => B;\nfunction pipe<A, B, C>(f: (a: A) => B, g: (b: B) => C): (a: A) => C;\nfunction pipe<A, B, C, D>(f: (a: A) => B, g: (b: B) => C, h: (c: C) => D): (a: A) => D;\nfunction pipe(...fns: Function[]): Function { return (x: any) => fns.reduce((v, f) => f(v), x); }',
-    setupCode: 'function pipe<A, B>(f: (a: A) => B): (a: A) => B;\nfunction pipe<A, B, C>(f: (a: A) => B, g: (b: B) => C): (a: A) => C;\nfunction pipe<A, B, C, D>(f: (a: A) => B, g: (b: B) => C, h: (c: C) => D): (a: A) => D;\nfunction pipe(...fns: Function[]): Function { return (x: any) => fns.reduce((v, f) => f(v), x); }',
+    setup:
+      'function pipe<A, B>(f: (a: A) => B): (a: A) => B;\nfunction pipe<A, B, C>(f: (a: A) => B, g: (b: B) => C): (a: A) => C;\nfunction pipe<A, B, C, D>(f: (a: A) => B, g: (b: B) => C, h: (c: C) => D): (a: A) => D;\nfunction pipe(...fns: Function[]): Function { return (x: any) => fns.reduce((v, f) => f(v), x); }',
+    setupCode:
+      'function pipe<A, B>(f: (a: A) => B): (a: A) => B;\nfunction pipe<A, B, C>(f: (a: A) => B, g: (b: B) => C): (a: A) => C;\nfunction pipe<A, B, C, D>(f: (a: A) => B, g: (b: B) => C, h: (c: C) => D): (a: A) => D;\nfunction pipe(...fns: Function[]): Function { return (x: any) => fns.reduce((v, f) => f(v), x); }',
     expected: 6,
     sample: 'const process = pipe((x: number) => x + 1, (x: number) => x * 2);\nprocess(2)',
-    hints: [
-      'Overloads handle different arities',
-      'Each function output feeds next input',
-    ],
+    hints: ['Overloads handle different arities', 'Each function output feeds next input'],
     tags: ['generics', 'pipe', 'composition'],
   },
   {
@@ -7175,14 +6743,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic Curry Function',
     text: 'Create a generic curry function for two arguments',
-    setup: 'function curry<A, B, R>(fn: (a: A, b: B) => R): (a: A) => (b: B) => R { return (a: A) => (b: B) => fn(a, b); }',
-    setupCode: 'function curry<A, B, R>(fn: (a: A, b: B) => R): (a: A) => (b: B) => R { return (a: A) => (b: B) => fn(a, b); }',
+    setup:
+      'function curry<A, B, R>(fn: (a: A, b: B) => R): (a: A) => (b: B) => R { return (a: A) => (b: B) => fn(a, b); }',
+    setupCode:
+      'function curry<A, B, R>(fn: (a: A, b: B) => R): (a: A) => (b: B) => R { return (a: A) => (b: B) => fn(a, b); }',
     expected: 5,
     sample: 'const add = curry((a: number, b: number) => a + b);\nadd(2)(3)',
-    hints: [
-      'Returns nested functions',
-      'Each function takes one argument',
-    ],
+    hints: ['Returns nested functions', 'Each function takes one argument'],
     tags: ['generics', 'curry', 'functions'],
   },
   {
@@ -7191,14 +6758,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic State Machine Type',
     text: 'Create generic types for a type-safe state machine',
-    setup: 'type State<S extends string, D = void> = { state: S; data: D };\ntype Transition<From extends string, To extends string> = { from: From; to: To };\nfunction transition<S extends string, D, T extends string>(current: State<S, D>, to: T): State<T, D> { return { state: to, data: current.data }; }',
-    setupCode: 'type State<S extends string, D = void> = { state: S; data: D };\ntype Transition<From extends string, To extends string> = { from: From; to: To };\nfunction transition<S extends string, D, T extends string>(current: State<S, D>, to: T): State<T, D> { return { state: to, data: current.data }; }',
+    setup:
+      'type State<S extends string, D = void> = { state: S; data: D };\ntype Transition<From extends string, To extends string> = { from: From; to: To };\nfunction transition<S extends string, D, T extends string>(current: State<S, D>, to: T): State<T, D> { return { state: to, data: current.data }; }',
+    setupCode:
+      'type State<S extends string, D = void> = { state: S; data: D };\ntype Transition<From extends string, To extends string> = { from: From; to: To };\nfunction transition<S extends string, D, T extends string>(current: State<S, D>, to: T): State<T, D> { return { state: to, data: current.data }; }',
     expected: 'active',
-    sample: 'const idle: State<"idle", number> = { state: "idle", data: 42 };\nconst active = transition(idle, "active");\nactive.state',
-    hints: [
-      'State type pairs state name with data',
-      'Transition changes state type',
-    ],
+    sample:
+      'const idle: State<"idle", number> = { state: "idle", data: 42 };\nconst active = transition(idle, "active");\nactive.state',
+    hints: ['State type pairs state name with data', 'Transition changes state type'],
     tags: ['generics', 'state-machine', 'pattern'],
   },
   {
@@ -7207,14 +6774,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Predicate Type',
     text: 'Create a generic predicate type for filtering',
-    setup: 'type Predicate<T> = (value: T) => boolean;\nconst isEven: Predicate<number> = (n) => n % 2 === 0;',
-    setupCode: 'type Predicate<T> = (value: T) => boolean;\nconst isEven: Predicate<number> = (n) => n % 2 === 0;',
+    setup:
+      'type Predicate<T> = (value: T) => boolean;\nconst isEven: Predicate<number> = (n) => n % 2 === 0;',
+    setupCode:
+      'type Predicate<T> = (value: T) => boolean;\nconst isEven: Predicate<number> = (n) => n % 2 === 0;',
     expected: [2, 4],
     sample: '[1, 2, 3, 4, 5].filter(isEven)',
-    hints: [
-      'Predicate returns boolean',
-      'Used for filtering operations',
-    ],
+    hints: ['Predicate returns boolean', 'Used for filtering operations'],
     tags: ['generics', 'predicate', 'filter'],
   },
   {
@@ -7223,14 +6789,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Generic Comparator Type',
     text: 'Create a generic comparator type for sorting',
-    setup: 'type Comparator<T> = (a: T, b: T) => number;\nconst byLength: Comparator<string> = (a, b) => a.length - b.length;',
-    setupCode: 'type Comparator<T> = (a: T, b: T) => number;\nconst byLength: Comparator<string> = (a, b) => a.length - b.length;',
+    setup:
+      'type Comparator<T> = (a: T, b: T) => number;\nconst byLength: Comparator<string> = (a, b) => a.length - b.length;',
+    setupCode:
+      'type Comparator<T> = (a: T, b: T) => number;\nconst byLength: Comparator<string> = (a, b) => a.length - b.length;',
     expected: ['a', 'bb', 'ccc'],
     sample: '["ccc", "a", "bb"].sort(byLength)',
-    hints: [
-      'Comparator returns negative, zero, or positive',
-      'Used for sorting operations',
-    ],
+    hints: ['Comparator returns negative, zero, or positive', 'Used for sorting operations'],
     tags: ['generics', 'comparator', 'sort'],
   },
 
@@ -7247,10 +6812,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'interface User { id: number; name: string; email: string; }',
     expected: { name: 'Alice' },
     sample: 'const partialUser: Partial<User> = { name: "Alice" };\npartialUser',
-    hints: [
-      'Partial<T> makes all properties optional',
-      'You can include any subset of properties',
-    ],
+    hints: ['Partial<T> makes all properties optional', 'You can include any subset of properties'],
     tags: ['utility-types', 'partial'],
   },
   {
@@ -7259,10 +6821,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Partial for Update Functions',
     text: 'Use Partial to create a function that accepts partial updates to a user object',
-    setup: 'interface User { id: number; name: string; email: string; }\nconst user: User = { id: 1, name: "Bob", email: "bob@test.com" };',
-    setupCode: 'interface User { id: number; name: string; email: string; }\nconst user: User = { id: 1, name: "Bob", email: "bob@test.com" };',
+    setup:
+      'interface User { id: number; name: string; email: string; }\nconst user: User = { id: 1, name: "Bob", email: "bob@test.com" };',
+    setupCode:
+      'interface User { id: number; name: string; email: string; }\nconst user: User = { id: 1, name: "Bob", email: "bob@test.com" };',
     expected: { id: 1, name: 'Bob', email: 'bob@new.com' },
-    sample: 'function updateUser(user: User, updates: Partial<User>): User {\n  return { ...user, ...updates };\n}\nupdateUser(user, { email: "bob@new.com" })',
+    sample:
+      'function updateUser(user: User, updates: Partial<User>): User {\n  return { ...user, ...updates };\n}\nupdateUser(user, { email: "bob@new.com" })',
     hints: [
       'Partial allows passing only the fields to update',
       'Spread operator merges the updates',
@@ -7275,10 +6840,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Partial with Nested Objects',
     text: 'Create a partially filled configuration object with nested properties',
-    setup: 'interface Config { server: { host: string; port: number; }; database: { url: string; }; }',
-    setupCode: 'interface Config { server: { host: string; port: number; }; database: { url: string; }; }',
+    setup:
+      'interface Config { server: { host: string; port: number; }; database: { url: string; }; }',
+    setupCode:
+      'interface Config { server: { host: string; port: number; }; database: { url: string; }; }',
     expected: { server: { host: 'localhost', port: 3000 } },
-    sample: 'const config: Partial<Config> = { server: { host: "localhost", port: 3000 } };\nconfig',
+    sample:
+      'const config: Partial<Config> = { server: { host: "localhost", port: 3000 } };\nconfig',
     hints: [
       'Partial only makes top-level properties optional',
       'Nested objects still require all their properties',
@@ -7291,14 +6859,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Deep Partial Type',
     text: 'Implement a DeepPartial type that makes all nested properties optional recursively',
-    setup: 'type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T;\ninterface Config { server: { host: string; port: number; }; }',
-    setupCode: 'type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T;\ninterface Config { server: { host: string; port: number; }; }',
+    setup:
+      'type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T;\ninterface Config { server: { host: string; port: number; }; }',
+    setupCode:
+      'type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T;\ninterface Config { server: { host: string; port: number; }; }',
     expected: { server: { host: 'localhost' } },
     sample: 'const config: DeepPartial<Config> = { server: { host: "localhost" } };\nconfig',
-    hints: [
-      'Use recursive conditional types',
-      'Check if T extends object before recursing',
-    ],
+    hints: ['Use recursive conditional types', 'Check if T extends object before recursing'],
     tags: ['utility-types', 'partial', 'deep', 'recursive'],
   },
   {
@@ -7307,14 +6874,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Partial with Required Keys',
     text: 'Create a type that makes all properties optional except specified keys',
-    setup: 'type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;\ninterface User { id: number; name: string; email: string; }',
-    setupCode: 'type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;\ninterface User { id: number; name: string; email: string; }',
+    setup:
+      'type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;\ninterface User { id: number; name: string; email: string; }',
+    setupCode:
+      'type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;\ninterface User { id: number; name: string; email: string; }',
     expected: { id: 1, name: 'Alice' },
     sample: 'const user: PartialExcept<User, "id"> = { id: 1, name: "Alice" };\nuser',
-    hints: [
-      'Combine Partial and Pick with intersection',
-      'Pick extracts required keys',
-    ],
+    hints: ['Combine Partial and Pick with intersection', 'Pick extracts required keys'],
     tags: ['utility-types', 'partial', 'pick', 'advanced'],
   },
 
@@ -7330,11 +6896,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface OptionalUser { id?: number; name?: string; email?: string; }',
     setupCode: 'interface OptionalUser { id?: number; name?: string; email?: string; }',
     expected: { id: 1, name: 'Alice', email: 'alice@test.com' },
-    sample: 'const user: Required<OptionalUser> = { id: 1, name: "Alice", email: "alice@test.com" };\nuser',
-    hints: [
-      'Required<T> makes all properties required',
-      'All properties must be provided',
-    ],
+    sample:
+      'const user: Required<OptionalUser> = { id: 1, name: "Alice", email: "alice@test.com" };\nuser',
+    hints: ['Required<T> makes all properties required', 'All properties must be provided'],
     tags: ['utility-types', 'required'],
   },
   {
@@ -7343,10 +6907,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Required for Form Validation',
     text: 'Ensure all form fields are filled before submission using Required',
-    setup: 'interface FormData { username?: string; password?: string; }\nfunction validateForm(data: Required<FormData>): boolean { return data.username.length > 0 && data.password.length > 0; }',
-    setupCode: 'interface FormData { username?: string; password?: string; }\nfunction validateForm(data: Required<FormData>): boolean { return data.username.length > 0 && data.password.length > 0; }',
+    setup:
+      'interface FormData { username?: string; password?: string; }\nfunction validateForm(data: Required<FormData>): boolean { return data.username.length > 0 && data.password.length > 0; }',
+    setupCode:
+      'interface FormData { username?: string; password?: string; }\nfunction validateForm(data: Required<FormData>): boolean { return data.username.length > 0 && data.password.length > 0; }',
     expected: true,
-    sample: 'const formData: Required<FormData> = { username: "admin", password: "secret" };\nvalidateForm(formData)',
+    sample:
+      'const formData: Required<FormData> = { username: "admin", password: "secret" };\nvalidateForm(formData)',
     hints: [
       'Required ensures no undefined values',
       'Safe to access properties without optional chaining',
@@ -7359,14 +6926,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Required with Partial Combination',
     text: 'Use Required to override Partial and ensure all properties exist',
-    setup: 'interface User { id: number; name: string; email: string; }\ntype PartialUser = Partial<User>;',
-    setupCode: 'interface User { id: number; name: string; email: string; }\ntype PartialUser = Partial<User>;',
+    setup:
+      'interface User { id: number; name: string; email: string; }\ntype PartialUser = Partial<User>;',
+    setupCode:
+      'interface User { id: number; name: string; email: string; }\ntype PartialUser = Partial<User>;',
     expected: { id: 1, name: 'Bob', email: 'bob@test.com' },
-    sample: 'const partial: PartialUser = { id: 1, name: "Bob" };\nconst complete: Required<PartialUser> = { ...partial, email: "bob@test.com" };\ncomplete',
-    hints: [
-      'Required<Partial<T>> equals T',
-      'Fill in missing properties to satisfy Required',
-    ],
+    sample:
+      'const partial: PartialUser = { id: 1, name: "Bob" };\nconst complete: Required<PartialUser> = { ...partial, email: "bob@test.com" };\ncomplete',
+    hints: ['Required<Partial<T>> equals T', 'Fill in missing properties to satisfy Required'],
     tags: ['utility-types', 'required', 'partial'],
   },
   {
@@ -7375,14 +6942,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Deep Required Type',
     text: 'Implement a DeepRequired type that makes all nested properties required recursively',
-    setup: 'type DeepRequired<T> = T extends object ? { [P in keyof T]-?: DeepRequired<T[P]> } : T;\ninterface Config { server?: { host?: string; port?: number; }; }',
-    setupCode: 'type DeepRequired<T> = T extends object ? { [P in keyof T]-?: DeepRequired<T[P]> } : T;\ninterface Config { server?: { host?: string; port?: number; }; }',
+    setup:
+      'type DeepRequired<T> = T extends object ? { [P in keyof T]-?: DeepRequired<T[P]> } : T;\ninterface Config { server?: { host?: string; port?: number; }; }',
+    setupCode:
+      'type DeepRequired<T> = T extends object ? { [P in keyof T]-?: DeepRequired<T[P]> } : T;\ninterface Config { server?: { host?: string; port?: number; }; }',
     expected: { server: { host: 'localhost', port: 3000 } },
-    sample: 'const config: DeepRequired<Config> = { server: { host: "localhost", port: 3000 } };\nconfig',
-    hints: [
-      'Use -? to remove optional modifier',
-      'Recursively apply to nested objects',
-    ],
+    sample:
+      'const config: DeepRequired<Config> = { server: { host: "localhost", port: 3000 } };\nconfig',
+    hints: ['Use -? to remove optional modifier', 'Recursively apply to nested objects'],
     tags: ['utility-types', 'required', 'deep', 'recursive'],
   },
   {
@@ -7391,8 +6958,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Required Keys Extraction',
     text: 'Extract only the keys that are required (non-optional) from a type',
-    setup: 'type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];\ninterface User { id: number; name: string; email?: string; }',
-    setupCode: 'type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];\ninterface User { id: number; name: string; email?: string; }',
+    setup:
+      'type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];\ninterface User { id: number; name: string; email?: string; }',
+    setupCode:
+      'type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];\ninterface User { id: number; name: string; email?: string; }',
     expected: ['id', 'name'],
     sample: 'type Keys = RequiredKeys<User>;\nconst keys: Keys[] = ["id", "name"];\nkeys',
     hints: [
@@ -7431,10 +7000,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'const numbers: number[] = [1, 2, 3];',
     expected: [1, 2, 3],
     sample: 'const readonlyNumbers: Readonly<number[]> = [1, 2, 3];\nreadonlyNumbers',
-    hints: [
-      'Readonly works on arrays too',
-      'Use ReadonlyArray<T> as an alternative',
-    ],
+    hints: ['Readonly works on arrays too', 'Use ReadonlyArray<T> as an alternative'],
     tags: ['utility-types', 'readonly', 'arrays'],
   },
   {
@@ -7443,8 +7009,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'ReadonlyArray Type',
     text: 'Use ReadonlyArray to create an immutable array type',
-    setup: 'function sum(numbers: ReadonlyArray<number>): number { return numbers.reduce((a, b) => a + b, 0); }',
-    setupCode: 'function sum(numbers: ReadonlyArray<number>): number { return numbers.reduce((a, b) => a + b, 0); }',
+    setup:
+      'function sum(numbers: ReadonlyArray<number>): number { return numbers.reduce((a, b) => a + b, 0); }',
+    setupCode:
+      'function sum(numbers: ReadonlyArray<number>): number { return numbers.reduce((a, b) => a + b, 0); }',
     expected: 15,
     sample: 'const nums: ReadonlyArray<number> = [1, 2, 3, 4, 5];\nsum(nums)',
     hints: [
@@ -7459,14 +7027,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Deep Readonly Type',
     text: 'Implement a DeepReadonly type that makes all nested properties readonly recursively',
-    setup: 'type DeepReadonly<T> = T extends object ? { readonly [P in keyof T]: DeepReadonly<T[P]> } : T;\ninterface State { user: { name: string; settings: { theme: string; }; }; }',
-    setupCode: 'type DeepReadonly<T> = T extends object ? { readonly [P in keyof T]: DeepReadonly<T[P]> } : T;\ninterface State { user: { name: string; settings: { theme: string; }; }; }',
+    setup:
+      'type DeepReadonly<T> = T extends object ? { readonly [P in keyof T]: DeepReadonly<T[P]> } : T;\ninterface State { user: { name: string; settings: { theme: string; }; }; }',
+    setupCode:
+      'type DeepReadonly<T> = T extends object ? { readonly [P in keyof T]: DeepReadonly<T[P]> } : T;\ninterface State { user: { name: string; settings: { theme: string; }; }; }',
     expected: { user: { name: 'Alice', settings: { theme: 'dark' } } },
-    sample: 'const state: DeepReadonly<State> = { user: { name: "Alice", settings: { theme: "dark" } } };\nstate',
-    hints: [
-      'Recursively apply readonly to nested objects',
-      'Base case is non-object types',
-    ],
+    sample:
+      'const state: DeepReadonly<State> = { user: { name: "Alice", settings: { theme: "dark" } } };\nstate',
+    hints: ['Recursively apply readonly to nested objects', 'Base case is non-object types'],
     tags: ['utility-types', 'readonly', 'deep', 'recursive'],
   },
   {
@@ -7475,10 +7043,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Mutable from Readonly',
     text: 'Create a Mutable type that removes readonly modifiers from all properties',
-    setup: 'type Mutable<T> = { -readonly [P in keyof T]: T[P] };\ninterface ReadonlyUser { readonly id: number; readonly name: string; }',
-    setupCode: 'type Mutable<T> = { -readonly [P in keyof T]: T[P] };\ninterface ReadonlyUser { readonly id: number; readonly name: string; }',
+    setup:
+      'type Mutable<T> = { -readonly [P in keyof T]: T[P] };\ninterface ReadonlyUser { readonly id: number; readonly name: string; }',
+    setupCode:
+      'type Mutable<T> = { -readonly [P in keyof T]: T[P] };\ninterface ReadonlyUser { readonly id: number; readonly name: string; }',
     expected: { id: 2, name: 'Bob' },
-    sample: 'const user: Mutable<ReadonlyUser> = { id: 1, name: "Alice" };\nuser.id = 2;\nuser.name = "Bob";\nuser',
+    sample:
+      'const user: Mutable<ReadonlyUser> = { id: 1, name: "Alice" };\nuser.id = 2;\nuser.name = "Bob";\nuser',
     hints: [
       'Use -readonly to remove the readonly modifier',
       'Mapped types can modify property modifiers',
@@ -7498,11 +7069,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface User { id: number; name: string; email: string; createdAt: Date; }',
     setupCode: 'interface User { id: number; name: string; email: string; createdAt: Date; }',
     expected: { name: 'Alice', email: 'alice@test.com' },
-    sample: 'const contact: Pick<User, "name" | "email"> = { name: "Alice", email: "alice@test.com" };\ncontact',
-    hints: [
-      'Pick<T, K> selects specific properties',
-      'Use union type for multiple keys',
-    ],
+    sample:
+      'const contact: Pick<User, "name" | "email"> = { name: "Alice", email: "alice@test.com" };\ncontact',
+    hints: ['Pick<T, K> selects specific properties', 'Use union type for multiple keys'],
     tags: ['utility-types', 'pick'],
   },
   {
@@ -7515,10 +7084,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'interface User { id: number; name: string; email: string; }',
     expected: { id: 42 },
     sample: 'const userId: Pick<User, "id"> = { id: 42 };\nuserId',
-    hints: [
-      'Pick works with a single key',
-      'Result type has only the picked property',
-    ],
+    hints: ['Pick works with a single key', 'Result type has only the picked property'],
     tags: ['utility-types', 'pick'],
   },
   {
@@ -7527,10 +7093,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Pick for API Response',
     text: 'Create a public user type by picking only non-sensitive fields',
-    setup: 'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
-    setupCode: 'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
+    setup:
+      'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
+    setupCode:
+      'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
     expected: { id: 1, name: 'Alice', email: 'alice@test.com' },
-    sample: 'type PublicUser = Pick<User, "id" | "name" | "email">;\nconst publicUser: PublicUser = { id: 1, name: "Alice", email: "alice@test.com" };\npublicUser',
+    sample:
+      'type PublicUser = Pick<User, "id" | "name" | "email">;\nconst publicUser: PublicUser = { id: 1, name: "Alice", email: "alice@test.com" };\npublicUser',
     hints: [
       'Pick is useful for creating subset types',
       'Sensitive fields like password are excluded',
@@ -7543,14 +7112,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Pick with Generics',
     text: 'Create a generic function that picks specific properties from an object',
-    setup: 'function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {\n  const result = {} as Pick<T, K>;\n  keys.forEach(key => result[key] = obj[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", email: "alice@test.com", age: 30 };',
-    setupCode: 'function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {\n  const result = {} as Pick<T, K>;\n  keys.forEach(key => result[key] = obj[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", email: "alice@test.com", age: 30 };',
+    setup:
+      'function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {\n  const result = {} as Pick<T, K>;\n  keys.forEach(key => result[key] = obj[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", email: "alice@test.com", age: 30 };',
+    setupCode:
+      'function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {\n  const result = {} as Pick<T, K>;\n  keys.forEach(key => result[key] = obj[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", email: "alice@test.com", age: 30 };',
     expected: { name: 'Alice', age: 30 },
     sample: 'pick(user, ["name", "age"])',
-    hints: [
-      'K extends keyof T constrains keys',
-      'Pick<T, K> is the return type',
-    ],
+    hints: ['K extends keyof T constrains keys', 'Pick<T, K> is the return type'],
     tags: ['utility-types', 'pick', 'generics'],
   },
   {
@@ -7559,14 +7127,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Pick by Value Type',
     text: 'Create a type that picks only properties of a specific value type',
-    setup: 'type PickByType<T, V> = { [K in keyof T as T[K] extends V ? K : never]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
-    setupCode: 'type PickByType<T, V> = { [K in keyof T as T[K] extends V ? K : never]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
+    setup:
+      'type PickByType<T, V> = { [K in keyof T as T[K] extends V ? K : never]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
+    setupCode:
+      'type PickByType<T, V> = { [K in keyof T as T[K] extends V ? K : never]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
     expected: { id: 1, count: 5 },
-    sample: 'type NumberProps = PickByType<Mixed, number>;\nconst nums: NumberProps = { id: 1, count: 5 };\nnums',
-    hints: [
-      'Use key remapping with as clause',
-      'Filter keys based on value type',
-    ],
+    sample:
+      'type NumberProps = PickByType<Mixed, number>;\nconst nums: NumberProps = { id: 1, count: 5 };\nnums',
+    hints: ['Use key remapping with as clause', 'Filter keys based on value type'],
     tags: ['utility-types', 'pick', 'advanced', 'key-remapping'],
   },
 
@@ -7582,7 +7150,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface User { id: number; name: string; email: string; password: string; }',
     setupCode: 'interface User { id: number; name: string; email: string; password: string; }',
     expected: { id: 1, name: 'Alice', email: 'alice@test.com' },
-    sample: 'const user: Omit<User, "password"> = { id: 1, name: "Alice", email: "alice@test.com" };\nuser',
+    sample:
+      'const user: Omit<User, "password"> = { id: 1, name: "Alice", email: "alice@test.com" };\nuser',
     hints: [
       'Omit<T, K> excludes specified properties',
       'Result has all properties except omitted ones',
@@ -7595,14 +7164,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Omit Multiple Properties',
     text: 'Remove multiple sensitive fields from a user type',
-    setup: 'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
-    setupCode: 'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
+    setup:
+      'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
+    setupCode:
+      'interface User { id: number; name: string; email: string; password: string; apiKey: string; }',
     expected: { id: 1, name: 'Alice', email: 'alice@test.com' },
-    sample: 'const safeUser: Omit<User, "password" | "apiKey"> = { id: 1, name: "Alice", email: "alice@test.com" };\nsafeUser',
-    hints: [
-      'Use union type to omit multiple keys',
-      'Omit is useful for sanitizing data',
-    ],
+    sample:
+      'const safeUser: Omit<User, "password" | "apiKey"> = { id: 1, name: "Alice", email: "alice@test.com" };\nsafeUser',
+    hints: ['Use union type to omit multiple keys', 'Omit is useful for sanitizing data'],
     tags: ['utility-types', 'omit', 'security'],
   },
   {
@@ -7614,11 +7183,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface BaseUser { id: number; name: string; role: string; }',
     setupCode: 'interface BaseUser { id: number; name: string; role: string; }',
     expected: { id: 1, name: 'Alice', role: 'admin', permissions: ['read', 'write'] },
-    sample: 'type AdminUser = Omit<BaseUser, "role"> & { role: "admin"; permissions: string[]; };\nconst admin: AdminUser = { id: 1, name: "Alice", role: "admin", permissions: ["read", "write"] };\nadmin',
-    hints: [
-      'Omit the property you want to override',
-      'Use intersection to add new properties',
-    ],
+    sample:
+      'type AdminUser = Omit<BaseUser, "role"> & { role: "admin"; permissions: string[]; };\nconst admin: AdminUser = { id: 1, name: "Alice", role: "admin", permissions: ["read", "write"] };\nadmin',
+    hints: ['Omit the property you want to override', 'Use intersection to add new properties'],
     tags: ['utility-types', 'omit', 'extension'],
   },
   {
@@ -7627,14 +7194,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Omit with Generics',
     text: 'Create a generic function that omits specified properties from an object',
-    setup: 'function omit<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {\n  const result = { ...obj };\n  keys.forEach(key => delete (result as any)[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", password: "secret", apiKey: "key123" };',
-    setupCode: 'function omit<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {\n  const result = { ...obj };\n  keys.forEach(key => delete (result as any)[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", password: "secret", apiKey: "key123" };',
+    setup:
+      'function omit<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {\n  const result = { ...obj };\n  keys.forEach(key => delete (result as any)[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", password: "secret", apiKey: "key123" };',
+    setupCode:
+      'function omit<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {\n  const result = { ...obj };\n  keys.forEach(key => delete (result as any)[key]);\n  return result;\n}\nconst user = { id: 1, name: "Alice", password: "secret", apiKey: "key123" };',
     expected: { id: 1, name: 'Alice' },
     sample: 'omit(user, ["password", "apiKey"])',
-    hints: [
-      'K extends keyof T constrains the keys',
-      'Omit<T, K> is the return type',
-    ],
+    hints: ['K extends keyof T constrains the keys', 'Omit<T, K> is the return type'],
     tags: ['utility-types', 'omit', 'generics'],
   },
   {
@@ -7643,14 +7209,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Omit by Value Type',
     text: 'Create a type that omits properties of a specific value type',
-    setup: 'type OmitByType<T, V> = { [K in keyof T as T[K] extends V ? never : K]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
-    setupCode: 'type OmitByType<T, V> = { [K in keyof T as T[K] extends V ? never : K]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
+    setup:
+      'type OmitByType<T, V> = { [K in keyof T as T[K] extends V ? never : K]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
+    setupCode:
+      'type OmitByType<T, V> = { [K in keyof T as T[K] extends V ? never : K]: T[K] };\ninterface Mixed { id: number; name: string; count: number; label: string; }',
     expected: { name: 'test', label: 'item' },
-    sample: 'type StringProps = OmitByType<Mixed, number>;\nconst strs: StringProps = { name: "test", label: "item" };\nstrs',
-    hints: [
-      'Use key remapping with as clause',
-      'Return never to exclude keys',
-    ],
+    sample:
+      'type StringProps = OmitByType<Mixed, number>;\nconst strs: StringProps = { name: "test", label: "item" };\nstrs',
+    hints: ['Use key remapping with as clause', 'Return never to exclude keys'],
     tags: ['utility-types', 'omit', 'advanced', 'key-remapping'],
   },
 
@@ -7682,11 +7248,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Status = "pending" | "active" | "completed";',
     setupCode: 'type Status = "pending" | "active" | "completed";',
     expected: { pending: 5, active: 3, completed: 12 },
-    sample: 'const statusCounts: Record<Status, number> = { pending: 5, active: 3, completed: 12 };\nstatusCounts',
-    hints: [
-      'Union types can be used as keys',
-      'All union members must be present',
-    ],
+    sample:
+      'const statusCounts: Record<Status, number> = { pending: 5, active: 3, completed: 12 };\nstatusCounts',
+    hints: ['Union types can be used as keys', 'All union members must be present'],
     tags: ['utility-types', 'record', 'union'],
   },
   {
@@ -7697,12 +7261,13 @@ export const typescriptProblems: Problem[] = [
     text: 'Create a record mapping user IDs to user objects',
     setup: 'interface User { name: string; email: string; }',
     setupCode: 'interface User { name: string; email: string; }',
-    expected: { '1': { name: 'Alice', email: 'alice@test.com' }, '2': { name: 'Bob', email: 'bob@test.com' } },
-    sample: 'const users: Record<string, User> = {\n  "1": { name: "Alice", email: "alice@test.com" },\n  "2": { name: "Bob", email: "bob@test.com" }\n};\nusers',
-    hints: [
-      'Record values can be complex types',
-      'Useful for lookup tables',
-    ],
+    expected: {
+      '1': { name: 'Alice', email: 'alice@test.com' },
+      '2': { name: 'Bob', email: 'bob@test.com' },
+    },
+    sample:
+      'const users: Record<string, User> = {\n  "1": { name: "Alice", email: "alice@test.com" },\n  "2": { name: "Bob", email: "bob@test.com" }\n};\nusers',
+    hints: ['Record values can be complex types', 'Useful for lookup tables'],
     tags: ['utility-types', 'record', 'objects'],
   },
   {
@@ -7711,14 +7276,19 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Record for State Management',
     text: 'Create a type-safe state object using Record with specific states',
-    setup: 'type LoadingState = "idle" | "loading" | "success" | "error";\ninterface StateConfig { message: string; canRetry: boolean; }',
-    setupCode: 'type LoadingState = "idle" | "loading" | "success" | "error";\ninterface StateConfig { message: string; canRetry: boolean; }',
-    expected: { idle: { message: 'Ready', canRetry: false }, loading: { message: 'Loading...', canRetry: false }, success: { message: 'Done!', canRetry: false }, error: { message: 'Failed', canRetry: true } },
-    sample: 'const stateConfig: Record<LoadingState, StateConfig> = {\n  idle: { message: "Ready", canRetry: false },\n  loading: { message: "Loading...", canRetry: false },\n  success: { message: "Done!", canRetry: false },\n  error: { message: "Failed", canRetry: true }\n};\nstateConfig',
-    hints: [
-      'Record ensures all states are covered',
-      'Compile error if a state is missing',
-    ],
+    setup:
+      'type LoadingState = "idle" | "loading" | "success" | "error";\ninterface StateConfig { message: string; canRetry: boolean; }',
+    setupCode:
+      'type LoadingState = "idle" | "loading" | "success" | "error";\ninterface StateConfig { message: string; canRetry: boolean; }',
+    expected: {
+      idle: { message: 'Ready', canRetry: false },
+      loading: { message: 'Loading...', canRetry: false },
+      success: { message: 'Done!', canRetry: false },
+      error: { message: 'Failed', canRetry: true },
+    },
+    sample:
+      'const stateConfig: Record<LoadingState, StateConfig> = {\n  idle: { message: "Ready", canRetry: false },\n  loading: { message: "Loading...", canRetry: false },\n  success: { message: "Done!", canRetry: false },\n  error: { message: "Failed", canRetry: true }\n};\nstateConfig',
+    hints: ['Record ensures all states are covered', 'Compile error if a state is missing'],
     tags: ['utility-types', 'record', 'state-management'],
   },
   {
@@ -7727,14 +7297,17 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Nested Record Types',
     text: 'Create a nested record for categorized items',
-    setup: 'type Category = "electronics" | "clothing";\ntype Item = { name: string; price: number; };',
-    setupCode: 'type Category = "electronics" | "clothing";\ntype Item = { name: string; price: number; };',
-    expected: { electronics: { laptop: { name: 'MacBook', price: 1999 } }, clothing: { shirt: { name: 'T-Shirt', price: 25 } } },
-    sample: 'const inventory: Record<Category, Record<string, Item>> = {\n  electronics: { laptop: { name: "MacBook", price: 1999 } },\n  clothing: { shirt: { name: "T-Shirt", price: 25 } }\n};\ninventory',
-    hints: [
-      'Records can be nested',
-      'Inner Record has string keys, Item values',
-    ],
+    setup:
+      'type Category = "electronics" | "clothing";\ntype Item = { name: string; price: number; };',
+    setupCode:
+      'type Category = "electronics" | "clothing";\ntype Item = { name: string; price: number; };',
+    expected: {
+      electronics: { laptop: { name: 'MacBook', price: 1999 } },
+      clothing: { shirt: { name: 'T-Shirt', price: 25 } },
+    },
+    sample:
+      'const inventory: Record<Category, Record<string, Item>> = {\n  electronics: { laptop: { name: "MacBook", price: 1999 } },\n  clothing: { shirt: { name: "T-Shirt", price: 25 } }\n};\ninventory',
+    hints: ['Records can be nested', 'Inner Record has string keys, Item values'],
     tags: ['utility-types', 'record', 'nested'],
   },
   {
@@ -7743,14 +7316,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Record with Mapped Types',
     text: 'Create a Record type that makes all values optional',
-    setup: 'type PartialRecord<K extends keyof any, V> = { [P in K]?: V };\ntype Status = "pending" | "active" | "completed";',
-    setupCode: 'type PartialRecord<K extends keyof any, V> = { [P in K]?: V };\ntype Status = "pending" | "active" | "completed";',
+    setup:
+      'type PartialRecord<K extends keyof any, V> = { [P in K]?: V };\ntype Status = "pending" | "active" | "completed";',
+    setupCode:
+      'type PartialRecord<K extends keyof any, V> = { [P in K]?: V };\ntype Status = "pending" | "active" | "completed";',
     expected: { pending: 5, completed: 10 },
     sample: 'const counts: PartialRecord<Status, number> = { pending: 5, completed: 10 };\ncounts',
-    hints: [
-      'Combine Record pattern with optional modifier',
-      'Not all keys need to be present',
-    ],
+    hints: ['Combine Record pattern with optional modifier', 'Not all keys need to be present'],
     tags: ['utility-types', 'record', 'mapped-types', 'partial'],
   },
 
@@ -7766,11 +7338,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Status = "pending" | "active" | "completed" | "cancelled";',
     setupCode: 'type Status = "pending" | "active" | "completed" | "cancelled";',
     expected: 'active',
-    sample: 'type ActiveStatus = Exclude<Status, "pending" | "cancelled">;\nconst status: ActiveStatus = "active";\nstatus',
-    hints: [
-      'Exclude<T, U> removes U from union T',
-      'Result is the remaining union members',
-    ],
+    sample:
+      'type ActiveStatus = Exclude<Status, "pending" | "cancelled">;\nconst status: ActiveStatus = "active";\nstatus',
+    hints: ['Exclude<T, U> removes U from union T', 'Result is the remaining union members'],
     tags: ['utility-types', 'exclude', 'union'],
   },
   {
@@ -7782,11 +7352,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MaybeString = string | null | undefined;',
     setupCode: 'type MaybeString = string | null | undefined;',
     expected: 'hello',
-    sample: 'type DefiniteString = Exclude<MaybeString, null | undefined>;\nconst str: DefiniteString = "hello";\nstr',
-    hints: [
-      'Exclude can remove multiple types at once',
-      'Similar to NonNullable for this case',
-    ],
+    sample:
+      'type DefiniteString = Exclude<MaybeString, null | undefined>;\nconst str: DefiniteString = "hello";\nstr',
+    hints: ['Exclude can remove multiple types at once', 'Similar to NonNullable for this case'],
     tags: ['utility-types', 'exclude', 'nullish'],
   },
   {
@@ -7798,11 +7366,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Mixed = string | number | (() => void) | ((x: number) => number);',
     setupCode: 'type Mixed = string | number | (() => void) | ((x: number) => number);',
     expected: 'test',
-    sample: 'type NonFunction = Exclude<Mixed, Function>;\nconst value: NonFunction = "test";\nvalue',
-    hints: [
-      'Function is the base type for all functions',
-      'Exclude removes all function types',
-    ],
+    sample:
+      'type NonFunction = Exclude<Mixed, Function>;\nconst value: NonFunction = "test";\nvalue',
+    hints: ['Function is the base type for all functions', 'Exclude removes all function types'],
     tags: ['utility-types', 'exclude', 'functions'],
   },
   {
@@ -7811,14 +7377,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Exclude for Event Types',
     text: 'Create a type for non-mouse events by excluding mouse-related events',
-    setup: 'type Event = "click" | "mousedown" | "mouseup" | "keydown" | "keyup" | "focus" | "blur";',
-    setupCode: 'type Event = "click" | "mousedown" | "mouseup" | "keydown" | "keyup" | "focus" | "blur";',
+    setup:
+      'type Event = "click" | "mousedown" | "mouseup" | "keydown" | "keyup" | "focus" | "blur";',
+    setupCode:
+      'type Event = "click" | "mousedown" | "mouseup" | "keydown" | "keyup" | "focus" | "blur";',
     expected: 'keydown',
-    sample: 'type NonMouseEvent = Exclude<Event, "click" | "mousedown" | "mouseup">;\nconst event: NonMouseEvent = "keydown";\nevent',
-    hints: [
-      'List all mouse events to exclude',
-      'Remaining events are keyboard and focus events',
-    ],
+    sample:
+      'type NonMouseEvent = Exclude<Event, "click" | "mousedown" | "mouseup">;\nconst event: NonMouseEvent = "keydown";\nevent',
+    hints: ['List all mouse events to exclude', 'Remaining events are keyboard and focus events'],
     tags: ['utility-types', 'exclude', 'events'],
   },
   {
@@ -7830,7 +7396,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Events = "onClick" | "onHover" | "onFocus" | "handleClick" | "handleHover";',
     setupCode: 'type Events = "onClick" | "onHover" | "onFocus" | "handleClick" | "handleHover";',
     expected: 'handleClick',
-    sample: 'type HandleEvents = Exclude<Events, `on${string}`>;\nconst event: HandleEvents = "handleClick";\nevent',
+    sample:
+      'type HandleEvents = Exclude<Events, `on${string}`>;\nconst event: HandleEvents = "handleClick";\nevent',
     hints: [
       'Template literal types can be used with Exclude',
       'Pattern `on${string}` matches strings starting with "on"',
@@ -7850,11 +7417,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Mixed = string | number | boolean | null;',
     setupCode: 'type Mixed = string | number | boolean | null;',
     expected: 'hello',
-    sample: 'type StringOrNumber = Extract<Mixed, string | number>;\nconst value: StringOrNumber = "hello";\nvalue',
-    hints: [
-      'Extract<T, U> keeps only types assignable to U',
-      'Opposite of Exclude',
-    ],
+    sample:
+      'type StringOrNumber = Extract<Mixed, string | number>;\nconst value: StringOrNumber = "hello";\nvalue',
+    hints: ['Extract<T, U> keeps only types assignable to U', 'Opposite of Exclude'],
     tags: ['utility-types', 'extract', 'union'],
   },
   {
@@ -7866,11 +7431,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Data = string | number | { id: number } | string[];',
     setupCode: 'type Data = string | number | { id: number } | string[];',
     expected: 42,
-    sample: 'type Primitives = Extract<Data, string | number | boolean>;\nconst value: Primitives = 42;\nvalue',
-    hints: [
-      'Extract matches types that extend the filter',
-      'Objects and arrays are excluded',
-    ],
+    sample:
+      'type Primitives = Extract<Data, string | number | boolean>;\nconst value: Primitives = 42;\nvalue',
+    hints: ['Extract matches types that extend the filter', 'Objects and arrays are excluded'],
     tags: ['utility-types', 'extract', 'primitives'],
   },
   {
@@ -7882,11 +7445,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Mixed = string | (() => void) | number | ((x: number) => number);',
     setupCode: 'type Mixed = string | (() => void) | number | ((x: number) => number);',
     expected: 10,
-    sample: 'type Functions = Extract<Mixed, Function>;\nconst fn: Functions = (x: number) => x * 2;\nfn(5)',
-    hints: [
-      'Function is the base type for all functions',
-      'Extract keeps all function types',
-    ],
+    sample:
+      'type Functions = Extract<Mixed, Function>;\nconst fn: Functions = (x: number) => x * 2;\nfn(5)',
+    hints: ['Function is the base type for all functions', 'Extract keeps all function types'],
     tags: ['utility-types', 'extract', 'functions'],
   },
   {
@@ -7895,14 +7456,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Extract from Discriminated Union',
     text: 'Extract specific variants from a discriminated union type',
-    setup: 'type Result = { type: "success"; data: string } | { type: "error"; message: string } | { type: "loading" };',
-    setupCode: 'type Result = { type: "success"; data: string } | { type: "error"; message: string } | { type: "loading" };',
+    setup:
+      'type Result = { type: "success"; data: string } | { type: "error"; message: string } | { type: "loading" };',
+    setupCode:
+      'type Result = { type: "success"; data: string } | { type: "error"; message: string } | { type: "loading" };',
     expected: { type: 'success', data: 'Done!' },
-    sample: 'type SuccessResult = Extract<Result, { type: "success" }>;\nconst result: SuccessResult = { type: "success", data: "Done!" };\nresult',
-    hints: [
-      'Extract matches by structure',
-      'Only the variant with type "success" is kept',
-    ],
+    sample:
+      'type SuccessResult = Extract<Result, { type: "success" }>;\nconst result: SuccessResult = { type: "success", data: "Done!" };\nresult',
+    hints: ['Extract matches by structure', 'Only the variant with type "success" is kept'],
     tags: ['utility-types', 'extract', 'discriminated-union'],
   },
   {
@@ -7914,11 +7475,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Events = "onClick" | "onHover" | "onFocus" | "handleClick" | "handleHover";',
     setupCode: 'type Events = "onClick" | "onHover" | "onFocus" | "handleClick" | "handleHover";',
     expected: 'onClick',
-    sample: 'type OnEvents = Extract<Events, `on${string}`>;\nconst event: OnEvents = "onClick";\nevent',
-    hints: [
-      'Template literals work with Extract',
-      'Pattern matches strings starting with "on"',
-    ],
+    sample:
+      'type OnEvents = Extract<Events, `on${string}`>;\nconst event: OnEvents = "onClick";\nevent',
+    hints: ['Template literals work with Extract', 'Pattern matches strings starting with "on"'],
     tags: ['utility-types', 'extract', 'template-literals'],
   },
 
@@ -7935,10 +7494,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type MaybeUser = { name: string } | null | undefined;',
     expected: { name: 'Alice' },
     sample: 'type User = NonNullable<MaybeUser>;\nconst user: User = { name: "Alice" };\nuser',
-    hints: [
-      'NonNullable removes null and undefined',
-      'Result is guaranteed to be defined',
-    ],
+    hints: ['NonNullable removes null and undefined', 'Result is guaranteed to be defined'],
     tags: ['utility-types', 'nonnullable', 'nullish'],
   },
   {
@@ -7950,11 +7506,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type MaybeString = string | null | undefined;',
     setupCode: 'type MaybeString = string | null | undefined;',
     expected: 'hello',
-    sample: 'type DefiniteString = NonNullable<MaybeString>;\nconst str: DefiniteString = "hello";\nstr',
-    hints: [
-      'NonNullable<string | null | undefined> = string',
-      'Only the string type remains',
-    ],
+    sample:
+      'type DefiniteString = NonNullable<MaybeString>;\nconst str: DefiniteString = "hello";\nstr',
+    hints: ['NonNullable<string | null | undefined> = string', 'Only the string type remains'],
     tags: ['utility-types', 'nonnullable', 'primitives'],
   },
   {
@@ -7963,14 +7517,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'NonNullable in Generic Contexts',
     text: 'Use NonNullable to assert a value exists in a generic function',
-    setup: 'function assertDefined<T>(value: T): NonNullable<T> {\n  if (value === null || value === undefined) throw new Error("Value is null or undefined");\n  return value as NonNullable<T>;\n}',
-    setupCode: 'function assertDefined<T>(value: T): NonNullable<T> {\n  if (value === null || value === undefined) throw new Error("Value is null or undefined");\n  return value as NonNullable<T>;\n}',
+    setup:
+      'function assertDefined<T>(value: T): NonNullable<T> {\n  if (value === null || value === undefined) throw new Error("Value is null or undefined");\n  return value as NonNullable<T>;\n}',
+    setupCode:
+      'function assertDefined<T>(value: T): NonNullable<T> {\n  if (value === null || value === undefined) throw new Error("Value is null or undefined");\n  return value as NonNullable<T>;\n}',
     expected: 'test',
-    sample: 'const maybeValue: string | null = "test";\nconst definiteValue = assertDefined(maybeValue);\ndefiniteValue',
-    hints: [
-      'NonNullable narrows the return type',
-      'Runtime check ensures value exists',
-    ],
+    sample:
+      'const maybeValue: string | null = "test";\nconst definiteValue = assertDefined(maybeValue);\ndefiniteValue',
+    hints: ['NonNullable narrows the return type', 'Runtime check ensures value exists'],
     tags: ['utility-types', 'nonnullable', 'generics', 'assertions'],
   },
   {
@@ -7979,14 +7533,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'NonNullable for Array Elements',
     text: 'Filter out null and undefined from array type',
-    setup: 'type Items = (string | null | undefined)[];\nfunction filterNullish<T>(arr: T[]): NonNullable<T>[] {\n  return arr.filter((x): x is NonNullable<T> => x != null);\n}',
-    setupCode: 'type Items = (string | null | undefined)[];\nfunction filterNullish<T>(arr: T[]): NonNullable<T>[] {\n  return arr.filter((x): x is NonNullable<T> => x != null);\n}',
+    setup:
+      'type Items = (string | null | undefined)[];\nfunction filterNullish<T>(arr: T[]): NonNullable<T>[] {\n  return arr.filter((x): x is NonNullable<T> => x != null);\n}',
+    setupCode:
+      'type Items = (string | null | undefined)[];\nfunction filterNullish<T>(arr: T[]): NonNullable<T>[] {\n  return arr.filter((x): x is NonNullable<T> => x != null);\n}',
     expected: ['a', 'b', 'c'],
     sample: 'const items: Items = ["a", null, "b", undefined, "c"];\nfilterNullish(items)',
-    hints: [
-      'Type guard narrows to NonNullable<T>',
-      'x != null checks both null and undefined',
-    ],
+    hints: ['Type guard narrows to NonNullable<T>', 'x != null checks both null and undefined'],
     tags: ['utility-types', 'nonnullable', 'arrays', 'type-guards'],
   },
 
@@ -8002,11 +7555,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'function getUser() { return { id: 1, name: "Alice" }; }',
     setupCode: 'function getUser() { return { id: 1, name: "Alice" }; }',
     expected: { id: 1, name: 'Alice' },
-    sample: 'type User = ReturnType<typeof getUser>;\nconst user: User = { id: 1, name: "Alice" };\nuser',
-    hints: [
-      'Use typeof to get the function type',
-      'ReturnType extracts what the function returns',
-    ],
+    sample:
+      'type User = ReturnType<typeof getUser>;\nconst user: User = { id: 1, name: "Alice" };\nuser',
+    hints: ['Use typeof to get the function type', 'ReturnType extracts what the function returns'],
     tags: ['utility-types', 'returntype', 'typeof'],
   },
   {
@@ -8018,11 +7569,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const multiply = (a: number, b: number) => a * b;',
     setupCode: 'const multiply = (a: number, b: number) => a * b;',
     expected: 6,
-    sample: 'type MultiplyResult = ReturnType<typeof multiply>;\nconst result: MultiplyResult = 6;\nresult',
-    hints: [
-      'ReturnType works with arrow functions',
-      'Returns number in this case',
-    ],
+    sample:
+      'type MultiplyResult = ReturnType<typeof multiply>;\nconst result: MultiplyResult = 6;\nresult',
+    hints: ['ReturnType works with arrow functions', 'Returns number in this case'],
     tags: ['utility-types', 'returntype', 'arrow-functions'],
   },
   {
@@ -8031,14 +7580,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'ReturnType with Async Functions',
     text: 'Extract the unwrapped return type of an async function',
-    setup: 'async function fetchUser(): Promise<{ id: number; name: string }> { return { id: 1, name: "Alice" }; }',
-    setupCode: 'async function fetchUser(): Promise<{ id: number; name: string }> { return { id: 1, name: "Alice" }; }',
+    setup:
+      'async function fetchUser(): Promise<{ id: number; name: string }> { return { id: 1, name: "Alice" }; }',
+    setupCode:
+      'async function fetchUser(): Promise<{ id: number; name: string }> { return { id: 1, name: "Alice" }; }',
     expected: { id: 1, name: 'Alice' },
-    sample: 'type FetchResult = Awaited<ReturnType<typeof fetchUser>>;\nconst user: FetchResult = { id: 1, name: "Alice" };\nuser',
-    hints: [
-      'ReturnType gives Promise<T>',
-      'Use Awaited to unwrap the Promise',
-    ],
+    sample:
+      'type FetchResult = Awaited<ReturnType<typeof fetchUser>>;\nconst user: FetchResult = { id: 1, name: "Alice" };\nuser',
+    hints: ['ReturnType gives Promise<T>', 'Use Awaited to unwrap the Promise'],
     tags: ['utility-types', 'returntype', 'async', 'awaited'],
   },
   {
@@ -8047,8 +7596,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'ReturnType with Overloaded Functions',
     text: 'Get the return type of the last overload signature',
-    setup: 'function parse(input: string): object;\nfunction parse(input: number): string;\nfunction parse(input: string | number): object | string { return typeof input === "string" ? {} : ""; }',
-    setupCode: 'function parse(input: string): object;\nfunction parse(input: number): string;\nfunction parse(input: string | number): object | string { return typeof input === "string" ? {} : ""; }',
+    setup:
+      'function parse(input: string): object;\nfunction parse(input: number): string;\nfunction parse(input: string | number): object | string { return typeof input === "string" ? {} : ""; }',
+    setupCode:
+      'function parse(input: string): object;\nfunction parse(input: number): string;\nfunction parse(input: string | number): object | string { return typeof input === "string" ? {} : ""; }',
     expected: '',
     sample: 'type ParseResult = ReturnType<typeof parse>;\nconst result: ParseResult = "";\nresult',
     hints: [
@@ -8063,14 +7614,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Conditional ReturnType',
     text: 'Create a type that extracts return type only for function types',
-    setup: 'type SafeReturnType<T> = T extends (...args: any[]) => infer R ? R : never;\nconst fn = () => ({ value: 42 });\nconst notFn = "hello";',
-    setupCode: 'type SafeReturnType<T> = T extends (...args: any[]) => infer R ? R : never;\nconst fn = () => ({ value: 42 });\nconst notFn = "hello";',
+    setup:
+      'type SafeReturnType<T> = T extends (...args: any[]) => infer R ? R : never;\nconst fn = () => ({ value: 42 });\nconst notFn = "hello";',
+    setupCode:
+      'type SafeReturnType<T> = T extends (...args: any[]) => infer R ? R : never;\nconst fn = () => ({ value: 42 });\nconst notFn = "hello";',
     expected: { value: 42 },
-    sample: 'type FnReturn = SafeReturnType<typeof fn>;\nconst result: FnReturn = { value: 42 };\nresult',
-    hints: [
-      'Use conditional type with infer',
-      'Returns never for non-function types',
-    ],
+    sample:
+      'type FnReturn = SafeReturnType<typeof fn>;\nconst result: FnReturn = { value: 42 };\nresult',
+    hints: ['Use conditional type with infer', 'Returns never for non-function types'],
     tags: ['utility-types', 'returntype', 'conditional', 'infer'],
   },
   {
@@ -8079,14 +7630,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'ReturnType from Class Methods',
     text: 'Extract return types from class methods',
-    setup: 'class UserService {\n  getUser(id: number) { return { id, name: "User" }; }\n  getAllUsers() { return [{ id: 1, name: "User" }]; }\n}',
-    setupCode: 'class UserService {\n  getUser(id: number) { return { id, name: "User" }; }\n  getAllUsers() { return [{ id: 1, name: "User" }]; }\n}',
+    setup:
+      'class UserService {\n  getUser(id: number) { return { id, name: "User" }; }\n  getAllUsers() { return [{ id: 1, name: "User" }]; }\n}',
+    setupCode:
+      'class UserService {\n  getUser(id: number) { return { id, name: "User" }; }\n  getAllUsers() { return [{ id: 1, name: "User" }]; }\n}',
     expected: { id: 1, name: 'User' },
-    sample: 'type GetUserReturn = ReturnType<UserService["getUser"]>;\nconst user: GetUserReturn = { id: 1, name: "User" };\nuser',
-    hints: [
-      'Access method type with indexed access',
-      'UserService["getUser"] is the method type',
-    ],
+    sample:
+      'type GetUserReturn = ReturnType<UserService["getUser"]>;\nconst user: GetUserReturn = { id: 1, name: "User" };\nuser',
+    hints: ['Access method type with indexed access', 'UserService["getUser"] is the method type'],
     tags: ['utility-types', 'returntype', 'classes', 'methods'],
   },
 
@@ -8102,11 +7653,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'function greet(name: string, age: number) { return `${name} is ${age}`; }',
     setupCode: 'function greet(name: string, age: number) { return `${name} is ${age}`; }',
     expected: ['Alice', 30],
-    sample: 'type GreetParams = Parameters<typeof greet>;\nconst params: GreetParams = ["Alice", 30];\nparams',
-    hints: [
-      'Parameters returns a tuple type',
-      'Use typeof to get the function type',
-    ],
+    sample:
+      'type GreetParams = Parameters<typeof greet>;\nconst params: GreetParams = ["Alice", 30];\nparams',
+    hints: ['Parameters returns a tuple type', 'Use typeof to get the function type'],
     tags: ['utility-types', 'parameters', 'tuple'],
   },
   {
@@ -8115,10 +7664,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Parameters Tuple Access',
     text: 'Access individual parameter types from Parameters tuple',
-    setup: 'function createUser(name: string, email: string, age: number) { return { name, email, age }; }',
-    setupCode: 'function createUser(name: string, email: string, age: number) { return { name, email, age }; }',
+    setup:
+      'function createUser(name: string, email: string, age: number) { return { name, email, age }; }',
+    setupCode:
+      'function createUser(name: string, email: string, age: number) { return { name, email, age }; }',
     expected: 'Alice',
-    sample: 'type FirstParam = Parameters<typeof createUser>[0];\nconst name: FirstParam = "Alice";\nname',
+    sample:
+      'type FirstParam = Parameters<typeof createUser>[0];\nconst name: FirstParam = "Alice";\nname',
     hints: [
       'Index into the tuple to get specific parameter types',
       '[0] gets the first parameter type',
@@ -8131,14 +7683,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Parameters with Rest Arguments',
     text: 'Extract parameters including rest arguments',
-    setup: 'function logMessages(level: string, ...messages: string[]) { return { level, messages }; }',
-    setupCode: 'function logMessages(level: string, ...messages: string[]) { return { level, messages }; }',
+    setup:
+      'function logMessages(level: string, ...messages: string[]) { return { level, messages }; }',
+    setupCode:
+      'function logMessages(level: string, ...messages: string[]) { return { level, messages }; }',
     expected: ['error', 'msg1', 'msg2'],
-    sample: 'type LogParams = Parameters<typeof logMessages>;\nconst params: LogParams = ["error", "msg1", "msg2"];\nparams',
-    hints: [
-      'Rest parameters become array type in tuple',
-      'Tuple is [string, ...string[]]',
-    ],
+    sample:
+      'type LogParams = Parameters<typeof logMessages>;\nconst params: LogParams = ["error", "msg1", "msg2"];\nparams',
+    hints: ['Rest parameters become array type in tuple', 'Tuple is [string, ...string[]]'],
     tags: ['utility-types', 'parameters', 'rest-arguments'],
   },
   {
@@ -8147,14 +7699,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Spread Parameters to Function',
     text: 'Use Parameters to spread arguments to another function',
-    setup: 'function original(a: number, b: string, c: boolean) { return { a, b, c }; }\nfunction wrapper<T extends (...args: any[]) => any>(fn: T, ...args: Parameters<T>): ReturnType<T> { return fn(...args); }',
-    setupCode: 'function original(a: number, b: string, c: boolean) { return { a, b, c }; }\nfunction wrapper<T extends (...args: any[]) => any>(fn: T, ...args: Parameters<T>): ReturnType<T> { return fn(...args); }',
+    setup:
+      'function original(a: number, b: string, c: boolean) { return { a, b, c }; }\nfunction wrapper<T extends (...args: any[]) => any>(fn: T, ...args: Parameters<T>): ReturnType<T> { return fn(...args); }',
+    setupCode:
+      'function original(a: number, b: string, c: boolean) { return { a, b, c }; }\nfunction wrapper<T extends (...args: any[]) => any>(fn: T, ...args: Parameters<T>): ReturnType<T> { return fn(...args); }',
     expected: { a: 1, b: 'test', c: true },
     sample: 'wrapper(original, 1, "test", true)',
-    hints: [
-      'Parameters<T> captures all parameter types',
-      'Spread into the inner function call',
-    ],
+    hints: ['Parameters<T> captures all parameter types', 'Spread into the inner function call'],
     tags: ['utility-types', 'parameters', 'generics', 'wrapper'],
   },
   {
@@ -8163,10 +7714,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Parameters for Callbacks',
     text: 'Type a callback function based on another functions parameters',
-    setup: 'function fetchData(url: string, options: { timeout: number }) { return { url, options }; }\ntype FetchCallback = (...args: Parameters<typeof fetchData>) => void;',
-    setupCode: 'function fetchData(url: string, options: { timeout: number }) { return { url, options }; }\ntype FetchCallback = (...args: Parameters<typeof fetchData>) => void;',
+    setup:
+      'function fetchData(url: string, options: { timeout: number }) { return { url, options }; }\ntype FetchCallback = (...args: Parameters<typeof fetchData>) => void;',
+    setupCode:
+      'function fetchData(url: string, options: { timeout: number }) { return { url, options }; }\ntype FetchCallback = (...args: Parameters<typeof fetchData>) => void;',
     expected: { url: 'https://api.com', timeout: 5000 },
-    sample: 'let captured: { url: string; timeout: number } | null = null;\nconst callback: FetchCallback = (url, options) => { captured = { url, timeout: options.timeout }; };\ncallback("https://api.com", { timeout: 5000 });\ncaptured',
+    sample:
+      'let captured: { url: string; timeout: number } | null = null;\nconst callback: FetchCallback = (url, options) => { captured = { url, timeout: options.timeout }; };\ncallback("https://api.com", { timeout: 5000 });\ncaptured',
     hints: [
       'FetchCallback has same parameters as fetchData',
       'Useful for creating matching callback types',
@@ -8179,14 +7733,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Parameters with Overloaded Functions',
     text: 'Extract parameters from overloaded function (gets last overload)',
-    setup: 'function process(x: string): string;\nfunction process(x: number, y: number): number;\nfunction process(x: string | number, y?: number): string | number { return y !== undefined ? (x as number) + y : x; }',
-    setupCode: 'function process(x: string): string;\nfunction process(x: number, y: number): number;\nfunction process(x: string | number, y?: number): string | number { return y !== undefined ? (x as number) + y : x; }',
+    setup:
+      'function process(x: string): string;\nfunction process(x: number, y: number): number;\nfunction process(x: string | number, y?: number): string | number { return y !== undefined ? (x as number) + y : x; }',
+    setupCode:
+      'function process(x: string): string;\nfunction process(x: number, y: number): number;\nfunction process(x: string | number, y?: number): string | number { return y !== undefined ? (x as number) + y : x; }',
     expected: [5, 3],
-    sample: 'type ProcessParams = Parameters<typeof process>;\nconst params: ProcessParams = [5, 3];\nparams',
-    hints: [
-      'Parameters uses the last overload',
-      'Result is [number, number] from last signature',
-    ],
+    sample:
+      'type ProcessParams = Parameters<typeof process>;\nconst params: ProcessParams = [5, 3];\nparams',
+    hints: ['Parameters uses the last overload', 'Result is [number, number] from last signature'],
     tags: ['utility-types', 'parameters', 'overloads'],
   },
 
@@ -8202,7 +7756,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'class User { constructor(public name: string, public age: number) {} }',
     setupCode: 'class User { constructor(public name: string, public age: number) {} }',
     expected: ['Alice', 30],
-    sample: 'type UserParams = ConstructorParameters<typeof User>;\nconst params: UserParams = ["Alice", 30];\nparams',
+    sample:
+      'type UserParams = ConstructorParameters<typeof User>;\nconst params: UserParams = ["Alice", 30];\nparams',
     hints: [
       'Use typeof to get the constructor type',
       'Returns tuple of constructor parameter types',
@@ -8218,11 +7773,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type DateParams = ConstructorParameters<typeof Date>;',
     setupCode: 'type DateParams = ConstructorParameters<typeof Date>;',
     expected: 2024,
-    sample: 'const params: [number, number, number] = [2024, 0, 15];\nnew Date(...params).getFullYear()',
-    hints: [
-      'Built-in classes have constructor types',
-      'Date has multiple constructor overloads',
-    ],
+    sample:
+      'const params: [number, number, number] = [2024, 0, 15];\nnew Date(...params).getFullYear()',
+    hints: ['Built-in classes have constructor types', 'Date has multiple constructor overloads'],
     tags: ['utility-types', 'constructorparameters', 'built-in'],
   },
   {
@@ -8231,14 +7784,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'ConstructorParameters for Factory',
     text: 'Use ConstructorParameters to create a factory function',
-    setup: 'class Product { constructor(public name: string, public price: number) {} }\nfunction createFactory<T extends new (...args: any[]) => any>(Ctor: T) {\n  return (...args: ConstructorParameters<T>): InstanceType<T> => new Ctor(...args);\n}',
-    setupCode: 'class Product { constructor(public name: string, public price: number) {} }\nfunction createFactory<T extends new (...args: any[]) => any>(Ctor: T) {\n  return (...args: ConstructorParameters<T>): InstanceType<T> => new Ctor(...args);\n}',
+    setup:
+      'class Product { constructor(public name: string, public price: number) {} }\nfunction createFactory<T extends new (...args: any[]) => any>(Ctor: T) {\n  return (...args: ConstructorParameters<T>): InstanceType<T> => new Ctor(...args);\n}',
+    setupCode:
+      'class Product { constructor(public name: string, public price: number) {} }\nfunction createFactory<T extends new (...args: any[]) => any>(Ctor: T) {\n  return (...args: ConstructorParameters<T>): InstanceType<T> => new Ctor(...args);\n}',
     expected: { name: 'Widget', price: 99 },
-    sample: 'const productFactory = createFactory(Product);\nconst product = productFactory("Widget", 99);\n({ name: product.name, price: product.price })',
-    hints: [
-      'ConstructorParameters types the factory args',
-      'InstanceType types the return value',
-    ],
+    sample:
+      'const productFactory = createFactory(Product);\nconst product = productFactory("Widget", 99);\n({ name: product.name, price: product.price })',
+    hints: ['ConstructorParameters types the factory args', 'InstanceType types the return value'],
     tags: ['utility-types', 'constructorparameters', 'factory', 'generics'],
   },
   {
@@ -8250,11 +7803,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'class Container<T> { constructor(public value: T, public label: string) {} }',
     setupCode: 'class Container<T> { constructor(public value: T, public label: string) {} }',
     expected: [42, 'number'],
-    sample: 'type ContainerParams = ConstructorParameters<typeof Container<number>>;\nconst params: ContainerParams = [42, "number"];\nparams',
-    hints: [
-      'Specify the generic parameter explicitly',
-      'Container<number> fixes T to number',
-    ],
+    sample:
+      'type ContainerParams = ConstructorParameters<typeof Container<number>>;\nconst params: ContainerParams = [42, "number"];\nparams',
+    hints: ['Specify the generic parameter explicitly', 'Container<number> fixes T to number'],
     tags: ['utility-types', 'constructorparameters', 'generics'],
   },
   {
@@ -8263,14 +7814,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'ConstructorParameters Constraint',
     text: 'Create a generic type that requires constructable types',
-    setup: 'type Constructable<T = any> = new (...args: any[]) => T;\nfunction instantiate<T extends Constructable>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}\nclass Service { constructor(public name: string) {} }',
-    setupCode: 'type Constructable<T = any> = new (...args: any[]) => T;\nfunction instantiate<T extends Constructable>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}\nclass Service { constructor(public name: string) {} }',
+    setup:
+      'type Constructable<T = any> = new (...args: any[]) => T;\nfunction instantiate<T extends Constructable>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}\nclass Service { constructor(public name: string) {} }',
+    setupCode:
+      'type Constructable<T = any> = new (...args: any[]) => T;\nfunction instantiate<T extends Constructable>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}\nclass Service { constructor(public name: string) {} }',
     expected: { name: 'API' },
     sample: 'const service = instantiate(Service, "API");\n({ name: service.name })',
-    hints: [
-      'Constructable constrains to newable types',
-      'ConstructorParameters extracts the args',
-    ],
+    hints: ['Constructable constrains to newable types', 'ConstructorParameters extracts the args'],
     tags: ['utility-types', 'constructorparameters', 'constraints', 'advanced'],
   },
 
@@ -8283,14 +7833,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Basic InstanceType',
     text: 'Extract the instance type from a class constructor',
-    setup: 'class User { constructor(public name: string) {} greet() { return `Hello, ${this.name}`; } }',
-    setupCode: 'class User { constructor(public name: string) {} greet() { return `Hello, ${this.name}`; } }',
+    setup:
+      'class User { constructor(public name: string) {} greet() { return `Hello, ${this.name}`; } }',
+    setupCode:
+      'class User { constructor(public name: string) {} greet() { return `Hello, ${this.name}`; } }',
     expected: 'Hello, Alice',
-    sample: 'type UserInstance = InstanceType<typeof User>;\nconst user: UserInstance = new User("Alice");\nuser.greet()',
-    hints: [
-      'InstanceType<typeof Class> equals Class',
-      'Useful when you only have the constructor',
-    ],
+    sample:
+      'type UserInstance = InstanceType<typeof User>;\nconst user: UserInstance = new User("Alice");\nuser.greet()',
+    hints: ['InstanceType<typeof Class> equals Class', 'Useful when you only have the constructor'],
     tags: ['utility-types', 'instancetype', 'classes'],
   },
   {
@@ -8303,10 +7853,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type RegExpInstance = InstanceType<typeof RegExp>;',
     expected: true,
     sample: 'const regex: RegExpInstance = new RegExp("test");\nregex.test("testing")',
-    hints: [
-      'Works with built-in classes',
-      'RegExpInstance is same as RegExp',
-    ],
+    hints: ['Works with built-in classes', 'RegExpInstance is same as RegExp'],
     tags: ['utility-types', 'instancetype', 'built-in'],
   },
   {
@@ -8315,14 +7862,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'InstanceType for Factory Pattern',
     text: 'Use InstanceType to type factory function returns',
-    setup: 'class Logger { constructor(public prefix: string) {} log(msg: string) { return `${this.prefix}: ${msg}`; } }\nfunction createLogger<T extends new (...args: any[]) => any>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}',
-    setupCode: 'class Logger { constructor(public prefix: string) {} log(msg: string) { return `${this.prefix}: ${msg}`; } }\nfunction createLogger<T extends new (...args: any[]) => any>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}',
+    setup:
+      'class Logger { constructor(public prefix: string) {} log(msg: string) { return `${this.prefix}: ${msg}`; } }\nfunction createLogger<T extends new (...args: any[]) => any>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}',
+    setupCode:
+      'class Logger { constructor(public prefix: string) {} log(msg: string) { return `${this.prefix}: ${msg}`; } }\nfunction createLogger<T extends new (...args: any[]) => any>(Ctor: T, ...args: ConstructorParameters<T>): InstanceType<T> {\n  return new Ctor(...args);\n}',
     expected: '[INFO]: Test message',
     sample: 'const logger = createLogger(Logger, "[INFO]");\nlogger.log("Test message")',
-    hints: [
-      'InstanceType infers the return type',
-      'Factory returns proper typed instance',
-    ],
+    hints: ['InstanceType infers the return type', 'Factory returns proper typed instance'],
     tags: ['utility-types', 'instancetype', 'factory'],
   },
   {
@@ -8331,14 +7877,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'InstanceType with Abstract Classes',
     text: 'Work with instance types of abstract classes',
-    setup: 'abstract class Animal { abstract speak(): string; move() { return "moving"; } }\nclass Dog extends Animal { speak() { return "woof"; } }',
-    setupCode: 'abstract class Animal { abstract speak(): string; move() { return "moving"; } }\nclass Dog extends Animal { speak() { return "woof"; } }',
+    setup:
+      'abstract class Animal { abstract speak(): string; move() { return "moving"; } }\nclass Dog extends Animal { speak() { return "woof"; } }',
+    setupCode:
+      'abstract class Animal { abstract speak(): string; move() { return "moving"; } }\nclass Dog extends Animal { speak() { return "woof"; } }',
     expected: 'woof',
-    sample: 'type AnimalInstance = InstanceType<typeof Dog>;\nconst dog: AnimalInstance = new Dog();\ndog.speak()',
-    hints: [
-      'Cannot use InstanceType on abstract class directly',
-      'Use concrete subclass instead',
-    ],
+    sample:
+      'type AnimalInstance = InstanceType<typeof Dog>;\nconst dog: AnimalInstance = new Dog();\ndog.speak()',
+    hints: ['Cannot use InstanceType on abstract class directly', 'Use concrete subclass instead'],
     tags: ['utility-types', 'instancetype', 'abstract'],
   },
   {
@@ -8347,14 +7893,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Generic InstanceType Constraint',
     text: 'Create a generic function that accepts any class and returns its instance type',
-    setup: 'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction singleton<T extends Constructor>(Ctor: T): () => InstanceType<T> {\n  let instance: InstanceType<T> | null = null;\n  return () => instance ?? (instance = new Ctor() as InstanceType<T>);\n}\nclass Config { value = "default"; }',
-    setupCode: 'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction singleton<T extends Constructor>(Ctor: T): () => InstanceType<T> {\n  let instance: InstanceType<T> | null = null;\n  return () => instance ?? (instance = new Ctor() as InstanceType<T>);\n}\nclass Config { value = "default"; }',
+    setup:
+      'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction singleton<T extends Constructor>(Ctor: T): () => InstanceType<T> {\n  let instance: InstanceType<T> | null = null;\n  return () => instance ?? (instance = new Ctor() as InstanceType<T>);\n}\nclass Config { value = "default"; }',
+    setupCode:
+      'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction singleton<T extends Constructor>(Ctor: T): () => InstanceType<T> {\n  let instance: InstanceType<T> | null = null;\n  return () => instance ?? (instance = new Ctor() as InstanceType<T>);\n}\nclass Config { value = "default"; }',
     expected: true,
-    sample: 'const getConfig = singleton(Config);\nconst c1 = getConfig();\nconst c2 = getConfig();\nc1 === c2',
-    hints: [
-      'InstanceType gives the instance type',
-      'Constructor type constrains to newable',
-    ],
+    sample:
+      'const getConfig = singleton(Config);\nconst c1 = getConfig();\nconst c2 = getConfig();\nc1 === c2',
+    hints: ['InstanceType gives the instance type', 'Constructor type constrains to newable'],
     tags: ['utility-types', 'instancetype', 'generics', 'singleton'],
   },
 
@@ -8370,11 +7916,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'function greet(this: { name: string }) { return `Hello, ${this.name}`; }',
     setupCode: 'function greet(this: { name: string }) { return `Hello, ${this.name}`; }',
     expected: { name: 'Alice' },
-    sample: 'type GreetThis = ThisParameterType<typeof greet>;\nconst context: GreetThis = { name: "Alice" };\ncontext',
-    hints: [
-      'ThisParameterType extracts the this type',
-      'Returns unknown if no this parameter',
-    ],
+    sample:
+      'type GreetThis = ThisParameterType<typeof greet>;\nconst context: GreetThis = { name: "Alice" };\ncontext',
+    hints: ['ThisParameterType extracts the this type', 'Returns unknown if no this parameter'],
     tags: ['utility-types', 'thisparametertype', 'this'],
   },
   {
@@ -8383,14 +7927,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'ThisParameterType with Methods',
     text: 'Extract this type from object method',
-    setup: 'const obj = {\n  name: "Widget",\n  getName(this: { name: string; id: number }) { return this.name; }\n};',
-    setupCode: 'const obj = {\n  name: "Widget",\n  getName(this: { name: string; id: number }) { return this.name; }\n};',
+    setup:
+      'const obj = {\n  name: "Widget",\n  getName(this: { name: string; id: number }) { return this.name; }\n};',
+    setupCode:
+      'const obj = {\n  name: "Widget",\n  getName(this: { name: string; id: number }) { return this.name; }\n};',
     expected: { name: 'Test', id: 1 },
-    sample: 'type GetNameThis = ThisParameterType<typeof obj.getName>;\nconst context: GetNameThis = { name: "Test", id: 1 };\ncontext',
-    hints: [
-      'Method can have explicit this type',
-      'ThisParameterType extracts it',
-    ],
+    sample:
+      'type GetNameThis = ThisParameterType<typeof obj.getName>;\nconst context: GetNameThis = { name: "Test", id: 1 };\ncontext',
+    hints: ['Method can have explicit this type', 'ThisParameterType extracts it'],
     tags: ['utility-types', 'thisparametertype', 'methods'],
   },
   {
@@ -8399,14 +7943,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'ThisParameterType for Call/Apply',
     text: 'Use ThisParameterType to type-check call/apply context',
-    setup: 'function formatName(this: { firstName: string; lastName: string }) {\n  return `${this.firstName} ${this.lastName}`;\n}',
-    setupCode: 'function formatName(this: { firstName: string; lastName: string }) {\n  return `${this.firstName} ${this.lastName}`;\n}',
+    setup:
+      'function formatName(this: { firstName: string; lastName: string }) {\n  return `${this.firstName} ${this.lastName}`;\n}',
+    setupCode:
+      'function formatName(this: { firstName: string; lastName: string }) {\n  return `${this.firstName} ${this.lastName}`;\n}',
     expected: 'John Doe',
-    sample: 'type Context = ThisParameterType<typeof formatName>;\nconst person: Context = { firstName: "John", lastName: "Doe" };\nformatName.call(person)',
-    hints: [
-      'call/apply need proper this context',
-      'ThisParameterType ensures type safety',
-    ],
+    sample:
+      'type Context = ThisParameterType<typeof formatName>;\nconst person: Context = { firstName: "John", lastName: "Doe" };\nformatName.call(person)',
+    hints: ['call/apply need proper this context', 'ThisParameterType ensures type safety'],
     tags: ['utility-types', 'thisparametertype', 'call', 'apply'],
   },
   {
@@ -8415,14 +7959,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'ThisParameterType in Decorators',
     text: 'Use ThisParameterType to preserve this type in decorators',
-    setup: 'function logMethod<T extends (this: any, ...args: any[]) => any>(\n  fn: T\n): (this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) => ReturnType<T> {\n  return function(this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) {\n    return fn.apply(this, args);\n  };\n}\nconst obj = { value: 10, getValue(this: { value: number }) { return this.value; } };',
-    setupCode: 'function logMethod<T extends (this: any, ...args: any[]) => any>(\n  fn: T\n): (this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) => ReturnType<T> {\n  return function(this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) {\n    return fn.apply(this, args);\n  };\n}\nconst obj = { value: 10, getValue(this: { value: number }) { return this.value; } };',
+    setup:
+      'function logMethod<T extends (this: any, ...args: any[]) => any>(\n  fn: T\n): (this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) => ReturnType<T> {\n  return function(this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) {\n    return fn.apply(this, args);\n  };\n}\nconst obj = { value: 10, getValue(this: { value: number }) { return this.value; } };',
+    setupCode:
+      'function logMethod<T extends (this: any, ...args: any[]) => any>(\n  fn: T\n): (this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) => ReturnType<T> {\n  return function(this: ThisParameterType<T>, ...args: Parameters<OmitThisParameter<T>>) {\n    return fn.apply(this, args);\n  };\n}\nconst obj = { value: 10, getValue(this: { value: number }) { return this.value; } };',
     expected: 10,
     sample: 'const logged = logMethod(obj.getValue);\nlogged.call({ value: 10 })',
-    hints: [
-      'Decorator preserves this type',
-      'Combine with OmitThisParameter for args',
-    ],
+    hints: ['Decorator preserves this type', 'Combine with OmitThisParameter for args'],
     tags: ['utility-types', 'thisparametertype', 'decorators', 'advanced'],
   },
 
@@ -8435,14 +7978,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Basic OmitThisParameter',
     text: 'Remove the this parameter from a function type',
-    setup: 'function greet(this: { name: string }, greeting: string) { return `${greeting}, ${this.name}`; }',
-    setupCode: 'function greet(this: { name: string }, greeting: string) { return `${greeting}, ${this.name}`; }',
+    setup:
+      'function greet(this: { name: string }, greeting: string) { return `${greeting}, ${this.name}`; }',
+    setupCode:
+      'function greet(this: { name: string }, greeting: string) { return `${greeting}, ${this.name}`; }',
     expected: 'Hello, World',
-    sample: 'type GreetFn = OmitThisParameter<typeof greet>;\nconst boundGreet: GreetFn = greet.bind({ name: "World" });\nboundGreet("Hello")',
-    hints: [
-      'OmitThisParameter removes this from signature',
-      'Useful for bound functions',
-    ],
+    sample:
+      'type GreetFn = OmitThisParameter<typeof greet>;\nconst boundGreet: GreetFn = greet.bind({ name: "World" });\nboundGreet("Hello")',
+    hints: ['OmitThisParameter removes this from signature', 'Useful for bound functions'],
     tags: ['utility-types', 'omitthisparameter', 'bind'],
   },
   {
@@ -8451,14 +7994,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'OmitThisParameter for Callbacks',
     text: 'Use OmitThisParameter to type bound callbacks',
-    setup: 'class Counter {\n  count = 0;\n  increment(this: Counter, amount: number) { this.count += amount; return this.count; }\n}',
-    setupCode: 'class Counter {\n  count = 0;\n  increment(this: Counter, amount: number) { this.count += amount; return this.count; }\n}',
+    setup:
+      'class Counter {\n  count = 0;\n  increment(this: Counter, amount: number) { this.count += amount; return this.count; }\n}',
+    setupCode:
+      'class Counter {\n  count = 0;\n  increment(this: Counter, amount: number) { this.count += amount; return this.count; }\n}',
     expected: 5,
-    sample: 'const counter = new Counter();\ntype IncrementFn = OmitThisParameter<typeof counter.increment>;\nconst boundIncrement: IncrementFn = counter.increment.bind(counter);\nboundIncrement(5)',
-    hints: [
-      'bind() returns function without this',
-      'OmitThisParameter types the bound function',
-    ],
+    sample:
+      'const counter = new Counter();\ntype IncrementFn = OmitThisParameter<typeof counter.increment>;\nconst boundIncrement: IncrementFn = counter.increment.bind(counter);\nboundIncrement(5)',
+    hints: ['bind() returns function without this', 'OmitThisParameter types the bound function'],
     tags: ['utility-types', 'omitthisparameter', 'callbacks', 'bind'],
   },
   {
@@ -8467,14 +8010,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'OmitThisParameter with Arrow Functions',
     text: 'Demonstrate that arrow functions have no this parameter',
-    setup: 'const regular = function(this: { x: number }) { return this.x; };\nconst arrow = () => 42;',
-    setupCode: 'const regular = function(this: { x: number }) { return this.x; };\nconst arrow = () => 42;',
+    setup:
+      'const regular = function(this: { x: number }) { return this.x; };\nconst arrow = () => 42;',
+    setupCode:
+      'const regular = function(this: { x: number }) { return this.x; };\nconst arrow = () => 42;',
     expected: 42,
-    sample: 'type RegularWithoutThis = OmitThisParameter<typeof regular>;\ntype ArrowType = OmitThisParameter<typeof arrow>;\nconst fn: ArrowType = () => 42;\nfn()',
-    hints: [
-      'Arrow functions have no this parameter',
-      'OmitThisParameter is identity for arrows',
-    ],
+    sample:
+      'type RegularWithoutThis = OmitThisParameter<typeof regular>;\ntype ArrowType = OmitThisParameter<typeof arrow>;\nconst fn: ArrowType = () => 42;\nfn()',
+    hints: ['Arrow functions have no this parameter', 'OmitThisParameter is identity for arrows'],
     tags: ['utility-types', 'omitthisparameter', 'arrow-functions'],
   },
   {
@@ -8483,10 +8026,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'OmitThisParameter in Method Extraction',
     text: 'Extract class methods as standalone functions',
-    setup: 'class Calculator {\n  constructor(private base: number) {}\n  add(this: Calculator, n: number) { return this.base + n; }\n  multiply(this: Calculator, n: number) { return this.base * n; }\n}\ntype MethodsOf<T> = { [K in keyof T]: T[K] extends (this: any, ...args: infer A) => infer R ? (...args: A) => R : never };',
-    setupCode: 'class Calculator {\n  constructor(private base: number) {}\n  add(this: Calculator, n: number) { return this.base + n; }\n  multiply(this: Calculator, n: number) { return this.base * n; }\n}\ntype MethodsOf<T> = { [K in keyof T]: T[K] extends (this: any, ...args: infer A) => infer R ? (...args: A) => R : never };',
+    setup:
+      'class Calculator {\n  constructor(private base: number) {}\n  add(this: Calculator, n: number) { return this.base + n; }\n  multiply(this: Calculator, n: number) { return this.base * n; }\n}\ntype MethodsOf<T> = { [K in keyof T]: T[K] extends (this: any, ...args: infer A) => infer R ? (...args: A) => R : never };',
+    setupCode:
+      'class Calculator {\n  constructor(private base: number) {}\n  add(this: Calculator, n: number) { return this.base + n; }\n  multiply(this: Calculator, n: number) { return this.base * n; }\n}\ntype MethodsOf<T> = { [K in keyof T]: T[K] extends (this: any, ...args: infer A) => infer R ? (...args: A) => R : never };',
     expected: 15,
-    sample: 'const calc = new Calculator(10);\nconst boundAdd: OmitThisParameter<typeof calc.add> = calc.add.bind(calc);\nboundAdd(5)',
+    sample:
+      'const calc = new Calculator(10);\nconst boundAdd: OmitThisParameter<typeof calc.add> = calc.add.bind(calc);\nboundAdd(5)',
     hints: [
       'OmitThisParameter enables method extraction',
       'Bound methods become standalone functions',
@@ -8507,10 +8053,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type UserPromise = Promise<{ id: number; name: string }>;',
     expected: { id: 1, name: 'Alice' },
     sample: 'type User = Awaited<UserPromise>;\nconst user: User = { id: 1, name: "Alice" };\nuser',
-    hints: [
-      'Awaited unwraps Promise types',
-      'Result is the resolved value type',
-    ],
+    hints: ['Awaited unwraps Promise types', 'Result is the resolved value type'],
     tags: ['utility-types', 'awaited', 'promises'],
   },
   {
@@ -8539,10 +8082,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'type DeepPromise = Promise<Promise<Promise<number>>>;',
     expected: 42,
     sample: 'type Value = Awaited<DeepPromise>;\nconst num: Value = 42;\nnum',
-    hints: [
-      'Awaited recursively unwraps Promises',
-      'Handles any nesting depth',
-    ],
+    hints: ['Awaited recursively unwraps Promises', 'Handles any nesting depth'],
     tags: ['utility-types', 'awaited', 'nested'],
   },
   {
@@ -8551,14 +8091,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Awaited for Async Function Returns',
     text: 'Get the resolved type of an async function return',
-    setup: 'async function fetchData(): Promise<{ items: string[]; total: number }> {\n  return { items: ["a", "b"], total: 2 };\n}',
-    setupCode: 'async function fetchData(): Promise<{ items: string[]; total: number }> {\n  return { items: ["a", "b"], total: 2 };\n}',
+    setup:
+      'async function fetchData(): Promise<{ items: string[]; total: number }> {\n  return { items: ["a", "b"], total: 2 };\n}',
+    setupCode:
+      'async function fetchData(): Promise<{ items: string[]; total: number }> {\n  return { items: ["a", "b"], total: 2 };\n}',
     expected: { items: ['a', 'b'], total: 2 },
-    sample: 'type FetchResult = Awaited<ReturnType<typeof fetchData>>;\nconst result: FetchResult = { items: ["a", "b"], total: 2 };\nresult',
-    hints: [
-      'Combine with ReturnType for async functions',
-      'Awaited unwraps the Promise',
-    ],
+    sample:
+      'type FetchResult = Awaited<ReturnType<typeof fetchData>>;\nconst result: FetchResult = { items: ["a", "b"], total: 2 };\nresult',
+    hints: ['Combine with ReturnType for async functions', 'Awaited unwraps the Promise'],
     tags: ['utility-types', 'awaited', 'async', 'returntype'],
   },
   {
@@ -8567,14 +8107,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Awaited with Promise.all',
     text: 'Type the result of Promise.all using Awaited',
-    setup: 'const promises = [Promise.resolve(1), Promise.resolve("two"), Promise.resolve(true)] as const;',
-    setupCode: 'const promises = [Promise.resolve(1), Promise.resolve("two"), Promise.resolve(true)] as const;',
+    setup:
+      'const promises = [Promise.resolve(1), Promise.resolve("two"), Promise.resolve(true)] as const;',
+    setupCode:
+      'const promises = [Promise.resolve(1), Promise.resolve("two"), Promise.resolve(true)] as const;',
     expected: [1, 'two', true],
-    sample: 'type AllResults = Awaited<typeof promises[number]>[];\nconst results: [number, string, boolean] = [1, "two", true];\nresults',
-    hints: [
-      'Promise.all resolves all promises',
-      'Awaited unwraps each Promise type',
-    ],
+    sample:
+      'type AllResults = Awaited<typeof promises[number]>[];\nconst results: [number, string, boolean] = [1, "two", true];\nresults',
+    hints: ['Promise.all resolves all promises', 'Awaited unwraps each Promise type'],
     tags: ['utility-types', 'awaited', 'promise-all'],
   },
   {
@@ -8583,14 +8123,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Awaited in Generic Context',
     text: 'Use Awaited in a generic function to handle both sync and async',
-    setup: 'type MaybePromise<T> = T | Promise<T>;\nasync function resolve<T>(value: MaybePromise<T>): Promise<Awaited<T>> {\n  return await value as Awaited<T>;\n}',
-    setupCode: 'type MaybePromise<T> = T | Promise<T>;\nasync function resolve<T>(value: MaybePromise<T>): Promise<Awaited<T>> {\n  return await value as Awaited<T>;\n}',
+    setup:
+      'type MaybePromise<T> = T | Promise<T>;\nasync function resolve<T>(value: MaybePromise<T>): Promise<Awaited<T>> {\n  return await value as Awaited<T>;\n}',
+    setupCode:
+      'type MaybePromise<T> = T | Promise<T>;\nasync function resolve<T>(value: MaybePromise<T>): Promise<Awaited<T>> {\n  return await value as Awaited<T>;\n}',
     expected: 42,
     sample: 'resolve(Promise.resolve(42)).then(v => v)',
-    hints: [
-      'MaybePromise accepts both types',
-      'Awaited normalizes the result',
-    ],
+    hints: ['MaybePromise accepts both types', 'Awaited normalizes the result'],
     tags: ['utility-types', 'awaited', 'generics', 'advanced'],
   },
 
@@ -8603,8 +8142,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Basic NoInfer Type',
     text: 'Use NoInfer to prevent type inference from certain positions',
-    setup: 'function createState<T>(initial: T, defaultValue: NoInfer<T>): { value: T; default: T } {\n  return { value: initial, default: defaultValue };\n}',
-    setupCode: 'function createState<T>(initial: T, defaultValue: NoInfer<T>): { value: T; default: T } {\n  return { value: initial, default: defaultValue };\n}',
+    setup:
+      'function createState<T>(initial: T, defaultValue: NoInfer<T>): { value: T; default: T } {\n  return { value: initial, default: defaultValue };\n}',
+    setupCode:
+      'function createState<T>(initial: T, defaultValue: NoInfer<T>): { value: T; default: T } {\n  return { value: initial, default: defaultValue };\n}',
     expected: { value: 'hello', default: '' },
     sample: 'const state = createState("hello", "");\nstate',
     hints: [
@@ -8619,14 +8160,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'NoInfer for Default Values',
     text: 'Prevent default value from widening inferred type',
-    setup: 'function withDefault<T>(value: T | undefined, defaultValue: NoInfer<T>): T {\n  return value ?? defaultValue;\n}',
-    setupCode: 'function withDefault<T>(value: T | undefined, defaultValue: NoInfer<T>): T {\n  return value ?? defaultValue;\n}',
+    setup:
+      'function withDefault<T>(value: T | undefined, defaultValue: NoInfer<T>): T {\n  return value ?? defaultValue;\n}',
+    setupCode:
+      'function withDefault<T>(value: T | undefined, defaultValue: NoInfer<T>): T {\n  return value ?? defaultValue;\n}',
     expected: 'fallback',
-    sample: 'const result = withDefault(undefined as "a" | "b" | undefined, "fallback" as "a" | "b");\nresult',
-    hints: [
-      'NoInfer keeps T narrow',
-      'Default does not affect inference',
-    ],
+    sample:
+      'const result = withDefault(undefined as "a" | "b" | undefined, "fallback" as "a" | "b");\nresult',
+    hints: ['NoInfer keeps T narrow', 'Default does not affect inference'],
     tags: ['utility-types', 'noinfer', 'defaults'],
   },
   {
@@ -8639,10 +8180,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'function matchPair<T>(a: T, b: NoInfer<T>): boolean {\n  return a === b;\n}',
     expected: true,
     sample: 'const result = matchPair("test", "test");\nresult',
-    hints: [
-      'T inferred from first argument only',
-      'Second argument must match inferred type',
-    ],
+    hints: ['T inferred from first argument only', 'Second argument must match inferred type'],
     tags: ['utility-types', 'noinfer', 'constraints'],
   },
   {
@@ -8651,14 +8189,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'NoInfer for Event Handlers',
     text: 'Use NoInfer to type event handlers without widening',
-    setup: 'type Events = { click: { x: number; y: number }; keydown: { key: string } };\nfunction on<K extends keyof Events>(event: K, handler: (data: NoInfer<Events[K]>) => void): void {}',
-    setupCode: 'type Events = { click: { x: number; y: number }; keydown: { key: string } };\nfunction on<K extends keyof Events>(event: K, handler: (data: NoInfer<Events[K]>) => void): void {}',
+    setup:
+      'type Events = { click: { x: number; y: number }; keydown: { key: string } };\nfunction on<K extends keyof Events>(event: K, handler: (data: NoInfer<Events[K]>) => void): void {}',
+    setupCode:
+      'type Events = { click: { x: number; y: number }; keydown: { key: string } };\nfunction on<K extends keyof Events>(event: K, handler: (data: NoInfer<Events[K]>) => void): void {}',
     expected: 'registered',
     sample: 'on("click", (data) => { const x = data.x; });\n"registered"',
-    hints: [
-      'K inferred from event name',
-      'Handler data type follows from K',
-    ],
+    hints: ['K inferred from event name', 'Handler data type follows from K'],
     tags: ['utility-types', 'noinfer', 'events', 'advanced'],
   },
 
@@ -8674,7 +8211,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define a function type',
     setupCode: '// Define a function type',
     expected: '42',
-    sample: 'type NumberToString = (n: number) => string;\nconst convert: NumberToString = n => String(n);\nconvert(42)',
+    sample:
+      'type NumberToString = (n: number) => string;\nconst convert: NumberToString = n => String(n);\nconvert(42)',
     hints: [
       'Use arrow syntax for function types: (param: Type) => ReturnType',
       'The function takes a number and returns a string',
@@ -8690,7 +8228,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define a callback that logs messages',
     setupCode: '// Define a callback that logs messages',
     expected: undefined,
-    sample: 'type Logger = (message: string) => void;\nconst log: Logger = msg => console.log(msg);\nlog("hello")',
+    sample:
+      'type Logger = (message: string) => void;\nconst log: Logger = msg => console.log(msg);\nlog("hello")',
     hints: [
       'Use void for functions that do not return a value',
       'void indicates the return value should not be used',
@@ -8706,7 +8245,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define an adder function type',
     setupCode: '// Define an adder function type',
     expected: 15,
-    sample: 'type Adder = (a: number, b: number) => number;\nconst add: Adder = (a, b) => a + b;\nadd(10, 5)',
+    sample:
+      'type Adder = (a: number, b: number) => number;\nconst add: Adder = (a, b) => a + b;\nadd(10, 5)',
     hints: [
       'List all parameters with their types in parentheses',
       'Parameters are separated by commas',
@@ -8722,11 +8262,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface User { firstName: string; lastName: string; }',
     setupCode: 'interface User { firstName: string; lastName: string; }',
     expected: 'John Doe',
-    sample: 'type GetFullName = (user: User) => string;\nconst getFullName: GetFullName = u => `${u.firstName} ${u.lastName}`;\ngetFullName({ firstName: "John", lastName: "Doe" })',
-    hints: [
-      'The parameter type can be an interface',
-      'Use template literals to combine strings',
-    ],
+    sample:
+      'type GetFullName = (user: User) => string;\nconst getFullName: GetFullName = u => `${u.firstName} ${u.lastName}`;\ngetFullName({ firstName: "John", lastName: "Doe" })',
+    hints: ['The parameter type can be an interface', 'Use template literals to combine strings'],
     tags: ['function-types', 'objects', 'interfaces'],
   },
   {
@@ -8738,11 +8276,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define a predicate type',
     setupCode: '// Define a predicate type',
     expected: true,
-    sample: 'type IsPositive = (n: number) => boolean;\nconst isPositive: IsPositive = n => n > 0;\nisPositive(5)',
-    hints: [
-      'Predicates return boolean values',
-      'Use comparison operators to return true/false',
-    ],
+    sample:
+      'type IsPositive = (n: number) => boolean;\nconst isPositive: IsPositive = n => n > 0;\nisPositive(5)',
+    hints: ['Predicates return boolean values', 'Use comparison operators to return true/false'],
     tags: ['function-types', 'predicates', 'boolean'],
   },
   {
@@ -8754,7 +8290,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const numbers = [1, 2, 3];',
     setupCode: 'const numbers = [1, 2, 3];',
     expected: [0, 2, 6],
-    sample: 'type ForEachCallback<T> = (element: T, index: number) => void;\nconst results: number[] = [];\nconst cb: ForEachCallback<number> = (el, idx) => results.push(el * idx);\nnumbers.forEach(cb);\nresults',
+    sample:
+      'type ForEachCallback<T> = (element: T, index: number) => void;\nconst results: number[] = [];\nconst cb: ForEachCallback<number> = (el, idx) => results.push(el * idx);\nnumbers.forEach(cb);\nresults',
     hints: [
       'Array callbacks typically receive element and index',
       'Generic type parameter allows reuse with different array types',
@@ -8770,7 +8307,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface ClickEvent { target: { id: string }; }',
     setupCode: 'interface ClickEvent { target: { id: string }; }',
     expected: 'btn-submit',
-    sample: 'type ClickHandler = (event: ClickEvent) => void;\nlet clicked = "";\nconst handler: ClickHandler = e => { clicked = e.target.id; };\nhandler({ target: { id: "btn-submit" } });\nclicked',
+    sample:
+      'type ClickHandler = (event: ClickEvent) => void;\nlet clicked = "";\nconst handler: ClickHandler = e => { clicked = e.target.id; };\nhandler({ target: { id: "btn-submit" } });\nclicked',
     hints: [
       'Event handlers typically return void',
       'The event object contains information about what happened',
@@ -8786,7 +8324,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const nums = [3, 1, 4, 1, 5];',
     setupCode: 'const nums = [3, 1, 4, 1, 5];',
     expected: [1, 1, 3, 4, 5],
-    sample: 'type Comparator = (a: number, b: number) => number;\nconst compare: Comparator = (a, b) => a - b;\n[...nums].sort(compare)',
+    sample:
+      'type Comparator = (a: number, b: number) => number;\nconst compare: Comparator = (a, b) => a - b;\n[...nums].sort(compare)',
     hints: [
       'Comparators return negative, zero, or positive numbers',
       'Return a - b for ascending order',
@@ -8802,7 +8341,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define a string transformer',
     setupCode: '// Define a string transformer',
     expected: 'HELLO',
-    sample: 'type StringTransformer = (input: string) => string;\nconst toUpper: StringTransformer = s => s.toUpperCase();\ntoUpper("hello")',
+    sample:
+      'type StringTransformer = (input: string) => string;\nconst toUpper: StringTransformer = s => s.toUpperCase();\ntoUpper("hello")',
     hints: [
       'Transformers take input and return transformed output of same or different type',
       'Use built-in string methods',
@@ -8818,7 +8358,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface User { id: number; name: string; }',
     setupCode: 'interface User { id: number; name: string; }',
     expected: { id: 1, name: 'Alice' },
-    sample: 'type UserFactory = (id: number, name: string) => User;\nconst createUser: UserFactory = (id, name) => ({ id, name });\ncreateUser(1, "Alice")',
+    sample:
+      'type UserFactory = (id: number, name: string) => User;\nconst createUser: UserFactory = (id, name) => ({ id, name });\ncreateUser(1, "Alice")',
     hints: [
       'Factory functions create and return new objects',
       'Use shorthand property syntax when names match',
@@ -8834,11 +8375,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define async function type',
     setupCode: '// Define async function type',
     expected: 42,
-    sample: 'type AsyncNumberFetcher = () => Promise<number>;\nconst fetchNum: AsyncNumberFetcher = async () => 42;\nfetchNum().then(n => n)',
-    hints: [
-      'Async functions return Promise<T>',
-      'Use Promise<T> as the return type',
-    ],
+    sample:
+      'type AsyncNumberFetcher = () => Promise<number>;\nconst fetchNum: AsyncNumberFetcher = async () => 42;\nfetchNum().then(n => n)',
+    hints: ['Async functions return Promise<T>', 'Use Promise<T> as the return type'],
     tags: ['function-types', 'async', 'promises'],
   },
   {
@@ -8850,7 +8389,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const data: Record<string, number> = { a: 1, b: 2 };',
     setupCode: 'const data: Record<string, number> = { a: 1, b: 2 };',
     expected: null,
-    sample: 'type Finder = (key: string) => number | null;\nconst find: Finder = key => data[key] ?? null;\nfind("c")',
+    sample:
+      'type Finder = (key: string) => number | null;\nconst find: Finder = key => data[key] ?? null;\nfind("c")',
     hints: [
       'Use union types for nullable returns: Type | null',
       'Nullish coalescing (??) provides default for undefined/null',
@@ -8866,7 +8406,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define a timestamp generator type',
     setupCode: '// Define a timestamp generator type',
     expected: true,
-    sample: 'type GetTimestamp = () => number;\nconst now: GetTimestamp = () => Date.now();\ntypeof now() === "number"',
+    sample:
+      'type GetTimestamp = () => number;\nconst now: GetTimestamp = () => Date.now();\ntypeof now() === "number"',
     hints: [
       'Use empty parentheses for no parameters: () => Type',
       'Date.now() returns a numeric timestamp',
@@ -8882,7 +8423,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define result tuple type',
     setupCode: '// Define result tuple type',
     expected: [true, 42],
-    sample: 'type ResultFn = () => [boolean, number];\nconst getResult: ResultFn = () => [true, 42];\ngetResult()',
+    sample:
+      'type ResultFn = () => [boolean, number];\nconst getResult: ResultFn = () => [true, 42];\ngetResult()',
     hints: [
       'Use tuple syntax for return type: [Type1, Type2]',
       'Tuples have fixed length and types at each position',
@@ -8898,7 +8440,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define flexible input type',
     setupCode: '// Define flexible input type',
     expected: '42',
-    sample: 'type Stringify = (value: string | number) => string;\nconst stringify: Stringify = v => String(v);\nstringify(42)',
+    sample:
+      'type Stringify = (value: string | number) => string;\nconst stringify: Stringify = v => String(v);\nstringify(42)',
     hints: [
       'Use union types for parameters that accept multiple types',
       'String() works on both strings and numbers',
@@ -8914,11 +8457,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define promise executor type',
     setupCode: '// Define promise executor type',
     expected: 'resolved',
-    sample: 'type Executor<T> = (resolve: (value: T) => void, reject: (reason?: any) => void) => void;\nconst executor: Executor<string> = (resolve, reject) => resolve("resolved");\nnew Promise(executor).then(v => v)',
-    hints: [
-      'Executor receives resolve and reject callbacks',
-      'Both callbacks return void',
-    ],
+    sample:
+      'type Executor<T> = (resolve: (value: T) => void, reject: (reason?: any) => void) => void;\nconst executor: Executor<string> = (resolve, reject) => resolve("resolved");\nnew Promise(executor).then(v => v)',
+    hints: ['Executor receives resolve and reject callbacks', 'Both callbacks return void'],
     tags: ['function-types', 'promises', 'executor'],
   },
   {
@@ -8930,11 +8471,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define then callback type',
     setupCode: '// Define then callback type',
     expected: 10,
-    sample: 'type ThenCallback<T, R> = (value: T) => R | PromiseLike<R>;\nconst doubler: ThenCallback<number, number> = n => n * 2;\nPromise.resolve(5).then(doubler).then(r => r)',
-    hints: [
-      'Then callbacks can return value or Promise',
-      'PromiseLike allows returning thenables',
-    ],
+    sample:
+      'type ThenCallback<T, R> = (value: T) => R | PromiseLike<R>;\nconst doubler: ThenCallback<number, number> = n => n * 2;\nPromise.resolve(5).then(doubler).then(r => r)',
+    hints: ['Then callbacks can return value or Promise', 'PromiseLike allows returning thenables'],
     tags: ['function-types', 'promises', 'then'],
   },
   {
@@ -8946,11 +8485,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define cleanup function type',
     setupCode: '// Define cleanup function type',
     expected: 'cleaned',
-    sample: 'type Cleanup = () => void;\nlet status = "active";\nconst cleanup: Cleanup = () => { status = "cleaned"; };\ncleanup();\nstatus',
-    hints: [
-      'Cleanup functions take no arguments',
-      'Return void as they just perform side effects',
-    ],
+    sample:
+      'type Cleanup = () => void;\nlet status = "active";\nconst cleanup: Cleanup = () => { status = "cleaned"; };\ncleanup();\nstatus',
+    hints: ['Cleanup functions take no arguments', 'Return void as they just perform side effects'],
     tags: ['function-types', 'cleanup', 'side-effects'],
   },
   {
@@ -8962,7 +8499,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define subscription types',
     setupCode: '// Define subscription types',
     expected: 0,
-    sample: 'type Unsubscribe = () => void;\ntype Subscribe<T> = (callback: (value: T) => void) => Unsubscribe;\nconst subscribers: ((v: number) => void)[] = [];\nconst subscribe: Subscribe<number> = cb => {\n  subscribers.push(cb);\n  return () => { subscribers.splice(subscribers.indexOf(cb), 1); };\n};\nconst unsub = subscribe(v => console.log(v));\nunsub();\nsubscribers.length',
+    sample:
+      'type Unsubscribe = () => void;\ntype Subscribe<T> = (callback: (value: T) => void) => Unsubscribe;\nconst subscribers: ((v: number) => void)[] = [];\nconst subscribe: Subscribe<number> = cb => {\n  subscribers.push(cb);\n  return () => { subscribers.splice(subscribers.indexOf(cb), 1); };\n};\nconst unsub = subscribe(v => console.log(v));\nunsub();\nsubscribers.length',
     hints: [
       'Subscribe returns a function to cancel subscription',
       'Unsubscribe removes callback from listeners',
@@ -8978,11 +8516,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface Config { apiUrl: string; timeout: number; }',
     setupCode: 'interface Config { apiUrl: string; timeout: number; }',
     expected: 'https://api.example.com',
-    sample: 'type Getter<T, K extends keyof T> = (obj: T) => T[K];\nconst getApiUrl: Getter<Config, "apiUrl"> = obj => obj.apiUrl;\ngetApiUrl({ apiUrl: "https://api.example.com", timeout: 5000 })',
-    hints: [
-      'Use keyof to constrain key parameter',
-      'T[K] is the type of property K in T',
-    ],
+    sample:
+      'type Getter<T, K extends keyof T> = (obj: T) => T[K];\nconst getApiUrl: Getter<Config, "apiUrl"> = obj => obj.apiUrl;\ngetApiUrl({ apiUrl: "https://api.example.com", timeout: 5000 })',
+    hints: ['Use keyof to constrain key parameter', 'T[K] is the type of property K in T'],
     tags: ['function-types', 'generics', 'property-access'],
   },
   {
@@ -8994,11 +8530,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface State { count: number; name: string; }',
     setupCode: 'interface State { count: number; name: string; }',
     expected: { count: 10, name: 'test' },
-    sample: 'type Setter<T, K extends keyof T> = (obj: T, value: T[K]) => T;\nconst setCount: Setter<State, "count"> = (obj, value) => ({ ...obj, count: value });\nsetCount({ count: 0, name: "test" }, 10)',
-    hints: [
-      'Setter takes object and new value',
-      'Return new object with updated property',
-    ],
+    sample:
+      'type Setter<T, K extends keyof T> = (obj: T, value: T[K]) => T;\nconst setCount: Setter<State, "count"> = (obj, value) => ({ ...obj, count: value });\nsetCount({ count: 0, name: "test" }, 10)',
+    hints: ['Setter takes object and new value', 'Return new object with updated property'],
     tags: ['function-types', 'generics', 'property-access'],
   },
   {
@@ -9010,11 +8544,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];',
     setupCode: 'const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];',
     expected: [2, 4, 6, 8, 10],
-    sample: 'type FilterPredicate<T> = (value: T, index: number, array: T[]) => boolean;\nconst isEven: FilterPredicate<number> = n => n % 2 === 0;\nnumbers.filter(isEven)',
-    hints: [
-      'Filter predicates return boolean',
-      'Receives value, index, and array like map',
-    ],
+    sample:
+      'type FilterPredicate<T> = (value: T, index: number, array: T[]) => boolean;\nconst isEven: FilterPredicate<number> = n => n % 2 === 0;\nnumbers.filter(isEven)',
+    hints: ['Filter predicates return boolean', 'Receives value, index, and array like map'],
     tags: ['function-types', 'predicates', 'arrays'],
   },
   {
@@ -9026,7 +8558,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const items = [{ name: "Charlie" }, { name: "Alice" }, { name: "Bob" }];',
     setupCode: 'const items = [{ name: "Charlie" }, { name: "Alice" }, { name: "Bob" }];',
     expected: [{ name: 'Alice' }, { name: 'Bob' }, { name: 'Charlie' }],
-    sample: 'type CompareFn<T> = (a: T, b: T) => number;\nconst byName: CompareFn<{ name: string }> = (a, b) => a.name.localeCompare(b.name);\n[...items].sort(byName)',
+    sample:
+      'type CompareFn<T> = (a: T, b: T) => number;\nconst byName: CompareFn<{ name: string }> = (a, b) => a.name.localeCompare(b.name);\n[...items].sort(byName)',
     hints: [
       'Compare returns negative, zero, or positive',
       'localeCompare compares strings properly',
@@ -9042,11 +8575,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define validator type',
     setupCode: '// Define validator type',
     expected: { valid: false, error: 'Too short' },
-    sample: 'type ValidationResult = { valid: true } | { valid: false; error: string };\ntype Validator<T> = (value: T) => ValidationResult;\nconst minLength: Validator<string> = s => \n  s.length >= 3 ? { valid: true } : { valid: false, error: "Too short" };\nminLength("ab")',
-    hints: [
-      'Discriminated union for success/failure',
-      'Validators return result object',
-    ],
+    sample:
+      'type ValidationResult = { valid: true } | { valid: false; error: string };\ntype Validator<T> = (value: T) => ValidationResult;\nconst minLength: Validator<string> = s => \n  s.length >= 3 ? { valid: true } : { valid: false, error: "Too short" };\nminLength("ab")',
+    hints: ['Discriminated union for success/failure', 'Validators return result object'],
     tags: ['function-types', 'validation', 'discriminated-union'],
   },
   {
@@ -9058,7 +8589,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define transform type',
     setupCode: '// Define transform type',
     expected: 'HELLO',
-    sample: 'type Transform<I, O> = (input: I) => O;\nconst toUpper: Transform<string, string> = s => s.toUpperCase();\ntoUpper("hello")',
+    sample:
+      'type Transform<I, O> = (input: I) => O;\nconst toUpper: Transform<string, string> = s => s.toUpperCase();\ntoUpper("hello")',
     hints: [
       'Transform takes input type and produces output type',
       'Generic parameters allow flexible typing',
@@ -9074,11 +8606,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const words = ["hello", "world"];',
     setupCode: 'const words = ["hello", "world"];',
     expected: [5, 5],
-    sample: 'type MapFn<T, U> = (value: T, index: number) => U;\nconst getLength: MapFn<string, number> = s => s.length;\nwords.map(getLength)',
-    hints: [
-      'Map callbacks transform each element',
-      'Return type can differ from input type',
-    ],
+    sample:
+      'type MapFn<T, U> = (value: T, index: number) => U;\nconst getLength: MapFn<string, number> = s => s.length;\nwords.map(getLength)',
+    hints: ['Map callbacks transform each element', 'Return type can differ from input type'],
     tags: ['function-types', 'arrays', 'map'],
   },
   {
@@ -9090,7 +8620,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define error handler type',
     setupCode: '// Define error handler type',
     expected: 'Error: Something went wrong',
-    sample: 'type ErrorHandler = (error: Error) => string;\nconst handleError: ErrorHandler = err => `Error: ${err.message}`;\nhandleError(new Error("Something went wrong"))',
+    sample:
+      'type ErrorHandler = (error: Error) => string;\nconst handleError: ErrorHandler = err => `Error: ${err.message}`;\nhandleError(new Error("Something went wrong"))',
     hints: [
       'Error handlers receive Error objects',
       'Return type depends on how errors are processed',
@@ -9106,7 +8637,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define greeting function type',
     setupCode: '// Define greeting function type',
     expected: 'Hello, World!',
-    sample: 'type Greeter = (name: string, greeting?: string) => string;\nconst greet: Greeter = (name, greeting = "Hello") => `${greeting}, ${name}!`;\ngreet("World")',
+    sample:
+      'type Greeter = (name: string, greeting?: string) => string;\nconst greet: Greeter = (name, greeting = "Hello") => `${greeting}, ${name}!`;\ngreet("World")',
     hints: [
       'Use ? after parameter name for optional: param?: Type',
       'Provide default value in implementation if needed',
@@ -9122,7 +8654,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define variadic sum type',
     setupCode: '// Define variadic sum type',
     expected: 15,
-    sample: 'type Sum = (...numbers: number[]) => number;\nconst sum: Sum = (...nums) => nums.reduce((a, b) => a + b, 0);\nsum(1, 2, 3, 4, 5)',
+    sample:
+      'type Sum = (...numbers: number[]) => number;\nconst sum: Sum = (...nums) => nums.reduce((a, b) => a + b, 0);\nsum(1, 2, 3, 4, 5)',
     hints: [
       'Use rest syntax: ...paramName: Type[]',
       'Rest parameters collect all remaining arguments',
@@ -9138,7 +8671,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define a function doubler type',
     setupCode: '// Define a function doubler type',
     expected: 20,
-    sample: 'type Doubler = (fn: (x: number) => number) => (x: number) => number;\nconst double: Doubler = fn => x => fn(x) * 2;\nconst addOne = (x: number) => x + 1;\ndouble(addOne)(9)',
+    sample:
+      'type Doubler = (fn: (x: number) => number) => (x: number) => number;\nconst double: Doubler = fn => x => fn(x) * 2;\nconst addOne = (x: number) => x + 1;\ndouble(addOne)(9)',
     hints: [
       'Higher-order functions take or return functions',
       'Nest function type expressions for complex signatures',
@@ -9154,7 +8688,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define generic identity type',
     setupCode: '// Define generic identity type',
     expected: 'hello',
-    sample: 'type Identity = <T>(value: T) => T;\nconst identity: Identity = value => value;\nidentity("hello")',
+    sample:
+      'type Identity = <T>(value: T) => T;\nconst identity: Identity = value => value;\nidentity("hello")',
     hints: [
       'Place generic parameter before function parameters: <T>(param: T) => T',
       'Generic preserves the input type in the output',
@@ -9170,7 +8705,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define generic mapper',
     setupCode: '// Define generic mapper',
     expected: 5,
-    sample: 'type Mapper<A, B> = (value: A) => B;\nconst strlen: Mapper<string, number> = s => s.length;\nstrlen("hello")',
+    sample:
+      'type Mapper<A, B> = (value: A) => B;\nconst strlen: Mapper<string, number> = s => s.length;\nstrlen("hello")',
     hints: [
       'Use two type parameters for input and output types',
       'Type parameters can be specified when using the type',
@@ -9186,7 +8722,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface HasLength { length: number; }',
     setupCode: 'interface HasLength { length: number; }',
     expected: 5,
-    sample: 'type GetLength = <T extends HasLength>(obj: T) => number;\nconst getLen: GetLength = obj => obj.length;\ngetLen("hello")',
+    sample:
+      'type GetLength = <T extends HasLength>(obj: T) => number;\nconst getLen: GetLength = obj => obj.length;\ngetLen("hello")',
     hints: [
       'Use extends to constrain generic types',
       'Constraint ensures the property exists on the type',
@@ -9202,7 +8739,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define formatter interface with call signature',
     setupCode: '// Define formatter interface with call signature',
     expected: '$100.00',
-    sample: 'interface Formatter {\n  (value: number): string;\n  prefix: string;\n}\nconst fmt: Formatter = Object.assign(\n  (v: number) => fmt.prefix + v.toFixed(2),\n  { prefix: "$" }\n);\nfmt(100)',
+    sample:
+      'interface Formatter {\n  (value: number): string;\n  prefix: string;\n}\nconst fmt: Formatter = Object.assign(\n  (v: number) => fmt.prefix + v.toFixed(2),\n  { prefix: "$" }\n);\nfmt(100)',
     hints: [
       'Call signatures in interfaces: (params): ReturnType',
       'Call signatures allow adding properties to callable objects',
@@ -9218,7 +8756,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'class Point { constructor(public x: number, public y: number) {} }',
     setupCode: 'class Point { constructor(public x: number, public y: number) {} }',
     expected: { x: 3, y: 4 },
-    sample: 'interface PointConstructor {\n  new (x: number, y: number): Point;\n}\nconst createPoint = (Ctor: PointConstructor, x: number, y: number) => new Ctor(x, y);\nconst p = createPoint(Point, 3, 4);\n({ x: p.x, y: p.y })',
+    sample:
+      'interface PointConstructor {\n  new (x: number, y: number): Point;\n}\nconst createPoint = (Ctor: PointConstructor, x: number, y: number) => new Ctor(x, y);\nconst p = createPoint(Point, 3, 4);\n({ x: p.x, y: p.y })',
     hints: [
       'Construct signatures use new keyword: new (params): Type',
       'Allows passing constructors as values',
@@ -9234,7 +8773,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define hybrid callable/constructable type',
     setupCode: '// Define hybrid callable/constructable type',
     expected: true,
-    sample: 'interface DateConstructor {\n  (): string;\n  new (): Date;\n}\nconst D = Date as unknown as DateConstructor;\ntypeof D() === "string" && D() !== undefined',
+    sample:
+      'interface DateConstructor {\n  (): string;\n  new (): Date;\n}\nconst D = Date as unknown as DateConstructor;\ntypeof D() === "string" && D() !== undefined',
     hints: [
       'Some built-ins like Date work both ways',
       'Combine call and construct signatures in one interface',
@@ -9250,7 +8790,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded double function',
     setupCode: '// Define overloaded double function',
     expected: 'hellohello',
-    sample: 'function double(x: string): string;\nfunction double(x: number): number;\nfunction double(x: string | number): string | number {\n  return typeof x === "string" ? x + x : x * 2;\n}\ndouble("hello")',
+    sample:
+      'function double(x: string): string;\nfunction double(x: number): number;\nfunction double(x: string | number): string | number {\n  return typeof x === "string" ? x + x : x * 2;\n}\ndouble("hello")',
     hints: [
       'Overload signatures come before implementation',
       'Implementation signature must be compatible with all overloads',
@@ -9266,7 +8807,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded createElement',
     setupCode: '// Define overloaded createElement',
     expected: { tag: 'div', content: 'Hello' },
-    sample: 'function createElement(tag: string): { tag: string };\nfunction createElement(tag: string, content: string): { tag: string; content: string };\nfunction createElement(tag: string, content?: string) {\n  return content ? { tag, content } : { tag };\n}\ncreateElement("div", "Hello")',
+    sample:
+      'function createElement(tag: string): { tag: string };\nfunction createElement(tag: string, content: string): { tag: string; content: string };\nfunction createElement(tag: string, content?: string) {\n  return content ? { tag, content } : { tag };\n}\ncreateElement("div", "Hello")',
     hints: [
       'Different overloads can have different parameter counts',
       'Implementation handles all cases',
@@ -9282,11 +8824,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded first function',
     setupCode: '// Define overloaded first function',
     expected: 1,
-    sample: 'function first(arr: []): undefined;\nfunction first<T>(arr: [T, ...T[]]): T;\nfunction first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\nfirst([1, 2, 3])',
-    hints: [
-      'Use tuple types for specific array shapes',
-      'Empty tuple [] is a valid type',
-    ],
+    sample:
+      'function first(arr: []): undefined;\nfunction first<T>(arr: [T, ...T[]]): T;\nfunction first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\nfirst([1, 2, 3])',
+    hints: ['Use tuple types for specific array shapes', 'Empty tuple [] is a valid type'],
     tags: ['overloads', 'arrays', 'tuples'],
   },
   {
@@ -9298,7 +8838,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define collection class with overloaded add',
     setupCode: '// Define collection class with overloaded add',
     expected: [1, 2, 3, 4, 5],
-    sample: 'class Collection<T> {\n  items: T[] = [];\n  add(item: T): void;\n  add(items: T[]): void;\n  add(itemOrItems: T | T[]): void {\n    if (Array.isArray(itemOrItems)) this.items.push(...itemOrItems);\n    else this.items.push(itemOrItems);\n  }\n}\nconst c = new Collection<number>();\nc.add(1);\nc.add([2, 3, 4, 5]);\nc.items',
+    sample:
+      'class Collection<T> {\n  items: T[] = [];\n  add(item: T): void;\n  add(items: T[]): void;\n  add(itemOrItems: T | T[]): void {\n    if (Array.isArray(itemOrItems)) this.items.push(...itemOrItems);\n    else this.items.push(itemOrItems);\n  }\n}\nconst c = new Collection<number>();\nc.add(1);\nc.add([2, 3, 4, 5]);\nc.items',
     hints: [
       'Class methods can have overloads too',
       'Use Array.isArray to distinguish types at runtime',
@@ -9314,7 +8855,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'const words = ["hello", "world"];',
     setupCode: 'const words = ["hello", "world"];',
     expected: ['HELLO-0', 'WORLD-1'],
-    sample: 'type MapCallback<T, U> = (value: T, index: number, array: T[]) => U;\nconst cb: MapCallback<string, string> = (v, i) => `${v.toUpperCase()}-${i}`;\nwords.map(cb)',
+    sample:
+      'type MapCallback<T, U> = (value: T, index: number, array: T[]) => U;\nconst cb: MapCallback<string, string> = (v, i) => `${v.toUpperCase()}-${i}`;\nwords.map(cb)',
     hints: [
       'Array callbacks often include value, index, and array',
       'Generic types allow reuse with different element types',
@@ -9330,11 +8872,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'const nums = [1, 2, 3, 4, 5];',
     setupCode: 'const nums = [1, 2, 3, 4, 5];',
     expected: 15,
-    sample: 'type Reducer<T, A> = (accumulator: A, current: T, index: number) => A;\nconst sumReducer: Reducer<number, number> = (acc, curr) => acc + curr;\nnums.reduce(sumReducer, 0)',
-    hints: [
-      'Reducers take accumulator and current value',
-      'Return type matches accumulator type',
-    ],
+    sample:
+      'type Reducer<T, A> = (accumulator: A, current: T, index: number) => A;\nconst sumReducer: Reducer<number, number> = (acc, curr) => acc + curr;\nnums.reduce(sumReducer, 0)',
+    hints: ['Reducers take accumulator and current value', 'Return type matches accumulator type'],
     tags: ['function-types', 'reducer', 'arrays'],
   },
   {
@@ -9346,7 +8886,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface Counter { count: number; }',
     setupCode: 'interface Counter { count: number; }',
     expected: 3,
-    sample: 'type IncrementFn = (this: Counter, amount: number) => number;\nconst increment: IncrementFn = function(amount) { return this.count += amount; };\nconst counter: Counter = { count: 0 };\nincrement.call(counter, 3)',
+    sample:
+      'type IncrementFn = (this: Counter, amount: number) => number;\nconst increment: IncrementFn = function(amount) { return this.count += amount; };\nconst counter: Counter = { count: 0 };\nincrement.call(counter, 3)',
     hints: [
       'this parameter must be first and is not counted as regular param',
       'Use call/apply/bind to set this context',
@@ -9362,7 +8903,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Both approaches define same callable type',
     setupCode: '// Both approaches define same callable type',
     expected: 6,
-    sample: 'type MultFn = (a: number, b: number) => number;\ninterface IMultFn { (a: number, b: number): number; }\nconst mult1: MultFn = (a, b) => a * b;\nconst mult2: IMultFn = (a, b) => a * b;\nmult1(2, 3)',
+    sample:
+      'type MultFn = (a: number, b: number) => number;\ninterface IMultFn { (a: number, b: number): number; }\nconst mult1: MultFn = (a, b) => a * b;\nconst mult2: IMultFn = (a, b) => a * b;\nmult1(2, 3)',
     hints: [
       'Type aliases use arrow syntax: (params) => Return',
       'Interfaces use call signature syntax: (params): Return',
@@ -9378,7 +8920,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define conditional return type',
     setupCode: '// Define conditional return type',
     expected: 'hello',
-    sample: 'type Wrap<T> = T extends string ? string : number[];\ntype WrapFn = <T>(value: T) => Wrap<T>;\nconst wrap: WrapFn = (value: any) => typeof value === "string" ? value : [value];\nwrap("hello")',
+    sample:
+      'type Wrap<T> = T extends string ? string : number[];\ntype WrapFn = <T>(value: T) => Wrap<T>;\nconst wrap: WrapFn = (value: any) => typeof value === "string" ? value : [value];\nwrap("hello")',
     hints: [
       'Conditional types can determine return type based on input',
       'T extends U ? X : Y pattern for conditional types',
@@ -9394,7 +8937,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded parse function',
     setupCode: '// Define overloaded parse function',
     expected: 42,
-    sample: 'function parse(type: "number", value: string): number;\nfunction parse(type: "boolean", value: string): boolean;\nfunction parse(type: string, value: string): number | boolean {\n  return type === "number" ? Number(value) : value === "true";\n}\nparse("number", "42")',
+    sample:
+      'function parse(type: "number", value: string): number;\nfunction parse(type: "boolean", value: string): boolean;\nfunction parse(type: string, value: string): number | boolean {\n  return type === "number" ? Number(value) : value === "true";\n}\nparse("number", "42")',
     hints: [
       'Literal types narrow the input to specific values',
       'Each overload handles a specific literal value',
@@ -9410,7 +8954,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define function type with default generic',
     setupCode: '// Define function type with default generic',
     expected: 'default',
-    sample: 'type GetOrDefault<T = string> = (value: T | undefined, defaultVal: T) => T;\nconst getStr: GetOrDefault = (v, d) => v ?? d;\ngetStr(undefined, "default")',
+    sample:
+      'type GetOrDefault<T = string> = (value: T | undefined, defaultVal: T) => T;\nconst getStr: GetOrDefault = (v, d) => v ?? d;\ngetStr(undefined, "default")',
     hints: [
       'Default type parameters use = syntax: T = DefaultType',
       'When not specified, the default is used',
@@ -9426,11 +8971,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define error-first callback',
     setupCode: '// Define error-first callback',
     expected: 'success',
-    sample: 'type NodeCallback<T> = (error: Error | null, data?: T) => void;\nlet result = "";\nconst cb: NodeCallback<string> = (err, data) => {\n  result = err ? err.message : data ?? "";\n};\ncb(null, "success");\nresult',
-    hints: [
-      'Error is first parameter, null if no error',
-      'Data is optional second parameter',
-    ],
+    sample:
+      'type NodeCallback<T> = (error: Error | null, data?: T) => void;\nlet result = "";\nconst cb: NodeCallback<string> = (err, data) => {\n  result = err ? err.message : data ?? "";\n};\ncb(null, "success");\nresult',
+    hints: ['Error is first parameter, null if no error', 'Data is optional second parameter'],
     tags: ['function-types', 'callbacks', 'node-style'],
   },
   {
@@ -9442,7 +8985,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define method decorator type',
     setupCode: '// Define method decorator type',
     expected: true,
-    sample: 'type MethodDecorator = <T>(\n  target: Object,\n  propertyKey: string | symbol,\n  descriptor: TypedPropertyDescriptor<T>\n) => TypedPropertyDescriptor<T> | void;\nconst log: MethodDecorator = (target, key, desc) => desc;\ntypeof log === "function"',
+    sample:
+      'type MethodDecorator = <T>(\n  target: Object,\n  propertyKey: string | symbol,\n  descriptor: TypedPropertyDescriptor<T>\n) => TypedPropertyDescriptor<T> | void;\nconst log: MethodDecorator = (target, key, desc) => desc;\ntypeof log === "function"',
     hints: [
       'Decorators receive target, key, and descriptor',
       'Can return modified descriptor or void',
@@ -9456,9 +9000,11 @@ export const typescriptProblems: Problem[] = [
     title: 'Middleware Function Type',
     text: 'Define an Express-style middleware function type',
     setup: 'interface Request { path: string; }\ninterface Response { send(data: string): void; }',
-    setupCode: 'interface Request { path: string; }\ninterface Response { send(data: string): void; }',
+    setupCode:
+      'interface Request { path: string; }\ninterface Response { send(data: string): void; }',
     expected: '/api/users',
-    sample: 'type Middleware = (req: Request, res: Response, next: () => void) => void;\nlet logged = "";\nconst logger: Middleware = (req, res, next) => { logged = req.path; next(); };\nlogger({ path: "/api/users" }, { send: () => {} }, () => {});\nlogged',
+    sample:
+      'type Middleware = (req: Request, res: Response, next: () => void) => void;\nlet logged = "";\nconst logger: Middleware = (req, res, next) => { logged = req.path; next(); };\nlogger({ path: "/api/users" }, { send: () => {} }, () => {});\nlogged',
     hints: [
       'Middleware receives request, response, and next',
       'Call next() to continue to next middleware',
@@ -9474,7 +9020,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded find function',
     setupCode: '// Define overloaded find function',
     expected: [2, 4, 6],
-    sample: 'function find(arr: number[], predicate: (n: number) => boolean, all: true): number[];\nfunction find(arr: number[], predicate: (n: number) => boolean, all: false): number | undefined;\nfunction find(arr: number[], predicate: (n: number) => boolean, all: boolean) {\n  return all ? arr.filter(predicate) : arr.find(predicate);\n}\nfind([1, 2, 3, 4, 5, 6], n => n % 2 === 0, true)',
+    sample:
+      'function find(arr: number[], predicate: (n: number) => boolean, all: true): number[];\nfunction find(arr: number[], predicate: (n: number) => boolean, all: false): number | undefined;\nfunction find(arr: number[], predicate: (n: number) => boolean, all: boolean) {\n  return all ? arr.filter(predicate) : arr.find(predicate);\n}\nfind([1, 2, 3, 4, 5, 6], n => n % 2 === 0, true)',
     hints: [
       'Boolean literal types control return type',
       'true returns array, false returns single item',
@@ -9490,11 +9037,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded replace function',
     setupCode: '// Define overloaded replace function',
     expected: 'hello universe',
-    sample: 'function replace(str: string, search: string, replacement: string): string;\nfunction replace(str: string, search: RegExp, replacement: string): string;\nfunction replace(str: string, search: string | RegExp, replacement: string): string {\n  return str.replace(search, replacement);\n}\nreplace("hello world", /world/, "universe")',
-    hints: [
-      'String and RegExp can be separate overloads',
-      'Implementation handles both cases',
-    ],
+    sample:
+      'function replace(str: string, search: string, replacement: string): string;\nfunction replace(str: string, search: RegExp, replacement: string): string;\nfunction replace(str: string, search: string | RegExp, replacement: string): string {\n  return str.replace(search, replacement);\n}\nreplace("hello world", /world/, "universe")',
+    hints: ['String and RegExp can be separate overloads', 'Implementation handles both cases'],
     tags: ['overloads', 'strings', 'regex'],
   },
   {
@@ -9506,11 +9051,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define memoize function type',
     setupCode: '// Define memoize function type',
     expected: 8,
-    sample: 'type Memoize = <A extends any[], R>(fn: (...args: A) => R) => (...args: A) => R;\nconst memoize: Memoize = fn => {\n  const cache = new Map<string, any>();\n  return (...args) => {\n    const key = JSON.stringify(args);\n    if (!cache.has(key)) cache.set(key, fn(...args));\n    return cache.get(key);\n  };\n};\nconst cube = memoize((n: number) => n * n * n);\ncube(2)',
-    hints: [
-      'Memoize preserves function signature',
-      'Use Map for caching results',
-    ],
+    sample:
+      'type Memoize = <A extends any[], R>(fn: (...args: A) => R) => (...args: A) => R;\nconst memoize: Memoize = fn => {\n  const cache = new Map<string, any>();\n  return (...args) => {\n    const key = JSON.stringify(args);\n    if (!cache.has(key)) cache.set(key, fn(...args));\n    return cache.get(key);\n  };\n};\nconst cube = memoize((n: number) => n * n * n);\ncube(2)',
+    hints: ['Memoize preserves function signature', 'Use Map for caching results'],
     tags: ['function-types', 'memoization', 'higher-order'],
   },
   {
@@ -9522,7 +9065,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define callable dictionary type',
     setupCode: '// Define callable dictionary type',
     expected: 'default',
-    sample: 'interface CallableDict {\n  (key: string): string;\n  [key: string]: string | ((key: string) => string);\n}\nconst dict: CallableDict = Object.assign(\n  (key: string) => dict[key] as string ?? "default",\n  { hello: "world", foo: "bar" }\n);\ndict("unknown")',
+    sample:
+      'interface CallableDict {\n  (key: string): string;\n  [key: string]: string | ((key: string) => string);\n}\nconst dict: CallableDict = Object.assign(\n  (key: string) => dict[key] as string ?? "default",\n  { hello: "world", foo: "bar" }\n);\ndict("unknown")',
     hints: [
       'Index signatures define property access types',
       'Call signature makes the object callable',
@@ -9538,7 +9082,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define function with readonly param',
     setupCode: '// Define function with readonly param',
     expected: 6,
-    sample: 'type Summer = (numbers: readonly number[]) => number;\nconst sum: Summer = nums => nums.reduce((a, b) => a + b, 0);\nsum([1, 2, 3])',
+    sample:
+      'type Summer = (numbers: readonly number[]) => number;\nconst sum: Summer = nums => nums.reduce((a, b) => a + b, 0);\nsum([1, 2, 3])',
     hints: [
       'readonly modifier prevents array mutation',
       'Accepts both mutable and readonly arrays',
@@ -9554,7 +9099,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface Query { table: string; columns: string[]; where?: string; }',
     setupCode: 'interface Query { table: string; columns: string[]; where?: string; }',
     expected: { table: 'users', columns: ['name', 'email'], where: 'active = true' },
-    sample: 'interface QueryBuilder {\n  select(...cols: string[]): QueryBuilder;\n  from(table: string): QueryBuilder;\n  where(condition: string): QueryBuilder;\n  build(): Query;\n}\nconst builder: QueryBuilder = {\n  _query: {} as Query,\n  select(...cols) { this._query.columns = cols; return this; },\n  from(table) { this._query.table = table; return this; },\n  where(cond) { this._query.where = cond; return this; },\n  build() { return this._query; }\n} as any;\nbuilder.select("name", "email").from("users").where("active = true").build()',
+    sample:
+      'interface QueryBuilder {\n  select(...cols: string[]): QueryBuilder;\n  from(table: string): QueryBuilder;\n  where(condition: string): QueryBuilder;\n  build(): Query;\n}\nconst builder: QueryBuilder = {\n  _query: {} as Query,\n  select(...cols) { this._query.columns = cols; return this; },\n  from(table) { this._query.table = table; return this; },\n  where(cond) { this._query.where = cond; return this; },\n  build() { return this._query; }\n} as any;\nbuilder.select("name", "email").from("users").where("active = true").build()',
     hints: [
       'Builder methods return this for chaining',
       'Use interface to define method signatures',
@@ -9570,7 +9116,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface Events { click: { x: number; y: number }; change: string; }',
     setupCode: 'interface Events { click: { x: number; y: number }; change: string; }',
     expected: { x: 10, y: 20 },
-    sample: 'type Listener<T> = (data: T) => void;\ntype Emitter<E> = {\n  on<K extends keyof E>(event: K, listener: Listener<E[K]>): void;\n  emit<K extends keyof E>(event: K, data: E[K]): void;\n};\nconst emitter: Emitter<Events> = {\n  listeners: {} as any,\n  on(event, listener) { (this.listeners[event] ??= []).push(listener); },\n  emit(event, data) { this.listeners[event]?.forEach((l: any) => l(data)); }\n} as any;\nlet received: any;\nemitter.on("click", d => { received = d; });\nemitter.emit("click", { x: 10, y: 20 });\nreceived',
+    sample:
+      'type Listener<T> = (data: T) => void;\ntype Emitter<E> = {\n  on<K extends keyof E>(event: K, listener: Listener<E[K]>): void;\n  emit<K extends keyof E>(event: K, data: E[K]): void;\n};\nconst emitter: Emitter<Events> = {\n  listeners: {} as any,\n  on(event, listener) { (this.listeners[event] ??= []).push(listener); },\n  emit(event, data) { this.listeners[event]?.forEach((l: any) => l(data)); }\n} as any;\nlet received: any;\nemitter.on("click", d => { received = d; });\nemitter.emit("click", { x: 10, y: 20 });\nreceived',
     hints: [
       'Use mapped types for event-specific listeners',
       'keyof E constrains to valid event names',
@@ -9586,7 +9133,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define partial application type',
     setupCode: '// Define partial application type',
     expected: 15,
-    sample: 'type PartialApply<F, A> = F extends (arg: A, ...rest: infer R) => infer Ret\n  ? (...args: R) => Ret\n  : never;\nconst add = (a: number, b: number, c: number) => a + b + c;\ntype AddWithFirst = PartialApply<typeof add, number>;\nconst add5: AddWithFirst = (b, c) => add(5, b, c);\nadd5(4, 6)',
+    sample:
+      'type PartialApply<F, A> = F extends (arg: A, ...rest: infer R) => infer Ret\n  ? (...args: R) => Ret\n  : never;\nconst add = (a: number, b: number, c: number) => a + b + c;\ntype AddWithFirst = PartialApply<typeof add, number>;\nconst add5: AddWithFirst = (b, c) => add(5, b, c);\nadd5(4, 6)',
     hints: [
       'Use infer to capture remaining params and return type',
       'Partial application fixes some arguments',
@@ -9602,11 +9150,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded fetch data function',
     setupCode: '// Define overloaded fetch data function',
     expected: 'sync',
-    sample: 'function fetchData(async: true): Promise<string>;\nfunction fetchData(async: false): string;\nfunction fetchData(async: boolean): Promise<string> | string {\n  return async ? Promise.resolve("async") : "sync";\n}\nfetchData(false)',
-    hints: [
-      'Boolean literal determines sync vs async',
-      'Return type changes based on parameter',
-    ],
+    sample:
+      'function fetchData(async: true): Promise<string>;\nfunction fetchData(async: false): string;\nfunction fetchData(async: boolean): Promise<string> | string {\n  return async ? Promise.resolve("async") : "sync";\n}\nfetchData(false)',
+    hints: ['Boolean literal determines sync vs async', 'Return type changes based on parameter'],
     tags: ['overloads', 'async', 'sync'],
   },
   {
@@ -9618,7 +9164,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Fn1 = (x: number, y: string) => boolean;\ntype Fn2 = (x: number) => boolean;',
     setupCode: 'type Fn1 = (x: number, y: string) => boolean;\ntype Fn2 = (x: number) => boolean;',
     expected: true,
-    sample: 'type IsAssignable<A, B> = A extends B ? true : false;\ntype CanAssignFn2ToFn1 = IsAssignable<Fn2, Fn1>;\nconst fn1: Fn1 = (x, y) => x > 0 && y.length > 0;\nconst fn2: Fn2 = x => x > 0;\nconst test: Fn1 = fn2;\ntest(5, "hi")',
+    sample:
+      'type IsAssignable<A, B> = A extends B ? true : false;\ntype CanAssignFn2ToFn1 = IsAssignable<Fn2, Fn1>;\nconst fn1: Fn1 = (x, y) => x > 0 && y.length > 0;\nconst fn2: Fn2 = x => x > 0;\nconst test: Fn1 = fn2;\ntest(5, "hi")',
     hints: [
       'Functions with fewer params can be assigned to functions with more',
       'This is due to function parameter bivariance',
@@ -9634,7 +9181,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'class Entity { constructor(public id: string) {} }',
     setupCode: 'class Entity { constructor(public id: string) {} }',
     expected: 'test-id',
-    sample: 'interface Constructor<T> {\n  new (...args: any[]): T;\n}\nfunction create<T>(Ctor: Constructor<T>, ...args: any[]): T {\n  return new Ctor(...args);\n}\ncreate(Entity, "test-id").id',
+    sample:
+      'interface Constructor<T> {\n  new (...args: any[]): T;\n}\nfunction create<T>(Ctor: Constructor<T>, ...args: any[]): T {\n  return new Ctor(...args);\n}\ncreate(Entity, "test-id").id',
     hints: [
       'Generic construct signatures work with class constructors',
       'Use rest parameters for flexible argument passing',
@@ -9650,7 +9198,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define curried function type',
     setupCode: '// Define curried function type',
     expected: 15,
-    sample: 'type Curried = (a: number) => (b: number) => (c: number) => number;\nconst add: Curried = a => b => c => a + b + c;\nadd(5)(6)(4)',
+    sample:
+      'type Curried = (a: number) => (b: number) => (c: number) => number;\nconst add: Curried = a => b => c => a + b + c;\nadd(5)(6)(4)',
     hints: [
       'Curried functions return functions until all args received',
       'Chain arrow types for multiple levels',
@@ -9666,7 +9215,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'function getUser() { return { id: 1, name: "Alice" }; }',
     setupCode: 'function getUser() { return { id: 1, name: "Alice" }; }',
     expected: { id: 2, name: 'Bob' },
-    sample: 'type User = ReturnType<typeof getUser>;\nconst user: User = { id: 2, name: "Bob" };\nuser',
+    sample:
+      'type User = ReturnType<typeof getUser>;\nconst user: User = { id: 2, name: "Bob" };\nuser',
     hints: [
       'ReturnType<F> extracts the return type of function type F',
       'Use typeof to get type of a function value',
@@ -9679,10 +9229,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Infer Parameters from Function',
     text: 'Use Parameters utility to extract function parameter types',
-    setup: 'function createPost(title: string, body: string, published: boolean) { return { title, body, published }; }',
-    setupCode: 'function createPost(title: string, body: string, published: boolean) { return { title, body, published }; }',
+    setup:
+      'function createPost(title: string, body: string, published: boolean) { return { title, body, published }; }',
+    setupCode:
+      'function createPost(title: string, body: string, published: boolean) { return { title, body, published }; }',
     expected: ['Hello', 'World', true],
-    sample: 'type PostParams = Parameters<typeof createPost>;\nconst params: PostParams = ["Hello", "World", true];\nparams',
+    sample:
+      'type PostParams = Parameters<typeof createPost>;\nconst params: PostParams = ["Hello", "World", true];\nparams',
     hints: [
       'Parameters<F> returns a tuple of parameter types',
       'Useful for wrapping or extending existing functions',
@@ -9698,7 +9251,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface Named { name: string; }\ninterface Numbered { id: number; }',
     setupCode: 'interface Named { name: string; }\ninterface Numbered { id: number; }',
     expected: 'Alice',
-    sample: 'function getIdentifier<T extends Named>(obj: T): string;\nfunction getIdentifier<T extends Numbered>(obj: T): number;\nfunction getIdentifier(obj: Named | Numbered): string | number {\n  return "name" in obj ? obj.name : obj.id;\n}\ngetIdentifier({ name: "Alice" })',
+    sample:
+      'function getIdentifier<T extends Named>(obj: T): string;\nfunction getIdentifier<T extends Numbered>(obj: T): number;\nfunction getIdentifier(obj: Named | Numbered): string | number {\n  return "name" in obj ? obj.name : obj.id;\n}\ngetIdentifier({ name: "Alice" })',
     hints: [
       'Overloads can have different generic constraints',
       'Use type narrowing in implementation',
@@ -9714,7 +9268,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define never-returning function type',
     setupCode: '// Define never-returning function type',
     expected: 'caught',
-    sample: 'type ThrowError = (message: string) => never;\nconst fail: ThrowError = msg => { throw new Error(msg); };\nlet result = "";\ntry { fail("oops"); } catch { result = "caught"; }\nresult',
+    sample:
+      'type ThrowError = (message: string) => never;\nconst fail: ThrowError = msg => { throw new Error(msg); };\nlet result = "";\ntry { fail("oops"); } catch { result = "caught"; }\nresult',
     hints: [
       'never is for functions that never successfully complete',
       'Throwing an error or infinite loops return never',
@@ -9730,7 +9285,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface User { name: string; role?: string; }',
     setupCode: 'interface User { name: string; role?: string; }',
     expected: 'admin',
-    sample: 'type AssertHasRole = (user: User) => asserts user is User & { role: string };\nconst assertHasRole: AssertHasRole = user => {\n  if (!user.role) throw new Error("No role");\n};\nconst user: User = { name: "Alice", role: "admin" };\nassertHasRole(user);\nuser.role',
+    sample:
+      'type AssertHasRole = (user: User) => asserts user is User & { role: string };\nconst assertHasRole: AssertHasRole = user => {\n  if (!user.role) throw new Error("No role");\n};\nconst user: User = { name: "Alice", role: "admin" };\nassertHasRole(user);\nuser.role',
     hints: [
       'asserts x is Type narrows the type after function call',
       'Assertion functions throw if condition not met',
@@ -9746,11 +9302,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define type guard function type',
     setupCode: '// Define type guard function type',
     expected: true,
-    sample: 'type IsStringArray = (value: unknown) => value is string[];\nconst isStrArr: IsStringArray = (v): v is string[] => \n  Array.isArray(v) && v.every(x => typeof x === "string");\nisStrArr(["a", "b", "c"])',
-    hints: [
-      'Type guards return x is Type predicate',
-      'Implementation must return boolean',
-    ],
+    sample:
+      'type IsStringArray = (value: unknown) => value is string[];\nconst isStrArr: IsStringArray = (v): v is string[] => \n  Array.isArray(v) && v.every(x => typeof x === "string");\nisStrArr(["a", "b", "c"])',
+    hints: ['Type guards return x is Type predicate', 'Implementation must return boolean'],
     tags: ['function-types', 'type-guards', 'predicates'],
   },
   {
@@ -9759,10 +9313,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Mapped Function Types',
     text: 'Create a type that wraps all methods of an object in promises',
-    setup: 'interface Api { getUser(id: number): { name: string }; getPost(id: number): { title: string }; }',
-    setupCode: 'interface Api { getUser(id: number): { name: string }; getPost(id: number): { title: string }; }',
+    setup:
+      'interface Api { getUser(id: number): { name: string }; getPost(id: number): { title: string }; }',
+    setupCode:
+      'interface Api { getUser(id: number): { name: string }; getPost(id: number): { title: string }; }',
     expected: { name: 'Alice' },
-    sample: 'type Async<T> = {\n  [K in keyof T]: T[K] extends (...args: infer A) => infer R\n    ? (...args: A) => Promise<R>\n    : T[K];\n};\nconst api: Async<Api> = {\n  getUser: async (id) => ({ name: "Alice" }),\n  getPost: async (id) => ({ title: "Hello" }),\n};\napi.getUser(1).then(u => u)',
+    sample:
+      'type Async<T> = {\n  [K in keyof T]: T[K] extends (...args: infer A) => infer R\n    ? (...args: A) => Promise<R>\n    : T[K];\n};\nconst api: Async<Api> = {\n  getUser: async (id) => ({ name: "Alice" }),\n  getPost: async (id) => ({ title: "Hello" }),\n};\napi.getUser(1).then(u => u)',
     hints: [
       'Use mapped types with conditional inference',
       'infer extracts argument and return types from functions',
@@ -9778,7 +9335,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded concatenate function',
     setupCode: '// Define overloaded concatenate function',
     expected: '1-2-3',
-    sample: 'function concat(...strings: string[]): string;\nfunction concat(...numbers: number[]): string;\nfunction concat(...args: (string | number)[]): string {\n  return args.join("-");\n}\nconcat(1, 2, 3)',
+    sample:
+      'function concat(...strings: string[]): string;\nfunction concat(...numbers: number[]): string;\nfunction concat(...args: (string | number)[]): string {\n  return args.join("-");\n}\nconcat(1, 2, 3)',
     hints: [
       'Each overload can have different rest parameter types',
       'Implementation must handle all variants',
@@ -9792,13 +9350,12 @@ export const typescriptProblems: Problem[] = [
     title: 'Distributive Conditional Function Type',
     text: 'Create a type that distributes over union in function parameter',
     setup: 'type Animal = { type: "cat"; meow: () => void } | { type: "dog"; bark: () => void };',
-    setupCode: 'type Animal = { type: "cat"; meow: () => void } | { type: "dog"; bark: () => void };',
+    setupCode:
+      'type Animal = { type: "cat"; meow: () => void } | { type: "dog"; bark: () => void };',
     expected: 'meow',
-    sample: 'type Handler<T> = T extends { type: infer U } ? (animal: T) => U : never;\ntype CatHandler = Handler<Extract<Animal, { type: "cat" }>>;\nconst handleCat: CatHandler = cat => { cat.meow(); return cat.type; };\nhandleCat({ type: "cat", meow: () => {} })',
-    hints: [
-      'Conditional types distribute over unions',
-      'Extract narrows union to specific member',
-    ],
+    sample:
+      'type Handler<T> = T extends { type: infer U } ? (animal: T) => U : never;\ntype CatHandler = Handler<Extract<Animal, { type: "cat" }>>;\nconst handleCat: CatHandler = cat => { cat.meow(); return cat.type; };\nhandleCat({ type: "cat", meow: () => {} })',
+    hints: ['Conditional types distribute over unions', 'Extract narrows union to specific member'],
     tags: ['function-types', 'conditional-types', 'unions'],
   },
   {
@@ -9810,7 +9367,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'abstract class Shape { abstract area(): number; }',
     setupCode: 'abstract class Shape { abstract area(): number; }',
     expected: 100,
-    sample: 'type AbstractConstructor<T> = abstract new (...args: any[]) => T;\nclass Square extends Shape {\n  constructor(public side: number) { super(); }\n  area() { return this.side * this.side; }\n}\nfunction getArea<T extends Shape>(Ctor: new (...args: any[]) => T, ...args: any[]): number {\n  return new Ctor(...args).area();\n}\ngetArea(Square, 10)',
+    sample:
+      'type AbstractConstructor<T> = abstract new (...args: any[]) => T;\nclass Square extends Shape {\n  constructor(public side: number) { super(); }\n  area() { return this.side * this.side; }\n}\nfunction getArea<T extends Shape>(Ctor: new (...args: any[]) => T, ...args: any[]): number {\n  return new Ctor(...args).area();\n}\ngetArea(Square, 10)',
     hints: [
       'abstract new creates abstract construct signature',
       'Abstract classes cannot be instantiated directly',
@@ -9826,7 +9384,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define pipe function type',
     setupCode: '// Define pipe function type',
     expected: 10,
-    sample: 'type Pipe<A, B> = (arg: A) => B;\nfunction pipe<A, B, C>(f1: Pipe<A, B>, f2: Pipe<B, C>): Pipe<A, C> {\n  return x => f2(f1(x));\n}\nconst addOne = (x: number) => x + 1;\nconst double = (x: number) => x * 2;\npipe(addOne, double)(4)',
+    sample:
+      'type Pipe<A, B> = (arg: A) => B;\nfunction pipe<A, B, C>(f1: Pipe<A, B>, f2: Pipe<B, C>): Pipe<A, C> {\n  return x => f2(f1(x));\n}\nconst addOne = (x: number) => x + 1;\nconst double = (x: number) => x * 2;\npipe(addOne, double)(4)',
     hints: [
       'Variadic tuples allow spreading tuple types',
       'Build type-safe pipelines with multiple functions',
@@ -9842,7 +9401,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define storage interface with overloaded get',
     setupCode: '// Define storage interface with overloaded get',
     expected: 42,
-    sample: 'interface Storage {\n  get(key: string): unknown;\n  get<T>(key: string, defaultValue: T): T;\n}\nconst storage: Storage = {\n  get<T>(key: string, defaultValue?: T) {\n    const data: Record<string, unknown> = { age: 42 };\n    return data[key] ?? defaultValue;\n  }\n};\nstorage.get<number>("age", 0)',
+    sample:
+      'interface Storage {\n  get(key: string): unknown;\n  get<T>(key: string, defaultValue: T): T;\n}\nconst storage: Storage = {\n  get<T>(key: string, defaultValue?: T) {\n    const data: Record<string, unknown> = { age: 42 };\n    return data[key] ?? defaultValue;\n  }\n};\nstorage.get<number>("age", 0)',
     hints: [
       'Interfaces can declare multiple overloaded signatures',
       'Implementation handles all variants',
@@ -9858,7 +9418,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface Counter {\n  count: number;\n  increment(this: Counter): void;\n}',
     setupCode: 'interface Counter {\n  count: number;\n  increment(this: Counter): void;\n}',
     expected: 1,
-    sample: 'type CounterThis = ThisParameterType<Counter["increment"]>;\nconst counter: CounterThis = { count: 0, increment() { this.count++; } };\ncounter.increment();\ncounter.count',
+    sample:
+      'type CounterThis = ThisParameterType<Counter["increment"]>;\nconst counter: CounterThis = { count: 0, increment() { this.count++; } };\ncounter.increment();\ncounter.count',
     hints: [
       'ThisParameterType extracts the this type from a function',
       'Useful for ensuring correct context',
@@ -9874,11 +9435,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'type BoundMethod = (this: { value: number }, multiplier: number) => number;',
     setupCode: 'type BoundMethod = (this: { value: number }, multiplier: number) => number;',
     expected: 15,
-    sample: 'type Unbound = OmitThisParameter<BoundMethod>;\nconst method: BoundMethod = function(mult) { return this.value * mult; };\nconst obj = { value: 5 };\nconst bound: Unbound = method.bind(obj);\nbound(3)',
-    hints: [
-      'OmitThisParameter removes the this parameter',
-      'Useful for bound functions',
-    ],
+    sample:
+      'type Unbound = OmitThisParameter<BoundMethod>;\nconst method: BoundMethod = function(mult) { return this.value * mult; };\nconst obj = { value: 5 };\nconst bound: Unbound = method.bind(obj);\nbound(3)',
+    hints: ['OmitThisParameter removes the this parameter', 'Useful for bound functions'],
     tags: ['function-types', 'this-parameter', 'utility-types'],
   },
   {
@@ -9890,11 +9449,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define debounce function type',
     setupCode: '// Define debounce function type',
     expected: true,
-    sample: 'type Debounce = <A extends any[]>(fn: (...args: A) => void, ms: number) => (...args: A) => void;\nconst debounce: Debounce = (fn, ms) => {\n  let timeout: ReturnType<typeof setTimeout>;\n  return (...args) => {\n    clearTimeout(timeout);\n    timeout = setTimeout(() => fn(...args), ms);\n  };\n};\nconst debounced = debounce((x: number) => x, 100);\ntypeof debounced === "function"',
-    hints: [
-      'Debounce delays function execution',
-      'Preserves original function argument types',
-    ],
+    sample:
+      'type Debounce = <A extends any[]>(fn: (...args: A) => void, ms: number) => (...args: A) => void;\nconst debounce: Debounce = (fn, ms) => {\n  let timeout: ReturnType<typeof setTimeout>;\n  return (...args) => {\n    clearTimeout(timeout);\n    timeout = setTimeout(() => fn(...args), ms);\n  };\n};\nconst debounced = debounce((x: number) => x, 100);\ntypeof debounced === "function"',
+    hints: ['Debounce delays function execution', 'Preserves original function argument types'],
     tags: ['function-types', 'debounce', 'utilities'],
   },
   {
@@ -9906,11 +9463,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define throttle function type',
     setupCode: '// Define throttle function type',
     expected: true,
-    sample: 'type Throttle = <A extends any[], R>(fn: (...args: A) => R, ms: number) => (...args: A) => R | undefined;\nconst throttle: Throttle = (fn, ms) => {\n  let lastCall = 0;\n  return (...args) => {\n    const now = Date.now();\n    if (now - lastCall >= ms) {\n      lastCall = now;\n      return fn(...args);\n    }\n  };\n};\nconst throttled = throttle((x: number) => x * 2, 100);\ntypeof throttled === "function"',
-    hints: [
-      'Throttle limits execution frequency',
-      'Returns undefined when throttled',
-    ],
+    sample:
+      'type Throttle = <A extends any[], R>(fn: (...args: A) => R, ms: number) => (...args: A) => R | undefined;\nconst throttle: Throttle = (fn, ms) => {\n  let lastCall = 0;\n  return (...args) => {\n    const now = Date.now();\n    if (now - lastCall >= ms) {\n      lastCall = now;\n      return fn(...args);\n    }\n  };\n};\nconst throttled = throttle((x: number) => x * 2, 100);\ntypeof throttled === "function"',
+    hints: ['Throttle limits execution frequency', 'Returns undefined when throttled'],
     tags: ['function-types', 'throttle', 'utilities'],
   },
   {
@@ -9922,7 +9477,8 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define overloaded point creator',
     setupCode: '// Define overloaded point creator',
     expected: { x: 3, y: 4, z: 5 },
-    sample: 'function createPoint(coords: [number, number]): { x: number; y: number };\nfunction createPoint(coords: [number, number, number]): { x: number; y: number; z: number };\nfunction createPoint(coords: number[]): { x: number; y: number; z?: number } {\n  return coords.length === 3\n    ? { x: coords[0], y: coords[1], z: coords[2] }\n    : { x: coords[0], y: coords[1] };\n}\ncreatePoint([3, 4, 5])',
+    sample:
+      'function createPoint(coords: [number, number]): { x: number; y: number };\nfunction createPoint(coords: [number, number, number]): { x: number; y: number; z: number };\nfunction createPoint(coords: number[]): { x: number; y: number; z?: number } {\n  return coords.length === 3\n    ? { x: coords[0], y: coords[1], z: coords[2] }\n    : { x: coords[0], y: coords[1] };\n}\ncreatePoint([3, 4, 5])',
     hints: [
       'Different tuple lengths can have different overloads',
       'Use tuple types [T, T] for fixed length arrays',
@@ -9938,11 +9494,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface TreeNode { value: number; children?: TreeNode[]; }',
     setupCode: 'interface TreeNode { value: number; children?: TreeNode[]; }',
     expected: 21,
-    sample: 'type TreeSum = (node: TreeNode) => number;\nconst sumTree: TreeSum = node => {\n  const childSum = node.children?.reduce((sum, child) => sum + sumTree(child), 0) ?? 0;\n  return node.value + childSum;\n};\nconst tree: TreeNode = { value: 1, children: [{ value: 2, children: [{ value: 3 }] }, { value: 4, children: [{ value: 5 }, { value: 6 }] }] };\nsumTree(tree)',
-    hints: [
-      'Recursive functions call themselves',
-      'Handle base case and recursive case',
-    ],
+    sample:
+      'type TreeSum = (node: TreeNode) => number;\nconst sumTree: TreeSum = node => {\n  const childSum = node.children?.reduce((sum, child) => sum + sumTree(child), 0) ?? 0;\n  return node.value + childSum;\n};\nconst tree: TreeNode = { value: 1, children: [{ value: 2, children: [{ value: 3 }] }, { value: 4, children: [{ value: 5 }, { value: 6 }] }] };\nsumTree(tree)',
+    hints: ['Recursive functions call themselves', 'Handle base case and recursive case'],
     tags: ['function-types', 'recursion', 'trees'],
   },
   {
@@ -9954,7 +9508,8 @@ export const typescriptProblems: Problem[] = [
     setup: 'type Callback<T> = (error: Error | null, result: T) => void;',
     setupCode: 'type Callback<T> = (error: Error | null, result: T) => void;',
     expected: 42,
-    sample: 'type Promisify<T extends (...args: any[]) => void> =\n  T extends (...args: [...infer A, Callback<infer R>]) => void\n    ? (...args: A) => Promise<R>\n    : never;\nconst readFile = (path: string, cb: Callback<string>) => cb(null, "content");\ntype PromisifiedRead = Promisify<typeof readFile>;\nconst promisified: PromisifiedRead = (path) => Promise.resolve("content" as any);\nPromise.resolve(42).then(r => r)',
+    sample:
+      'type Promisify<T extends (...args: any[]) => void> =\n  T extends (...args: [...infer A, Callback<infer R>]) => void\n    ? (...args: A) => Promise<R>\n    : never;\nconst readFile = (path: string, cb: Callback<string>) => cb(null, "content");\ntype PromisifiedRead = Promisify<typeof readFile>;\nconst promisified: PromisifiedRead = (path) => Promise.resolve("content" as any);\nPromise.resolve(42).then(r => r)',
     hints: [
       'Extract callback result type using infer',
       'Remove callback from args, return Promise',
@@ -9970,11 +9525,9 @@ export const typescriptProblems: Problem[] = [
     setup: '// Define compose type',
     setupCode: '// Define compose type',
     expected: 10,
-    sample: 'type Compose = <A, B, C>(f: (b: B) => C, g: (a: A) => B) => (a: A) => C;\nconst compose: Compose = (f, g) => a => f(g(a));\nconst double = (n: number) => n * 2;\nconst addOne = (n: number) => n + 1;\ncompose(double, addOne)(4)',
-    hints: [
-      'Compose applies functions right to left',
-      'Output of g becomes input of f',
-    ],
+    sample:
+      'type Compose = <A, B, C>(f: (b: B) => C, g: (a: A) => B) => (a: A) => C;\nconst compose: Compose = (f, g) => a => f(g(a));\nconst double = (n: number) => n * 2;\nconst addOne = (n: number) => n + 1;\ncompose(double, addOne)(4)',
+    hints: ['Compose applies functions right to left', 'Output of g becomes input of f'],
     tags: ['function-types', 'composition', 'higher-order'],
   },
   {
@@ -9986,11 +9539,9 @@ export const typescriptProblems: Problem[] = [
     setup: 'interface Options { name?: string; count?: number; active?: boolean; }',
     setupCode: 'interface Options { name?: string; count?: number; active?: boolean; }',
     expected: { name: 'test', count: 5, active: true },
-    sample: 'class OptionsBuilder {\n  private options: Options = {};\n  set(key: "name", value: string): this;\n  set(key: "count", value: number): this;\n  set(key: "active", value: boolean): this;\n  set(key: keyof Options, value: string | number | boolean): this {\n    (this.options as any)[key] = value;\n    return this;\n  }\n  build(): Options { return this.options; }\n}\nnew OptionsBuilder().set("name", "test").set("count", 5).set("active", true).build()',
-    hints: [
-      'Each overload specifies key-value type pairing',
-      'Return this for method chaining',
-    ],
+    sample:
+      'class OptionsBuilder {\n  private options: Options = {};\n  set(key: "name", value: string): this;\n  set(key: "count", value: number): this;\n  set(key: "active", value: boolean): this;\n  set(key: keyof Options, value: string | number | boolean): this {\n    (this.options as any)[key] = value;\n    return this;\n  }\n  build(): Options { return this.options; }\n}\nnew OptionsBuilder().set("name", "test").set("count", 5).set("active", true).build()',
+    hints: ['Each overload specifies key-value type pairing', 'Return this for method chaining'],
     tags: ['overloads', 'builder', 'method-chaining'],
   },
   {
@@ -9999,10 +9550,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Extract Function from Union',
     text: 'Extract only function types from a union',
-    setup: 'type Mixed = string | ((x: number) => number) | { a: number } | ((s: string) => string);',
-    setupCode: 'type Mixed = string | ((x: number) => number) | { a: number } | ((s: string) => string);',
+    setup:
+      'type Mixed = string | ((x: number) => number) | { a: number } | ((s: string) => string);',
+    setupCode:
+      'type Mixed = string | ((x: number) => number) | { a: number } | ((s: string) => string);',
     expected: 4,
-    sample: 'type OnlyFunctions<T> = T extends (...args: any[]) => any ? T : never;\ntype Fns = OnlyFunctions<Mixed>;\nconst fn: Fns = (x: number) => x * 2;\nfn(2)',
+    sample:
+      'type OnlyFunctions<T> = T extends (...args: any[]) => any ? T : never;\ntype Fns = OnlyFunctions<Mixed>;\nconst fn: Fns = (x: number) => x * 2;\nfn(2)',
     hints: [
       'Conditional types distribute over unions',
       'never removes non-matching types from union',
@@ -10016,9 +9570,11 @@ export const typescriptProblems: Problem[] = [
     title: 'Contravariance in Function Parameters',
     text: 'Demonstrate contravariance in function parameter types',
     setup: 'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }',
-    setupCode: 'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }',
+    setupCode:
+      'interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }',
     expected: 'Buddy',
-    sample: 'type AnimalHandler = (animal: Animal) => string;\ntype DogHandler = (dog: Dog) => string;\nconst handleAnimal: AnimalHandler = a => a.name;\nconst handleDog: DogHandler = handleAnimal;\nhandleDog({ name: "Buddy", breed: "Lab" })',
+    sample:
+      'type AnimalHandler = (animal: Animal) => string;\ntype DogHandler = (dog: Dog) => string;\nconst handleAnimal: AnimalHandler = a => a.name;\nconst handleDog: DogHandler = handleAnimal;\nhandleDog({ name: "Buddy", breed: "Lab" })',
     hints: [
       'Functions are contravariant in parameter types',
       'AnimalHandler can be used where DogHandler expected',
@@ -10039,10 +9595,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'class Person { name: string = "Alice"; }',
     expected: 'Alice',
     sample: 'new Person().name',
-    hints: [
-      'Instantiate the class with new keyword',
-      'Access the property using dot notation',
-    ],
+    hints: ['Instantiate the class with new keyword', 'Access the property using dot notation'],
     tags: ['class', 'property', 'basics'],
   },
   {
@@ -10055,10 +9608,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'class Animal { name: string; constructor(name: string) { this.name = name; } }',
     expected: 'Dog',
     sample: 'new Animal("Dog").name',
-    hints: [
-      'Pass arguments to the constructor',
-      'The constructor initializes the instance',
-    ],
+    hints: ['Pass arguments to the constructor', 'The constructor initializes the instance'],
     tags: ['class', 'constructor', 'basics'],
   },
   {
@@ -10135,10 +9685,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'class Calculator { static add(a: number, b: number): number { return a + b; } }',
     expected: 15,
     sample: 'Calculator.add(10, 5)',
-    hints: [
-      'Static methods are called on the class itself',
-      'No need to create an instance',
-    ],
+    hints: ['Static methods are called on the class itself', 'No need to create an instance'],
     tags: ['class', 'static', 'method'],
   },
   {
@@ -10147,14 +9694,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Getter Property',
     text: 'Use a getter to compute a derived value',
-    setup: 'class Rectangle { constructor(public width: number, public height: number) {} get area(): number { return this.width * this.height; } }',
-    setupCode: 'class Rectangle { constructor(public width: number, public height: number) {} get area(): number { return this.width * this.height; } }',
+    setup:
+      'class Rectangle { constructor(public width: number, public height: number) {} get area(): number { return this.width * this.height; } }',
+    setupCode:
+      'class Rectangle { constructor(public width: number, public height: number) {} get area(): number { return this.width * this.height; } }',
     expected: 50,
     sample: 'new Rectangle(10, 5).area',
-    hints: [
-      'Getters are accessed like properties',
-      'They compute values on demand',
-    ],
+    hints: ['Getters are accessed like properties', 'They compute values on demand'],
     tags: ['class', 'getter', 'computed-property'],
   },
   {
@@ -10163,14 +9709,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Basic Inheritance',
     text: 'Create a subclass that extends a parent class',
-    setup: 'class Animal { name: string = "Animal"; }\nclass Dog extends Animal { name: string = "Dog"; }',
-    setupCode: 'class Animal { name: string = "Animal"; }\nclass Dog extends Animal { name: string = "Dog"; }',
+    setup:
+      'class Animal { name: string = "Animal"; }\nclass Dog extends Animal { name: string = "Dog"; }',
+    setupCode:
+      'class Animal { name: string = "Animal"; }\nclass Dog extends Animal { name: string = "Dog"; }',
     expected: 'Dog',
     sample: 'new Dog().name',
-    hints: [
-      'Subclass overrides parent property',
-      'Use extends keyword for inheritance',
-    ],
+    hints: ['Subclass overrides parent property', 'Use extends keyword for inheritance'],
     tags: ['class', 'inheritance', 'extends'],
   },
   {
@@ -10195,14 +9740,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Method Return Type',
     text: 'Call a method with explicit return type',
-    setup: 'class Counter { private count: number = 0; increment(): number { return ++this.count; } }',
-    setupCode: 'class Counter { private count: number = 0; increment(): number { return ++this.count; } }',
+    setup:
+      'class Counter { private count: number = 0; increment(): number { return ++this.count; } }',
+    setupCode:
+      'class Counter { private count: number = 0; increment(): number { return ++this.count; } }',
     expected: 1,
     sample: 'new Counter().increment()',
-    hints: [
-      'Methods can have explicit return types',
-      'The private count starts at 0',
-    ],
+    hints: ['Methods can have explicit return types', 'The private count starts at 0'],
     tags: ['class', 'method', 'return-type'],
   },
   {
@@ -10211,8 +9755,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Multiple Properties',
     text: 'Access multiple properties from a class instance',
-    setup: 'class User { constructor(public name: string, public age: number, public email: string) {} }',
-    setupCode: 'class User { constructor(public name: string, public age: number, public email: string) {} }',
+    setup:
+      'class User { constructor(public name: string, public age: number, public email: string) {} }',
+    setupCode:
+      'class User { constructor(public name: string, public age: number, public email: string) {} }',
     expected: 'john@example.com',
     sample: 'new User("John", 30, "john@example.com").email',
     hints: [
@@ -10231,10 +9777,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'class Settings { theme: string = "dark"; fontSize: number = 14; }',
     expected: 14,
     sample: 'new Settings().fontSize',
-    hints: [
-      'Properties can have default values',
-      'No constructor needed for defaults',
-    ],
+    hints: ['Properties can have default values', 'No constructor needed for defaults'],
     tags: ['class', 'property', 'default-value'],
   },
   {
@@ -10243,14 +9786,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'This Reference',
     text: 'Use this to reference instance properties in a method',
-    setup: 'class Multiplier { constructor(public factor: number) {} multiply(value: number): number { return value * this.factor; } }',
-    setupCode: 'class Multiplier { constructor(public factor: number) {} multiply(value: number): number { return value * this.factor; } }',
+    setup:
+      'class Multiplier { constructor(public factor: number) {} multiply(value: number): number { return value * this.factor; } }',
+    setupCode:
+      'class Multiplier { constructor(public factor: number) {} multiply(value: number): number { return value * this.factor; } }',
     expected: 25,
     sample: 'new Multiplier(5).multiply(5)',
-    hints: [
-      'this refers to the current instance',
-      'Access instance properties with this.property',
-    ],
+    hints: ['this refers to the current instance', 'Access instance properties with this.property'],
     tags: ['class', 'this', 'method'],
   },
   {
@@ -10263,10 +9805,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'class TodoList { items: string[] = ["Buy milk", "Walk dog"]; }',
     expected: 2,
     sample: 'new TodoList().items.length',
-    hints: [
-      'Array properties work like regular arrays',
-      'Access length property of the array',
-    ],
+    hints: ['Array properties work like regular arrays', 'Access length property of the array'],
     tags: ['class', 'array', 'property'],
   },
   {
@@ -10275,8 +9814,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Readonly Constructor Parameter',
     text: 'Use readonly parameter property',
-    setup: 'class ImmutablePoint { constructor(public readonly x: number, public readonly y: number) {} }',
-    setupCode: 'class ImmutablePoint { constructor(public readonly x: number, public readonly y: number) {} }',
+    setup:
+      'class ImmutablePoint { constructor(public readonly x: number, public readonly y: number) {} }',
+    setupCode:
+      'class ImmutablePoint { constructor(public readonly x: number, public readonly y: number) {} }',
     expected: 10,
     sample: 'new ImmutablePoint(10, 20).x',
     hints: [
@@ -10291,14 +9832,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Method Chaining Setup',
     text: 'Return this from a method to enable chaining',
-    setup: 'class Builder { value: number = 0; add(n: number): this { this.value += n; return this; } }',
-    setupCode: 'class Builder { value: number = 0; add(n: number): this { this.value += n; return this; } }',
+    setup:
+      'class Builder { value: number = 0; add(n: number): this { this.value += n; return this; } }',
+    setupCode:
+      'class Builder { value: number = 0; add(n: number): this { this.value += n; return this; } }',
     expected: 15,
     sample: 'new Builder().add(5).add(10).value',
-    hints: [
-      'Returning this enables method chaining',
-      'Each call returns the same instance',
-    ],
+    hints: ['Returning this enables method chaining', 'Each call returns the same instance'],
     tags: ['class', 'method-chaining', 'this'],
   },
   {
@@ -10307,14 +9847,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'String Method in Class',
     text: 'Implement a toString method for a class',
-    setup: 'class Point { constructor(public x: number, public y: number) {} toString(): string { return `(${this.x}, ${this.y})`; } }',
-    setupCode: 'class Point { constructor(public x: number, public y: number) {} toString(): string { return `(${this.x}, ${this.y})`; } }',
+    setup:
+      'class Point { constructor(public x: number, public y: number) {} toString(): string { return `(${this.x}, ${this.y})`; } }',
+    setupCode:
+      'class Point { constructor(public x: number, public y: number) {} toString(): string { return `(${this.x}, ${this.y})`; } }',
     expected: '(3, 4)',
     sample: 'new Point(3, 4).toString()',
-    hints: [
-      'toString provides string representation',
-      'Use template literals for formatting',
-    ],
+    hints: ['toString provides string representation', 'Use template literals for formatting'],
     tags: ['class', 'toString', 'method'],
   },
   {
@@ -10323,8 +9862,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Protected Visibility in Subclass',
     text: 'Access a protected property from within a subclass method',
-    setup: 'class Base { protected secret: string = "hidden"; }\nclass Derived extends Base { reveal(): string { return this.secret; } }',
-    setupCode: 'class Base { protected secret: string = "hidden"; }\nclass Derived extends Base { reveal(): string { return this.secret; } }',
+    setup:
+      'class Base { protected secret: string = "hidden"; }\nclass Derived extends Base { reveal(): string { return this.secret; } }',
+    setupCode:
+      'class Base { protected secret: string = "hidden"; }\nclass Derived extends Base { reveal(): string { return this.secret; } }',
     expected: 'hidden',
     sample: 'new Derived().reveal()',
     hints: [
@@ -10359,10 +9900,7 @@ export const typescriptProblems: Problem[] = [
     setupCode: 'class Profile { constructor(public name: string, public bio?: string) {} }',
     expected: undefined,
     sample: 'new Profile("Alice").bio',
-    hints: [
-      'Optional properties use ? in parameter',
-      'They default to undefined if not provided',
-    ],
+    hints: ['Optional properties use ? in parameter', 'They default to undefined if not provided'],
     tags: ['class', 'optional', 'parameter-properties'],
   },
   {
@@ -10403,14 +9941,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Getter Only Property',
     text: 'Create a read-only computed property using only a getter',
-    setup: 'class Circle { constructor(public radius: number) {} get diameter(): number { return this.radius * 2; } }',
-    setupCode: 'class Circle { constructor(public radius: number) {} get diameter(): number { return this.radius * 2; } }',
+    setup:
+      'class Circle { constructor(public radius: number) {} get diameter(): number { return this.radius * 2; } }',
+    setupCode:
+      'class Circle { constructor(public radius: number) {} get diameter(): number { return this.radius * 2; } }',
     expected: 20,
     sample: 'new Circle(10).diameter',
-    hints: [
-      'Getter without setter is read-only',
-      'Computed from other properties',
-    ],
+    hints: ['Getter without setter is read-only', 'Computed from other properties'],
     tags: ['class', 'getter', 'readonly'],
   },
   {
@@ -10419,14 +9956,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Method with Multiple Parameters',
     text: 'Call a method with multiple typed parameters',
-    setup: 'class StringUtils { concat(a: string, b: string, separator: string): string { return a + separator + b; } }',
-    setupCode: 'class StringUtils { concat(a: string, b: string, separator: string): string { return a + separator + b; } }',
+    setup:
+      'class StringUtils { concat(a: string, b: string, separator: string): string { return a + separator + b; } }',
+    setupCode:
+      'class StringUtils { concat(a: string, b: string, separator: string): string { return a + separator + b; } }',
     expected: 'Hello-World',
     sample: 'new StringUtils().concat("Hello", "World", "-")',
-    hints: [
-      'Methods can have multiple parameters',
-      'Each parameter has its own type',
-    ],
+    hints: ['Methods can have multiple parameters', 'Each parameter has its own type'],
     tags: ['class', 'method', 'parameters'],
   },
   {
@@ -10436,13 +9972,11 @@ export const typescriptProblems: Problem[] = [
     title: 'Boolean Property',
     text: 'Use boolean property for state',
     setup: 'class Toggle { isActive: boolean = false; activate(): void { this.isActive = true; } }',
-    setupCode: 'class Toggle { isActive: boolean = false; activate(): void { this.isActive = true; } }',
+    setupCode:
+      'class Toggle { isActive: boolean = false; activate(): void { this.isActive = true; } }',
     expected: true,
     sample: 'const t = new Toggle(); t.activate(); t.isActive',
-    hints: [
-      'Boolean properties for state management',
-      'Methods can modify instance state',
-    ],
+    hints: ['Boolean properties for state management', 'Methods can modify instance state'],
     tags: ['class', 'boolean', 'state'],
   },
   {
@@ -10451,8 +9985,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Private Property with Getter',
     text: 'Expose a private property through a getter',
-    setup: 'class BankAccount { private _balance: number = 100; get balance(): number { return this._balance; } }',
-    setupCode: 'class BankAccount { private _balance: number = 100; get balance(): number { return this._balance; } }',
+    setup:
+      'class BankAccount { private _balance: number = 100; get balance(): number { return this._balance; } }',
+    setupCode:
+      'class BankAccount { private _balance: number = 100; get balance(): number { return this._balance; } }',
     expected: 100,
     sample: 'new BankAccount().balance',
     hints: [
@@ -10467,14 +10003,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Calling Super Constructor',
     text: 'Call parent constructor from subclass',
-    setup: 'class Animal { constructor(public name: string) {} }\nclass Cat extends Animal { constructor(name: string, public color: string) { super(name); } }',
-    setupCode: 'class Animal { constructor(public name: string) {} }\nclass Cat extends Animal { constructor(name: string, public color: string) { super(name); } }',
+    setup:
+      'class Animal { constructor(public name: string) {} }\nclass Cat extends Animal { constructor(name: string, public color: string) { super(name); } }',
+    setupCode:
+      'class Animal { constructor(public name: string) {} }\nclass Cat extends Animal { constructor(name: string, public color: string) { super(name); } }',
     expected: 'Whiskers',
     sample: 'new Cat("Whiskers", "orange").name',
-    hints: [
-      'super() calls the parent constructor',
-      'Must be called before accessing this',
-    ],
+    hints: ['super() calls the parent constructor', 'Must be called before accessing this'],
     tags: ['class', 'super', 'inheritance'],
   },
   {
@@ -10483,14 +10018,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Setter with Validation',
     text: 'Use a setter to validate and set a value',
-    setup: 'class Temperature { private _celsius: number = 0; get celsius(): number { return this._celsius; } set celsius(value: number) { if (value >= -273.15) this._celsius = value; } }',
-    setupCode: 'class Temperature { private _celsius: number = 0; get celsius(): number { return this._celsius; } set celsius(value: number) { if (value >= -273.15) this._celsius = value; } }',
+    setup:
+      'class Temperature { private _celsius: number = 0; get celsius(): number { return this._celsius; } set celsius(value: number) { if (value >= -273.15) this._celsius = value; } }',
+    setupCode:
+      'class Temperature { private _celsius: number = 0; get celsius(): number { return this._celsius; } set celsius(value: number) { if (value >= -273.15) this._celsius = value; } }',
     expected: 25,
     sample: 'const t = new Temperature(); t.celsius = 25; t.celsius',
-    hints: [
-      'Setters can include validation logic',
-      'Invalid values are rejected silently here',
-    ],
+    hints: ['Setters can include validation logic', 'Invalid values are rejected silently here'],
     tags: ['class', 'setter', 'validation'],
   },
   {
@@ -10499,8 +10033,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Method Overriding',
     text: 'Override a parent method in a subclass',
-    setup: 'class Shape { getType(): string { return "Shape"; } }\nclass Circle extends Shape { getType(): string { return "Circle"; } }',
-    setupCode: 'class Shape { getType(): string { return "Shape"; } }\nclass Circle extends Shape { getType(): string { return "Circle"; } }',
+    setup:
+      'class Shape { getType(): string { return "Shape"; } }\nclass Circle extends Shape { getType(): string { return "Circle"; } }',
+    setupCode:
+      'class Shape { getType(): string { return "Shape"; } }\nclass Circle extends Shape { getType(): string { return "Circle"; } }',
     expected: 'Circle',
     sample: 'new Circle().getType()',
     hints: [
@@ -10515,14 +10051,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Calling Super Method',
     text: 'Call parent method from overridden method',
-    setup: 'class Logger { log(msg: string): string { return `[LOG] ${msg}`; } }\nclass TimestampLogger extends Logger { log(msg: string): string { return `[${Date.now()}] ${super.log(msg)}`; } }',
-    setupCode: 'class Logger { log(msg: string): string { return `[LOG] ${msg}`; } }\nclass TimestampLogger extends Logger { log(msg: string): string { return `[${Date.now()}] ${super.log(msg)}`; } }',
+    setup:
+      'class Logger { log(msg: string): string { return `[LOG] ${msg}`; } }\nclass TimestampLogger extends Logger { log(msg: string): string { return `[${Date.now()}] ${super.log(msg)}`; } }',
+    setupCode:
+      'class Logger { log(msg: string): string { return `[LOG] ${msg}`; } }\nclass TimestampLogger extends Logger { log(msg: string): string { return `[${Date.now()}] ${super.log(msg)}`; } }',
     expected: true,
     sample: 'new TimestampLogger().log("test").includes("[LOG] test")',
-    hints: [
-      'super.method() calls the parent implementation',
-      'Useful for extending functionality',
-    ],
+    hints: ['super.method() calls the parent implementation', 'Useful for extending functionality'],
     tags: ['class', 'super', 'override'],
   },
   {
@@ -10531,8 +10066,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Implement Interface',
     text: 'Create a class that implements an interface',
-    setup: 'interface Printable { print(): string; }\nclass Document implements Printable { constructor(public content: string) {} print(): string { return this.content; } }',
-    setupCode: 'interface Printable { print(): string; }\nclass Document implements Printable { constructor(public content: string) {} print(): string { return this.content; } }',
+    setup:
+      'interface Printable { print(): string; }\nclass Document implements Printable { constructor(public content: string) {} print(): string { return this.content; } }',
+    setupCode:
+      'interface Printable { print(): string; }\nclass Document implements Printable { constructor(public content: string) {} print(): string { return this.content; } }',
     expected: 'Hello Document',
     sample: 'new Document("Hello Document").print()',
     hints: [
@@ -10547,8 +10084,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Multiple Interface Implementation',
     text: 'Implement multiple interfaces in one class',
-    setup: 'interface Readable { read(): string; }\ninterface Writable { write(data: string): void; }\nclass File implements Readable, Writable { private data: string = ""; read(): string { return this.data; } write(data: string): void { this.data = data; } }',
-    setupCode: 'interface Readable { read(): string; }\ninterface Writable { write(data: string): void; }\nclass File implements Readable, Writable { private data: string = ""; read(): string { return this.data; } write(data: string): void { this.data = data; } }',
+    setup:
+      'interface Readable { read(): string; }\ninterface Writable { write(data: string): void; }\nclass File implements Readable, Writable { private data: string = ""; read(): string { return this.data; } write(data: string): void { this.data = data; } }',
+    setupCode:
+      'interface Readable { read(): string; }\ninterface Writable { write(data: string): void; }\nclass File implements Readable, Writable { private data: string = ""; read(): string { return this.data; } write(data: string): void { this.data = data; } }',
     expected: 'Hello',
     sample: 'const f = new File(); f.write("Hello"); f.read()',
     hints: [
@@ -10563,8 +10102,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Abstract Class',
     text: 'Create a concrete class from an abstract class',
-    setup: 'abstract class Animal { abstract makeSound(): string; move(): string { return "Moving"; } }\nclass Dog extends Animal { makeSound(): string { return "Woof!"; } }',
-    setupCode: 'abstract class Animal { abstract makeSound(): string; move(): string { return "Moving"; } }\nclass Dog extends Animal { makeSound(): string { return "Woof!"; } }',
+    setup:
+      'abstract class Animal { abstract makeSound(): string; move(): string { return "Moving"; } }\nclass Dog extends Animal { makeSound(): string { return "Woof!"; } }',
+    setupCode:
+      'abstract class Animal { abstract makeSound(): string; move(): string { return "Moving"; } }\nclass Dog extends Animal { makeSound(): string { return "Woof!"; } }',
     expected: 'Woof!',
     sample: 'new Dog().makeSound()',
     hints: [
@@ -10579,8 +10120,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Abstract Method with Concrete Method',
     text: 'Use both abstract and concrete methods',
-    setup: 'abstract class Formatter { abstract format(data: string): string; wrap(data: string): string { return `[${this.format(data)}]`; } }\nclass UpperFormatter extends Formatter { format(data: string): string { return data.toUpperCase(); } }',
-    setupCode: 'abstract class Formatter { abstract format(data: string): string; wrap(data: string): string { return `[${this.format(data)}]`; } }\nclass UpperFormatter extends Formatter { format(data: string): string { return data.toUpperCase(); } }',
+    setup:
+      'abstract class Formatter { abstract format(data: string): string; wrap(data: string): string { return `[${this.format(data)}]`; } }\nclass UpperFormatter extends Formatter { format(data: string): string { return data.toUpperCase(); } }',
+    setupCode:
+      'abstract class Formatter { abstract format(data: string): string; wrap(data: string): string { return `[${this.format(data)}]`; } }\nclass UpperFormatter extends Formatter { format(data: string): string { return data.toUpperCase(); } }',
     expected: '[HELLO]',
     sample: 'new UpperFormatter().wrap("hello")',
     hints: [
@@ -10595,8 +10138,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Private Constructor - Factory Pattern',
     text: 'Use private constructor with static factory method',
-    setup: 'class Singleton { private static instance: Singleton | null = null; private constructor(public value: number) {} static create(value: number): Singleton { if (!Singleton.instance) { Singleton.instance = new Singleton(value); } return Singleton.instance; } }',
-    setupCode: 'class Singleton { private static instance: Singleton | null = null; private constructor(public value: number) {} static create(value: number): Singleton { if (!Singleton.instance) { Singleton.instance = new Singleton(value); } return Singleton.instance; } }',
+    setup:
+      'class Singleton { private static instance: Singleton | null = null; private constructor(public value: number) {} static create(value: number): Singleton { if (!Singleton.instance) { Singleton.instance = new Singleton(value); } return Singleton.instance; } }',
+    setupCode:
+      'class Singleton { private static instance: Singleton | null = null; private constructor(public value: number) {} static create(value: number): Singleton { if (!Singleton.instance) { Singleton.instance = new Singleton(value); } return Singleton.instance; } }',
     expected: 42,
     sample: 'Singleton.create(42).value',
     hints: [
@@ -10611,14 +10156,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Getter/Setter Pair',
     text: 'Use matched getter and setter for a property',
-    setup: 'class Person { private _age: number = 0; get age(): number { return this._age; } set age(value: number) { this._age = Math.max(0, value); } }',
-    setupCode: 'class Person { private _age: number = 0; get age(): number { return this._age; } set age(value: number) { this._age = Math.max(0, value); } }',
+    setup:
+      'class Person { private _age: number = 0; get age(): number { return this._age; } set age(value: number) { this._age = Math.max(0, value); } }',
+    setupCode:
+      'class Person { private _age: number = 0; get age(): number { return this._age; } set age(value: number) { this._age = Math.max(0, value); } }',
     expected: 0,
     sample: 'const p = new Person(); p.age = -5; p.age',
-    hints: [
-      'Setter validates and normalizes input',
-      'Negative age becomes 0',
-    ],
+    hints: ['Setter validates and normalizes input', 'Negative age becomes 0'],
     tags: ['class', 'getter', 'setter', 'validation'],
   },
   {
@@ -10627,8 +10171,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Static Factory Method',
     text: 'Create instances using a static factory method',
-    setup: 'class Point { private constructor(public x: number, public y: number) {} static origin(): Point { return new Point(0, 0); } static fromCoords(x: number, y: number): Point { return new Point(x, y); } }',
-    setupCode: 'class Point { private constructor(public x: number, public y: number) {} static origin(): Point { return new Point(0, 0); } static fromCoords(x: number, y: number): Point { return new Point(x, y); } }',
+    setup:
+      'class Point { private constructor(public x: number, public y: number) {} static origin(): Point { return new Point(0, 0); } static fromCoords(x: number, y: number): Point { return new Point(x, y); } }',
+    setupCode:
+      'class Point { private constructor(public x: number, public y: number) {} static origin(): Point { return new Point(0, 0); } static fromCoords(x: number, y: number): Point { return new Point(x, y); } }',
     expected: 0,
     sample: 'Point.origin().x',
     hints: [
@@ -10643,8 +10189,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Protected Method',
     text: 'Use protected method in inheritance chain',
-    setup: 'class Base { protected helper(): number { return 10; } }\nclass Derived extends Base { compute(): number { return this.helper() * 2; } }',
-    setupCode: 'class Base { protected helper(): number { return 10; } }\nclass Derived extends Base { compute(): number { return this.helper() * 2; } }',
+    setup:
+      'class Base { protected helper(): number { return 10; } }\nclass Derived extends Base { compute(): number { return this.helper() * 2; } }',
+    setupCode:
+      'class Base { protected helper(): number { return 10; } }\nclass Derived extends Base { compute(): number { return this.helper() * 2; } }',
     expected: 20,
     sample: 'new Derived().compute()',
     hints: [
@@ -10660,13 +10208,11 @@ export const typescriptProblems: Problem[] = [
     title: 'Generic Class',
     text: 'Create and use a generic class',
     setup: 'class Box<T> { constructor(public value: T) {} getValue(): T { return this.value; } }',
-    setupCode: 'class Box<T> { constructor(public value: T) {} getValue(): T { return this.value; } }',
+    setupCode:
+      'class Box<T> { constructor(public value: T) {} getValue(): T { return this.value; } }',
     expected: 'Hello',
     sample: 'new Box<string>("Hello").getValue()',
-    hints: [
-      'Generic classes work with any type',
-      'Type parameter preserves type safety',
-    ],
+    hints: ['Generic classes work with any type', 'Type parameter preserves type safety'],
     tags: ['class', 'generics', 'type-parameter'],
   },
   {
@@ -10675,14 +10221,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Generic Class with Constraint',
     text: 'Use a constrained generic type in a class',
-    setup: 'interface HasLength { length: number; }\nclass Measurable<T extends HasLength> { constructor(public item: T) {} getLength(): number { return this.item.length; } }',
-    setupCode: 'interface HasLength { length: number; }\nclass Measurable<T extends HasLength> { constructor(public item: T) {} getLength(): number { return this.item.length; } }',
+    setup:
+      'interface HasLength { length: number; }\nclass Measurable<T extends HasLength> { constructor(public item: T) {} getLength(): number { return this.item.length; } }',
+    setupCode:
+      'interface HasLength { length: number; }\nclass Measurable<T extends HasLength> { constructor(public item: T) {} getLength(): number { return this.item.length; } }',
     expected: 5,
     sample: 'new Measurable("Hello").getLength()',
-    hints: [
-      'extends constraint limits acceptable types',
-      'Type must have required properties',
-    ],
+    hints: ['extends constraint limits acceptable types', 'Type must have required properties'],
     tags: ['class', 'generics', 'constraint'],
   },
   {
@@ -10691,14 +10236,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Class with Index Signature',
     text: 'Use index signature for dynamic properties',
-    setup: 'class Dictionary { [key: string]: string | undefined; set(key: string, value: string): void { this[key] = value; } }',
-    setupCode: 'class Dictionary { [key: string]: string | undefined; set(key: string, value: string): void { this[key] = value; } }',
+    setup:
+      'class Dictionary { [key: string]: string | undefined; set(key: string, value: string): void { this[key] = value; } }',
+    setupCode:
+      'class Dictionary { [key: string]: string | undefined; set(key: string, value: string): void { this[key] = value; } }',
     expected: 'bar',
     sample: 'const d = new Dictionary(); d.set("foo", "bar"); d["foo"]',
-    hints: [
-      'Index signatures allow dynamic property access',
-      'Type includes undefined for safety',
-    ],
+    hints: ['Index signatures allow dynamic property access', 'Type includes undefined for safety'],
     tags: ['class', 'index-signature', 'dynamic'],
   },
   {
@@ -10707,8 +10251,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Static Block Initialization',
     text: 'Use static block for complex initialization',
-    setup: 'class Config { static values: number[]; static { Config.values = [1, 2, 3].map(x => x * 10); } }',
-    setupCode: 'class Config { static values: number[]; static { Config.values = [1, 2, 3].map(x => x * 10); } }',
+    setup:
+      'class Config { static values: number[]; static { Config.values = [1, 2, 3].map(x => x * 10); } }',
+    setupCode:
+      'class Config { static values: number[]; static { Config.values = [1, 2, 3].map(x => x * 10); } }',
     expected: 30,
     sample: 'Config.values[2]',
     hints: [
@@ -10723,14 +10269,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Polymorphic this Type',
     text: 'Use this type for method chaining in inheritance',
-    setup: 'class Builder { protected value: number = 0; setValue(n: number): this { this.value = n; return this; } }\nclass AdvancedBuilder extends Builder { double(): this { this.value *= 2; return this; } getResult(): number { return this.value; } }',
-    setupCode: 'class Builder { protected value: number = 0; setValue(n: number): this { this.value = n; return this; } }\nclass AdvancedBuilder extends Builder { double(): this { this.value *= 2; return this; } getResult(): number { return this.value; } }',
+    setup:
+      'class Builder { protected value: number = 0; setValue(n: number): this { this.value = n; return this; } }\nclass AdvancedBuilder extends Builder { double(): this { this.value *= 2; return this; } getResult(): number { return this.value; } }',
+    setupCode:
+      'class Builder { protected value: number = 0; setValue(n: number): this { this.value = n; return this; } }\nclass AdvancedBuilder extends Builder { double(): this { this.value *= 2; return this; } getResult(): number { return this.value; } }',
     expected: 20,
     sample: 'new AdvancedBuilder().setValue(10).double().getResult()',
-    hints: [
-      'this return type preserves subclass type',
-      'Enables fluent chaining in inheritance',
-    ],
+    hints: ['this return type preserves subclass type', 'Enables fluent chaining in inheritance'],
     tags: ['class', 'this-type', 'method-chaining'],
   },
   {
@@ -10739,14 +10284,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Interface Extending Class',
     text: 'Create an interface that extends a class',
-    setup: 'class Point { x: number = 0; y: number = 0; }\ninterface Point3D extends Point { z: number; }\nconst p: Point3D = { x: 1, y: 2, z: 3 };',
-    setupCode: 'class Point { x: number = 0; y: number = 0; }\ninterface Point3D extends Point { z: number; }\nconst p: Point3D = { x: 1, y: 2, z: 3 };',
+    setup:
+      'class Point { x: number = 0; y: number = 0; }\ninterface Point3D extends Point { z: number; }\nconst p: Point3D = { x: 1, y: 2, z: 3 };',
+    setupCode:
+      'class Point { x: number = 0; y: number = 0; }\ninterface Point3D extends Point { z: number; }\nconst p: Point3D = { x: 1, y: 2, z: 3 };',
     expected: 3,
     sample: 'p.z',
-    hints: [
-      'Interfaces can extend classes',
-      'Inherits class structure without implementation',
-    ],
+    hints: ['Interfaces can extend classes', 'Inherits class structure without implementation'],
     tags: ['interface', 'class', 'extends'],
   },
   {
@@ -10755,14 +10299,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Constructor Overloads',
     text: 'Use constructor overloads for different initialization patterns',
-    setup: 'class Point { x: number; y: number; constructor(x: number, y: number);\nconstructor(coords: {x: number, y: number});\nconstructor(xOrCoords: number | {x: number, y: number}, y?: number) { if (typeof xOrCoords === "number") { this.x = xOrCoords; this.y = y!; } else { this.x = xOrCoords.x; this.y = xOrCoords.y; } } }',
-    setupCode: 'class Point { x: number; y: number; constructor(x: number, y: number);\nconstructor(coords: {x: number, y: number});\nconstructor(xOrCoords: number | {x: number, y: number}, y?: number) { if (typeof xOrCoords === "number") { this.x = xOrCoords; this.y = y!; } else { this.x = xOrCoords.x; this.y = xOrCoords.y; } } }',
+    setup:
+      'class Point { x: number; y: number; constructor(x: number, y: number);\nconstructor(coords: {x: number, y: number});\nconstructor(xOrCoords: number | {x: number, y: number}, y?: number) { if (typeof xOrCoords === "number") { this.x = xOrCoords; this.y = y!; } else { this.x = xOrCoords.x; this.y = xOrCoords.y; } } }',
+    setupCode:
+      'class Point { x: number; y: number; constructor(x: number, y: number);\nconstructor(coords: {x: number, y: number});\nconstructor(xOrCoords: number | {x: number, y: number}, y?: number) { if (typeof xOrCoords === "number") { this.x = xOrCoords; this.y = y!; } else { this.x = xOrCoords.x; this.y = xOrCoords.y; } } }',
     expected: 5,
     sample: 'new Point({x: 5, y: 10}).x',
-    hints: [
-      'Overloads provide multiple signatures',
-      'Implementation handles all cases',
-    ],
+    hints: ['Overloads provide multiple signatures', 'Implementation handles all cases'],
     tags: ['class', 'constructor', 'overloads'],
   },
   {
@@ -10771,8 +10314,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Method Overloads',
     text: 'Use method overloads for type-safe polymorphism',
-    setup: 'class Converter { convert(value: string): number;\nconvert(value: number): string;\nconvert(value: string | number): string | number { return typeof value === "string" ? parseInt(value) : value.toString(); } }',
-    setupCode: 'class Converter { convert(value: string): number;\nconvert(value: number): string;\nconvert(value: string | number): string | number { return typeof value === "string" ? parseInt(value) : value.toString(); } }',
+    setup:
+      'class Converter { convert(value: string): number;\nconvert(value: number): string;\nconvert(value: string | number): string | number { return typeof value === "string" ? parseInt(value) : value.toString(); } }',
+    setupCode:
+      'class Converter { convert(value: string): number;\nconvert(value: number): string;\nconvert(value: string | number): string | number { return typeof value === "string" ? parseInt(value) : value.toString(); } }',
     expected: 42,
     sample: 'new Converter().convert("42")',
     hints: [
@@ -10787,14 +10332,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Composition over Inheritance',
     text: 'Use composition to combine behaviors',
-    setup: 'class Engine { start(): string { return "Engine started"; } }\nclass Wheels { roll(): string { return "Wheels rolling"; } }\nclass Car { private engine = new Engine(); private wheels = new Wheels(); drive(): string { return `${this.engine.start()}, ${this.wheels.roll()}`; } }',
-    setupCode: 'class Engine { start(): string { return "Engine started"; } }\nclass Wheels { roll(): string { return "Wheels rolling"; } }\nclass Car { private engine = new Engine(); private wheels = new Wheels(); drive(): string { return `${this.engine.start()}, ${this.wheels.roll()}`; } }',
+    setup:
+      'class Engine { start(): string { return "Engine started"; } }\nclass Wheels { roll(): string { return "Wheels rolling"; } }\nclass Car { private engine = new Engine(); private wheels = new Wheels(); drive(): string { return `${this.engine.start()}, ${this.wheels.roll()}`; } }',
+    setupCode:
+      'class Engine { start(): string { return "Engine started"; } }\nclass Wheels { roll(): string { return "Wheels rolling"; } }\nclass Car { private engine = new Engine(); private wheels = new Wheels(); drive(): string { return `${this.engine.start()}, ${this.wheels.roll()}`; } }',
     expected: 'Engine started, Wheels rolling',
     sample: 'new Car().drive()',
-    hints: [
-      'Composition includes instances of other classes',
-      'Delegate to composed objects',
-    ],
+    hints: ['Composition includes instances of other classes', 'Delegate to composed objects'],
     tags: ['class', 'composition', 'design-pattern'],
   },
   {
@@ -10803,14 +10347,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Dependency Injection',
     text: 'Inject dependencies through constructor',
-    setup: 'interface Logger { log(msg: string): string; }\nclass ConsoleLogger implements Logger { log(msg: string): string { return `Console: ${msg}`; } }\nclass Service { constructor(private logger: Logger) {} doWork(): string { return this.logger.log("Working"); } }',
-    setupCode: 'interface Logger { log(msg: string): string; }\nclass ConsoleLogger implements Logger { log(msg: string): string { return `Console: ${msg}`; } }\nclass Service { constructor(private logger: Logger) {} doWork(): string { return this.logger.log("Working"); } }',
+    setup:
+      'interface Logger { log(msg: string): string; }\nclass ConsoleLogger implements Logger { log(msg: string): string { return `Console: ${msg}`; } }\nclass Service { constructor(private logger: Logger) {} doWork(): string { return this.logger.log("Working"); } }',
+    setupCode:
+      'interface Logger { log(msg: string): string; }\nclass ConsoleLogger implements Logger { log(msg: string): string { return `Console: ${msg}`; } }\nclass Service { constructor(private logger: Logger) {} doWork(): string { return this.logger.log("Working"); } }',
     expected: 'Console: Working',
     sample: 'new Service(new ConsoleLogger()).doWork()',
-    hints: [
-      'Dependencies are passed to constructor',
-      'Allows swapping implementations',
-    ],
+    hints: ['Dependencies are passed to constructor', 'Allows swapping implementations'],
     tags: ['class', 'dependency-injection', 'interface'],
   },
   {
@@ -10819,14 +10362,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Private Class Fields (ES2022)',
     text: 'Use true private fields with # syntax',
-    setup: 'class Secret { #password: string = "secret123"; checkPassword(input: string): boolean { return input === this.#password; } }',
-    setupCode: 'class Secret { #password: string = "secret123"; checkPassword(input: string): boolean { return input === this.#password; } }',
+    setup:
+      'class Secret { #password: string = "secret123"; checkPassword(input: string): boolean { return input === this.#password; } }',
+    setupCode:
+      'class Secret { #password: string = "secret123"; checkPassword(input: string): boolean { return input === this.#password; } }',
     expected: true,
     sample: 'new Secret().checkPassword("secret123")',
-    hints: [
-      '# prefix creates truly private fields',
-      'Not accessible outside the class at all',
-    ],
+    hints: ['# prefix creates truly private fields', 'Not accessible outside the class at all'],
     tags: ['class', 'private-fields', 'es2022'],
   },
   {
@@ -10835,8 +10377,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Static Private Field',
     text: 'Use private static field for class-level secrets',
-    setup: 'class APIClient { static #apiKey: string = "key123"; static getKeyLength(): number { return APIClient.#apiKey.length; } }',
-    setupCode: 'class APIClient { static #apiKey: string = "key123"; static getKeyLength(): number { return APIClient.#apiKey.length; } }',
+    setup:
+      'class APIClient { static #apiKey: string = "key123"; static getKeyLength(): number { return APIClient.#apiKey.length; } }',
+    setupCode:
+      'class APIClient { static #apiKey: string = "key123"; static getKeyLength(): number { return APIClient.#apiKey.length; } }',
     expected: 6,
     sample: 'APIClient.getKeyLength()',
     hints: [
@@ -10851,14 +10395,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Abstract Property',
     text: 'Define abstract property in abstract class',
-    setup: 'abstract class Shape { abstract readonly name: string; describe(): string { return `This is a ${this.name}`; } }\nclass Square extends Shape { readonly name = "Square"; }',
-    setupCode: 'abstract class Shape { abstract readonly name: string; describe(): string { return `This is a ${this.name}`; } }\nclass Square extends Shape { readonly name = "Square"; }',
+    setup:
+      'abstract class Shape { abstract readonly name: string; describe(): string { return `This is a ${this.name}`; } }\nclass Square extends Shape { readonly name = "Square"; }',
+    setupCode:
+      'abstract class Shape { abstract readonly name: string; describe(): string { return `This is a ${this.name}`; } }\nclass Square extends Shape { readonly name = "Square"; }',
     expected: 'This is a Square',
     sample: 'new Square().describe()',
-    hints: [
-      'Abstract properties must be implemented',
-      'Concrete class provides the value',
-    ],
+    hints: ['Abstract properties must be implemented', 'Concrete class provides the value'],
     tags: ['class', 'abstract', 'property'],
   },
   {
@@ -10867,8 +10410,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Mixin Pattern',
     text: 'Apply mixin to extend class functionality',
-    setup: 'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Timestamped<TBase extends Constructor>(Base: TBase) { return class extends Base { timestamp = Date.now(); }; }\nclass User { constructor(public name: string) {} }\nconst TimestampedUser = Timestamped(User);',
-    setupCode: 'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Timestamped<TBase extends Constructor>(Base: TBase) { return class extends Base { timestamp = Date.now(); }; }\nclass User { constructor(public name: string) {} }\nconst TimestampedUser = Timestamped(User);',
+    setup:
+      'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Timestamped<TBase extends Constructor>(Base: TBase) { return class extends Base { timestamp = Date.now(); }; }\nclass User { constructor(public name: string) {} }\nconst TimestampedUser = Timestamped(User);',
+    setupCode:
+      'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Timestamped<TBase extends Constructor>(Base: TBase) { return class extends Base { timestamp = Date.now(); }; }\nclass User { constructor(public name: string) {} }\nconst TimestampedUser = Timestamped(User);',
     expected: true,
     sample: 'typeof new TimestampedUser("Alice").timestamp === "number"',
     hints: [
@@ -10883,14 +10428,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Class Implementing Multiple Behaviors',
     text: 'Implement interface with methods and properties',
-    setup: 'interface Identifiable { id: string; }\ninterface Timestampable { createdAt: Date; }\nclass Entity implements Identifiable, Timestampable { id: string = "1"; createdAt: Date = new Date(); }',
-    setupCode: 'interface Identifiable { id: string; }\ninterface Timestampable { createdAt: Date; }\nclass Entity implements Identifiable, Timestampable { id: string = "1"; createdAt: Date = new Date(); }',
+    setup:
+      'interface Identifiable { id: string; }\ninterface Timestampable { createdAt: Date; }\nclass Entity implements Identifiable, Timestampable { id: string = "1"; createdAt: Date = new Date(); }',
+    setupCode:
+      'interface Identifiable { id: string; }\ninterface Timestampable { createdAt: Date; }\nclass Entity implements Identifiable, Timestampable { id: string = "1"; createdAt: Date = new Date(); }',
     expected: '1',
     sample: 'new Entity().id',
-    hints: [
-      'Multiple interfaces separate concerns',
-      'Class implements all required members',
-    ],
+    hints: ['Multiple interfaces separate concerns', 'Class implements all required members'],
     tags: ['class', 'interface', 'composition'],
   },
   {
@@ -10899,14 +10443,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Deep Inheritance Chain',
     text: 'Access properties through inheritance chain',
-    setup: 'class A { a: number = 1; }\nclass B extends A { b: number = 2; }\nclass C extends B { c: number = 3; }',
-    setupCode: 'class A { a: number = 1; }\nclass B extends A { b: number = 2; }\nclass C extends B { c: number = 3; }',
+    setup:
+      'class A { a: number = 1; }\nclass B extends A { b: number = 2; }\nclass C extends B { c: number = 3; }',
+    setupCode:
+      'class A { a: number = 1; }\nclass B extends A { b: number = 2; }\nclass C extends B { c: number = 3; }',
     expected: 6,
     sample: 'const obj = new C(); obj.a + obj.b + obj.c',
-    hints: [
-      'Properties inherit through the chain',
-      'Access any ancestor property',
-    ],
+    hints: ['Properties inherit through the chain', 'Access any ancestor property'],
     tags: ['class', 'inheritance', 'chain'],
   },
   {
@@ -10915,14 +10458,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Override with Different Return Type',
     text: 'Override method with covariant return type',
-    setup: 'class Animal { clone(): Animal { return new Animal(); } }\nclass Dog extends Animal { clone(): Dog { return new Dog(); } breed: string = "Labrador"; }',
-    setupCode: 'class Animal { clone(): Animal { return new Animal(); } }\nclass Dog extends Animal { clone(): Dog { return new Dog(); } breed: string = "Labrador"; }',
+    setup:
+      'class Animal { clone(): Animal { return new Animal(); } }\nclass Dog extends Animal { clone(): Dog { return new Dog(); } breed: string = "Labrador"; }',
+    setupCode:
+      'class Animal { clone(): Animal { return new Animal(); } }\nclass Dog extends Animal { clone(): Dog { return new Dog(); } breed: string = "Labrador"; }',
     expected: 'Labrador',
     sample: 'new Dog().clone().breed',
-    hints: [
-      'Subclass can return more specific type',
-      'Covariant return types are allowed',
-    ],
+    hints: ['Subclass can return more specific type', 'Covariant return types are allowed'],
     tags: ['class', 'override', 'covariance'],
   },
   {
@@ -10931,8 +10473,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Constructor Property Promotion in Subclass',
     text: 'Combine parameter properties with super call',
-    setup: 'class Person { constructor(public name: string) {} }\nclass Employee extends Person { constructor(name: string, public department: string) { super(name); } }',
-    setupCode: 'class Person { constructor(public name: string) {} }\nclass Employee extends Person { constructor(name: string, public department: string) { super(name); } }',
+    setup:
+      'class Person { constructor(public name: string) {} }\nclass Employee extends Person { constructor(name: string, public department: string) { super(name); } }',
+    setupCode:
+      'class Person { constructor(public name: string) {} }\nclass Employee extends Person { constructor(name: string, public department: string) { super(name); } }',
     expected: 'Engineering',
     sample: 'new Employee("Alice", "Engineering").department',
     hints: [
@@ -10947,14 +10491,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Decorator Class Method',
     text: 'Create a method decorator that logs calls',
-    setup: 'function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) { const original = descriptor.value; descriptor.value = function(...args: any[]) { console.log(`Calling ${propertyKey}`); return original.apply(this, args); }; return descriptor; }\nclass Calculator { @log add(a: number, b: number): number { return a + b; } }',
-    setupCode: 'function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) { const original = descriptor.value; descriptor.value = function(...args: any[]) { console.log(`Calling ${propertyKey}`); return original.apply(this, args); }; return descriptor; }\nclass Calculator { @log add(a: number, b: number): number { return a + b; } }',
+    setup:
+      'function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) { const original = descriptor.value; descriptor.value = function(...args: any[]) { console.log(`Calling ${propertyKey}`); return original.apply(this, args); }; return descriptor; }\nclass Calculator { @log add(a: number, b: number): number { return a + b; } }',
+    setupCode:
+      'function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) { const original = descriptor.value; descriptor.value = function(...args: any[]) { console.log(`Calling ${propertyKey}`); return original.apply(this, args); }; return descriptor; }\nclass Calculator { @log add(a: number, b: number): number { return a + b; } }',
     expected: 7,
     sample: 'new Calculator().add(3, 4)',
-    hints: [
-      'Decorators wrap method behavior',
-      'Original method is preserved and called',
-    ],
+    hints: ['Decorators wrap method behavior', 'Original method is preserved and called'],
     tags: ['class', 'decorator', 'method'],
   },
   {
@@ -10963,14 +10506,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Class Decorator',
     text: 'Create a class decorator that seals the class',
-    setup: 'function sealed(constructor: Function) { Object.seal(constructor); Object.seal(constructor.prototype); }\n@sealed\nclass Greeter { greeting: string = "Hello"; greet(): string { return this.greeting; } }',
-    setupCode: 'function sealed(constructor: Function) { Object.seal(constructor); Object.seal(constructor.prototype); }\n@sealed\nclass Greeter { greeting: string = "Hello"; greet(): string { return this.greeting; } }',
+    setup:
+      'function sealed(constructor: Function) { Object.seal(constructor); Object.seal(constructor.prototype); }\n@sealed\nclass Greeter { greeting: string = "Hello"; greet(): string { return this.greeting; } }',
+    setupCode:
+      'function sealed(constructor: Function) { Object.seal(constructor); Object.seal(constructor.prototype); }\n@sealed\nclass Greeter { greeting: string = "Hello"; greet(): string { return this.greeting; } }',
     expected: true,
     sample: 'Object.isSealed(Greeter)',
-    hints: [
-      'Class decorators receive the constructor',
-      'Can modify class behavior',
-    ],
+    hints: ['Class decorators receive the constructor', 'Can modify class behavior'],
     tags: ['class', 'decorator', 'sealed'],
   },
   {
@@ -10979,8 +10521,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Property Decorator',
     text: 'Create a property decorator for validation',
-    setup: 'function positive(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.max(0, newValue); }, enumerable: true, configurable: true }); }\nclass Product { @positive price: number = 0; }',
-    setupCode: 'function positive(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.max(0, newValue); }, enumerable: true, configurable: true }); }\nclass Product { @positive price: number = 0; }',
+    setup:
+      'function positive(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.max(0, newValue); }, enumerable: true, configurable: true }); }\nclass Product { @positive price: number = 0; }',
+    setupCode:
+      'function positive(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.max(0, newValue); }, enumerable: true, configurable: true }); }\nclass Product { @positive price: number = 0; }',
     expected: 0,
     sample: 'const p = new Product(); p.price = -10; p.price',
     hints: [
@@ -10995,14 +10539,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Decorator Factory',
     text: 'Create a parameterized decorator factory',
-    setup: 'function range(min: number, max: number) { return function(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.min(max, Math.max(min, newValue)); }, enumerable: true, configurable: true }); }; }\nclass Slider { @range(0, 100) position: number = 50; }',
-    setupCode: 'function range(min: number, max: number) { return function(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.min(max, Math.max(min, newValue)); }, enumerable: true, configurable: true }); }; }\nclass Slider { @range(0, 100) position: number = 50; }',
+    setup:
+      'function range(min: number, max: number) { return function(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.min(max, Math.max(min, newValue)); }, enumerable: true, configurable: true }); }; }\nclass Slider { @range(0, 100) position: number = 50; }',
+    setupCode:
+      'function range(min: number, max: number) { return function(target: any, propertyKey: string) { let value: number; Object.defineProperty(target, propertyKey, { get: () => value, set: (newValue: number) => { value = Math.min(max, Math.max(min, newValue)); }, enumerable: true, configurable: true }); }; }\nclass Slider { @range(0, 100) position: number = 50; }',
     expected: 100,
     sample: 'const s = new Slider(); s.position = 150; s.position',
-    hints: [
-      'Factory returns the actual decorator',
-      'Outer function receives parameters',
-    ],
+    hints: ['Factory returns the actual decorator', 'Outer function receives parameters'],
     tags: ['class', 'decorator', 'factory'],
   },
   {
@@ -11011,14 +10554,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Multiple Mixins',
     text: 'Apply multiple mixins to a class',
-    setup: 'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Tagged<TBase extends Constructor>(Base: TBase) { return class extends Base { tag: string = "tagged"; }; }\nfunction Versioned<TBase extends Constructor>(Base: TBase) { return class extends Base { version: number = 1; }; }\nclass Entity { id: number = 1; }\nconst TaggedVersionedEntity = Tagged(Versioned(Entity));',
-    setupCode: 'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Tagged<TBase extends Constructor>(Base: TBase) { return class extends Base { tag: string = "tagged"; }; }\nfunction Versioned<TBase extends Constructor>(Base: TBase) { return class extends Base { version: number = 1; }; }\nclass Entity { id: number = 1; }\nconst TaggedVersionedEntity = Tagged(Versioned(Entity));',
+    setup:
+      'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Tagged<TBase extends Constructor>(Base: TBase) { return class extends Base { tag: string = "tagged"; }; }\nfunction Versioned<TBase extends Constructor>(Base: TBase) { return class extends Base { version: number = 1; }; }\nclass Entity { id: number = 1; }\nconst TaggedVersionedEntity = Tagged(Versioned(Entity));',
+    setupCode:
+      'type Constructor<T = {}> = new (...args: any[]) => T;\nfunction Tagged<TBase extends Constructor>(Base: TBase) { return class extends Base { tag: string = "tagged"; }; }\nfunction Versioned<TBase extends Constructor>(Base: TBase) { return class extends Base { version: number = 1; }; }\nclass Entity { id: number = 1; }\nconst TaggedVersionedEntity = Tagged(Versioned(Entity));',
     expected: 'tagged',
     sample: 'new TaggedVersionedEntity().tag',
-    hints: [
-      'Mixins can be composed together',
-      'Each adds its own properties',
-    ],
+    hints: ['Mixins can be composed together', 'Each adds its own properties'],
     tags: ['class', 'mixin', 'composition'],
   },
   {
@@ -11027,14 +10569,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Abstract Generic Class',
     text: 'Create abstract class with generic type parameter',
-    setup: 'abstract class Repository<T> { protected items: T[] = []; add(item: T): void { this.items.push(item); } abstract findById(id: number): T | undefined; }\nclass UserRepo extends Repository<{id: number, name: string}> { findById(id: number) { return this.items.find(u => u.id === id); } }',
-    setupCode: 'abstract class Repository<T> { protected items: T[] = []; add(item: T): void { this.items.push(item); } abstract findById(id: number): T | undefined; }\nclass UserRepo extends Repository<{id: number, name: string}> { findById(id: number) { return this.items.find(u => u.id === id); } }',
+    setup:
+      'abstract class Repository<T> { protected items: T[] = []; add(item: T): void { this.items.push(item); } abstract findById(id: number): T | undefined; }\nclass UserRepo extends Repository<{id: number, name: string}> { findById(id: number) { return this.items.find(u => u.id === id); } }',
+    setupCode:
+      'abstract class Repository<T> { protected items: T[] = []; add(item: T): void { this.items.push(item); } abstract findById(id: number): T | undefined; }\nclass UserRepo extends Repository<{id: number, name: string}> { findById(id: number) { return this.items.find(u => u.id === id); } }',
     expected: 'Alice',
     sample: 'const repo = new UserRepo(); repo.add({id: 1, name: "Alice"}); repo.findById(1)?.name',
-    hints: [
-      'Abstract classes can have generics',
-      'Subclass specifies concrete type',
-    ],
+    hints: ['Abstract classes can have generics', 'Subclass specifies concrete type'],
     tags: ['class', 'abstract', 'generics'],
   },
   {
@@ -11043,8 +10584,10 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Constrained Mixin',
     text: 'Create mixin that requires specific base class structure',
-    setup: 'interface Nameable { name: string; }\ntype Constructor<T = {}> = new (...args: any[]) => T;\nfunction Greetable<TBase extends Constructor<Nameable>>(Base: TBase) { return class extends Base { greet(): string { return `Hello, ${this.name}!`; } }; }\nclass Person { constructor(public name: string) {} }\nconst GreetablePerson = Greetable(Person);',
-    setupCode: 'interface Nameable { name: string; }\ntype Constructor<T = {}> = new (...args: any[]) => T;\nfunction Greetable<TBase extends Constructor<Nameable>>(Base: TBase) { return class extends Base { greet(): string { return `Hello, ${this.name}!`; } }; }\nclass Person { constructor(public name: string) {} }\nconst GreetablePerson = Greetable(Person);',
+    setup:
+      'interface Nameable { name: string; }\ntype Constructor<T = {}> = new (...args: any[]) => T;\nfunction Greetable<TBase extends Constructor<Nameable>>(Base: TBase) { return class extends Base { greet(): string { return `Hello, ${this.name}!`; } }; }\nclass Person { constructor(public name: string) {} }\nconst GreetablePerson = Greetable(Person);',
+    setupCode:
+      'interface Nameable { name: string; }\ntype Constructor<T = {}> = new (...args: any[]) => T;\nfunction Greetable<TBase extends Constructor<Nameable>>(Base: TBase) { return class extends Base { greet(): string { return `Hello, ${this.name}!`; } }; }\nclass Person { constructor(public name: string) {} }\nconst GreetablePerson = Greetable(Person);',
     expected: 'Hello, Alice!',
     sample: 'new GreetablePerson("Alice").greet()',
     hints: [
@@ -11059,14 +10602,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Proxy Pattern with Class',
     text: 'Implement proxy pattern for lazy loading',
-    setup: 'interface Image { display(): string; }\nclass RealImage implements Image { constructor(private filename: string) {} display(): string { return `Displaying ${this.filename}`; } }\nclass ProxyImage implements Image { private realImage: RealImage | null = null; constructor(private filename: string) {} display(): string { if (!this.realImage) { this.realImage = new RealImage(this.filename); } return this.realImage.display(); } }',
-    setupCode: 'interface Image { display(): string; }\nclass RealImage implements Image { constructor(private filename: string) {} display(): string { return `Displaying ${this.filename}`; } }\nclass ProxyImage implements Image { private realImage: RealImage | null = null; constructor(private filename: string) {} display(): string { if (!this.realImage) { this.realImage = new RealImage(this.filename); } return this.realImage.display(); } }',
+    setup:
+      'interface Image { display(): string; }\nclass RealImage implements Image { constructor(private filename: string) {} display(): string { return `Displaying ${this.filename}`; } }\nclass ProxyImage implements Image { private realImage: RealImage | null = null; constructor(private filename: string) {} display(): string { if (!this.realImage) { this.realImage = new RealImage(this.filename); } return this.realImage.display(); } }',
+    setupCode:
+      'interface Image { display(): string; }\nclass RealImage implements Image { constructor(private filename: string) {} display(): string { return `Displaying ${this.filename}`; } }\nclass ProxyImage implements Image { private realImage: RealImage | null = null; constructor(private filename: string) {} display(): string { if (!this.realImage) { this.realImage = new RealImage(this.filename); } return this.realImage.display(); } }',
     expected: 'Displaying photo.jpg',
     sample: 'new ProxyImage("photo.jpg").display()',
-    hints: [
-      'Proxy creates real object on demand',
-      'Same interface as real object',
-    ],
+    hints: ['Proxy creates real object on demand', 'Same interface as real object'],
     tags: ['class', 'proxy', 'design-pattern'],
   },
   {
@@ -11075,14 +10617,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Observer Pattern',
     text: 'Implement observer pattern with typed events',
-    setup: 'type Observer<T> = (data: T) => void;\nclass Subject<T> { private observers: Observer<T>[] = []; subscribe(observer: Observer<T>): void { this.observers.push(observer); } notify(data: T): void { this.observers.forEach(o => o(data)); } }\nconst subject = new Subject<string>();\nlet result = "";\nsubject.subscribe(data => { result = data; });',
-    setupCode: 'type Observer<T> = (data: T) => void;\nclass Subject<T> { private observers: Observer<T>[] = []; subscribe(observer: Observer<T>): void { this.observers.push(observer); } notify(data: T): void { this.observers.forEach(o => o(data)); } }\nconst subject = new Subject<string>();\nlet result = "";\nsubject.subscribe(data => { result = data; });',
+    setup:
+      'type Observer<T> = (data: T) => void;\nclass Subject<T> { private observers: Observer<T>[] = []; subscribe(observer: Observer<T>): void { this.observers.push(observer); } notify(data: T): void { this.observers.forEach(o => o(data)); } }\nconst subject = new Subject<string>();\nlet result = "";\nsubject.subscribe(data => { result = data; });',
+    setupCode:
+      'type Observer<T> = (data: T) => void;\nclass Subject<T> { private observers: Observer<T>[] = []; subscribe(observer: Observer<T>): void { this.observers.push(observer); } notify(data: T): void { this.observers.forEach(o => o(data)); } }\nconst subject = new Subject<string>();\nlet result = "";\nsubject.subscribe(data => { result = data; });',
     expected: 'Hello',
     sample: 'subject.notify("Hello"); result',
-    hints: [
-      'Observers are notified of changes',
-      'Generic type for event data',
-    ],
+    hints: ['Observers are notified of changes', 'Generic type for event data'],
     tags: ['class', 'observer', 'design-pattern'],
   },
   {
@@ -11091,14 +10632,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Strategy Pattern',
     text: 'Implement strategy pattern for interchangeable algorithms',
-    setup: 'interface SortStrategy<T> { sort(data: T[]): T[]; }\nclass BubbleSort<T> implements SortStrategy<T> { sort(data: T[]): T[] { return [...data].sort(); } }\nclass Sorter<T> { constructor(private strategy: SortStrategy<T>) {} setStrategy(strategy: SortStrategy<T>): void { this.strategy = strategy; } sort(data: T[]): T[] { return this.strategy.sort(data); } }',
-    setupCode: 'interface SortStrategy<T> { sort(data: T[]): T[]; }\nclass BubbleSort<T> implements SortStrategy<T> { sort(data: T[]): T[] { return [...data].sort(); } }\nclass Sorter<T> { constructor(private strategy: SortStrategy<T>) {} setStrategy(strategy: SortStrategy<T>): void { this.strategy = strategy; } sort(data: T[]): T[] { return this.strategy.sort(data); } }',
+    setup:
+      'interface SortStrategy<T> { sort(data: T[]): T[]; }\nclass BubbleSort<T> implements SortStrategy<T> { sort(data: T[]): T[] { return [...data].sort(); } }\nclass Sorter<T> { constructor(private strategy: SortStrategy<T>) {} setStrategy(strategy: SortStrategy<T>): void { this.strategy = strategy; } sort(data: T[]): T[] { return this.strategy.sort(data); } }',
+    setupCode:
+      'interface SortStrategy<T> { sort(data: T[]): T[]; }\nclass BubbleSort<T> implements SortStrategy<T> { sort(data: T[]): T[] { return [...data].sort(); } }\nclass Sorter<T> { constructor(private strategy: SortStrategy<T>) {} setStrategy(strategy: SortStrategy<T>): void { this.strategy = strategy; } sort(data: T[]): T[] { return this.strategy.sort(data); } }',
     expected: '1,2,3',
     sample: 'new Sorter(new BubbleSort<number>()).sort([3, 1, 2]).join(",")',
-    hints: [
-      'Strategy encapsulates algorithm',
-      'Can swap strategies at runtime',
-    ],
+    hints: ['Strategy encapsulates algorithm', 'Can swap strategies at runtime'],
     tags: ['class', 'strategy', 'design-pattern'],
   },
   {
@@ -11107,14 +10647,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Command Pattern',
     text: 'Implement command pattern with undo support',
-    setup: 'interface Command { execute(): void; undo(): void; }\nclass Calculator { value: number = 0; }\nclass AddCommand implements Command { constructor(private calc: Calculator, private amount: number) {} execute(): void { this.calc.value += this.amount; } undo(): void { this.calc.value -= this.amount; } }',
-    setupCode: 'interface Command { execute(): void; undo(): void; }\nclass Calculator { value: number = 0; }\nclass AddCommand implements Command { constructor(private calc: Calculator, private amount: number) {} execute(): void { this.calc.value += this.amount; } undo(): void { this.calc.value -= this.amount; } }',
+    setup:
+      'interface Command { execute(): void; undo(): void; }\nclass Calculator { value: number = 0; }\nclass AddCommand implements Command { constructor(private calc: Calculator, private amount: number) {} execute(): void { this.calc.value += this.amount; } undo(): void { this.calc.value -= this.amount; } }',
+    setupCode:
+      'interface Command { execute(): void; undo(): void; }\nclass Calculator { value: number = 0; }\nclass AddCommand implements Command { constructor(private calc: Calculator, private amount: number) {} execute(): void { this.calc.value += this.amount; } undo(): void { this.calc.value -= this.amount; } }',
     expected: 5,
-    sample: 'const calc = new Calculator(); const cmd = new AddCommand(calc, 10); cmd.execute(); cmd.undo(); cmd.execute(); calc.value -= 5; calc.value',
-    hints: [
-      'Commands encapsulate operations',
-      'Undo reverses the operation',
-    ],
+    sample:
+      'const calc = new Calculator(); const cmd = new AddCommand(calc, 10); cmd.execute(); cmd.undo(); cmd.execute(); calc.value -= 5; calc.value',
+    hints: ['Commands encapsulate operations', 'Undo reverses the operation'],
     tags: ['class', 'command', 'design-pattern'],
   },
   {
@@ -11123,14 +10663,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'State Pattern',
     text: 'Implement state pattern for state machine',
-    setup: 'interface State { handle(context: Context): void; getName(): string; }\nclass Context { constructor(public state: State) {} request(): void { this.state.handle(this); } }\nclass StateA implements State { handle(context: Context): void { context.state = new StateB(); } getName(): string { return "A"; } }\nclass StateB implements State { handle(context: Context): void { context.state = new StateA(); } getName(): string { return "B"; } }',
-    setupCode: 'interface State { handle(context: Context): void; getName(): string; }\nclass Context { constructor(public state: State) {} request(): void { this.state.handle(this); } }\nclass StateA implements State { handle(context: Context): void { context.state = new StateB(); } getName(): string { return "A"; } }\nclass StateB implements State { handle(context: Context): void { context.state = new StateA(); } getName(): string { return "B"; } }',
+    setup:
+      'interface State { handle(context: Context): void; getName(): string; }\nclass Context { constructor(public state: State) {} request(): void { this.state.handle(this); } }\nclass StateA implements State { handle(context: Context): void { context.state = new StateB(); } getName(): string { return "A"; } }\nclass StateB implements State { handle(context: Context): void { context.state = new StateA(); } getName(): string { return "B"; } }',
+    setupCode:
+      'interface State { handle(context: Context): void; getName(): string; }\nclass Context { constructor(public state: State) {} request(): void { this.state.handle(this); } }\nclass StateA implements State { handle(context: Context): void { context.state = new StateB(); } getName(): string { return "A"; } }\nclass StateB implements State { handle(context: Context): void { context.state = new StateA(); } getName(): string { return "B"; } }',
     expected: 'B',
     sample: 'const ctx = new Context(new StateA()); ctx.request(); ctx.state.getName()',
-    hints: [
-      'State objects control transitions',
-      'Context delegates to current state',
-    ],
+    hints: ['State objects control transitions', 'Context delegates to current state'],
     tags: ['class', 'state', 'design-pattern'],
   },
   {
@@ -11139,14 +10678,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Builder Pattern with Fluent Interface',
     text: 'Implement builder pattern with method chaining',
-    setup: 'class QueryBuilder { private parts: string[] = []; select(columns: string): this { this.parts.push(`SELECT ${columns}`); return this; } from(table: string): this { this.parts.push(`FROM ${table}`); return this; } where(condition: string): this { this.parts.push(`WHERE ${condition}`); return this; } build(): string { return this.parts.join(" "); } }',
-    setupCode: 'class QueryBuilder { private parts: string[] = []; select(columns: string): this { this.parts.push(`SELECT ${columns}`); return this; } from(table: string): this { this.parts.push(`FROM ${table}`); return this; } where(condition: string): this { this.parts.push(`WHERE ${condition}`); return this; } build(): string { return this.parts.join(" "); } }',
+    setup:
+      'class QueryBuilder { private parts: string[] = []; select(columns: string): this { this.parts.push(`SELECT ${columns}`); return this; } from(table: string): this { this.parts.push(`FROM ${table}`); return this; } where(condition: string): this { this.parts.push(`WHERE ${condition}`); return this; } build(): string { return this.parts.join(" "); } }',
+    setupCode:
+      'class QueryBuilder { private parts: string[] = []; select(columns: string): this { this.parts.push(`SELECT ${columns}`); return this; } from(table: string): this { this.parts.push(`FROM ${table}`); return this; } where(condition: string): this { this.parts.push(`WHERE ${condition}`); return this; } build(): string { return this.parts.join(" "); } }',
     expected: 'SELECT * FROM users WHERE id = 1',
     sample: 'new QueryBuilder().select("*").from("users").where("id = 1").build()',
-    hints: [
-      'Each method returns this for chaining',
-      'build() produces final result',
-    ],
+    hints: ['Each method returns this for chaining', 'build() produces final result'],
     tags: ['class', 'builder', 'fluent-interface'],
   },
   {
@@ -11155,14 +10693,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Abstract Factory Pattern',
     text: 'Implement abstract factory for creating related objects',
-    setup: 'interface Button { render(): string; }\ninterface Checkbox { check(): string; }\nabstract class UIFactory { abstract createButton(): Button; abstract createCheckbox(): Checkbox; }\nclass DarkButton implements Button { render(): string { return "Dark Button"; } }\nclass DarkCheckbox implements Checkbox { check(): string { return "Dark Checkbox"; } }\nclass DarkUIFactory extends UIFactory { createButton(): Button { return new DarkButton(); } createCheckbox(): Checkbox { return new DarkCheckbox(); } }',
-    setupCode: 'interface Button { render(): string; }\ninterface Checkbox { check(): string; }\nabstract class UIFactory { abstract createButton(): Button; abstract createCheckbox(): Checkbox; }\nclass DarkButton implements Button { render(): string { return "Dark Button"; } }\nclass DarkCheckbox implements Checkbox { check(): string { return "Dark Checkbox"; } }\nclass DarkUIFactory extends UIFactory { createButton(): Button { return new DarkButton(); } createCheckbox(): Checkbox { return new DarkCheckbox(); } }',
+    setup:
+      'interface Button { render(): string; }\ninterface Checkbox { check(): string; }\nabstract class UIFactory { abstract createButton(): Button; abstract createCheckbox(): Checkbox; }\nclass DarkButton implements Button { render(): string { return "Dark Button"; } }\nclass DarkCheckbox implements Checkbox { check(): string { return "Dark Checkbox"; } }\nclass DarkUIFactory extends UIFactory { createButton(): Button { return new DarkButton(); } createCheckbox(): Checkbox { return new DarkCheckbox(); } }',
+    setupCode:
+      'interface Button { render(): string; }\ninterface Checkbox { check(): string; }\nabstract class UIFactory { abstract createButton(): Button; abstract createCheckbox(): Checkbox; }\nclass DarkButton implements Button { render(): string { return "Dark Button"; } }\nclass DarkCheckbox implements Checkbox { check(): string { return "Dark Checkbox"; } }\nclass DarkUIFactory extends UIFactory { createButton(): Button { return new DarkButton(); } createCheckbox(): Checkbox { return new DarkCheckbox(); } }',
     expected: 'Dark Button',
     sample: 'new DarkUIFactory().createButton().render()',
-    hints: [
-      'Factory creates families of objects',
-      'Concrete factories produce concrete products',
-    ],
+    hints: ['Factory creates families of objects', 'Concrete factories produce concrete products'],
     tags: ['class', 'abstract-factory', 'design-pattern'],
   },
   {
@@ -11171,14 +10708,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Template Method Pattern',
     text: 'Implement template method with hook',
-    setup: 'abstract class DataProcessor { process(data: string): string { const cleaned = this.clean(data); const transformed = this.transform(cleaned); return this.format(transformed); } protected clean(data: string): string { return data.trim(); } protected abstract transform(data: string): string; protected format(data: string): string { return `[${data}]`; } }\nclass UpperProcessor extends DataProcessor { protected transform(data: string): string { return data.toUpperCase(); } }',
-    setupCode: 'abstract class DataProcessor { process(data: string): string { const cleaned = this.clean(data); const transformed = this.transform(cleaned); return this.format(transformed); } protected clean(data: string): string { return data.trim(); } protected abstract transform(data: string): string; protected format(data: string): string { return `[${data}]`; } }\nclass UpperProcessor extends DataProcessor { protected transform(data: string): string { return data.toUpperCase(); } }',
+    setup:
+      'abstract class DataProcessor { process(data: string): string { const cleaned = this.clean(data); const transformed = this.transform(cleaned); return this.format(transformed); } protected clean(data: string): string { return data.trim(); } protected abstract transform(data: string): string; protected format(data: string): string { return `[${data}]`; } }\nclass UpperProcessor extends DataProcessor { protected transform(data: string): string { return data.toUpperCase(); } }',
+    setupCode:
+      'abstract class DataProcessor { process(data: string): string { const cleaned = this.clean(data); const transformed = this.transform(cleaned); return this.format(transformed); } protected clean(data: string): string { return data.trim(); } protected abstract transform(data: string): string; protected format(data: string): string { return `[${data}]`; } }\nclass UpperProcessor extends DataProcessor { protected transform(data: string): string { return data.toUpperCase(); } }',
     expected: '[HELLO]',
     sample: 'new UpperProcessor().process("  hello  ")',
-    hints: [
-      'Template method defines algorithm skeleton',
-      'Subclasses implement abstract steps',
-    ],
+    hints: ['Template method defines algorithm skeleton', 'Subclasses implement abstract steps'],
     tags: ['class', 'template-method', 'design-pattern'],
   },
   {
@@ -11187,14 +10723,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Adapter Pattern',
     text: 'Implement adapter to convert interfaces',
-    setup: 'interface NewLogger { log(level: string, message: string): string; }\nclass OldLogger { writeLog(message: string): string { return `LOG: ${message}`; } }\nclass LoggerAdapter implements NewLogger { constructor(private oldLogger: OldLogger) {} log(level: string, message: string): string { return this.oldLogger.writeLog(`[${level}] ${message}`); } }',
-    setupCode: 'interface NewLogger { log(level: string, message: string): string; }\nclass OldLogger { writeLog(message: string): string { return `LOG: ${message}`; } }\nclass LoggerAdapter implements NewLogger { constructor(private oldLogger: OldLogger) {} log(level: string, message: string): string { return this.oldLogger.writeLog(`[${level}] ${message}`); } }',
+    setup:
+      'interface NewLogger { log(level: string, message: string): string; }\nclass OldLogger { writeLog(message: string): string { return `LOG: ${message}`; } }\nclass LoggerAdapter implements NewLogger { constructor(private oldLogger: OldLogger) {} log(level: string, message: string): string { return this.oldLogger.writeLog(`[${level}] ${message}`); } }',
+    setupCode:
+      'interface NewLogger { log(level: string, message: string): string; }\nclass OldLogger { writeLog(message: string): string { return `LOG: ${message}`; } }\nclass LoggerAdapter implements NewLogger { constructor(private oldLogger: OldLogger) {} log(level: string, message: string): string { return this.oldLogger.writeLog(`[${level}] ${message}`); } }',
     expected: 'LOG: [INFO] Hello',
     sample: 'new LoggerAdapter(new OldLogger()).log("INFO", "Hello")',
-    hints: [
-      'Adapter wraps incompatible interface',
-      'Translates calls to adaptee',
-    ],
+    hints: ['Adapter wraps incompatible interface', 'Translates calls to adaptee'],
     tags: ['class', 'adapter', 'design-pattern'],
   },
   {
@@ -11203,14 +10738,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Decorator Pattern (OOP)',
     text: 'Implement decorator pattern for extending behavior',
-    setup: 'interface Coffee { cost(): number; description(): string; }\nclass SimpleCoffee implements Coffee { cost(): number { return 5; } description(): string { return "Coffee"; } }\nclass MilkDecorator implements Coffee { constructor(private coffee: Coffee) {} cost(): number { return this.coffee.cost() + 2; } description(): string { return this.coffee.description() + " + Milk"; } }',
-    setupCode: 'interface Coffee { cost(): number; description(): string; }\nclass SimpleCoffee implements Coffee { cost(): number { return 5; } description(): string { return "Coffee"; } }\nclass MilkDecorator implements Coffee { constructor(private coffee: Coffee) {} cost(): number { return this.coffee.cost() + 2; } description(): string { return this.coffee.description() + " + Milk"; } }',
+    setup:
+      'interface Coffee { cost(): number; description(): string; }\nclass SimpleCoffee implements Coffee { cost(): number { return 5; } description(): string { return "Coffee"; } }\nclass MilkDecorator implements Coffee { constructor(private coffee: Coffee) {} cost(): number { return this.coffee.cost() + 2; } description(): string { return this.coffee.description() + " + Milk"; } }',
+    setupCode:
+      'interface Coffee { cost(): number; description(): string; }\nclass SimpleCoffee implements Coffee { cost(): number { return 5; } description(): string { return "Coffee"; } }\nclass MilkDecorator implements Coffee { constructor(private coffee: Coffee) {} cost(): number { return this.coffee.cost() + 2; } description(): string { return this.coffee.description() + " + Milk"; } }',
     expected: 7,
     sample: 'new MilkDecorator(new SimpleCoffee()).cost()',
-    hints: [
-      'Decorator wraps and extends object',
-      'Same interface as wrapped object',
-    ],
+    hints: ['Decorator wraps and extends object', 'Same interface as wrapped object'],
     tags: ['class', 'decorator-pattern', 'design-pattern'],
   },
   {
@@ -11219,14 +10753,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Composite Pattern',
     text: 'Implement composite pattern for tree structures',
-    setup: 'interface Component { getSize(): number; }\nclass File implements Component { constructor(private size: number) {} getSize(): number { return this.size; } }\nclass Folder implements Component { private children: Component[] = []; add(component: Component): void { this.children.push(component); } getSize(): number { return this.children.reduce((sum, c) => sum + c.getSize(), 0); } }',
-    setupCode: 'interface Component { getSize(): number; }\nclass File implements Component { constructor(private size: number) {} getSize(): number { return this.size; } }\nclass Folder implements Component { private children: Component[] = []; add(component: Component): void { this.children.push(component); } getSize(): number { return this.children.reduce((sum, c) => sum + c.getSize(), 0); } }',
+    setup:
+      'interface Component { getSize(): number; }\nclass File implements Component { constructor(private size: number) {} getSize(): number { return this.size; } }\nclass Folder implements Component { private children: Component[] = []; add(component: Component): void { this.children.push(component); } getSize(): number { return this.children.reduce((sum, c) => sum + c.getSize(), 0); } }',
+    setupCode:
+      'interface Component { getSize(): number; }\nclass File implements Component { constructor(private size: number) {} getSize(): number { return this.size; } }\nclass Folder implements Component { private children: Component[] = []; add(component: Component): void { this.children.push(component); } getSize(): number { return this.children.reduce((sum, c) => sum + c.getSize(), 0); } }',
     expected: 30,
-    sample: 'const folder = new Folder(); folder.add(new File(10)); folder.add(new File(20)); folder.getSize()',
-    hints: [
-      'Composite contains components',
-      'Uniform interface for leaf and composite',
-    ],
+    sample:
+      'const folder = new Folder(); folder.add(new File(10)); folder.add(new File(20)); folder.getSize()',
+    hints: ['Composite contains components', 'Uniform interface for leaf and composite'],
     tags: ['class', 'composite', 'design-pattern'],
   },
   {
@@ -11235,14 +10769,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Facade Pattern',
     text: 'Implement facade to simplify complex subsystem',
-    setup: 'class CPU { freeze(): string { return "CPU frozen"; } execute(): string { return "CPU executing"; } }\nclass Memory { load(): string { return "Memory loaded"; } }\nclass HardDrive { read(): string { return "HD reading"; } }\nclass ComputerFacade { private cpu = new CPU(); private memory = new Memory(); private hd = new HardDrive(); start(): string { return [this.cpu.freeze(), this.memory.load(), this.hd.read(), this.cpu.execute()].join(", "); } }',
-    setupCode: 'class CPU { freeze(): string { return "CPU frozen"; } execute(): string { return "CPU executing"; } }\nclass Memory { load(): string { return "Memory loaded"; } }\nclass HardDrive { read(): string { return "HD reading"; } }\nclass ComputerFacade { private cpu = new CPU(); private memory = new Memory(); private hd = new HardDrive(); start(): string { return [this.cpu.freeze(), this.memory.load(), this.hd.read(), this.cpu.execute()].join(", "); } }',
+    setup:
+      'class CPU { freeze(): string { return "CPU frozen"; } execute(): string { return "CPU executing"; } }\nclass Memory { load(): string { return "Memory loaded"; } }\nclass HardDrive { read(): string { return "HD reading"; } }\nclass ComputerFacade { private cpu = new CPU(); private memory = new Memory(); private hd = new HardDrive(); start(): string { return [this.cpu.freeze(), this.memory.load(), this.hd.read(), this.cpu.execute()].join(", "); } }',
+    setupCode:
+      'class CPU { freeze(): string { return "CPU frozen"; } execute(): string { return "CPU executing"; } }\nclass Memory { load(): string { return "Memory loaded"; } }\nclass HardDrive { read(): string { return "HD reading"; } }\nclass ComputerFacade { private cpu = new CPU(); private memory = new Memory(); private hd = new HardDrive(); start(): string { return [this.cpu.freeze(), this.memory.load(), this.hd.read(), this.cpu.execute()].join(", "); } }',
     expected: 'CPU frozen, Memory loaded, HD reading, CPU executing',
     sample: 'new ComputerFacade().start()',
-    hints: [
-      'Facade provides simple interface',
-      'Hides subsystem complexity',
-    ],
+    hints: ['Facade provides simple interface', 'Hides subsystem complexity'],
     tags: ['class', 'facade', 'design-pattern'],
   },
   {
@@ -11251,14 +10784,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Flyweight Pattern',
     text: 'Implement flyweight pattern for memory optimization',
-    setup: 'class TreeType { constructor(public name: string, public color: string) {} }\nclass TreeFactory { private static types: Map<string, TreeType> = new Map(); static getTreeType(name: string, color: string): TreeType { const key = `${name}_${color}`; if (!TreeFactory.types.has(key)) { TreeFactory.types.set(key, new TreeType(name, color)); } return TreeFactory.types.get(key)!; } static getTypeCount(): number { return TreeFactory.types.size; } }',
-    setupCode: 'class TreeType { constructor(public name: string, public color: string) {} }\nclass TreeFactory { private static types: Map<string, TreeType> = new Map(); static getTreeType(name: string, color: string): TreeType { const key = `${name}_${color}`; if (!TreeFactory.types.has(key)) { TreeFactory.types.set(key, new TreeType(name, color)); } return TreeFactory.types.get(key)!; } static getTypeCount(): number { return TreeFactory.types.size; } }',
+    setup:
+      'class TreeType { constructor(public name: string, public color: string) {} }\nclass TreeFactory { private static types: Map<string, TreeType> = new Map(); static getTreeType(name: string, color: string): TreeType { const key = `${name}_${color}`; if (!TreeFactory.types.has(key)) { TreeFactory.types.set(key, new TreeType(name, color)); } return TreeFactory.types.get(key)!; } static getTypeCount(): number { return TreeFactory.types.size; } }',
+    setupCode:
+      'class TreeType { constructor(public name: string, public color: string) {} }\nclass TreeFactory { private static types: Map<string, TreeType> = new Map(); static getTreeType(name: string, color: string): TreeType { const key = `${name}_${color}`; if (!TreeFactory.types.has(key)) { TreeFactory.types.set(key, new TreeType(name, color)); } return TreeFactory.types.get(key)!; } static getTypeCount(): number { return TreeFactory.types.size; } }',
     expected: 2,
-    sample: 'TreeFactory.getTreeType("Oak", "Green"); TreeFactory.getTreeType("Oak", "Green"); TreeFactory.getTreeType("Pine", "Green"); TreeFactory.getTypeCount()',
-    hints: [
-      'Flyweight shares common state',
-      'Factory ensures single instance per type',
-    ],
+    sample:
+      'TreeFactory.getTreeType("Oak", "Green"); TreeFactory.getTreeType("Oak", "Green"); TreeFactory.getTreeType("Pine", "Green"); TreeFactory.getTypeCount()',
+    hints: ['Flyweight shares common state', 'Factory ensures single instance per type'],
     tags: ['class', 'flyweight', 'design-pattern'],
   },
   {
@@ -11267,14 +10800,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Chain of Responsibility',
     text: 'Implement chain of responsibility pattern',
-    setup: 'abstract class Handler { protected next: Handler | null = null; setNext(handler: Handler): Handler { this.next = handler; return handler; } handle(request: number): string { if (this.next) { return this.next.handle(request); } return "End of chain"; } }\nclass LowHandler extends Handler { handle(request: number): string { if (request < 10) { return "Low handled"; } return super.handle(request); } }\nclass HighHandler extends Handler { handle(request: number): string { if (request >= 10) { return "High handled"; } return super.handle(request); } }',
-    setupCode: 'abstract class Handler { protected next: Handler | null = null; setNext(handler: Handler): Handler { this.next = handler; return handler; } handle(request: number): string { if (this.next) { return this.next.handle(request); } return "End of chain"; } }\nclass LowHandler extends Handler { handle(request: number): string { if (request < 10) { return "Low handled"; } return super.handle(request); } }\nclass HighHandler extends Handler { handle(request: number): string { if (request >= 10) { return "High handled"; } return super.handle(request); } }',
+    setup:
+      'abstract class Handler { protected next: Handler | null = null; setNext(handler: Handler): Handler { this.next = handler; return handler; } handle(request: number): string { if (this.next) { return this.next.handle(request); } return "End of chain"; } }\nclass LowHandler extends Handler { handle(request: number): string { if (request < 10) { return "Low handled"; } return super.handle(request); } }\nclass HighHandler extends Handler { handle(request: number): string { if (request >= 10) { return "High handled"; } return super.handle(request); } }',
+    setupCode:
+      'abstract class Handler { protected next: Handler | null = null; setNext(handler: Handler): Handler { this.next = handler; return handler; } handle(request: number): string { if (this.next) { return this.next.handle(request); } return "End of chain"; } }\nclass LowHandler extends Handler { handle(request: number): string { if (request < 10) { return "Low handled"; } return super.handle(request); } }\nclass HighHandler extends Handler { handle(request: number): string { if (request >= 10) { return "High handled"; } return super.handle(request); } }',
     expected: 'High handled',
     sample: 'const low = new LowHandler(); low.setNext(new HighHandler()); low.handle(15)',
-    hints: [
-      'Handlers form a chain',
-      'Each handler decides to process or pass',
-    ],
+    hints: ['Handlers form a chain', 'Each handler decides to process or pass'],
     tags: ['class', 'chain-of-responsibility', 'design-pattern'],
   },
   {
@@ -11283,14 +10815,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Memento Pattern',
     text: 'Implement memento pattern for state snapshot',
-    setup: 'class Memento { constructor(public state: string) {} }\nclass Originator { state: string = ""; createMemento(): Memento { return new Memento(this.state); } restore(memento: Memento): void { this.state = memento.state; } }\nclass Caretaker { private mementos: Memento[] = []; constructor(private originator: Originator) {} backup(): void { this.mementos.push(this.originator.createMemento()); } undo(): void { const memento = this.mementos.pop(); if (memento) { this.originator.restore(memento); } } }',
-    setupCode: 'class Memento { constructor(public state: string) {} }\nclass Originator { state: string = ""; createMemento(): Memento { return new Memento(this.state); } restore(memento: Memento): void { this.state = memento.state; } }\nclass Caretaker { private mementos: Memento[] = []; constructor(private originator: Originator) {} backup(): void { this.mementos.push(this.originator.createMemento()); } undo(): void { const memento = this.mementos.pop(); if (memento) { this.originator.restore(memento); } } }',
+    setup:
+      'class Memento { constructor(public state: string) {} }\nclass Originator { state: string = ""; createMemento(): Memento { return new Memento(this.state); } restore(memento: Memento): void { this.state = memento.state; } }\nclass Caretaker { private mementos: Memento[] = []; constructor(private originator: Originator) {} backup(): void { this.mementos.push(this.originator.createMemento()); } undo(): void { const memento = this.mementos.pop(); if (memento) { this.originator.restore(memento); } } }',
+    setupCode:
+      'class Memento { constructor(public state: string) {} }\nclass Originator { state: string = ""; createMemento(): Memento { return new Memento(this.state); } restore(memento: Memento): void { this.state = memento.state; } }\nclass Caretaker { private mementos: Memento[] = []; constructor(private originator: Originator) {} backup(): void { this.mementos.push(this.originator.createMemento()); } undo(): void { const memento = this.mementos.pop(); if (memento) { this.originator.restore(memento); } } }',
     expected: 'State1',
-    sample: 'const orig = new Originator(); const care = new Caretaker(orig); orig.state = "State1"; care.backup(); orig.state = "State2"; care.undo(); orig.state',
-    hints: [
-      'Memento captures state snapshot',
-      'Caretaker manages history',
-    ],
+    sample:
+      'const orig = new Originator(); const care = new Caretaker(orig); orig.state = "State1"; care.backup(); orig.state = "State2"; care.undo(); orig.state',
+    hints: ['Memento captures state snapshot', 'Caretaker manages history'],
     tags: ['class', 'memento', 'design-pattern'],
   },
   {
@@ -11299,14 +10831,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Visitor Pattern',
     text: 'Implement visitor pattern for operation dispatch',
-    setup: 'interface Visitor { visitCircle(circle: Circle): number; visitSquare(square: Square): number; }\ninterface Shape { accept(visitor: Visitor): number; }\nclass Circle implements Shape { constructor(public radius: number) {} accept(visitor: Visitor): number { return visitor.visitCircle(this); } }\nclass Square implements Shape { constructor(public side: number) {} accept(visitor: Visitor): number { return visitor.visitSquare(this); } }\nclass AreaVisitor implements Visitor { visitCircle(circle: Circle): number { return Math.PI * circle.radius ** 2; } visitSquare(square: Square): number { return square.side ** 2; } }',
-    setupCode: 'interface Visitor { visitCircle(circle: Circle): number; visitSquare(square: Square): number; }\ninterface Shape { accept(visitor: Visitor): number; }\nclass Circle implements Shape { constructor(public radius: number) {} accept(visitor: Visitor): number { return visitor.visitCircle(this); } }\nclass Square implements Shape { constructor(public side: number) {} accept(visitor: Visitor): number { return visitor.visitSquare(this); } }\nclass AreaVisitor implements Visitor { visitCircle(circle: Circle): number { return Math.PI * circle.radius ** 2; } visitSquare(square: Square): number { return square.side ** 2; } }',
+    setup:
+      'interface Visitor { visitCircle(circle: Circle): number; visitSquare(square: Square): number; }\ninterface Shape { accept(visitor: Visitor): number; }\nclass Circle implements Shape { constructor(public radius: number) {} accept(visitor: Visitor): number { return visitor.visitCircle(this); } }\nclass Square implements Shape { constructor(public side: number) {} accept(visitor: Visitor): number { return visitor.visitSquare(this); } }\nclass AreaVisitor implements Visitor { visitCircle(circle: Circle): number { return Math.PI * circle.radius ** 2; } visitSquare(square: Square): number { return square.side ** 2; } }',
+    setupCode:
+      'interface Visitor { visitCircle(circle: Circle): number; visitSquare(square: Square): number; }\ninterface Shape { accept(visitor: Visitor): number; }\nclass Circle implements Shape { constructor(public radius: number) {} accept(visitor: Visitor): number { return visitor.visitCircle(this); } }\nclass Square implements Shape { constructor(public side: number) {} accept(visitor: Visitor): number { return visitor.visitSquare(this); } }\nclass AreaVisitor implements Visitor { visitCircle(circle: Circle): number { return Math.PI * circle.radius ** 2; } visitSquare(square: Square): number { return square.side ** 2; } }',
     expected: 25,
     sample: 'new Square(5).accept(new AreaVisitor())',
-    hints: [
-      'Visitor separates algorithm from structure',
-      'Double dispatch via accept method',
-    ],
+    hints: ['Visitor separates algorithm from structure', 'Double dispatch via accept method'],
     tags: ['class', 'visitor', 'design-pattern'],
   },
   {
@@ -11315,14 +10846,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Mediator Pattern',
     text: 'Implement mediator pattern for component communication',
-    setup: 'interface Mediator { notify(sender: Component, event: string): void; }\nclass Component { constructor(protected mediator: Mediator) {} }\nclass Button extends Component { click(): void { this.mediator.notify(this, "click"); } }\nclass TextBox extends Component { value: string = ""; setValue(val: string): void { this.value = val; } }\nclass DialogMediator implements Mediator { constructor(public button: Button, public textBox: TextBox) {} notify(sender: Component, event: string): void { if (sender === this.button && event === "click") { this.textBox.setValue("Clicked!"); } } }',
-    setupCode: 'interface Mediator { notify(sender: Component, event: string): void; }\nclass Component { constructor(protected mediator: Mediator) {} }\nclass Button extends Component { click(): void { this.mediator.notify(this, "click"); } }\nclass TextBox extends Component { value: string = ""; setValue(val: string): void { this.value = val; } }\nclass DialogMediator implements Mediator { constructor(public button: Button, public textBox: TextBox) {} notify(sender: Component, event: string): void { if (sender === this.button && event === "click") { this.textBox.setValue("Clicked!"); } } }',
+    setup:
+      'interface Mediator { notify(sender: Component, event: string): void; }\nclass Component { constructor(protected mediator: Mediator) {} }\nclass Button extends Component { click(): void { this.mediator.notify(this, "click"); } }\nclass TextBox extends Component { value: string = ""; setValue(val: string): void { this.value = val; } }\nclass DialogMediator implements Mediator { constructor(public button: Button, public textBox: TextBox) {} notify(sender: Component, event: string): void { if (sender === this.button && event === "click") { this.textBox.setValue("Clicked!"); } } }',
+    setupCode:
+      'interface Mediator { notify(sender: Component, event: string): void; }\nclass Component { constructor(protected mediator: Mediator) {} }\nclass Button extends Component { click(): void { this.mediator.notify(this, "click"); } }\nclass TextBox extends Component { value: string = ""; setValue(val: string): void { this.value = val; } }\nclass DialogMediator implements Mediator { constructor(public button: Button, public textBox: TextBox) {} notify(sender: Component, event: string): void { if (sender === this.button && event === "click") { this.textBox.setValue("Clicked!"); } } }',
     expected: 'Clicked!',
-    sample: 'const mediator = {} as DialogMediator; const btn = new Button(mediator); const txt = new TextBox(mediator); const dialog = new DialogMediator(btn, txt); (btn as any).mediator = dialog; btn.click(); txt.value',
-    hints: [
-      'Mediator coordinates components',
-      'Components communicate through mediator',
-    ],
+    sample:
+      'const mediator = {} as DialogMediator; const btn = new Button(mediator); const txt = new TextBox(mediator); const dialog = new DialogMediator(btn, txt); (btn as any).mediator = dialog; btn.click(); txt.value',
+    hints: ['Mediator coordinates components', 'Components communicate through mediator'],
     tags: ['class', 'mediator', 'design-pattern'],
   },
   {
@@ -11331,14 +10862,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Iterator Pattern',
     text: 'Implement custom iterator for collection',
-    setup: 'class NumberCollection { private items: number[] = []; add(item: number): void { this.items.push(item); } [Symbol.iterator](): Iterator<number> { let index = 0; const items = this.items; return { next(): IteratorResult<number> { if (index < items.length) { return { value: items[index++], done: false }; } return { value: undefined, done: true }; } }; } }',
-    setupCode: 'class NumberCollection { private items: number[] = []; add(item: number): void { this.items.push(item); } [Symbol.iterator](): Iterator<number> { let index = 0; const items = this.items; return { next(): IteratorResult<number> { if (index < items.length) { return { value: items[index++], done: false }; } return { value: undefined, done: true }; } }; } }',
+    setup:
+      'class NumberCollection { private items: number[] = []; add(item: number): void { this.items.push(item); } [Symbol.iterator](): Iterator<number> { let index = 0; const items = this.items; return { next(): IteratorResult<number> { if (index < items.length) { return { value: items[index++], done: false }; } return { value: undefined, done: true }; } }; } }',
+    setupCode:
+      'class NumberCollection { private items: number[] = []; add(item: number): void { this.items.push(item); } [Symbol.iterator](): Iterator<number> { let index = 0; const items = this.items; return { next(): IteratorResult<number> { if (index < items.length) { return { value: items[index++], done: false }; } return { value: undefined, done: true }; } }; } }',
     expected: 6,
-    sample: 'const col = new NumberCollection(); col.add(1); col.add(2); col.add(3); let sum = 0; for (const n of col) { sum += n; } sum',
-    hints: [
-      'Symbol.iterator enables for...of',
-      'next() returns value and done status',
-    ],
+    sample:
+      'const col = new NumberCollection(); col.add(1); col.add(2); col.add(3); let sum = 0; for (const n of col) { sum += n; } sum',
+    hints: ['Symbol.iterator enables for...of', 'next() returns value and done status'],
     tags: ['class', 'iterator', 'symbol'],
   },
   {
@@ -11347,14 +10878,14 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Prototype Pattern',
     text: 'Implement prototype pattern for cloning',
-    setup: 'interface Prototype { clone(): Prototype; }\nclass ConcretePrototype implements Prototype { constructor(public primitive: number, public component: { value: string }) {} clone(): ConcretePrototype { return new ConcretePrototype(this.primitive, { ...this.component }); } }',
-    setupCode: 'interface Prototype { clone(): Prototype; }\nclass ConcretePrototype implements Prototype { constructor(public primitive: number, public component: { value: string }) {} clone(): ConcretePrototype { return new ConcretePrototype(this.primitive, { ...this.component }); } }',
+    setup:
+      'interface Prototype { clone(): Prototype; }\nclass ConcretePrototype implements Prototype { constructor(public primitive: number, public component: { value: string }) {} clone(): ConcretePrototype { return new ConcretePrototype(this.primitive, { ...this.component }); } }',
+    setupCode:
+      'interface Prototype { clone(): Prototype; }\nclass ConcretePrototype implements Prototype { constructor(public primitive: number, public component: { value: string }) {} clone(): ConcretePrototype { return new ConcretePrototype(this.primitive, { ...this.component }); } }',
     expected: 'test',
-    sample: 'const original = new ConcretePrototype(42, { value: "test" }); const cloned = original.clone(); cloned.component.value',
-    hints: [
-      'Clone creates a copy of the object',
-      'Deep copy nested objects',
-    ],
+    sample:
+      'const original = new ConcretePrototype(42, { value: "test" }); const cloned = original.clone(); cloned.component.value',
+    hints: ['Clone creates a copy of the object', 'Deep copy nested objects'],
     tags: ['class', 'prototype', 'design-pattern'],
   },
   {
@@ -11363,14 +10894,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Bridge Pattern',
     text: 'Implement bridge pattern to separate abstraction from implementation',
-    setup: 'interface Renderer { renderCircle(radius: number): string; }\nclass VectorRenderer implements Renderer { renderCircle(radius: number): string { return `Vector circle r=${radius}`; } }\nclass RasterRenderer implements Renderer { renderCircle(radius: number): string { return `Raster circle r=${radius}`; } }\nclass Circle { constructor(private renderer: Renderer, public radius: number) {} draw(): string { return this.renderer.renderCircle(this.radius); } }',
-    setupCode: 'interface Renderer { renderCircle(radius: number): string; }\nclass VectorRenderer implements Renderer { renderCircle(radius: number): string { return `Vector circle r=${radius}`; } }\nclass RasterRenderer implements Renderer { renderCircle(radius: number): string { return `Raster circle r=${radius}`; } }\nclass Circle { constructor(private renderer: Renderer, public radius: number) {} draw(): string { return this.renderer.renderCircle(this.radius); } }',
+    setup:
+      'interface Renderer { renderCircle(radius: number): string; }\nclass VectorRenderer implements Renderer { renderCircle(radius: number): string { return `Vector circle r=${radius}`; } }\nclass RasterRenderer implements Renderer { renderCircle(radius: number): string { return `Raster circle r=${radius}`; } }\nclass Circle { constructor(private renderer: Renderer, public radius: number) {} draw(): string { return this.renderer.renderCircle(this.radius); } }',
+    setupCode:
+      'interface Renderer { renderCircle(radius: number): string; }\nclass VectorRenderer implements Renderer { renderCircle(radius: number): string { return `Vector circle r=${radius}`; } }\nclass RasterRenderer implements Renderer { renderCircle(radius: number): string { return `Raster circle r=${radius}`; } }\nclass Circle { constructor(private renderer: Renderer, public radius: number) {} draw(): string { return this.renderer.renderCircle(this.radius); } }',
     expected: 'Vector circle r=5',
     sample: 'new Circle(new VectorRenderer(), 5).draw()',
-    hints: [
-      'Bridge separates interface from implementation',
-      'Can vary both independently',
-    ],
+    hints: ['Bridge separates interface from implementation', 'Can vary both independently'],
     tags: ['class', 'bridge', 'design-pattern'],
   },
   {
@@ -11379,14 +10909,13 @@ export const typescriptProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Null Object Pattern',
     text: 'Implement null object pattern for safe defaults',
-    setup: 'interface Logger { log(message: string): string; }\nclass ConsoleLogger implements Logger { log(message: string): string { return `Logged: ${message}`; } }\nclass NullLogger implements Logger { log(message: string): string { return ""; } }\nclass Application { constructor(private logger: Logger = new NullLogger()) {} doWork(): string { const result = this.logger.log("Working"); return result || "Silent"; } }',
-    setupCode: 'interface Logger { log(message: string): string; }\nclass ConsoleLogger implements Logger { log(message: string): string { return `Logged: ${message}`; } }\nclass NullLogger implements Logger { log(message: string): string { return ""; } }\nclass Application { constructor(private logger: Logger = new NullLogger()) {} doWork(): string { const result = this.logger.log("Working"); return result || "Silent"; } }',
+    setup:
+      'interface Logger { log(message: string): string; }\nclass ConsoleLogger implements Logger { log(message: string): string { return `Logged: ${message}`; } }\nclass NullLogger implements Logger { log(message: string): string { return ""; } }\nclass Application { constructor(private logger: Logger = new NullLogger()) {} doWork(): string { const result = this.logger.log("Working"); return result || "Silent"; } }',
+    setupCode:
+      'interface Logger { log(message: string): string; }\nclass ConsoleLogger implements Logger { log(message: string): string { return `Logged: ${message}`; } }\nclass NullLogger implements Logger { log(message: string): string { return ""; } }\nclass Application { constructor(private logger: Logger = new NullLogger()) {} doWork(): string { const result = this.logger.log("Working"); return result || "Silent"; } }',
     expected: 'Silent',
     sample: 'new Application().doWork()',
-    hints: [
-      'Null object provides default behavior',
-      'Avoids null checks throughout code',
-    ],
+    hints: ['Null object provides default behavior', 'Avoids null checks throughout code'],
     tags: ['class', 'null-object', 'design-pattern'],
   },
 ];

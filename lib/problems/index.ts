@@ -6,53 +6,51 @@ import type { LanguageId, Problem } from '../types';
 
 // Import language-specific problems (original languages)
 import { cProblems } from './c';
+// Import new language problems
+import { clojureProblems } from './clojure';
 import { cppProblems } from './cpp';
 import { csharpProblems } from './csharp';
+import { dartProblems } from './dart';
+import { elixirProblems } from './elixir';
 import { goProblems } from './go';
+import { haskellProblems } from './haskell';
 import { javaProblems } from './java';
 import { javascriptProblems } from './javascript';
 import { kotlinProblems } from './kotlin';
-import { phpProblems } from './php';
-import { pythonProblems } from './python';
-import { rubyProblems } from './ruby';
-import { typescriptProblems } from './typescript';
-
-// Import new language problems
-import { clojureProblems } from './clojure';
-import { dartProblems } from './dart';
-import { elixirProblems } from './elixir';
-import { haskellProblems } from './haskell';
 import { luaProblems } from './lua';
 import { perlProblems } from './perl';
+import { phpProblems } from './php';
+import { pythonProblems } from './python';
 import { rProblems } from './r';
+import { rubyProblems } from './ruby';
 import { rustProblems } from './rust';
 import { scalaProblems } from './scala';
 import { swiftProblems } from './swift';
+import { typescriptProblems } from './typescript';
 
 // Export individual problem sets (original languages)
 export { cProblems } from './c';
+// Export new language problem sets
+export { clojureProblems } from './clojure';
 export { cppProblems } from './cpp';
 export { csharpProblems } from './csharp';
+export { dartProblems } from './dart';
+export { elixirProblems } from './elixir';
 export { goProblems } from './go';
+export { haskellProblems } from './haskell';
 export { javaProblems } from './java';
 export { javascriptProblems } from './javascript';
 export { kotlinProblems } from './kotlin';
-export { phpProblems } from './php';
-export { pythonProblems } from './python';
-export { rubyProblems } from './ruby';
-export { typescriptProblems } from './typescript';
-
-// Export new language problem sets
-export { clojureProblems } from './clojure';
-export { dartProblems } from './dart';
-export { elixirProblems } from './elixir';
-export { haskellProblems } from './haskell';
 export { luaProblems } from './lua';
 export { perlProblems } from './perl';
+export { phpProblems } from './php';
+export { pythonProblems } from './python';
 export { rProblems } from './r';
+export { rubyProblems } from './ruby';
 export { rustProblems } from './rust';
 export { scalaProblems } from './scala';
 export { swiftProblems } from './swift';
+export { typescriptProblems } from './typescript';
 
 // Combined problems map by language
 export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {

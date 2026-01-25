@@ -295,15 +295,7 @@ export const languages: Record<LanguageId, Language> = {
     secondaryColor: '#0298C3',
     fileExtension: '.pl',
     monacoLanguage: 'perl',
-    categories: [
-      'Arrays',
-      'Strings',
-      'Hashes',
-      'Regex',
-      'Files',
-      'References',
-      'Built-ins',
-    ],
+    categories: ['Arrays', 'Strings', 'Hashes', 'Regex', 'Files', 'References', 'Built-ins'],
   },
   lua: {
     id: 'lua',
@@ -313,15 +305,7 @@ export const languages: Record<LanguageId, Language> = {
     secondaryColor: '#00007F',
     fileExtension: '.lua',
     monacoLanguage: 'lua',
-    categories: [
-      'Tables',
-      'Strings',
-      'Math',
-      'Iterators',
-      'Patterns',
-      'Coroutines',
-      'Metatables',
-    ],
+    categories: ['Tables', 'Strings', 'Math', 'Iterators', 'Patterns', 'Coroutines', 'Metatables'],
   },
   haskell: {
     id: 'haskell',
