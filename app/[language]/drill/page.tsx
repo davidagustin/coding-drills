@@ -878,7 +878,7 @@ function DrillPhaseComponent({
             language={currentProblem.sourceLanguage}
             height={120}
             minHeight={120}
-            lineNumbers={false}
+            lineNumbers={true}
             autoFocus
             onSubmitShortcut={handleSubmit}
             className="border-zinc-700"
