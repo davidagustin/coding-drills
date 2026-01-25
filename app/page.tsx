@@ -292,7 +292,7 @@ export default function Home() {
           {/* Main Title */}
           <div className="text-center space-y-6 animate-fade-in-up">
             <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
-              <span className="gradient-text">Code Drills</span>
+              <span className="gradient-text">Coding Drills</span>
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto animate-fade-in-up delay-100">
@@ -398,7 +398,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold gradient-text">Code Drills</span>
+              <span className="text-xl font-bold gradient-text">Coding Drills</span>
             </div>
 
             <p className="text-gray-500 text-sm text-center">
@@ -413,7 +413,7 @@ export default function Home() {
           </div>
 
           <div className="mt-6 pt-6 border-t border-gray-800/30 text-center text-gray-600 text-xs">
-            © {new Date().getFullYear()} Code Drills. All rights reserved.
+            © {new Date().getFullYear()} Coding Drills. All rights reserved.
           </div>
         </div>
       </footer>
