@@ -21,7 +21,14 @@ interface DrillConfig {
   questionCount: number;
   difficulty: Difficulty | 'all';
   selectedQuestionIds?: string[];
+  includeSiblingLanguage?: boolean;
 }
+
+// Define sibling language pairs
+const SIBLING_LANGUAGES: Partial<Record<LanguageId, LanguageId>> = {
+  javascript: 'typescript',
+  typescript: 'javascript',
+};
 
 interface DrillState {
   currentIndex: number;
@@ -182,14 +189,35 @@ function formatTime(ms: number): string {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-function getCategories(language: LanguageId): string[] {
+function getCategories(language: LanguageId, includeSibling = false): string[] {
   const problems = PROBLEMS_BY_LANGUAGE[language] || [];
   const categories = new Set(problems.map((p) => p.category));
-  return Array.from(categories);
+
+  // Include sibling language categories if requested
+  if (includeSibling) {
+    const siblingLang = SIBLING_LANGUAGES[language];
+    if (siblingLang) {
+      const siblingProblems = PROBLEMS_BY_LANGUAGE[siblingLang] || [];
+      for (const p of siblingProblems) {
+        categories.add(p.category);
+      }
+    }
+  }
+
+  return Array.from(categories).sort();
 }
 
 function selectProblems(language: LanguageId, config: DrillConfig): Problem[] {
   let problems = PROBLEMS_BY_LANGUAGE[language] || [];
+
+  // Include sibling language problems if requested
+  if (config.includeSiblingLanguage) {
+    const siblingLang = SIBLING_LANGUAGES[language];
+    if (siblingLang) {
+      const siblingProblems = PROBLEMS_BY_LANGUAGE[siblingLang] || [];
+      problems = [...problems, ...siblingProblems];
+    }
+  }
 
   // If specific questions are selected, use only those
   if (config.selectedQuestionIds && config.selectedQuestionIds.length > 0) {
@@ -302,7 +330,11 @@ interface SetupPhaseProps {
 }
 
 function SetupPhase({ language, onStart }: SetupPhaseProps) {
-  const categories = getCategories(language);
+  const siblingLanguage = SIBLING_LANGUAGES[language];
+  const [includeSibling, setIncludeSibling] = useState(false);
+
+  // Get categories based on whether sibling is included
+  const categories = getCategories(language, includeSibling);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [questionCount, setQuestionCount] = useState(10);
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
@@ -323,12 +355,19 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
       difficulty,
       selectedQuestionIds:
         selectedQuestionIds.size > 0 ? Array.from(selectedQuestionIds) : undefined,
+      includeSiblingLanguage: includeSibling,
     });
   };
 
   // Get all problems for browsing (without the random selection limit)
   const allFilteredProblems = (() => {
     let problems = PROBLEMS_BY_LANGUAGE[language] || [];
+
+    // Include sibling language problems if toggled
+    if (includeSibling && siblingLanguage) {
+      const siblingProblems = PROBLEMS_BY_LANGUAGE[siblingLanguage] || [];
+      problems = [...problems, ...siblingProblems];
+    }
 
     // Filter by categories
     if (selectedCategories.length > 0) {
@@ -397,6 +436,34 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
       </div>
 
       <div className="bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-800 space-y-6">
+        {/* Sibling Language Toggle (only for JS/TS) */}
+        {siblingLanguage && (
+          <div className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg border border-zinc-700">
+            <div>
+              <span className="block text-sm font-medium text-zinc-300">
+                Include {siblingLanguage.charAt(0).toUpperCase() + siblingLanguage.slice(1)}{' '}
+                Questions
+              </span>
+              <span className="text-xs text-zinc-500">
+                Practice both languages together since they share similar syntax
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIncludeSibling(!includeSibling)}
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
+                includeSibling ? 'bg-blue-500' : 'bg-zinc-600'
+              }`}
+            >
+              <div
+                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
+                  includeSibling ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        )}
+
         {/* Categories */}
         <div>
           <span className="block text-sm font-medium text-zinc-300 mb-3">
