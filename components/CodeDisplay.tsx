@@ -18,6 +18,17 @@ const LANGUAGE_TO_MONACO: Record<LanguageId, string> = {
   c: 'c',
   php: 'php',
   kotlin: 'kotlin',
+  // New languages
+  rust: 'rust',
+  swift: 'swift',
+  scala: 'scala',
+  r: 'r',
+  perl: 'perl',
+  lua: 'lua',
+  haskell: 'haskell',
+  elixir: 'elixir',
+  dart: 'dart',
+  clojure: 'clojure',
 };
 
 interface CodeDisplayProps {

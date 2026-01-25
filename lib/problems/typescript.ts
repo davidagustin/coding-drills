@@ -1009,6 +1009,1546 @@ export const typescriptProblems: Problem[] = [
     validPatterns: [/\[\s*\.\.\.tuple\s*\]/],
     tags: ['const-assertion', 'readonly'],
   },
+
+  // ============================================================
+  // Type Guards - typeof, instanceof, in, custom
+  // ============================================================
+  {
+    id: 'ts-typeof-guard-string',
+    category: 'Type Guards',
+    difficulty: 'easy',
+    title: 'typeof Guard for Strings',
+    text: 'Use typeof to check if the value is a string and return its uppercase, otherwise return "not a string"',
+    setup: 'const value: string | number = "hello";',
+    setupCode: 'const value: string | number = "hello";',
+    expected: 'HELLO',
+    sample: 'typeof value === "string" ? value.toUpperCase() : "not a string"',
+    hints: [
+      'typeof returns "string", "number", "boolean", etc.',
+      'TypeScript narrows the type after the check',
+    ],
+    validPatterns: [/typeof\s+value\s*===?\s*["']string["']/, /\.toUpperCase\s*\(\s*\)/],
+    tags: ['type-guard', 'typeof'],
+  },
+  {
+    id: 'ts-typeof-guard-function',
+    category: 'Type Guards',
+    difficulty: 'easy',
+    title: 'typeof Guard for Functions',
+    text: 'Check if the value is a function using typeof and call it if so, otherwise return the value directly',
+    setup: 'const value: string | (() => string) = () => "called";',
+    setupCode: 'const value: string | (() => string) = () => "called";',
+    expected: 'called',
+    sample: 'typeof value === "function" ? value() : value',
+    hints: [
+      'typeof function returns "function"',
+      'After the check, TypeScript knows value is callable',
+    ],
+    validPatterns: [/typeof\s+value\s*===?\s*["']function["']/, /value\s*\(\s*\)/],
+    tags: ['type-guard', 'typeof', 'function'],
+  },
+  {
+    id: 'ts-instanceof-guard-date',
+    category: 'Type Guards',
+    difficulty: 'easy',
+    title: 'instanceof Guard for Date',
+    text: 'Check if the value is a Date instance and return its year, otherwise return -1',
+    setup: 'const value: Date | string = new Date("2024-01-15");',
+    setupCode: 'const value: Date | string = new Date("2024-01-15");',
+    expected: 2024,
+    sample: 'value instanceof Date ? value.getFullYear() : -1',
+    hints: [
+      'instanceof checks the prototype chain',
+      'Works with classes and built-in constructors',
+    ],
+    validPatterns: [/value\s+instanceof\s+Date/, /\.getFullYear\s*\(\s*\)/],
+    tags: ['type-guard', 'instanceof'],
+  },
+  {
+    id: 'ts-instanceof-guard-array',
+    category: 'Type Guards',
+    difficulty: 'easy',
+    title: 'instanceof Guard for Array',
+    text: 'Check if the value is an array and return its length, otherwise return 0',
+    setup: 'const value: number[] | number = [1, 2, 3, 4, 5];',
+    setupCode: 'const value: number[] | number = [1, 2, 3, 4, 5];',
+    expected: 5,
+    sample: 'Array.isArray(value) ? value.length : 0',
+    hints: ['Array.isArray is preferred over instanceof Array', 'Works across different realms/frames'],
+    validPatterns: [/Array\.isArray\s*\(\s*value\s*\)|value\s+instanceof\s+Array/, /\.length/],
+    tags: ['type-guard', 'instanceof', 'array'],
+  },
+  {
+    id: 'ts-in-guard-property',
+    category: 'Type Guards',
+    difficulty: 'medium',
+    title: 'in Operator Type Guard',
+    text: 'Use the "in" operator to check if the object has an "error" property and return its message, otherwise return "success"',
+    setup:
+      'type Success = { data: string };\ntype Failure = { error: string };\nconst result: Success | Failure = { error: "Something went wrong" };',
+    setupCode:
+      'type Success = { data: string };\ntype Failure = { error: string };\nconst result: Success | Failure = { error: "Something went wrong" };',
+    expected: 'Something went wrong',
+    sample: '"error" in result ? result.error : "success"',
+    hints: [
+      '"in" operator checks for property existence',
+      'TypeScript narrows based on discriminating properties',
+    ],
+    validPatterns: [/["']error["']\s+in\s+result/, /result\.error/],
+    tags: ['type-guard', 'in-operator'],
+  },
+  {
+    id: 'ts-custom-type-guard',
+    category: 'Type Guards',
+    difficulty: 'medium',
+    title: 'Custom Type Guard Function',
+    text: 'Use the custom type guard to filter only Bird objects from the array',
+    setup:
+      'interface Bird { fly: () => void; species: string; }\ninterface Fish { swim: () => void; species: string; }\nfunction isBird(animal: Bird | Fish): animal is Bird { return "fly" in animal; }\nconst animals: (Bird | Fish)[] = [{fly: () => {}, species: "Eagle"}, {swim: () => {}, species: "Salmon"}, {fly: () => {}, species: "Sparrow"}];',
+    setupCode:
+      'interface Bird { fly: () => void; species: string; }\ninterface Fish { swim: () => void; species: string; }\nfunction isBird(animal: Bird | Fish): animal is Bird { return "fly" in animal; }\nconst animals: (Bird | Fish)[] = [{fly: () => {}, species: "Eagle"}, {swim: () => {}, species: "Salmon"}, {fly: () => {}, species: "Sparrow"}];',
+    expected: ['Eagle', 'Sparrow'],
+    sample: 'animals.filter(isBird).map(b => b.species)',
+    hints: ['Custom type guards use "x is Type" syntax', 'filter with type guard narrows array type'],
+    validPatterns: [/\.filter\s*\(\s*isBird\s*\)/, /\.map\s*\(/],
+    tags: ['type-guard', 'custom', 'filter'],
+  },
+  {
+    id: 'ts-type-guard-assertion',
+    category: 'Type Guards',
+    difficulty: 'hard',
+    title: 'Assertion Type Guard',
+    text: 'Use the assertion function to validate the user exists, then access the name',
+    setup:
+      'interface User { name: string; }\nfunction assertUser(value: unknown): asserts value is User { if (typeof value !== "object" || value === null || !("name" in value)) throw new Error("Not a user"); }\nconst data: unknown = { name: "Alice" };',
+    setupCode:
+      'interface User { name: string; }\nfunction assertUser(value: unknown): asserts value is User { if (typeof value !== "object" || value === null || !("name" in value)) throw new Error("Not a user"); }\nconst data: unknown = { name: "Alice" };',
+    expected: 'Alice',
+    sample: '(assertUser(data), (data as User).name)',
+    hints: [
+      'Assertion functions use "asserts x is Type"',
+      'After assertion, the type is narrowed for the rest of the scope',
+    ],
+    validPatterns: [/assertUser\s*\(\s*data\s*\)/, /\.name/],
+    tags: ['type-guard', 'assertion', 'asserts'],
+  },
+
+  // ============================================================
+  // Utility Types - Advanced Usage
+  // ============================================================
+  {
+    id: 'ts-utility-returntype',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'ReturnType Utility',
+    text: 'Extract the return type of the function and create a value of that type',
+    setup: 'function createUser() { return { id: 1, name: "Alice", active: true }; }',
+    setupCode: 'function createUser() { return { id: 1, name: "Alice", active: true }; }',
+    expected: { id: 2, name: 'Bob', active: false },
+    sample: '({ id: 2, name: "Bob", active: false } as ReturnType<typeof createUser>)',
+    hints: [
+      'ReturnType<T> extracts the return type of a function type',
+      'Use typeof to get the function type first',
+    ],
+    validPatterns: [/ReturnType\s*<\s*typeof\s+createUser\s*>/],
+    tags: ['utility-types', 'returntype'],
+  },
+  {
+    id: 'ts-utility-parameters',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'Parameters Utility',
+    text: 'Extract the parameter types and create a tuple matching them',
+    setup: 'function greet(name: string, age: number): string { return `${name} is ${age}`; }',
+    setupCode: 'function greet(name: string, age: number): string { return `${name} is ${age}`; }',
+    expected: ['Alice', 30],
+    sample: '(["Alice", 30] as Parameters<typeof greet>)',
+    hints: [
+      'Parameters<T> returns a tuple of parameter types',
+      'Useful for forwarding arguments',
+    ],
+    validPatterns: [/Parameters\s*<\s*typeof\s+greet\s*>/],
+    tags: ['utility-types', 'parameters'],
+  },
+  {
+    id: 'ts-utility-awaited',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'Awaited Utility',
+    text: 'Get the resolved type of the promise',
+    setup: 'const promise: Promise<{ data: string }> = Promise.resolve({ data: "hello" });',
+    setupCode: 'const promise: Promise<{ data: string }> = Promise.resolve({ data: "hello" });',
+    expected: { data: 'result' },
+    sample: '({ data: "result" } as Awaited<typeof promise>)',
+    hints: [
+      'Awaited<T> unwraps Promise types recursively',
+      'Works with nested promises too',
+    ],
+    validPatterns: [/Awaited\s*<\s*typeof\s+promise\s*>/],
+    tags: ['utility-types', 'awaited', 'promise'],
+  },
+  {
+    id: 'ts-utility-record-enum',
+    category: 'Utility Types',
+    difficulty: 'easy',
+    title: 'Record with String Literal Union',
+    text: 'Create a Record that maps each HTTP method to a handler function result',
+    setup: 'type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";',
+    setupCode: 'type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";',
+    expected: { GET: 'get', POST: 'post', PUT: 'put', DELETE: 'delete' },
+    sample: '({ GET: "get", POST: "post", PUT: "put", DELETE: "delete" } as Record<HttpMethod, string>)',
+    hints: [
+      'Record enforces all keys from the union',
+      'Missing keys will cause a type error',
+    ],
+    validPatterns: [/Record\s*<\s*HttpMethod\s*,\s*string\s*>/],
+    tags: ['utility-types', 'record', 'union'],
+  },
+  {
+    id: 'ts-utility-omit-multiple',
+    category: 'Utility Types',
+    difficulty: 'easy',
+    title: 'Omit Multiple Properties',
+    text: 'Create a public user type by omitting password and secretKey',
+    setup:
+      'interface FullUser { id: number; name: string; password: string; secretKey: string; }\nconst user: FullUser = { id: 1, name: "Alice", password: "secret", secretKey: "key123" };',
+    setupCode:
+      'interface FullUser { id: number; name: string; password: string; secretKey: string; }\nconst user: FullUser = { id: 1, name: "Alice", password: "secret", secretKey: "key123" };',
+    expected: { id: 1, name: 'Alice' },
+    sample: '(({ id, name }) => ({ id, name }))(user) as Omit<FullUser, "password" | "secretKey">',
+    hints: [
+      'Omit accepts a union of keys to remove',
+      'Use | to combine multiple keys',
+    ],
+    validPatterns: [/Omit\s*<\s*FullUser\s*,\s*["']password["']\s*\|\s*["']secretKey["']\s*>/],
+    tags: ['utility-types', 'omit'],
+  },
+
+  // ============================================================
+  // Generic Methods - Array, Map, Custom
+  // ============================================================
+  {
+    id: 'ts-generic-array-method',
+    category: 'Generic Methods',
+    difficulty: 'easy',
+    title: 'Generic Array Wrapper',
+    text: 'Call the generic wrap function to put the value in an array',
+    setup: 'function wrap<T>(value: T): T[] { return [value]; }',
+    setupCode: 'function wrap<T>(value: T): T[] { return [value]; }',
+    expected: [42],
+    sample: 'wrap(42)',
+    hints: ['Type parameter is inferred from argument', 'Result is T[] where T is inferred'],
+    validPatterns: [/wrap\s*\(\s*42\s*\)/],
+    tags: ['generics', 'array'],
+  },
+  {
+    id: 'ts-generic-map-entries',
+    category: 'Generic Methods',
+    difficulty: 'medium',
+    title: 'Generic Map Builder',
+    text: 'Use the generic function to create a Map from the object',
+    setup:
+      'function toMap<K extends string, V>(obj: Record<K, V>): Map<K, V> { return new Map(Object.entries(obj) as [K, V][]); }\nconst scores = { alice: 100, bob: 85 };',
+    setupCode:
+      'function toMap<K extends string, V>(obj: Record<K, V>): Map<K, V> { return new Map(Object.entries(obj) as [K, V][]); }\nconst scores = { alice: 100, bob: 85 };',
+    expected: { alice: 100, bob: 85 },
+    sample: 'Object.fromEntries(toMap(scores))',
+    hints: [
+      'Generic constraints can use extends',
+      'K extends string ensures keys are strings',
+    ],
+    validPatterns: [/toMap\s*\(\s*scores\s*\)/],
+    tags: ['generics', 'map', 'record'],
+  },
+  {
+    id: 'ts-generic-tuple-swap',
+    category: 'Generic Methods',
+    difficulty: 'medium',
+    title: 'Generic Tuple Swap',
+    text: 'Use the swap function to reverse the tuple elements',
+    setup: 'function swap<A, B>(tuple: [A, B]): [B, A] { return [tuple[1], tuple[0]]; }\nconst pair: [string, number] = ["hello", 42];',
+    setupCode: 'function swap<A, B>(tuple: [A, B]): [B, A] { return [tuple[1], tuple[0]]; }\nconst pair: [string, number] = ["hello", 42];',
+    expected: [42, 'hello'],
+    sample: 'swap(pair)',
+    hints: ['Multiple type parameters can be used', 'Tuple types preserve position'],
+    validPatterns: [/swap\s*\(\s*pair\s*\)/],
+    tags: ['generics', 'tuple'],
+  },
+  {
+    id: 'ts-generic-filter-type',
+    category: 'Generic Methods',
+    difficulty: 'hard',
+    title: 'Generic Type Filter',
+    text: 'Use the generic filterByType function to get only numbers from the array',
+    setup:
+      'function filterByType<T, U extends T>(arr: T[], guard: (x: T) => x is U): U[] { return arr.filter(guard); }\nconst mixed: (string | number)[] = [1, "a", 2, "b", 3];\nconst isNumber = (x: string | number): x is number => typeof x === "number";',
+    setupCode:
+      'function filterByType<T, U extends T>(arr: T[], guard: (x: T) => x is U): U[] { return arr.filter(guard); }\nconst mixed: (string | number)[] = [1, "a", 2, "b", 3];\nconst isNumber = (x: string | number): x is number => typeof x === "number";',
+    expected: [1, 2, 3],
+    sample: 'filterByType(mixed, isNumber)',
+    hints: [
+      'U extends T ensures U is a subtype of T',
+      'Type guard function narrows the array type',
+    ],
+    validPatterns: [/filterByType\s*\(\s*mixed\s*,\s*isNumber\s*\)/],
+    tags: ['generics', 'filter', 'type-guard'],
+  },
+  {
+    id: 'ts-generic-default-param',
+    category: 'Generic Methods',
+    difficulty: 'easy',
+    title: 'Generic with Default Type',
+    text: 'Call the createContainer function without explicit type (uses default)',
+    setup:
+      'function createContainer<T = string>(value: T): { value: T } { return { value }; }',
+    setupCode:
+      'function createContainer<T = string>(value: T): { value: T } { return { value }; }',
+    expected: { value: 'hello' },
+    sample: 'createContainer("hello")',
+    hints: ['Default type parameters use = syntax', 'Inferred type takes precedence over default'],
+    validPatterns: [/createContainer\s*\(\s*["']hello["']\s*\)/],
+    tags: ['generics', 'default'],
+  },
+
+  // ============================================================
+  // Mapped Types and keyof
+  // ============================================================
+  {
+    id: 'ts-keyof-basic',
+    category: 'Mapped Types',
+    difficulty: 'easy',
+    title: 'keyof Type Operator',
+    text: 'Use keyof to get a valid key for the user object',
+    setup: 'interface User { name: string; age: number; email: string; }\nconst user: User = { name: "Alice", age: 30, email: "alice@example.com" };',
+    setupCode: 'interface User { name: string; age: number; email: string; }\nconst user: User = { name: "Alice", age: 30, email: "alice@example.com" };',
+    expected: 'Alice',
+    sample: 'user["name" as keyof User]',
+    hints: ['keyof creates a union of property names', 'Result is "name" | "age" | "email"'],
+    validPatterns: [/keyof\s+User/, /\[\s*["']name["']/],
+    tags: ['keyof', 'mapped-types'],
+  },
+  {
+    id: 'ts-mapped-readonly',
+    category: 'Mapped Types',
+    difficulty: 'medium',
+    title: 'Custom Readonly Mapped Type',
+    text: 'Apply the custom MyReadonly type to make the config immutable',
+    setup:
+      'type MyReadonly<T> = { readonly [K in keyof T]: T[K] };\ninterface Config { host: string; port: number; }\nconst config: Config = { host: "localhost", port: 3000 };',
+    setupCode:
+      'type MyReadonly<T> = { readonly [K in keyof T]: T[K] };\ninterface Config { host: string; port: number; }\nconst config: Config = { host: "localhost", port: 3000 };',
+    expected: { host: 'localhost', port: 3000 },
+    sample: '(config as MyReadonly<Config>)',
+    hints: [
+      'Mapped types iterate over keys with [K in keyof T]',
+      'readonly modifier makes properties immutable',
+    ],
+    validPatterns: [/MyReadonly\s*<\s*Config\s*>/],
+    tags: ['mapped-types', 'readonly'],
+  },
+  {
+    id: 'ts-mapped-optional',
+    category: 'Mapped Types',
+    difficulty: 'medium',
+    title: 'Custom Partial Mapped Type',
+    text: 'Use the custom MyPartial type to create an optional update object',
+    setup:
+      'type MyPartial<T> = { [K in keyof T]?: T[K] };\ninterface User { name: string; age: number; }\nconst user: User = { name: "Alice", age: 30 };',
+    setupCode:
+      'type MyPartial<T> = { [K in keyof T]?: T[K] };\ninterface User { name: string; age: number; }\nconst user: User = { name: "Alice", age: 30 };',
+    expected: { name: 'Bob', age: 30 },
+    sample: '({ ...user, ...({ name: "Bob" } as MyPartial<User>) })',
+    hints: ['? modifier makes properties optional', 'Mapped types can add or remove modifiers'],
+    validPatterns: [/MyPartial\s*<\s*User\s*>/],
+    tags: ['mapped-types', 'optional'],
+  },
+  {
+    id: 'ts-mapped-value-transform',
+    category: 'Mapped Types',
+    difficulty: 'hard',
+    title: 'Mapped Type with Value Transformation',
+    text: 'Use the Getters type to create an object with getter functions for each property',
+    setup:
+      'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };\ninterface Person { name: string; age: number; }',
+    setupCode:
+      'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };\ninterface Person { name: string; age: number; }',
+    expected: { getName: 'Alice', getAge: 30 },
+    sample: '({ getName: () => "Alice", getAge: () => 30 } as Getters<Person>).getName() + (({ getName: () => "Alice", getAge: () => 30 } as Getters<Person>).getAge())',
+    hints: [
+      'Key remapping uses "as" clause in mapped types',
+      'Template literal types transform key names',
+    ],
+    validPatterns: [/Getters\s*<\s*Person\s*>/, /getName|getAge/],
+    tags: ['mapped-types', 'template-literal'],
+  },
+  {
+    id: 'ts-keyof-index-access',
+    category: 'Mapped Types',
+    difficulty: 'easy',
+    title: 'Index Access Types',
+    text: 'Use index access type to get the type of the name property',
+    setup:
+      'interface User { name: string; age: number; active: boolean; }\nconst userName: User["name"] = "Alice";',
+    setupCode:
+      'interface User { name: string; age: number; active: boolean; }\nconst userName: User["name"] = "Alice";',
+    expected: 'Alice',
+    sample: 'userName',
+    hints: ['T["key"] accesses the type of a property', 'Can use union of keys: T["a" | "b"]'],
+    validPatterns: [/userName/],
+    tags: ['keyof', 'index-access'],
+  },
+
+  // ============================================================
+  // Conditional Types
+  // ============================================================
+  {
+    id: 'ts-conditional-basic',
+    category: 'Conditional Types',
+    difficulty: 'medium',
+    title: 'Basic Conditional Type',
+    text: 'Use the IsString type to check the type and return the appropriate value',
+    setup:
+      'type IsString<T> = T extends string ? "yes" : "no";\ntype Result = IsString<"hello">;',
+    setupCode:
+      'type IsString<T> = T extends string ? "yes" : "no";\ntype Result = IsString<"hello">;',
+    expected: 'yes',
+    sample: '("yes" as Result)',
+    hints: [
+      'Conditional types use T extends U ? X : Y syntax',
+      'Similar to ternary operator but for types',
+    ],
+    validPatterns: [/as\s+Result/, /["']yes["']/],
+    tags: ['conditional-types'],
+  },
+  {
+    id: 'ts-conditional-infer',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Conditional Type with infer',
+    text: 'Use the ArrayElement type to extract the element type from the array type',
+    setup:
+      'type ArrayElement<T> = T extends (infer U)[] ? U : never;\ntype NumberArray = number[];\ntype Element = ArrayElement<NumberArray>;',
+    setupCode:
+      'type ArrayElement<T> = T extends (infer U)[] ? U : never;\ntype NumberArray = number[];\ntype Element = ArrayElement<NumberArray>;',
+    expected: 42,
+    sample: '(42 as Element)',
+    hints: [
+      'infer keyword introduces a type variable in extends clause',
+      'Extracts types from complex structures',
+    ],
+    validPatterns: [/as\s+Element/, /42/],
+    tags: ['conditional-types', 'infer'],
+  },
+  {
+    id: 'ts-conditional-exclude-null',
+    category: 'Conditional Types',
+    difficulty: 'medium',
+    title: 'Conditional Type for NonNullable',
+    text: 'Use the custom NonNull type to remove null from the union',
+    setup:
+      'type NonNull<T> = T extends null | undefined ? never : T;\ntype MaybeString = string | null | undefined;\ntype JustString = NonNull<MaybeString>;',
+    setupCode:
+      'type NonNull<T> = T extends null | undefined ? never : T;\ntype MaybeString = string | null | undefined;\ntype JustString = NonNull<MaybeString>;',
+    expected: 'hello',
+    sample: '("hello" as JustString)',
+    hints: [
+      'Conditional types distribute over unions',
+      'never in a union disappears',
+    ],
+    validPatterns: [/as\s+JustString/, /["']hello["']/],
+    tags: ['conditional-types', 'union'],
+  },
+  {
+    id: 'ts-conditional-function-return',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Extract Function Return Type',
+    text: 'Use the custom GetReturn type to extract the return type',
+    setup:
+      'type GetReturn<T> = T extends (...args: unknown[]) => infer R ? R : never;\ntype Fn = (x: number) => string;\ntype FnReturn = GetReturn<Fn>;',
+    setupCode:
+      'type GetReturn<T> = T extends (...args: unknown[]) => infer R ? R : never;\ntype Fn = (x: number) => string;\ntype FnReturn = GetReturn<Fn>;',
+    expected: 'result',
+    sample: '("result" as FnReturn)',
+    hints: [
+      'infer R captures the return type position',
+      'This is how ReturnType utility is implemented',
+    ],
+    validPatterns: [/as\s+FnReturn/, /["']result["']/],
+    tags: ['conditional-types', 'infer', 'function'],
+  },
+  {
+    id: 'ts-conditional-distributive',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Distributive Conditional Types',
+    text: 'Use the ToArray type that distributes over unions',
+    setup:
+      'type ToArray<T> = T extends unknown ? T[] : never;\ntype Union = string | number;\ntype Arrays = ToArray<Union>;',
+    setupCode:
+      'type ToArray<T> = T extends unknown ? T[] : never;\ntype Union = string | number;\ntype Arrays = ToArray<Union>;',
+    expected: [1, 2, 3],
+    sample: '([1, 2, 3] as Arrays)',
+    hints: [
+      'Conditional types distribute when T is a naked type parameter',
+      'Result is string[] | number[], not (string | number)[]',
+    ],
+    validPatterns: [/as\s+Arrays/, /\[\s*1\s*,\s*2\s*,\s*3\s*\]/],
+    tags: ['conditional-types', 'distributive'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Template Literal Types
+  // ============================================================
+  {
+    id: 'ts-type-template-event-handler',
+    category: 'Template Literal Types',
+    difficulty: 'easy',
+    title: 'Event Handler Template Literal',
+    text: 'Create a typed event handler name using template literal types',
+    setup:
+      'type EventName = "click" | "focus" | "blur";\ntype Handler<E extends string> = `on${Capitalize<E>}`;\nconst handler: Handler<"click"> = "onClick";',
+    setupCode:
+      'type EventName = "click" | "focus" | "blur";\ntype Handler<E extends string> = `on${Capitalize<E>}`;\nconst handler: Handler<"click"> = "onClick";',
+    expected: 'onClick',
+    sample: 'handler',
+    hints: [
+      'Template literal types create string literal types from patterns',
+      'Capitalize<T> uppercases the first character',
+    ],
+    validPatterns: [/handler/],
+    tags: ['template-literal', 'capitalize', 'intrinsic-types'],
+  },
+  {
+    id: 'ts-type-template-css-property',
+    category: 'Template Literal Types',
+    difficulty: 'medium',
+    title: 'CSS Property Template Literal',
+    text: 'Create CSS variable names using template literal types',
+    setup:
+      'type CSSVar<T extends string> = `--${T}`;\ntype Theme = "primary" | "secondary";\ntype ThemeVar = CSSVar<Theme>;\nconst cssVar: ThemeVar = "--primary";',
+    setupCode:
+      'type CSSVar<T extends string> = `--${T}`;\ntype Theme = "primary" | "secondary";\ntype ThemeVar = CSSVar<Theme>;\nconst cssVar: ThemeVar = "--primary";',
+    expected: '--primary',
+    sample: 'cssVar',
+    hints: [
+      'Template literals distribute over unions',
+      'ThemeVar becomes "--primary" | "--secondary"',
+    ],
+    validPatterns: [/cssVar/],
+    tags: ['template-literal', 'css', 'union'],
+  },
+  {
+    id: 'ts-type-template-route-params',
+    category: 'Template Literal Types',
+    difficulty: 'hard',
+    title: 'Extract Route Parameters',
+    text: 'Use template literal inference to extract route parameters',
+    setup:
+      'type ExtractParam<T extends string> = T extends `${string}:${infer P}` ? P : never;\ntype Route = "/users/:id";\ntype Param = ExtractParam<Route>;\nconst param: Param = "id";',
+    setupCode:
+      'type ExtractParam<T extends string> = T extends `${string}:${infer P}` ? P : never;\ntype Route = "/users/:id";\ntype Param = ExtractParam<Route>;\nconst param: Param = "id";',
+    expected: 'id',
+    sample: 'param',
+    hints: [
+      'infer can capture parts of template literal types',
+      'Useful for type-safe routing',
+    ],
+    validPatterns: [/param/],
+    tags: ['template-literal', 'infer', 'routing'],
+  },
+  {
+    id: 'ts-type-template-getter-setter',
+    category: 'Template Literal Types',
+    difficulty: 'medium',
+    title: 'Getter and Setter Names',
+    text: 'Generate getter and setter method names from property name',
+    setup:
+      'type PropMethods<T extends string> = `get${Capitalize<T>}` | `set${Capitalize<T>}`;\ntype NameMethods = PropMethods<"name">;\nconst method: NameMethods = "getName";',
+    setupCode:
+      'type PropMethods<T extends string> = `get${Capitalize<T>}` | `set${Capitalize<T>}`;\ntype NameMethods = PropMethods<"name">;\nconst method: NameMethods = "getName";',
+    expected: 'getName',
+    sample: 'method',
+    hints: [
+      'Union in template literal creates multiple patterns',
+      'Result is "getName" | "setName"',
+    ],
+    validPatterns: [/method/],
+    tags: ['template-literal', 'getter-setter', 'union'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Recursive Types
+  // ============================================================
+  {
+    id: 'ts-type-recursive-deep-partial',
+    category: 'Recursive Types',
+    difficulty: 'medium',
+    title: 'DeepPartial Recursive Type',
+    text: 'Use DeepPartial to make all nested properties optional',
+    setup:
+      'type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;\ninterface Config { server: { host: string; port: number }; }\nconst partial: DeepPartial<Config> = { server: { host: "localhost" } };',
+    setupCode:
+      'type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;\ninterface Config { server: { host: string; port: number }; }\nconst partial: DeepPartial<Config> = { server: { host: "localhost" } };',
+    expected: { server: { host: 'localhost' } },
+    sample: 'partial',
+    hints: [
+      'DeepPartial recursively applies Partial to nested objects',
+      'Base case is when T is not an object',
+    ],
+    validPatterns: [/partial/],
+    tags: ['recursive-types', 'deep-partial', 'mapped-types'],
+  },
+  {
+    id: 'ts-type-recursive-path',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Recursive Path Type',
+    text: 'Use the Paths type to get all possible dot-notation paths',
+    setup:
+      'type Paths<T> = T extends object ? { [K in keyof T]: K extends string ? K | `${K}.${Paths<T[K]> & string}` : never }[keyof T] : never;\ninterface User { name: string; address: { city: string } }\ntype UserPaths = Paths<User>;\nconst path: UserPaths = "address.city";',
+    setupCode:
+      'type Paths<T> = T extends object ? { [K in keyof T]: K extends string ? K | `${K}.${Paths<T[K]> & string}` : never }[keyof T] : never;\ninterface User { name: string; address: { city: string } }\ntype UserPaths = Paths<User>;\nconst path: UserPaths = "address.city";',
+    expected: 'address.city',
+    sample: 'path',
+    hints: [
+      'Recursive types can generate nested paths',
+      'Template literals join keys with dots',
+    ],
+    validPatterns: [/path/],
+    tags: ['recursive-types', 'template-literal', 'paths'],
+  },
+  {
+    id: 'ts-type-recursive-linked-list',
+    category: 'Recursive Types',
+    difficulty: 'easy',
+    title: 'Linked List Type',
+    text: 'Create a type-safe linked list using recursive types',
+    setup:
+      'type LinkedList<T> = { value: T; next: LinkedList<T> | null };\nconst list: LinkedList<number> = { value: 1, next: { value: 2, next: { value: 3, next: null } } };',
+    setupCode:
+      'type LinkedList<T> = { value: T; next: LinkedList<T> | null };\nconst list: LinkedList<number> = { value: 1, next: { value: 2, next: { value: 3, next: null } } };',
+    expected: 1,
+    sample: 'list.value',
+    hints: [
+      'Recursive types can reference themselves',
+      'null terminates the recursion at runtime',
+    ],
+    validPatterns: [/list\.value/],
+    tags: ['recursive-types', 'data-structures', 'linked-list'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Infer Keyword
+  // ============================================================
+  {
+    id: 'ts-type-infer-constructor-params',
+    category: 'Infer Keyword',
+    difficulty: 'medium',
+    title: 'Infer Constructor Parameters',
+    text: 'Extract constructor parameter types using infer',
+    setup:
+      'type ConstructorParams<T> = T extends new (...args: infer P) => unknown ? P : never;\nclass User { constructor(public name: string, public age: number) {} }\ntype UserParams = ConstructorParams<typeof User>;\nconst params: UserParams = ["Alice", 30];',
+    setupCode:
+      'type ConstructorParams<T> = T extends new (...args: infer P) => unknown ? P : never;\nclass User { constructor(public name: string, public age: number) {} }\ntype UserParams = ConstructorParams<typeof User>;\nconst params: UserParams = ["Alice", 30];',
+    expected: ['Alice', 30],
+    sample: 'params',
+    hints: [
+      'new (...args: infer P) matches constructor signatures',
+      'Similar to built-in ConstructorParameters<T>',
+    ],
+    validPatterns: [/params/],
+    tags: ['infer', 'constructor', 'parameters'],
+  },
+  {
+    id: 'ts-type-infer-instance-type',
+    category: 'Infer Keyword',
+    difficulty: 'easy',
+    title: 'Infer Instance Type',
+    text: 'Extract the instance type from a constructor using infer',
+    setup:
+      'type Instance<T> = T extends new (...args: unknown[]) => infer I ? I : never;\nclass User { name = "Alice"; }\ntype UserInstance = Instance<typeof User>;\nconst user: UserInstance = new User();',
+    setupCode:
+      'type Instance<T> = T extends new (...args: unknown[]) => infer I ? I : never;\nclass User { name = "Alice"; }\ntype UserInstance = Instance<typeof User>;\nconst user: UserInstance = new User();',
+    expected: 'Alice',
+    sample: 'user.name',
+    hints: [
+      'infer I captures what the constructor returns',
+      'Similar to built-in InstanceType<T>',
+    ],
+    validPatterns: [/user\.name/],
+    tags: ['infer', 'instance', 'class'],
+  },
+  {
+    id: 'ts-type-infer-this-param',
+    category: 'Infer Keyword',
+    difficulty: 'medium',
+    title: 'Infer This Parameter',
+    text: 'Extract the this parameter type from a function',
+    setup:
+      'type ThisParam<T> = T extends (this: infer U, ...args: unknown[]) => unknown ? U : never;\nfunction greet(this: { name: string }) { return this.name; }\ntype Context = ThisParam<typeof greet>;\nconst ctx: Context = { name: "World" };',
+    setupCode:
+      'type ThisParam<T> = T extends (this: infer U, ...args: unknown[]) => unknown ? U : never;\nfunction greet(this: { name: string }) { return this.name; }\ntype Context = ThisParam<typeof greet>;\nconst ctx: Context = { name: "World" };',
+    expected: 'World',
+    sample: 'ctx.name',
+    hints: [
+      'Functions can have a typed this parameter',
+      'infer extracts the this type',
+    ],
+    validPatterns: [/ctx\.name/],
+    tags: ['infer', 'this', 'function'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Discriminated Unions
+  // ============================================================
+  {
+    id: 'ts-type-discriminated-shape',
+    category: 'Discriminated Unions',
+    difficulty: 'easy',
+    title: 'Shape Discriminated Union',
+    text: 'Calculate area based on shape type using discriminated union',
+    setup:
+      'type Shape = { kind: "circle"; radius: number } | { kind: "square"; side: number };\nfunction area(shape: Shape): number { return shape.kind === "circle" ? Math.PI * shape.radius ** 2 : shape.side ** 2; }\nconst square: Shape = { kind: "square", side: 4 };',
+    setupCode:
+      'type Shape = { kind: "circle"; radius: number } | { kind: "square"; side: number };\nfunction area(shape: Shape): number { return shape.kind === "circle" ? Math.PI * shape.radius ** 2 : shape.side ** 2; }\nconst square: Shape = { kind: "square", side: 4 };',
+    expected: 16,
+    sample: 'area(square)',
+    hints: [
+      'Discriminated unions have a common literal property',
+      'TypeScript narrows based on the discriminant check',
+    ],
+    validPatterns: [/area\s*\(\s*square\s*\)/],
+    tags: ['discriminated-union', 'type-narrowing', 'shape'],
+  },
+  {
+    id: 'ts-type-discriminated-fetch',
+    category: 'Discriminated Unions',
+    difficulty: 'medium',
+    title: 'Fetch Result Discriminated Union',
+    text: 'Handle loading states using discriminated union',
+    setup:
+      'type FetchState<T> = { status: "loading" } | { status: "success"; data: T } | { status: "error"; message: string };\nfunction getData(state: FetchState<string>): string { switch(state.status) { case "loading": return "Loading..."; case "success": return state.data; case "error": return state.message; } }\nconst state: FetchState<string> = { status: "success", data: "Hello" };',
+    setupCode:
+      'type FetchState<T> = { status: "loading" } | { status: "success"; data: T } | { status: "error"; message: string };\nfunction getData(state: FetchState<string>): string { switch(state.status) { case "loading": return "Loading..."; case "success": return state.data; case "error": return state.message; } }\nconst state: FetchState<string> = { status: "success", data: "Hello" };',
+    expected: 'Hello',
+    sample: 'getData(state)',
+    hints: [
+      'Generic discriminated unions can carry type-safe payloads',
+      'Switch provides exhaustive checking',
+    ],
+    validPatterns: [/getData\s*\(\s*state\s*\)/],
+    tags: ['discriminated-union', 'generic', 'fetch'],
+  },
+  {
+    id: 'ts-type-discriminated-exhaustive',
+    category: 'Discriminated Unions',
+    difficulty: 'medium',
+    title: 'Exhaustive Check with never',
+    text: 'Ensure all union cases are handled using never',
+    setup:
+      'type Animal = { type: "dog"; bark: () => string } | { type: "cat"; meow: () => string };\nfunction assertNever(x: never): never { throw new Error("Unexpected"); }\nfunction sound(animal: Animal): string { switch(animal.type) { case "dog": return animal.bark(); case "cat": return animal.meow(); default: return assertNever(animal); } }\nconst dog: Animal = { type: "dog", bark: () => "Woof" };',
+    setupCode:
+      'type Animal = { type: "dog"; bark: () => string } | { type: "cat"; meow: () => string };\nfunction assertNever(x: never): never { throw new Error("Unexpected"); }\nfunction sound(animal: Animal): string { switch(animal.type) { case "dog": return animal.bark(); case "cat": return animal.meow(); default: return assertNever(animal); } }\nconst dog: Animal = { type: "dog", bark: () => "Woof" };',
+    expected: 'Woof',
+    sample: 'sound(dog)',
+    hints: [
+      'never type ensures all cases are handled',
+      'Adding new union members causes compile error in default',
+    ],
+    validPatterns: [/sound\s*\(\s*dog\s*\)/],
+    tags: ['discriminated-union', 'never', 'exhaustive'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Branded Types
+  // ============================================================
+  {
+    id: 'ts-type-branded-id',
+    category: 'Branded Types',
+    difficulty: 'easy',
+    title: 'Branded ID Types',
+    text: 'Create type-safe IDs using branded types',
+    setup:
+      'type UserId = string & { readonly __brand: unique symbol };\ntype PostId = string & { readonly __brand: unique symbol };\nfunction createUserId(id: string): UserId { return id as UserId; }\nconst userId = createUserId("user-123");',
+    setupCode:
+      'type UserId = string & { readonly __brand: unique symbol };\ntype PostId = string & { readonly __brand: unique symbol };\nfunction createUserId(id: string): UserId { return id as UserId; }\nconst userId = createUserId("user-123");',
+    expected: 'user-123',
+    sample: 'userId',
+    hints: [
+      'Branded types prevent mixing semantically different values',
+      'unique symbol ensures brands are incompatible',
+    ],
+    validPatterns: [/userId/],
+    tags: ['branded-types', 'id', 'type-safety'],
+  },
+  {
+    id: 'ts-type-branded-positive',
+    category: 'Branded Types',
+    difficulty: 'medium',
+    title: 'Branded Positive Number',
+    text: 'Create a validated positive number type',
+    setup:
+      'type Positive = number & { readonly __positive: true };\nfunction positive(n: number): Positive | null { return n > 0 ? n as Positive : null; }\nconst pos = positive(42);',
+    setupCode:
+      'type Positive = number & { readonly __positive: true };\nfunction positive(n: number): Positive | null { return n > 0 ? n as Positive : null; }\nconst pos = positive(42);',
+    expected: 42,
+    sample: 'pos',
+    hints: [
+      'Branded types can encode runtime validations in the type system',
+      'Factory function performs validation',
+    ],
+    validPatterns: [/pos/],
+    tags: ['branded-types', 'validation', 'number'],
+  },
+  {
+    id: 'ts-type-branded-json-string',
+    category: 'Branded Types',
+    difficulty: 'medium',
+    title: 'Branded JSON String',
+    text: 'Create a type for validated JSON strings',
+    setup:
+      'type JSONString<T> = string & { readonly __json: T };\nfunction toJSON<T>(value: T): JSONString<T> { return JSON.stringify(value) as JSONString<T>; }\nconst json = toJSON({ name: "Alice" });',
+    setupCode:
+      'type JSONString<T> = string & { readonly __json: T };\nfunction toJSON<T>(value: T): JSONString<T> { return JSON.stringify(value) as JSONString<T>; }\nconst json = toJSON({ name: "Alice" });',
+    expected: '{"name":"Alice"}',
+    sample: 'json',
+    hints: [
+      'Branded types can carry type information',
+      'The phantom type T tracks the serialized type',
+    ],
+    validPatterns: [/json/],
+    tags: ['branded-types', 'json', 'phantom-types'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Type Narrowing
+  // ============================================================
+  {
+    id: 'ts-type-narrowing-null-check',
+    category: 'Type Narrowing',
+    difficulty: 'easy',
+    title: 'Null Check Narrowing',
+    text: 'Narrow nullable type using null check',
+    setup:
+      'function getLength(value: string | null): number { if (value === null) return 0; return value.length; }\nconst result = getLength("hello");',
+    setupCode:
+      'function getLength(value: string | null): number { if (value === null) return 0; return value.length; }\nconst result = getLength("hello");',
+    expected: 5,
+    sample: 'result',
+    hints: [
+      'Null checks narrow the type to non-null',
+      'After the check, value is just string',
+    ],
+    validPatterns: [/result/],
+    tags: ['type-narrowing', 'null', 'control-flow'],
+  },
+  {
+    id: 'ts-type-narrowing-truthiness',
+    category: 'Type Narrowing',
+    difficulty: 'easy',
+    title: 'Truthiness Narrowing',
+    text: 'Use truthiness to narrow optional values',
+    setup:
+      'function greet(name?: string): string { if (name) { return `Hello, ${name}!`; } return "Hello, stranger!"; }\nconst greeting = greet("Alice");',
+    setupCode:
+      'function greet(name?: string): string { if (name) { return `Hello, ${name}!`; } return "Hello, stranger!"; }\nconst greeting = greet("Alice");',
+    expected: 'Hello, Alice!',
+    sample: 'greeting',
+    hints: [
+      'Truthiness check narrows out null, undefined, empty string, 0',
+      'Be careful with values that can be falsy',
+    ],
+    validPatterns: [/greeting/],
+    tags: ['type-narrowing', 'truthiness', 'optional'],
+  },
+  {
+    id: 'ts-type-narrowing-equality',
+    category: 'Type Narrowing',
+    difficulty: 'medium',
+    title: 'Equality Narrowing',
+    text: 'Narrow union by comparing to specific value',
+    setup:
+      'type Status = "pending" | "active" | "completed";\nfunction isActive(status: Status): boolean { return status === "active"; }\nconst active = isActive("active");',
+    setupCode:
+      'type Status = "pending" | "active" | "completed";\nfunction isActive(status: Status): boolean { return status === "active"; }\nconst active = isActive("active");',
+    expected: true,
+    sample: 'active',
+    hints: [
+      'Equality narrows to the specific literal type',
+      'Works with string, number, and boolean literals',
+    ],
+    validPatterns: [/active/],
+    tags: ['type-narrowing', 'equality', 'literal'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Readonly and DeepReadonly
+  // ============================================================
+  {
+    id: 'ts-type-readonly-mapped',
+    category: 'Readonly Patterns',
+    difficulty: 'medium',
+    title: 'Readonly Mapped Type',
+    text: 'Create a custom readonly mapped type',
+    setup:
+      'type Immutable<T> = { readonly [K in keyof T]: T[K] };\ninterface User { name: string; age: number; }\nconst user: Immutable<User> = { name: "Alice", age: 30 };',
+    setupCode:
+      'type Immutable<T> = { readonly [K in keyof T]: T[K] };\ninterface User { name: string; age: number; }\nconst user: Immutable<User> = { name: "Alice", age: 30 };',
+    expected: 'Alice',
+    sample: 'user.name',
+    hints: [
+      'Mapped types can add readonly modifier',
+      'Equivalent to built-in Readonly<T>',
+    ],
+    validPatterns: [/user\.name/],
+    tags: ['readonly', 'mapped-types', 'immutable'],
+  },
+  {
+    id: 'ts-type-deep-readonly',
+    category: 'Readonly Patterns',
+    difficulty: 'hard',
+    title: 'DeepReadonly Implementation',
+    text: 'Use DeepReadonly for nested immutable structures',
+    setup:
+      'type DeepReadonly<T> = T extends (infer U)[] ? ReadonlyArray<DeepReadonly<U>> : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;\ninterface State { user: { name: string; settings: { theme: string } } }\nconst state: DeepReadonly<State> = { user: { name: "Alice", settings: { theme: "dark" } } };',
+    setupCode:
+      'type DeepReadonly<T> = T extends (infer U)[] ? ReadonlyArray<DeepReadonly<U>> : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;\ninterface State { user: { name: string; settings: { theme: string } } }\nconst state: DeepReadonly<State> = { user: { name: "Alice", settings: { theme: "dark" } } };',
+    expected: 'dark',
+    sample: 'state.user.settings.theme',
+    hints: [
+      'DeepReadonly handles arrays and objects differently',
+      'Recursively applies readonly to all levels',
+    ],
+    validPatterns: [/state\.user\.settings\.theme/],
+    tags: ['readonly', 'deep-readonly', 'recursive-types'],
+  },
+
+  // ============================================================
+  // Advanced Type Manipulation - Type Assertions vs Guards
+  // ============================================================
+  {
+    id: 'ts-type-assertion-unknown',
+    category: 'Type Assertions',
+    difficulty: 'easy',
+    title: 'Assertion from Unknown',
+    text: 'Assert unknown value to a specific type',
+    setup:
+      'const data: unknown = { name: "Alice", age: 30 };\ninterface User { name: string; age: number; }',
+    setupCode:
+      'const data: unknown = { name: "Alice", age: 30 };\ninterface User { name: string; age: number; }',
+    expected: 'Alice',
+    sample: '(data as User).name',
+    hints: [
+      'Type assertions override the compiler',
+      'Use when you know more than TypeScript',
+    ],
+    validPatterns: [/\(\s*data\s+as\s+User\s*\)\.name/],
+    tags: ['type-assertion', 'unknown', 'as'],
+  },
+  {
+    id: 'ts-type-guard-vs-assertion',
+    category: 'Type Assertions',
+    difficulty: 'medium',
+    title: 'Type Guard for Runtime Safety',
+    text: 'Use type guard instead of assertion for runtime safety',
+    setup:
+      'interface User { name: string; }\nfunction isUser(obj: unknown): obj is User { return typeof obj === "object" && obj !== null && "name" in obj && typeof (obj as User).name === "string"; }\nconst data: unknown = { name: "Alice" };',
+    setupCode:
+      'interface User { name: string; }\nfunction isUser(obj: unknown): obj is User { return typeof obj === "object" && obj !== null && "name" in obj && typeof (obj as User).name === "string"; }\nconst data: unknown = { name: "Alice" };',
+    expected: true,
+    sample: 'isUser(data)',
+    hints: [
+      'Type guards provide runtime validation',
+      'Safer than assertions for external data',
+    ],
+    validPatterns: [/isUser\s*\(\s*data\s*\)/],
+    tags: ['type-guard', 'type-assertion', 'runtime'],
+  },
+  {
+    id: 'ts-type-template-kebab-case',
+    category: 'Template Literal Types',
+    difficulty: 'hard',
+    title: 'Kebab-Case Conversion Type',
+    text: 'Use template literal types to convert camelCase to kebab-case',
+    setup:
+      'type KebabCase<S extends string> = S extends `${infer First}${infer Rest}` ? First extends Lowercase<First> ? `${First}${KebabCase<Rest>}` : `-${Lowercase<First>}${KebabCase<Rest>}` : S;\ntype Result = KebabCase<"backgroundColor">;\nconst kebab: Result = "-background-color";',
+    setupCode:
+      'type KebabCase<S extends string> = S extends `${infer First}${infer Rest}` ? First extends Lowercase<First> ? `${First}${KebabCase<Rest>}` : `-${Lowercase<First>}${KebabCase<Rest>}` : S;\ntype Result = KebabCase<"backgroundColor">;\nconst kebab: Result = "-background-color";',
+    expected: '-background-color',
+    sample: 'kebab',
+    hints: [
+      'Template literal types can process strings character by character',
+      'Lowercase<T> converts a string literal to lowercase',
+    ],
+    validPatterns: [/kebab/],
+    tags: ['template-literal', 'recursive-types', 'string-manipulation'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - Generic Array Methods
+  // ============================================================
+  {
+    id: 'ts-arr-generic-map',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'Generic Array Map with Type Inference',
+    text: 'Use a generic map function to transform numbers to strings with proper type inference',
+    setup:
+      'function mapArray<T, U>(arr: T[], fn: (item: T) => U): U[] { return arr.map(fn); }\nconst numbers: number[] = [1, 2, 3, 4, 5];',
+    setupCode:
+      'function mapArray<T, U>(arr: T[], fn: (item: T) => U): U[] { return arr.map(fn); }\nconst numbers: number[] = [1, 2, 3, 4, 5];',
+    expected: ['1', '2', '3', '4', '5'],
+    sample: 'mapArray(numbers, (n) => String(n))',
+    hints: [
+      'Generic functions infer types from arguments',
+      'T is inferred as number, U as string',
+    ],
+    validPatterns: [/mapArray\s*\(\s*numbers/, /String\s*\(\s*n\s*\)|\.toString\s*\(\s*\)/],
+    tags: ['generics', 'map', 'type-inference', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-generic-filter',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'Generic Array Filter with Predicate',
+    text: 'Use a generic filter function with a predicate to get even numbers',
+    setup:
+      'function filterArray<T>(arr: T[], predicate: (item: T) => boolean): T[] { return arr.filter(predicate); }\nconst nums: number[] = [1, 2, 3, 4, 5, 6];',
+    setupCode:
+      'function filterArray<T>(arr: T[], predicate: (item: T) => boolean): T[] { return arr.filter(predicate); }\nconst nums: number[] = [1, 2, 3, 4, 5, 6];',
+    expected: [2, 4, 6],
+    sample: 'filterArray(nums, (n) => n % 2 === 0)',
+    hints: [
+      'Predicate returns boolean for filtering',
+      'Result type is same as input array type',
+    ],
+    validPatterns: [/filterArray\s*\(\s*nums/, /%\s*2\s*===?\s*0/],
+    tags: ['generics', 'filter', 'predicate', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-generic-reduce-accumulator',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Generic Reduce with Typed Accumulator',
+    text: 'Use the generic reduce function to count occurrences of each string',
+    setup:
+      'function reduceArray<T, U>(arr: T[], fn: (acc: U, item: T) => U, initial: U): U { return arr.reduce(fn, initial); }\nconst words: string[] = ["a", "b", "a", "c", "b", "a"];',
+    setupCode:
+      'function reduceArray<T, U>(arr: T[], fn: (acc: U, item: T) => U, initial: U): U { return arr.reduce(fn, initial); }\nconst words: string[] = ["a", "b", "a", "c", "b", "a"];',
+    expected: { a: 3, b: 2, c: 1 },
+    sample:
+      'reduceArray(words, (acc, word) => ({ ...acc, [word]: (acc[word] || 0) + 1 }), {} as Record<string, number>)',
+    hints: [
+      'U is the accumulator type, different from T',
+      'Initial value determines the accumulator type',
+    ],
+    validPatterns: [/reduceArray\s*\(\s*words/, /Record\s*<\s*string\s*,\s*number\s*>/],
+    tags: ['generics', 'reduce', 'accumulator', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-generic-find-or-default',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'Generic Find with Default Value',
+    text: 'Use the generic findOrDefault function to find a user or return a default',
+    setup:
+      'function findOrDefault<T>(arr: T[], predicate: (item: T) => boolean, defaultValue: T): T { return arr.find(predicate) ?? defaultValue; }\ninterface User { id: number; name: string; }\nconst users: User[] = [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }];\nconst defaultUser: User = { id: 0, name: "Guest" };',
+    setupCode:
+      'function findOrDefault<T>(arr: T[], predicate: (item: T) => boolean, defaultValue: T): T { return arr.find(predicate) ?? defaultValue; }\ninterface User { id: number; name: string; }\nconst users: User[] = [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }];\nconst defaultUser: User = { id: 0, name: "Guest" };',
+    expected: { id: 0, name: 'Guest' },
+    sample: 'findOrDefault(users, (u) => u.id === 99, defaultUser)',
+    hints: [
+      'Nullish coalescing (??) provides the default',
+      'Return type is T, not T | undefined',
+    ],
+    validPatterns: [/findOrDefault\s*\(\s*users/, /defaultUser/],
+    tags: ['generics', 'find', 'default', 'typed-array'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - ReadonlyArray
+  // ============================================================
+  {
+    id: 'ts-arr-readonly-basic',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'ReadonlyArray Basic Usage',
+    text: 'Use ReadonlyArray to create an immutable view and access elements',
+    setup:
+      'const mutable: number[] = [1, 2, 3, 4, 5];\nconst immutable: ReadonlyArray<number> = mutable;',
+    setupCode:
+      'const mutable: number[] = [1, 2, 3, 4, 5];\nconst immutable: ReadonlyArray<number> = mutable;',
+    expected: 3,
+    sample: 'immutable[2]',
+    hints: [
+      'ReadonlyArray allows reading but not mutating',
+      'Index access still works on ReadonlyArray',
+    ],
+    validPatterns: [/immutable\s*\[\s*2\s*\]/],
+    tags: ['readonly', 'array', 'immutable', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-readonly-methods',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'ReadonlyArray Non-Mutating Methods',
+    text: 'Use slice on ReadonlyArray to get a portion without mutation',
+    setup: 'const items: ReadonlyArray<string> = ["a", "b", "c", "d", "e"];',
+    setupCode: 'const items: ReadonlyArray<string> = ["a", "b", "c", "d", "e"];',
+    expected: ['b', 'c', 'd'],
+    sample: 'items.slice(1, 4)',
+    hints: [
+      'slice, map, filter are available on ReadonlyArray',
+      'Methods that mutate (push, pop) are not available',
+    ],
+    validPatterns: [/items\.slice\s*\(\s*1\s*,\s*4\s*\)/],
+    tags: ['readonly', 'array', 'slice', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-readonly-to-mutable',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Convert ReadonlyArray to Mutable',
+    text: 'Create a mutable copy of the ReadonlyArray using spread',
+    setup: 'const frozen: ReadonlyArray<number> = [10, 20, 30];',
+    setupCode: 'const frozen: ReadonlyArray<number> = [10, 20, 30];',
+    expected: [10, 20, 30, 40],
+    sample: '[...frozen, 40]',
+    hints: [
+      'Spread creates a new mutable array',
+      'The new array is number[], not ReadonlyArray',
+    ],
+    validPatterns: [/\[\s*\.\.\.frozen\s*,\s*40\s*\]/],
+    tags: ['readonly', 'spread', 'mutable', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-readonly-deep',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Deep Readonly Array',
+    text: 'Use the DeepReadonly type to create a deeply immutable structure and access nested data',
+    setup:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: DeepReadonly<T[K]> };\ninterface Data { items: { name: string; value: number }[] }\nconst data: DeepReadonly<Data> = { items: [{ name: "a", value: 1 }, { name: "b", value: 2 }] };',
+    setupCode:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: DeepReadonly<T[K]> };\ninterface Data { items: { name: string; value: number }[] }\nconst data: DeepReadonly<Data> = { items: [{ name: "a", value: 1 }, { name: "b", value: 2 }] };',
+    expected: 'a',
+    sample: 'data.items[0].name',
+    hints: [
+      'DeepReadonly recursively applies readonly',
+      'Nested objects and arrays become immutable',
+    ],
+    validPatterns: [/data\.items\s*\[\s*0\s*\]\.name/],
+    tags: ['readonly', 'deep', 'mapped-types', 'typed-array'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - Tuple Manipulation
+  // ============================================================
+  {
+    id: 'ts-arr-tuple-basic',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'Basic Tuple Type',
+    text: 'Access elements from a typed tuple with different types',
+    setup: 'const tuple: [string, number, boolean] = ["hello", 42, true];',
+    setupCode: 'const tuple: [string, number, boolean] = ["hello", 42, true];',
+    expected: ['hello', 42],
+    sample: '[tuple[0], tuple[1]]',
+    hints: [
+      'Tuple elements have specific types by position',
+      'Each index has its own inferred type',
+    ],
+    validPatterns: [/tuple\s*\[\s*0\s*\]/, /tuple\s*\[\s*1\s*\]/],
+    tags: ['tuple', 'index-access', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-tuple-rest',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Tuple with Rest Element',
+    text: 'Use a tuple with rest element to represent a function with variable arguments',
+    setup:
+      'type VarArgs = [first: string, ...rest: number[]];\nconst args: VarArgs = ["sum", 1, 2, 3, 4, 5];',
+    setupCode:
+      'type VarArgs = [first: string, ...rest: number[]];\nconst args: VarArgs = ["sum", 1, 2, 3, 4, 5];',
+    expected: 15,
+    sample: 'args.slice(1).reduce((a, b) => (a as number) + (b as number), 0)',
+    hints: [
+      'Rest element captures remaining items',
+      'First element is string, rest are numbers',
+    ],
+    validPatterns: [/args\.slice\s*\(\s*1\s*\)/, /\.reduce\s*\(/],
+    tags: ['tuple', 'rest', 'variadic', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-tuple-spread',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Tuple Spread and Concatenation',
+    text: 'Concatenate two tuples using spread with proper typing',
+    setup:
+      'const tuple1: [number, string] = [1, "a"];\nconst tuple2: [boolean, null] = [true, null];',
+    setupCode:
+      'const tuple1: [number, string] = [1, "a"];\nconst tuple2: [boolean, null] = [true, null];',
+    expected: [1, 'a', true, null],
+    sample: '[...tuple1, ...tuple2] as [number, string, boolean, null]',
+    hints: [
+      'Spreading tuples preserves element types',
+      'Result type is concatenation of tuple types',
+    ],
+    validPatterns: [/\[\s*\.\.\.tuple1\s*,\s*\.\.\.tuple2\s*\]/, /as\s*\[/],
+    tags: ['tuple', 'spread', 'concatenation', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-tuple-destructure',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'Tuple Destructuring with Types',
+    text: 'Destructure a tuple and use the typed values',
+    setup:
+      'const point: [x: number, y: number, label: string] = [10, 20, "origin"];',
+    setupCode:
+      'const point: [x: number, y: number, label: string] = [10, 20, "origin"];',
+    expected: { x: 10, y: 20, label: 'origin' },
+    sample: '(([x, y, label]) => ({ x, y, label }))(point)',
+    hints: [
+      'Named tuple elements improve readability',
+      'Destructuring preserves individual types',
+    ],
+    validPatterns: [/\[\s*x\s*,\s*y\s*,\s*label\s*\]/, /\(\s*point\s*\)/],
+    tags: ['tuple', 'destructuring', 'named-elements', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-tuple-length',
+    category: 'Typed Array Operations',
+    difficulty: 'hard',
+    title: 'Tuple Length Type',
+    text: 'Use the Length type to get the compile-time length of a tuple',
+    setup:
+      'type Length<T extends readonly unknown[]> = T["length"];\nconst tuple = [1, 2, 3, 4, 5] as const;\ntype TupleLength = Length<typeof tuple>;',
+    setupCode:
+      'type Length<T extends readonly unknown[]> = T["length"];\nconst tuple = [1, 2, 3, 4, 5] as const;\ntype TupleLength = Length<typeof tuple>;',
+    expected: 5,
+    sample: '(5 as TupleLength)',
+    hints: [
+      'Tuple types have a literal length property',
+      'as const creates a readonly tuple type',
+    ],
+    validPatterns: [/as\s+TupleLength/, /5/],
+    tags: ['tuple', 'length', 'type-level', 'typed-array'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - Array Type Narrowing
+  // ============================================================
+  {
+    id: 'ts-arr-narrow-nonempty',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Non-Empty Array Type Guard',
+    text: 'Use the type guard to narrow to a non-empty array and access first element safely',
+    setup:
+      'type NonEmptyArray<T> = [T, ...T[]];\nfunction isNonEmpty<T>(arr: T[]): arr is NonEmptyArray<T> { return arr.length > 0; }\nconst items: string[] = ["first", "second", "third"];',
+    setupCode:
+      'type NonEmptyArray<T> = [T, ...T[]];\nfunction isNonEmpty<T>(arr: T[]): arr is NonEmptyArray<T> { return arr.length > 0; }\nconst items: string[] = ["first", "second", "third"];',
+    expected: 'first',
+    sample: 'isNonEmpty(items) ? items[0] : "empty"',
+    hints: [
+      'NonEmptyArray guarantees at least one element',
+      'After the guard, items[0] is guaranteed to exist',
+    ],
+    validPatterns: [/isNonEmpty\s*\(\s*items\s*\)/, /items\s*\[\s*0\s*\]/],
+    tags: ['type-guard', 'narrowing', 'non-empty', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-narrow-specific-length',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Specific Length Array Guard',
+    text: 'Use the type guard to narrow to a pair (2-element tuple)',
+    setup:
+      'type Pair<T> = [T, T];\nfunction isPair<T>(arr: T[]): arr is Pair<T> { return arr.length === 2; }\nconst coords: number[] = [10, 20];',
+    setupCode:
+      'type Pair<T> = [T, T];\nfunction isPair<T>(arr: T[]): arr is Pair<T> { return arr.length === 2; }\nconst coords: number[] = [10, 20];',
+    expected: 30,
+    sample: 'isPair(coords) ? coords[0] + coords[1] : 0',
+    hints: [
+      'Pair type is a 2-element tuple',
+      'After guard, both indices are safely accessible',
+    ],
+    validPatterns: [
+      /isPair\s*\(\s*coords\s*\)/,
+      /coords\s*\[\s*0\s*\]\s*\+\s*coords\s*\[\s*1\s*\]/,
+    ],
+    tags: ['type-guard', 'narrowing', 'tuple', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-narrow-array-of-type',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Array Element Type Guard',
+    text: 'Use the isArrayOf guard to verify all elements are numbers',
+    setup:
+      'function isArrayOf<T>(arr: unknown[], guard: (x: unknown) => x is T): arr is T[] { return arr.every(guard); }\nfunction isNumber(x: unknown): x is number { return typeof x === "number"; }\nconst mixed: unknown[] = [1, 2, 3, 4, 5];',
+    setupCode:
+      'function isArrayOf<T>(arr: unknown[], guard: (x: unknown) => x is T): arr is T[] { return arr.every(guard); }\nfunction isNumber(x: unknown): x is number { return typeof x === "number"; }\nconst mixed: unknown[] = [1, 2, 3, 4, 5];',
+    expected: 15,
+    sample: 'isArrayOf(mixed, isNumber) ? mixed.reduce((a, b) => a + b, 0) : 0',
+    hints: [
+      'isArrayOf validates all elements match the type',
+      'After guard, array is narrowed to T[]',
+    ],
+    validPatterns: [/isArrayOf\s*\(\s*mixed\s*,\s*isNumber\s*\)/, /\.reduce\s*\(/],
+    tags: ['type-guard', 'narrowing', 'every', 'typed-array'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - Typed Reduce Operations
+  // ============================================================
+  {
+    id: 'ts-arr-reduce-to-map',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Reduce to Map with Generics',
+    text: 'Use reduce to convert array to a Map keyed by a property',
+    setup:
+      'interface Product { sku: string; name: string; price: number; }\nconst products: Product[] = [{ sku: "A1", name: "Widget", price: 10 }, { sku: "B2", name: "Gadget", price: 20 }];',
+    setupCode:
+      'interface Product { sku: string; name: string; price: number; }\nconst products: Product[] = [{ sku: "A1", name: "Widget", price: 10 }, { sku: "B2", name: "Gadget", price: 20 }];',
+    expected: { A1: 'Widget', B2: 'Gadget' },
+    sample:
+      'Object.fromEntries(products.reduce<Map<string, string>>((map, p) => map.set(p.sku, p.name), new Map()))',
+    hints: [
+      'reduce<Map<K,V>> specifies accumulator type',
+      'Map.set returns the Map for chaining',
+    ],
+    validPatterns: [/\.reduce\s*<\s*Map\s*</, /\.set\s*\(\s*p\.sku/],
+    tags: ['reduce', 'map', 'generics', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-reduce-partition',
+    category: 'Typed Array Operations',
+    difficulty: 'hard',
+    title: 'Reduce to Partition Array',
+    text: 'Use reduce to partition numbers into even and odd arrays',
+    setup: 'const numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8];',
+    setupCode: 'const numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8];',
+    expected: { even: [2, 4, 6, 8], odd: [1, 3, 5, 7] },
+    sample:
+      'numbers.reduce<{ even: number[]; odd: number[] }>((acc, n) => { n % 2 === 0 ? acc.even.push(n) : acc.odd.push(n); return acc; }, { even: [], odd: [] })',
+    hints: [
+      'Accumulator type is an object with two arrays',
+      'Mutate accumulator for better performance',
+    ],
+    validPatterns: [/\.reduce\s*<\s*\{\s*even\s*:/, /even\.push|odd\.push/],
+    tags: ['reduce', 'partition', 'generics', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-reduce-unique',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Reduce to Unique Array with Type',
+    text: 'Use reduce with Set to get unique values maintaining type',
+    setup: 'const items: string[] = ["a", "b", "a", "c", "b", "d", "a"];',
+    setupCode: 'const items: string[] = ["a", "b", "a", "c", "b", "d", "a"];',
+    expected: ['a', 'b', 'c', 'd'],
+    sample:
+      'items.reduce<string[]>((acc, item) => acc.includes(item) ? acc : [...acc, item], [])',
+    hints: [
+      'Check if item already exists before adding',
+      'Alternative: [...new Set(items)]',
+    ],
+    validPatterns: [/\.reduce\s*<\s*string\s*\[\s*\]\s*>/, /\.includes\s*\(\s*item\s*\)/],
+    tags: ['reduce', 'unique', 'dedup', 'typed-array'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - Array Assertion Functions
+  // ============================================================
+  {
+    id: 'ts-arr-assert-nonempty',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Assert Non-Empty Array',
+    text: 'Use the assertion function to guarantee the array is non-empty, then get first element',
+    setup:
+      'type NonEmptyArray<T> = [T, ...T[]];\nfunction assertNonEmpty<T>(arr: T[]): asserts arr is NonEmptyArray<T> { if (arr.length === 0) throw new Error("Array is empty"); }\nconst data: number[] = [10, 20, 30];',
+    setupCode:
+      'type NonEmptyArray<T> = [T, ...T[]];\nfunction assertNonEmpty<T>(arr: T[]): asserts arr is NonEmptyArray<T> { if (arr.length === 0) throw new Error("Array is empty"); }\nconst data: number[] = [10, 20, 30];',
+    expected: 10,
+    sample: '(assertNonEmpty(data), data[0])',
+    hints: [
+      'Assertion functions throw on failure',
+      'After assertion, type is narrowed for rest of scope',
+    ],
+    validPatterns: [/assertNonEmpty\s*\(\s*data\s*\)/, /data\s*\[\s*0\s*\]/],
+    tags: ['assertion', 'non-empty', 'asserts', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-assert-all-defined',
+    category: 'Typed Array Operations',
+    difficulty: 'hard',
+    title: 'Assert All Elements Defined',
+    text: 'Use the assertion function to guarantee no undefined elements exist',
+    setup:
+      'function assertAllDefined<T>(arr: (T | undefined)[]): asserts arr is T[] { if (arr.some(x => x === undefined)) throw new Error("Found undefined"); }\nconst maybeNumbers: (number | undefined)[] = [1, 2, 3, 4, 5];',
+    setupCode:
+      'function assertAllDefined<T>(arr: (T | undefined)[]): asserts arr is T[] { if (arr.some(x => x === undefined)) throw new Error("Found undefined"); }\nconst maybeNumbers: (number | undefined)[] = [1, 2, 3, 4, 5];',
+    expected: 15,
+    sample: '(assertAllDefined(maybeNumbers), maybeNumbers.reduce((a, b) => a + b, 0))',
+    hints: [
+      'asserts arr is T[] narrows away undefined',
+      'After assertion, array elements are guaranteed defined',
+    ],
+    validPatterns: [/assertAllDefined\s*\(\s*maybeNumbers\s*\)/, /\.reduce\s*\(/],
+    tags: ['assertion', 'defined', 'asserts', 'typed-array'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - as const with Arrays
+  // ============================================================
+  {
+    id: 'ts-arr-const-literal',
+    category: 'Typed Array Operations',
+    difficulty: 'easy',
+    title: 'Const Assertion for Literal Array',
+    text: 'Use as const to create a readonly tuple with literal types',
+    setup: 'const colors = ["red", "green", "blue"] as const;',
+    setupCode: 'const colors = ["red", "green", "blue"] as const;',
+    expected: 'green',
+    sample: 'colors[1]',
+    hints: [
+      'as const creates readonly tuple with literal types',
+      'Type is readonly ["red", "green", "blue"]',
+    ],
+    validPatterns: [/colors\s*\[\s*1\s*\]/],
+    tags: ['const-assertion', 'literal', 'readonly', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-const-union',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Extract Union from Const Array',
+    text: 'Use as const array to create a union type of its values',
+    setup:
+      'const statuses = ["pending", "active", "completed"] as const;\ntype Status = typeof statuses[number];',
+    setupCode:
+      'const statuses = ["pending", "active", "completed"] as const;\ntype Status = typeof statuses[number];',
+    expected: 'active',
+    sample: '("active" as Status)',
+    hints: [
+      'typeof arr[number] extracts union of element types',
+      'Result is "pending" | "active" | "completed"',
+    ],
+    validPatterns: [/as\s+Status/, /["']active["']/],
+    tags: ['const-assertion', 'union', 'typeof', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-const-object-array',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Const Assertion with Object Array',
+    text: 'Use as const with an array of objects to preserve literal types',
+    setup:
+      'const routes = [{ path: "/", name: "home" }, { path: "/about", name: "about" }] as const;',
+    setupCode:
+      'const routes = [{ path: "/", name: "home" }, { path: "/about", name: "about" }] as const;',
+    expected: '/',
+    sample: 'routes[0].path',
+    hints: [
+      'as const makes nested objects readonly too',
+      'Property types are literal, not widened to string',
+    ],
+    validPatterns: [/routes\s*\[\s*0\s*\]\.path/],
+    tags: ['const-assertion', 'object', 'readonly', 'typed-array'],
+  },
+
+  // ============================================================
+  // Typed Array Operations - Typed Filter with Predicates
+  // ============================================================
+  {
+    id: 'ts-arr-filter-instance',
+    category: 'Typed Array Operations',
+    difficulty: 'medium',
+    title: 'Filter by Instance Type',
+    text: 'Filter array to only Error instances using type predicate',
+    setup:
+      'class CustomError extends Error { code: number = 0; }\nconst items: (string | Error | CustomError)[] = ["text", new Error("err"), new CustomError("custom")];',
+    setupCode:
+      'class CustomError extends Error { code: number = 0; }\nconst items: (string | Error | CustomError)[] = ["text", new Error("err"), new CustomError("custom")];',
+    expected: ['err', 'custom'],
+    sample: 'items.filter((x): x is Error => x instanceof Error).map(e => e.message)',
+    hints: [
+      'instanceof checks class hierarchy',
+      'CustomError extends Error, so both match',
+    ],
+    validPatterns: [/\.filter\s*\(\s*\([^)]*\)\s*:\s*\w+\s+is\s+Error/, /instanceof\s+Error/],
+    tags: ['filter', 'type-predicate', 'instanceof', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-filter-property',
+    category: 'Typed Array Operations',
+    difficulty: 'hard',
+    title: 'Filter by Property Existence',
+    text: 'Filter to objects that have an optional property defined',
+    setup:
+      'interface Item { id: number; metadata?: { timestamp: number } }\nconst items: Item[] = [{ id: 1 }, { id: 2, metadata: { timestamp: 100 } }, { id: 3, metadata: { timestamp: 200 } }];',
+    setupCode:
+      'interface Item { id: number; metadata?: { timestamp: number } }\nconst items: Item[] = [{ id: 1 }, { id: 2, metadata: { timestamp: 100 } }, { id: 3, metadata: { timestamp: 200 } }];',
+    expected: [100, 200],
+    sample:
+      'items.filter((x): x is Item & { metadata: { timestamp: number } } => x.metadata !== undefined).map(x => x.metadata.timestamp)',
+    hints: [
+      'Use intersection type to add the required property',
+      'After filter, metadata is guaranteed to exist',
+    ],
+    validPatterns: [/\.filter\s*\(\s*\([^)]*\)\s*:\s*\w+\s+is/, /metadata\s*!==\s*undefined/],
+    tags: ['filter', 'type-predicate', 'optional', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-filter-narrow-union',
+    category: 'Typed Array Operations',
+    difficulty: 'hard',
+    title: 'Filter and Narrow Union Array',
+    text: 'Filter discriminated union array to specific variant and access its unique property',
+    setup:
+      'type Event = { type: "click"; x: number; y: number } | { type: "keypress"; key: string } | { type: "scroll"; delta: number };\nconst events: Event[] = [{ type: "click", x: 10, y: 20 }, { type: "keypress", key: "a" }, { type: "click", x: 30, y: 40 }];',
+    setupCode:
+      'type Event = { type: "click"; x: number; y: number } | { type: "keypress"; key: string } | { type: "scroll"; delta: number };\nconst events: Event[] = [{ type: "click", x: 10, y: 20 }, { type: "keypress", key: "a" }, { type: "click", x: 30, y: 40 }];',
+    expected: [10, 30],
+    sample:
+      'events.filter((e): e is Extract<Event, { type: "click" }> => e.type === "click").map(e => e.x)',
+    hints: [
+      'Extract pulls specific variant from union',
+      'After filter, only click events remain',
+    ],
+    validPatterns: [
+      /\.filter\s*\(\s*\([^)]*\)\s*:\s*\w+\s+is\s+Extract/,
+      /type\s*===?\s*["']click["']/,
+    ],
+    tags: ['filter', 'type-predicate', 'discriminated-union', 'typed-array'],
+  },
+  {
+    id: 'ts-arr-filter-chain-narrow',
+    category: 'Typed Array Operations',
+    difficulty: 'hard',
+    title: 'Chained Filter with Type Narrowing',
+    text: 'Chain multiple filters with type predicates to progressively narrow the type',
+    setup:
+      'interface User { id: number; name?: string; email?: string; verified?: boolean }\nconst users: User[] = [{ id: 1, name: "Alice", email: "a@test.com", verified: true }, { id: 2, name: "Bob" }, { id: 3, email: "c@test.com", verified: true }, { id: 4, name: "Dave", email: "d@test.com", verified: true }];',
+    setupCode:
+      'interface User { id: number; name?: string; email?: string; verified?: boolean }\nconst users: User[] = [{ id: 1, name: "Alice", email: "a@test.com", verified: true }, { id: 2, name: "Bob" }, { id: 3, email: "c@test.com", verified: true }, { id: 4, name: "Dave", email: "d@test.com", verified: true }];',
+    expected: ['Alice', 'Dave'],
+    sample:
+      'users.filter((u): u is User & { name: string } => u.name !== undefined).filter((u): u is User & { name: string; verified: true } => u.verified === true).map(u => u.name)',
+    hints: [
+      'Each filter narrows the type further',
+      'Intersection types accumulate requirements',
+    ],
+    validPatterns: [/\.filter\s*\([^)]+\)\.filter\s*\(/, /u\s+is\s+User\s*&/],
+    tags: ['filter', 'chaining', 'progressive-narrowing', 'typed-array'],
+  },
 ];
 
 // Helper functions

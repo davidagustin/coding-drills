@@ -3,12 +3,13 @@
  */
 
 import type { LanguageId, Problem } from '../types';
+
+// Import language-specific problems (original languages)
 import { cProblems } from './c';
 import { cppProblems } from './cpp';
 import { csharpProblems } from './csharp';
 import { goProblems } from './go';
 import { javaProblems } from './java';
-// Import language-specific problems
 import { javascriptProblems } from './javascript';
 import { kotlinProblems } from './kotlin';
 import { phpProblems } from './php';
@@ -16,12 +17,24 @@ import { pythonProblems } from './python';
 import { rubyProblems } from './ruby';
 import { typescriptProblems } from './typescript';
 
+// Import new language problems
+import { clojureProblems } from './clojure';
+import { dartProblems } from './dart';
+import { elixirProblems } from './elixir';
+import { haskellProblems } from './haskell';
+import { luaProblems } from './lua';
+import { perlProblems } from './perl';
+import { rProblems } from './r';
+import { rustProblems } from './rust';
+import { scalaProblems } from './scala';
+import { swiftProblems } from './swift';
+
+// Export individual problem sets (original languages)
 export { cProblems } from './c';
 export { cppProblems } from './cpp';
 export { csharpProblems } from './csharp';
 export { goProblems } from './go';
 export { javaProblems } from './java';
-// Export individual problem sets
 export { javascriptProblems } from './javascript';
 export { kotlinProblems } from './kotlin';
 export { phpProblems } from './php';
@@ -29,8 +42,21 @@ export { pythonProblems } from './python';
 export { rubyProblems } from './ruby';
 export { typescriptProblems } from './typescript';
 
+// Export new language problem sets
+export { clojureProblems } from './clojure';
+export { dartProblems } from './dart';
+export { elixirProblems } from './elixir';
+export { haskellProblems } from './haskell';
+export { luaProblems } from './lua';
+export { perlProblems } from './perl';
+export { rProblems } from './r';
+export { rustProblems } from './rust';
+export { scalaProblems } from './scala';
+export { swiftProblems } from './swift';
+
 // Combined problems map by language
 export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
+  // Original languages
   javascript: javascriptProblems,
   typescript: typescriptProblems,
   python: pythonProblems,
@@ -42,6 +68,17 @@ export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
   c: cProblems,
   kotlin: kotlinProblems,
   php: phpProblems,
+  // New languages
+  rust: rustProblems,
+  swift: swiftProblems,
+  scala: scalaProblems,
+  r: rProblems,
+  perl: perlProblems,
+  lua: luaProblems,
+  haskell: haskellProblems,
+  elixir: elixirProblems,
+  dart: dartProblems,
+  clojure: clojureProblems,
 };
 
 // Get problems for a specific language

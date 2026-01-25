@@ -1160,6 +1160,2562 @@ export const javaProblems: Problem[] = [
     validPatterns: [/Collections\.frequency\(\s*nums\s*,\s*3\s*\)/],
     tags: ['Collections', 'frequency', 'counting'],
   },
+
+  // ============================================================
+  // Stream API - Advanced Operations (5 problems)
+  // ============================================================
+
+  {
+    id: 'java-stream-026',
+    category: 'Stream API',
+    difficulty: 'easy',
+    title: 'Filter with Multiple Conditions',
+    text: 'Filter numbers that are both positive and even',
+    setup: 'List<Integer> nums = Arrays.asList(-2, -1, 0, 1, 2, 3, 4, 5, 6);',
+    setupCode: 'List<Integer> nums = Arrays.asList(-2, -1, 0, 1, 2, 3, 4, 5, 6);',
+    expected: [2, 4, 6],
+    sample: 'nums.stream().filter(n -> n > 0 && n % 2 == 0).collect(Collectors.toList())',
+    hints: [
+      'Use filter() with a compound predicate',
+      'Combine conditions with && (and) operator',
+      'n > 0 checks positive, n % 2 == 0 checks even',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.filter\(/, /&&/],
+    tags: ['Stream', 'filter', 'predicate', 'lambda'],
+  },
+
+  {
+    id: 'java-stream-027',
+    category: 'Stream API',
+    difficulty: 'medium',
+    title: 'FlatMap Characters from Strings',
+    text: 'Extract all unique characters from all words as a sorted list',
+    setup: 'List<String> words = Arrays.asList("hello", "world");',
+    setupCode: 'List<String> words = Arrays.asList("hello", "world");',
+    expected: ['d', 'e', 'h', 'l', 'o', 'r', 'w'],
+    sample:
+      'words.stream().flatMap(w -> w.chars().mapToObj(c -> String.valueOf((char) c))).distinct().sorted().collect(Collectors.toList())',
+    hints: [
+      'Use flatMap to convert each string to a stream of characters',
+      'String.chars() returns an IntStream of character codes',
+      'Use mapToObj to convert int to Character or String',
+      'Apply distinct() to remove duplicates, sorted() for ordering',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.flatMap\(/, /\.distinct\(\)/, /\.sorted\(\)/],
+    tags: ['Stream', 'flatMap', 'distinct', 'sorted', 'advanced'],
+  },
+
+  {
+    id: 'java-stream-028',
+    category: 'Stream API',
+    difficulty: 'hard',
+    title: 'Collect to Map',
+    text: 'Create a Map where key is the string and value is its length',
+    setup: 'List<String> words = Arrays.asList("apple", "banana", "cherry");',
+    setupCode: 'List<String> words = Arrays.asList("apple", "banana", "cherry");',
+    expected: { apple: 5, banana: 6, cherry: 6 },
+    sample:
+      'words.stream().collect(Collectors.toMap(Function.identity(), String::length))',
+    hints: [
+      'Use Collectors.toMap(keyMapper, valueMapper)',
+      'Function.identity() returns the element itself as the key',
+      'String::length extracts the value',
+      'For duplicate keys, add a merge function as third argument',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.collect\(/, /toMap/],
+    tags: ['Stream', 'Collectors', 'toMap', 'Function'],
+  },
+
+  {
+    id: 'java-stream-029',
+    category: 'Stream API',
+    difficulty: 'hard',
+    title: 'GroupingBy with Downstream Collector',
+    text: 'Group by string length and count elements in each group',
+    setup: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
+    setupCode: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
+    expected: { 3: 4, 7: 1, 8: 1 },
+    sample:
+      'words.stream().collect(Collectors.groupingBy(String::length, Collectors.counting()))',
+    hints: [
+      'Use groupingBy with a downstream collector',
+      'Collectors.counting() counts elements in each group',
+      'Returns Map<Integer, Long> where Integer is length, Long is count',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.collect\(/, /groupingBy/, /counting/],
+    tags: ['Stream', 'Collectors', 'groupingBy', 'counting', 'advanced'],
+  },
+
+  {
+    id: 'java-stream-030',
+    category: 'Stream API',
+    difficulty: 'medium',
+    title: 'Reduce with Concatenation',
+    text: 'Concatenate all strings into one using reduce',
+    setup: 'List<String> words = Arrays.asList("Hello", " ", "World", "!");',
+    setupCode: 'List<String> words = Arrays.asList("Hello", " ", "World", "!");',
+    expected: 'Hello World!',
+    sample: 'words.stream().reduce("", String::concat)',
+    hints: [
+      'Use reduce(identity, accumulator)',
+      'Empty string "" is the identity for concatenation',
+      'String::concat is a method reference for string concatenation',
+      'Alternative: use Collectors.joining() for better performance',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.reduce\(/],
+    tags: ['Stream', 'reduce', 'String', 'concatenation'],
+  },
+
+  // ============================================================
+  // Optional Methods (5 problems)
+  // ============================================================
+
+  {
+    id: 'java-optional-001',
+    category: 'Optional Methods',
+    difficulty: 'easy',
+    title: 'Create Optional with Value',
+    text: 'Create an Optional containing the string "hello"',
+    setup: '// Create an Optional<String> containing "hello"',
+    setupCode: '// Create an Optional<String> containing "hello"',
+    expected: 'hello',
+    sample: 'Optional.of("hello") // Optional containing "hello"',
+    hints: [
+      'Use Optional.of(value) for non-null values',
+      'Optional.of() throws NullPointerException if value is null',
+      'Use Optional.ofNullable() if value might be null',
+    ],
+    validPatterns: [/Optional\.of\(\s*"hello"\s*\)/],
+    tags: ['Optional', 'of', 'creation'],
+  },
+
+  {
+    id: 'java-optional-002',
+    category: 'Optional Methods',
+    difficulty: 'easy',
+    title: 'Create Optional from Nullable',
+    text: 'Create an Optional that safely handles a potentially null value',
+    setup: 'String value = null;',
+    setupCode: 'String value = null;',
+    expected: 'Optional.empty',
+    sample: 'Optional.ofNullable(value) // Optional.empty if null',
+    hints: [
+      'Use Optional.ofNullable() for potentially null values',
+      'Returns Optional.empty() if the value is null',
+      'Safer than Optional.of() for uncertain values',
+    ],
+    validPatterns: [/Optional\.ofNullable\(\s*value\s*\)/],
+    tags: ['Optional', 'ofNullable', 'null-safety'],
+  },
+
+  {
+    id: 'java-optional-003',
+    category: 'Optional Methods',
+    difficulty: 'easy',
+    title: 'Get Value or Default',
+    text: 'Get the value from Optional or return "default" if empty',
+    setup: 'Optional<String> opt = Optional.empty();',
+    setupCode: 'Optional<String> opt = Optional.empty();',
+    expected: 'default',
+    sample: 'opt.orElse("default") // returns "default"',
+    hints: [
+      'Use orElse(defaultValue) to provide a fallback',
+      'The default value is always evaluated',
+      'Use orElseGet(() -> ...) for lazy evaluation of default',
+    ],
+    validPatterns: [/\.orElse\(\s*"default"\s*\)/],
+    tags: ['Optional', 'orElse', 'default'],
+  },
+
+  {
+    id: 'java-optional-004',
+    category: 'Optional Methods',
+    difficulty: 'medium',
+    title: 'Get Value with Lazy Default',
+    text: 'Get the value or compute a default lazily using orElseGet',
+    setup: 'Optional<String> opt = Optional.empty();',
+    setupCode: 'Optional<String> opt = Optional.empty();',
+    expected: 'computed',
+    sample: 'opt.orElseGet(() -> "computed") // returns "computed"',
+    hints: [
+      'Use orElseGet(Supplier) for lazy evaluation',
+      'The supplier is only called if Optional is empty',
+      'More efficient than orElse() when default is expensive to compute',
+    ],
+    validPatterns: [/\.orElseGet\(/],
+    tags: ['Optional', 'orElseGet', 'Supplier', 'lazy'],
+  },
+
+  {
+    id: 'java-optional-005',
+    category: 'Optional Methods',
+    difficulty: 'medium',
+    title: 'Map Optional Value',
+    text: 'Transform the Optional value to uppercase if present',
+    setup: 'Optional<String> opt = Optional.of("hello");',
+    setupCode: 'Optional<String> opt = Optional.of("hello");',
+    expected: 'HELLO',
+    sample: 'opt.map(String::toUpperCase).orElse("") // returns "HELLO"',
+    hints: [
+      'Use map() to transform the value inside Optional',
+      'map() returns Optional.empty() if original is empty',
+      'Chain with orElse() to extract the final value',
+    ],
+    validPatterns: [/\.map\(/, /toUpperCase/],
+    tags: ['Optional', 'map', 'transformation'],
+  },
+
+  {
+    id: 'java-optional-006',
+    category: 'Optional Methods',
+    difficulty: 'hard',
+    title: 'FlatMap Nested Optional',
+    text: 'Extract nested Optional value using flatMap',
+    setup:
+      'Optional<String> inner = Optional.of("nested");\nOptional<Optional<String>> outer = Optional.of(inner);',
+    setupCode:
+      'Optional<String> inner = Optional.of("nested");\nOptional<Optional<String>> outer = Optional.of(inner);',
+    expected: 'nested',
+    sample: 'outer.flatMap(Function.identity()).orElse("") // returns "nested"',
+    hints: [
+      'Use flatMap() to flatten nested Optionals',
+      'flatMap expects a function returning Optional<T>',
+      'Function.identity() returns the inner Optional as-is',
+      'Avoids Optional<Optional<T>> nesting',
+    ],
+    validPatterns: [/\.flatMap\(/],
+    tags: ['Optional', 'flatMap', 'nested', 'advanced'],
+  },
+
+  // ============================================================
+  // String Methods - Modern Java (5 problems)
+  // ============================================================
+
+  {
+    id: 'java-string-018',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Format String',
+    text: 'Format a string with name "John" and age 25',
+    setup: 'String name = "John";\nint age = 25;',
+    setupCode: 'String name = "John";\nint age = 25;',
+    expected: 'Name: John, Age: 25',
+    sample: 'String.format("Name: %s, Age: %d", name, age)',
+    hints: [
+      'Use String.format(pattern, args...)',
+      '%s is placeholder for strings, %d for integers',
+      'Other formats: %f (float), %b (boolean), %n (newline)',
+    ],
+    validPatterns: [/String\.format\(/],
+    tags: ['String', 'format', 'placeholder'],
+  },
+
+  {
+    id: 'java-string-019',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Join with Delimiter',
+    text: 'Join the list elements with " | " delimiter',
+    setup: 'List<String> items = Arrays.asList("one", "two", "three");',
+    setupCode: 'List<String> items = Arrays.asList("one", "two", "three");',
+    expected: 'one | two | three',
+    sample: 'String.join(" | ", items)',
+    hints: [
+      'Use String.join(delimiter, elements)',
+      'Works with arrays and Iterable collections',
+      'First argument is the delimiter string',
+    ],
+    validPatterns: [/String\.join\(\s*"\s*\|\s*"\s*,\s*items\s*\)/],
+    tags: ['String', 'join', 'delimiter'],
+  },
+
+  {
+    id: 'java-string-020',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Repeat String',
+    text: 'Repeat the string "ab" three times (Java 11+)',
+    setup: 'String str = "ab";',
+    setupCode: 'String str = "ab";',
+    expected: 'ababab',
+    sample: 'str.repeat(3) // returns "ababab"',
+    hints: [
+      'Use repeat(count) method (Java 11+)',
+      'Returns a new string with the original repeated count times',
+      'repeat(0) returns empty string',
+    ],
+    validPatterns: [/\.repeat\(\s*3\s*\)/],
+    tags: ['String', 'repeat', 'Java11'],
+  },
+
+  {
+    id: 'java-string-021',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Strip Whitespace',
+    text: 'Remove leading and trailing whitespace including Unicode (Java 11+)',
+    setup: 'String str = "\\u2000  Hello World  \\u2000";',
+    setupCode: 'String str = "\\u2000  Hello World  \\u2000";',
+    expected: 'Hello World',
+    sample: 'str.strip() // returns "Hello World"',
+    hints: [
+      'Use strip() instead of trim() (Java 11+)',
+      'strip() handles Unicode whitespace characters',
+      'stripLeading() and stripTrailing() for one side only',
+    ],
+    validPatterns: [/\.strip\(\)/],
+    tags: ['String', 'strip', 'whitespace', 'Java11'],
+  },
+
+  {
+    id: 'java-string-022',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Indent String Lines',
+    text: 'Add 4 spaces of indentation to each line (Java 12+)',
+    setup: 'String str = "line1\\nline2\\nline3";',
+    setupCode: 'String str = "line1\\nline2\\nline3";',
+    expected: '    line1\n    line2\n    line3\n',
+    sample: 'str.indent(4) // adds 4 spaces to each line',
+    hints: [
+      'Use indent(n) method (Java 12+)',
+      'Positive n adds spaces, negative n removes spaces',
+      'Also normalizes line endings and adds trailing newline',
+    ],
+    validPatterns: [/\.indent\(\s*4\s*\)/],
+    tags: ['String', 'indent', 'formatting', 'Java12'],
+  },
+
+  // ============================================================
+  // Collection Methods (5 problems)
+  // ============================================================
+
+  {
+    id: 'java-collection-001',
+    category: 'Collection Methods',
+    difficulty: 'easy',
+    title: 'Remove If Condition',
+    text: 'Remove all even numbers from the list using removeIf',
+    setup: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6));',
+    setupCode: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6));',
+    expected: [1, 3, 5],
+    sample: 'nums.removeIf(n -> n % 2 == 0); // removes even numbers',
+    hints: [
+      'Use removeIf(Predicate) to remove elements matching condition',
+      'Modifies the list in place',
+      'Returns true if any elements were removed',
+    ],
+    validPatterns: [/\.removeIf\(/],
+    tags: ['Collection', 'removeIf', 'Predicate', 'in-place'],
+  },
+
+  {
+    id: 'java-collection-002',
+    category: 'Collection Methods',
+    difficulty: 'medium',
+    title: 'Replace All Elements',
+    text: 'Double every element in the list using replaceAll',
+    setup: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));',
+    setupCode: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));',
+    expected: [2, 4, 6, 8, 10],
+    sample: 'nums.replaceAll(n -> n * 2); // doubles each element',
+    hints: [
+      'Use replaceAll(UnaryOperator) to transform all elements',
+      'Modifies the list in place',
+      'UnaryOperator takes and returns the same type',
+    ],
+    validPatterns: [/\.replaceAll\(/],
+    tags: ['List', 'replaceAll', 'UnaryOperator', 'transformation'],
+  },
+
+  {
+    id: 'java-collection-003',
+    category: 'Collection Methods',
+    difficulty: 'medium',
+    title: 'Compute Value in Map',
+    text: 'Update the value for key "count" by incrementing it, or set to 1 if absent',
+    setup: 'Map<String, Integer> map = new HashMap<>();\nmap.put("count", 5);',
+    setupCode: 'Map<String, Integer> map = new HashMap<>();\nmap.put("count", 5);',
+    expected: 6,
+    sample: 'map.compute("count", (k, v) -> v == null ? 1 : v + 1) // returns 6',
+    hints: [
+      'Use compute(key, BiFunction) to update values',
+      'BiFunction receives key and current value (may be null)',
+      'Return null from function to remove the key',
+    ],
+    validPatterns: [/\.compute\(/],
+    tags: ['Map', 'compute', 'BiFunction', 'update'],
+  },
+
+  {
+    id: 'java-collection-004',
+    category: 'Collection Methods',
+    difficulty: 'hard',
+    title: 'Merge Map Values',
+    text: 'Merge value 10 into key "total", adding to existing value if present',
+    setup: 'Map<String, Integer> map = new HashMap<>();\nmap.put("total", 5);',
+    setupCode: 'Map<String, Integer> map = new HashMap<>();\nmap.put("total", 5);',
+    expected: 15,
+    sample: 'map.merge("total", 10, Integer::sum) // returns 15',
+    hints: [
+      'Use merge(key, value, BiFunction) to combine values',
+      'If key exists, applies BiFunction to old and new values',
+      'If key absent, inserts the new value directly',
+      'Integer::sum adds the two values',
+    ],
+    validPatterns: [/\.merge\(/],
+    tags: ['Map', 'merge', 'BiFunction', 'aggregation'],
+  },
+
+  {
+    id: 'java-collection-005',
+    category: 'Collection Methods',
+    difficulty: 'easy',
+    title: 'Remove If from Map',
+    text: 'Remove all entries where value is less than 10',
+    setup:
+      'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 5);\nmap.put("b", 15);\nmap.put("c", 3);',
+    setupCode:
+      'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 5);\nmap.put("b", 15);\nmap.put("c", 3);',
+    expected: { b: 15 },
+    sample: 'map.entrySet().removeIf(e -> e.getValue() < 10);',
+    hints: [
+      'Use entrySet().removeIf() to remove map entries conditionally',
+      'Entry provides getKey() and getValue() methods',
+      'Alternatively use map.values().removeIf() for value-only conditions',
+    ],
+    validPatterns: [/\.removeIf\(/],
+    tags: ['Map', 'removeIf', 'entrySet', 'filtering'],
+  },
+
+  // ============================================================
+  // Map Methods (5 problems)
+  // ============================================================
+
+  {
+    id: 'java-map-001',
+    category: 'Map Methods',
+    difficulty: 'easy',
+    title: 'Get with Default Value',
+    text: 'Get value for key "missing" or return 0 if not found',
+    setup: 'Map<String, Integer> map = new HashMap<>();\nmap.put("present", 42);',
+    setupCode: 'Map<String, Integer> map = new HashMap<>();\nmap.put("present", 42);',
+    expected: 0,
+    sample: 'map.getOrDefault("missing", 0) // returns 0',
+    hints: [
+      'Use getOrDefault(key, defaultValue)',
+      'Returns default if key is not found or value is null',
+      'Cleaner than checking containsKey() first',
+    ],
+    validPatterns: [/\.getOrDefault\(\s*"missing"\s*,\s*0\s*\)/],
+    tags: ['Map', 'getOrDefault', 'default'],
+  },
+
+  {
+    id: 'java-map-002',
+    category: 'Map Methods',
+    difficulty: 'easy',
+    title: 'Put If Absent',
+    text: 'Add key "new" with value 100 only if key does not exist',
+    setup: 'Map<String, Integer> map = new HashMap<>();\nmap.put("existing", 50);',
+    setupCode: 'Map<String, Integer> map = new HashMap<>();\nmap.put("existing", 50);',
+    expected: 100,
+    sample: 'map.putIfAbsent("new", 100) // adds and returns null (no previous value)',
+    hints: [
+      'Use putIfAbsent(key, value) to avoid overwriting',
+      'Returns previous value (null if key was absent)',
+      'Does not update if key already exists',
+    ],
+    validPatterns: [/\.putIfAbsent\(\s*"new"\s*,\s*100\s*\)/],
+    tags: ['Map', 'putIfAbsent', 'conditional'],
+  },
+
+  {
+    id: 'java-map-003',
+    category: 'Map Methods',
+    difficulty: 'medium',
+    title: 'Compute If Absent',
+    text: 'Get or create a new ArrayList for key "items" if absent',
+    setup: 'Map<String, List<String>> map = new HashMap<>();',
+    setupCode: 'Map<String, List<String>> map = new HashMap<>();',
+    expected: [],
+    sample: 'map.computeIfAbsent("items", k -> new ArrayList<>())',
+    hints: [
+      'Use computeIfAbsent(key, Function) for lazy initialization',
+      'Function is only called if key is absent',
+      'Returns the existing or newly computed value',
+      'Perfect for Map<K, Collection<V>> patterns',
+    ],
+    validPatterns: [/\.computeIfAbsent\(/],
+    tags: ['Map', 'computeIfAbsent', 'lazy', 'initialization'],
+  },
+
+  {
+    id: 'java-map-004',
+    category: 'Map Methods',
+    difficulty: 'medium',
+    title: 'Compute If Present',
+    text: 'Update value for key "score" by adding 10, only if key exists',
+    setup: 'Map<String, Integer> map = new HashMap<>();\nmap.put("score", 50);',
+    setupCode: 'Map<String, Integer> map = new HashMap<>();\nmap.put("score", 50);',
+    expected: 60,
+    sample: 'map.computeIfPresent("score", (k, v) -> v + 10) // returns 60',
+    hints: [
+      'Use computeIfPresent(key, BiFunction) to update existing values',
+      'BiFunction receives key and current value',
+      'Does nothing if key is absent',
+      'Return null to remove the entry',
+    ],
+    validPatterns: [/\.computeIfPresent\(/],
+    tags: ['Map', 'computeIfPresent', 'BiFunction', 'update'],
+  },
+
+  {
+    id: 'java-map-005',
+    category: 'Map Methods',
+    difficulty: 'hard',
+    title: 'Iterate Map with forEach',
+    text: 'Print all key-value pairs using forEach (returns void)',
+    setup:
+      'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 1);\nmap.put("b", 2);',
+    setupCode:
+      'Map<String, Integer> map = new HashMap<>();\nmap.put("a", 1);\nmap.put("b", 2);',
+    expected: null,
+    sample:
+      'map.forEach((k, v) -> System.out.println(k + "=" + v)); // prints each entry',
+    hints: [
+      'Use forEach(BiConsumer) to iterate over map entries',
+      'BiConsumer receives key and value as parameters',
+      'Cleaner than iterating over entrySet()',
+      'Returns void - use for side effects only',
+    ],
+    validPatterns: [/\.forEach\(/],
+    tags: ['Map', 'forEach', 'BiConsumer', 'iteration'],
+  },
+
+  // ============================================================
+  // Array Operations - Advanced (25 problems)
+  // ============================================================
+
+  // --- EASY (8 problems) ---
+
+  {
+    id: 'java-arr-001',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'Sort Array Range',
+    text: 'Sort only elements from index 1 to 4 (exclusive) of the array',
+    setup: 'int[] nums = {5, 3, 1, 4, 2, 9, 7};',
+    setupCode: 'int[] nums = {5, 3, 1, 4, 2, 9, 7};',
+    expected: [5, 1, 3, 4, 2, 9, 7],
+    sample: 'Arrays.sort(nums, 1, 4); // sorts indices 1-3 only',
+    hints: [
+      'Use Arrays.sort(array, fromIndex, toIndex)',
+      'fromIndex is inclusive, toIndex is exclusive',
+      'Only the specified range is sorted',
+    ],
+    validPatterns: [/Arrays\.sort\(\s*nums\s*,\s*1\s*,\s*4\s*\)/],
+    tags: ['Arrays', 'sort', 'range', 'partial'],
+  },
+
+  {
+    id: 'java-arr-002',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'Fill Array Range',
+    text: 'Fill elements from index 2 to 5 (exclusive) with the value 7',
+    setup: 'int[] nums = {1, 2, 3, 4, 5, 6, 7};',
+    setupCode: 'int[] nums = {1, 2, 3, 4, 5, 6, 7};',
+    expected: [1, 2, 7, 7, 7, 6, 7],
+    sample: 'Arrays.fill(nums, 2, 5, 7); // fills indices 2-4 with 7',
+    hints: [
+      'Use Arrays.fill(array, fromIndex, toIndex, value)',
+      'fromIndex is inclusive, toIndex is exclusive',
+      'Only the specified range is filled',
+    ],
+    validPatterns: [/Arrays\.fill\(\s*nums\s*,\s*2\s*,\s*5\s*,\s*7\s*\)/],
+    tags: ['Arrays', 'fill', 'range', 'initialization'],
+  },
+
+  {
+    id: 'java-arr-003',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'Copy Array Range',
+    text: 'Copy elements from index 2 to 5 (exclusive) into a new array',
+    setup: 'int[] nums = {10, 20, 30, 40, 50, 60};',
+    setupCode: 'int[] nums = {10, 20, 30, 40, 50, 60};',
+    expected: [30, 40, 50],
+    sample: 'Arrays.copyOfRange(nums, 2, 5) // returns {30, 40, 50}',
+    hints: [
+      'Use Arrays.copyOfRange(array, from, to)',
+      'Creates a new array with the specified range',
+      'from is inclusive, to is exclusive',
+    ],
+    validPatterns: [/Arrays\.copyOfRange\(\s*nums\s*,\s*2\s*,\s*5\s*\)/],
+    tags: ['Arrays', 'copyOfRange', 'slicing', 'copy'],
+  },
+
+  {
+    id: 'java-arr-004',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'Array to String',
+    text: 'Convert the array to a readable string representation',
+    setup: 'int[] nums = {1, 2, 3, 4, 5};',
+    setupCode: 'int[] nums = {1, 2, 3, 4, 5};',
+    expected: '[1, 2, 3, 4, 5]',
+    sample: 'Arrays.toString(nums) // returns "[1, 2, 3, 4, 5]"',
+    hints: [
+      'Use Arrays.toString() for readable output',
+      'Much better than array.toString() which shows memory address',
+      'Works for all primitive and object arrays',
+    ],
+    validPatterns: [/Arrays\.toString\(\s*nums\s*\)/],
+    tags: ['Arrays', 'toString', 'debugging', 'display'],
+  },
+
+  {
+    id: 'java-arr-005',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'Compare Arrays for Equality',
+    text: 'Check if two integer arrays contain the same elements',
+    setup: 'int[] arr1 = {1, 2, 3};\nint[] arr2 = {1, 2, 3};',
+    setupCode: 'int[] arr1 = {1, 2, 3};\nint[] arr2 = {1, 2, 3};',
+    expected: true,
+    sample: 'Arrays.equals(arr1, arr2) // returns true',
+    hints: [
+      'Use Arrays.equals() for array comparison',
+      'Never use == which compares references',
+      'Compares element by element in order',
+    ],
+    validPatterns: [/Arrays\.equals\(\s*arr1\s*,\s*arr2\s*\)/],
+    tags: ['Arrays', 'equals', 'comparison', 'equality'],
+  },
+
+  {
+    id: 'java-arr-006',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'Create List from Array',
+    text: 'Convert the string array to a List (fixed-size)',
+    setup: 'String[] arr = {"red", "green", "blue"};',
+    setupCode: 'String[] arr = {"red", "green", "blue"};',
+    expected: ['red', 'green', 'blue'],
+    sample: 'Arrays.asList(arr) // returns fixed-size List',
+    hints: [
+      'Use Arrays.asList() to wrap array as List',
+      'The returned list is fixed-size (cannot add/remove)',
+      'Changes to array reflect in list and vice versa',
+      'For mutable list: new ArrayList<>(Arrays.asList(arr))',
+    ],
+    validPatterns: [/Arrays\.asList\(\s*arr\s*\)/],
+    tags: ['Arrays', 'asList', 'List', 'conversion'],
+  },
+
+  {
+    id: 'java-arr-007',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'Create Mutable List from Array',
+    text: 'Convert the array to a mutable ArrayList',
+    setup: 'Integer[] arr = {1, 2, 3, 4, 5};',
+    setupCode: 'Integer[] arr = {1, 2, 3, 4, 5};',
+    expected: [1, 2, 3, 4, 5],
+    sample: 'new ArrayList<>(Arrays.asList(arr)) // mutable list',
+    hints: [
+      'Wrap Arrays.asList() in new ArrayList<>()',
+      'The result is a mutable list that can be modified',
+      'Java 9+: List.of(arr) creates immutable list',
+    ],
+    validPatterns: [/new\s+ArrayList<.*>\(\s*Arrays\.asList\(\s*arr\s*\)\s*\)/],
+    tags: ['Arrays', 'ArrayList', 'conversion', 'mutable'],
+  },
+
+  {
+    id: 'java-arr-008',
+    category: 'Arrays Utility',
+    difficulty: 'easy',
+    title: 'System Array Copy',
+    text: 'Copy 3 elements from src starting at index 1 to dest starting at index 2',
+    setup: 'int[] src = {10, 20, 30, 40, 50};\nint[] dest = {0, 0, 0, 0, 0, 0};',
+    setupCode: 'int[] src = {10, 20, 30, 40, 50};\nint[] dest = {0, 0, 0, 0, 0, 0};',
+    expected: [0, 0, 20, 30, 40, 0],
+    sample: 'System.arraycopy(src, 1, dest, 2, 3); // copies 3 elements',
+    hints: [
+      'Use System.arraycopy(src, srcPos, dest, destPos, length)',
+      'Fastest way to copy array portions',
+      'Can copy within same array (use caution with overlapping)',
+    ],
+    validPatterns: [/System\.arraycopy\(\s*src\s*,\s*1\s*,\s*dest\s*,\s*2\s*,\s*3\s*\)/],
+    tags: ['System', 'arraycopy', 'copy', 'performance'],
+  },
+
+  // --- MEDIUM (12 problems) ---
+
+  {
+    id: 'java-arr-009',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Binary Search Range',
+    text: 'Search for value 5 in sorted array range from index 2 to 7 (exclusive)',
+    setup: 'int[] nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};',
+    setupCode: 'int[] nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};',
+    expected: 4,
+    sample: 'Arrays.binarySearch(nums, 2, 7, 5) // returns 4',
+    hints: [
+      'Use Arrays.binarySearch(array, fromIndex, toIndex, key)',
+      'Array must be sorted in the search range',
+      'Returns negative value if not found: -(insertion point) - 1',
+    ],
+    validPatterns: [/Arrays\.binarySearch\(\s*nums\s*,\s*2\s*,\s*7\s*,\s*5\s*\)/],
+    tags: ['Arrays', 'binarySearch', 'range', 'search'],
+  },
+
+  {
+    id: 'java-arr-010',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Sort with Custom Comparator',
+    text: 'Sort the string array by length in ascending order',
+    setup: 'String[] words = {"elephant", "cat", "giraffe", "dog"};',
+    setupCode: 'String[] words = {"elephant", "cat", "giraffe", "dog"};',
+    expected: ['cat', 'dog', 'elephant', 'giraffe'],
+    sample: 'Arrays.sort(words, Comparator.comparingInt(String::length))',
+    hints: [
+      'Use Arrays.sort(array, Comparator)',
+      'Comparator.comparingInt() extracts int key for comparison',
+      'String::length provides the length of each string',
+    ],
+    validPatterns: [/Arrays\.sort\(/, /Comparator/, /length/],
+    tags: ['Arrays', 'sort', 'Comparator', 'custom'],
+  },
+
+  {
+    id: 'java-arr-011',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Sort Descending Order',
+    text: 'Sort the Integer array in descending order',
+    setup: 'Integer[] nums = {3, 1, 4, 1, 5, 9, 2, 6};',
+    setupCode: 'Integer[] nums = {3, 1, 4, 1, 5, 9, 2, 6};',
+    expected: [9, 6, 5, 4, 3, 2, 1, 1],
+    sample: 'Arrays.sort(nums, Collections.reverseOrder())',
+    hints: [
+      'Use Arrays.sort(array, Comparator)',
+      'Collections.reverseOrder() provides descending order',
+      'Only works with object arrays, not primitives',
+    ],
+    validPatterns: [/Arrays\.sort\(\s*nums\s*,\s*Collections\.reverseOrder\(\)\s*\)/],
+    tags: ['Arrays', 'sort', 'descending', 'Comparator'],
+  },
+
+  {
+    id: 'java-arr-012',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Parallel Sort Array',
+    text: 'Sort the large array using parallel sorting for better performance',
+    setup: 'int[] nums = {9, 3, 7, 1, 5, 8, 2, 4, 6};',
+    setupCode: 'int[] nums = {9, 3, 7, 1, 5, 8, 2, 4, 6};',
+    expected: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    sample: 'Arrays.parallelSort(nums); // uses parallel processing',
+    hints: [
+      'Use Arrays.parallelSort() for large arrays',
+      'Uses ForkJoinPool for parallel processing',
+      'Beneficial for arrays larger than 8192 elements',
+      'Same result as sort(), but potentially faster',
+    ],
+    validPatterns: [/Arrays\.parallelSort\(\s*nums\s*\)/],
+    tags: ['Arrays', 'parallelSort', 'parallel', 'performance'],
+  },
+
+  {
+    id: 'java-arr-013',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Set All Array Elements',
+    text: 'Set each element to its index squared using setAll',
+    setup: 'int[] nums = new int[5];',
+    setupCode: 'int[] nums = new int[5];',
+    expected: [0, 1, 4, 9, 16],
+    sample: 'Arrays.setAll(nums, i -> i * i); // sets each element to index squared',
+    hints: [
+      'Use Arrays.setAll(array, IntUnaryOperator)',
+      'The function receives the index as parameter',
+      'Sets each element based on its index',
+    ],
+    validPatterns: [/Arrays\.setAll\(\s*nums\s*,/],
+    tags: ['Arrays', 'setAll', 'functional', 'initialization'],
+  },
+
+  {
+    id: 'java-arr-014',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Parallel Set All Elements',
+    text: 'Set each element to index * 10 using parallel processing',
+    setup: 'int[] nums = new int[5];',
+    setupCode: 'int[] nums = new int[5];',
+    expected: [0, 10, 20, 30, 40],
+    sample: 'Arrays.parallelSetAll(nums, i -> i * 10);',
+    hints: [
+      'Use Arrays.parallelSetAll() for large arrays',
+      'Function receives index, returns value to set',
+      'Parallel execution for better performance on large arrays',
+    ],
+    validPatterns: [/Arrays\.parallelSetAll\(\s*nums\s*,/],
+    tags: ['Arrays', 'parallelSetAll', 'parallel', 'initialization'],
+  },
+
+  {
+    id: 'java-arr-015',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Array Stream Filter and Collect',
+    text: 'Filter even numbers from array and collect to new array',
+    setup: 'int[] nums = {1, 2, 3, 4, 5, 6, 7, 8};',
+    setupCode: 'int[] nums = {1, 2, 3, 4, 5, 6, 7, 8};',
+    expected: [2, 4, 6, 8],
+    sample: 'Arrays.stream(nums).filter(n -> n % 2 == 0).toArray()',
+    hints: [
+      'Use Arrays.stream() to create IntStream from int[]',
+      'Use filter() with predicate for even numbers',
+      'Use toArray() to collect back to int[]',
+    ],
+    validPatterns: [/Arrays\.stream\(/, /\.filter\(/, /\.toArray\(\)/],
+    tags: ['Arrays', 'stream', 'filter', 'IntStream'],
+  },
+
+  {
+    id: 'java-arr-016',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Array Stream Map Operation',
+    text: 'Double each element in the array using streams',
+    setup: 'int[] nums = {1, 2, 3, 4, 5};',
+    setupCode: 'int[] nums = {1, 2, 3, 4, 5};',
+    expected: [2, 4, 6, 8, 10],
+    sample: 'Arrays.stream(nums).map(n -> n * 2).toArray()',
+    hints: [
+      'Use Arrays.stream() then map() for transformation',
+      'map() on IntStream takes IntUnaryOperator',
+      'toArray() collects results back to int[]',
+    ],
+    validPatterns: [/Arrays\.stream\(/, /\.map\(/, /\.toArray\(\)/],
+    tags: ['Arrays', 'stream', 'map', 'transformation'],
+  },
+
+  {
+    id: 'java-arr-017',
+    category: 'Multidimensional Arrays',
+    difficulty: 'medium',
+    title: 'Create 2D Array',
+    text: 'Create and initialize a 3x3 matrix with row*10 + col values',
+    setup: '// Create a 3x3 int matrix',
+    setupCode: '// Create a 3x3 int matrix',
+    expected: [[0, 1, 2], [10, 11, 12], [20, 21, 22]],
+    sample: 'int[][] matrix = new int[3][3];\nfor (int i = 0; i < 3; i++)\n  for (int j = 0; j < 3; j++)\n    matrix[i][j] = i * 10 + j;',
+    hints: [
+      'Use new int[rows][cols] to create 2D array',
+      'Access elements with matrix[row][col]',
+      'Nested loops to initialize all elements',
+    ],
+    validPatterns: [/new\s+int\[\s*3\s*\]\[\s*3\s*\]/],
+    tags: ['Arrays', '2D', 'matrix', 'initialization'],
+  },
+
+  {
+    id: 'java-arr-018',
+    category: 'Multidimensional Arrays',
+    difficulty: 'medium',
+    title: 'Deep Equals for 2D Arrays',
+    text: 'Compare two 2D arrays for deep equality',
+    setup: 'int[][] arr1 = {{1, 2}, {3, 4}};\nint[][] arr2 = {{1, 2}, {3, 4}};',
+    setupCode: 'int[][] arr1 = {{1, 2}, {3, 4}};\nint[][] arr2 = {{1, 2}, {3, 4}};',
+    expected: true,
+    sample: 'Arrays.deepEquals(arr1, arr2) // returns true',
+    hints: [
+      'Use Arrays.deepEquals() for nested arrays',
+      'Arrays.equals() only works for 1D arrays',
+      'deepEquals() recursively compares all elements',
+    ],
+    validPatterns: [/Arrays\.deepEquals\(\s*arr1\s*,\s*arr2\s*\)/],
+    tags: ['Arrays', 'deepEquals', '2D', 'comparison'],
+  },
+
+  {
+    id: 'java-arr-019',
+    category: 'Multidimensional Arrays',
+    difficulty: 'medium',
+    title: 'Deep To String for 2D Arrays',
+    text: 'Convert the 2D array to a readable string representation',
+    setup: 'int[][] matrix = {{1, 2, 3}, {4, 5, 6}};',
+    setupCode: 'int[][] matrix = {{1, 2, 3}, {4, 5, 6}};',
+    expected: '[[1, 2, 3], [4, 5, 6]]',
+    sample: 'Arrays.deepToString(matrix) // returns "[[1, 2, 3], [4, 5, 6]]"',
+    hints: [
+      'Use Arrays.deepToString() for nested arrays',
+      'Arrays.toString() would show memory addresses for inner arrays',
+      'Works with any level of nesting',
+    ],
+    validPatterns: [/Arrays\.deepToString\(\s*matrix\s*\)/],
+    tags: ['Arrays', 'deepToString', '2D', 'debugging'],
+  },
+
+  {
+    id: 'java-arr-020',
+    category: 'Arrays Utility',
+    difficulty: 'medium',
+    title: 'Varargs Array Creation',
+    text: 'Create a method that accepts variable number of integers and returns their sum',
+    setup: '// Call: sum(1, 2, 3, 4, 5)',
+    setupCode: '// Call: sum(1, 2, 3, 4, 5)',
+    expected: 15,
+    sample: 'public int sum(int... nums) {\n  return Arrays.stream(nums).sum();\n}\n// sum(1, 2, 3, 4, 5) returns 15',
+    hints: [
+      'Use int... for varargs parameter',
+      'Varargs is treated as an array inside the method',
+      'Can pass individual values or an array',
+      'Varargs must be the last parameter',
+    ],
+    validPatterns: [/int\s*\.\.\./],
+    tags: ['Arrays', 'varargs', 'method', 'flexible'],
+  },
+
+  // --- HARD (5 problems) ---
+
+  {
+    id: 'java-arr-021',
+    category: 'Arrays Utility',
+    difficulty: 'hard',
+    title: 'Parallel Prefix Cumulative Sum',
+    text: 'Compute cumulative sums using parallel prefix operation',
+    setup: 'int[] nums = {1, 2, 3, 4, 5};',
+    setupCode: 'int[] nums = {1, 2, 3, 4, 5};',
+    expected: [1, 3, 6, 10, 15],
+    sample: 'Arrays.parallelPrefix(nums, Integer::sum); // cumulative sum',
+    hints: [
+      'Use Arrays.parallelPrefix(array, BinaryOperator)',
+      'Each element becomes operation of itself with all previous elements',
+      'Integer::sum computes running sum',
+      'Modifies array in place',
+    ],
+    validPatterns: [/Arrays\.parallelPrefix\(\s*nums\s*,\s*Integer::sum\s*\)/],
+    tags: ['Arrays', 'parallelPrefix', 'cumulative', 'parallel'],
+  },
+
+  {
+    id: 'java-arr-022',
+    category: 'Arrays Utility',
+    difficulty: 'hard',
+    title: 'Parallel Prefix Product',
+    text: 'Compute cumulative products using parallel prefix operation',
+    setup: 'int[] nums = {1, 2, 3, 4, 5};',
+    setupCode: 'int[] nums = {1, 2, 3, 4, 5};',
+    expected: [1, 2, 6, 24, 120],
+    sample: 'Arrays.parallelPrefix(nums, (a, b) -> a * b); // cumulative product',
+    hints: [
+      'Use Arrays.parallelPrefix(array, BinaryOperator)',
+      'Lambda (a, b) -> a * b multiplies consecutive elements',
+      'Result is running product (factorial-like)',
+      'First element remains unchanged',
+    ],
+    validPatterns: [/Arrays\.parallelPrefix\(\s*nums\s*,/],
+    tags: ['Arrays', 'parallelPrefix', 'product', 'parallel'],
+  },
+
+  {
+    id: 'java-arr-023',
+    category: 'Multidimensional Arrays',
+    difficulty: 'hard',
+    title: 'Jagged Array Creation',
+    text: 'Create a jagged (ragged) array where row i has i+1 elements',
+    setup: '// Create jagged array with rows of length 1, 2, 3',
+    setupCode: '// Create jagged array with rows of length 1, 2, 3',
+    expected: [[0], [0, 0], [0, 0, 0]],
+    sample: 'int[][] jagged = new int[3][];\nfor (int i = 0; i < 3; i++) {\n  jagged[i] = new int[i + 1];\n}',
+    hints: [
+      'First create outer array with row count only',
+      'Then create each inner array with desired length',
+      'Rows can have different lengths (jagged)',
+      'Access with jagged[row][col] where col < row length',
+    ],
+    validPatterns: [/new\s+int\[\s*3\s*\]\[\s*\]/],
+    tags: ['Arrays', 'jagged', '2D', 'dynamic'],
+  },
+
+  {
+    id: 'java-arr-024',
+    category: 'Arrays Utility',
+    difficulty: 'hard',
+    title: 'Array Mismatch Index',
+    text: 'Find the index of first mismatch between two arrays (Java 9+)',
+    setup: 'int[] arr1 = {1, 2, 3, 4, 5};\nint[] arr2 = {1, 2, 9, 4, 5};',
+    setupCode: 'int[] arr1 = {1, 2, 3, 4, 5};\nint[] arr2 = {1, 2, 9, 4, 5};',
+    expected: 2,
+    sample: 'Arrays.mismatch(arr1, arr2) // returns 2 (first difference at index 2)',
+    hints: [
+      'Use Arrays.mismatch(a, b) to find first difference (Java 9+)',
+      'Returns index of first mismatch',
+      'Returns -1 if arrays are equal',
+      'Returns smaller array length if one is prefix of other',
+    ],
+    validPatterns: [/Arrays\.mismatch\(\s*arr1\s*,\s*arr2\s*\)/],
+    tags: ['Arrays', 'mismatch', 'comparison', 'Java9'],
+  },
+
+  {
+    id: 'java-arr-025',
+    category: 'Arrays Utility',
+    difficulty: 'hard',
+    title: 'Array Compare Lexicographically',
+    text: 'Compare two arrays lexicographically (Java 9+)',
+    setup: 'int[] arr1 = {1, 2, 3};\nint[] arr2 = {1, 2, 4};',
+    setupCode: 'int[] arr1 = {1, 2, 3};\nint[] arr2 = {1, 2, 4};',
+    expected: -1,
+    sample: 'Arrays.compare(arr1, arr2) // returns negative (arr1 < arr2)',
+    hints: [
+      'Use Arrays.compare(a, b) for lexicographic comparison (Java 9+)',
+      'Returns negative if a < b, zero if equal, positive if a > b',
+      'Compares element by element like string comparison',
+      'Shorter array is less than longer if it is a prefix',
+    ],
+    validPatterns: [/Arrays\.compare\(\s*arr1\s*,\s*arr2\s*\)/],
+    tags: ['Arrays', 'compare', 'lexicographic', 'Java9'],
+  },
+
+  // ============================================================
+  // String Operations - Advanced (25 problems)
+  // ============================================================
+
+  // --- EASY (8 problems) ---
+
+  {
+    id: 'java-str-001',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'Substring from Index',
+    text: 'Extract the substring starting from index 7 to the end',
+    setup: 'String str = "Hello, World!";',
+    setupCode: 'String str = "Hello, World!";',
+    expected: 'World!',
+    sample: 'str.substring(7) // returns "World!"',
+    hints: [
+      'Use substring(beginIndex) to extract from a position to the end',
+      'The character at beginIndex is included',
+      'For substring(7), characters at indices 7, 8, 9... are returned',
+    ],
+    validPatterns: [/\.substring\(\s*7\s*\)/],
+    tags: ['String', 'substring', 'extraction'],
+  },
+
+  {
+    id: 'java-str-002',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'Index of Character from Position',
+    text: 'Find the index of "o" starting search from index 5',
+    setup: 'String str = "Hello, World!";',
+    setupCode: 'String str = "Hello, World!";',
+    expected: 8,
+    sample: 'str.indexOf("o", 5) // returns 8',
+    hints: [
+      'Use indexOf(str, fromIndex) to search starting from a position',
+      'The first "o" is at index 4, but searching from 5 finds the one at 8',
+      'Returns -1 if not found after fromIndex',
+    ],
+    validPatterns: [/\.indexOf\(\s*"o"\s*,\s*5\s*\)/],
+    tags: ['String', 'indexOf', 'search', 'fromIndex'],
+  },
+
+  {
+    id: 'java-str-003',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'Last Index of Character',
+    text: 'Find the last occurrence of "l" in the string',
+    setup: 'String str = "Hello, World!";',
+    setupCode: 'String str = "Hello, World!";',
+    expected: 10,
+    sample: 'str.lastIndexOf("l") // returns 10',
+    hints: [
+      'Use lastIndexOf() to find the last occurrence',
+      'Searches from the end of the string backwards',
+      'Returns -1 if not found',
+    ],
+    validPatterns: [/\.lastIndexOf\(\s*"l"\s*\)/],
+    tags: ['String', 'lastIndexOf', 'search'],
+  },
+
+  {
+    id: 'java-str-004',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'Replace First Occurrence',
+    text: 'Replace only the first occurrence of "a" with "X"',
+    setup: 'String str = "banana";',
+    setupCode: 'String str = "banana";',
+    expected: 'bXnana',
+    sample: 'str.replaceFirst("a", "X") // returns "bXnana"',
+    hints: [
+      'Use replaceFirst(regex, replacement) to replace only the first match',
+      'Unlike replace(), replaceFirst() uses regex patterns',
+      'For literal replacement, escape special regex characters',
+    ],
+    validPatterns: [/\.replaceFirst\(\s*"a"\s*,\s*"X"\s*\)/],
+    tags: ['String', 'replaceFirst', 'regex', 'substitution'],
+  },
+
+  {
+    id: 'java-str-005',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'Check if String is Blank',
+    text: 'Check if the string contains only whitespace (Java 11+)',
+    setup: 'String str = "   \\t\\n  ";',
+    setupCode: 'String str = "   \\t\\n  ";',
+    expected: true,
+    sample: 'str.isBlank() // returns true',
+    hints: [
+      'Use isBlank() to check for whitespace-only strings (Java 11+)',
+      'Returns true for empty string or strings with only whitespace',
+      'Different from isEmpty() which only checks for zero length',
+    ],
+    validPatterns: [/\.isBlank\(\)/],
+    tags: ['String', 'isBlank', 'validation', 'Java11'],
+  },
+
+  {
+    id: 'java-str-006',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'Character is Letter',
+    text: 'Check if the character at index 0 is a letter',
+    setup: 'String str = "Hello123";',
+    setupCode: 'String str = "Hello123";',
+    expected: true,
+    sample: 'Character.isLetter(str.charAt(0)) // returns true',
+    hints: [
+      'Use Character.isLetter(char) to check for letters',
+      'Works with Unicode letters, not just ASCII',
+      'Other methods: isDigit(), isWhitespace(), isUpperCase(), isLowerCase()',
+    ],
+    validPatterns: [/Character\.isLetter\(/],
+    tags: ['Character', 'isLetter', 'validation'],
+  },
+
+  {
+    id: 'java-str-007',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'Character to Uppercase',
+    text: 'Convert the character "a" to uppercase',
+    setup: 'char ch = \'a\';',
+    setupCode: 'char ch = \'a\';',
+    expected: 'A',
+    sample: 'Character.toUpperCase(ch) // returns \'A\'',
+    hints: [
+      'Use Character.toUpperCase(char) for single character conversion',
+      'Returns the same character if already uppercase or not a letter',
+      'For strings, use String.toUpperCase()',
+    ],
+    validPatterns: [/Character\.toUpperCase\(/],
+    tags: ['Character', 'toUpperCase', 'case'],
+  },
+
+  {
+    id: 'java-str-008',
+    category: 'String Operations',
+    difficulty: 'easy',
+    title: 'StringBuilder Append',
+    text: 'Create a StringBuilder and append "Hello" and " World"',
+    setup: 'StringBuilder sb = new StringBuilder();',
+    setupCode: 'StringBuilder sb = new StringBuilder();',
+    expected: 'Hello World',
+    sample: 'sb.append("Hello").append(" World").toString() // returns "Hello World"',
+    hints: [
+      'Use StringBuilder.append() for efficient string concatenation',
+      'append() returns the StringBuilder for method chaining',
+      'Call toString() to get the final String',
+    ],
+    validPatterns: [/\.append\(.*\)\.append\(/],
+    tags: ['StringBuilder', 'append', 'concatenation'],
+  },
+
+  // --- MEDIUM (12 problems) ---
+
+  {
+    id: 'java-str-009',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'StringBuilder Insert',
+    text: 'Insert "Java " at index 0 of the existing content',
+    setup: 'StringBuilder sb = new StringBuilder("Programming");',
+    setupCode: 'StringBuilder sb = new StringBuilder("Programming");',
+    expected: 'Java Programming',
+    sample: 'sb.insert(0, "Java ").toString() // returns "Java Programming"',
+    hints: [
+      'Use insert(offset, str) to insert at a specific position',
+      'Existing content shifts to the right',
+      'Can insert various types: String, char, int, etc.',
+    ],
+    validPatterns: [/\.insert\(\s*0\s*,\s*"Java\s*"\s*\)/],
+    tags: ['StringBuilder', 'insert', 'manipulation'],
+  },
+
+  {
+    id: 'java-str-010',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'StringBuilder Delete',
+    text: 'Delete characters from index 5 to 11 (exclusive)',
+    setup: 'StringBuilder sb = new StringBuilder("Hello World!");',
+    setupCode: 'StringBuilder sb = new StringBuilder("Hello World!");',
+    expected: 'Hello!',
+    sample: 'sb.delete(5, 11).toString() // returns "Hello!"',
+    hints: [
+      'Use delete(start, end) to remove a range of characters',
+      'start is inclusive, end is exclusive',
+      'deleteCharAt(index) removes a single character',
+    ],
+    validPatterns: [/\.delete\(\s*5\s*,\s*11\s*\)/],
+    tags: ['StringBuilder', 'delete', 'manipulation'],
+  },
+
+  {
+    id: 'java-str-011',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'StringBuilder Reverse',
+    text: 'Reverse the content of the StringBuilder',
+    setup: 'StringBuilder sb = new StringBuilder("Hello");',
+    setupCode: 'StringBuilder sb = new StringBuilder("Hello");',
+    expected: 'olleH',
+    sample: 'sb.reverse().toString() // returns "olleH"',
+    hints: [
+      'Use reverse() to reverse the character sequence',
+      'Modifies the StringBuilder in place',
+      'Common interview question: reverse a string efficiently',
+    ],
+    validPatterns: [/\.reverse\(\)/],
+    tags: ['StringBuilder', 'reverse', 'manipulation'],
+  },
+
+  {
+    id: 'java-str-012',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'String Format with Padding',
+    text: 'Format the number 42 with leading zeros to make it 5 digits',
+    setup: 'int num = 42;',
+    setupCode: 'int num = 42;',
+    expected: '00042',
+    sample: 'String.format("%05d", num) // returns "00042"',
+    hints: [
+      'Use %0Nd format specifier for zero-padding',
+      '0 means pad with zeros, 5 is the total width, d is for decimal integer',
+      'Without 0, it pads with spaces: "%5d" gives "   42"',
+    ],
+    validPatterns: [/String\.format\(\s*"%05d"/],
+    tags: ['String', 'format', 'padding', 'number'],
+  },
+
+  {
+    id: 'java-str-013',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'Formatted Method',
+    text: 'Use the formatted instance method to create a greeting (Java 15+)',
+    setup: 'String template = "Hello, %s! You are %d years old.";',
+    setupCode: 'String template = "Hello, %s! You are %d years old.";',
+    expected: 'Hello, Alice! You are 30 years old.',
+    sample: 'template.formatted("Alice", 30) // returns formatted string',
+    hints: [
+      'Use formatted() instance method (Java 15+)',
+      'Equivalent to String.format(this, args)',
+      'More readable when template is already a variable',
+    ],
+    validPatterns: [/\.formatted\(/],
+    tags: ['String', 'formatted', 'Java15', 'template'],
+  },
+
+  {
+    id: 'java-str-014',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'StringJoiner Basic',
+    text: 'Join strings with comma delimiter using StringJoiner',
+    setup: 'StringJoiner sj = new StringJoiner(", ");',
+    setupCode: 'StringJoiner sj = new StringJoiner(", ");',
+    expected: 'apple, banana, cherry',
+    sample: 'sj.add("apple").add("banana").add("cherry").toString()',
+    hints: [
+      'StringJoiner provides more control than String.join()',
+      'Constructor takes delimiter, optional prefix and suffix',
+      'Use add() to append elements',
+    ],
+    validPatterns: [/StringJoiner/, /\.add\(/],
+    tags: ['StringJoiner', 'join', 'delimiter'],
+  },
+
+  {
+    id: 'java-str-015',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'StringJoiner with Prefix and Suffix',
+    text: 'Create a JSON-like array string [a, b, c] using StringJoiner',
+    setup: 'StringJoiner sj = new StringJoiner(", ", "[", "]");',
+    setupCode: 'StringJoiner sj = new StringJoiner(", ", "[", "]");',
+    expected: '[a, b, c]',
+    sample: 'sj.add("a").add("b").add("c").toString() // returns "[a, b, c]"',
+    hints: [
+      'StringJoiner constructor: (delimiter, prefix, suffix)',
+      'Prefix and suffix are added automatically',
+      'Great for building structured output like JSON arrays',
+    ],
+    validPatterns: [/StringJoiner\([^)]+,\s*"\["\s*,\s*"\]"\s*\)/],
+    tags: ['StringJoiner', 'prefix', 'suffix', 'formatting'],
+  },
+
+  {
+    id: 'java-str-016',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'Pattern Matcher Find',
+    text: 'Check if the string contains any digits using regex',
+    setup: 'String str = "Hello123World";\nimport java.util.regex.*;',
+    setupCode: 'String str = "Hello123World";\nimport java.util.regex.*;',
+    expected: true,
+    sample: 'Pattern.compile("\\\\d").matcher(str).find() // returns true',
+    hints: [
+      'Use Pattern.compile() to create a regex pattern',
+      'Use matcher(input) to create a Matcher for the input',
+      'find() returns true if any subsequence matches the pattern',
+    ],
+    validPatterns: [/Pattern\.compile\(/, /\.matcher\(/, /\.find\(\)/],
+    tags: ['Pattern', 'Matcher', 'regex', 'find'],
+  },
+
+  {
+    id: 'java-str-017',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'Pattern Matcher Matches',
+    text: 'Check if the entire string is a valid email format',
+    setup: 'String email = "test@example.com";\nimport java.util.regex.*;',
+    setupCode: 'String email = "test@example.com";\nimport java.util.regex.*;',
+    expected: true,
+    sample:
+      'Pattern.compile("^[\\\\w.-]+@[\\\\w.-]+\\\\.[a-zA-Z]{2,}$").matcher(email).matches()',
+    hints: [
+      'Use matches() to check if ENTIRE string matches the pattern',
+      'Different from find() which looks for any matching subsequence',
+      'Anchors ^ and $ are implicit with matches()',
+    ],
+    validPatterns: [/Pattern\.compile\(/, /\.matcher\(/, /\.matches\(\)/],
+    tags: ['Pattern', 'Matcher', 'regex', 'matches', 'validation'],
+  },
+
+  {
+    id: 'java-str-018',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'Extract Groups with Matcher',
+    text: 'Extract the domain from an email address using regex groups',
+    setup:
+      'String email = "user@example.com";\nPattern p = Pattern.compile("@(.+)$");',
+    setupCode:
+      'String email = "user@example.com";\nPattern p = Pattern.compile("@(.+)$");',
+    expected: 'example.com',
+    sample:
+      'Matcher m = p.matcher(email); m.find(); m.group(1) // returns "example.com"',
+    hints: [
+      'Use parentheses in regex to define capture groups',
+      'group(0) is entire match, group(1) is first capture group',
+      'Call find() or matches() before accessing groups',
+    ],
+    validPatterns: [/\.group\(\s*1\s*\)/],
+    tags: ['Pattern', 'Matcher', 'regex', 'groups', 'extraction'],
+  },
+
+  {
+    id: 'java-str-019',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'Locale-Aware Uppercase',
+    text: 'Convert string to uppercase using Turkish locale',
+    setup: 'String str = "istanbul";\nimport java.util.Locale;',
+    setupCode: 'String str = "istanbul";\nimport java.util.Locale;',
+    expected: 'ISTANBUL',
+    sample:
+      'str.toUpperCase(new Locale("tr", "TR")) // returns "ISTANBUL" with dotted I',
+    hints: [
+      'Use toUpperCase(Locale) for locale-aware conversion',
+      'Turkish has special rules: i -> I with dot, I -> i without dot',
+      'Always specify locale for user-facing text transformations',
+    ],
+    validPatterns: [/\.toUpperCase\(\s*.*Locale/],
+    tags: ['String', 'toUpperCase', 'Locale', 'i18n'],
+  },
+
+  {
+    id: 'java-str-020',
+    category: 'String Operations',
+    difficulty: 'medium',
+    title: 'Compare Strings with Locale',
+    text: 'Compare two strings using German locale collation',
+    setup:
+      'String s1 = "Acker";\nString s2 = "Adam";\nimport java.text.Collator;\nimport java.util.Locale;',
+    setupCode:
+      'String s1 = "Acker";\nString s2 = "Adam";\nimport java.text.Collator;\nimport java.util.Locale;',
+    expected: -1,
+    sample:
+      'Collator.getInstance(Locale.GERMAN).compare(s1, s2) // negative if s1 < s2',
+    hints: [
+      'Use Collator for locale-aware string comparison',
+      'Different locales have different sorting rules',
+      'Returns negative, zero, or positive like compareTo()',
+    ],
+    validPatterns: [/Collator\.getInstance\(/, /\.compare\(/],
+    tags: ['Collator', 'Locale', 'comparison', 'i18n'],
+  },
+
+  // --- HARD (5 problems) ---
+
+  {
+    id: 'java-str-021',
+    category: 'String Operations',
+    difficulty: 'hard',
+    title: 'Text Block with Formatting',
+    text: 'Create a text block for HTML and format with variables (Java 15+)',
+    setup: 'String title = "Welcome";\nString body = "Hello, World!";',
+    setupCode: 'String title = "Welcome";\nString body = "Hello, World!";',
+    expected: '<html>\n  <head><title>Welcome</title></head>\n  <body>Hello, World!</body>\n</html>',
+    sample: `"""
+<html>
+  <head><title>%s</title></head>
+  <body>%s</body>
+</html>
+""".formatted(title, body)`,
+    hints: [
+      'Text blocks use triple quotes """ and preserve formatting',
+      'Incidental indentation is removed based on closing """',
+      'Combine with formatted() for variable substitution',
+      'Great for multi-line strings: SQL, HTML, JSON',
+    ],
+    validPatterns: [/"""/, /\.formatted\(/],
+    tags: ['String', 'textBlock', 'Java15', 'formatted', 'multiline'],
+  },
+
+  {
+    id: 'java-str-022',
+    category: 'String Operations',
+    difficulty: 'hard',
+    title: 'Pattern Replace with Function',
+    text: 'Replace all words with their uppercase versions using Matcher.replaceAll with Function',
+    setup:
+      'String str = "hello world java";\nimport java.util.regex.*;\nimport java.util.function.Function;',
+    setupCode:
+      'String str = "hello world java";\nimport java.util.regex.*;\nimport java.util.function.Function;',
+    expected: 'HELLO WORLD JAVA',
+    sample:
+      'Pattern.compile("\\\\w+").matcher(str).replaceAll(m -> m.group().toUpperCase())',
+    hints: [
+      'Matcher.replaceAll(Function<MatchResult, String>) provides dynamic replacement (Java 9+)',
+      'Function receives MatchResult with access to matched text and groups',
+      'More powerful than static replacement strings',
+    ],
+    validPatterns: [/\.replaceAll\(\s*\w+\s*->/],
+    tags: ['Pattern', 'Matcher', 'replaceAll', 'Function', 'Java9'],
+  },
+
+  {
+    id: 'java-str-023',
+    category: 'String Operations',
+    difficulty: 'hard',
+    title: 'Split with Regex Groups',
+    text: 'Split string keeping delimiters using regex lookahead',
+    setup: 'String str = "one1two2three3four";',
+    setupCode: 'String str = "one1two2three3four";',
+    expected: ['one', '1', 'two', '2', 'three', '3', 'four'],
+    sample:
+      'str.split("(?<=\\\\d)|(?=\\\\d)") // splits around digits, keeping them',
+    hints: [
+      'Use lookahead (?=X) and lookbehind (?<=X) for zero-width splits',
+      '(?<=\\d) matches position after digit, (?=\\d) before digit',
+      'This technique keeps the delimiter as separate elements',
+    ],
+    validPatterns: [/\.split\(\s*".*\(\?[<>=]/],
+    tags: ['String', 'split', 'regex', 'lookahead', 'lookbehind', 'advanced'],
+  },
+
+  {
+    id: 'java-str-024',
+    category: 'String Operations',
+    difficulty: 'hard',
+    title: 'StringBuffer Thread-Safe Operations',
+    text: 'Use StringBuffer for thread-safe string building in concurrent context',
+    setup:
+      'StringBuffer sb = new StringBuffer();\n// Simulate concurrent access',
+    setupCode:
+      'StringBuffer sb = new StringBuffer();\n// Simulate concurrent access',
+    expected: 'ABC',
+    sample: `synchronized(sb) {
+  sb.append("A").append("B").append("C");
+}
+sb.toString() // returns "ABC"`,
+    hints: [
+      'StringBuffer is thread-safe (synchronized), StringBuilder is not',
+      'For single-threaded code, prefer StringBuilder (faster)',
+      'StringBuffer methods are synchronized individually',
+      'For atomic compound operations, use external synchronization',
+    ],
+    validPatterns: [/StringBuffer/, /\.append\(/],
+    tags: ['StringBuffer', 'thread-safe', 'concurrent', 'synchronization'],
+  },
+
+  {
+    id: 'java-str-025',
+    category: 'String Operations',
+    difficulty: 'hard',
+    title: 'Transform String Lines',
+    text: 'Process each line of a multi-line string and add line numbers (Java 11+)',
+    setup: 'String text = "first\\nsecond\\nthird";',
+    setupCode: 'String text = "first\\nsecond\\nthird";',
+    expected: '1: first\n2: second\n3: third',
+    sample: `import java.util.concurrent.atomic.AtomicInteger;
+AtomicInteger counter = new AtomicInteger(0);
+text.lines()
+    .map(line -> counter.incrementAndGet() + ": " + line)
+    .collect(Collectors.joining("\\n"))`,
+    hints: [
+      'Use lines() to get a Stream<String> of lines (Java 11+)',
+      'lines() handles different line separators (\\n, \\r\\n, \\r)',
+      'Combine with Stream operations for powerful text processing',
+      'Use AtomicInteger or IntStream for line numbering',
+    ],
+    validPatterns: [/\.lines\(\)/, /\.map\(/, /\.collect\(/],
+    tags: ['String', 'lines', 'Stream', 'Java11', 'text-processing'],
+  },
+
+  // ============================================================
+  // Java Collections Framework (25 problems)
+  // ============================================================
+
+  // --- List Operations (subList, replaceAll, sort with Comparator) ---
+
+  {
+    id: 'java-coll-001',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'SubList Clear to Remove Range',
+    text: 'Remove elements from index 1 to 3 (exclusive) using subList',
+    setup: 'List<Integer> nums = new ArrayList<>(Arrays.asList(10, 20, 30, 40, 50));',
+    setupCode: 'List<Integer> nums = new ArrayList<>(Arrays.asList(10, 20, 30, 40, 50));',
+    expected: [10, 40, 50],
+    sample: 'nums.subList(1, 3).clear(); // nums is now [10, 40, 50]',
+    hints: [
+      'subList() returns a view backed by the original list',
+      'Modifications to subList affect the original list',
+      'clear() on subList removes those elements from the original',
+    ],
+    validPatterns: [/\.subList\(\s*1\s*,\s*3\s*\)\.clear\(\)/],
+    tags: ['List', 'subList', 'clear', 'range-removal'],
+  },
+
+  {
+    id: 'java-coll-002',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'Sort List with Custom Comparator',
+    text: 'Sort strings by length in ascending order',
+    setup:
+      'List<String> words = new ArrayList<>(Arrays.asList("elephant", "cat", "dog", "giraffe"));',
+    setupCode:
+      'List<String> words = new ArrayList<>(Arrays.asList("elephant", "cat", "dog", "giraffe"));',
+    expected: ['cat', 'dog', 'giraffe', 'elephant'],
+    sample: 'words.sort(Comparator.comparingInt(String::length));',
+    hints: [
+      'Use List.sort(Comparator) for in-place sorting',
+      'Comparator.comparingInt() creates a comparator from an int-valued function',
+      'String::length extracts the length for comparison',
+    ],
+    validPatterns: [/\.sort\(/, /Comparator\.comparingInt|comparing/],
+    tags: ['List', 'sort', 'Comparator', 'comparingInt'],
+  },
+
+  {
+    id: 'java-coll-003',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'Sort Descending with Comparator',
+    text: 'Sort integers in descending order using List.sort()',
+    setup: 'List<Integer> nums = new ArrayList<>(Arrays.asList(3, 1, 4, 1, 5, 9, 2, 6));',
+    setupCode: 'List<Integer> nums = new ArrayList<>(Arrays.asList(3, 1, 4, 1, 5, 9, 2, 6));',
+    expected: [9, 6, 5, 4, 3, 2, 1, 1],
+    sample: 'nums.sort(Comparator.reverseOrder());',
+    hints: [
+      'Comparator.reverseOrder() returns a comparator for reverse natural order',
+      'Alternatively use Collections.sort(list, Collections.reverseOrder())',
+      'Or use Comparator.comparing(Function.identity()).reversed()',
+    ],
+    validPatterns: [/\.sort\(/, /reverseOrder|reversed/],
+    tags: ['List', 'sort', 'Comparator', 'descending'],
+  },
+
+  {
+    id: 'java-coll-004',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'ReplaceAll with UnaryOperator',
+    text: 'Convert all strings to uppercase in place',
+    setup: 'List<String> words = new ArrayList<>(Arrays.asList("hello", "world", "java"));',
+    setupCode: 'List<String> words = new ArrayList<>(Arrays.asList("hello", "world", "java"));',
+    expected: ['HELLO', 'WORLD', 'JAVA'],
+    sample: 'words.replaceAll(String::toUpperCase);',
+    hints: [
+      'replaceAll(UnaryOperator) transforms each element in place',
+      'String::toUpperCase is a method reference for transformation',
+      'More efficient than stream().map().collect() for in-place updates',
+    ],
+    validPatterns: [/\.replaceAll\(/, /toUpperCase/],
+    tags: ['List', 'replaceAll', 'UnaryOperator', 'transformation'],
+  },
+
+  {
+    id: 'java-coll-005',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'Sort with Multiple Criteria',
+    text: 'Sort by string length, then alphabetically for same length',
+    setup:
+      'List<String> words = new ArrayList<>(Arrays.asList("cat", "dog", "ant", "bear", "ape"));',
+    setupCode:
+      'List<String> words = new ArrayList<>(Arrays.asList("cat", "dog", "ant", "bear", "ape"));',
+    expected: ['ant', 'ape', 'cat', 'dog', 'bear'],
+    sample:
+      'words.sort(Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder()));',
+    hints: [
+      'Use thenComparing() to chain multiple sort criteria',
+      'First sorts by length, then by natural order for ties',
+      'thenComparing() only applies when previous comparison is equal',
+    ],
+    validPatterns: [/\.sort\(/, /comparingInt|comparing/, /thenComparing/],
+    tags: ['List', 'sort', 'Comparator', 'thenComparing', 'multi-criteria'],
+  },
+
+  // --- Set Operations (TreeSet, LinkedHashSet) ---
+
+  {
+    id: 'java-coll-006',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'TreeSet Natural Ordering',
+    text: 'Create a TreeSet from the list to get sorted unique elements',
+    setup: 'List<Integer> nums = Arrays.asList(5, 2, 8, 2, 1, 8, 3);',
+    setupCode: 'List<Integer> nums = Arrays.asList(5, 2, 8, 2, 1, 8, 3);',
+    expected: [1, 2, 3, 5, 8],
+    sample: 'new TreeSet<>(nums) // returns TreeSet [1, 2, 3, 5, 8]',
+    hints: [
+      'TreeSet maintains elements in sorted order',
+      'Duplicates are automatically removed',
+      'Uses natural ordering (Comparable) by default',
+    ],
+    validPatterns: [/new\s+TreeSet\s*<.*>\s*\(\s*nums\s*\)/],
+    tags: ['TreeSet', 'sorted', 'unique', 'NavigableSet'],
+  },
+
+  {
+    id: 'java-coll-007',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'LinkedHashSet Insertion Order',
+    text: 'Create a LinkedHashSet to maintain insertion order while removing duplicates',
+    setup: 'List<String> items = Arrays.asList("b", "a", "c", "a", "b", "d");',
+    setupCode: 'List<String> items = Arrays.asList("b", "a", "c", "a", "b", "d");',
+    expected: ['b', 'a', 'c', 'd'],
+    sample: 'new LinkedHashSet<>(items) // returns LinkedHashSet [b, a, c, d]',
+    hints: [
+      'LinkedHashSet maintains insertion order',
+      'Duplicates are removed (first occurrence kept)',
+      'Good for deduplication while preserving order',
+    ],
+    validPatterns: [/new\s+LinkedHashSet\s*<.*>\s*\(\s*items\s*\)/],
+    tags: ['LinkedHashSet', 'insertion-order', 'unique'],
+  },
+
+  {
+    id: 'java-coll-008',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'TreeSet Floor and Ceiling',
+    text: 'Find the greatest element less than or equal to 5, and smallest greater than or equal to 5',
+    setup: 'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 3, 6, 8, 10));',
+    setupCode: 'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 3, 6, 8, 10));',
+    expected: { floor: 3, ceiling: 6 },
+    sample: 'set.floor(5) // returns 3\nset.ceiling(5) // returns 6',
+    hints: [
+      'floor(e) returns greatest element <= e, or null',
+      'ceiling(e) returns smallest element >= e, or null',
+      'TreeSet implements NavigableSet with these navigation methods',
+    ],
+    validPatterns: [/\.floor\(\s*5\s*\)|\.ceiling\(\s*5\s*\)/],
+    tags: ['TreeSet', 'NavigableSet', 'floor', 'ceiling'],
+  },
+
+  {
+    id: 'java-coll-009',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'TreeSet SubSet Range',
+    text: 'Get a view of elements from 3 (inclusive) to 8 (exclusive)',
+    setup:
+      'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));',
+    setupCode:
+      'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));',
+    expected: [3, 4, 5, 6, 7],
+    sample: 'set.subSet(3, 8) // returns SortedSet [3, 4, 5, 6, 7]',
+    hints: [
+      'subSet(from, to) returns a view with from inclusive, to exclusive',
+      'Use subSet(from, fromInclusive, to, toInclusive) for full control',
+      'Changes to the subset reflect in the original set',
+    ],
+    validPatterns: [/\.subSet\(\s*3\s*,\s*8\s*\)/],
+    tags: ['TreeSet', 'NavigableSet', 'subSet', 'range-view'],
+  },
+
+  {
+    id: 'java-coll-010',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'TreeSet HeadSet and TailSet',
+    text: 'Get elements less than 5 (headSet) and elements >= 5 (tailSet)',
+    setup: 'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));',
+    setupCode: 'TreeSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));',
+    expected: { head: [1, 2, 3, 4], tail: [5, 6, 7, 8] },
+    sample: 'set.headSet(5) // [1, 2, 3, 4]\nset.tailSet(5) // [5, 6, 7, 8]',
+    hints: [
+      'headSet(e) returns elements strictly less than e',
+      'tailSet(e) returns elements >= e',
+      'Use headSet(e, inclusive) for control over boundary',
+    ],
+    validPatterns: [/\.headSet\(\s*5\s*\)|\.tailSet\(\s*5\s*\)/],
+    tags: ['TreeSet', 'NavigableSet', 'headSet', 'tailSet'],
+  },
+
+  // --- Map Operations (TreeMap, LinkedHashMap, NavigableMap) ---
+
+  {
+    id: 'java-coll-011',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'TreeMap Sorted Keys',
+    text: 'Create a TreeMap to maintain keys in sorted order',
+    setup:
+      'Map<String, Integer> data = new HashMap<>();\ndata.put("cherry", 3);\ndata.put("apple", 1);\ndata.put("banana", 2);',
+    setupCode:
+      'Map<String, Integer> data = new HashMap<>();\ndata.put("cherry", 3);\ndata.put("apple", 1);\ndata.put("banana", 2);',
+    expected: { apple: 1, banana: 2, cherry: 3 },
+    sample: 'new TreeMap<>(data) // TreeMap with sorted keys',
+    hints: [
+      'TreeMap maintains keys in sorted (natural) order',
+      'Implements NavigableMap for navigation operations',
+      'Keys must be Comparable or provide a Comparator',
+    ],
+    validPatterns: [/new\s+TreeMap\s*<.*>\s*\(\s*data\s*\)/],
+    tags: ['TreeMap', 'sorted', 'NavigableMap'],
+  },
+
+  {
+    id: 'java-coll-012',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'TreeMap First and Last Key',
+    text: 'Get the first (smallest) and last (largest) keys from the TreeMap',
+    setup:
+      'TreeMap<Integer, String> map = new TreeMap<>();\nmap.put(5, "five");\nmap.put(2, "two");\nmap.put(8, "eight");\nmap.put(1, "one");',
+    setupCode:
+      'TreeMap<Integer, String> map = new TreeMap<>();\nmap.put(5, "five");\nmap.put(2, "two");\nmap.put(8, "eight");\nmap.put(1, "one");',
+    expected: { first: 1, last: 8 },
+    sample: 'map.firstKey() // returns 1\nmap.lastKey() // returns 8',
+    hints: [
+      'firstKey() returns the smallest key',
+      'lastKey() returns the largest key',
+      'Throws NoSuchElementException if map is empty',
+    ],
+    validPatterns: [/\.firstKey\(\)|\.lastKey\(\)/],
+    tags: ['TreeMap', 'NavigableMap', 'firstKey', 'lastKey'],
+  },
+
+  {
+    id: 'java-coll-013',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'TreeMap FloorEntry and CeilingEntry',
+    text: 'Find the entry with greatest key <= 6 and smallest key >= 6',
+    setup:
+      'TreeMap<Integer, String> map = new TreeMap<>();\nmap.put(2, "two");\nmap.put(4, "four");\nmap.put(8, "eight");\nmap.put(10, "ten");',
+    setupCode:
+      'TreeMap<Integer, String> map = new TreeMap<>();\nmap.put(2, "two");\nmap.put(4, "four");\nmap.put(8, "eight");\nmap.put(10, "ten");',
+    expected: { floorKey: 4, ceilingKey: 8 },
+    sample:
+      'map.floorEntry(6).getKey() // returns 4\nmap.ceilingEntry(6).getKey() // returns 8',
+    hints: [
+      'floorEntry(k) returns entry with greatest key <= k',
+      'ceilingEntry(k) returns entry with smallest key >= k',
+      'Also available: floorKey(), ceilingKey() for keys only',
+    ],
+    validPatterns: [
+      /\.floorEntry\(\s*6\s*\)|\.ceilingEntry\(\s*6\s*\)|\.floorKey\(\s*6\s*\)|\.ceilingKey\(\s*6\s*\)/,
+    ],
+    tags: ['TreeMap', 'NavigableMap', 'floorEntry', 'ceilingEntry'],
+  },
+
+  {
+    id: 'java-coll-014',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'LinkedHashMap Access Order',
+    text: 'Create a LinkedHashMap with access-order (LRU cache behavior)',
+    setup:
+      '// Create access-ordered LinkedHashMap with initial capacity 16, load factor 0.75',
+    setupCode:
+      '// Create access-ordered LinkedHashMap with initial capacity 16, load factor 0.75',
+    expected: 'access-ordered map',
+    sample: 'new LinkedHashMap<>(16, 0.75f, true) // true enables access-order',
+    hints: [
+      'Third constructor parameter enables access-order when true',
+      'Access-order: most recently accessed entries move to end',
+      'Useful for implementing LRU caches',
+      'Default (false) maintains insertion order',
+    ],
+    validPatterns: [/new\s+LinkedHashMap\s*<.*>\s*\([^)]*,\s*true\s*\)/],
+    tags: ['LinkedHashMap', 'access-order', 'LRU', 'cache'],
+  },
+
+  {
+    id: 'java-coll-015',
+    category: 'Collections Framework',
+    difficulty: 'hard',
+    title: 'TreeMap SubMap Range View',
+    text: 'Get a view of entries with keys from 5 to 15 (inclusive)',
+    setup:
+      'TreeMap<Integer, String> map = new TreeMap<>();\nfor (int i = 1; i <= 20; i++) map.put(i, "v" + i);',
+    setupCode:
+      'TreeMap<Integer, String> map = new TreeMap<>();\nfor (int i = 1; i <= 20; i++) map.put(i, "v" + i);',
+    expected: 'submap with keys 5-15',
+    sample: 'map.subMap(5, true, 15, true) // NavigableMap with keys 5-15 inclusive',
+    hints: [
+      'subMap(fromKey, fromInclusive, toKey, toInclusive) for full control',
+      'Returns a NavigableMap view backed by original',
+      'Changes reflect in both directions',
+    ],
+    validPatterns: [/\.subMap\(\s*5\s*,\s*true\s*,\s*15\s*,\s*true\s*\)/],
+    tags: ['TreeMap', 'NavigableMap', 'subMap', 'range-view'],
+  },
+
+  // --- Queue and Deque Operations ---
+
+  {
+    id: 'java-coll-016',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'PriorityQueue Min Heap',
+    text: 'Create a PriorityQueue and poll elements to get them in sorted order',
+    setup: 'PriorityQueue<Integer> pq = new PriorityQueue<>(Arrays.asList(5, 2, 8, 1, 9));',
+    setupCode: 'PriorityQueue<Integer> pq = new PriorityQueue<>(Arrays.asList(5, 2, 8, 1, 9));',
+    expected: 1,
+    sample: 'pq.poll() // returns 1 (smallest element)',
+    hints: [
+      'PriorityQueue is a min-heap by default',
+      'poll() removes and returns the smallest element',
+      'peek() returns smallest without removing',
+      'Use Comparator.reverseOrder() for max-heap',
+    ],
+    validPatterns: [/\.poll\(\)|\.peek\(\)/],
+    tags: ['PriorityQueue', 'min-heap', 'poll', 'peek'],
+  },
+
+  {
+    id: 'java-coll-017',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'PriorityQueue Max Heap',
+    text: 'Create a max-heap PriorityQueue that returns largest element first',
+    setup: 'List<Integer> nums = Arrays.asList(5, 2, 8, 1, 9);',
+    setupCode: 'List<Integer> nums = Arrays.asList(5, 2, 8, 1, 9);',
+    expected: 9,
+    sample:
+      'PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());\nmaxHeap.addAll(nums);\nmaxHeap.poll() // returns 9',
+    hints: [
+      'Pass Comparator.reverseOrder() to constructor for max-heap',
+      'Or use Collections.reverseOrder()',
+      'poll() now returns the largest element',
+    ],
+    validPatterns: [
+      /new\s+PriorityQueue\s*<.*>\s*\(\s*Comparator\.reverseOrder\(\)\s*\)|new\s+PriorityQueue\s*<.*>\s*\(\s*Collections\.reverseOrder\(\)\s*\)/,
+    ],
+    tags: ['PriorityQueue', 'max-heap', 'Comparator', 'reverseOrder'],
+  },
+
+  {
+    id: 'java-coll-018',
+    category: 'Collections Framework',
+    difficulty: 'easy',
+    title: 'ArrayDeque as Stack',
+    text: 'Use ArrayDeque as a stack: push 1, 2, 3 and pop to get 3',
+    setup: 'Deque<Integer> stack = new ArrayDeque<>();',
+    setupCode: 'Deque<Integer> stack = new ArrayDeque<>();',
+    expected: 3,
+    sample: 'stack.push(1);\nstack.push(2);\nstack.push(3);\nstack.pop() // returns 3',
+    hints: [
+      'ArrayDeque is preferred over Stack for stack operations',
+      'push() adds to front, pop() removes from front (LIFO)',
+      'peek() returns front element without removing',
+    ],
+    validPatterns: [/\.push\(|\.pop\(\)/],
+    tags: ['ArrayDeque', 'Deque', 'stack', 'LIFO'],
+  },
+
+  {
+    id: 'java-coll-019',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'ArrayDeque as Queue',
+    text: 'Use ArrayDeque as a queue: offer 1, 2, 3 and poll to get 1',
+    setup: 'Deque<Integer> queue = new ArrayDeque<>();',
+    setupCode: 'Deque<Integer> queue = new ArrayDeque<>();',
+    expected: 1,
+    sample: 'queue.offer(1);\nqueue.offer(2);\nqueue.offer(3);\nqueue.poll() // returns 1',
+    hints: [
+      'offer() adds to end, poll() removes from front (FIFO)',
+      'ArrayDeque is more efficient than LinkedList for queue operations',
+      'offerFirst/offerLast and pollFirst/pollLast for explicit control',
+    ],
+    validPatterns: [/\.offer\(|\.poll\(\)/],
+    tags: ['ArrayDeque', 'Deque', 'queue', 'FIFO'],
+  },
+
+  {
+    id: 'java-coll-020',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'Deque PeekFirst and PeekLast',
+    text: 'Peek at both ends of the deque without removing',
+    setup:
+      'Deque<String> deque = new ArrayDeque<>(Arrays.asList("first", "middle", "last"));',
+    setupCode:
+      'Deque<String> deque = new ArrayDeque<>(Arrays.asList("first", "middle", "last"));',
+    expected: { first: 'first', last: 'last' },
+    sample: 'deque.peekFirst() // returns "first"\ndeque.peekLast() // returns "last"',
+    hints: [
+      'peekFirst() returns head element without removing',
+      'peekLast() returns tail element without removing',
+      'Returns null if deque is empty (vs getFirst/getLast which throw)',
+    ],
+    validPatterns: [/\.peekFirst\(\)|\.peekLast\(\)/],
+    tags: ['ArrayDeque', 'Deque', 'peekFirst', 'peekLast'],
+  },
+
+  // --- Collections Utility Methods ---
+
+  {
+    id: 'java-coll-021',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'Collections BinarySearch',
+    text: 'Find the index of 30 in a sorted list using binary search',
+    setup: 'List<Integer> sorted = Arrays.asList(10, 20, 30, 40, 50);',
+    setupCode: 'List<Integer> sorted = Arrays.asList(10, 20, 30, 40, 50);',
+    expected: 2,
+    sample: 'Collections.binarySearch(sorted, 30) // returns 2',
+    hints: [
+      'List MUST be sorted before binary search',
+      'Returns index if found, or (-(insertion point) - 1) if not found',
+      'O(log n) complexity for RandomAccess lists',
+    ],
+    validPatterns: [/Collections\.binarySearch\(\s*sorted\s*,\s*30\s*\)/],
+    tags: ['Collections', 'binarySearch', 'sorted', 'search'],
+  },
+
+  {
+    id: 'java-coll-022',
+    category: 'Collections Framework',
+    difficulty: 'medium',
+    title: 'Collections Disjoint Check',
+    text: 'Check if two collections have no elements in common',
+    setup:
+      'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
+    setupCode:
+      'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
+    expected: true,
+    sample: 'Collections.disjoint(list1, list2) // returns true',
+    hints: [
+      'disjoint() returns true if collections have no common elements',
+      'Returns false if any element exists in both collections',
+      'Useful for checking set intersection without creating new set',
+    ],
+    validPatterns: [/Collections\.disjoint\(\s*list1\s*,\s*list2\s*\)/],
+    tags: ['Collections', 'disjoint', 'intersection', 'check'],
+  },
+
+  {
+    id: 'java-coll-023',
+    category: 'Collections Framework',
+    difficulty: 'hard',
+    title: 'Collections Rotate',
+    text: 'Rotate list elements by 2 positions to the right',
+    setup: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));',
+    setupCode: 'List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));',
+    expected: [4, 5, 1, 2, 3],
+    sample: 'Collections.rotate(nums, 2); // nums is now [4, 5, 1, 2, 3]',
+    hints: [
+      'rotate(list, distance) rotates elements by distance positions',
+      'Positive distance rotates right (toward end)',
+      'Negative distance rotates left (toward beginning)',
+      'Elements that fall off one end appear at the other',
+    ],
+    validPatterns: [/Collections\.rotate\(\s*nums\s*,\s*2\s*\)/],
+    tags: ['Collections', 'rotate', 'circular', 'manipulation'],
+  },
+
+  // --- Concurrent Collections ---
+
+  {
+    id: 'java-coll-024',
+    category: 'Collections Framework',
+    difficulty: 'hard',
+    title: 'ConcurrentHashMap Atomic Update',
+    text: 'Atomically increment a counter value in ConcurrentHashMap',
+    setup:
+      'ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();\nmap.put("counter", 10);',
+    setupCode:
+      'ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();\nmap.put("counter", 10);',
+    expected: 11,
+    sample: 'map.compute("counter", (k, v) -> v + 1) // atomically returns 11',
+    hints: [
+      'ConcurrentHashMap.compute() is atomic and thread-safe',
+      'BiFunction receives key and current value',
+      'Also available: computeIfAbsent, computeIfPresent, merge',
+      'Preferred over get-then-put which has race conditions',
+    ],
+    validPatterns: [/\.compute\(\s*"counter"/],
+    tags: ['ConcurrentHashMap', 'concurrent', 'atomic', 'thread-safe'],
+  },
+
+  // --- Immutable Collections (List.of, Set.of, Map.of) ---
+
+  {
+    id: 'java-coll-025',
+    category: 'Collections Framework',
+    difficulty: 'hard',
+    title: 'Immutable List with List.of',
+    text: 'Create an immutable list containing 1, 2, 3 (Java 9+)',
+    setup: '// Create an immutable List<Integer>',
+    setupCode: '// Create an immutable List<Integer>',
+    expected: [1, 2, 3],
+    sample: 'List.of(1, 2, 3) // returns immutable [1, 2, 3]',
+    hints: [
+      'List.of() creates an immutable list (Java 9+)',
+      'Cannot add, remove, or modify elements',
+      'Does not allow null elements',
+      'Use new ArrayList<>(List.of(...)) if mutability needed',
+    ],
+    validPatterns: [/List\.of\(\s*1\s*,\s*2\s*,\s*3\s*\)/],
+    tags: ['List', 'immutable', 'List.of', 'Java9'],
+  },
+
+  // ============================================================
+  // Advanced Stream API - Complex Pipelines (25 problems)
+  // Focusing on: Collectors, flatMap, primitives, parallel, takeWhile/dropWhile, custom collectors
+  // ============================================================
+
+  // --- EASY (8 problems) ---
+
+  {
+    id: 'java-stream-031',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'IntStream Range',
+    text: 'Generate numbers from 1 to 5 (inclusive) using IntStream',
+    setup: '// Use IntStream to generate a range of integers',
+    setupCode: '// Use IntStream to generate a range of integers',
+    expected: [1, 2, 3, 4, 5],
+    sample: 'IntStream.rangeClosed(1, 5).boxed().collect(Collectors.toList())',
+    hints: [
+      'Use IntStream.rangeClosed(start, endInclusive) for inclusive range',
+      'IntStream.range(start, end) excludes the end value',
+      'Use boxed() to convert IntStream to Stream<Integer>',
+    ],
+    validPatterns: [/IntStream\.rangeClosed\(/, /\.boxed\(\)/],
+    tags: ['Stream', 'IntStream', 'range', 'generation'],
+  },
+
+  {
+    id: 'java-stream-032',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'DoubleStream Average',
+    text: 'Calculate the average of the double array',
+    setup: 'double[] values = {1.5, 2.5, 3.5, 4.5};',
+    setupCode: 'double[] values = {1.5, 2.5, 3.5, 4.5};',
+    expected: 3.0,
+    sample: 'Arrays.stream(values).average().orElse(0)',
+    hints: [
+      'Arrays.stream() on double[] returns DoubleStream',
+      'DoubleStream has average() returning OptionalDouble',
+      'Use orElse(default) to handle empty streams',
+    ],
+    validPatterns: [/Arrays\.stream\(/, /\.average\(\)/],
+    tags: ['Stream', 'DoubleStream', 'average', 'primitives'],
+  },
+
+  {
+    id: 'java-stream-033',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'LongStream Sum',
+    text: 'Calculate the sum of the long array',
+    setup: 'long[] values = {100L, 200L, 300L, 400L};',
+    setupCode: 'long[] values = {100L, 200L, 300L, 400L};',
+    expected: 1000,
+    sample: 'Arrays.stream(values).sum()',
+    hints: [
+      'Arrays.stream() on long[] returns LongStream',
+      'LongStream has sum() method returning long',
+      'More efficient than boxing to Stream<Long>',
+    ],
+    validPatterns: [/Arrays\.stream\(/, /\.sum\(\)/],
+    tags: ['Stream', 'LongStream', 'sum', 'primitives'],
+  },
+
+  {
+    id: 'java-stream-034',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'Stream Concatenation',
+    text: 'Concatenate two streams into one',
+    setup: 'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
+    setupCode: 'List<Integer> list1 = Arrays.asList(1, 2, 3);\nList<Integer> list2 = Arrays.asList(4, 5, 6);',
+    expected: [1, 2, 3, 4, 5, 6],
+    sample: 'Stream.concat(list1.stream(), list2.stream()).collect(Collectors.toList())',
+    hints: [
+      'Use Stream.concat(stream1, stream2) to combine two streams',
+      'Creates a lazily concatenated stream',
+      'For more than two streams, use Stream.of(s1, s2, s3).flatMap(s -> s)',
+    ],
+    validPatterns: [/Stream\.concat\(/],
+    tags: ['Stream', 'concat', 'combination'],
+  },
+
+  {
+    id: 'java-stream-035',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'Collectors.toSet',
+    text: 'Collect stream results into a Set to remove duplicates',
+    setup: 'List<Integer> nums = Arrays.asList(1, 2, 2, 3, 3, 3, 4);',
+    setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 2, 3, 3, 3, 4);',
+    expected: [1, 2, 3, 4],
+    sample: 'nums.stream().collect(Collectors.toSet())',
+    hints: [
+      'Use Collectors.toSet() to collect into a Set',
+      'Set automatically removes duplicates',
+      'Order is not guaranteed; use toCollection(LinkedHashSet::new) for ordered set',
+    ],
+    validPatterns: [/\.stream\(\)/, /Collectors\.toSet\(\)/],
+    tags: ['Stream', 'Collectors', 'toSet', 'deduplication'],
+  },
+
+  {
+    id: 'java-stream-036',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'IntStream Min',
+    text: 'Find the minimum value from an int array using IntStream',
+    setup: 'int[] nums = {5, 2, 8, 1, 9};',
+    setupCode: 'int[] nums = {5, 2, 8, 1, 9};',
+    expected: 1,
+    sample: 'Arrays.stream(nums).min().orElse(0)',
+    hints: [
+      'IntStream has min() method returning OptionalInt',
+      'Use orElse() or orElseThrow() to handle empty case',
+      'Also available: max(), sum(), average(), count()',
+    ],
+    validPatterns: [/Arrays\.stream\(/, /\.min\(\)/],
+    tags: ['Stream', 'IntStream', 'min', 'statistics'],
+  },
+
+  {
+    id: 'java-stream-037',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'Peek for Debugging',
+    text: 'Use peek to print elements while filtering (returns the filtered list)',
+    setup: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);',
+    setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);',
+    expected: [2, 4],
+    sample: 'nums.stream().filter(n -> n % 2 == 0).peek(System.out::println).collect(Collectors.toList())',
+    hints: [
+      'peek() is for debugging - performs action without modifying stream',
+      'peek() is an intermediate operation, needs a terminal operation',
+      'Avoid using peek() for side effects in production code',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.peek\(/, /\.collect\(/],
+    tags: ['Stream', 'peek', 'debugging'],
+  },
+
+  {
+    id: 'java-stream-038',
+    category: 'Stream API - Advanced',
+    difficulty: 'easy',
+    title: 'Stream.of Creation',
+    text: 'Create a stream from individual elements',
+    setup: '// Create a stream from individual values',
+    setupCode: '// Create a stream from individual values',
+    expected: ['a', 'b', 'c'],
+    sample: 'Stream.of("a", "b", "c").collect(Collectors.toList())',
+    hints: [
+      'Stream.of(elements...) creates a stream from varargs',
+      'Useful for creating streams from literal values',
+      'For arrays, prefer Arrays.stream(array)',
+    ],
+    validPatterns: [/Stream\.of\(/],
+    tags: ['Stream', 'creation', 'of'],
+  },
+
+  // --- MEDIUM (12 problems) ---
+
+  {
+    id: 'java-stream-039',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'Collectors.toMap Basic',
+    text: 'Convert list of strings to a map with string as key and length as value',
+    setup: 'List<String> words = Arrays.asList("apple", "banana", "cherry");',
+    setupCode: 'List<String> words = Arrays.asList("apple", "banana", "cherry");',
+    expected: { apple: 5, banana: 6, cherry: 6 },
+    sample: 'words.stream().collect(Collectors.toMap(s -> s, String::length))',
+    hints: [
+      'Collectors.toMap(keyMapper, valueMapper) creates a Map',
+      's -> s means use the element itself as key (Function.identity() also works)',
+      'Throws IllegalStateException if duplicate keys exist',
+    ],
+    validPatterns: [/\.stream\(\)/, /Collectors\.toMap\(/],
+    tags: ['Stream', 'Collectors', 'toMap', 'transformation'],
+  },
+
+  {
+    id: 'java-stream-040',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'Collectors.partitioningBy',
+    text: 'Partition numbers into even and odd groups',
+    setup: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);',
+    setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);',
+    expected: { true: [2, 4, 6], false: [1, 3, 5] },
+    sample: 'nums.stream().collect(Collectors.partitioningBy(n -> n % 2 == 0))',
+    hints: [
+      'partitioningBy splits into exactly two groups based on predicate',
+      'Returns Map<Boolean, List<T>>',
+      'true key contains elements matching predicate, false contains the rest',
+    ],
+    validPatterns: [/\.stream\(\)/, /Collectors\.partitioningBy\(/],
+    tags: ['Stream', 'Collectors', 'partitioningBy', 'grouping'],
+  },
+
+  {
+    id: 'java-stream-041',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'FlatMap with Strings',
+    text: 'Split each string into characters and flatten into a single list',
+    setup: 'List<String> words = Arrays.asList("Hi", "Bye");',
+    setupCode: 'List<String> words = Arrays.asList("Hi", "Bye");',
+    expected: ['H', 'i', 'B', 'y', 'e'],
+    sample: 'words.stream().flatMap(s -> s.chars().mapToObj(c -> String.valueOf((char)c))).collect(Collectors.toList())',
+    hints: [
+      'String.chars() returns IntStream of character codes',
+      'Use mapToObj to convert int to Character or String',
+      'flatMap flattens all character streams into one',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.flatMap\(/, /\.chars\(\)/],
+    tags: ['Stream', 'flatMap', 'String', 'characters'],
+  },
+
+  {
+    id: 'java-stream-042',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'TakeWhile (Java 9+)',
+    text: 'Take elements while they are less than 5',
+    setup: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 1, 2);',
+    setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 1, 2);',
+    expected: [1, 2, 3, 4],
+    sample: 'nums.stream().takeWhile(n -> n < 5).collect(Collectors.toList())',
+    hints: [
+      'takeWhile takes elements while predicate is true',
+      'Stops at first element that fails the predicate',
+      'Java 9+ feature - different from filter which checks all elements',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.takeWhile\(/],
+    tags: ['Stream', 'takeWhile', 'Java9', 'shortCircuit'],
+  },
+
+  {
+    id: 'java-stream-043',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'DropWhile (Java 9+)',
+    text: 'Drop elements while they are less than 5, keep the rest',
+    setup: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 1, 2);',
+    setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 1, 2);',
+    expected: [5, 6, 7, 1, 2],
+    sample: 'nums.stream().dropWhile(n -> n < 5).collect(Collectors.toList())',
+    hints: [
+      'dropWhile drops elements while predicate is true',
+      'Keeps all elements after first element that fails predicate',
+      'Java 9+ feature - note that later elements (1, 2) are kept',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.dropWhile\(/],
+    tags: ['Stream', 'dropWhile', 'Java9', 'shortCircuit'],
+  },
+
+  {
+    id: 'java-stream-044',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'Collectors.joining with Prefix/Suffix',
+    text: 'Join strings with comma delimiter, wrapped in square brackets',
+    setup: 'List<String> items = Arrays.asList("apple", "banana", "cherry");',
+    setupCode: 'List<String> items = Arrays.asList("apple", "banana", "cherry");',
+    expected: '[apple, banana, cherry]',
+    sample: 'items.stream().collect(Collectors.joining(", ", "[", "]"))',
+    hints: [
+      'Collectors.joining(delimiter, prefix, suffix) adds wrapping',
+      'First arg is delimiter, second is prefix, third is suffix',
+      'Useful for building formatted output like JSON arrays',
+    ],
+    validPatterns: [/\.stream\(\)/, /Collectors\.joining\(/],
+    tags: ['Stream', 'Collectors', 'joining', 'formatting'],
+  },
+
+  {
+    id: 'java-stream-045',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'Grouping with Downstream Counting',
+    text: 'Group strings by length and count elements in each group',
+    setup: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
+    setupCode: 'List<String> words = Arrays.asList("cat", "dog", "elephant", "rat", "giraffe", "ant");',
+    expected: { 3: 4, 7: 1, 8: 1 },
+    sample: 'words.stream().collect(Collectors.groupingBy(String::length, Collectors.counting()))',
+    hints: [
+      'groupingBy accepts a downstream collector as second argument',
+      'Collectors.counting() counts elements in each group',
+      'Returns Map<K, Long> when using counting()',
+    ],
+    validPatterns: [/\.stream\(\)/, /groupingBy\(/, /counting\(\)/],
+    tags: ['Stream', 'Collectors', 'groupingBy', 'counting'],
+  },
+
+  {
+    id: 'java-stream-046',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'IntStream Iterate with Limit',
+    text: 'Generate the first 5 squares using IntStream.iterate',
+    setup: '// Generate squares: 1, 4, 9, 16, 25',
+    setupCode: '// Generate squares: 1, 4, 9, 16, 25',
+    expected: [1, 4, 9, 16, 25],
+    sample: 'IntStream.iterate(1, n -> n + 1).limit(5).map(n -> n * n).boxed().collect(Collectors.toList())',
+    hints: [
+      'IntStream.iterate(seed, unaryOperator) generates infinite stream',
+      'Must use limit() to make it finite',
+      'map() on IntStream returns IntStream, use boxed() for List<Integer>',
+    ],
+    validPatterns: [/IntStream\.iterate\(/, /\.limit\(/, /\.map\(/],
+    tags: ['Stream', 'IntStream', 'iterate', 'generation'],
+  },
+
+  {
+    id: 'java-stream-047',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'FlatMapToInt',
+    text: 'Flatten nested integer lists and calculate sum',
+    setup: 'List<List<Integer>> nested = Arrays.asList(\n  Arrays.asList(1, 2),\n  Arrays.asList(3, 4),\n  Arrays.asList(5)\n);',
+    setupCode: 'List<List<Integer>> nested = Arrays.asList(\n  Arrays.asList(1, 2),\n  Arrays.asList(3, 4),\n  Arrays.asList(5)\n);',
+    expected: 15,
+    sample: 'nested.stream().flatMapToInt(list -> list.stream().mapToInt(Integer::intValue)).sum()',
+    hints: [
+      'flatMapToInt flattens to IntStream directly',
+      'More efficient than flatMap when working with primitives',
+      'Avoids boxing/unboxing overhead',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.flatMapToInt\(/, /\.sum\(\)/],
+    tags: ['Stream', 'flatMapToInt', 'primitives', 'performance'],
+  },
+
+  {
+    id: 'java-stream-048',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'Collectors.toMap with Merge Function',
+    text: 'Create a map counting word occurrences (handle duplicates)',
+    setup: 'List<String> words = Arrays.asList("apple", "banana", "apple", "cherry", "banana", "apple");',
+    setupCode: 'List<String> words = Arrays.asList("apple", "banana", "apple", "cherry", "banana", "apple");',
+    expected: { apple: 3, banana: 2, cherry: 1 },
+    sample: 'words.stream().collect(Collectors.toMap(w -> w, w -> 1, Integer::sum))',
+    hints: [
+      'toMap with 3 args: keyMapper, valueMapper, mergeFunction',
+      'mergeFunction handles duplicate keys',
+      'Integer::sum adds values when keys collide',
+    ],
+    validPatterns: [/\.stream\(\)/, /Collectors\.toMap\(/, /Integer::sum|\(\s*a\s*,\s*b\s*\)\s*->\s*a\s*\+\s*b/],
+    tags: ['Stream', 'Collectors', 'toMap', 'merge', 'frequency'],
+  },
+
+  {
+    id: 'java-stream-049',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'Parallel Stream Sum',
+    text: 'Process elements in parallel and sum them',
+    setup: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);',
+    setupCode: 'List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);',
+    expected: 55,
+    sample: 'nums.parallelStream().reduce(0, Integer::sum)',
+    hints: [
+      'parallelStream() creates a parallel stream for concurrent processing',
+      'Use for CPU-intensive operations on large datasets',
+      'Ensure operations are stateless and associative for correct results',
+    ],
+    validPatterns: [/\.parallelStream\(\)/, /\.reduce\(/],
+    tags: ['Stream', 'parallel', 'performance', 'concurrency'],
+  },
+
+  {
+    id: 'java-stream-050',
+    category: 'Stream API - Advanced',
+    difficulty: 'medium',
+    title: 'Grouping with Mapping',
+    text: 'Group by first letter and collect only the word lengths',
+    setup: 'List<String> words = Arrays.asList("apple", "ant", "banana", "bear", "cherry");',
+    setupCode: 'List<String> words = Arrays.asList("apple", "ant", "banana", "bear", "cherry");',
+    expected: { a: [5, 3], b: [6, 4], c: [6] },
+    sample: 'words.stream().collect(Collectors.groupingBy(s -> s.charAt(0), Collectors.mapping(String::length, Collectors.toList())))',
+    hints: [
+      'Use Collectors.mapping() as downstream collector',
+      'mapping(mapper, downstream) transforms before collecting',
+      'Useful for extracting specific fields when grouping',
+    ],
+    validPatterns: [/\.stream\(\)/, /groupingBy\(/, /mapping\(/],
+    tags: ['Stream', 'Collectors', 'groupingBy', 'mapping'],
+  },
+
+  // --- HARD (5 problems) ---
+
+  {
+    id: 'java-stream-051',
+    category: 'Stream API - Advanced',
+    difficulty: 'hard',
+    title: 'SummarizingInt Statistics',
+    text: 'Get all statistics (count, sum, min, avg, max) for ages',
+    setup: 'List<Integer> ages = Arrays.asList(25, 30, 35, 40, 45);',
+    setupCode: 'List<Integer> ages = Arrays.asList(25, 30, 35, 40, 45);',
+    expected: { count: 5, sum: 175, min: 25, average: 35.0, max: 45 },
+    sample: 'ages.stream().collect(Collectors.summarizingInt(Integer::intValue)) // returns IntSummaryStatistics',
+    hints: [
+      'Collectors.summarizingInt returns IntSummaryStatistics',
+      'Contains getCount(), getSum(), getMin(), getAverage(), getMax()',
+      'Also available: summarizingLong, summarizingDouble',
+    ],
+    validPatterns: [/\.stream\(\)/, /Collectors\.summarizingInt\(/],
+    tags: ['Stream', 'Collectors', 'summarizing', 'statistics', 'advanced'],
+  },
+
+  {
+    id: 'java-stream-052',
+    category: 'Stream API - Advanced',
+    difficulty: 'hard',
+    title: 'Teeing Collector (Java 12+)',
+    text: 'Calculate both sum and count in a single stream operation',
+    setup: 'List<Integer> nums = Arrays.asList(10, 20, 30, 40);',
+    setupCode: 'List<Integer> nums = Arrays.asList(10, 20, 30, 40);',
+    expected: { sum: 100, count: 4 },
+    sample: 'nums.stream().collect(Collectors.teeing(\n  Collectors.summingInt(Integer::intValue),\n  Collectors.counting(),\n  (sum, count) -> Map.of("sum", sum, "count", count)\n))',
+    hints: [
+      'Collectors.teeing combines two collectors and merges results',
+      'Takes two collectors and a BiFunction merger',
+      'Java 12+ feature - processes stream once for multiple results',
+    ],
+    validPatterns: [/\.stream\(\)/, /Collectors\.teeing\(/],
+    tags: ['Stream', 'Collectors', 'teeing', 'Java12', 'advanced'],
+  },
+
+  {
+    id: 'java-stream-053',
+    category: 'Stream API - Advanced',
+    difficulty: 'hard',
+    title: 'Complex Pipeline - Top N Longest',
+    text: 'Find the top 3 longest words that start with a vowel, sorted by length descending',
+    setup: 'List<String> words = Arrays.asList("elephant", "ant", "umbrella", "igloo", "orange", "apple", "ice", "ear");',
+    setupCode: 'List<String> words = Arrays.asList("elephant", "ant", "umbrella", "igloo", "orange", "apple", "ice", "ear");',
+    expected: ['elephant', 'umbrella', 'orange'],
+    sample: 'words.stream()\n  .filter(w -> "aeiouAEIOU".indexOf(w.charAt(0)) >= 0)\n  .sorted(Comparator.comparingInt(String::length).reversed())\n  .limit(3)\n  .collect(Collectors.toList())',
+    hints: [
+      'Chain filter, sorted, limit in the right order',
+      'Comparator.comparingInt().reversed() for descending order',
+      'Check first character against vowels using indexOf or matches',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.filter\(/, /\.sorted\(/, /\.limit\(/, /reversed\(\)/],
+    tags: ['Stream', 'pipeline', 'filter', 'sort', 'advanced'],
+  },
+
+  {
+    id: 'java-stream-054',
+    category: 'Stream API - Advanced',
+    difficulty: 'hard',
+    title: 'Nested GroupingBy',
+    text: 'Group employees by department, then by salary range (high >50k, low <=50k)',
+    setup: 'record Employee(String name, String dept, int salary) {}\nList<Employee> employees = Arrays.asList(\n  new Employee("Alice", "IT", 60000),\n  new Employee("Bob", "IT", 45000),\n  new Employee("Carol", "HR", 55000),\n  new Employee("Dave", "HR", 40000)\n);',
+    setupCode: 'record Employee(String name, String dept, int salary) {}\nList<Employee> employees = Arrays.asList(\n  new Employee("Alice", "IT", 60000),\n  new Employee("Bob", "IT", 45000),\n  new Employee("Carol", "HR", 55000),\n  new Employee("Dave", "HR", 40000)\n);',
+    expected: {
+      IT: { high: ['Alice'], low: ['Bob'] },
+      HR: { high: ['Carol'], low: ['Dave'] },
+    },
+    sample: 'employees.stream().collect(\n  Collectors.groupingBy(Employee::dept,\n    Collectors.groupingBy(e -> e.salary() > 50000 ? "high" : "low",\n      Collectors.mapping(Employee::name, Collectors.toList())\n    )\n  )\n)',
+    hints: [
+      'Nest groupingBy collectors for multi-level grouping',
+      'Use ternary operator for salary classification',
+      'Add mapping collector to extract just names',
+    ],
+    validPatterns: [/\.stream\(\)/, /groupingBy\([\s\S]*groupingBy\(/, /mapping\(/],
+    tags: ['Stream', 'Collectors', 'groupingBy', 'nested', 'advanced'],
+  },
+
+  {
+    id: 'java-stream-055',
+    category: 'Stream API - Advanced',
+    difficulty: 'hard',
+    title: 'Find Second Largest',
+    text: 'Find the second largest number in the list',
+    setup: 'List<Integer> nums = Arrays.asList(5, 2, 9, 1, 7, 3, 8);',
+    setupCode: 'List<Integer> nums = Arrays.asList(5, 2, 9, 1, 7, 3, 8);',
+    expected: 8,
+    sample: 'nums.stream()\n  .sorted(Comparator.reverseOrder())\n  .skip(1)\n  .findFirst()\n  .orElse(null)',
+    hints: [
+      'Sort in descending order using Comparator.reverseOrder()',
+      'skip(1) skips the largest element',
+      'findFirst() gets the second largest',
+      'Alternative: use distinct() first if duplicates should be ignored',
+    ],
+    validPatterns: [/\.stream\(\)/, /\.sorted\(/, /\.skip\(1\)/, /\.findFirst\(\)/],
+    tags: ['Stream', 'Collector', 'sort', 'skip', 'algorithm'],
+  },
 ];
 
 export default javaProblems;

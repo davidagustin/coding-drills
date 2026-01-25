@@ -124,6 +124,117 @@ const languages = [
     iconBg: 'bg-gradient-to-br from-violet-500 to-orange-400',
     iconText: 'text-white font-bold',
   },
+  // New languages
+  {
+    name: 'Rust',
+    slug: 'rust',
+    icon: null,
+    emoji: '🦀',
+    bgGradient: 'from-orange-600/20 to-red-700/10',
+    borderColor: 'border-orange-600/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(234,88,12,0.4)]',
+    iconBg: 'bg-gradient-to-br from-orange-600 to-red-700',
+    iconText: 'text-white',
+  },
+  {
+    name: 'Swift',
+    slug: 'swift',
+    icon: null,
+    emoji: '🐦',
+    bgGradient: 'from-orange-500/20 to-red-500/10',
+    borderColor: 'border-orange-500/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]',
+    iconBg: 'bg-gradient-to-br from-orange-500 to-red-500',
+    iconText: 'text-white',
+  },
+  {
+    name: 'Scala',
+    slug: 'scala',
+    icon: 'Sc',
+    emoji: null,
+    bgGradient: 'from-red-500/20 to-red-600/10',
+    borderColor: 'border-red-500/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(239,68,68,0.4)]',
+    iconBg: 'bg-red-600',
+    iconText: 'text-white font-bold',
+  },
+  {
+    name: 'R',
+    slug: 'r',
+    icon: 'R',
+    emoji: null,
+    bgGradient: 'from-blue-400/20 to-gray-500/10',
+    borderColor: 'border-blue-400/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(96,165,250,0.4)]',
+    iconBg: 'bg-blue-500',
+    iconText: 'text-white font-bold',
+  },
+  {
+    name: 'Perl',
+    slug: 'perl',
+    icon: null,
+    emoji: '🐪',
+    bgGradient: 'from-indigo-400/20 to-blue-500/10',
+    borderColor: 'border-indigo-400/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(129,140,248,0.4)]',
+    iconBg: 'bg-indigo-500',
+    iconText: 'text-white',
+  },
+  {
+    name: 'Lua',
+    slug: 'lua',
+    icon: null,
+    emoji: '🌙',
+    bgGradient: 'from-blue-800/20 to-blue-900/10',
+    borderColor: 'border-blue-800/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(30,64,175,0.4)]',
+    iconBg: 'bg-blue-800',
+    iconText: 'text-white',
+  },
+  {
+    name: 'Haskell',
+    slug: 'haskell',
+    icon: 'λ',
+    emoji: null,
+    bgGradient: 'from-purple-600/20 to-purple-700/10',
+    borderColor: 'border-purple-600/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(147,51,234,0.4)]',
+    iconBg: 'bg-purple-700',
+    iconText: 'text-white font-bold text-2xl',
+  },
+  {
+    name: 'Elixir',
+    slug: 'elixir',
+    icon: null,
+    emoji: '💧',
+    bgGradient: 'from-purple-500/20 to-violet-600/10',
+    borderColor: 'border-purple-500/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(168,85,247,0.4)]',
+    iconBg: 'bg-gradient-to-br from-purple-500 to-violet-600',
+    iconText: 'text-white',
+  },
+  {
+    name: 'Dart',
+    slug: 'dart',
+    icon: null,
+    emoji: '🎯',
+    bgGradient: 'from-cyan-400/20 to-blue-500/10',
+    borderColor: 'border-cyan-400/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(34,211,238,0.4)]',
+    iconBg: 'bg-gradient-to-br from-cyan-400 to-blue-500',
+    iconText: 'text-white',
+  },
+  {
+    name: 'Clojure',
+    slug: 'clojure',
+    icon: null,
+    emoji: '☯',
+    bgGradient: 'from-green-500/20 to-teal-600/10',
+    borderColor: 'border-green-500/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(34,197,94,0.4)]',
+    iconBg: 'bg-gradient-to-br from-green-500 to-teal-600',
+    iconText: 'text-white',
+  },
 ];
 
 const modes = [
@@ -185,9 +296,8 @@ export default function Home() {
             </p>
 
             <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-              Sharpen your coding skills across 11 programming languages. Practice essential
-              methods, test your knowledge with quizzes, and build the muscle memory every developer
-              needs.
+              Sharpen your coding skills across 21 programming languages. Practice 2200+ problems,
+              test your knowledge with quizzes, and build the muscle memory every developer needs.
             </p>
 
             {/* CTA Arrow */}
@@ -264,8 +374,8 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
-            { stat: '11', label: 'Languages', icon: '🌐' },
-            { stat: '100+', label: 'Methods', icon: '⚡' },
+            { stat: '21', label: 'Languages', icon: '🌐' },
+            { stat: '2200+', label: 'Problems', icon: '⚡' },
             { stat: '∞', label: 'Practice', icon: '🔄' },
             { stat: 'Free', label: 'Forever', icon: '✨' },
           ].map((item) => (

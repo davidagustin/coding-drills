@@ -21,6 +21,17 @@ const LANGUAGE_TO_MONACO: Record<LanguageId, string> = {
   c: 'c',
   php: 'php',
   kotlin: 'kotlin',
+  // New languages
+  rust: 'rust',
+  swift: 'swift',
+  scala: 'scala',
+  r: 'r',
+  perl: 'perl',
+  lua: 'lua',
+  haskell: 'haskell',
+  elixir: 'elixir',
+  dart: 'dart',
+  clojure: 'clojure',
 };
 
 /**
@@ -38,6 +49,17 @@ const LANGUAGE_EXTENSIONS: Record<LanguageId, string> = {
   c: '.c',
   php: '.php',
   kotlin: '.kt',
+  // New languages
+  rust: '.rs',
+  swift: '.swift',
+  scala: '.scala',
+  r: '.r',
+  perl: '.pl',
+  lua: '.lua',
+  haskell: '.hs',
+  elixir: '.ex',
+  dart: '.dart',
+  clojure: '.clj',
 };
 
 interface CodeEditorProps {

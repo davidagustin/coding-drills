@@ -995,6 +995,1696 @@ export const rubyProblems: Problem[] = [
     ],
     tags: ['sum', 'total'],
   },
+
+  // ============================================================
+  // NEW PROBLEMS - Enumerable Methods (Advanced)
+  // ============================================================
+
+  // partition
+  {
+    id: 'ruby-enum-partition-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Partition Even and Odd',
+    text: 'Use `partition` to split numbers into even and odd arrays.',
+    setup: 'numbers = [1, 2, 3, 4, 5, 6]',
+    setupCode: 'numbers = [1, 2, 3, 4, 5, 6]',
+    expected: [[2, 4, 6], [1, 3, 5]],
+    sample: 'numbers.partition { |n| n.even? }',
+    hints: [
+      'partition returns two arrays: [truthy, falsy]',
+      'First array contains elements where block is true',
+    ],
+    validPatterns: [
+      /numbers\.partition\s*\{\s*\|(\w+)\|\s*\1\.even\?\s*\}/,
+      /numbers\.partition\s*\(\s*&:even\?\s*\)/,
+    ],
+    tags: ['partition', 'split', 'even', 'odd'],
+  },
+  {
+    id: 'ruby-enum-partition-2',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Partition Passing and Failing Scores',
+    text: 'Use `partition` to separate passing (>= 60) and failing scores.',
+    setup: 'scores = [85, 42, 91, 55, 78, 33]',
+    setupCode: 'scores = [85, 42, 91, 55, 78, 33]',
+    expected: [[85, 91, 78], [42, 55, 33]],
+    sample: 'scores.partition { |s| s >= 60 }',
+    hints: [
+      'partition splits based on condition',
+      'Returns [passing, failing] arrays',
+    ],
+    validPatterns: [
+      /scores\.partition\s*\{\s*\|(\w+)\|\s*\1\s*>=\s*60\s*\}/,
+    ],
+    tags: ['partition', 'filter', 'scores'],
+  },
+
+  // group_by
+  {
+    id: 'ruby-enum-group-by-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Group by Length',
+    text: 'Use `group_by` to group words by their length.',
+    setup: 'words = ["cat", "dog", "elephant", "ant", "bear"]',
+    setupCode: 'words = ["cat", "dog", "elephant", "ant", "bear"]',
+    expected: { 3: ['cat', 'dog', 'ant'], 8: ['elephant'], 4: ['bear'] },
+    sample: 'words.group_by { |w| w.length }',
+    hints: [
+      'group_by returns a hash with block values as keys',
+      'Each key maps to array of matching elements',
+    ],
+    validPatterns: [
+      /words\.group_by\s*\{\s*\|(\w+)\|\s*\1\.length\s*\}/,
+      /words\.group_by\s*\{\s*\|(\w+)\|\s*\1\.size\s*\}/,
+      /words\.group_by\s*\(\s*&:length\s*\)/,
+      /words\.group_by\s*\(\s*&:size\s*\)/,
+    ],
+    tags: ['group_by', 'hash', 'categorize'],
+  },
+  {
+    id: 'ruby-enum-group-by-2',
+    category: 'Enumerable Methods',
+    difficulty: 'hard',
+    title: 'Group by First Letter',
+    text: 'Use `group_by` to group words by their first letter (lowercase).',
+    setup: 'words = ["Apple", "Banana", "apricot", "Blueberry", "cherry"]',
+    setupCode: 'words = ["Apple", "Banana", "apricot", "Blueberry", "cherry"]',
+    expected: { 'a': ['Apple', 'apricot'], 'b': ['Banana', 'Blueberry'], 'c': ['cherry'] },
+    sample: 'words.group_by { |w| w[0].downcase }',
+    hints: [
+      'Access first character with [0]',
+      'Use downcase for case-insensitive grouping',
+    ],
+    validPatterns: [
+      /words\.group_by\s*\{\s*\|(\w+)\|\s*\1\[0\]\.downcase\s*\}/,
+      /words\.group_by\s*\{\s*\|(\w+)\|\s*\1\.chr\.downcase\s*\}/,
+    ],
+    tags: ['group_by', 'downcase', 'first_char'],
+  },
+
+  // inject with initial value
+  {
+    id: 'ruby-enum-inject-hash-1',
+    category: 'Enumerable Methods',
+    difficulty: 'hard',
+    title: 'Build Hash with inject',
+    text: 'Use `inject` to convert an array of pairs into a hash.',
+    setup: 'pairs = [[:a, 1], [:b, 2], [:c, 3]]',
+    setupCode: 'pairs = [[:a, 1], [:b, 2], [:c, 3]]',
+    expected: { a: 1, b: 2, c: 3 },
+    sample: 'pairs.inject({}) { |hash, (k, v)| hash[k] = v; hash }',
+    hints: [
+      'Start with empty hash {}',
+      'Destructure pair into key and value',
+      'Return the hash from block',
+    ],
+    validPatterns: [
+      /pairs\.inject\s*\(\s*\{\}\s*\)\s*\{/,
+      /pairs\.reduce\s*\(\s*\{\}\s*\)\s*\{/,
+      /pairs\.each_with_object\s*\(\s*\{\}\s*\)\s*\{/,
+      /pairs\.to_h\b/,
+    ],
+    tags: ['inject', 'reduce', 'hash', 'transform'],
+  },
+
+  // collect/map with index
+  {
+    id: 'ruby-enum-collect-index-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Collect with Index',
+    text: 'Use `collect` with `with_index` to multiply each element by its index.',
+    setup: 'numbers = [10, 20, 30, 40]',
+    setupCode: 'numbers = [10, 20, 30, 40]',
+    expected: [0, 20, 60, 120],
+    sample: 'numbers.collect.with_index { |n, i| n * i }',
+    hints: [
+      'Chain with_index after collect',
+      'Block receives element and index',
+    ],
+    validPatterns: [
+      /numbers\.collect\.with_index\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\*\s*\2\s*\}/,
+      /numbers\.map\.with_index\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\*\s*\2\s*\}/,
+      /numbers\.each_with_index\.map\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\*\s*\2\s*\}/,
+    ],
+    tags: ['collect', 'map', 'with_index', 'transform'],
+  },
+
+  // ============================================================
+  // NEW PROBLEMS - String Methods (Advanced)
+  // ============================================================
+
+  // scan
+  {
+    id: 'ruby-string-scan-1',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Scan for All Numbers',
+    text: 'Use `scan` to extract all numbers from the string.',
+    setup: 'text = "I have 3 cats and 2 dogs"',
+    setupCode: 'text = "I have 3 cats and 2 dogs"',
+    expected: ['3', '2'],
+    sample: 'text.scan(/\\d+/)',
+    hints: [
+      'scan returns all regex matches as array',
+      'Use \\d+ to match digits',
+    ],
+    validPatterns: [
+      /text\.scan\s*\(\s*\/\\d\+\/\s*\)/,
+      /text\.scan\s*\(\s*\/\[0-9\]\+\/\s*\)/,
+    ],
+    tags: ['scan', 'regex', 'extract'],
+  },
+  {
+    id: 'ruby-string-scan-2',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Scan for Words Starting with Capital',
+    text: 'Use `scan` to extract all words starting with a capital letter.',
+    setup: 'text = "Hello World from Ruby Land"',
+    setupCode: 'text = "Hello World from Ruby Land"',
+    expected: ['Hello', 'World', 'Ruby', 'Land'],
+    sample: 'text.scan(/[A-Z][a-z]*/)',
+    hints: [
+      'Match capital letter followed by lowercase',
+      'Use [A-Z] for uppercase, [a-z]* for following lowercase',
+    ],
+    validPatterns: [
+      /text\.scan\s*\(\s*\/\[A-Z\]\[a-z\]\*\/\s*\)/,
+      /text\.scan\s*\(\s*\/\[A-Z\]\\w\*\/\s*\)/,
+    ],
+    tags: ['scan', 'regex', 'capitalize'],
+  },
+
+  // match
+  {
+    id: 'ruby-string-match-1',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Match Email Domain',
+    text: 'Use `match` to extract the domain from an email address.',
+    setup: 'email = "user@example.com"',
+    setupCode: 'email = "user@example.com"',
+    expected: 'example.com',
+    sample: 'email.match(/@(.+)/)[1]',
+    hints: [
+      'match returns MatchData object',
+      'Use capturing group and index [1]',
+    ],
+    validPatterns: [
+      /email\.match\s*\(\s*\/@\(\.\+\)\/\s*\)\s*\[1\]/,
+      /email\.match\s*\(\s*\/@\(\[^@\]\+\)\/\s*\)\s*\[1\]/,
+      /email\.split\s*\(\s*["']@["']\s*\)\s*\[1\]/,
+      /email\[\/\/@\(\.\+\)\/,\s*1\]/,
+    ],
+    tags: ['match', 'regex', 'capture'],
+  },
+
+  // squeeze
+  {
+    id: 'ruby-string-squeeze-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Squeeze Repeated Characters',
+    text: 'Use `squeeze` to reduce consecutive duplicate characters to single.',
+    setup: 'text = "heeellooo   woorrld"',
+    setupCode: 'text = "heeellooo   woorrld"',
+    expected: 'helo world',
+    sample: 'text.squeeze',
+    hints: [
+      'squeeze reduces runs of same character to one',
+      'Works on all characters by default',
+    ],
+    validPatterns: [/text\.squeeze\b/],
+    tags: ['squeeze', 'duplicates', 'compress'],
+  },
+  {
+    id: 'ruby-string-squeeze-2',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Squeeze Only Spaces',
+    text: 'Use `squeeze` to reduce only multiple spaces to single space.',
+    setup: 'text = "hello    world   ruby"',
+    setupCode: 'text = "hello    world   ruby"',
+    expected: 'hello world ruby',
+    sample: 'text.squeeze(" ")',
+    hints: [
+      'Pass character to squeeze as argument',
+      'Only that character will be squeezed',
+    ],
+    validPatterns: [
+      /text\.squeeze\s*\(\s*["'] ["']\s*\)/,
+    ],
+    tags: ['squeeze', 'spaces', 'normalize'],
+  },
+
+  // gsub with block
+  {
+    id: 'ruby-string-gsub-block-1',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Replace with Block Transformation',
+    text: 'Use `gsub` with a block to uppercase all words starting with "r".',
+    setup: 'text = "ruby is really rad"',
+    setupCode: 'text = "ruby is really rad"',
+    expected: 'RUBY is REALLY RAD',
+    sample: 'text.gsub(/\\br\\w*/i) { |word| word.upcase }',
+    hints: [
+      'gsub can take a block for dynamic replacement',
+      'Use \\b for word boundary',
+      'Block receives matched text',
+    ],
+    validPatterns: [
+      /text\.gsub\s*\(\s*\/.*r.*\/[i]?\s*\)\s*\{\s*\|(\w+)\|\s*\1\.upcase\s*\}/,
+    ],
+    tags: ['gsub', 'block', 'transform', 'regex'],
+  },
+
+  // chomp with argument
+  {
+    id: 'ruby-string-chomp-arg-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Chomp Specific Suffix',
+    text: 'Use `chomp` to remove the ".txt" suffix from the filename.',
+    setup: 'filename = "document.txt"',
+    setupCode: 'filename = "document.txt"',
+    expected: 'document',
+    sample: 'filename.chomp(".txt")',
+    hints: [
+      'chomp can take a suffix argument',
+      'Only removes if string ends with that suffix',
+    ],
+    validPatterns: [
+      /filename\.chomp\s*\(\s*["']\.txt["']\s*\)/,
+      /filename\.delete_suffix\s*\(\s*["']\.txt["']\s*\)/,
+    ],
+    tags: ['chomp', 'suffix', 'filename'],
+  },
+
+  // ============================================================
+  // NEW PROBLEMS - Array Methods (Advanced)
+  // ============================================================
+
+  // zip
+  {
+    id: 'ruby-array-zip-1',
+    category: 'Array Methods',
+    difficulty: 'medium',
+    title: 'Zip Arrays Together',
+    text: 'Use `zip` to combine two arrays into pairs.',
+    setup: 'names = ["Alice", "Bob", "Carol"]\nages = [25, 30, 35]',
+    setupCode: 'names = ["Alice", "Bob", "Carol"]\nages = [25, 30, 35]',
+    expected: [['Alice', 25], ['Bob', 30], ['Carol', 35]],
+    sample: 'names.zip(ages)',
+    hints: [
+      'zip combines arrays element-wise',
+      'Returns array of pairs',
+    ],
+    validPatterns: [
+      /names\.zip\s*\(\s*ages\s*\)/,
+    ],
+    tags: ['zip', 'combine', 'pairs'],
+  },
+  {
+    id: 'ruby-array-zip-2',
+    category: 'Array Methods',
+    difficulty: 'hard',
+    title: 'Zip and Transform to Hash',
+    text: 'Use `zip` to create a hash from two arrays.',
+    setup: 'keys = [:name, :age, :city]\nvalues = ["Alice", 30, "NYC"]',
+    setupCode: 'keys = [:name, :age, :city]\nvalues = ["Alice", 30, "NYC"]',
+    expected: { name: 'Alice', age: 30, city: 'NYC' },
+    sample: 'keys.zip(values).to_h',
+    hints: [
+      'zip creates array of pairs',
+      'to_h converts pairs to hash',
+    ],
+    validPatterns: [
+      /keys\.zip\s*\(\s*values\s*\)\.to_h\b/,
+      /Hash\s*\[\s*keys\.zip\s*\(\s*values\s*\)\s*\]/,
+    ],
+    tags: ['zip', 'to_h', 'hash', 'transform'],
+  },
+
+  // transpose
+  {
+    id: 'ruby-array-transpose-1',
+    category: 'Array Methods',
+    difficulty: 'medium',
+    title: 'Transpose Matrix',
+    text: 'Use `transpose` to swap rows and columns of a 2D array.',
+    setup: 'matrix = [[1, 2, 3], [4, 5, 6]]',
+    setupCode: 'matrix = [[1, 2, 3], [4, 5, 6]]',
+    expected: [[1, 4], [2, 5], [3, 6]],
+    sample: 'matrix.transpose',
+    hints: [
+      'transpose flips rows and columns',
+      'Works on arrays of equal-length arrays',
+    ],
+    validPatterns: [/matrix\.transpose\b/],
+    tags: ['transpose', 'matrix', '2d'],
+  },
+
+  // rotate
+  {
+    id: 'ruby-array-rotate-1',
+    category: 'Array Methods',
+    difficulty: 'easy',
+    title: 'Rotate Array Left',
+    text: 'Use `rotate` to move the first element to the end.',
+    setup: 'letters = ["a", "b", "c", "d"]',
+    setupCode: 'letters = ["a", "b", "c", "d"]',
+    expected: ['b', 'c', 'd', 'a'],
+    sample: 'letters.rotate',
+    hints: [
+      'rotate(1) moves first element to end',
+      'Default rotation is 1',
+    ],
+    validPatterns: [
+      /letters\.rotate\b/,
+      /letters\.rotate\s*\(\s*1\s*\)/,
+    ],
+    tags: ['rotate', 'shift', 'circular'],
+  },
+  {
+    id: 'ruby-array-rotate-2',
+    category: 'Array Methods',
+    difficulty: 'medium',
+    title: 'Rotate Array Right',
+    text: 'Use `rotate` with a negative argument to rotate right by 2 positions.',
+    setup: 'numbers = [1, 2, 3, 4, 5]',
+    setupCode: 'numbers = [1, 2, 3, 4, 5]',
+    expected: [4, 5, 1, 2, 3],
+    sample: 'numbers.rotate(-2)',
+    hints: [
+      'Negative argument rotates right',
+      'rotate(-2) brings last 2 elements to front',
+    ],
+    validPatterns: [
+      /numbers\.rotate\s*\(\s*-2\s*\)/,
+    ],
+    tags: ['rotate', 'right', 'negative'],
+  },
+
+  // flatten with depth
+  {
+    id: 'ruby-array-flatten-depth-1',
+    category: 'Array Methods',
+    difficulty: 'medium',
+    title: 'Flatten One Level',
+    text: 'Use `flatten` with depth argument to flatten only one level.',
+    setup: 'nested = [[1, [2, 3]], [4, [5, 6]]]',
+    setupCode: 'nested = [[1, [2, 3]], [4, [5, 6]]]',
+    expected: [1, [2, 3], 4, [5, 6]],
+    sample: 'nested.flatten(1)',
+    hints: [
+      'flatten(n) flattens n levels deep',
+      'flatten(1) only removes one nesting level',
+    ],
+    validPatterns: [
+      /nested\.flatten\s*\(\s*1\s*\)/,
+    ],
+    tags: ['flatten', 'depth', 'nested'],
+  },
+
+  // ============================================================
+  // NEW PROBLEMS - Hash Methods (Advanced)
+  // ============================================================
+
+  // invert
+  {
+    id: 'ruby-hash-invert-1',
+    category: 'Hash Methods',
+    difficulty: 'easy',
+    title: 'Invert Hash Keys and Values',
+    text: 'Use `invert` to swap keys and values in the hash.',
+    setup: 'codes = { a: 1, b: 2, c: 3 }',
+    setupCode: 'codes = { a: 1, b: 2, c: 3 }',
+    expected: { 1: ':a', 2: ':b', 3: ':c' },
+    sample: 'codes.invert',
+    hints: [
+      'invert swaps keys and values',
+      'Original values become new keys',
+    ],
+    validPatterns: [/codes\.invert\b/],
+    tags: ['invert', 'swap', 'reverse'],
+  },
+
+  // transform_keys
+  {
+    id: 'ruby-hash-transform-keys-1',
+    category: 'Hash Methods',
+    difficulty: 'medium',
+    title: 'Transform Keys to Strings',
+    text: 'Use `transform_keys` to convert all symbol keys to strings.',
+    setup: 'person = { name: "Alice", age: 30 }',
+    setupCode: 'person = { name: "Alice", age: 30 }',
+    expected: { 'name': 'Alice', 'age': 30 },
+    sample: 'person.transform_keys(&:to_s)',
+    hints: [
+      'transform_keys applies block to each key',
+      'Use &:to_s for symbol to string',
+    ],
+    validPatterns: [
+      /person\.transform_keys\s*\(\s*&:to_s\s*\)/,
+      /person\.transform_keys\s*\{\s*\|(\w+)\|\s*\1\.to_s\s*\}/,
+    ],
+    tags: ['transform_keys', 'keys', 'to_s'],
+  },
+
+  // transform_values
+  {
+    id: 'ruby-hash-transform-values-1',
+    category: 'Hash Methods',
+    difficulty: 'medium',
+    title: 'Transform Values by Doubling',
+    text: 'Use `transform_values` to double all values in the hash.',
+    setup: 'scores = { alice: 10, bob: 15, carol: 20 }',
+    setupCode: 'scores = { alice: 10, bob: 15, carol: 20 }',
+    expected: { alice: 20, bob: 30, carol: 40 },
+    sample: 'scores.transform_values { |v| v * 2 }',
+    hints: [
+      'transform_values applies block to each value',
+      'Keys remain unchanged',
+    ],
+    validPatterns: [
+      /scores\.transform_values\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*2\s*\}/,
+    ],
+    tags: ['transform_values', 'values', 'multiply'],
+  },
+
+  // slice
+  {
+    id: 'ruby-hash-slice-1',
+    category: 'Hash Methods',
+    difficulty: 'easy',
+    title: 'Slice Specific Keys',
+    text: 'Use `slice` to extract only the :name and :age keys.',
+    setup: 'person = { name: "Alice", age: 30, city: "NYC", job: "Engineer" }',
+    setupCode: 'person = { name: "Alice", age: 30, city: "NYC", job: "Engineer" }',
+    expected: { name: 'Alice', age: 30 },
+    sample: 'person.slice(:name, :age)',
+    hints: [
+      'slice returns new hash with only specified keys',
+      'Pass multiple keys as arguments',
+    ],
+    validPatterns: [
+      /person\.slice\s*\(\s*:name,\s*:age\s*\)/,
+    ],
+    tags: ['slice', 'subset', 'extract'],
+  },
+
+  // ============================================================
+  // NEW PROBLEMS - Block/Proc/Lambda
+  // ============================================================
+
+  // Basic block
+  {
+    id: 'ruby-block-basic-1',
+    category: 'Block/Proc/Lambda',
+    difficulty: 'easy',
+    title: 'Pass Block to Method',
+    text: 'Use `yield` concept: call the block three times with 1, 2, 3.',
+    setup: '# Define result using map with a block',
+    setupCode: '# Use map with a block that squares numbers',
+    expected: [1, 4, 9],
+    sample: '[1, 2, 3].map { |n| n ** 2 }',
+    hints: [
+      'Blocks are code between { } or do/end',
+      'map yields each element to the block',
+    ],
+    validPatterns: [
+      /\[1,\s*2,\s*3\]\.map\s*\{\s*\|(\w+)\|\s*\1\s*\*\*\s*2\s*\}/,
+      /\[1,\s*2,\s*3\]\.map\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*\1\s*\}/,
+    ],
+    tags: ['block', 'map', 'yield'],
+  },
+
+  // Proc creation
+  {
+    id: 'ruby-proc-create-1',
+    category: 'Block/Proc/Lambda',
+    difficulty: 'medium',
+    title: 'Create and Call a Proc',
+    text: 'Create a Proc that doubles a number and call it with 5.',
+    setup: '# Create doubler proc and call it',
+    setupCode: '# Create a Proc that doubles, then call with 5',
+    expected: 10,
+    sample: 'doubler = Proc.new { |n| n * 2 }; doubler.call(5)',
+    hints: [
+      'Proc.new creates a proc object',
+      'Call proc with .call(arg)',
+    ],
+    validPatterns: [
+      /Proc\.new\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*2\s*\}.*\.call\s*\(\s*5\s*\)/,
+      /proc\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*2\s*\}.*\.call\s*\(\s*5\s*\)/,
+    ],
+    tags: ['proc', 'call', 'create'],
+  },
+
+  // Lambda creation
+  {
+    id: 'ruby-lambda-create-1',
+    category: 'Block/Proc/Lambda',
+    difficulty: 'medium',
+    title: 'Create and Call a Lambda',
+    text: 'Create a lambda that adds 10 to a number and call it with 5.',
+    setup: '# Create add_ten lambda and call it',
+    setupCode: '# Create a lambda that adds 10, then call with 5',
+    expected: 15,
+    sample: 'add_ten = ->(n) { n + 10 }; add_ten.call(5)',
+    hints: [
+      'Lambda syntax: ->(args) { body } or lambda { |args| body }',
+      'Call with .call(arg) or .(arg) or [arg]',
+    ],
+    validPatterns: [
+      /->\s*\(\s*(\w+)\s*\)\s*\{\s*\1\s*\+\s*10\s*\}.*\.call\s*\(\s*5\s*\)/,
+      /lambda\s*\{\s*\|(\w+)\|\s*\1\s*\+\s*10\s*\}.*\.call\s*\(\s*5\s*\)/,
+    ],
+    tags: ['lambda', 'call', 'stabby'],
+  },
+
+  // Symbol to proc
+  {
+    id: 'ruby-symbol-to-proc-1',
+    category: 'Block/Proc/Lambda',
+    difficulty: 'easy',
+    title: 'Symbol to Proc Shorthand',
+    text: 'Use the & symbol-to-proc shorthand to convert numbers to strings.',
+    setup: 'numbers = [1, 2, 3, 4, 5]',
+    setupCode: 'numbers = [1, 2, 3, 4, 5]',
+    expected: ['1', '2', '3', '4', '5'],
+    sample: 'numbers.map(&:to_s)',
+    hints: [
+      '&:method_name converts symbol to proc',
+      'Equivalent to { |x| x.method_name }',
+    ],
+    validPatterns: [
+      /numbers\.map\s*\(\s*&:to_s\s*\)/,
+    ],
+    tags: ['symbol_to_proc', 'map', 'shorthand'],
+  },
+
+  // tap
+  {
+    id: 'ruby-block-tap-1',
+    category: 'Block/Proc/Lambda',
+    difficulty: 'hard',
+    title: 'Use tap for Debugging Chain',
+    text: 'Use `tap` to inspect intermediate value in a method chain that doubles then adds 1.',
+    setup: 'numbers = [1, 2, 3]',
+    setupCode: 'numbers = [1, 2, 3]',
+    expected: [3, 5, 7],
+    sample: 'numbers.map { |n| n * 2 }.tap { |arr| p arr }.map { |n| n + 1 }',
+    hints: [
+      'tap yields self to block and returns self',
+      'Useful for debugging method chains',
+    ],
+    validPatterns: [
+      /\.tap\s*\{.*\}.*\.map\s*\{/,
+      /numbers\.map\s*\{.*\}\.map\s*\{.*\+\s*1/,
+    ],
+    tags: ['tap', 'debug', 'chain'],
+  },
+
+  // ============================================================
+  // String Operations (Advanced)
+  // Covers: center, ljust, rjust, squeeze, delete, scan, match,
+  // gsub with blocks, encoding, heredocs, interpolation,
+  // each_char, each_line, % formatting, StringIO
+  // ============================================================
+
+  // center
+  {
+    id: 'ruby-str-center-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Center String with Padding',
+    text: 'Use `center` to pad the string to 11 characters with spaces.',
+    setup: 'text = "ruby"',
+    setupCode: 'text = "ruby"',
+    expected: '   ruby    ',
+    sample: 'text.center(11)',
+    hints: [
+      'center pads both sides equally',
+      'Default padding character is space',
+    ],
+    validPatterns: [
+      /text\.center\s*\(\s*11\s*\)/,
+    ],
+    tags: ['center', 'padding', 'alignment'],
+  },
+  {
+    id: 'ruby-str-center-2',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Center with Custom Padding',
+    text: 'Use `center` to pad the string to 10 characters with asterisks.',
+    setup: 'text = "hi"',
+    setupCode: 'text = "hi"',
+    expected: '****hi****',
+    sample: 'text.center(10, "*")',
+    hints: [
+      'Pass second argument for custom padding',
+      'Padding character can be any string',
+    ],
+    validPatterns: [
+      /text\.center\s*\(\s*10,\s*["']\*["']\s*\)/,
+    ],
+    tags: ['center', 'padding', 'custom'],
+  },
+
+  // ljust
+  {
+    id: 'ruby-str-ljust-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Left Justify String',
+    text: 'Use `ljust` to left-justify the string in a 10-character field.',
+    setup: 'text = "ruby"',
+    setupCode: 'text = "ruby"',
+    expected: 'ruby      ',
+    sample: 'text.ljust(10)',
+    hints: [
+      'ljust pads on the right side',
+      'String stays on the left',
+    ],
+    validPatterns: [
+      /text\.ljust\s*\(\s*10\s*\)/,
+    ],
+    tags: ['ljust', 'padding', 'alignment'],
+  },
+  {
+    id: 'ruby-str-ljust-2',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Left Justify with Dots',
+    text: 'Use `ljust` to left-justify with dots to fill 15 characters.',
+    setup: 'item = "Price"',
+    setupCode: 'item = "Price"',
+    expected: 'Price..........',
+    sample: 'item.ljust(15, ".")',
+    hints: [
+      'Second argument specifies padding character',
+      'Useful for creating formatted output',
+    ],
+    validPatterns: [
+      /item\.ljust\s*\(\s*15,\s*["']\.["']\s*\)/,
+    ],
+    tags: ['ljust', 'padding', 'format'],
+  },
+
+  // rjust
+  {
+    id: 'ruby-str-rjust-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Right Justify Number',
+    text: 'Use `rjust` to right-justify the number string with leading zeros.',
+    setup: 'num = "42"',
+    setupCode: 'num = "42"',
+    expected: '00042',
+    sample: 'num.rjust(5, "0")',
+    hints: [
+      'rjust pads on the left side',
+      'Common for zero-padding numbers',
+    ],
+    validPatterns: [
+      /num\.rjust\s*\(\s*5,\s*["']0["']\s*\)/,
+    ],
+    tags: ['rjust', 'padding', 'zero-pad'],
+  },
+
+  // delete
+  {
+    id: 'ruby-str-delete-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Delete Vowels from String',
+    text: 'Use `delete` to remove all vowels from the string.',
+    setup: 'text = "hello world"',
+    setupCode: 'text = "hello world"',
+    expected: 'hll wrld',
+    sample: 'text.delete("aeiou")',
+    hints: [
+      'delete removes all characters in the argument',
+      'Pass all vowels as a single string',
+    ],
+    validPatterns: [
+      /text\.delete\s*\(\s*["']aeiou["']\s*\)/,
+      /text\.delete\s*\(\s*["']aeiouAEIOU["']\s*\)/,
+    ],
+    tags: ['delete', 'remove', 'vowels'],
+  },
+  {
+    id: 'ruby-str-delete-2',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Delete All Digits',
+    text: 'Use `delete` with a range to remove all digits from the string.',
+    setup: 'text = "Order #12345 confirmed"',
+    setupCode: 'text = "Order #12345 confirmed"',
+    expected: 'Order # confirmed',
+    sample: 'text.delete("0-9")',
+    hints: [
+      'delete supports character ranges like "0-9"',
+      'Works similar to character classes in regex',
+    ],
+    validPatterns: [
+      /text\.delete\s*\(\s*["']0-9["']\s*\)/,
+      /text\.delete\s*\(\s*["']\d["']\s*\)/,
+      /text\.gsub\s*\(\s*\/\\d\/,\s*["']["']\s*\)/,
+    ],
+    tags: ['delete', 'digits', 'range'],
+  },
+
+  // scan with regex groups
+  {
+    id: 'ruby-str-scan-groups-1',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Scan with Capture Groups',
+    text: 'Use `scan` with capture groups to extract key-value pairs.',
+    setup: 'text = "name=Alice, age=30, city=NYC"',
+    setupCode: 'text = "name=Alice, age=30, city=NYC"',
+    expected: [['name', 'Alice'], ['age', '30'], ['city', 'NYC']],
+    sample: 'text.scan(/(\\w+)=(\\w+)/)',
+    hints: [
+      'Capture groups () in regex return nested arrays',
+      'Each match returns array of captured groups',
+    ],
+    validPatterns: [
+      /text\.scan\s*\(\s*\/\(\\w\+\)=\(\\w\+\)\/\s*\)/,
+      /text\.scan\s*\(\s*\/\(\[^=\]\+\)=\(\[^,\s\]\+\)\/\s*\)/,
+    ],
+    tags: ['scan', 'regex', 'capture', 'groups'],
+  },
+
+  // match with named groups
+  {
+    id: 'ruby-str-match-named-1',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Match with Named Capture Groups',
+    text: 'Use `match` with named capture groups to extract date parts.',
+    setup: 'date = "2024-03-15"',
+    setupCode: 'date = "2024-03-15"',
+    expected: '2024',
+    sample: 'date.match(/(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})/)[:year]',
+    hints: [
+      'Named groups use (?<name>pattern) syntax',
+      'Access captured values with [:name] or .captures',
+    ],
+    validPatterns: [
+      /date\.match\s*\(.*\?\<year\>.*\)\s*\[\s*:year\s*\]/,
+      /date\.match\s*\(.*\)\s*\[\s*1\s*\]/,
+      /date\.split\s*\(\s*["']-["']\s*\)\s*\[\s*0\s*\]/,
+    ],
+    tags: ['match', 'regex', 'named', 'capture'],
+  },
+
+  // =~ operator
+  {
+    id: 'ruby-str-match-operator-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Match Operator Index',
+    text: 'Use the `=~` operator to find the index of the first digit.',
+    setup: 'text = "hello123world"',
+    setupCode: 'text = "hello123world"',
+    expected: 5,
+    sample: 'text =~ /\\d/',
+    hints: [
+      '=~ returns the index of first match',
+      'Returns nil if no match found',
+    ],
+    validPatterns: [
+      /text\s*=~\s*\/\\d\//,
+      /text\s*=~\s*\/\[0-9\]\//,
+    ],
+    tags: ['=~', 'match', 'index', 'regex'],
+  },
+
+  // gsub with block
+  {
+    id: 'ruby-str-gsub-block-2',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Replace Numbers with Doubled Values',
+    text: 'Use `gsub` with a block to double all numbers in the string.',
+    setup: 'text = "I have 3 cats and 5 dogs"',
+    setupCode: 'text = "I have 3 cats and 5 dogs"',
+    expected: 'I have 6 cats and 10 dogs',
+    sample: 'text.gsub(/\\d+/) { |n| (n.to_i * 2).to_s }',
+    hints: [
+      'Block receives matched string',
+      'Convert to integer, double, convert back to string',
+    ],
+    validPatterns: [
+      /text\.gsub\s*\(\s*\/\\d\+\/\s*\)\s*\{\s*\|(\w+)\|.*\.to_i\s*\*\s*2/,
+    ],
+    tags: ['gsub', 'block', 'transform', 'numbers'],
+  },
+  {
+    id: 'ruby-str-gsub-block-3',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Titlecase Words with gsub',
+    text: 'Use `gsub` with a block to capitalize each word.',
+    setup: 'text = "hello world from ruby"',
+    setupCode: 'text = "hello world from ruby"',
+    expected: 'Hello World From Ruby',
+    sample: 'text.gsub(/\\b\\w/) { |char| char.upcase }',
+    hints: [
+      'Use \\b for word boundary',
+      'Match first character of each word',
+      'Upcase the matched character in block',
+    ],
+    validPatterns: [
+      /text\.gsub\s*\(\s*\/\\b\\w\/\s*\)\s*\{\s*\|(\w+)\|\s*\1\.upcase\s*\}/,
+      /text\.gsub\s*\(\s*\/\\b\(\\w\)\/\s*\)\s*\{/,
+      /text\.split\s*\(.*\)\.map\s*\{.*capitalize.*\}\.join/,
+    ],
+    tags: ['gsub', 'block', 'titlecase', 'capitalize'],
+  },
+
+  // each_char
+  {
+    id: 'ruby-str-each-char-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Iterate Characters with each_char',
+    text: 'Use `each_char` to count vowels in the string.',
+    setup: 'text = "hello"',
+    setupCode: 'text = "hello"',
+    expected: 2,
+    sample: 'count = 0; text.each_char { |c| count += 1 if "aeiou".include?(c) }; count',
+    hints: [
+      'each_char yields each character',
+      'Check if character is in vowels string',
+    ],
+    validPatterns: [
+      /text\.each_char\s*\{/,
+      /text\.chars\.count\s*\{.*aeiou/,
+      /text\.count\s*\(\s*["']aeiou["']\s*\)/,
+    ],
+    tags: ['each_char', 'iterate', 'count', 'vowels'],
+  },
+
+  // each_line
+  {
+    id: 'ruby-str-each-line-1',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Process Lines with each_line',
+    text: 'Use `each_line` to collect non-empty lines into an array.',
+    setup: 'text = "hello\\n\\nworld\\n\\nruby"',
+    setupCode: 'text = "hello\\n\\nworld\\n\\nruby"',
+    expected: ['hello', 'world', 'ruby'],
+    sample: 'result = []; text.each_line { |line| result << line.strip unless line.strip.empty? }; result',
+    hints: [
+      'each_line yields each line including newline',
+      'Use strip to remove whitespace',
+      'Check empty? to skip blank lines',
+    ],
+    validPatterns: [
+      /text\.each_line\s*\{/,
+      /text\.lines\.reject\s*\{.*empty/,
+      /text\.split\s*\(\s*\/\\n\+\/\s*\)/,
+    ],
+    tags: ['each_line', 'iterate', 'lines', 'filter'],
+  },
+
+  // String % formatting
+  {
+    id: 'ruby-str-format-1',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Printf-style Formatting',
+    text: 'Use the `%` operator to format a string with name and age.',
+    setup: 'name = "Alice"\nage = 30',
+    setupCode: 'name = "Alice"\nage = 30',
+    expected: 'Name: Alice, Age: 30',
+    sample: '"Name: %s, Age: %d" % [name, age]',
+    hints: [
+      '% operator uses printf-style format specifiers',
+      '%s for strings, %d for integers',
+    ],
+    validPatterns: [
+      /["'].*%s.*%d.*["']\s*%\s*\[\s*name,\s*age\s*\]/,
+      /["'].*%\{.*\}.*["']\s*%\s*\{/,
+    ],
+    tags: ['%', 'format', 'printf', 'sprintf'],
+  },
+  {
+    id: 'ruby-str-format-2',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Format Float with Precision',
+    text: 'Use `%` formatting to display a float with 2 decimal places.',
+    setup: 'price = 19.99567',
+    setupCode: 'price = 19.99567',
+    expected: 'Price: $19.99',
+    sample: '"Price: $%.2f" % price',
+    hints: [
+      '%.2f formats float with 2 decimal places',
+      'Rounds the value automatically',
+    ],
+    validPatterns: [
+      /["'].*%\.2f.*["']\s*%\s*price/,
+      /sprintf\s*\(\s*["'].*%\.2f.*["'],\s*price\s*\)/,
+    ],
+    tags: ['%', 'format', 'float', 'precision'],
+  },
+  {
+    id: 'ruby-str-format-3',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Named Format Placeholders',
+    text: 'Use named placeholders with `%` formatting.',
+    setup: 'data = { name: "Ruby", version: 3.2 }',
+    setupCode: 'data = { name: "Ruby", version: 3.2 }',
+    expected: 'Language: Ruby v3.2',
+    sample: '"Language: %{name} v%{version}" % data',
+    hints: [
+      '%{key} uses named placeholders',
+      'Hash keys must match placeholder names',
+    ],
+    validPatterns: [
+      /["'].*%\{name\}.*%\{version\}.*["']\s*%\s*data/,
+    ],
+    tags: ['%', 'format', 'named', 'hash'],
+  },
+
+  // String encoding
+  {
+    id: 'ruby-str-encoding-1',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Check String Encoding',
+    text: 'Use `encoding` to get the encoding of the string.',
+    setup: 'text = "hello"',
+    setupCode: 'text = "hello"',
+    expected: 'UTF-8',
+    sample: 'text.encoding.to_s',
+    hints: [
+      'encoding returns an Encoding object',
+      'Use to_s or name to get string representation',
+    ],
+    validPatterns: [
+      /text\.encoding\.to_s/,
+      /text\.encoding\.name/,
+    ],
+    tags: ['encoding', 'utf-8', 'charset'],
+  },
+  {
+    id: 'ruby-str-encoding-2',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Force Encoding Change',
+    text: 'Use `force_encoding` to treat the string as ASCII-8BIT.',
+    setup: 'text = "hello"',
+    setupCode: 'text = "hello"',
+    expected: 'ASCII-8BIT',
+    sample: 'text.dup.force_encoding("ASCII-8BIT").encoding.to_s',
+    hints: [
+      'force_encoding changes encoding without transcoding',
+      'Use dup to avoid modifying original string',
+    ],
+    validPatterns: [
+      /\.force_encoding\s*\(\s*["']ASCII-8BIT["']\s*\)/,
+      /\.force_encoding\s*\(\s*Encoding::ASCII_8BIT\s*\)/,
+    ],
+    tags: ['force_encoding', 'encoding', 'binary'],
+  },
+
+  // Heredoc
+  {
+    id: 'ruby-str-heredoc-1',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Multi-line String with Heredoc',
+    text: 'Use a heredoc to create a multi-line string and get its line count.',
+    setup: '# Create a 3-line heredoc',
+    setupCode: '# Create heredoc with 3 lines',
+    expected: 3,
+    sample: '<<~TEXT.lines.count\n  Line 1\n  Line 2\n  Line 3\nTEXT',
+    hints: [
+      '<<~DELIMITER starts a squiggly heredoc',
+      'Squiggly heredoc strips leading whitespace',
+      'lines.count gives number of lines',
+    ],
+    validPatterns: [
+      /<<[~-]?[A-Z]+/,
+      /<<-?[A-Z]+/,
+    ],
+    tags: ['heredoc', 'multiline', 'string'],
+  },
+
+  // String interpolation patterns
+  {
+    id: 'ruby-str-interpolation-1',
+    category: 'String Methods',
+    difficulty: 'easy',
+    title: 'Expression Interpolation',
+    text: 'Use string interpolation to embed an arithmetic expression.',
+    setup: 'a = 5\nb = 3',
+    setupCode: 'a = 5\nb = 3',
+    expected: '5 + 3 = 8',
+    sample: '"#{a} + #{b} = #{a + b}"',
+    hints: [
+      '#{} can contain any Ruby expression',
+      'Expression is evaluated and converted to string',
+    ],
+    validPatterns: [
+      /"#\{a\}\s*\+\s*#\{b\}\s*=\s*#\{a\s*\+\s*b\}"/,
+    ],
+    tags: ['interpolation', 'expression', 'embed'],
+  },
+  {
+    id: 'ruby-str-interpolation-2',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Method Call Interpolation',
+    text: 'Use interpolation to embed a method call result.',
+    setup: 'items = ["apple", "banana", "cherry"]',
+    setupCode: 'items = ["apple", "banana", "cherry"]',
+    expected: 'Total: 3 items',
+    sample: '"Total: #{items.length} items"',
+    hints: [
+      'Any method can be called inside #{}',
+      'Result is automatically converted to string',
+    ],
+    validPatterns: [
+      /".*#\{items\.(length|size|count)\}.*"/,
+    ],
+    tags: ['interpolation', 'method', 'call'],
+  },
+
+  // StringIO
+  {
+    id: 'ruby-str-stringio-1',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Write to StringIO',
+    text: 'Use StringIO to capture output written with puts.',
+    setup: 'require "stringio"',
+    setupCode: 'require "stringio"',
+    expected: 'Hello, World!',
+    sample: 'io = StringIO.new; io.puts "Hello, World!"; io.string.chomp',
+    hints: [
+      'StringIO acts like a file but uses a string',
+      'Use .string to get the written content',
+      'chomp removes trailing newline from puts',
+    ],
+    validPatterns: [
+      /StringIO\.new.*\.puts.*\.string/,
+      /StringIO\.new.*<<.*\.string/,
+    ],
+    tags: ['StringIO', 'io', 'buffer', 'capture'],
+  },
+  {
+    id: 'ruby-str-stringio-2',
+    category: 'String Methods',
+    difficulty: 'hard',
+    title: 'Read from StringIO',
+    text: 'Use StringIO to read a string line by line.',
+    setup: 'require "stringio"\ntext = "line1\\nline2\\nline3"',
+    setupCode: 'require "stringio"\ntext = "line1\\nline2\\nline3"',
+    expected: ['line1', 'line2', 'line3'],
+    sample: 'io = StringIO.new(text); io.readlines.map(&:chomp)',
+    hints: [
+      'Initialize StringIO with a string to read from',
+      'readlines returns array of lines',
+      'map(&:chomp) removes newlines',
+    ],
+    validPatterns: [
+      /StringIO\.new\s*\(\s*text\s*\).*\.readlines/,
+      /StringIO\.new\s*\(\s*text\s*\).*\.each_line/,
+    ],
+    tags: ['StringIO', 'read', 'lines', 'parse'],
+  },
+
+  // Additional squeeze variations
+  {
+    id: 'ruby-str-squeeze-3',
+    category: 'String Methods',
+    difficulty: 'medium',
+    title: 'Squeeze Letter Range',
+    text: 'Use `squeeze` with a range to squeeze only letters, not spaces.',
+    setup: 'text = "heeelllo   wooorld"',
+    setupCode: 'text = "heeelllo   wooorld"',
+    expected: 'helo   world',
+    sample: 'text.squeeze("a-z")',
+    hints: [
+      'squeeze accepts character ranges',
+      'Only specified characters are squeezed',
+    ],
+    validPatterns: [
+      /text\.squeeze\s*\(\s*["']a-z["']\s*\)/,
+      /text\.squeeze\s*\(\s*["']a-zA-Z["']\s*\)/,
+    ],
+    tags: ['squeeze', 'range', 'letters'],
+  },
+
+  // ============================================================
+  // Advanced Enumerable Module - Lazy Enumerators, chunk, slice,
+  // tally, each_with_object, minmax_by, cycle patterns
+  // ============================================================
+
+  // each_with_object patterns (3 problems: 2 easy, 1 medium)
+  {
+    id: 'ruby-enum-each-with-object-hash-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Build Word Length Hash with each_with_object',
+    text: 'Use `each_with_object` to create a hash mapping each word to its length.',
+    setup: 'words = ["cat", "elephant", "dog"]',
+    setupCode: 'words = ["cat", "elephant", "dog"]',
+    expected: { 'cat': 3, 'elephant': 8, 'dog': 3 },
+    sample: 'words.each_with_object({}) { |word, hash| hash[word] = word.length }',
+    hints: [
+      'each_with_object passes an accumulator to each iteration',
+      'The accumulator is the second block parameter',
+      'Returns the accumulator after all iterations',
+    ],
+    validPatterns: [
+      /words\.each_with_object\s*\(\s*\{\s*\}\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|/,
+    ],
+    tags: ['each_with_object', 'hash', 'accumulator'],
+  },
+  {
+    id: 'ruby-enum-each-with-object-array-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Collect Squares with each_with_object',
+    text: 'Use `each_with_object` to build an array of squared numbers.',
+    setup: 'numbers = [1, 2, 3, 4, 5]',
+    setupCode: 'numbers = [1, 2, 3, 4, 5]',
+    expected: [1, 4, 9, 16, 25],
+    sample: 'numbers.each_with_object([]) { |n, arr| arr << n ** 2 }',
+    hints: [
+      'Pass an empty array as the accumulator object',
+      'Use << to append transformed elements',
+      'Returns the modified array after iteration',
+    ],
+    validPatterns: [
+      /numbers\.each_with_object\s*\(\s*\[\s*\]\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|/,
+    ],
+    tags: ['each_with_object', 'array', 'transform'],
+  },
+  {
+    id: 'ruby-enum-each-with-object-group-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Group Numbers by Parity',
+    text: 'Use `each_with_object` to group numbers into even and odd arrays.',
+    setup: 'numbers = [1, 2, 3, 4, 5, 6, 7, 8]',
+    setupCode: 'numbers = [1, 2, 3, 4, 5, 6, 7, 8]',
+    expected: { even: [2, 4, 6, 8], odd: [1, 3, 5, 7] },
+    sample:
+      'numbers.each_with_object({ even: [], odd: [] }) { |n, h| n.even? ? h[:even] << n : h[:odd] << n }',
+    hints: [
+      'Initialize the hash structure with both keys',
+      'Use ternary operator or if/else in block',
+      'Append to the appropriate array based on condition',
+    ],
+    validPatterns: [
+      /numbers\.each_with_object\s*\(\s*\{\s*even:.*odd:.*\}\s*\)\s*\{/,
+    ],
+    tags: ['each_with_object', 'grouping', 'conditional'],
+  },
+
+  // tally and group_by combinations (3 problems: 1 easy, 2 medium)
+  {
+    id: 'ruby-enum-tally-basic-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Count Element Frequency with tally',
+    text: 'Use `tally` to count occurrences of each fruit.',
+    setup: 'fruits = ["apple", "banana", "apple", "cherry", "banana", "apple"]',
+    setupCode: 'fruits = ["apple", "banana", "apple", "cherry", "banana", "apple"]',
+    expected: { 'apple': 3, 'banana': 2, 'cherry': 1 },
+    sample: 'fruits.tally',
+    hints: [
+      'tally returns a hash of element counts',
+      'Each unique element becomes a key',
+      'Value is the count of occurrences',
+    ],
+    validPatterns: [/fruits\.tally\b/],
+    tags: ['tally', 'count', 'frequency'],
+  },
+  {
+    id: 'ruby-enum-tally-transform-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Tally First Letters',
+    text: 'Count words by their first letter using `map` and `tally`.',
+    setup: 'words = ["apple", "ant", "bear", "banana", "cat"]',
+    setupCode: 'words = ["apple", "ant", "bear", "banana", "cat"]',
+    expected: { 'a': 2, 'b': 2, 'c': 1 },
+    sample: 'words.map { |w| w[0] }.tally',
+    hints: [
+      'First transform elements with map',
+      'Then tally the transformed values',
+      'Chain map and tally together',
+    ],
+    validPatterns: [
+      /words\.map\s*\{.*\[0\].*\}\.tally/,
+      /words\.map\s*\(\s*&:chr\s*\)\.tally/,
+    ],
+    tags: ['tally', 'map', 'transform'],
+  },
+  {
+    id: 'ruby-enum-group-tally-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Group by Length and Count',
+    text: 'Use `group_by` and `transform_values` to count words by length.',
+    setup: 'words = ["a", "bb", "ccc", "dd", "eee", "f"]',
+    setupCode: 'words = ["a", "bb", "ccc", "dd", "eee", "f"]',
+    expected: { 1: 2, 2: 2, 3: 2 },
+    sample: 'words.group_by(&:length).transform_values(&:count)',
+    hints: [
+      'First group words by their length',
+      'Then transform each group to its count',
+      'Alternative: words.map(&:length).tally',
+    ],
+    validPatterns: [
+      /words\.group_by\s*\(\s*&:length\s*\)\.transform_values\s*\(\s*&:count\s*\)/,
+      /words\.group_by\s*\{.*\.length.*\}\.transform_values\s*\{.*\.(count|size|length).*\}/,
+      /words\.map\s*\(\s*&:length\s*\)\.tally/,
+    ],
+    tags: ['group_by', 'transform_values', 'tally'],
+  },
+
+  // chunk and chunk_while (4 problems: 2 medium, 2 hard)
+  {
+    id: 'ruby-enum-chunk-even-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Chunk Consecutive Even/Odd Numbers',
+    text: 'Use `chunk` to group consecutive numbers by whether they are even.',
+    setup: 'numbers = [1, 3, 2, 4, 5, 7, 6, 8]',
+    setupCode: 'numbers = [1, 3, 2, 4, 5, 7, 6, 8]',
+    expected: [[false, [1, 3]], [true, [2, 4]], [false, [5, 7]], [true, [6, 8]]],
+    sample: 'numbers.chunk { |n| n.even? }.to_a',
+    hints: [
+      'chunk groups consecutive elements with same block value',
+      'Returns an Enumerator of [key, array] pairs',
+      'Unlike group_by, maintains consecutive runs',
+    ],
+    validPatterns: [
+      /numbers\.chunk\s*\{\s*\|(\w+)\|\s*\1\.even\?\s*\}\.to_a/,
+      /numbers\.chunk\s*\(\s*&:even\?\s*\)\.to_a/,
+    ],
+    tags: ['chunk', 'consecutive', 'grouping'],
+  },
+  {
+    id: 'ruby-enum-chunk-sign-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Chunk by Number Sign',
+    text: 'Use `chunk` to group consecutive numbers by positive/negative.',
+    setup: 'numbers = [1, 2, -1, -3, 4, 5, -2]',
+    setupCode: 'numbers = [1, 2, -1, -3, 4, 5, -2]',
+    expected: [[true, [1, 2]], [false, [-1, -3]], [true, [4, 5]], [false, [-2]]],
+    sample: 'numbers.chunk { |n| n > 0 }.to_a',
+    hints: [
+      'chunk creates runs of elements with same block result',
+      'Positive numbers return true, negative return false',
+      'New chunk starts when block result changes',
+    ],
+    validPatterns: [
+      /numbers\.chunk\s*\{\s*\|(\w+)\|\s*\1\s*>\s*0\s*\}\.to_a/,
+      /numbers\.chunk\s*\(\s*&:positive\?\s*\)\.to_a/,
+    ],
+    tags: ['chunk', 'sign', 'positive', 'negative'],
+  },
+  {
+    id: 'ruby-enum-chunk-while-ascending-1',
+    category: 'Enumerable Methods',
+    difficulty: 'hard',
+    title: 'Chunk While Ascending',
+    text: 'Use `chunk_while` to split into ascending runs.',
+    setup: 'numbers = [1, 2, 4, 3, 5, 6, 2, 8]',
+    setupCode: 'numbers = [1, 2, 4, 3, 5, 6, 2, 8]',
+    expected: [[1, 2, 4], [3, 5, 6], [2, 8]],
+    sample: 'numbers.chunk_while { |a, b| a < b }.to_a',
+    hints: [
+      'chunk_while continues a chunk while block returns true',
+      'Block receives consecutive pairs of elements',
+      'New chunk starts when condition becomes false',
+    ],
+    validPatterns: [
+      /numbers\.chunk_while\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*<\s*\2\s*\}\.to_a/,
+    ],
+    tags: ['chunk_while', 'ascending', 'consecutive'],
+  },
+  {
+    id: 'ruby-enum-chunk-while-close-1',
+    category: 'Enumerable Methods',
+    difficulty: 'hard',
+    title: 'Chunk While Numbers Close Together',
+    text: 'Use `chunk_while` to group numbers differing by at most 2.',
+    setup: 'numbers = [1, 2, 4, 9, 10, 11, 15, 16, 19]',
+    setupCode: 'numbers = [1, 2, 4, 9, 10, 11, 15, 16, 19]',
+    expected: [[1, 2, 4], [9, 10, 11], [15, 16], [19]],
+    sample: 'numbers.chunk_while { |a, b| (b - a).abs <= 2 }.to_a',
+    hints: [
+      'Compare difference between consecutive elements',
+      'Use abs for absolute difference',
+      'Chunk continues while difference is small',
+    ],
+    validPatterns: [
+      /numbers\.chunk_while\s*\{\s*\|(\w+),\s*(\w+)\|.*<=\s*2.*\}\.to_a/,
+      /numbers\.chunk_while\s*\{\s*\|(\w+),\s*(\w+)\|\s*\2\s*-\s*\1\s*<=\s*2\s*\}\.to_a/,
+    ],
+    tags: ['chunk_while', 'difference', 'proximity'],
+  },
+
+  // slice_before, slice_after, slice_when (4 problems: 2 medium, 2 hard)
+  {
+    id: 'ruby-enum-slice-before-negative-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Slice Before Negative Numbers',
+    text: 'Use `slice_before` to start a new slice before each negative number.',
+    setup: 'numbers = [1, 2, -1, 3, 4, -2, 5]',
+    setupCode: 'numbers = [1, 2, -1, 3, 4, -2, 5]',
+    expected: [[1, 2], [-1, 3, 4], [-2, 5]],
+    sample: 'numbers.slice_before { |n| n < 0 }.to_a',
+    hints: [
+      'slice_before starts new slice when block is true',
+      'The matching element begins the new slice',
+      'Returns an Enumerator of slices',
+    ],
+    validPatterns: [
+      /numbers\.slice_before\s*\{\s*\|(\w+)\|\s*\1\s*<\s*0\s*\}\.to_a/,
+      /numbers\.slice_before\s*\(\s*&:negative\?\s*\)\.to_a/,
+    ],
+    tags: ['slice_before', 'partition', 'negative'],
+  },
+  {
+    id: 'ruby-enum-slice-after-period-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Slice After Periods',
+    text: 'Use `slice_after` to split after each word ending with a period.',
+    setup: 'words = ["Hello.", "World", "is", "great.", "Ruby", "rocks."]',
+    setupCode: 'words = ["Hello.", "World", "is", "great.", "Ruby", "rocks."]',
+    expected: [['Hello.'], ['World', 'is', 'great.'], ['Ruby', 'rocks.']],
+    sample: 'words.slice_after { |w| w.end_with?(".") }.to_a',
+    hints: [
+      'slice_after ends current slice when block is true',
+      'The matching element ends the current slice',
+      'Next element starts a new slice',
+    ],
+    validPatterns: [
+      /words\.slice_after\s*\{\s*\|(\w+)\|\s*\1\.end_with\?\s*\(\s*["']\.["']\s*\)\s*\}\.to_a/,
+      /words\.slice_after\s*\(\s*\/\\.\$\/\s*\)\.to_a/,
+    ],
+    tags: ['slice_after', 'punctuation', 'sentences'],
+  },
+  {
+    id: 'ruby-enum-slice-when-gap-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Slice When Gap Detected',
+    text: 'Use `slice_when` to split when gap > 1 between consecutive numbers.',
+    setup: 'numbers = [1, 2, 3, 6, 7, 10, 11, 12]',
+    setupCode: 'numbers = [1, 2, 3, 6, 7, 10, 11, 12]',
+    expected: [[1, 2, 3], [6, 7], [10, 11, 12]],
+    sample: 'numbers.slice_when { |a, b| b - a > 1 }.to_a',
+    hints: [
+      'slice_when splits when block returns true',
+      'Block receives consecutive element pairs',
+      'Split occurs between a and b when condition met',
+    ],
+    validPatterns: [
+      /numbers\.slice_when\s*\{\s*\|(\w+),\s*(\w+)\|\s*\2\s*-\s*\1\s*>\s*1\s*\}\.to_a/,
+    ],
+    tags: ['slice_when', 'gap', 'consecutive'],
+  },
+  {
+    id: 'ruby-enum-slice-when-type-1',
+    category: 'Enumerable Methods',
+    difficulty: 'hard',
+    title: 'Slice When Type Changes',
+    text: 'Use `slice_when` to split when element type changes.',
+    setup: 'items = [1, 2, "a", "b", "c", 3, 4, "d"]',
+    setupCode: 'items = [1, 2, "a", "b", "c", 3, 4, "d"]',
+    expected: [[1, 2], ['a', 'b', 'c'], [3, 4], ['d']],
+    sample: 'items.slice_when { |a, b| a.class != b.class }.to_a',
+    hints: [
+      'Compare classes of consecutive elements',
+      'Split when types differ',
+      'Useful for heterogeneous collections',
+    ],
+    validPatterns: [
+      /items\.slice_when\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\.class\s*!=\s*\2\.class\s*\}\.to_a/,
+    ],
+    tags: ['slice_when', 'type', 'class'],
+  },
+
+  // minmax and minmax_by (2 problems: 1 easy, 1 medium)
+  {
+    id: 'ruby-enum-minmax-by-length-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Find Shortest and Longest Word',
+    text: 'Use `minmax_by` to find the shortest and longest word.',
+    setup: 'words = ["cat", "elephant", "dog", "hippopotamus", "ant"]',
+    setupCode: 'words = ["cat", "elephant", "dog", "hippopotamus", "ant"]',
+    expected: ['cat', 'hippopotamus'],
+    sample: 'words.minmax_by { |w| w.length }',
+    hints: [
+      'minmax_by returns [min, max] based on block value',
+      'More efficient than separate min_by and max_by',
+      'Block determines the comparison criteria',
+    ],
+    validPatterns: [
+      /words\.minmax_by\s*\{\s*\|(\w+)\|\s*\1\.length\s*\}/,
+      /words\.minmax_by\s*\(\s*&:length\s*\)/,
+      /words\.minmax_by\s*\(\s*&:size\s*\)/,
+    ],
+    tags: ['minmax_by', 'length', 'extremes'],
+  },
+  {
+    id: 'ruby-enum-minmax-by-abs-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Find Min and Max by Absolute Value',
+    text: 'Use `minmax_by` to find numbers with smallest and largest absolute values.',
+    setup: 'numbers = [-10, 3, -2, 8, -1, 5]',
+    setupCode: 'numbers = [-10, 3, -2, 8, -1, 5]',
+    expected: [-1, -10],
+    sample: 'numbers.minmax_by { |n| n.abs }',
+    hints: [
+      'Use abs to compare by magnitude only',
+      'Returns the actual elements, not transformed values',
+      'Smallest absolute value comes first',
+    ],
+    validPatterns: [
+      /numbers\.minmax_by\s*\{\s*\|(\w+)\|\s*\1\.abs\s*\}/,
+      /numbers\.minmax_by\s*\(\s*&:abs\s*\)/,
+    ],
+    tags: ['minmax_by', 'abs', 'magnitude'],
+  },
+
+  // cycle and take patterns (2 problems: 1 easy, 1 medium)
+  {
+    id: 'ruby-enum-cycle-take-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Cycle and Take Elements',
+    text: 'Use `cycle` with `take` to repeat elements and get first 8.',
+    setup: 'colors = ["red", "green", "blue"]',
+    setupCode: 'colors = ["red", "green", "blue"]',
+    expected: ['red', 'green', 'blue', 'red', 'green', 'blue', 'red', 'green'],
+    sample: 'colors.cycle.take(8)',
+    hints: [
+      'cycle creates an infinite enumerator',
+      'Use take to limit the result',
+      'Elements repeat in order indefinitely',
+    ],
+    validPatterns: [
+      /colors\.cycle\.take\s*\(\s*8\s*\)/,
+      /colors\.cycle\s*\(\s*\)\.take\s*\(\s*8\s*\)/,
+    ],
+    tags: ['cycle', 'take', 'infinite'],
+  },
+  {
+    id: 'ruby-enum-cycle-finite-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Cycle Fixed Number of Times',
+    text: 'Use `cycle(n)` to repeat the array exactly 3 times.',
+    setup: 'items = [1, 2]',
+    setupCode: 'items = [1, 2]',
+    expected: [1, 2, 1, 2, 1, 2],
+    sample: 'items.cycle(3).to_a',
+    hints: [
+      'cycle(n) repeats exactly n times then stops',
+      'Returns an Enumerator',
+      'Use to_a to convert to array',
+    ],
+    validPatterns: [
+      /items\.cycle\s*\(\s*3\s*\)\.to_a/,
+    ],
+    tags: ['cycle', 'repeat', 'finite'],
+  },
+
+  // Enumerator::Lazy (5 problems: 2 medium, 3 hard)
+  {
+    id: 'ruby-enum-lazy-select-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Lazy Select from Infinite Range',
+    text: 'Use `lazy` to find first 5 numbers divisible by 7.',
+    setup: 'range = 1..Float::INFINITY',
+    setupCode: 'range = 1..Float::INFINITY',
+    expected: [7, 14, 21, 28, 35],
+    sample: 'range.lazy.select { |n| n % 7 == 0 }.take(5).to_a',
+    hints: [
+      'lazy creates a lazy enumerator',
+      'Operations are deferred until needed',
+      'Prevents evaluating the entire infinite range',
+    ],
+    validPatterns: [
+      /range\.lazy\.select\s*\{\s*\|(\w+)\|\s*\1\s*%\s*7\s*==\s*0\s*\}\.take\s*\(\s*5\s*\)\.to_a/,
+    ],
+    tags: ['lazy', 'infinite', 'select'],
+  },
+  {
+    id: 'ruby-enum-lazy-map-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Lazy Map and Take',
+    text: 'Use `lazy` to get first 6 squares from infinite range.',
+    setup: 'range = 1..Float::INFINITY',
+    setupCode: 'range = 1..Float::INFINITY',
+    expected: [1, 4, 9, 16, 25, 36],
+    sample: 'range.lazy.map { |n| n ** 2 }.take(6).to_a',
+    hints: [
+      'lazy.map transforms elements lazily',
+      'Only computes as many as needed',
+      'Use take to limit results',
+    ],
+    validPatterns: [
+      /range\.lazy\.map\s*\{\s*\|(\w+)\|\s*\1\s*\*\*\s*2\s*\}\.take\s*\(\s*6\s*\)\.to_a/,
+      /range\.lazy\.map\s*\{\s*\|(\w+)\|\s*\1\s*\*\s*\1\s*\}\.take\s*\(\s*6\s*\)\.to_a/,
+    ],
+    tags: ['lazy', 'map', 'squares'],
+  },
+  {
+    id: 'ruby-enum-lazy-chain-1',
+    category: 'Enumerable Methods',
+    difficulty: 'medium',
+    title: 'Lazy Chain: Filter and Transform',
+    text: 'Use `lazy` to find first 4 squares of even numbers.',
+    setup: 'range = 1..Float::INFINITY',
+    setupCode: 'range = 1..Float::INFINITY',
+    expected: [4, 16, 36, 64],
+    sample: 'range.lazy.select(&:even?).map { |n| n ** 2 }.take(4).to_a',
+    hints: [
+      'Chain lazy operations: select, map, take',
+      'Each operation stays lazy until to_a',
+      'Processes only as many elements as needed',
+    ],
+    validPatterns: [
+      /range\.lazy\.select.*\.map\s*\{.*\*\*\s*2.*\}\.take\s*\(\s*4\s*\)\.to_a/,
+      /range\.lazy\.select\s*\(\s*&:even\?\s*\)\.map\s*\{.*\}\.take/,
+    ],
+    tags: ['lazy', 'chain', 'transform'],
+  },
+  {
+    id: 'ruby-enum-lazy-flatmap-1',
+    category: 'Enumerable Methods',
+    difficulty: 'hard',
+    title: 'Lazy flat_map from Infinite Range',
+    text: 'Use `lazy.flat_map` to generate first 6 pairs [n, n*2].',
+    setup: 'range = 1..Float::INFINITY',
+    setupCode: 'range = 1..Float::INFINITY',
+    expected: [1, 2, 2, 4, 3, 6],
+    sample: 'range.lazy.flat_map { |n| [n, n * 2] }.take(6).to_a',
+    hints: [
+      'flat_map flattens one level of nesting',
+      'Each number produces a pair that gets flattened',
+      'Lazy prevents infinite loop',
+    ],
+    validPatterns: [
+      /range\.lazy\.flat_map\s*\{\s*\|(\w+)\|\s*\[\s*\1,\s*\1\s*\*\s*2\s*\]\s*\}\.take\s*\(\s*6\s*\)\.to_a/,
+    ],
+    tags: ['lazy', 'flat_map', 'infinite'],
+  },
+  {
+    id: 'ruby-enum-lazy-force-1',
+    category: 'Enumerable Methods',
+    difficulty: 'hard',
+    title: 'Lazy with Force Evaluation',
+    text: 'Use `lazy` with `force` to get first 5 Fibonacci-like sums.',
+    setup: 'fibs = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]',
+    setupCode: 'fibs = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]',
+    expected: [2, 3, 5, 8, 13],
+    sample: 'fibs.lazy.each_cons(2).map { |a, b| a + b }.take(5).force',
+    hints: [
+      'force is an alias for to_a on lazy enumerators',
+      'each_cons(2) yields consecutive pairs',
+      'Triggers evaluation of the lazy chain',
+    ],
+    validPatterns: [
+      /fibs\.lazy\.each_cons\s*\(\s*2\s*\)\.map\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\+\s*\2\s*\}\.take\s*\(\s*5\s*\)\.force/,
+      /fibs\.lazy\.each_cons\s*\(\s*2\s*\)\.map\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\+\s*\2\s*\}\.take\s*\(\s*5\s*\)\.to_a/,
+    ],
+    tags: ['lazy', 'force', 'each_cons'],
+  },
+
+  // Additional Enumerable patterns (2 more to reach 25 total)
+  {
+    id: 'ruby-enum-each-cons-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Consecutive Pairs with each_cons',
+    text: 'Use `each_cons` to get all consecutive pairs of elements.',
+    setup: 'numbers = [1, 2, 3, 4, 5]',
+    setupCode: 'numbers = [1, 2, 3, 4, 5]',
+    expected: [[1, 2], [2, 3], [3, 4], [4, 5]],
+    sample: 'numbers.each_cons(2).to_a',
+    hints: [
+      'each_cons(n) yields overlapping slices of n elements',
+      'Each slice shares n-1 elements with the next',
+      'Returns an Enumerator, use to_a to collect',
+    ],
+    validPatterns: [
+      /numbers\.each_cons\s*\(\s*2\s*\)\.to_a/,
+    ],
+    tags: ['each_cons', 'consecutive', 'sliding_window'],
+  },
+  {
+    id: 'ruby-enum-each-slice-batch-1',
+    category: 'Enumerable Methods',
+    difficulty: 'easy',
+    title: 'Batch Processing with each_slice',
+    text: 'Use `each_slice` to split numbers into groups of 3.',
+    setup: 'numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]',
+    setupCode: 'numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]',
+    expected: [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]],
+    sample: 'numbers.each_slice(3).to_a',
+    hints: [
+      'each_slice(n) yields non-overlapping slices of n elements',
+      'Last slice may have fewer than n elements',
+      'Useful for batch processing',
+    ],
+    validPatterns: [
+      /numbers\.each_slice\s*\(\s*3\s*\)\.to_a/,
+    ],
+    tags: ['each_slice', 'batch', 'chunking'],
+  },
 ];
 
 export default rubyProblems;

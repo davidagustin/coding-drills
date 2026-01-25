@@ -123,6 +123,17 @@ const problemLoaders: Record<
   c: () => import('@/lib/problems/c'),
   php: () => import('@/lib/problems/php'),
   kotlin: () => import('@/lib/problems/kotlin'),
+  // New languages
+  rust: () => import('@/lib/problems/rust'),
+  swift: () => import('@/lib/problems/swift'),
+  scala: () => import('@/lib/problems/scala'),
+  r: () => import('@/lib/problems/r'),
+  perl: () => import('@/lib/problems/perl'),
+  lua: () => import('@/lib/problems/lua'),
+  haskell: () => import('@/lib/problems/haskell'),
+  elixir: () => import('@/lib/problems/elixir'),
+  dart: () => import('@/lib/problems/dart'),
+  clojure: () => import('@/lib/problems/clojure'),
 };
 
 // Extract problems from module based on naming convention

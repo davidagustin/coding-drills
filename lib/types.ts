@@ -13,7 +13,18 @@ export type LanguageId =
   | 'ruby'
   | 'c'
   | 'php'
-  | 'kotlin';
+  | 'kotlin'
+  // New languages
+  | 'rust'
+  | 'swift'
+  | 'scala'
+  | 'r'
+  | 'perl'
+  | 'lua'
+  | 'haskell'
+  | 'elixir'
+  | 'dart'
+  | 'clojure';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
