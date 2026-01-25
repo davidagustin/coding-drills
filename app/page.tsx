@@ -296,13 +296,13 @@ export default function Home() {
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto animate-fade-in-up delay-100">
-              Master programming methods through practice
+              Your complete coding interview prep toolkit
             </p>
 
             <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-              Sharpen your coding skills across 21 programming languages. Practice{' '}
-              {totalProblems.toLocaleString()}+ problems, test your knowledge with quizzes, and
-              build the muscle memory every developer needs.
+              Practice {totalProblems.toLocaleString()}+ problems across 21 languages. Build muscle
+              memory with drills, test yourself with quizzes, study cheatsheets, and rehearse with
+              AI mock interviews.
             </p>
 
             {/* CTA Arrow */}
