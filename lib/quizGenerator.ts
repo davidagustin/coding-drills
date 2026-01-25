@@ -4,7 +4,7 @@ import type { Difficulty, LanguageId, Method, QuizQuestion } from './types';
 export interface QuizConfig {
   language: LanguageId;
   categories: string[];
-  questionCount: 5 | 10 | 15;
+  questionCount: number;
   timePerQuestion: 10 | 15 | 20 | 30;
 }
 

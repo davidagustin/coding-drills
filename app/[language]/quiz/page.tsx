@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { getCategoriesForLanguage } from '@/lib/problems';
 import {
   addToLeaderboard,
@@ -121,7 +122,6 @@ interface SetupPhaseProps {
 function SetupPhase({ config, onConfigChange, onStart, availableCategories }: SetupPhaseProps) {
   const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const questionCountOptions = [5, 10, 15] as const;
   const timeOptions = [10, 15, 20, 30] as const;
 
   const toggleCategory = (category: string) => {
@@ -198,22 +198,13 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
         {/* Question Count */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <h2 className="text-xl font-semibold mb-4">Number of Questions</h2>
-          <div className="flex gap-3">
-            {questionCountOptions.map((count) => (
-              <button
-                type="button"
-                key={count}
-                onClick={() => onConfigChange({ ...config, questionCount: count })}
-                className={`flex-1 py-3 rounded-lg font-semibold text-lg transition-all duration-200 ${
-                  config.questionCount === count
-                    ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/25'
-                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                {count}
-              </button>
-            ))}
-          </div>
+          <QuestionCountSlider
+            value={config.questionCount}
+            onChange={(value) => onConfigChange({ ...config, questionCount: value })}
+            min={1}
+            max={30}
+            showLabel={false}
+          />
         </div>
 
         {/* Time Per Question */}

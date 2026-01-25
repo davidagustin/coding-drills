@@ -9,6 +9,15 @@ import {
 } from './config';
 import { LanguageIcon } from './LanguageIcon';
 
+// Mode definitions for navigation
+const MODES = [
+  { slug: 'drill', label: 'Drill', icon: '🎯' },
+  { slug: 'quiz', label: 'Quiz', icon: '🧠' },
+  { slug: 'exercises', label: 'Exercises', icon: '🔄' },
+  { slug: 'reference', label: 'Reference', icon: '📚' },
+  { slug: 'interview', label: 'Interview', icon: '🤖' },
+] as const;
+
 interface LayoutProps {
   children: React.ReactNode;
   params: Promise<{ language: string }>;
@@ -40,6 +49,39 @@ export function generateStaticParams() {
   }));
 }
 
+// Client component for mode navigation (needs usePathname)
+function ModeNav({
+  language,
+  config,
+}: {
+  language: string;
+  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
+}) {
+  return (
+    <nav className={`border-b ${config.borderColor} bg-zinc-900/30`}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-1 overflow-x-auto py-2 scrollbar-hide">
+          {MODES.map((mode) => (
+            <Link
+              key={mode.slug}
+              href={`/${language}/${mode.slug}`}
+              className={`
+                flex items-center gap-2 px-4 py-2 rounded-lg
+                text-sm font-medium whitespace-nowrap
+                transition-all duration-200 cursor-pointer
+                text-zinc-400 hover:text-white hover:bg-zinc-800
+              `}
+            >
+              <span>{mode.icon}</span>
+              <span>{mode.label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 export default async function LanguageLayout({ children, params }: LayoutProps) {
   const { language } = await params;
 
@@ -61,15 +103,18 @@ export default async function LanguageLayout({ children, params }: LayoutProps) 
             <div className="flex items-center gap-3">
               <Link
                 href="/"
-                className="text-zinc-400 hover:text-white transition-colors font-medium"
+                className="text-zinc-400 hover:text-white transition-colors font-medium cursor-pointer"
               >
                 Coding Drills
               </Link>
               <span className="text-zinc-600">/</span>
-              <div className="flex items-center gap-2">
+              <Link
+                href={`/${language}`}
+                className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+              >
                 <LanguageIcon language={language as SupportedLanguage} className="w-5 h-5" />
                 <span className={`font-semibold ${config.color}`}>{config.name}</span>
-              </div>
+              </Link>
             </div>
 
             {/* Language indicator badge */}
@@ -82,6 +127,9 @@ export default async function LanguageLayout({ children, params }: LayoutProps) 
           </div>
         </div>
       </header>
+
+      {/* Mode Navigation */}
+      <ModeNav language={language} config={config} />
 
       {/* Main content */}
       <main>{children}</main>

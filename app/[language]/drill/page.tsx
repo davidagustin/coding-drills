@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
 import { problemsByLanguage } from '@/lib/problems/index';
 import type { Difficulty, LanguageId, Problem } from '@/lib/types';
@@ -195,65 +196,6 @@ function Chip({ label, selected, onClick }: ChipProps) {
   );
 }
 
-interface CountSelectorProps {
-  value: number;
-  onChange: (value: number) => void;
-}
-
-function CountSelector({ value, onChange }: CountSelectorProps) {
-  const presets = [5, 10, 15, 20];
-  const [customValue, setCustomValue] = useState('');
-  const [showCustom, setShowCustom] = useState(false);
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {presets.map((preset) => (
-        <button
-          type="button"
-          key={preset}
-          onClick={() => {
-            onChange(preset);
-            setShowCustom(false);
-          }}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-            value === preset && !showCustom
-              ? 'bg-blue-600 text-white'
-              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-          }`}
-        >
-          {preset}
-        </button>
-      ))}
-      <button
-        type="button"
-        onClick={() => setShowCustom(true)}
-        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-          showCustom ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-        }`}
-      >
-        Custom
-      </button>
-      {showCustom && (
-        <input
-          type="number"
-          min="1"
-          max="50"
-          value={customValue}
-          onChange={(e) => {
-            setCustomValue(e.target.value);
-            const num = parseInt(e.target.value, 10);
-            if (num >= 1 && num <= 50) {
-              onChange(num);
-            }
-          }}
-          placeholder="1-50"
-          className="w-20 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-800 text-sm text-white"
-        />
-      )}
-    </div>
-  );
-}
-
 interface DifficultyFilterProps {
   value: Difficulty | 'all';
   onChange: (value: Difficulty | 'all') => void;
@@ -361,8 +303,13 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
 
         {/* Question Count */}
         <div>
-          <span className="block text-sm font-medium text-zinc-300 mb-3">Number of Questions</span>
-          <CountSelector value={questionCount} onChange={setQuestionCount} />
+          <QuestionCountSlider
+            value={questionCount}
+            onChange={setQuestionCount}
+            min={1}
+            max={Math.min(50, availableCount || 50)}
+            label="Number of Questions"
+          />
         </div>
 
         {/* Difficulty */}
