@@ -210,7 +210,8 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
         {/* Time Per Question */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <h2 className="text-xl font-semibold mb-4">Time Per Question</h2>
-          <div className="flex gap-3">
+          {/* Quick Select Buttons */}
+          <div className="flex gap-3 mb-4">
             {timeOptions.map((time) => (
               <button
                 type="button"
@@ -225,6 +226,30 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
                 {time}s
               </button>
             ))}
+          </div>
+          {/* Custom Slider */}
+          <div className="pt-2 border-t border-slate-700/50">
+            <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
+              <span>Custom time</span>
+              <span className="font-mono bg-slate-700/50 px-2 py-1 rounded">
+                {config.timePerQuestion}s
+              </span>
+            </div>
+            <input
+              type="range"
+              min={5}
+              max={60}
+              step={5}
+              value={config.timePerQuestion}
+              onChange={(e) =>
+                onConfigChange({ ...config, timePerQuestion: Number(e.target.value) })
+              }
+              className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+            />
+            <div className="flex justify-between text-xs text-slate-500 mt-1">
+              <span>5s</span>
+              <span>60s</span>
+            </div>
           </div>
         </div>
 
@@ -421,6 +446,7 @@ function MethodCard({
   let cardClasses = `
     relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
     transform hover:scale-[1.02] active:scale-[0.98]
+    ${isHovered ? 'z-20' : 'z-0'}
   `;
 
   if (isRevealed) {
@@ -483,7 +509,7 @@ function MethodCard({
 
       {/* Tooltip on hover */}
       {isHovered && !isRevealed && methodInfo && (
-        <div className="absolute left-0 right-0 -bottom-2 transform translate-y-full z-10 p-3 bg-slate-900 rounded-lg border border-slate-600 shadow-xl text-sm text-slate-300 text-left">
+        <div className="absolute left-0 right-0 -bottom-2 transform translate-y-full z-50 p-3 bg-slate-900 rounded-lg border border-slate-600 shadow-xl text-sm text-slate-300 text-left pointer-events-none">
           {methodInfo.description.length > 100
             ? `${methodInfo.description.slice(0, 100)}...`
             : methodInfo.description}

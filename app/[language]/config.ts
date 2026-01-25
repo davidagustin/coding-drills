@@ -12,6 +12,17 @@ export const SUPPORTED_LANGUAGES = [
   'c',
   'php',
   'kotlin',
+  // New languages
+  'rust',
+  'swift',
+  'scala',
+  'r',
+  'perl',
+  'lua',
+  'haskell',
+  'elixir',
+  'dart',
+  'clojure',
 ] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -103,6 +114,77 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     hoverBg: 'hover:bg-purple-500/20',
+  },
+  // New languages
+  rust: {
+    name: 'Rust',
+    color: 'text-orange-500',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    hoverBg: 'hover:bg-orange-500/20',
+  },
+  swift: {
+    name: 'Swift',
+    color: 'text-orange-400',
+    bgColor: 'bg-orange-400/10',
+    borderColor: 'border-orange-400/30',
+    hoverBg: 'hover:bg-orange-400/20',
+  },
+  scala: {
+    name: 'Scala',
+    color: 'text-red-500',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    hoverBg: 'hover:bg-red-500/20',
+  },
+  r: {
+    name: 'R',
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    hoverBg: 'hover:bg-blue-400/20',
+  },
+  perl: {
+    name: 'Perl',
+    color: 'text-indigo-400',
+    bgColor: 'bg-indigo-400/10',
+    borderColor: 'border-indigo-400/30',
+    hoverBg: 'hover:bg-indigo-400/20',
+  },
+  lua: {
+    name: 'Lua',
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    hoverBg: 'hover:bg-blue-600/20',
+  },
+  haskell: {
+    name: 'Haskell',
+    color: 'text-purple-500',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    hoverBg: 'hover:bg-purple-500/20',
+  },
+  elixir: {
+    name: 'Elixir',
+    color: 'text-purple-400',
+    bgColor: 'bg-purple-400/10',
+    borderColor: 'border-purple-400/30',
+    hoverBg: 'hover:bg-purple-400/20',
+  },
+  dart: {
+    name: 'Dart',
+    color: 'text-cyan-400',
+    bgColor: 'bg-cyan-400/10',
+    borderColor: 'border-cyan-400/30',
+    hoverBg: 'hover:bg-cyan-400/20',
+  },
+  clojure: {
+    name: 'Clojure',
+    color: 'text-green-500',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    hoverBg: 'hover:bg-green-500/20',
   },
 };
 

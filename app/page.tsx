@@ -1,4 +1,5 @@
 import { LanguageGrid } from '@/components/LanguageGrid';
+import { getProblemCountByLanguage } from '@/lib/problems/index';
 
 const languages = [
   {
@@ -273,6 +274,9 @@ const modes = [
 ];
 
 export default function Home() {
+  const problemCounts = getProblemCountByLanguage();
+  const totalProblems = Object.values(problemCounts).reduce((a, b) => a + b, 0);
+
   return (
     <div className="min-h-screen bg-mesh">
       {/* Hero Section */}
@@ -296,8 +300,9 @@ export default function Home() {
             </p>
 
             <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-              Sharpen your coding skills across 21 programming languages. Practice 2200+ problems,
-              test your knowledge with quizzes, and build the muscle memory every developer needs.
+              Sharpen your coding skills across 21 programming languages. Practice{' '}
+              {totalProblems.toLocaleString()}+ problems, test your knowledge with quizzes, and
+              build the muscle memory every developer needs.
             </p>
 
             {/* CTA Arrow */}
@@ -332,7 +337,7 @@ export default function Home() {
           Select a programming language to start practicing
         </p>
 
-        <LanguageGrid languages={languages} />
+        <LanguageGrid languages={languages} problemCounts={problemCounts} />
       </section>
 
       {/* Mode Selection Preview */}
@@ -375,7 +380,7 @@ export default function Home() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
             { stat: '21', label: 'Languages', icon: '🌐' },
-            { stat: '2200+', label: 'Problems', icon: '⚡' },
+            { stat: `${totalProblems.toLocaleString()}+`, label: 'Problems', icon: '⚡' },
             { stat: '∞', label: 'Practice', icon: '🔄' },
             { stat: 'Free', label: 'Forever', icon: '✨' },
           ].map((item) => (

@@ -5,7 +5,7 @@ export interface QuizConfig {
   language: LanguageId;
   categories: string[];
   questionCount: number;
-  timePerQuestion: 10 | 15 | 20 | 30;
+  timePerQuestion: number; // 5-60 seconds, supports slider
 }
 
 /**

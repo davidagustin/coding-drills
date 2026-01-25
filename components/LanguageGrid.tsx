@@ -18,11 +18,12 @@ interface Language {
 
 interface LanguageGridProps {
   languages: Language[];
+  problemCounts?: Record<string, number>;
 }
 
 type ViewMode = 'grid' | 'list';
 
-export function LanguageGrid({ languages }: LanguageGridProps) {
+export function LanguageGrid({ languages, problemCounts = {} }: LanguageGridProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
@@ -204,6 +205,12 @@ export function LanguageGrid({ languages }: LanguageGridProps) {
                     {lang.name}
                   </h3>
                   {lang.subtitle && <p className="text-xs text-gray-400 mt-1">{lang.subtitle}</p>}
+                  {problemCounts[lang.slug] !== undefined && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      <span className="text-gray-400 font-medium">{problemCounts[lang.slug]}</span>{' '}
+                      problems
+                    </p>
+                  )}
                 </div>
 
                 {/* Arrow indicator */}
@@ -264,6 +271,14 @@ export function LanguageGrid({ languages }: LanguageGridProps) {
                 </h3>
                 {lang.subtitle && <p className="text-xs text-gray-400 truncate">{lang.subtitle}</p>}
               </div>
+
+              {/* Problem Count */}
+              {problemCounts[lang.slug] !== undefined && (
+                <div className="text-sm text-gray-400">
+                  <span className="font-medium text-gray-300">{problemCounts[lang.slug]}</span>{' '}
+                  problems
+                </div>
+              )}
 
               {/* Arrow */}
               <svg

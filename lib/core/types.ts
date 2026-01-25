@@ -23,7 +23,19 @@ export type LanguageId =
   | 'csharp'
   | 'go'
   | 'ruby'
-  | 'c';
+  | 'c'
+  | 'php'
+  | 'kotlin'
+  | 'rust'
+  | 'swift'
+  | 'scala'
+  | 'r'
+  | 'perl'
+  | 'lua'
+  | 'haskell'
+  | 'elixir'
+  | 'dart'
+  | 'clojure';
 
 export interface Language {
   id: LanguageId;
@@ -188,8 +200,8 @@ export interface QuizQuestion {
 export interface QuizConfig {
   language: LanguageId;
   categories: string[];
-  questionCount: 5 | 10 | 15;
-  timePerQuestion: 10 | 15 | 20 | 30;
+  questionCount: number; // 1-30
+  timePerQuestion: number; // 5-60 seconds, supports slider
 }
 
 export interface QuizAnswer {
