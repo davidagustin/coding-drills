@@ -48,12 +48,12 @@ const config: Config = {
         info: 'var(--info)',
       },
       spacing: {
-        xs: 'var(--spacing-xs)',
-        sm: 'var(--spacing-sm)',
-        md: 'var(--spacing-md)',
-        lg: 'var(--spacing-lg)',
-        xl: 'var(--spacing-xl)',
-        '2xl': 'var(--spacing-2xl)',
+        'space-xs': 'var(--spacing-space-xs)',
+        'space-sm': 'var(--spacing-space-sm)',
+        'space-md': 'var(--spacing-space-md)',
+        'space-lg': 'var(--spacing-space-lg)',
+        'space-xl': 'var(--spacing-space-xl)',
+        'space-2xl': 'var(--spacing-space-2xl)',
       },
       borderRadius: {
         sm: 'var(--radius-sm)',

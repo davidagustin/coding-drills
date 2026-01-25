@@ -146,13 +146,13 @@ html.light {
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
 
-  /* Spacing scale - generous */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
-  --spacing-2xl: 4rem;
+  /* Custom spacing scale - use unique names to avoid conflicts with Tailwind defaults */
+  --spacing-space-xs: 0.5rem;
+  --spacing-space-sm: 1rem;
+  --spacing-space-md: 1.5rem;
+  --spacing-space-lg: 2rem;
+  --spacing-space-xl: 3rem;
+  --spacing-space-2xl: 4rem;
 
   /* Border radius */
   --radius-sm: 0.375rem;
