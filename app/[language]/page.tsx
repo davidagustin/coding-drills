@@ -391,9 +391,9 @@ export default function LanguagePage() {
         <ModeCard
           href={`/${language}/interview`}
           icon={<ChatBubbleIcon className="w-8 h-8" />}
-          title="Interview Mode"
-          description="Practice with an AI interviewer. Get real-time guidance and hints as you solve algorithm problems."
-          buttonText="Start Interview"
+          title="AI Mock Interview"
+          description="Talk through coding problems with an AI interviewer. Practice explaining your approach and reasoning out loud."
+          buttonText="Start Mock Interview"
           config={config}
         />
       </div>

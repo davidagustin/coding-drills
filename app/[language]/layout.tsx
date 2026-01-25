@@ -17,7 +17,7 @@ const MODES = [
   { slug: 'exercises', label: 'Exercises', icon: '🔄' },
   { slug: 'reference', label: 'Reference', icon: '📚' },
   { slug: 'cheatsheet', label: 'Cheatsheet', icon: '📋' },
-  { slug: 'interview', label: 'Interview', icon: '🤖' },
+  { slug: 'interview', label: 'AI Mock Interview', icon: '🎙️' },
 ] as const;
 
 interface LayoutProps {
