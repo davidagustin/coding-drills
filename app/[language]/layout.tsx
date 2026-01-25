@@ -16,6 +16,7 @@ const MODES = [
   { slug: 'quiz', label: 'Quiz', icon: '🧠' },
   { slug: 'exercises', label: 'Exercises', icon: '🔄' },
   { slug: 'reference', label: 'Reference', icon: '📚' },
+  { slug: 'cheatsheet', label: 'Cheatsheet', icon: '📋' },
   { slug: 'interview', label: 'Interview', icon: '🤖' },
 ] as const;
 
