@@ -2,33 +2,32 @@
  * Problems index - exports all language-specific problem sets
  */
 
-import type { Problem, LanguageId } from '../types';
-
-// Import language-specific problems
-import { javascriptProblems } from './javascript';
-import { typescriptProblems } from './typescript';
-import { pythonProblems } from './python';
-import { javaProblems } from './java';
+import type { LanguageId, Problem } from '../types';
+import { cProblems } from './c';
 import { cppProblems } from './cpp';
 import { csharpProblems } from './csharp';
-import { rubyProblems } from './ruby';
 import { goProblems } from './go';
-import { cProblems } from './c';
+import { javaProblems } from './java';
+// Import language-specific problems
+import { javascriptProblems } from './javascript';
 import { kotlinProblems } from './kotlin';
 import { phpProblems } from './php';
+import { pythonProblems } from './python';
+import { rubyProblems } from './ruby';
+import { typescriptProblems } from './typescript';
 
-// Export individual problem sets
-export { javascriptProblems } from './javascript';
-export { typescriptProblems } from './typescript';
-export { pythonProblems } from './python';
-export { javaProblems } from './java';
+export { cProblems } from './c';
 export { cppProblems } from './cpp';
 export { csharpProblems } from './csharp';
-export { rubyProblems } from './ruby';
 export { goProblems } from './go';
-export { cProblems } from './c';
+export { javaProblems } from './java';
+// Export individual problem sets
+export { javascriptProblems } from './javascript';
 export { kotlinProblems } from './kotlin';
 export { phpProblems } from './php';
+export { pythonProblems } from './python';
+export { rubyProblems } from './ruby';
+export { typescriptProblems } from './typescript';
 
 // Combined problems map by language
 export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
@@ -56,10 +55,7 @@ export const getAllProblems = (): Problem[] => {
 };
 
 // Get problems by category for a language
-export const getProblemsByCategory = (
-  languageId: LanguageId,
-  category: string
-): Problem[] => {
+export const getProblemsByCategory = (languageId: LanguageId, category: string): Problem[] => {
   const problems = problemsByLanguage[languageId] || [];
   return problems.filter((p) => p.category === category);
 };
@@ -67,7 +63,7 @@ export const getProblemsByCategory = (
 // Get problems by difficulty for a language
 export const getProblemsByDifficulty = (
   languageId: LanguageId,
-  difficulty: 'easy' | 'medium' | 'hard'
+  difficulty: 'easy' | 'medium' | 'hard',
 ): Problem[] => {
   const problems = problemsByLanguage[languageId] || [];
   return problems.filter((p) => p.difficulty === difficulty);
@@ -100,10 +96,7 @@ export const getRandomProblem = (languageId: LanguageId): Problem | null => {
 };
 
 // Search problems by tag
-export const searchProblemsByTag = (
-  languageId: LanguageId,
-  tag: string
-): Problem[] => {
+export const searchProblemsByTag = (languageId: LanguageId, tag: string): Problem[] => {
   const problems = problemsByLanguage[languageId] || [];
   return problems.filter((p) => p.tags?.includes(tag));
 };

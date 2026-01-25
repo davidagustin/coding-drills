@@ -163,10 +163,7 @@ export const pythonProblems: Problem[] = [
     expected: [1, 2, 3, 5, 8, 9],
     sample: 'sorted(nums)',
     hints: ['Use the sorted() built-in function'],
-    validPatterns: [
-      /sorted\s*\(\s*nums\s*\)/,
-      /sorted\s*\(\s*nums\s*,\s*reverse\s*=\s*False\s*\)/,
-    ],
+    validPatterns: [/sorted\s*\(\s*nums\s*\)/, /sorted\s*\(\s*nums\s*,\s*reverse\s*=\s*False\s*\)/],
     tags: ['sorting', 'built-in'],
   },
   {
@@ -198,10 +195,7 @@ export const pythonProblems: Problem[] = [
     expected: [5, 4, 3, 2, 1],
     sample: 'list(reversed(nums))',
     hints: ['Use reversed() or slice notation [::-1]'],
-    validPatterns: [
-      /list\s*\(\s*reversed\s*\(\s*nums\s*\)\s*\)/,
-      /nums\s*\[\s*::\s*-1\s*\]/,
-    ],
+    validPatterns: [/list\s*\(\s*reversed\s*\(\s*nums\s*\)\s*\)/, /nums\s*\[\s*::\s*-1\s*\]/],
     tags: ['reverse', 'built-in'],
   },
   {
@@ -215,9 +209,7 @@ export const pythonProblems: Problem[] = [
     expected: 15,
     sample: 'sum(nums)',
     hints: ['Use the sum() built-in function'],
-    validPatterns: [
-      /sum\s*\(\s*nums\s*\)/,
-    ],
+    validPatterns: [/sum\s*\(\s*nums\s*\)/],
     tags: ['aggregation', 'built-in'],
   },
   {
@@ -231,10 +223,7 @@ export const pythonProblems: Problem[] = [
     expected: 9,
     sample: 'max(nums)',
     hints: ['Use the max() built-in function'],
-    validPatterns: [
-      /max\s*\(\s*nums\s*\)/,
-      /sorted\s*\(\s*nums\s*\)\s*\[\s*-1\s*\]/,
-    ],
+    validPatterns: [/max\s*\(\s*nums\s*\)/, /sorted\s*\(\s*nums\s*\)\s*\[\s*-1\s*\]/],
     tags: ['aggregation', 'built-in'],
   },
   {
@@ -248,10 +237,7 @@ export const pythonProblems: Problem[] = [
     expected: 1,
     sample: 'min(nums)',
     hints: ['Use the min() built-in function'],
-    validPatterns: [
-      /min\s*\(\s*nums\s*\)/,
-      /sorted\s*\(\s*nums\s*\)\s*\[\s*0\s*\]/,
-    ],
+    validPatterns: [/min\s*\(\s*nums\s*\)/, /sorted\s*\(\s*nums\s*\)\s*\[\s*0\s*\]/],
     tags: ['aggregation', 'built-in'],
   },
   {
@@ -265,9 +251,7 @@ export const pythonProblems: Problem[] = [
     expected: 7,
     sample: 'len(nums)',
     hints: ['Use the len() built-in function'],
-    validPatterns: [
-      /len\s*\(\s*nums\s*\)/,
-    ],
+    validPatterns: [/len\s*\(\s*nums\s*\)/],
     tags: ['built-in'],
   },
   {
@@ -312,9 +296,16 @@ export const pythonProblems: Problem[] = [
     text: 'Combine two lists into a list of tuples using zip. The result should be a list containing tuples like [("Alice", 25), ("Bob", 30), ("Charlie", 35)].',
     setup: 'names = ["Alice", "Bob", "Charlie"]\nages = [25, 30, 35]',
     setupCode: 'names = ["Alice", "Bob", "Charlie"]\nages = [25, 30, 35]',
-    expected: [['Alice', 25], ['Bob', 30], ['Charlie', 35]],
+    expected: [
+      ['Alice', 25],
+      ['Bob', 30],
+      ['Charlie', 35],
+    ],
     sample: 'list(zip(names, ages))',
-    hints: ['Use zip() to combine iterables element by element', 'zip() returns tuples, which are displayed similar to lists in output'],
+    hints: [
+      'Use zip() to combine iterables element by element',
+      'zip() returns tuples, which are displayed similar to lists in output',
+    ],
     validPatterns: [
       /list\s*\(\s*zip\s*\(\s*names\s*,\s*ages\s*\)\s*\)/,
       /\[\s*\(\s*\w+\s*,\s*\w+\s*\)\s+for\s+\w+\s*,\s*\w+\s+in\s+zip\s*\(\s*names\s*,\s*ages\s*\)\s*\]/,
@@ -330,9 +321,16 @@ export const pythonProblems: Problem[] = [
     text: 'Create a list of tuples with (index, value) pairs using enumerate. The result should be [(0, "apple"), (1, "banana"), (2, "cherry")].',
     setup: 'fruits = ["apple", "banana", "cherry"]',
     setupCode: 'fruits = ["apple", "banana", "cherry"]',
-    expected: [[0, 'apple'], [1, 'banana'], [2, 'cherry']],
+    expected: [
+      [0, 'apple'],
+      [1, 'banana'],
+      [2, 'cherry'],
+    ],
     sample: 'list(enumerate(fruits))',
-    hints: ['Use enumerate() to get index and value pairs', 'enumerate() yields tuples of (index, element)'],
+    hints: [
+      'Use enumerate() to get index and value pairs',
+      'enumerate() yields tuples of (index, element)',
+    ],
     validPatterns: [
       /list\s*\(\s*enumerate\s*\(\s*fruits\s*\)\s*\)/,
       /\[\s*\(\s*i\s*,\s*\w+\s*\)\s+for\s+i\s*,\s*\w+\s+in\s+enumerate\s*\(\s*fruits\s*\)\s*\]/,
@@ -369,9 +367,7 @@ export const pythonProblems: Problem[] = [
     expected: 1,
     sample: 'fruits.index("banana")',
     hints: ['Use the index() method on lists'],
-    validPatterns: [
-      /fruits\.index\s*\(\s*["']banana["']\s*\)/,
-    ],
+    validPatterns: [/fruits\.index\s*\(\s*["']banana["']\s*\)/],
     tags: ['index', 'list-method'],
   },
   {
@@ -442,9 +438,7 @@ export const pythonProblems: Problem[] = [
     expected: ['apple', 'banana', 'cherry'],
     sample: 'csv.split(",")',
     hints: ['Pass the delimiter to split()'],
-    validPatterns: [
-      /csv\.split\s*\(\s*["'],["']\s*\)/,
-    ],
+    validPatterns: [/csv\.split\s*\(\s*["'],["']\s*\)/],
     tags: ['split', 'string-method'],
   },
   {
@@ -458,10 +452,7 @@ export const pythonProblems: Problem[] = [
     expected: 'hello world python',
     sample: '" ".join(words)',
     hints: ['Use the join() method with a space separator'],
-    validPatterns: [
-      /["']\s["']\.join\s*\(\s*words\s*\)/,
-      /" "\.join\s*\(\s*words\s*\)/,
-    ],
+    validPatterns: [/["']\s["']\.join\s*\(\s*words\s*\)/, /" "\.join\s*\(\s*words\s*\)/],
     tags: ['join', 'string-method'],
   },
   {
@@ -475,9 +466,7 @@ export const pythonProblems: Problem[] = [
     expected: 'apple,banana,cherry',
     sample: '",".join(items)',
     hints: ['Use comma as the separator in join()'],
-    validPatterns: [
-      /["'],["']\.join\s*\(\s*items\s*\)/,
-    ],
+    validPatterns: [/["'],["']\.join\s*\(\s*items\s*\)/],
     tags: ['join', 'string-method'],
   },
   {
@@ -491,9 +480,7 @@ export const pythonProblems: Problem[] = [
     expected: 'hello world',
     sample: 'text.strip()',
     hints: ['Use the strip() method'],
-    validPatterns: [
-      /text\.strip\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.strip\s*\(\s*\)/],
     tags: ['strip', 'string-method'],
   },
   {
@@ -507,9 +494,7 @@ export const pythonProblems: Problem[] = [
     expected: 'HELLO WORLD',
     sample: 'text.upper()',
     hints: ['Use the upper() method'],
-    validPatterns: [
-      /text\.upper\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.upper\s*\(\s*\)/],
     tags: ['upper', 'string-method'],
   },
   {
@@ -523,9 +508,7 @@ export const pythonProblems: Problem[] = [
     expected: 'hello world',
     sample: 'text.lower()',
     hints: ['Use the lower() method'],
-    validPatterns: [
-      /text\.lower\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.lower\s*\(\s*\)/],
     tags: ['lower', 'string-method'],
   },
   {
@@ -539,9 +522,7 @@ export const pythonProblems: Problem[] = [
     expected: 'Hello World Python',
     sample: 'text.title()',
     hints: ['Use the title() method'],
-    validPatterns: [
-      /text\.title\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.title\s*\(\s*\)/],
     tags: ['title', 'string-method'],
   },
   {
@@ -555,9 +536,7 @@ export const pythonProblems: Problem[] = [
     expected: 'Hello world',
     sample: 'text.capitalize()',
     hints: ['Use the capitalize() method'],
-    validPatterns: [
-      /text\.capitalize\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.capitalize\s*\(\s*\)/],
     tags: ['capitalize', 'string-method'],
   },
   {
@@ -571,9 +550,7 @@ export const pythonProblems: Problem[] = [
     expected: 'hello Python',
     sample: 'text.replace("world", "Python")',
     hints: ['Use the replace() method'],
-    validPatterns: [
-      /text\.replace\s*\(\s*["']world["']\s*,\s*["']Python["']\s*\)/,
-    ],
+    validPatterns: [/text\.replace\s*\(\s*["']world["']\s*,\s*["']Python["']\s*\)/],
     tags: ['replace', 'string-method'],
   },
   {
@@ -604,9 +581,7 @@ export const pythonProblems: Problem[] = [
     expected: 3,
     sample: 'text.count("l")',
     hints: ['Use the count() method'],
-    validPatterns: [
-      /text\.count\s*\(\s*["']l["']\s*\)/,
-    ],
+    validPatterns: [/text\.count\s*\(\s*["']l["']\s*\)/],
     tags: ['count', 'string-method'],
   },
   {
@@ -620,9 +595,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'text.startswith("hello")',
     hints: ['Use the startswith() method'],
-    validPatterns: [
-      /text\.startswith\s*\(\s*["']hello["']\s*\)/,
-    ],
+    validPatterns: [/text\.startswith\s*\(\s*["']hello["']\s*\)/],
     tags: ['startswith', 'string-method'],
   },
   {
@@ -636,9 +609,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'text.endswith("world")',
     hints: ['Use the endswith() method'],
-    validPatterns: [
-      /text\.endswith\s*\(\s*["']world["']\s*\)/,
-    ],
+    validPatterns: [/text\.endswith\s*\(\s*["']world["']\s*\)/],
     tags: ['endswith', 'string-method'],
   },
   {
@@ -652,10 +623,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'text.isdigit()',
     hints: ['Use the isdigit() method'],
-    validPatterns: [
-      /text\.isdigit\s*\(\s*\)/,
-      /text\.isnumeric\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.isdigit\s*\(\s*\)/, /text\.isnumeric\s*\(\s*\)/],
     tags: ['isdigit', 'string-method'],
   },
   {
@@ -669,9 +637,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'text.isalpha()',
     hints: ['Use the isalpha() method'],
-    validPatterns: [
-      /text\.isalpha\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.isalpha\s*\(\s*\)/],
     tags: ['isalpha', 'string-method'],
   },
   {
@@ -685,9 +651,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'text.isalnum()',
     hints: ['Use the isalnum() method'],
-    validPatterns: [
-      /text\.isalnum\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.isalnum\s*\(\s*\)/],
     tags: ['isalnum', 'string-method'],
   },
   {
@@ -719,10 +683,7 @@ export const pythonProblems: Problem[] = [
     expected: 'hel',
     sample: 'text[:3]',
     hints: ['Use slice notation text[:n] to get first n characters'],
-    validPatterns: [
-      /text\s*\[\s*:\s*3\s*\]/,
-      /text\s*\[\s*0\s*:\s*3\s*\]/,
-    ],
+    validPatterns: [/text\s*\[\s*:\s*3\s*\]/, /text\s*\[\s*0\s*:\s*3\s*\]/],
     tags: ['slicing', 'string'],
   },
   {
@@ -736,9 +697,7 @@ export const pythonProblems: Problem[] = [
     expected: 'rld',
     sample: 'text[-3:]',
     hints: ['Use negative indexing with slices'],
-    validPatterns: [
-      /text\s*\[\s*-3\s*:\s*\]/,
-    ],
+    validPatterns: [/text\s*\[\s*-3\s*:\s*\]/],
     tags: ['slicing', 'string'],
   },
   {
@@ -805,7 +764,10 @@ export const pythonProblems: Problem[] = [
     text: 'Get all key-value pairs as a list of tuples. The result should be [("name", "Alice"), ("age", 30)].',
     setup: 'person = {"name": "Alice", "age": 30}',
     setupCode: 'person = {"name": "Alice", "age": 30}',
-    expected: [['name', 'Alice'], ['age', 30]],
+    expected: [
+      ['name', 'Alice'],
+      ['age', 30],
+    ],
     sample: 'list(person.items())',
     hints: ['Use the items() method and convert to list', 'items() returns tuples of (key, value)'],
     validPatterns: [
@@ -826,9 +788,7 @@ export const pythonProblems: Problem[] = [
     expected: 'Unknown',
     sample: 'person.get("country", "Unknown")',
     hints: ['Use the get() method with a default value'],
-    validPatterns: [
-      /person\.get\s*\(\s*["']country["']\s*,\s*["']Unknown["']\s*\)/,
-    ],
+    validPatterns: [/person\.get\s*\(\s*["']country["']\s*,\s*["']Unknown["']\s*\)/],
     tags: ['get', 'dict-method'],
   },
   {
@@ -842,9 +802,7 @@ export const pythonProblems: Problem[] = [
     expected: 0,
     sample: 'data.setdefault("score", 0)',
     hints: ['Use setdefault() to get or set a default value'],
-    validPatterns: [
-      /data\.setdefault\s*\(\s*["']score["']\s*,\s*0\s*\)/,
-    ],
+    validPatterns: [/data\.setdefault\s*\(\s*["']score["']\s*,\s*0\s*\)/],
     tags: ['setdefault', 'dict-method'],
   },
   {
@@ -910,9 +868,7 @@ export const pythonProblems: Problem[] = [
     expected: 30,
     sample: 'person.pop("age")',
     hints: ['Use the pop() method to remove and return a value'],
-    validPatterns: [
-      /person\.pop\s*\(\s*["']age["']\s*\)/,
-    ],
+    validPatterns: [/person\.pop\s*\(\s*["']age["']\s*\)/],
     tags: ['pop', 'dict-method'],
   },
   {
@@ -1019,10 +975,7 @@ export const pythonProblems: Problem[] = [
     expected: [1, 2, 3],
     sample: 'set1.difference(set2)',
     hints: ['Use the difference() method or - operator'],
-    validPatterns: [
-      /set1\.difference\s*\(\s*set2\s*\)/,
-      /set1\s*-\s*set2/,
-    ],
+    validPatterns: [/set1\.difference\s*\(\s*set2\s*\)/, /set1\s*-\s*set2/],
     tags: ['difference', 'set-method'],
   },
   {
@@ -1053,10 +1006,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'set1.issubset(set2)',
     hints: ['Use the issubset() method or <= operator'],
-    validPatterns: [
-      /set1\.issubset\s*\(\s*set2\s*\)/,
-      /set1\s*<=\s*set2/,
-    ],
+    validPatterns: [/set1\.issubset\s*\(\s*set2\s*\)/, /set1\s*<=\s*set2/],
     tags: ['issubset', 'set-method'],
   },
   {
@@ -1070,10 +1020,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'set1.issuperset(set2)',
     hints: ['Use the issuperset() method or >= operator'],
-    validPatterns: [
-      /set1\.issuperset\s*\(\s*set2\s*\)/,
-      /set1\s*>=\s*set2/,
-    ],
+    validPatterns: [/set1\.issuperset\s*\(\s*set2\s*\)/, /set1\s*>=\s*set2/],
     tags: ['issuperset', 'set-method'],
   },
 
@@ -1143,9 +1090,7 @@ export const pythonProblems: Problem[] = [
     expected: 42,
     sample: 'int(num_str)',
     hints: ['Use the int() built-in function'],
-    validPatterns: [
-      /int\s*\(\s*num_str\s*\)/,
-    ],
+    validPatterns: [/int\s*\(\s*num_str\s*\)/],
     tags: ['type-conversion', 'built-in'],
   },
   {
@@ -1159,10 +1104,7 @@ export const pythonProblems: Problem[] = [
     expected: '42',
     sample: 'str(num)',
     hints: ['Use the str() built-in function'],
-    validPatterns: [
-      /str\s*\(\s*num\s*\)/,
-      /f["']\{num\}["']/,
-    ],
+    validPatterns: [/str\s*\(\s*num\s*\)/, /f["']\{num\}["']/],
     tags: ['type-conversion', 'built-in'],
   },
   {
@@ -1176,10 +1118,7 @@ export const pythonProblems: Problem[] = [
     expected: ['h', 'e', 'l', 'l', 'o'],
     sample: 'list(text)',
     hints: ['Use the list() built-in function'],
-    validPatterns: [
-      /list\s*\(\s*text\s*\)/,
-      /\[\s*\w+\s+for\s+\w+\s+in\s+text\s*\]/,
-    ],
+    validPatterns: [/list\s*\(\s*text\s*\)/, /\[\s*\w+\s+for\s+\w+\s+in\s+text\s*\]/],
     tags: ['type-conversion', 'built-in'],
   },
   {
@@ -1210,9 +1149,7 @@ export const pythonProblems: Problem[] = [
     expected: 15,
     sample: 'reduce(lambda a, b: a + b, nums)',
     hints: ['Import reduce from functools and use with a lambda'],
-    validPatterns: [
-      /reduce\s*\(\s*lambda\s+\w+\s*,\s*\w+\s*:\s*\w+\s*\+\s*\w+\s*,\s*nums\s*\)/,
-    ],
+    validPatterns: [/reduce\s*\(\s*lambda\s+\w+\s*,\s*\w+\s*:\s*\w+\s*\+\s*\w+\s*,\s*nums\s*\)/],
     tags: ['reduce', 'functools'],
   },
   {
@@ -1226,9 +1163,7 @@ export const pythonProblems: Problem[] = [
     expected: 120,
     sample: 'reduce(lambda a, b: a * b, nums)',
     hints: ['Use reduce with multiplication'],
-    validPatterns: [
-      /reduce\s*\(\s*lambda\s+\w+\s*,\s*\w+\s*:\s*\w+\s*\*\s*\w+\s*,\s*nums\s*\)/,
-    ],
+    validPatterns: [/reduce\s*\(\s*lambda\s+\w+\s*,\s*\w+\s*:\s*\w+\s*\*\s*\w+\s*,\s*nums\s*\)/],
     tags: ['reduce', 'functools'],
   },
   {
@@ -1242,9 +1177,7 @@ export const pythonProblems: Problem[] = [
     expected: 42,
     sample: 'abs(num)',
     hints: ['Use the abs() built-in function'],
-    validPatterns: [
-      /abs\s*\(\s*num\s*\)/,
-    ],
+    validPatterns: [/abs\s*\(\s*num\s*\)/],
     tags: ['abs', 'built-in'],
   },
   {
@@ -1258,9 +1191,7 @@ export const pythonProblems: Problem[] = [
     expected: 3.14,
     sample: 'round(num, 2)',
     hints: ['Use the round() built-in function with precision'],
-    validPatterns: [
-      /round\s*\(\s*num\s*,\s*2\s*\)/,
-    ],
+    validPatterns: [/round\s*\(\s*num\s*,\s*2\s*\)/],
     tags: ['round', 'built-in'],
   },
   {
@@ -1288,7 +1219,11 @@ export const pythonProblems: Problem[] = [
     text: 'Sort the list of tuples by the second element (age)',
     setup: 'people = [("Alice", 30), ("Bob", 25), ("Charlie", 35)]',
     setupCode: 'people = [("Alice", 30), ("Bob", 25), ("Charlie", 35)]',
-    expected: [['Bob', 25], ['Alice', 30], ['Charlie', 35]],
+    expected: [
+      ['Bob', 25],
+      ['Alice', 30],
+      ['Charlie', 35],
+    ],
     sample: 'sorted(people, key=lambda x: x[1])',
     hints: ['Use sorted() with a key function'],
     validPatterns: [
@@ -1324,9 +1259,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'bool(items)',
     hints: ['Use bool() - non-empty lists are truthy'],
-    validPatterns: [
-      /bool\s*\(\s*items\s*\)/,
-    ],
+    validPatterns: [/bool\s*\(\s*items\s*\)/],
     tags: ['bool', 'type-conversion'],
   },
 
@@ -1380,9 +1313,7 @@ export const pythonProblems: Problem[] = [
     expected: [1, 2, 10, 3, 4, 5],
     sample: 'nums.insert(2, 10) or nums',
     hints: ['Use insert(index, element) to insert at a specific position'],
-    validPatterns: [
-      /nums\.insert\s*\(\s*2\s*,\s*10\s*\)/,
-    ],
+    validPatterns: [/nums\.insert\s*\(\s*2\s*,\s*10\s*\)/],
     tags: ['insert', 'list-method'],
   },
   {
@@ -1396,10 +1327,7 @@ export const pythonProblems: Problem[] = [
     expected: 5,
     sample: 'nums.pop()',
     hints: ['Use pop() without arguments to remove the last element'],
-    validPatterns: [
-      /nums\.pop\s*\(\s*\)/,
-      /nums\s*\[\s*-1\s*\]/,
-    ],
+    validPatterns: [/nums\.pop\s*\(\s*\)/, /nums\s*\[\s*-1\s*\]/],
     tags: ['pop', 'list-method'],
   },
   {
@@ -1413,9 +1341,7 @@ export const pythonProblems: Problem[] = [
     expected: 3,
     sample: 'nums.pop(2)',
     hints: ['Use pop(index) to remove and return element at specific index'],
-    validPatterns: [
-      /nums\.pop\s*\(\s*2\s*\)/,
-    ],
+    validPatterns: [/nums\.pop\s*\(\s*2\s*\)/],
     tags: ['pop', 'list-method'],
   },
   {
@@ -1429,9 +1355,7 @@ export const pythonProblems: Problem[] = [
     expected: [1, 2, 4, 3, 5],
     sample: 'nums.remove(3) or nums',
     hints: ['Use remove() to remove the first occurrence of a value'],
-    validPatterns: [
-      /nums\.remove\s*\(\s*3\s*\)/,
-    ],
+    validPatterns: [/nums\.remove\s*\(\s*3\s*\)/],
     tags: ['remove', 'list-method'],
   },
   {
@@ -1445,9 +1369,7 @@ export const pythonProblems: Problem[] = [
     expected: [2, 3, 4],
     sample: 'nums[2:5]',
     hints: ['Use slice notation: list[start:stop]'],
-    validPatterns: [
-      /nums\s*\[\s*2\s*:\s*5\s*\]/,
-    ],
+    validPatterns: [/nums\s*\[\s*2\s*:\s*5\s*\]/],
     tags: ['slicing', 'list'],
   },
   {
@@ -1476,7 +1398,11 @@ export const pythonProblems: Problem[] = [
     text: 'Create a multiplication table (3x3) using nested list comprehension',
     setup: '# Create 3x3 multiplication table',
     setupCode: '# Create 3x3 multiplication table',
-    expected: [[1, 2, 3], [2, 4, 6], [3, 6, 9]],
+    expected: [
+      [1, 2, 3],
+      [2, 4, 6],
+      [3, 6, 9],
+    ],
     sample: '[[i * j for j in range(1, 4)] for i in range(1, 4)]',
     hints: ['Use nested list comprehensions: [[expr for inner] for outer]'],
     validPatterns: [
@@ -1516,9 +1442,7 @@ export const pythonProblems: Problem[] = [
     expected: '*******Python*******',
     sample: 'text.center(20, "*")',
     hints: ['Use the center() method with width and fill character'],
-    validPatterns: [
-      /text\.center\s*\(\s*20\s*,\s*["']\*["']\s*\)/,
-    ],
+    validPatterns: [/text\.center\s*\(\s*20\s*,\s*["']\*["']\s*\)/],
     tags: ['center', 'string-method', 'padding'],
   },
   {
@@ -1532,9 +1456,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'text.isspace()',
     hints: ['Use the isspace() method'],
-    validPatterns: [
-      /text\.isspace\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.isspace\s*\(\s*\)/],
     tags: ['isspace', 'string-method'],
   },
   {
@@ -1547,7 +1469,10 @@ export const pythonProblems: Problem[] = [
     setupCode: 'email = "user@example.com"',
     expected: 'user',
     sample: 'email.partition("@")[0]',
-    hints: ['Use partition() which returns (before, separator, after)', 'Index [0] gets the part before the separator'],
+    hints: [
+      'Use partition() which returns (before, separator, after)',
+      'Index [0] gets the part before the separator',
+    ],
     validPatterns: [
       /email\.partition\s*\(\s*["']@["']\s*\)\s*\[\s*0\s*\]/,
       /email\.split\s*\(\s*["']@["']\s*\)\s*\[\s*0\s*\]/,
@@ -1565,9 +1490,7 @@ export const pythonProblems: Problem[] = [
     expected: 'hELLO wORLD',
     sample: 'text.swapcase()',
     hints: ['Use the swapcase() method'],
-    validPatterns: [
-      /text\.swapcase\s*\(\s*\)/,
-    ],
+    validPatterns: [/text\.swapcase\s*\(\s*\)/],
     tags: ['swapcase', 'string-method'],
   },
 
@@ -1584,11 +1507,11 @@ export const pythonProblems: Problem[] = [
     setupCode: 'dict1 = {"a": 1, "b": 2}\ndict2 = {"b": 3, "c": 4}',
     expected: { a: 1, b: 3, c: 4 },
     sample: 'dict1 | dict2',
-    hints: ['Use the | operator to merge dictionaries (Python 3.9+)', 'Later values override earlier ones'],
-    validPatterns: [
-      /dict1\s*\|\s*dict2/,
-      /\{\s*\*\*dict1\s*,\s*\*\*dict2\s*\}/,
+    hints: [
+      'Use the | operator to merge dictionaries (Python 3.9+)',
+      'Later values override earlier ones',
     ],
+    validPatterns: [/dict1\s*\|\s*dict2/, /\{\s*\*\*dict1\s*,\s*\*\*dict2\s*\}/],
     tags: ['merge', 'dict-operator'],
   },
   {
@@ -1617,7 +1540,8 @@ export const pythonProblems: Problem[] = [
     setup: 'words = ["hi", "hello", "hey", "world", "a"]',
     setupCode: 'words = ["hi", "hello", "hey", "world", "a"]',
     expected: { 1: ['a'], 2: ['hi'], 3: ['hey'], 5: ['hello', 'world'] },
-    sample: '{length: [w for w in words if len(w) == length] for length in set(len(w) for w in words)}',
+    sample:
+      '{length: [w for w in words if len(w) == length] for length in set(len(w) for w in words)}',
     hints: ['Group by extracting unique lengths first', 'Then filter words matching each length'],
     validPatterns: [
       /\{\s*\w+\s*:\s*\[\s*\w+\s+for\s+\w+\s+in\s+words\s+if\s+len\s*\(\s*\w+\s*\)\s*==\s*\w+\s*\]\s+for\s+\w+\s+in/,
@@ -1639,10 +1563,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: 'isinstance(data, list)',
     hints: ['Use isinstance() to check if an object is of a certain type'],
-    validPatterns: [
-      /isinstance\s*\(\s*data\s*,\s*list\s*\)/,
-      /type\s*\(\s*data\s*\)\s*==\s*list/,
-    ],
+    validPatterns: [/isinstance\s*\(\s*data\s*,\s*list\s*\)/, /type\s*\(\s*data\s*\)\s*==\s*list/],
     tags: ['isinstance', 'type-checking'],
   },
   {
@@ -1656,10 +1577,7 @@ export const pythonProblems: Problem[] = [
     expected: true,
     sample: '1 <= x <= 10',
     hints: ['Python supports chained comparisons'],
-    validPatterns: [
-      /1\s*<=\s*x\s*<=\s*10/,
-      /x\s*>=\s*1\s*and\s*x\s*<=\s*10/,
-    ],
+    validPatterns: [/1\s*<=\s*x\s*<=\s*10/, /x\s*>=\s*1\s*and\s*x\s*<=\s*10/],
     tags: ['comparison', 'pythonic'],
   },
   {
@@ -1691,9 +1609,7 @@ export const pythonProblems: Problem[] = [
     expected: [2, 3, 4],
     sample: 'first, *middle, last = nums; middle',
     hints: ['Use * to capture multiple elements during unpacking'],
-    validPatterns: [
-      /\w+\s*,\s*\*\s*\w+\s*,\s*\w+\s*=\s*nums/,
-    ],
+    validPatterns: [/\w+\s*,\s*\*\s*\w+\s*,\s*\w+\s*=\s*nums/],
     tags: ['unpacking', 'star-expression'],
   },
   {
@@ -1768,10 +1684,7 @@ export const pythonProblems: Problem[] = [
     expected: [1, 2, 3],
     sample: '(1, 2, 3)',
     hints: ['Use parentheses to create a tuple: (item1, item2, ...)'],
-    validPatterns: [
-      /\(\s*1\s*,\s*2\s*,\s*3\s*\)/,
-      /tuple\s*\(\s*\[\s*1\s*,\s*2\s*,\s*3\s*\]\s*\)/,
-    ],
+    validPatterns: [/\(\s*1\s*,\s*2\s*,\s*3\s*\)/, /tuple\s*\(\s*\[\s*1\s*,\s*2\s*,\s*3\s*\]\s*\)/],
     tags: ['tuple', 'creation'],
   },
   {
@@ -1785,9 +1698,7 @@ export const pythonProblems: Problem[] = [
     expected: 1,
     sample: 'fruits.index("banana")',
     hints: ['Tuples have an index() method like lists'],
-    validPatterns: [
-      /fruits\.index\s*\(\s*["']banana["']\s*\)/,
-    ],
+    validPatterns: [/fruits\.index\s*\(\s*["']banana["']\s*\)/],
     tags: ['tuple', 'index'],
   },
   {
@@ -1801,9 +1712,7 @@ export const pythonProblems: Problem[] = [
     expected: 3,
     sample: 'nums.count(1)',
     hints: ['Tuples have a count() method like lists'],
-    validPatterns: [
-      /nums\.count\s*\(\s*1\s*\)/,
-    ],
+    validPatterns: [/nums\.count\s*\(\s*1\s*\)/],
     tags: ['tuple', 'count'],
   },
   {
@@ -1817,10 +1726,7 @@ export const pythonProblems: Problem[] = [
     expected: 60,
     sample: 'x, y, z = point; x + y + z',
     hints: ['Use tuple unpacking: a, b, c = tuple'],
-    validPatterns: [
-      /\w+\s*,\s*\w+\s*,\s*\w+\s*=\s*point/,
-      /sum\s*\(\s*point\s*\)/,
-    ],
+    validPatterns: [/\w+\s*,\s*\w+\s*,\s*\w+\s*=\s*point/, /sum\s*\(\s*point\s*\)/],
     tags: ['tuple', 'unpacking'],
   },
 
@@ -1837,7 +1743,10 @@ export const pythonProblems: Problem[] = [
     setupCode: '# Sum of squares using generator',
     expected: 55,
     sample: 'sum(x**2 for x in range(1, 6))',
-    hints: ['Generator expressions use parentheses: (expr for x in iterable)', 'More memory efficient than list comprehensions'],
+    hints: [
+      'Generator expressions use parentheses: (expr for x in iterable)',
+      'More memory efficient than list comprehensions',
+    ],
     validPatterns: [
       /sum\s*\(\s*\w+\s*\*\*\s*2\s+for\s+\w+\s+in\s+range\s*\(\s*1\s*,\s*6\s*\)\s*\)/,
       /sum\s*\(\s*\[\s*\w+\s*\*\*\s*2\s+for\s+\w+\s+in\s+range\s*\(\s*1\s*,\s*6\s*\)\s*\]\s*\)/,
@@ -1855,9 +1764,7 @@ export const pythonProblems: Problem[] = [
     expected: 8,
     sample: 'max(x for x in nums if x % 2 == 0)',
     hints: ['Generator expressions can include conditions'],
-    validPatterns: [
-      /max\s*\(\s*\w+\s+for\s+\w+\s+in\s+nums\s+if\s+\w+\s*%\s*2\s*==\s*0\s*\)/,
-    ],
+    validPatterns: [/max\s*\(\s*\w+\s+for\s+\w+\s+in\s+nums\s+if\s+\w+\s*%\s*2\s*==\s*0\s*\)/],
     tags: ['generator', 'max', 'filter'],
   },
 ];

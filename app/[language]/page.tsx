@@ -1,14 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import {
-  LANGUAGE_CONFIG,
-  isValidLanguage,
-  type SupportedLanguage,
-} from "./config";
-import { LanguageIcon } from "./LanguageIcon";
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from './config';
+import { LanguageIcon } from './LanguageIcon';
 
 // Stats interface for localStorage
 interface UserStats {
@@ -18,7 +14,7 @@ interface UserStats {
 }
 
 // Icon components for mode cards
-function KeyboardIcon({ className = "w-8 h-8" }: { className?: string }) {
+function KeyboardIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -26,6 +22,7 @@ function KeyboardIcon({ className = "w-8 h-8" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="1.5"
       className={className}
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -36,7 +33,7 @@ function KeyboardIcon({ className = "w-8 h-8" }: { className?: string }) {
   );
 }
 
-function LightbulbIcon({ className = "w-8 h-8" }: { className?: string }) {
+function LightbulbIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -44,6 +41,7 @@ function LightbulbIcon({ className = "w-8 h-8" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="1.5"
       className={className}
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -54,7 +52,7 @@ function LightbulbIcon({ className = "w-8 h-8" }: { className?: string }) {
   );
 }
 
-function BookIcon({ className = "w-8 h-8" }: { className?: string }) {
+function BookIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -62,6 +60,7 @@ function BookIcon({ className = "w-8 h-8" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="1.5"
       className={className}
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -72,7 +71,7 @@ function BookIcon({ className = "w-8 h-8" }: { className?: string }) {
   );
 }
 
-function LoopIcon({ className = "w-8 h-8" }: { className?: string }) {
+function LoopIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -80,6 +79,7 @@ function LoopIcon({ className = "w-8 h-8" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="1.5"
       className={className}
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -90,7 +90,7 @@ function LoopIcon({ className = "w-8 h-8" }: { className?: string }) {
   );
 }
 
-function ArrowLeftIcon({ className = "w-5 h-5" }: { className?: string }) {
+function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -98,17 +98,14 @@ function ArrowLeftIcon({ className = "w-5 h-5" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="2"
       className={className}
+      aria-hidden="true"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
     </svg>
   );
 }
 
-function ArrowRightIcon({ className = "w-5 h-5" }: { className?: string }) {
+function ArrowRightIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -116,17 +113,14 @@ function ArrowRightIcon({ className = "w-5 h-5" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="2"
       className={className}
+      aria-hidden="true"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
     </svg>
   );
 }
 
-function TrophyIcon({ className = "w-5 h-5" }: { className?: string }) {
+function TrophyIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -134,6 +128,7 @@ function TrophyIcon({ className = "w-5 h-5" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="1.5"
       className={className}
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -143,7 +138,6 @@ function TrophyIcon({ className = "w-5 h-5" }: { className?: string }) {
     </svg>
   );
 }
-
 
 // Mode card component
 interface ModeCardProps {
@@ -155,14 +149,7 @@ interface ModeCardProps {
   config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
 }
 
-function ModeCard({
-  href,
-  icon,
-  title,
-  description,
-  buttonText,
-  config,
-}: ModeCardProps) {
+function ModeCard({ href, icon, title, description, buttonText, config }: ModeCardProps) {
   return (
     <Link
       href={href}
@@ -208,14 +195,10 @@ function StatsSection({
   config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
 }) {
   const accuracy =
-    stats.totalAnswered > 0
-      ? Math.round((stats.correctAnswers / stats.totalAnswered) * 100)
-      : 0;
+    stats.totalAnswered > 0 ? Math.round((stats.correctAnswers / stats.totalAnswered) * 100) : 0;
 
   return (
-    <div
-      className={`rounded-2xl border ${config.borderColor} bg-zinc-900/30 p-6`}
-    >
+    <div className={`rounded-2xl border ${config.borderColor} bg-zinc-900/30 p-6`}>
       <div className="flex items-center gap-2 mb-6">
         <TrophyIcon className={`w-6 h-6 ${config.color}`} />
         <h3 className="text-lg font-semibold text-white">Your Progress</h3>
@@ -224,9 +207,7 @@ function StatsSection({
       <div className="grid grid-cols-3 gap-4">
         {/* Total Answered */}
         <div className="text-center">
-          <div className={`text-3xl font-bold ${config.color}`}>
-            {stats.totalAnswered}
-          </div>
+          <div className={`text-3xl font-bold ${config.color}`}>{stats.totalAnswered}</div>
           <div className="text-sm text-zinc-500 mt-1">Questions Answered</div>
         </div>
 
@@ -238,9 +219,7 @@ function StatsSection({
 
         {/* Best Streak */}
         <div className="text-center">
-          <div className={`text-3xl font-bold ${config.color}`}>
-            {stats.bestStreak}
-          </div>
+          <div className={`text-3xl font-bold ${config.color}`}>{stats.bestStreak}</div>
           <div className="text-sm text-zinc-500 mt-1">Best Streak</div>
         </div>
       </div>
@@ -269,7 +248,7 @@ export default function LanguagePage() {
     // Note: In Next.js 15, notFound() should only be called during server render.
     // For client-side validation, we redirect instead.
     if (!isValidLanguage(language)) {
-      router.replace("/not-found");
+      router.replace('/not-found');
       return;
     }
 
@@ -279,11 +258,7 @@ export default function LanguagePage() {
       const stored = localStorage.getItem(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored) as UserStats;
-        if (
-          parsed.totalAnswered > 0 ||
-          parsed.correctAnswers > 0 ||
-          parsed.bestStreak > 0
-        ) {
+        if (parsed.totalAnswered > 0 || parsed.correctAnswers > 0 || parsed.bestStreak > 0) {
           // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading from localStorage
           setStats(parsed);
         }
@@ -321,12 +296,10 @@ export default function LanguagePage() {
         >
           <LanguageIcon language={language} className="w-16 h-16" />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-          {config.name}
-        </h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{config.name}</h1>
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-          Master {config.name} methods through interactive drills, quizzes, and
-          comprehensive references.
+          Master {config.name} methods through interactive drills, quizzes, and comprehensive
+          references.
         </p>
       </div>
 
@@ -374,14 +347,12 @@ export default function LanguagePage() {
 
       {/* Quick tips section */}
       <div className="mt-12 text-center">
-        <h3 className="text-lg font-medium text-zinc-300 mb-4">
-          Quick Tips for {config.name}
-        </h3>
+        <h3 className="text-lg font-medium text-zinc-300 mb-4">Quick Tips for {config.name}</h3>
         <div className="flex flex-wrap justify-center gap-3">
           {[
-            "Start with Drill Mode to build muscle memory",
-            "Use Quiz Mode to test retention",
-            "Reference section for quick lookups",
+            'Start with Drill Mode to build muscle memory',
+            'Use Quiz Mode to test retention',
+            'Reference section for quick lookups',
           ].map((tip, index) => (
             <span
               key={index}

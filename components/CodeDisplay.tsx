@@ -90,9 +90,7 @@ export default function CodeDisplay({
           <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">
             {title}
           </span>
-          <span className="text-xs text-text-muted font-mono">
-            {language.toUpperCase()}
-          </span>
+          <span className="text-xs text-text-muted font-mono">{language.toUpperCase()}</span>
         </div>
       )}
 
@@ -135,7 +133,8 @@ export default function CodeDisplay({
             bracketPairColorization: { enabled: true },
             matchBrackets: 'always',
             folding: false,
-            fontFamily: 'var(--font-jetbrains), "Fira Code", "Cascadia Code", "Consolas", monospace',
+            fontFamily:
+              'var(--font-jetbrains), "Fira Code", "Cascadia Code", "Consolas", monospace',
             fontLigatures: true,
             padding: { top: 8, bottom: 8 },
             scrollbar: {
@@ -180,20 +179,8 @@ export default function CodeDisplay({
  * An even simpler inline code display without Monaco Editor.
  * Use this for very short code snippets where Monaco overhead isn't worth it.
  */
-export function CodeDisplayInline({
-  code,
-  className = '',
-}: {
-  code: string;
-  className?: string;
-}) {
-  return (
-    <code
-      className={`code-inline text-sm font-mono ${className}`}
-    >
-      {code}
-    </code>
-  );
+export function CodeDisplayInline({ code, className = '' }: { code: string; className?: string }) {
+  return <code className={`code-inline text-sm font-mono ${className}`}>{code}</code>;
 }
 
 /**
@@ -220,9 +207,7 @@ export function OutputDisplay({
         </span>
       </div>
       <div className="bg-bg-surface border border-border-default border-t-0 rounded-b-lg p-4">
-        <pre className="font-mono text-sm text-success whitespace-pre-wrap break-all">
-          {output}
-        </pre>
+        <pre className="font-mono text-sm text-success whitespace-pre-wrap break-all">{output}</pre>
       </div>
     </div>
   );

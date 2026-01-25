@@ -9,9 +9,7 @@ export const pythonMethods: Method[] = [
     category: 'List Methods',
     syntax: 'list.append(element)',
     description: 'Adds an element to the end of the list. Modifies the list in place.',
-    arguments: [
-      { name: 'element', type: 'any', description: 'The element to add to the list' },
-    ],
+    arguments: [{ name: 'element', type: 'any', description: 'The element to add to the list' }],
     returns: { type: 'None', description: 'Returns None, modifies list in place' },
     examples: [
       { code: 'lst = [1, 2, 3]; lst.append(4); lst', output: '[1, 2, 3, 4]' },
@@ -27,7 +25,11 @@ export const pythonMethods: Method[] = [
     syntax: 'list.extend(iterable)',
     description: 'Extends the list by appending all elements from the iterable.',
     arguments: [
-      { name: 'iterable', type: 'iterable', description: 'An iterable whose elements will be added' },
+      {
+        name: 'iterable',
+        type: 'iterable',
+        description: 'An iterable whose elements will be added',
+      },
     ],
     returns: { type: 'None', description: 'Returns None, modifies list in place' },
     examples: [
@@ -62,9 +64,7 @@ export const pythonMethods: Method[] = [
     category: 'List Methods',
     syntax: 'list.remove(element)',
     description: 'Removes the first occurrence of a value. Raises ValueError if not present.',
-    arguments: [
-      { name: 'element', type: 'any', description: 'The element to remove' },
-    ],
+    arguments: [{ name: 'element', type: 'any', description: 'The element to remove' }],
     returns: { type: 'None', description: 'Returns None, modifies list in place' },
     examples: [
       { code: 'lst = [1, 2, 3, 2]; lst.remove(2); lst', output: '[1, 3, 2]' },
@@ -79,9 +79,16 @@ export const pythonMethods: Method[] = [
     name: 'pop',
     category: 'List Methods',
     syntax: 'list.pop(index=-1)',
-    description: 'Removes and returns the element at the given position. Defaults to the last element.',
+    description:
+      'Removes and returns the element at the given position. Defaults to the last element.',
     arguments: [
-      { name: 'index', type: 'int', description: 'Index of element to remove', optional: true, defaultValue: '-1' },
+      {
+        name: 'index',
+        type: 'int',
+        description: 'Index of element to remove',
+        optional: true,
+        defaultValue: '-1',
+      },
     ],
     returns: { type: 'any', description: 'The removed element' },
     examples: [
@@ -101,8 +108,20 @@ export const pythonMethods: Method[] = [
     description: 'Returns the index of the first occurrence of the specified element.',
     arguments: [
       { name: 'element', type: 'any', description: 'The element to search for' },
-      { name: 'start', type: 'int', description: 'Start index for search', optional: true, defaultValue: '0' },
-      { name: 'end', type: 'int', description: 'End index for search', optional: true, defaultValue: 'len(list)' },
+      {
+        name: 'start',
+        type: 'int',
+        description: 'Start index for search',
+        optional: true,
+        defaultValue: '0',
+      },
+      {
+        name: 'end',
+        type: 'int',
+        description: 'End index for search',
+        optional: true,
+        defaultValue: 'len(list)',
+      },
     ],
     returns: { type: 'int', description: 'Index of the first occurrence' },
     examples: [
@@ -119,9 +138,7 @@ export const pythonMethods: Method[] = [
     category: 'List Methods',
     syntax: 'list.count(element)',
     description: 'Returns the number of times the specified element appears in the list.',
-    arguments: [
-      { name: 'element', type: 'any', description: 'The element to count' },
-    ],
+    arguments: [{ name: 'element', type: 'any', description: 'The element to count' }],
     returns: { type: 'int', description: 'Number of occurrences' },
     examples: [
       { code: '[1, 2, 2, 3, 2].count(2)', output: '3' },
@@ -138,19 +155,45 @@ export const pythonMethods: Method[] = [
     syntax: 'list.sort(key=None, reverse=False)',
     description: 'Sorts the list in place. Can use a custom key function and reverse order.',
     arguments: [
-      { name: 'key', type: 'function', description: 'Function to extract comparison key', optional: true },
-      { name: 'reverse', type: 'bool', description: 'If True, sort in descending order', optional: true, defaultValue: 'False' },
+      {
+        name: 'key',
+        type: 'function',
+        description: 'Function to extract comparison key',
+        optional: true,
+      },
+      {
+        name: 'reverse',
+        type: 'bool',
+        description: 'If True, sort in descending order',
+        optional: true,
+        defaultValue: 'False',
+      },
     ],
     returns: { type: 'None', description: 'Returns None, modifies list in place' },
     examples: [
-      { code: 'lst = [3, 1, 2]; lst.sort(); lst', output: '[1, 2, 3]', explanation: 'Default ascending sort' },
-      { code: 'lst = [3, 1, 2]; lst.sort(reverse=True); lst', output: '[3, 2, 1]', explanation: 'Descending sort' },
-      { code: 'lst = ["hi", "hello", "a"]; lst.sort(key=len); lst', output: '["a", "hi", "hello"]', explanation: 'Sort by string length' },
+      {
+        code: 'lst = [3, 1, 2]; lst.sort(); lst',
+        output: '[1, 2, 3]',
+        explanation: 'Default ascending sort',
+      },
+      {
+        code: 'lst = [3, 1, 2]; lst.sort(reverse=True); lst',
+        output: '[3, 2, 1]',
+        explanation: 'Descending sort',
+      },
+      {
+        code: 'lst = ["hi", "hello", "a"]; lst.sort(key=len); lst',
+        output: '["a", "hi", "hello"]',
+        explanation: 'Sort by string length',
+      },
     ],
     timeComplexity: 'O(n log n)',
     spaceComplexity: 'O(n)',
     relatedMethods: ['sorted', 'reverse'],
-    notes: ['Use sorted() for a new sorted list without modifying original', 'Timsort algorithm is stable - equal elements maintain original order'],
+    notes: [
+      'Use sorted() for a new sorted list without modifying original',
+      'Timsort algorithm is stable - equal elements maintain original order',
+    ],
   },
   {
     name: 'reverse',
@@ -191,9 +234,7 @@ export const pythonMethods: Method[] = [
     description: 'Removes all elements from the list.',
     arguments: [],
     returns: { type: 'None', description: 'Returns None, modifies list in place' },
-    examples: [
-      { code: 'lst = [1, 2, 3]; lst.clear(); lst', output: '[]' },
-    ],
+    examples: [{ code: 'lst = [1, 2, 3]; lst.clear(); lst', output: '[]' }],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['del', 'pop', 'remove'],
@@ -208,8 +249,20 @@ export const pythonMethods: Method[] = [
     syntax: 'string.split(sep=None, maxsplit=-1)',
     description: 'Splits the string at the specified separator and returns a list of substrings.',
     arguments: [
-      { name: 'sep', type: 'str', description: 'The separator to split on', optional: true, defaultValue: 'whitespace' },
-      { name: 'maxsplit', type: 'int', description: 'Maximum number of splits', optional: true, defaultValue: '-1 (no limit)' },
+      {
+        name: 'sep',
+        type: 'str',
+        description: 'The separator to split on',
+        optional: true,
+        defaultValue: 'whitespace',
+      },
+      {
+        name: 'maxsplit',
+        type: 'int',
+        description: 'Maximum number of splits',
+        optional: true,
+        defaultValue: '-1 (no limit)',
+      },
     ],
     returns: { type: 'list[str]', description: 'A list of substrings' },
     examples: [
@@ -226,9 +279,7 @@ export const pythonMethods: Method[] = [
     category: 'String Methods',
     syntax: 'separator.join(iterable)',
     description: 'Joins elements of an iterable with the string as separator.',
-    arguments: [
-      { name: 'iterable', type: 'iterable', description: 'Iterable of strings to join' },
-    ],
+    arguments: [{ name: 'iterable', type: 'iterable', description: 'Iterable of strings to join' }],
     returns: { type: 'str', description: 'A single string with elements joined' },
     examples: [
       { code: '",".join(["a", "b", "c"])', output: '"a,b,c"' },
@@ -245,9 +296,18 @@ export const pythonMethods: Method[] = [
     syntax: 'string.strip(chars=None)',
     description: 'Returns a copy of the string with leading and trailing characters removed.',
     arguments: [
-      { name: 'chars', type: 'str', description: 'Characters to remove', optional: true, defaultValue: 'whitespace' },
+      {
+        name: 'chars',
+        type: 'str',
+        description: 'Characters to remove',
+        optional: true,
+        defaultValue: 'whitespace',
+      },
     ],
-    returns: { type: 'str', description: 'String with specified characters removed from both ends' },
+    returns: {
+      type: 'str',
+      description: 'String with specified characters removed from both ends',
+    },
     examples: [
       { code: '"  hello  ".strip()', output: '"hello"' },
       { code: '"xxxhelloxxx".strip("x")', output: '"hello"' },
@@ -265,7 +325,13 @@ export const pythonMethods: Method[] = [
     arguments: [
       { name: 'old', type: 'str', description: 'Substring to be replaced' },
       { name: 'new', type: 'str', description: 'Replacement substring' },
-      { name: 'count', type: 'int', description: 'Maximum replacements', optional: true, defaultValue: '-1 (all)' },
+      {
+        name: 'count',
+        type: 'int',
+        description: 'Maximum replacements',
+        optional: true,
+        defaultValue: '-1 (all)',
+      },
     ],
     returns: { type: 'str', description: 'String with replacements made' },
     examples: [
@@ -285,7 +351,13 @@ export const pythonMethods: Method[] = [
     arguments: [
       { name: 'sub', type: 'str', description: 'Substring to search for' },
       { name: 'start', type: 'int', description: 'Start index', optional: true, defaultValue: '0' },
-      { name: 'end', type: 'int', description: 'End index', optional: true, defaultValue: 'len(string)' },
+      {
+        name: 'end',
+        type: 'int',
+        description: 'End index',
+        optional: true,
+        defaultValue: 'len(string)',
+      },
     ],
     returns: { type: 'int', description: 'Index of substring, or -1 if not found' },
     examples: [
@@ -306,7 +378,13 @@ export const pythonMethods: Method[] = [
     arguments: [
       { name: 'prefix', type: 'str | tuple', description: 'Prefix(es) to check' },
       { name: 'start', type: 'int', description: 'Start index', optional: true, defaultValue: '0' },
-      { name: 'end', type: 'int', description: 'End index', optional: true, defaultValue: 'len(string)' },
+      {
+        name: 'end',
+        type: 'int',
+        description: 'End index',
+        optional: true,
+        defaultValue: 'len(string)',
+      },
     ],
     returns: { type: 'bool', description: 'True if string starts with prefix' },
     examples: [
@@ -326,7 +404,13 @@ export const pythonMethods: Method[] = [
     arguments: [
       { name: 'suffix', type: 'str | tuple', description: 'Suffix(es) to check' },
       { name: 'start', type: 'int', description: 'Start index', optional: true, defaultValue: '0' },
-      { name: 'end', type: 'int', description: 'End index', optional: true, defaultValue: 'len(string)' },
+      {
+        name: 'end',
+        type: 'int',
+        description: 'End index',
+        optional: true,
+        defaultValue: 'len(string)',
+      },
     ],
     returns: { type: 'bool', description: 'True if string ends with suffix' },
     examples: [
@@ -424,9 +508,7 @@ export const pythonMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.zfill(width)',
     description: 'Pads the string with zeros on the left to fill the specified width.',
-    arguments: [
-      { name: 'width', type: 'int', description: 'Total width of resulting string' },
-    ],
+    arguments: [{ name: 'width', type: 'int', description: 'Total width of resulting string' }],
     returns: { type: 'str', description: 'Zero-padded string' },
     examples: [
       { code: '"42".zfill(5)', output: '"00042"' },
@@ -448,7 +530,13 @@ export const pythonMethods: Method[] = [
     description: 'Returns the value for key if key is in the dictionary, else default.',
     arguments: [
       { name: 'key', type: 'any', description: 'Key to look up' },
-      { name: 'default', type: 'any', description: 'Value to return if key not found', optional: true, defaultValue: 'None' },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Value to return if key not found',
+        optional: true,
+        defaultValue: 'None',
+      },
     ],
     returns: { type: 'any', description: 'Value associated with key, or default' },
     examples: [
@@ -512,7 +600,11 @@ export const pythonMethods: Method[] = [
     syntax: 'dict.update(other)',
     description: 'Updates the dictionary with key-value pairs from another dictionary or iterable.',
     arguments: [
-      { name: 'other', type: 'dict | iterable', description: 'Dictionary or iterable of key-value pairs' },
+      {
+        name: 'other',
+        type: 'dict | iterable',
+        description: 'Dictionary or iterable of key-value pairs',
+      },
     ],
     returns: { type: 'None', description: 'Returns None, modifies dict in place' },
     examples: [
@@ -528,10 +620,16 @@ export const pythonMethods: Method[] = [
     name: 'pop',
     category: 'Dict Methods',
     syntax: 'dict.pop(key, default)',
-    description: 'Removes and returns the value for key. If key is not found, returns default or raises KeyError.',
+    description:
+      'Removes and returns the value for key. If key is not found, returns default or raises KeyError.',
     arguments: [
       { name: 'key', type: 'any', description: 'Key to remove' },
-      { name: 'default', type: 'any', description: 'Value to return if key not found', optional: true },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Value to return if key not found',
+        optional: true,
+      },
     ],
     returns: { type: 'any', description: 'The removed value' },
     examples: [
@@ -547,10 +645,17 @@ export const pythonMethods: Method[] = [
     name: 'setdefault',
     category: 'Dict Methods',
     syntax: 'dict.setdefault(key, default=None)',
-    description: 'Returns value for key if it exists, otherwise inserts key with default value and returns default.',
+    description:
+      'Returns value for key if it exists, otherwise inserts key with default value and returns default.',
     arguments: [
       { name: 'key', type: 'any', description: 'Key to look up or insert' },
-      { name: 'default', type: 'any', description: 'Value to insert if key not found', optional: true, defaultValue: 'None' },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Value to insert if key not found',
+        optional: true,
+        defaultValue: 'None',
+      },
     ],
     returns: { type: 'any', description: 'Value associated with key' },
     examples: [
@@ -590,9 +695,21 @@ export const pythonMethods: Method[] = [
     syntax: 'range(start, stop, step)',
     description: 'Returns an immutable sequence of numbers from start to stop with step increment.',
     arguments: [
-      { name: 'start', type: 'int', description: 'Start value (inclusive)', optional: true, defaultValue: '0' },
+      {
+        name: 'start',
+        type: 'int',
+        description: 'Start value (inclusive)',
+        optional: true,
+        defaultValue: '0',
+      },
       { name: 'stop', type: 'int', description: 'Stop value (exclusive)' },
-      { name: 'step', type: 'int', description: 'Step increment', optional: true, defaultValue: '1' },
+      {
+        name: 'step',
+        type: 'int',
+        description: 'Step increment',
+        optional: true,
+        defaultValue: '1',
+      },
     ],
     returns: { type: 'range', description: 'A range object' },
     examples: [
@@ -612,7 +729,13 @@ export const pythonMethods: Method[] = [
     description: 'Returns an enumerate object yielding pairs of (index, value).',
     arguments: [
       { name: 'iterable', type: 'iterable', description: 'An iterable object' },
-      { name: 'start', type: 'int', description: 'Starting index', optional: true, defaultValue: '0' },
+      {
+        name: 'start',
+        type: 'int',
+        description: 'Starting index',
+        optional: true,
+        defaultValue: '0',
+      },
     ],
     returns: { type: 'enumerate', description: 'An enumerate object' },
     examples: [
@@ -627,14 +750,17 @@ export const pythonMethods: Method[] = [
     name: 'zip',
     category: 'Built-in Functions',
     syntax: 'zip(*iterables)',
-    description: 'Returns an iterator of tuples, where the i-th tuple contains the i-th element from each input iterable.',
-    arguments: [
-      { name: 'iterables', type: 'iterable', description: 'Two or more iterables' },
-    ],
+    description:
+      'Returns an iterator of tuples, where the i-th tuple contains the i-th element from each input iterable.',
+    arguments: [{ name: 'iterables', type: 'iterable', description: 'Two or more iterables' }],
     returns: { type: 'zip', description: 'A zip iterator' },
     examples: [
       { code: 'list(zip([1, 2], ["a", "b"]))', output: '[(1, "a"), (2, "b")]' },
-      { code: 'list(zip([1, 2, 3], ["a", "b"]))', output: '[(1, "a"), (2, "b")]', explanation: 'Stops at shortest iterable' },
+      {
+        code: 'list(zip([1, 2, 3], ["a", "b"]))',
+        output: '[(1, "a"), (2, "b")]',
+        explanation: 'Stops at shortest iterable',
+      },
       { code: 'dict(zip(["a", "b"], [1, 2]))', output: '{"a": 1, "b": 2}' },
     ],
     timeComplexity: 'O(n)',
@@ -675,7 +801,11 @@ export const pythonMethods: Method[] = [
     examples: [
       { code: 'list(filter(lambda x: x > 2, [1, 2, 3, 4]))', output: '[3, 4]' },
       { code: 'list(filter(str.isalpha, ["a", "1", "b"]))', output: '["a", "b"]' },
-      { code: 'list(filter(None, [0, 1, "", "a"]))', output: '[1, "a"]', explanation: 'None removes falsy values' },
+      {
+        code: 'list(filter(None, [0, 1, "", "a"]))',
+        output: '[1, "a"]',
+        explanation: 'None removes falsy values',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -688,8 +818,19 @@ export const pythonMethods: Method[] = [
     description: 'Returns a new sorted list from the items in iterable.',
     arguments: [
       { name: 'iterable', type: 'iterable', description: 'An iterable to sort' },
-      { name: 'key', type: 'callable', description: 'Function to extract comparison key', optional: true },
-      { name: 'reverse', type: 'bool', description: 'Sort in descending order', optional: true, defaultValue: 'False' },
+      {
+        name: 'key',
+        type: 'callable',
+        description: 'Function to extract comparison key',
+        optional: true,
+      },
+      {
+        name: 'reverse',
+        type: 'bool',
+        description: 'Sort in descending order',
+        optional: true,
+        defaultValue: 'False',
+      },
     ],
     returns: { type: 'list', description: 'A new sorted list' },
     examples: [
@@ -707,9 +848,7 @@ export const pythonMethods: Method[] = [
     category: 'Built-in Functions',
     syntax: 'reversed(sequence)',
     description: 'Returns a reverse iterator over the values of the given sequence.',
-    arguments: [
-      { name: 'sequence', type: 'sequence', description: 'A sequence to reverse' },
-    ],
+    arguments: [{ name: 'sequence', type: 'sequence', description: 'A sequence to reverse' }],
     returns: { type: 'reversed', description: 'A reverse iterator' },
     examples: [
       { code: 'list(reversed([1, 2, 3]))', output: '[3, 2, 1]' },
@@ -726,13 +865,23 @@ export const pythonMethods: Method[] = [
     description: 'Returns the sum of all items in the iterable plus the start value.',
     arguments: [
       { name: 'iterable', type: 'iterable', description: 'An iterable of numbers' },
-      { name: 'start', type: 'number', description: 'Value to add to sum', optional: true, defaultValue: '0' },
+      {
+        name: 'start',
+        type: 'number',
+        description: 'Value to add to sum',
+        optional: true,
+        defaultValue: '0',
+      },
     ],
     returns: { type: 'number', description: 'Sum of all items' },
     examples: [
       { code: 'sum([1, 2, 3])', output: '6' },
       { code: 'sum([1, 2, 3], 10)', output: '16' },
-      { code: 'sum([[1, 2], [3, 4]], [])', output: '[1, 2, 3, 4]', explanation: 'Flatten lists (but use itertools.chain instead)' },
+      {
+        code: 'sum([[1, 2], [3, 4]], [])',
+        output: '[1, 2, 3, 4]',
+        explanation: 'Flatten lists (but use itertools.chain instead)',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -743,11 +892,22 @@ export const pythonMethods: Method[] = [
     name: 'min',
     category: 'Built-in Functions',
     syntax: 'min(iterable, key=None, default=None) | min(arg1, arg2, ...)',
-    description: 'Returns the smallest item in an iterable or the smallest of two or more arguments.',
+    description:
+      'Returns the smallest item in an iterable or the smallest of two or more arguments.',
     arguments: [
       { name: 'iterable', type: 'iterable', description: 'An iterable of items' },
-      { name: 'key', type: 'callable', description: 'Function to extract comparison key', optional: true },
-      { name: 'default', type: 'any', description: 'Value to return if iterable is empty', optional: true },
+      {
+        name: 'key',
+        type: 'callable',
+        description: 'Function to extract comparison key',
+        optional: true,
+      },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Value to return if iterable is empty',
+        optional: true,
+      },
     ],
     returns: { type: 'any', description: 'The smallest item' },
     examples: [
@@ -766,8 +926,18 @@ export const pythonMethods: Method[] = [
     description: 'Returns the largest item in an iterable or the largest of two or more arguments.',
     arguments: [
       { name: 'iterable', type: 'iterable', description: 'An iterable of items' },
-      { name: 'key', type: 'callable', description: 'Function to extract comparison key', optional: true },
-      { name: 'default', type: 'any', description: 'Value to return if iterable is empty', optional: true },
+      {
+        name: 'key',
+        type: 'callable',
+        description: 'Function to extract comparison key',
+        optional: true,
+      },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Value to return if iterable is empty',
+        optional: true,
+      },
     ],
     returns: { type: 'any', description: 'The largest item' },
     examples: [
@@ -784,9 +954,7 @@ export const pythonMethods: Method[] = [
     category: 'Built-in Functions',
     syntax: 'abs(x)',
     description: 'Returns the absolute value of a number.',
-    arguments: [
-      { name: 'x', type: 'int | float | complex', description: 'A number' },
-    ],
+    arguments: [{ name: 'x', type: 'int | float | complex', description: 'A number' }],
     returns: { type: 'int | float', description: 'The absolute value' },
     examples: [
       { code: 'abs(-5)', output: '5' },
@@ -801,10 +969,9 @@ export const pythonMethods: Method[] = [
     name: 'any',
     category: 'Built-in Functions',
     syntax: 'any(iterable)',
-    description: 'Returns True if any element of the iterable is truthy. Returns False if the iterable is empty.',
-    arguments: [
-      { name: 'iterable', type: 'iterable', description: 'An iterable to check' },
-    ],
+    description:
+      'Returns True if any element of the iterable is truthy. Returns False if the iterable is empty.',
+    arguments: [{ name: 'iterable', type: 'iterable', description: 'An iterable to check' }],
     returns: { type: 'bool', description: 'True if any element is truthy' },
     examples: [
       { code: 'any([False, True, False])', output: 'True' },
@@ -820,10 +987,9 @@ export const pythonMethods: Method[] = [
     name: 'all',
     category: 'Built-in Functions',
     syntax: 'all(iterable)',
-    description: 'Returns True if all elements of the iterable are truthy. Returns True if the iterable is empty.',
-    arguments: [
-      { name: 'iterable', type: 'iterable', description: 'An iterable to check' },
-    ],
+    description:
+      'Returns True if all elements of the iterable are truthy. Returns True if the iterable is empty.',
+    arguments: [{ name: 'iterable', type: 'iterable', description: 'An iterable to check' }],
     returns: { type: 'bool', description: 'True if all elements are truthy' },
     examples: [
       { code: 'all([True, True, True])', output: 'True' },
@@ -844,9 +1010,7 @@ export const pythonMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.add(element)',
     description: 'Adds an element to the set.',
-    arguments: [
-      { name: 'element', type: 'hashable', description: 'Element to add' },
-    ],
+    arguments: [{ name: 'element', type: 'hashable', description: 'Element to add' }],
     returns: { type: 'None', description: 'Returns None, modifies set in place' },
     examples: [
       { code: 's = {1, 2}; s.add(3); s', output: '{1, 2, 3}' },
@@ -861,13 +1025,15 @@ export const pythonMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.discard(element)',
     description: 'Removes an element from the set if present. Does nothing if not present.',
-    arguments: [
-      { name: 'element', type: 'hashable', description: 'Element to remove' },
-    ],
+    arguments: [{ name: 'element', type: 'hashable', description: 'Element to remove' }],
     returns: { type: 'None', description: 'Returns None, modifies set in place' },
     examples: [
       { code: 's = {1, 2, 3}; s.discard(2); s', output: '{1, 3}' },
-      { code: 's = {1, 2}; s.discard(3); s', output: '{1, 2}', explanation: 'No error if not present' },
+      {
+        code: 's = {1, 2}; s.discard(3); s',
+        output: '{1, 2}',
+        explanation: 'No error if not present',
+      },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
@@ -879,9 +1045,7 @@ export const pythonMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.union(*others)',
     description: 'Returns a new set with elements from the set and all others.',
-    arguments: [
-      { name: 'others', type: 'iterable', description: 'Other sets or iterables' },
-    ],
+    arguments: [{ name: 'others', type: 'iterable', description: 'Other sets or iterables' }],
     returns: { type: 'set', description: 'A new set with all unique elements' },
     examples: [
       { code: '{1, 2}.union({2, 3})', output: '{1, 2, 3}' },
@@ -896,9 +1060,7 @@ export const pythonMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.intersection(*others)',
     description: 'Returns a new set with elements common to the set and all others.',
-    arguments: [
-      { name: 'others', type: 'iterable', description: 'Other sets or iterables' },
-    ],
+    arguments: [{ name: 'others', type: 'iterable', description: 'Other sets or iterables' }],
     returns: { type: 'set', description: 'A new set with common elements' },
     examples: [
       { code: '{1, 2, 3}.intersection({2, 3, 4})', output: '{2, 3}' },
@@ -913,9 +1075,7 @@ export const pythonMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.difference(*others)',
     description: 'Returns a new set with elements in the set that are not in the others.',
-    arguments: [
-      { name: 'others', type: 'iterable', description: 'Other sets or iterables' },
-    ],
+    arguments: [{ name: 'others', type: 'iterable', description: 'Other sets or iterables' }],
     returns: { type: 'set', description: 'A new set with elements only in the original' },
     examples: [
       { code: '{1, 2, 3}.difference({2, 3, 4})', output: '{1}' },
@@ -930,9 +1090,7 @@ export const pythonMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.symmetric_difference(other)',
     description: 'Returns a new set with elements in either set but not in both.',
-    arguments: [
-      { name: 'other', type: 'iterable', description: 'Other set or iterable' },
-    ],
+    arguments: [{ name: 'other', type: 'iterable', description: 'Other set or iterable' }],
     returns: { type: 'set', description: 'A new set with elements exclusive to each set' },
     examples: [
       { code: '{1, 2, 3}.symmetric_difference({2, 3, 4})', output: '{1, 4}' },
@@ -986,7 +1144,8 @@ export const pythonMethods: Method[] = [
     name: 'title',
     category: 'String Methods',
     syntax: 'string.title()',
-    description: 'Returns a titlecased version where words start with uppercase and remaining chars are lowercase.',
+    description:
+      'Returns a titlecased version where words start with uppercase and remaining chars are lowercase.',
     arguments: [],
     returns: { type: 'str', description: 'Titlecased string' },
     examples: [
@@ -1001,7 +1160,8 @@ export const pythonMethods: Method[] = [
     name: 'capitalize',
     category: 'String Methods',
     syntax: 'string.capitalize()',
-    description: 'Returns a copy with only the first character capitalized and the rest lowercased.',
+    description:
+      'Returns a copy with only the first character capitalized and the rest lowercased.',
     arguments: [],
     returns: { type: 'str', description: 'Capitalized string' },
     examples: [
@@ -1021,7 +1181,11 @@ export const pythonMethods: Method[] = [
     returns: { type: 'str', description: 'Casefolded string' },
     examples: [
       { code: '"HELLO".casefold()', output: '"hello"' },
-      { code: '"Straße".casefold()', output: '"strasse"', explanation: 'German sharp s becomes ss' },
+      {
+        code: '"Straße".casefold()',
+        output: '"strasse"',
+        explanation: 'German sharp s becomes ss',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -1034,7 +1198,13 @@ export const pythonMethods: Method[] = [
     syntax: 'string.lstrip(chars=None)',
     description: 'Returns a copy with leading characters removed.',
     arguments: [
-      { name: 'chars', type: 'str', description: 'Characters to remove', optional: true, defaultValue: 'whitespace' },
+      {
+        name: 'chars',
+        type: 'str',
+        description: 'Characters to remove',
+        optional: true,
+        defaultValue: 'whitespace',
+      },
     ],
     returns: { type: 'str', description: 'String with leading characters removed' },
     examples: [
@@ -1051,7 +1221,13 @@ export const pythonMethods: Method[] = [
     syntax: 'string.rstrip(chars=None)',
     description: 'Returns a copy with trailing characters removed.',
     arguments: [
-      { name: 'chars', type: 'str', description: 'Characters to remove', optional: true, defaultValue: 'whitespace' },
+      {
+        name: 'chars',
+        type: 'str',
+        description: 'Characters to remove',
+        optional: true,
+        defaultValue: 'whitespace',
+      },
     ],
     returns: { type: 'str', description: 'String with trailing characters removed' },
     examples: [
@@ -1069,7 +1245,13 @@ export const pythonMethods: Method[] = [
     description: 'Returns a centered string of specified width, padded with fillchar.',
     arguments: [
       { name: 'width', type: 'int', description: 'Total width of resulting string' },
-      { name: 'fillchar', type: 'str', description: 'Padding character', optional: true, defaultValue: '" "' },
+      {
+        name: 'fillchar',
+        type: 'str',
+        description: 'Padding character',
+        optional: true,
+        defaultValue: '" "',
+      },
     ],
     returns: { type: 'str', description: 'Centered and padded string' },
     examples: [
@@ -1087,7 +1269,13 @@ export const pythonMethods: Method[] = [
     description: 'Returns a left-justified string of specified width, padded on the right.',
     arguments: [
       { name: 'width', type: 'int', description: 'Total width of resulting string' },
-      { name: 'fillchar', type: 'str', description: 'Padding character', optional: true, defaultValue: '" "' },
+      {
+        name: 'fillchar',
+        type: 'str',
+        description: 'Padding character',
+        optional: true,
+        defaultValue: '" "',
+      },
     ],
     returns: { type: 'str', description: 'Left-justified and padded string' },
     examples: [
@@ -1105,7 +1293,13 @@ export const pythonMethods: Method[] = [
     description: 'Returns a right-justified string of specified width, padded on the left.',
     arguments: [
       { name: 'width', type: 'int', description: 'Total width of resulting string' },
-      { name: 'fillchar', type: 'str', description: 'Padding character', optional: true, defaultValue: '" "' },
+      {
+        name: 'fillchar',
+        type: 'str',
+        description: 'Padding character',
+        optional: true,
+        defaultValue: '" "',
+      },
     ],
     returns: { type: 'str', description: 'Right-justified and padded string' },
     examples: [
@@ -1124,7 +1318,13 @@ export const pythonMethods: Method[] = [
     arguments: [
       { name: 'sub', type: 'str', description: 'Substring to search for' },
       { name: 'start', type: 'int', description: 'Start index', optional: true, defaultValue: '0' },
-      { name: 'end', type: 'int', description: 'End index', optional: true, defaultValue: 'len(string)' },
+      {
+        name: 'end',
+        type: 'int',
+        description: 'End index',
+        optional: true,
+        defaultValue: 'len(string)',
+      },
     ],
     returns: { type: 'int', description: 'Highest index of substring, or -1' },
     examples: [
@@ -1140,9 +1340,7 @@ export const pythonMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.partition(sep)',
     description: 'Splits the string at the first occurrence of sep, returning a 3-tuple.',
-    arguments: [
-      { name: 'sep', type: 'str', description: 'Separator to split on' },
-    ],
+    arguments: [{ name: 'sep', type: 'str', description: 'Separator to split on' }],
     returns: { type: 'tuple', description: '(before, sep, after) tuple' },
     examples: [
       { code: '"hello-world".partition("-")', output: '("hello", "-", "world")' },
@@ -1157,13 +1355,15 @@ export const pythonMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.rpartition(sep)',
     description: 'Splits the string at the last occurrence of sep, returning a 3-tuple.',
-    arguments: [
-      { name: 'sep', type: 'str', description: 'Separator to split on' },
-    ],
+    arguments: [{ name: 'sep', type: 'str', description: 'Separator to split on' }],
     returns: { type: 'tuple', description: '(before, sep, after) tuple' },
     examples: [
       { code: '"hello-world-test".rpartition("-")', output: '("hello-world", "-", "test")' },
-      { code: '"hello".rpartition("-")', output: '("", "", "hello")', explanation: 'Sep not found' },
+      {
+        code: '"hello".rpartition("-")',
+        output: '("", "", "hello")',
+        explanation: 'Sep not found',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -1180,12 +1380,22 @@ export const pythonMethods: Method[] = [
     description: 'Returns number rounded to ndigits precision after the decimal point.',
     arguments: [
       { name: 'number', type: 'float', description: 'Number to round' },
-      { name: 'ndigits', type: 'int', description: 'Precision digits', optional: true, defaultValue: 'None (rounds to int)' },
+      {
+        name: 'ndigits',
+        type: 'int',
+        description: 'Precision digits',
+        optional: true,
+        defaultValue: 'None (rounds to int)',
+      },
     ],
     returns: { type: 'float | int', description: 'Rounded number' },
     examples: [
       { code: 'round(3.14159, 2)', output: '3.14' },
-      { code: 'round(2.5)', output: '2', explanation: "Banker's rounding - rounds to nearest even" },
+      {
+        code: 'round(2.5)',
+        output: '2',
+        explanation: "Banker's rounding - rounds to nearest even",
+      },
       { code: 'round(3.5)', output: '4' },
     ],
     timeComplexity: 'O(1)',
@@ -1258,9 +1468,7 @@ export const pythonMethods: Method[] = [
     category: 'Built-in Functions',
     syntax: 'type(object)',
     description: 'Returns the type of an object.',
-    arguments: [
-      { name: 'object', type: 'any', description: 'Object to get type of' },
-    ],
+    arguments: [{ name: 'object', type: 'any', description: 'Object to get type of' }],
     returns: { type: 'type', description: 'The type of the object' },
     examples: [
       { code: 'type(5)', output: "<class 'int'>" },
@@ -1299,7 +1507,12 @@ export const pythonMethods: Method[] = [
     arguments: [
       { name: 'object', type: 'any', description: 'Object to get attribute from' },
       { name: 'name', type: 'str', description: 'Attribute name' },
-      { name: 'default', type: 'any', description: 'Default if attribute not found', optional: true },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Default if attribute not found',
+        optional: true,
+      },
     ],
     returns: { type: 'any', description: 'Attribute value or default' },
     examples: [
@@ -1315,9 +1528,7 @@ export const pythonMethods: Method[] = [
     category: 'Built-in Functions',
     syntax: 'callable(object)',
     description: 'Returns True if the object appears callable.',
-    arguments: [
-      { name: 'object', type: 'any', description: 'Object to check' },
-    ],
+    arguments: [{ name: 'object', type: 'any', description: 'Object to check' }],
     returns: { type: 'bool', description: 'True if object is callable' },
     examples: [
       { code: 'callable(len)', output: 'True' },
@@ -1339,7 +1550,13 @@ export const pythonMethods: Method[] = [
     description: 'Creates a new dictionary with keys from iterable and values set to value.',
     arguments: [
       { name: 'keys', type: 'iterable', description: 'Iterable of keys' },
-      { name: 'value', type: 'any', description: 'Value for all keys', optional: true, defaultValue: 'None' },
+      {
+        name: 'value',
+        type: 'any',
+        description: 'Value for all keys',
+        optional: true,
+        defaultValue: 'None',
+      },
     ],
     returns: { type: 'dict', description: 'New dictionary with specified keys and values' },
     examples: [
@@ -1360,7 +1577,11 @@ export const pythonMethods: Method[] = [
     returns: { type: 'dict', description: 'Shallow copy of the dictionary' },
     examples: [
       { code: 'd = {"a": 1}; d2 = d.copy(); d2', output: '{"a": 1}' },
-      { code: 'd = {"a": 1}; d2 = d.copy(); d2["b"] = 2; d', output: '{"a": 1}', explanation: 'Original unchanged' },
+      {
+        code: 'd = {"a": 1}; d2 = d.copy(); d2["b"] = 2; d',
+        output: '{"a": 1}',
+        explanation: 'Original unchanged',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -1373,9 +1594,7 @@ export const pythonMethods: Method[] = [
     description: 'Removes all items from the dictionary.',
     arguments: [],
     returns: { type: 'None', description: 'Returns None, modifies dict in place' },
-    examples: [
-      { code: 'd = {"a": 1, "b": 2}; d.clear(); d', output: '{}' },
-    ],
+    examples: [{ code: 'd = {"a": 1, "b": 2}; d.clear(); d', output: '{}' }],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['pop', 'popitem', 'del'],
@@ -1387,9 +1606,7 @@ export const pythonMethods: Method[] = [
     description: 'Removes and returns a (key, value) pair as a tuple. LIFO order (Python 3.7+).',
     arguments: [],
     returns: { type: 'tuple', description: 'Removed (key, value) pair' },
-    examples: [
-      { code: 'd = {"a": 1, "b": 2}; d.popitem()', output: '("b", 2)' },
-    ],
+    examples: [{ code: 'd = {"a": 1, "b": 2}; d.popitem()', output: '("b", 2)' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['pop', 'clear'],

@@ -1,86 +1,162 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useCallback } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import {
-  getExerciseById,
-  EXERCISE_CATEGORIES,
   DIFFICULTY_CONFIG,
+  EXERCISE_CATEGORIES,
   type Exercise,
-} from "@/lib/exercises";
-import { LANGUAGE_CONFIG, isValidLanguage } from "../../config";
+  getExerciseById,
+} from '@/lib/exercises';
+import { isValidLanguage, LANGUAGE_CONFIG } from '../../config';
 
 // Icon components
-function ArrowLeftIcon({ className = "w-5 h-5" }: { className?: string }) {
+function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+      aria-hidden="true"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
     </svg>
   );
 }
 
-function LightbulbIcon({ className = "w-5 h-5" }: { className?: string }) {
+function LightbulbIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+      />
     </svg>
   );
 }
 
-function BookIcon({ className = "w-5 h-5" }: { className?: string }) {
+function BookIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+      />
     </svg>
   );
 }
 
-function PlayIcon({ className = "w-5 h-5" }: { className?: string }) {
+function PlayIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
       <path d="M8 5v14l11-7z" />
     </svg>
   );
 }
 
-function CheckIcon({ className = "w-5 h-5" }: { className?: string }) {
+function CheckIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+      aria-hidden="true"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
     </svg>
   );
 }
 
-function XIcon({ className = "w-5 h-5" }: { className?: string }) {
+function XIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+      aria-hidden="true"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
 }
 
-function EyeIcon({ className = "w-5 h-5" }: { className?: string }) {
+function EyeIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+      />
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
   );
 }
 
-function ClockIcon({ className = "w-5 h-5" }: { className?: string }) {
+function ClockIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
     </svg>
   );
 }
 
-function ResetIcon({ className = "w-5 h-5" }: { className?: string }) {
+function ResetIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+      />
     </svg>
   );
 }
@@ -165,34 +241,39 @@ export default function ExerciseDetailPage() {
     }
   };
 
-  const saveProgress = useCallback((completed: boolean, time?: number) => {
-    const storageKey = `coding-drills-exercises-${language}`;
-    try {
-      const stored = localStorage.getItem(storageKey);
-      const allProgress = stored ? JSON.parse(stored) : {};
+  const saveProgress = useCallback(
+    (completed: boolean, time?: number) => {
+      const storageKey = `coding-drills-exercises-${language}`;
+      try {
+        const stored = localStorage.getItem(storageKey);
+        const allProgress = stored ? JSON.parse(stored) : {};
 
-      const currentProgress = allProgress[exerciseId] || { completed: false, attempts: 0 };
-      const newProgress: ExerciseProgress = {
-        completed: completed || currentProgress.completed,
-        attempts: currentProgress.attempts + 1,
-        bestTime: time && (!currentProgress.bestTime || time < currentProgress.bestTime)
-          ? time
-          : currentProgress.bestTime,
-      };
+        const currentProgress = allProgress[exerciseId] || { completed: false, attempts: 0 };
+        const newProgress: ExerciseProgress = {
+          completed: completed || currentProgress.completed,
+          attempts: currentProgress.attempts + 1,
+          bestTime:
+            time && (!currentProgress.bestTime || time < currentProgress.bestTime)
+              ? time
+              : currentProgress.bestTime,
+        };
 
-      allProgress[exerciseId] = newProgress;
-      localStorage.setItem(storageKey, JSON.stringify(allProgress));
-      setProgress(newProgress);
-    } catch {
-      // Ignore localStorage errors
-    }
-  }, [language, exerciseId]);
+        allProgress[exerciseId] = newProgress;
+        localStorage.setItem(storageKey, JSON.stringify(allProgress));
+        setProgress(newProgress);
+      } catch {
+        // Ignore localStorage errors
+      }
+    },
+    [language, exerciseId],
+  );
 
   const runCode = async () => {
-    if (!exercise || language !== 'javascript' && language !== 'typescript') {
+    if (!exercise || (language !== 'javascript' && language !== 'typescript')) {
       setResult({
         success: false,
-        message: 'Code execution is only available for JavaScript/TypeScript. For other languages, compare your solution with the provided solution.',
+        message:
+          'Code execution is only available for JavaScript/TypeScript. For other languages, compare your solution with the provided solution.',
       });
       return;
     }
@@ -229,13 +310,17 @@ export default function ExerciseDetailPage() {
           const passed = JSON.stringify(output) === JSON.stringify(expected);
           if (!passed) {
             allPassed = false;
-            messages.push(`Test ${i + 1} failed: ${testCase.description}\n  Expected: ${JSON.stringify(expected)}\n  Got: ${JSON.stringify(output)}`);
+            messages.push(
+              `Test ${i + 1} failed: ${testCase.description}\n  Expected: ${JSON.stringify(expected)}\n  Got: ${JSON.stringify(output)}`,
+            );
           } else {
             messages.push(`Test ${i + 1} passed: ${testCase.description}`);
           }
         } catch (err) {
           allPassed = false;
-          messages.push(`Test ${i + 1} error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+          messages.push(
+            `Test ${i + 1} error: ${err instanceof Error ? err.message : 'Unknown error'}`,
+          );
         }
       }
 
@@ -289,10 +374,7 @@ export default function ExerciseDetailPage() {
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-4">Exercise Not Found</h1>
-          <Link
-            href={`/${language}/exercises`}
-            className="text-blue-400 hover:text-blue-300"
-          >
+          <Link href={`/${language}/exercises`} className="text-blue-400 hover:text-blue-300">
             Back to exercises
           </Link>
         </div>
@@ -322,7 +404,9 @@ export default function ExerciseDetailPage() {
             <span className={`text-xs px-2 py-1 rounded-full ${config.bgColor} ${config.color}`}>
               {categoryConfig.name}
             </span>
-            <span className={`text-xs px-2 py-1 rounded-full ${diffConfig.bgColor} ${diffConfig.color}`}>
+            <span
+              className={`text-xs px-2 py-1 rounded-full ${diffConfig.bgColor} ${diffConfig.color}`}
+            >
               {diffConfig.name}
             </span>
             {progress?.completed && (
@@ -339,6 +423,7 @@ export default function ExerciseDetailPage() {
         {/* View Mode Toggle */}
         <div className="flex gap-2 mb-6">
           <button
+            type="button"
             onClick={() => setViewMode('learn')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
               viewMode === 'learn'
@@ -350,6 +435,7 @@ export default function ExerciseDetailPage() {
             Learn
           </button>
           <button
+            type="button"
             onClick={startPractice}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
               viewMode === 'practice'
@@ -374,7 +460,9 @@ export default function ExerciseDetailPage() {
               <ul className="space-y-2">
                 {exercise.instructions.map((instruction, i) => (
                   <li key={i} className="flex items-start gap-3 text-zinc-300">
-                    <span className={`flex-shrink-0 w-6 h-6 rounded-full ${config.bgColor} ${config.color} flex items-center justify-center text-xs font-medium`}>
+                    <span
+                      className={`flex-shrink-0 w-6 h-6 rounded-full ${config.bgColor} ${config.color} flex items-center justify-center text-xs font-medium`}
+                    >
                       {i + 1}
                     </span>
                     {instruction}
@@ -384,7 +472,9 @@ export default function ExerciseDetailPage() {
             </div>
 
             {/* Code Editor / Display */}
-            <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 overflow-hidden`}>
+            <div
+              className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 overflow-hidden`}
+            >
               <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
                 <span className="text-sm font-medium text-zinc-400">
                   {viewMode === 'learn' ? 'Starter Code' : 'Your Solution'}
@@ -396,6 +486,7 @@ export default function ExerciseDetailPage() {
                       <span className="font-mono text-sm">{formatTime(timer)}</span>
                     </div>
                     <button
+                      type="button"
                       onClick={resetPractice}
                       className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white"
                     >
@@ -422,6 +513,7 @@ export default function ExerciseDetailPage() {
                   />
                   <div className="flex justify-end mt-4 gap-3">
                     <button
+                      type="button"
                       onClick={runCode}
                       disabled={isRunning}
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${config.bgColor} ${config.color} hover:opacity-80 disabled:opacity-50`}
@@ -445,11 +537,13 @@ export default function ExerciseDetailPage() {
 
             {/* Test Results */}
             {result && (
-              <div className={`rounded-xl border p-6 ${
-                result.success
-                  ? 'border-green-500/50 bg-green-500/10'
-                  : 'border-red-500/50 bg-red-500/10'
-              }`}>
+              <div
+                className={`rounded-xl border p-6 ${
+                  result.success
+                    ? 'border-green-500/50 bg-green-500/10'
+                    : 'border-red-500/50 bg-red-500/10'
+                }`}
+              >
                 <div className="flex items-center gap-2 mb-3">
                   {result.success ? (
                     <>
@@ -471,8 +565,11 @@ export default function ExerciseDetailPage() {
 
             {/* Solution (Learn mode only) */}
             {viewMode === 'learn' && (
-              <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 overflow-hidden`}>
+              <div
+                className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 overflow-hidden`}
+              >
                 <button
+                  type="button"
                   onClick={() => setShowSolution(!showSolution)}
                   className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-zinc-800/50 transition-colors"
                 >
@@ -480,7 +577,9 @@ export default function ExerciseDetailPage() {
                     <EyeIcon className="w-4 h-4" />
                     {showSolution ? 'Hide Solution' : 'View Solution'}
                   </span>
-                  <span className={`transform transition-transform ${showSolution ? 'rotate-180' : ''}`}>
+                  <span
+                    className={`transform transition-transform ${showSolution ? 'rotate-180' : ''}`}
+                  >
                     ▼
                   </span>
                 </button>
@@ -500,6 +599,7 @@ export default function ExerciseDetailPage() {
             {/* Hints */}
             <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
               <button
+                type="button"
                 onClick={() => setShowHints(!showHints)}
                 className="w-full flex items-center justify-between mb-4"
               >
@@ -522,6 +622,7 @@ export default function ExerciseDetailPage() {
                         </div>
                       ) : (
                         <button
+                          type="button"
                           onClick={() => revealHint(i)}
                           className="w-full p-3 rounded-lg border border-dashed border-zinc-700 text-sm text-zinc-500 hover:border-zinc-500 hover:text-zinc-300 transition-colors"
                         >
@@ -557,8 +658,14 @@ export default function ExerciseDetailPage() {
                   <div key={i} className="p-3 rounded-lg bg-zinc-800/50 text-sm">
                     <div className="text-zinc-400 mb-1">{testCase.description}</div>
                     <div className="font-mono text-xs">
-                      <div className="text-zinc-500">Input: <span className="text-zinc-300">{JSON.stringify(testCase.input)}</span></div>
-                      <div className="text-zinc-500">Expected: <span className="text-green-400">{JSON.stringify(testCase.expected)}</span></div>
+                      <div className="text-zinc-500">
+                        Input:{' '}
+                        <span className="text-zinc-300">{JSON.stringify(testCase.input)}</span>
+                      </div>
+                      <div className="text-zinc-500">
+                        Expected:{' '}
+                        <span className="text-green-400">{JSON.stringify(testCase.expected)}</span>
+                      </div>
                     </div>
                   </div>
                 ))}

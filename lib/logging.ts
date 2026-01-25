@@ -235,7 +235,7 @@ function createLogEntry(
   level: LogLevel,
   message: string,
   context?: Record<string, unknown>,
-  error?: Error
+  error?: Error,
 ): LogEntry {
   const entry: LogEntry = {
     timestamp: getTimestamp(),
@@ -303,7 +303,7 @@ function log(
   level: LogLevel,
   message: string,
   context?: Record<string, unknown>,
-  error?: Error
+  error?: Error,
 ): LogEntry | null {
   if (!shouldLog(level)) return null;
 
@@ -339,14 +339,11 @@ function log(
 // ============================================================================
 
 export const logger = {
-  debug: (message: string, context?: Record<string, unknown>) =>
-    log('debug', message, context),
+  debug: (message: string, context?: Record<string, unknown>) => log('debug', message, context),
 
-  info: (message: string, context?: Record<string, unknown>) =>
-    log('info', message, context),
+  info: (message: string, context?: Record<string, unknown>) => log('info', message, context),
 
-  warn: (message: string, context?: Record<string, unknown>) =>
-    log('warn', message, context),
+  warn: (message: string, context?: Record<string, unknown>) => log('warn', message, context),
 
   error: (message: string, error?: Error, context?: Record<string, unknown>) =>
     log('error', message, context, error),
@@ -373,7 +370,7 @@ export function recordMetric(
   type: MetricType,
   value: number,
   labels?: Record<string, string>,
-  unit?: string
+  unit?: string,
 ): void {
   if (!config.enableMetrics) return;
 
@@ -400,7 +397,11 @@ export function recordMetric(
 /**
  * Increment a counter
  */
-export function incrementCounter(name: string, labels?: Record<string, string>, increment = 1): void {
+export function incrementCounter(
+  name: string,
+  labels?: Record<string, string>,
+  increment = 1,
+): void {
   recordMetric(name, 'counter', increment, labels);
 }
 
@@ -442,7 +443,12 @@ export function stopTimer(timerId: string, labels?: Record<string, string>): num
 /**
  * Record a histogram value
  */
-export function recordHistogram(name: string, value: number, labels?: Record<string, string>, unit?: string): void {
+export function recordHistogram(
+  name: string,
+  value: number,
+  labels?: Record<string, string>,
+  unit?: string,
+): void {
   recordMetric(name, 'histogram', value, labels, unit);
 }
 
@@ -456,13 +462,19 @@ export function getMetrics(): Map<string, Metric[]> {
 /**
  * Get metrics summary
  */
-export function getMetricsSummary(): Record<string, { count: number; latest: number; avg: number; min: number; max: number }> {
-  const summary: Record<string, { count: number; latest: number; avg: number; min: number; max: number }> = {};
+export function getMetricsSummary(): Record<
+  string,
+  { count: number; latest: number; avg: number; min: number; max: number }
+> {
+  const summary: Record<
+    string,
+    { count: number; latest: number; avg: number; min: number; max: number }
+  > = {};
 
   for (const [name, values] of metrics.entries()) {
     if (values.length === 0) continue;
 
-    const numericValues = values.map(v => v.value);
+    const numericValues = values.map((v) => v.value);
     summary[name] = {
       count: values.length,
       latest: numericValues[numericValues.length - 1],
@@ -498,7 +510,7 @@ export function registerAlertHandler(handler: AlertHandler): void {
  * Unregister an alert handler
  */
 export function unregisterAlertHandler(name: string): void {
-  config.alertHandlers = config.alertHandlers.filter(h => h.name !== name);
+  config.alertHandlers = config.alertHandlers.filter((h) => h.name !== name);
 }
 
 /**
@@ -513,11 +525,9 @@ export async function sendAlert(alert: Omit<AlertPayload, 'alertId' | 'timestamp
   };
 
   // Log the alert
-  logger.log(
-    severityToLevel(fullAlert.severity),
-    `ALERT: ${fullAlert.title}`,
-    { alert: fullAlert }
-  );
+  logger.log(severityToLevel(fullAlert.severity), `ALERT: ${fullAlert.title}`, {
+    alert: fullAlert,
+  });
 
   // Store alert
   if (isBrowser() && config.enablePersistence) {
@@ -546,10 +556,14 @@ export async function sendAlert(alert: Omit<AlertPayload, 'alertId' | 'timestamp
     try {
       await handler.handler(fullAlert);
     } catch (error) {
-      logger.error('Alert handler failed', error instanceof Error ? error : new Error(String(error)), {
-        handlerName: handler.name,
-        alertId: fullAlert.alertId,
-      });
+      logger.error(
+        'Alert handler failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          handlerName: handler.name,
+          alertId: fullAlert.alertId,
+        },
+      );
     }
   }
 }
@@ -635,7 +649,7 @@ export const consoleAlertHandler: AlertHandler = {
 export function createWebhookAlertHandler(
   name: string,
   webhookUrl: string,
-  minSeverity: AlertPayload['severity'] = 'medium'
+  minSeverity: AlertPayload['severity'] = 'medium',
 ): AlertHandler {
   return {
     name,
@@ -649,10 +663,14 @@ export function createWebhookAlertHandler(
           body: JSON.stringify(alert),
         });
       } catch (error) {
-        logger.error('Webhook alert delivery failed', error instanceof Error ? error : new Error(String(error)), {
-          webhookUrl,
-          alertId: alert.alertId,
-        });
+        logger.error(
+          'Webhook alert delivery failed',
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            webhookUrl,
+            alertId: alert.alertId,
+          },
+        );
       }
     },
   };
@@ -664,7 +682,7 @@ export function createWebhookAlertHandler(
 export function createSlackAlertHandler(
   webhookUrl: string,
   channel?: string,
-  minSeverity: AlertPayload['severity'] = 'high'
+  minSeverity: AlertPayload['severity'] = 'high',
 ): AlertHandler {
   return {
     name: 'slack',
@@ -703,7 +721,10 @@ export function createSlackAlertHandler(
           body: JSON.stringify(payload),
         });
       } catch (error) {
-        logger.error('Slack alert delivery failed', error instanceof Error ? error : new Error(String(error)));
+        logger.error(
+          'Slack alert delivery failed',
+          error instanceof Error ? error : new Error(String(error)),
+        );
       }
     },
   };

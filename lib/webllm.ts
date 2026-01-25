@@ -74,7 +74,13 @@ declare global {
 
   interface GPUQueue {
     submit(commandBuffers: Iterable<GPUCommandBuffer>): void;
-    writeBuffer(buffer: GPUBuffer, bufferOffset: number, data: BufferSource, dataOffset?: number, size?: number): void;
+    writeBuffer(
+      buffer: GPUBuffer,
+      bufferOffset: number,
+      data: BufferSource,
+      dataOffset?: number,
+      size?: number,
+    ): void;
   }
 
   interface GPUDeviceLostInfo {
@@ -206,9 +212,7 @@ function formatErrorMessage(error: unknown): string {
  * @param onProgress - Callback function receiving progress updates (0-100)
  * @returns Promise that resolves when model is loaded
  */
-export async function initializeModel(
-  onProgress?: (progress: number) => void
-): Promise<void> {
+export async function initializeModel(onProgress?: (progress: number) => void): Promise<void> {
   // Prevent re-initialization if already loaded or loading
   if (modelStatus === 'ready') {
     return;
@@ -227,7 +231,9 @@ export async function initializeModel(
   const hasWebGPU = await checkWebGPUSupport();
   if (!hasWebGPU) {
     modelStatus = 'error';
-    lastError = new Error('WebGPU is not supported in this browser. Please use Chrome 113+, Edge 113+, or another WebGPU-compatible browser.');
+    lastError = new Error(
+      'WebGPU is not supported in this browser. Please use Chrome 113+, Edge 113+, or another WebGPU-compatible browser.',
+    );
     throw lastError;
   }
 
@@ -282,7 +288,7 @@ export async function initializeModel(
  */
 export async function chat(
   systemPrompt: string,
-  messages: Array<{ role: 'user' | 'assistant'; content: string }>
+  messages: Array<{ role: 'user' | 'assistant'; content: string }>,
 ): Promise<string> {
   if (!engine) {
     throw new Error('Model not initialized. Call initializeModel() first.');
@@ -332,7 +338,7 @@ export async function chat(
 export async function streamChat(
   systemPrompt: string,
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
-  callbacks: StreamCallbacks = {}
+  callbacks: StreamCallbacks = {},
 ): Promise<string> {
   if (!engine) {
     throw new Error('Model not initialized. Call initializeModel() first.');
@@ -473,7 +479,8 @@ export async function checkCompatibility(): Promise<{
       isCompatible: false,
       hasWebGPU: false,
       isBrowser: true,
-      errorMessage: 'WebGPU is not supported. Please use Chrome 113+, Edge 113+, or another WebGPU-compatible browser.',
+      errorMessage:
+        'WebGPU is not supported. Please use Chrome 113+, Edge 113+, or another WebGPU-compatible browser.',
     };
   }
 

@@ -1,17 +1,15 @@
-import Link from "next/link";
-import { SUPPORTED_LANGUAGES, LANGUAGE_CONFIG } from "./config";
+import Link from 'next/link';
+import { LANGUAGE_CONFIG, SUPPORTED_LANGUAGES } from './config';
 
 export default function LanguageNotFound() {
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
       <div className="text-center max-w-2xl">
         <h1 className="text-6xl font-bold text-red-500 mb-4">404</h1>
-        <h2 className="text-2xl font-semibold text-white mb-4">
-          Language Not Found
-        </h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Language Not Found</h2>
         <p className="text-zinc-400 mb-8">
-          The programming language you requested is not supported. Please choose
-          from one of our available languages below.
+          The programming language you requested is not supported. Please choose from one of our
+          available languages below.
         </p>
 
         <div className="flex flex-wrap justify-center gap-3 mb-8">
@@ -39,6 +37,7 @@ export default function LanguageNotFound() {
             stroke="currentColor"
             strokeWidth="2"
             className="w-5 h-5"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"

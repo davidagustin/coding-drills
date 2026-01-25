@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 
 /**
  * Supported programming languages in the application
@@ -184,9 +184,7 @@ export class DrillModeUtils {
    * Get the problem description
    */
   async getProblemDescription(): Promise<string | null> {
-    const description = this.page
-      .locator('[data-testid="problem-description"]')
-      .first();
+    const description = this.page.locator('[data-testid="problem-description"]').first();
     if (await description.isVisible()) {
       return description.textContent();
     }
@@ -197,9 +195,7 @@ export class DrillModeUtils {
    * Get the code editor element
    */
   getCodeEditor(): Locator {
-    return this.page.locator(
-      '[data-testid="code-editor"], .monaco-editor, textarea[name="code"]'
-    );
+    return this.page.locator('[data-testid="code-editor"], .monaco-editor, textarea[name="code"]');
   }
 
   /**
@@ -237,7 +233,7 @@ export class DrillModeUtils {
    */
   async isResultCorrect(): Promise<boolean> {
     const successIndicator = this.page.locator(
-      '[data-testid="result-success"], .success, .correct'
+      '[data-testid="result-success"], .success, .correct',
     );
     return successIndicator.isVisible();
   }
@@ -246,9 +242,7 @@ export class DrillModeUtils {
    * Check if the result is incorrect
    */
   async isResultIncorrect(): Promise<boolean> {
-    const errorIndicator = this.page.locator(
-      '[data-testid="result-error"], .error, .incorrect'
-    );
+    const errorIndicator = this.page.locator('[data-testid="result-error"], .error, .incorrect');
     return errorIndicator.isVisible();
   }
 
@@ -256,9 +250,7 @@ export class DrillModeUtils {
    * Get the result message
    */
   async getResultMessage(): Promise<string | null> {
-    const result = this.page.locator(
-      '[data-testid="result-message"], .result-message'
-    );
+    const result = this.page.locator('[data-testid="result-message"], .result-message');
     if (await result.isVisible()) {
       return result.textContent();
     }
@@ -301,9 +293,7 @@ export class QuizModeUtils {
    * Get the current question text
    */
   async getQuestionText(): Promise<string | null> {
-    const question = this.page.locator(
-      '[data-testid="quiz-question"], .quiz-question'
-    );
+    const question = this.page.locator('[data-testid="quiz-question"], .quiz-question');
     if (await question.isVisible()) {
       return question.textContent();
     }
@@ -315,7 +305,7 @@ export class QuizModeUtils {
    */
   async getAnswerOptions(): Promise<Locator> {
     return this.page.locator(
-      '[data-testid="answer-option"], .answer-option, [role="radio"], button:has-text("")'
+      '[data-testid="answer-option"], .answer-option, [role="radio"], button:has-text("")',
     );
   }
 
@@ -333,7 +323,7 @@ export class QuizModeUtils {
    */
   async selectAnswerByText(text: string): Promise<void> {
     const option = this.page.locator(
-      `[data-testid="answer-option"]:has-text("${text}"), .answer-option:has-text("${text}")`
+      `[data-testid="answer-option"]:has-text("${text}"), .answer-option:has-text("${text}")`,
     );
     await option.click();
   }
@@ -354,9 +344,7 @@ export class QuizModeUtils {
    * Check if answer feedback is shown
    */
   async isFeedbackShown(): Promise<boolean> {
-    const feedback = this.page.locator(
-      '[data-testid="quiz-feedback"], .quiz-feedback'
-    );
+    const feedback = this.page.locator('[data-testid="quiz-feedback"], .quiz-feedback');
     return feedback.isVisible();
   }
 
@@ -385,9 +373,7 @@ export class QuizModeUtils {
    * Get progress indicator text
    */
   async getProgress(): Promise<string | null> {
-    const progress = this.page.locator(
-      '[data-testid="quiz-progress"], .quiz-progress'
-    );
+    const progress = this.page.locator('[data-testid="quiz-progress"], .quiz-progress');
     if (await progress.isVisible()) {
       return progress.textContent();
     }
@@ -405,9 +391,7 @@ export class ReferenceUtils {
    * Get all method categories
    */
   async getCategories(): Promise<Locator> {
-    return this.page.locator(
-      '[data-testid="method-category"], .method-category'
-    );
+    return this.page.locator('[data-testid="method-category"], .method-category');
   }
 
   /**
@@ -432,7 +416,7 @@ export class ReferenceUtils {
    */
   async viewMethodDetails(methodName: string): Promise<void> {
     const method = this.page.locator(
-      `[data-testid="method-item"]:has-text("${methodName}"), .method-item:has-text("${methodName}")`
+      `[data-testid="method-item"]:has-text("${methodName}"), .method-item:has-text("${methodName}")`,
     );
     await method.click();
   }
@@ -441,9 +425,7 @@ export class ReferenceUtils {
    * Get method syntax
    */
   async getMethodSyntax(): Promise<string | null> {
-    const syntax = this.page.locator(
-      '[data-testid="method-syntax"], .method-syntax'
-    );
+    const syntax = this.page.locator('[data-testid="method-syntax"], .method-syntax');
     if (await syntax.isVisible()) {
       return syntax.textContent();
     }
@@ -454,9 +436,7 @@ export class ReferenceUtils {
    * Get method examples
    */
   async getMethodExamples(): Promise<Locator> {
-    return this.page.locator(
-      '[data-testid="method-example"], .method-example, pre code'
-    );
+    return this.page.locator('[data-testid="method-example"], .method-example, pre code');
   }
 
   /**
@@ -464,7 +444,7 @@ export class ReferenceUtils {
    */
   async filterByCategory(category: string): Promise<void> {
     const categoryFilter = this.page.locator(
-      `[data-testid="category-filter"]:has-text("${category}"), button:has-text("${category}")`
+      `[data-testid="category-filter"]:has-text("${category}"), button:has-text("${category}")`,
     );
     if (await categoryFilter.isVisible()) {
       await categoryFilter.click();
@@ -507,15 +487,15 @@ export async function extractProblemData(page: Page): Promise<{
 export async function verifyBasicAccessibility(page: Page): Promise<void> {
   // Check for main landmark
   const main = page.locator('main');
-  const hasMain = await main.count() > 0;
+  const hasMain = (await main.count()) > 0;
 
   // Check for heading hierarchy
   const h1 = page.locator('h1');
-  const hasH1 = await h1.count() > 0;
+  const hasH1 = (await h1.count()) > 0;
 
   // Check for skip links or navigation
   const nav = page.locator('nav, [role="navigation"]');
-  const hasNav = await nav.count() >= 0; // Navigation is optional
+  const _hasNav = (await nav.count()) >= 0; // Navigation is optional
 
   // These are soft checks - log warnings but don't fail
   if (!hasMain) {

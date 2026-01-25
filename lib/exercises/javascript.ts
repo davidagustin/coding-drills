@@ -1,4 +1,4 @@
-import { Exercise } from './types';
+import type { Exercise } from './types';
 
 export const javascriptExercises: Exercise[] = [
   // ========== ITERATION PATTERNS ==========
@@ -7,11 +7,12 @@ export const javascriptExercises: Exercise[] = [
     title: 'Skip Every Other Element',
     category: 'iteration-patterns',
     difficulty: 'beginner',
-    description: 'Learn to iterate through an array while skipping every other element using index manipulation.',
+    description:
+      'Learn to iterate through an array while skipping every other element using index manipulation.',
     instructions: [
       'Given an array of numbers, return a new array containing only elements at even indices (0, 2, 4, ...)',
       'Use a for loop with a step of 2',
-      'Do not use filter or other array methods'
+      'Do not use filter or other array methods',
     ],
     starterCode: `function skipEveryOther(arr) {
   const result = [];
@@ -31,13 +32,13 @@ export const javascriptExercises: Exercise[] = [
       { input: [1, 2, 3, 4, 5, 6], expected: [1, 3, 5], description: 'Basic even-length array' },
       { input: [10, 20, 30, 40, 50], expected: [10, 30, 50], description: 'Odd-length array' },
       { input: [1], expected: [1], description: 'Single element' },
-      { input: [], expected: [], description: 'Empty array' }
+      { input: [], expected: [], description: 'Empty array' },
     ],
     hints: [
       'Initialize i to 0 and increment by 2 each iteration: i += 2',
-      'Push arr[i] to the result array in each iteration'
+      'Push arr[i] to the result array in each iteration',
     ],
-    concepts: ['for loop', 'index stepping', 'array iteration']
+    concepts: ['for loop', 'index stepping', 'array iteration'],
   },
   {
     id: 'js-reverse-iteration',
@@ -48,7 +49,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Given an array, return a new array with elements in reverse order',
       'Use a for loop iterating backwards',
-      'Do not use the reverse() method'
+      'Do not use the reverse() method',
     ],
     starterCode: `function reverseIterate(arr) {
   const result = [];
@@ -68,14 +69,10 @@ export const javascriptExercises: Exercise[] = [
       { input: [1, 2, 3, 4, 5], expected: [5, 4, 3, 2, 1], description: 'Basic reverse' },
       { input: ['a', 'b', 'c'], expected: ['c', 'b', 'a'], description: 'String array' },
       { input: [42], expected: [42], description: 'Single element' },
-      { input: [], expected: [], description: 'Empty array' }
+      { input: [], expected: [], description: 'Empty array' },
     ],
-    hints: [
-      'Start i at arr.length - 1',
-      'Loop while i >= 0',
-      'Decrement i each iteration: i--'
-    ],
-    concepts: ['reverse iteration', 'for loop', 'array indices']
+    hints: ['Start i at arr.length - 1', 'Loop while i >= 0', 'Decrement i each iteration: i--'],
+    concepts: ['reverse iteration', 'for loop', 'array indices'],
   },
   {
     id: 'js-step-iteration',
@@ -86,7 +83,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Given an array and a step size, return elements at indices that are multiples of the step',
       'For step=3: return elements at indices 0, 3, 6, 9...',
-      'Handle edge cases like empty arrays and step larger than array length'
+      'Handle edge cases like empty arrays and step larger than array length',
     ],
     starterCode: `function stepIterate(arr, step) {
   const result = [];
@@ -106,13 +103,10 @@ export const javascriptExercises: Exercise[] = [
       { input: [[1, 2, 3, 4, 5, 6, 7, 8, 9], 3], expected: [1, 4, 7], description: 'Step of 3' },
       { input: [[10, 20, 30, 40, 50], 2], expected: [10, 30, 50], description: 'Step of 2' },
       { input: [[1, 2, 3], 5], expected: [1], description: 'Step larger than array' },
-      { input: [[], 2], expected: [], description: 'Empty array' }
+      { input: [[], 2], expected: [], description: 'Empty array' },
     ],
-    hints: [
-      'Use i += step instead of i++',
-      'The first element (index 0) is always included'
-    ],
-    concepts: ['variable step', 'for loop', 'modular iteration']
+    hints: ['Use i += step instead of i++', 'The first element (index 0) is always included'],
+    concepts: ['variable step', 'for loop', 'modular iteration'],
   },
   {
     id: 'js-nested-loop-matrix',
@@ -123,7 +117,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Given a 2D array (matrix), return a flat array of all elements',
       'Traverse row by row, from left to right',
-      'Use nested for loops'
+      'Use nested for loops',
     ],
     starterCode: `function flattenMatrix(matrix) {
   const result = [];
@@ -142,17 +136,36 @@ export const javascriptExercises: Exercise[] = [
   return result;
 }`,
     testCases: [
-      { input: [[[1, 2], [3, 4], [5, 6]]], expected: [1, 2, 3, 4, 5, 6], description: '3x2 matrix' },
-      { input: [[[1, 2, 3], [4, 5, 6]]], expected: [1, 2, 3, 4, 5, 6], description: '2x3 matrix' },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+            [5, 6],
+          ],
+        ],
+        expected: [1, 2, 3, 4, 5, 6],
+        description: '3x2 matrix',
+      },
+      {
+        input: [
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+          ],
+        ],
+        expected: [1, 2, 3, 4, 5, 6],
+        description: '2x3 matrix',
+      },
       { input: [[[1]]], expected: [1], description: '1x1 matrix' },
-      { input: [[]], expected: [], description: 'Empty matrix' }
+      { input: [[]], expected: [], description: 'Empty matrix' },
     ],
     hints: [
       'Outer loop iterates over rows',
       'Inner loop iterates over columns within each row',
-      'Access elements with matrix[row][col]'
+      'Access elements with matrix[row][col]',
     ],
-    concepts: ['nested loops', '2D arrays', 'matrix traversal']
+    concepts: ['nested loops', '2D arrays', 'matrix traversal'],
   },
 
   // ========== GENERATION ALGORITHMS ==========
@@ -161,11 +174,12 @@ export const javascriptExercises: Exercise[] = [
     title: 'Generate Prime Numbers',
     category: 'generation',
     difficulty: 'intermediate',
-    description: 'Generate all prime numbers between 1 and 100 using the Sieve of Eratosthenes or trial division.',
+    description:
+      'Generate all prime numbers between 1 and 100 using the Sieve of Eratosthenes or trial division.',
     instructions: [
       'Return an array of all prime numbers from 2 to 100',
       'A prime number is only divisible by 1 and itself',
-      'Use nested loops to check divisibility'
+      'Use nested loops to check divisibility',
     ],
     starterCode: `function generatePrimes() {
   const primes = [];
@@ -193,17 +207,20 @@ export const javascriptExercises: Exercise[] = [
     testCases: [
       {
         input: null,
-        expected: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97],
-        description: 'All primes 1-100'
-      }
+        expected: [
+          2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83,
+          89, 97,
+        ],
+        description: 'All primes 1-100',
+      },
     ],
     hints: [
       'Start checking from 2 (smallest prime)',
       'Only check divisors up to Math.sqrt(num) for efficiency',
-      'Use a boolean flag to track if the number is prime'
+      'Use a boolean flag to track if the number is prime',
     ],
     concepts: ['prime numbers', 'nested loops', 'optimization', 'break statement'],
-    timeLimit: 120
+    timeLimit: 120,
   },
   {
     id: 'js-fibonacci-iterative',
@@ -214,7 +231,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Return an array of the first n Fibonacci numbers',
       'Fibonacci: each number is the sum of the two preceding ones',
-      'Start with [0, 1, 1, 2, 3, 5, 8, ...]'
+      'Start with [0, 1, 1, 2, 3, 5, 8, ...]',
     ],
     starterCode: `function fibonacciIterative(n) {
   if (n <= 0) return [];
@@ -240,13 +257,13 @@ export const javascriptExercises: Exercise[] = [
       { input: 10, expected: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34], description: 'First 10 Fibonacci' },
       { input: 5, expected: [0, 1, 1, 2, 3], description: 'First 5 Fibonacci' },
       { input: 1, expected: [0], description: 'Single element' },
-      { input: 0, expected: [], description: 'Zero elements' }
+      { input: 0, expected: [], description: 'Zero elements' },
     ],
     hints: [
       'fib[i] = fib[i-1] + fib[i-2]',
-      'Start the loop at index 2 since indices 0 and 1 are already defined'
+      'Start the loop at index 2 since indices 0 and 1 are already defined',
     ],
-    concepts: ['Fibonacci', 'iteration', 'dynamic programming']
+    concepts: ['Fibonacci', 'iteration', 'dynamic programming'],
   },
 
   // ========== RECURSION ==========
@@ -259,7 +276,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Return the nth Fibonacci number (0-indexed)',
       'fib(0) = 0, fib(1) = 1',
-      'Use recursion: fib(n) = fib(n-1) + fib(n-2)'
+      'Use recursion: fib(n) = fib(n-1) + fib(n-2)',
     ],
     starterCode: `function fibonacciRecursive(n) {
   // Base cases
@@ -277,13 +294,13 @@ export const javascriptExercises: Exercise[] = [
       { input: 0, expected: 0, description: 'fib(0)' },
       { input: 1, expected: 1, description: 'fib(1)' },
       { input: 5, expected: 5, description: 'fib(5)' },
-      { input: 10, expected: 55, description: 'fib(10)' }
+      { input: 10, expected: 55, description: 'fib(10)' },
     ],
     hints: [
       'Base cases: n <= 0 returns 0, n === 1 returns 1',
-      'Recursive case: return fib(n-1) + fib(n-2)'
+      'Recursive case: return fib(n-1) + fib(n-2)',
     ],
-    concepts: ['recursion', 'base case', 'Fibonacci']
+    concepts: ['recursion', 'base case', 'Fibonacci'],
   },
   {
     id: 'js-factorial-recursive',
@@ -294,7 +311,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Return n! (n factorial)',
       'factorial(5) = 5 * 4 * 3 * 2 * 1 = 120',
-      'Base case: factorial(0) = factorial(1) = 1'
+      'Base case: factorial(0) = factorial(1) = 1',
     ],
     starterCode: `function factorial(n) {
   // Base case
@@ -311,13 +328,10 @@ export const javascriptExercises: Exercise[] = [
       { input: 0, expected: 1, description: '0!' },
       { input: 1, expected: 1, description: '1!' },
       { input: 5, expected: 120, description: '5!' },
-      { input: 10, expected: 3628800, description: '10!' }
+      { input: 10, expected: 3628800, description: '10!' },
     ],
-    hints: [
-      'Base case: if n <= 1, return 1',
-      'Recursive case: n * factorial(n - 1)'
-    ],
-    concepts: ['recursion', 'factorial', 'base case']
+    hints: ['Base case: if n <= 1, return 1', 'Recursive case: n * factorial(n - 1)'],
+    concepts: ['recursion', 'factorial', 'base case'],
   },
   {
     id: 'js-sum-recursive',
@@ -328,7 +342,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Return the sum of all numbers in the array',
       'Use recursion, not loops',
-      'Consider: sum of array = first element + sum of rest'
+      'Consider: sum of array = first element + sum of rest',
     ],
     starterCode: `function sumArray(arr) {
   // Base case
@@ -345,13 +359,10 @@ export const javascriptExercises: Exercise[] = [
       { input: [1, 2, 3, 4, 5], expected: 15, description: 'Sum 1-5' },
       { input: [10, 20, 30], expected: 60, description: 'Sum of tens' },
       { input: [5], expected: 5, description: 'Single element' },
-      { input: [], expected: 0, description: 'Empty array' }
+      { input: [], expected: 0, description: 'Empty array' },
     ],
-    hints: [
-      'Base case: empty array returns 0',
-      'Use arr.slice(1) to get the rest of the array'
-    ],
-    concepts: ['recursion', 'array slicing', 'base case']
+    hints: ['Base case: empty array returns 0', 'Use arr.slice(1) to get the rest of the array'],
+    concepts: ['recursion', 'array slicing', 'base case'],
   },
 
   // ========== TRAVERSAL (DFS/BFS) ==========
@@ -364,7 +375,7 @@ export const javascriptExercises: Exercise[] = [
     instructions: [
       'Given a binary tree node, return an array of all values in pre-order (root, left, right)',
       'Use recursion to implement DFS',
-      'Each node has value, left, and right properties'
+      'Each node has value, left, and right properties',
     ],
     starterCode: `// Tree node structure: { value, left, right }
 function dfsPreOrder(node) {
@@ -394,23 +405,31 @@ function dfsPreOrder(node) {
 }`,
     testCases: [
       {
-        input: { value: 1, left: { value: 2, left: null, right: null }, right: { value: 3, left: null, right: null } },
+        input: {
+          value: 1,
+          left: { value: 2, left: null, right: null },
+          right: { value: 3, left: null, right: null },
+        },
         expected: [1, 2, 3],
-        description: 'Simple tree'
+        description: 'Simple tree',
       },
       {
-        input: { value: 1, left: { value: 2, left: { value: 4, left: null, right: null }, right: null }, right: { value: 3, left: null, right: null } },
+        input: {
+          value: 1,
+          left: { value: 2, left: { value: 4, left: null, right: null }, right: null },
+          right: { value: 3, left: null, right: null },
+        },
         expected: [1, 2, 4, 3],
-        description: 'Deeper tree'
+        description: 'Deeper tree',
       },
-      { input: null, expected: [], description: 'Empty tree' }
+      { input: null, expected: [], description: 'Empty tree' },
     ],
     hints: [
       'Pre-order: visit current node first, then recurse left, then right',
       'Check for null nodes before accessing properties',
-      'Push node.value to result before recursing'
+      'Push node.value to result before recursing',
     ],
-    concepts: ['DFS', 'tree traversal', 'pre-order', 'recursion']
+    concepts: ['DFS', 'tree traversal', 'pre-order', 'recursion'],
   },
   {
     id: 'js-dfs-inorder',
@@ -421,7 +440,7 @@ function dfsPreOrder(node) {
     instructions: [
       'Return values in in-order: left subtree, then root, then right subtree',
       'For a BST, this gives values in sorted order',
-      'Use recursion'
+      'Use recursion',
     ],
     starterCode: `function dfsInOrder(node) {
   const result = [];
@@ -450,21 +469,33 @@ function dfsPreOrder(node) {
 }`,
     testCases: [
       {
-        input: { value: 2, left: { value: 1, left: null, right: null }, right: { value: 3, left: null, right: null } },
+        input: {
+          value: 2,
+          left: { value: 1, left: null, right: null },
+          right: { value: 3, left: null, right: null },
+        },
         expected: [1, 2, 3],
-        description: 'BST in-order gives sorted'
+        description: 'BST in-order gives sorted',
       },
       {
-        input: { value: 4, left: { value: 2, left: { value: 1, left: null, right: null }, right: { value: 3, left: null, right: null } }, right: { value: 5, left: null, right: null } },
+        input: {
+          value: 4,
+          left: {
+            value: 2,
+            left: { value: 1, left: null, right: null },
+            right: { value: 3, left: null, right: null },
+          },
+          right: { value: 5, left: null, right: null },
+        },
         expected: [1, 2, 3, 4, 5],
-        description: 'Larger BST'
-      }
+        description: 'Larger BST',
+      },
     ],
     hints: [
       'In-order: recurse left, then visit current, then recurse right',
-      'Perfect for getting sorted values from a BST'
+      'Perfect for getting sorted values from a BST',
     ],
-    concepts: ['DFS', 'in-order traversal', 'BST', 'recursion']
+    concepts: ['DFS', 'in-order traversal', 'BST', 'recursion'],
   },
   {
     id: 'js-bfs-tree',
@@ -475,7 +506,7 @@ function dfsPreOrder(node) {
     instructions: [
       'Return an array of values in level-order (top to bottom, left to right)',
       'Use a queue (array with push/shift) to track nodes to visit',
-      'BFS processes all nodes at current depth before moving deeper'
+      'BFS processes all nodes at current depth before moving deeper',
     ],
     starterCode: `function bfs(root) {
   if (!root) return [];
@@ -508,26 +539,38 @@ function dfsPreOrder(node) {
 }`,
     testCases: [
       {
-        input: { value: 1, left: { value: 2, left: null, right: null }, right: { value: 3, left: null, right: null } },
+        input: {
+          value: 1,
+          left: { value: 2, left: null, right: null },
+          right: { value: 3, left: null, right: null },
+        },
         expected: [1, 2, 3],
-        description: 'Simple tree'
+        description: 'Simple tree',
       },
       {
         input: {
           value: 1,
-          left: { value: 2, left: { value: 4, left: null, right: null }, right: { value: 5, left: null, right: null } },
-          right: { value: 3, left: { value: 6, left: null, right: null }, right: { value: 7, left: null, right: null } }
+          left: {
+            value: 2,
+            left: { value: 4, left: null, right: null },
+            right: { value: 5, left: null, right: null },
+          },
+          right: {
+            value: 3,
+            left: { value: 6, left: null, right: null },
+            right: { value: 7, left: null, right: null },
+          },
         },
         expected: [1, 2, 3, 4, 5, 6, 7],
-        description: 'Full binary tree'
-      }
+        description: 'Full binary tree',
+      },
     ],
     hints: [
       'Use shift() to remove from front of queue (FIFO)',
       'Use push() to add children to back of queue',
-      'Check if left/right child exists before adding to queue'
+      'Check if left/right child exists before adding to queue',
     ],
-    concepts: ['BFS', 'queue', 'level-order traversal']
+    concepts: ['BFS', 'queue', 'level-order traversal'],
   },
 
   // ========== SEARCHING ==========
@@ -540,7 +583,7 @@ function dfsPreOrder(node) {
     instructions: [
       'Given a sorted array and target, return the index of target or -1 if not found',
       'Binary search divides the search space in half each iteration',
-      'Time complexity: O(log n)'
+      'Time complexity: O(log n)',
     ],
     starterCode: `function binarySearch(arr, target) {
   let left = 0;
@@ -575,14 +618,14 @@ function dfsPreOrder(node) {
       { input: [[1, 3, 5, 7, 9, 11], 7], expected: 3, description: 'Find 7' },
       { input: [[1, 3, 5, 7, 9, 11], 1], expected: 0, description: 'Find first element' },
       { input: [[1, 3, 5, 7, 9, 11], 11], expected: 5, description: 'Find last element' },
-      { input: [[1, 3, 5, 7, 9, 11], 4], expected: -1, description: 'Not found' }
+      { input: [[1, 3, 5, 7, 9, 11], 4], expected: -1, description: 'Not found' },
     ],
     hints: [
       'Calculate mid: Math.floor((left + right) / 2)',
       'If arr[mid] < target, search right half (left = mid + 1)',
-      'If arr[mid] > target, search left half (right = mid - 1)'
+      'If arr[mid] > target, search left half (right = mid - 1)',
     ],
-    concepts: ['binary search', 'divide and conquer', 'logarithmic complexity']
+    concepts: ['binary search', 'divide and conquer', 'logarithmic complexity'],
   },
 
   // ========== DATA STRUCTURES ==========
@@ -595,7 +638,7 @@ function dfsPreOrder(node) {
     instructions: [
       'Given the head of a linked list, return an array of all values',
       'Each node has value and next properties',
-      'Traverse until next is null'
+      'Traverse until next is null',
     ],
     starterCode: `// Node structure: { value, next }
 function traverseLinkedList(head) {
@@ -620,21 +663,21 @@ function traverseLinkedList(head) {
       {
         input: { value: 1, next: { value: 2, next: { value: 3, next: null } } },
         expected: [1, 2, 3],
-        description: 'Three nodes'
+        description: 'Three nodes',
       },
       {
         input: { value: 42, next: null },
         expected: [42],
-        description: 'Single node'
+        description: 'Single node',
       },
-      { input: null, expected: [], description: 'Empty list' }
+      { input: null, expected: [], description: 'Empty list' },
     ],
     hints: [
       'Use a current pointer starting at head',
       'Loop while current !== null',
-      'Move to next node with: current = current.next'
+      'Move to next node with: current = current.next',
     ],
-    concepts: ['linked list', 'pointer traversal', 'iteration']
+    concepts: ['linked list', 'pointer traversal', 'iteration'],
   },
   {
     id: 'js-stack-operations',
@@ -645,7 +688,7 @@ function traverseLinkedList(head) {
     instructions: [
       'Implement push, pop, and peek operations',
       'Stack follows LIFO (Last In, First Out)',
-      'Return the final state of the stack after operations'
+      'Return the final state of the stack after operations',
     ],
     starterCode: `function stackOperations(operations) {
   const stack = [];
@@ -679,28 +722,32 @@ function traverseLinkedList(head) {
 }`,
     testCases: [
       {
-        input: [{ type: 'push', value: 1 }, { type: 'push', value: 2 }, { type: 'push', value: 3 }],
+        input: [
+          { type: 'push', value: 1 },
+          { type: 'push', value: 2 },
+          { type: 'push', value: 3 },
+        ],
         expected: [1, 2, 3],
-        description: 'Push three values'
+        description: 'Push three values',
       },
       {
         input: [{ type: 'push', value: 1 }, { type: 'push', value: 2 }, { type: 'pop' }],
         expected: [1],
-        description: 'Push and pop'
+        description: 'Push and pop',
       },
       {
         input: [{ type: 'pop' }],
         expected: [],
-        description: 'Pop from empty'
-      }
+        description: 'Pop from empty',
+      },
     ],
     hints: [
       'Use array.push() for stack push',
       'Use array.pop() for stack pop',
-      'Check stack.length > 0 before popping'
+      'Check stack.length > 0 before popping',
     ],
-    concepts: ['stack', 'LIFO', 'push', 'pop']
-  }
+    concepts: ['stack', 'LIFO', 'push', 'pop'],
+  },
 ];
 
 export default javascriptExercises;

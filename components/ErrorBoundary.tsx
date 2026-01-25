@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  Component,
-  type ReactNode,
-  type ErrorInfo,
-} from 'react';
-import { logComponentError, getUserFriendlyMessage } from '@/lib/errorLogger';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { getUserFriendlyMessage, logComponentError } from '@/lib/errorLogger';
 
 // ============================================================================
 // Types
@@ -53,11 +49,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log error using centralized error logger
-    const loggedError = logComponentError(
-      error,
-      errorInfo.componentStack || undefined,
-      { boundary: 'ErrorBoundary' }
-    );
+    const loggedError = logComponentError(error, errorInfo.componentStack || undefined, {
+      boundary: 'ErrorBoundary',
+    });
 
     // Store error info for potential display
     this.setState({
@@ -114,6 +108,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </h2>
             <p className="text-zinc-400 mb-4">{userMessage}</p>
             <button
+              type="button"
               onClick={this.handleRetry}
               className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
             >
@@ -137,6 +132,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -152,16 +148,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </h1>
 
               {/* User-friendly Error Description */}
-              <p className="text-zinc-400 mb-6">
-                {userMessage}
-              </p>
+              <p className="text-zinc-400 mb-6">{userMessage}</p>
 
               {/* Error ID for support */}
-              {errorId && (
-                <p className="text-xs text-zinc-600 mb-4">
-                  Error ID: {errorId}
-                </p>
-              )}
+              {errorId && <p className="text-xs text-zinc-600 mb-4">Error ID: {errorId}</p>}
 
               {/* Error Details (development only) */}
               {showDetails && error && (
@@ -202,6 +192,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 {/* Retry Button */}
                 <button
+                  type="button"
                   onClick={this.handleRetry}
                   className="
                     px-6 py-3 rounded-lg
@@ -219,6 +210,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={2}
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -231,6 +223,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
                 {/* Reload Button */}
                 <button
+                  type="button"
                   onClick={this.handleReload}
                   className="
                     px-6 py-3 rounded-lg
@@ -248,6 +241,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={2}
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -260,6 +254,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
                 {/* Go Home Button */}
                 <button
+                  type="button"
                   onClick={this.handleGoHome}
                   className="
                     px-6 py-3 rounded-lg
@@ -277,6 +272,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={2}
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -351,13 +347,10 @@ export function ErrorFallback({
     <div className="p-6 bg-red-500/10 border border-red-500/30 rounded-xl text-center">
       <h2 className="text-lg font-semibold text-red-400 mb-2">{title}</h2>
       <p className="text-zinc-400 mb-4">{message}</p>
-      {error?.message && (
-        <p className="text-sm text-zinc-500 mb-4 font-mono">
-          {error.message}
-        </p>
-      )}
+      {error?.message && <p className="text-sm text-zinc-500 mb-4 font-mono">{error.message}</p>}
       {resetErrorBoundary && (
         <button
+          type="button"
           onClick={resetErrorBoundary}
           className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
         >

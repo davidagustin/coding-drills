@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ThemeToggle } from "./ThemeToggle";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavLink {
   href: string;
@@ -17,11 +17,7 @@ interface NavbarProps {
   currentLanguage?: string;
 }
 
-export function Navbar({
-  links = [],
-  showLanguageNav = false,
-  currentLanguage
-}: NavbarProps) {
+export function Navbar({ links = [], showLanguageNav = false, currentLanguage }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
@@ -32,43 +28,43 @@ export function Navbar({
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Close menu on route change
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Route change cleanup
     setIsMenuOpen(false);
-  }, [pathname]);
+  }, []);
 
   // Close menu on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         setIsMenuOpen(false);
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     }
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
 
   const isActiveLink = (href: string) => {
-    if (href === "/") {
-      return pathname === "/";
+    if (href === '/') {
+      return pathname === '/';
     }
     return pathname.startsWith(href);
   };
@@ -78,19 +74,17 @@ export function Navbar({
       className={`
         sticky top-0 z-50 w-full
         transition-all duration-300 ease-out
-        ${isScrolled
-          ? "bg-bg-primary/80 backdrop-blur-xl border-b border-border-subtle shadow-lg shadow-black/5"
-          : "bg-transparent border-b border-transparent"
+        ${
+          isScrolled
+            ? 'bg-bg-primary/80 backdrop-blur-xl border-b border-border-subtle shadow-lg shadow-black/5'
+            : 'bg-transparent border-b border-transparent'
         }
       `}
     >
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 group"
-          >
+          <Link href="/" className="flex items-center gap-2 group">
             {/* Logo Icon */}
             <div className="relative w-8 h-8 flex items-center justify-center">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
@@ -100,6 +94,7 @@ export function Navbar({
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -110,9 +105,7 @@ export function Navbar({
             </div>
 
             {/* Logo Text */}
-            <span className="text-lg font-bold gradient-text hidden sm:block">
-              Code Drills
-            </span>
+            <span className="text-lg font-bold gradient-text hidden sm:block">Code Drills</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -125,9 +118,10 @@ export function Navbar({
                   flex items-center gap-2 px-3 py-2 rounded-lg
                   text-sm font-medium
                   transition-all duration-200
-                  ${isActiveLink(link.href)
-                    ? "text-text-primary bg-bg-elevated"
-                    : "text-text-secondary hover:text-text-primary hover:bg-bg-elevated/50"
+                  ${
+                    isActiveLink(link.href)
+                      ? 'text-text-primary bg-bg-elevated'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/50'
                   }
                 `}
               >
@@ -144,6 +138,7 @@ export function Navbar({
 
             {/* Mobile Menu Button */}
             <button
+              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`
                 md:hidden p-2 rounded-lg
@@ -153,7 +148,7 @@ export function Navbar({
                 transition-all duration-200
                 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/60
               `}
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
             >
               <div className="w-5 h-5 flex flex-col justify-center items-center gap-1">
@@ -161,21 +156,21 @@ export function Navbar({
                   className={`
                     block w-5 h-0.5 bg-current rounded-full
                     transition-all duration-300 ease-out
-                    ${isMenuOpen ? "rotate-45 translate-y-[3px]" : ""}
+                    ${isMenuOpen ? 'rotate-45 translate-y-[3px]' : ''}
                   `}
                 />
                 <span
                   className={`
                     block w-5 h-0.5 bg-current rounded-full
                     transition-all duration-300 ease-out
-                    ${isMenuOpen ? "opacity-0" : ""}
+                    ${isMenuOpen ? 'opacity-0' : ''}
                   `}
                 />
                 <span
                   className={`
                     block w-5 h-0.5 bg-current rounded-full
                     transition-all duration-300 ease-out
-                    ${isMenuOpen ? "-rotate-45 -translate-y-[3px]" : ""}
+                    ${isMenuOpen ? '-rotate-45 -translate-y-[3px]' : ''}
                   `}
                 />
               </div>
@@ -189,10 +184,7 @@ export function Navbar({
         className={`
           fixed inset-0 top-16 z-40 md:hidden
           transition-all duration-300 ease-out
-          ${isMenuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-          }
+          ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
         `}
       >
         {/* Backdrop */}
@@ -210,7 +202,7 @@ export function Navbar({
             border-b border-border-subtle
             shadow-2xl shadow-black/20
             transform transition-all duration-300 ease-out
-            ${isMenuOpen ? "translate-y-0" : "-translate-y-full"}
+            ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}
           `}
         >
           <nav className="max-w-6xl mx-auto px-4 py-4">
@@ -222,9 +214,10 @@ export function Navbar({
                   flex items-center gap-3 px-4 py-3 rounded-lg
                   text-base font-medium
                   transition-all duration-200
-                  ${isActiveLink("/") && pathname === "/"
-                    ? "text-text-primary bg-bg-elevated"
-                    : "text-text-secondary hover:text-text-primary hover:bg-bg-elevated/50"
+                  ${
+                    isActiveLink('/') && pathname === '/'
+                      ? 'text-text-primary bg-bg-elevated'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/50'
                   }
                 `}
               >
@@ -234,6 +227,7 @@ export function Navbar({
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -253,9 +247,10 @@ export function Navbar({
                     flex items-center gap-3 px-4 py-3 rounded-lg
                     text-base font-medium
                     transition-all duration-200
-                    ${isActiveLink(link.href)
-                      ? "text-text-primary bg-bg-elevated"
-                      : "text-text-secondary hover:text-text-primary hover:bg-bg-elevated/50"
+                    ${
+                      isActiveLink(link.href)
+                        ? 'text-text-primary bg-bg-elevated'
+                        : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/50'
                     }
                   `}
                 >
@@ -266,6 +261,7 @@ export function Navbar({
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                       strokeWidth={2}
+                      aria-hidden="true"
                     >
                       <path
                         strokeLinecap="round"
@@ -282,9 +278,7 @@ export function Navbar({
             {/* Current Language Badge (if applicable) */}
             {showLanguageNav && currentLanguage && (
               <div className="mt-4 pt-4 border-t border-border-subtle">
-                <div className="px-4 py-2 text-sm text-text-muted">
-                  Current Language
-                </div>
+                <div className="px-4 py-2 text-sm text-text-muted">Current Language</div>
                 <div className="px-4 py-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-success" />
                   <span className="text-text-primary font-medium capitalize">

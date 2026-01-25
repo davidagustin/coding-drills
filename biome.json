@@ -7,14 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": [
-      "**/*.js",
-      "**/*.jsx",
-      "**/*.ts",
-      "**/*.tsx",
-      "**/*.json",
-      "**/*.css"
-    ]
+    "includes": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx", "**/*.json", "**/*.css"]
   },
   "formatter": {
     "enabled": true,
@@ -28,13 +21,31 @@
       "recommended": true,
       "complexity": {
         "noUselessFragments": "warn",
-        "noImportantStyles": "off"
+        "noImportantStyles": "off",
+        "useLiteralKeys": "warn"
+      },
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "noUnusedImports": "warn",
+        "noUnusedFunctionParameters": "warn",
+        "useExhaustiveDependencies": "warn"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "off",
+        "noTemplateCurlyInString": "warn",
+        "noImplicitAnyLet": "warn",
+        "noAssignInExpressions": "warn",
+        "noGlobalIsNan": "warn",
+        "useIterableCallbackReturn": "warn",
+        "noShadowRestrictedNames": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
       },
       "style": {
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "warn",
+        "useTemplate": "warn"
       }
     }
   },

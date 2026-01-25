@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -32,6 +32,7 @@ export default function Error({ error, reset }: ErrorProps) {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -58,23 +59,16 @@ export default function Error({ error, reset }: ErrorProps) {
         {/* Error details (development only - in production you might hide this) */}
         {error.message && (
           <div className="rounded-xl bg-gray-900/80 border border-gray-800 p-4 text-left">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
-              Error Details
-            </p>
-            <code className="text-sm text-red-400 font-mono break-all">
-              {error.message}
-            </code>
-            {error.digest && (
-              <p className="text-xs text-gray-600 mt-2">
-                Error ID: {error.digest}
-              </p>
-            )}
+            <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Error Details</p>
+            <code className="text-sm text-red-400 font-mono break-all">{error.message}</code>
+            {error.digest && <p className="text-xs text-gray-600 mt-2">Error ID: {error.digest}</p>}
           </div>
         )}
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
+            type="button"
             onClick={reset}
             className="
               inline-flex items-center gap-2 px-6 py-3
@@ -91,6 +85,7 @@ export default function Error({ error, reset }: ErrorProps) {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -118,6 +113,7 @@ export default function Error({ error, reset }: ErrorProps) {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

@@ -8,19 +8,46 @@ export const javascriptMethods: Method[] = [
     name: 'filter',
     category: 'Array Methods',
     syntax: 'array.filter(callback(element, index, array), thisArg)',
-    description: 'Creates a new array with all elements that pass the test implemented by the provided function.',
+    description:
+      'Creates a new array with all elements that pass the test implemented by the provided function.',
     arguments: [
-      { name: 'callback', type: 'Function', description: 'Function to test each element. Return true to keep, false to discard.' },
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Function to test each element. Return true to keep, false to discard.',
+      },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
-      { name: 'array', type: 'Array', description: 'The array filter was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
+      {
+        name: 'array',
+        type: 'Array',
+        description: 'The array filter was called on',
+        optional: true,
+      },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
     returns: { type: 'Array', description: 'A new array with elements that pass the test' },
     examples: [
       { code: '[1, 2, 3, 4, 5].filter(n => n > 2)', output: '[3, 4, 5]' },
-      { code: '["apple", "banana", "cherry"].filter(f => f.length > 5)', output: '["banana", "cherry"]' },
-      { code: '[1, 2, 3, 4].filter((n, i) => i % 2 === 0)', output: '[1, 3]', explanation: 'Filter by index position' },
+      {
+        code: '["apple", "banana", "cherry"].filter(f => f.length > 5)',
+        output: '["banana", "cherry"]',
+      },
+      {
+        code: '[1, 2, 3, 4].filter((n, i) => i % 2 === 0)',
+        output: '[1, 3]',
+        explanation: 'Filter by index position',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -31,15 +58,33 @@ export const javascriptMethods: Method[] = [
     name: 'map',
     category: 'Array Methods',
     syntax: 'array.map(callback(element, index, array), thisArg)',
-    description: 'Creates a new array populated with the results of calling a provided function on every element in the calling array.',
+    description:
+      'Creates a new array populated with the results of calling a provided function on every element in the calling array.',
     arguments: [
-      { name: 'callback', type: 'Function', description: 'Function that produces an element of the new array' },
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Function that produces an element of the new array',
+      },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
       { name: 'array', type: 'Array', description: 'The array map was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
-    returns: { type: 'Array', description: 'A new array with each element being the result of the callback function' },
+    returns: {
+      type: 'Array',
+      description: 'A new array with each element being the result of the callback function',
+    },
     examples: [
       { code: '[1, 2, 3].map(x => x * 2)', output: '[2, 4, 6]' },
       { code: '["a", "b", "c"].map(s => s.toUpperCase())', output: '["A", "B", "C"]' },
@@ -54,20 +99,50 @@ export const javascriptMethods: Method[] = [
     name: 'reduce',
     category: 'Array Methods',
     syntax: 'array.reduce(callback(accumulator, currentValue, index, array), initialValue)',
-    description: 'Executes a user-supplied reducer callback function on each element of the array, passing in the return value from the calculation on the preceding element.',
+    description:
+      'Executes a user-supplied reducer callback function on each element of the array, passing in the return value from the calculation on the preceding element.',
     arguments: [
-      { name: 'callback', type: 'Function', description: 'Reducer function to execute on each element' },
-      { name: 'accumulator', type: 'any', description: 'The accumulated value previously returned' },
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Reducer function to execute on each element',
+      },
+      {
+        name: 'accumulator',
+        type: 'any',
+        description: 'The accumulated value previously returned',
+      },
       { name: 'currentValue', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
-      { name: 'array', type: 'Array', description: 'The array reduce was called on', optional: true },
-      { name: 'initialValue', type: 'any', description: 'Value to use as the first argument to the first call of callback', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
+      {
+        name: 'array',
+        type: 'Array',
+        description: 'The array reduce was called on',
+        optional: true,
+      },
+      {
+        name: 'initialValue',
+        type: 'any',
+        description: 'Value to use as the first argument to the first call of callback',
+        optional: true,
+      },
     ],
     returns: { type: 'any', description: 'The single value that results from the reduction' },
     examples: [
       { code: '[1, 2, 3, 4].reduce((acc, n) => acc + n, 0)', output: '10' },
-      { code: '[[1, 2], [3, 4]].reduce((acc, arr) => acc.concat(arr), [])', output: '[1, 2, 3, 4]' },
-      { code: '[1, 2, 3].reduce((acc, n) => ({ ...acc, [n]: n * 2 }), {})', output: '{ 1: 2, 2: 4, 3: 6 }' },
+      {
+        code: '[[1, 2], [3, 4]].reduce((acc, arr) => acc.concat(arr), [])',
+        output: '[1, 2, 3, 4]',
+      },
+      {
+        code: '[1, 2, 3].reduce((acc, n) => ({ ...acc, [n]: n * 2 }), {})',
+        output: '{ 1: 2, 2: 4, 3: 6 }',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -79,15 +154,33 @@ export const javascriptMethods: Method[] = [
     name: 'find',
     category: 'Array Methods',
     syntax: 'array.find(callback(element, index, array), thisArg)',
-    description: 'Returns the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned.',
+    description:
+      'Returns the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned.',
     arguments: [
-      { name: 'callback', type: 'Function', description: 'Function to execute on each value in the array' },
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Function to execute on each value in the array',
+      },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
       { name: 'array', type: 'Array', description: 'The array find was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
-    returns: { type: 'any | undefined', description: 'The first element that satisfies the testing function, or undefined' },
+    returns: {
+      type: 'any | undefined',
+      description: 'The first element that satisfies the testing function, or undefined',
+    },
     examples: [
       { code: '[1, 2, 3, 4, 5].find(n => n > 3)', output: '4' },
       { code: '[{id: 1}, {id: 2}].find(obj => obj.id === 2)', output: '{id: 2}' },
@@ -102,15 +195,38 @@ export const javascriptMethods: Method[] = [
     name: 'findIndex',
     category: 'Array Methods',
     syntax: 'array.findIndex(callback(element, index, array), thisArg)',
-    description: 'Returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1.',
+    description:
+      'Returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1.',
     arguments: [
-      { name: 'callback', type: 'Function', description: 'Function to execute on each value in the array' },
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Function to execute on each value in the array',
+      },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
-      { name: 'array', type: 'Array', description: 'The array findIndex was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
+      {
+        name: 'array',
+        type: 'Array',
+        description: 'The array findIndex was called on',
+        optional: true,
+      },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
-    returns: { type: 'number', description: 'The index of the first element that passes the test, or -1' },
+    returns: {
+      type: 'number',
+      description: 'The index of the first element that passes the test, or -1',
+    },
     examples: [
       { code: '[1, 2, 3, 4, 5].findIndex(n => n > 3)', output: '3' },
       { code: '["a", "b", "c"].findIndex(s => s === "b")', output: '1' },
@@ -125,13 +241,29 @@ export const javascriptMethods: Method[] = [
     name: 'forEach',
     category: 'Array Methods',
     syntax: 'array.forEach(callback(element, index, array), thisArg)',
-    description: 'Executes a provided function once for each array element. Returns undefined and cannot be chained.',
+    description:
+      'Executes a provided function once for each array element. Returns undefined and cannot be chained.',
     arguments: [
       { name: 'callback', type: 'Function', description: 'Function to execute on each element' },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
-      { name: 'array', type: 'Array', description: 'The array forEach was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
+      {
+        name: 'array',
+        type: 'Array',
+        description: 'The array forEach was called on',
+        optional: true,
+      },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
     returns: { type: 'undefined', description: 'Always returns undefined' },
     examples: [
@@ -148,19 +280,37 @@ export const javascriptMethods: Method[] = [
     name: 'some',
     category: 'Array Methods',
     syntax: 'array.some(callback(element, index, array), thisArg)',
-    description: 'Tests whether at least one element in the array passes the test implemented by the provided function. Returns true if it finds an element for which the callback returns truthy.',
+    description:
+      'Tests whether at least one element in the array passes the test implemented by the provided function. Returns true if it finds an element for which the callback returns truthy.',
     arguments: [
       { name: 'callback', type: 'Function', description: 'Function to test each element' },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
       { name: 'array', type: 'Array', description: 'The array some was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
-    returns: { type: 'boolean', description: 'true if at least one element passes the test, false otherwise' },
+    returns: {
+      type: 'boolean',
+      description: 'true if at least one element passes the test, false otherwise',
+    },
     examples: [
       { code: '[1, 2, 3, 4, 5].some(n => n > 4)', output: 'true' },
       { code: '[1, 2, 3].some(n => n > 10)', output: 'false' },
-      { code: '[].some(n => n > 0)', output: 'false', explanation: 'Empty array always returns false' },
+      {
+        code: '[].some(n => n > 0)',
+        output: 'false',
+        explanation: 'Empty array always returns false',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -171,20 +321,43 @@ export const javascriptMethods: Method[] = [
     name: 'every',
     category: 'Array Methods',
     syntax: 'array.every(callback(element, index, array), thisArg)',
-    description: 'Tests whether all elements in the array pass the test implemented by the provided function. Returns true only if every element passes.',
+    description:
+      'Tests whether all elements in the array pass the test implemented by the provided function. Returns true only if every element passes.',
     arguments: [
       { name: 'callback', type: 'Function', description: 'Function to test each element' },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
-      { name: 'array', type: 'Array', description: 'The array every was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
+      {
+        name: 'array',
+        type: 'Array',
+        description: 'The array every was called on',
+        optional: true,
+      },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
-    returns: { type: 'boolean', description: 'true if all elements pass the test, false otherwise' },
+    returns: {
+      type: 'boolean',
+      description: 'true if all elements pass the test, false otherwise',
+    },
     examples: [
       { code: '[2, 4, 6, 8].every(n => n % 2 === 0)', output: 'true' },
       { code: '[1, 2, 3].every(n => n > 0)', output: 'true' },
       { code: '[1, 2, 3].every(n => n > 2)', output: 'false' },
-      { code: '[].every(n => n > 0)', output: 'true', explanation: 'Empty array always returns true (vacuous truth)' },
+      {
+        code: '[].every(n => n > 0)',
+        output: 'true',
+        explanation: 'Empty array always returns true (vacuous truth)',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -195,17 +368,32 @@ export const javascriptMethods: Method[] = [
     name: 'includes',
     category: 'Array Methods',
     syntax: 'array.includes(searchElement, fromIndex)',
-    description: 'Determines whether an array includes a certain value among its entries, returning true or false as appropriate.',
+    description:
+      'Determines whether an array includes a certain value among its entries, returning true or false as appropriate.',
     arguments: [
       { name: 'searchElement', type: 'any', description: 'The value to search for' },
-      { name: 'fromIndex', type: 'number', description: 'Position to start searching from', optional: true, defaultValue: '0' },
+      {
+        name: 'fromIndex',
+        type: 'number',
+        description: 'Position to start searching from',
+        optional: true,
+        defaultValue: '0',
+      },
     ],
     returns: { type: 'boolean', description: 'true if the value is found, false otherwise' },
     examples: [
       { code: '[1, 2, 3].includes(2)', output: 'true' },
       { code: '["a", "b", "c"].includes("d")', output: 'false' },
-      { code: '[1, 2, 3].includes(2, 2)', output: 'false', explanation: 'Starts searching from index 2' },
-      { code: '[NaN].includes(NaN)', output: 'true', explanation: 'Unlike indexOf, handles NaN correctly' },
+      {
+        code: '[1, 2, 3].includes(2, 2)',
+        output: 'false',
+        explanation: 'Starts searching from index 2',
+      },
+      {
+        code: '[NaN].includes(NaN)',
+        output: 'true',
+        explanation: 'Unlike indexOf, handles NaN correctly',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -216,16 +404,33 @@ export const javascriptMethods: Method[] = [
     name: 'slice',
     category: 'Array Methods',
     syntax: 'array.slice(start, end)',
-    description: 'Returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included).',
+    description:
+      'Returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included).',
     arguments: [
-      { name: 'start', type: 'number', description: 'Zero-based index at which to start extraction', optional: true, defaultValue: '0' },
-      { name: 'end', type: 'number', description: 'Zero-based index before which to end extraction', optional: true, defaultValue: 'array.length' },
+      {
+        name: 'start',
+        type: 'number',
+        description: 'Zero-based index at which to start extraction',
+        optional: true,
+        defaultValue: '0',
+      },
+      {
+        name: 'end',
+        type: 'number',
+        description: 'Zero-based index before which to end extraction',
+        optional: true,
+        defaultValue: 'array.length',
+      },
     ],
     returns: { type: 'Array', description: 'A new array containing the extracted elements' },
     examples: [
       { code: '[1, 2, 3, 4, 5].slice(1, 4)', output: '[2, 3, 4]' },
       { code: '[1, 2, 3, 4, 5].slice(2)', output: '[3, 4, 5]' },
-      { code: '[1, 2, 3, 4, 5].slice(-2)', output: '[4, 5]', explanation: 'Negative index counts from end' },
+      {
+        code: '[1, 2, 3, 4, 5].slice(-2)',
+        output: '[4, 5]',
+        explanation: 'Negative index counts from end',
+      },
       { code: '[1, 2, 3].slice()', output: '[1, 2, 3]', explanation: 'Creates a shallow copy' },
     ],
     timeComplexity: 'O(n)',
@@ -238,16 +443,25 @@ export const javascriptMethods: Method[] = [
     name: 'splice',
     category: 'Array Methods',
     syntax: 'array.splice(start, deleteCount, item1, item2, ...)',
-    description: 'Changes the contents of an array by removing or replacing existing elements and/or adding new elements in place.',
+    description:
+      'Changes the contents of an array by removing or replacing existing elements and/or adding new elements in place.',
     arguments: [
       { name: 'start', type: 'number', description: 'Index at which to start changing the array' },
-      { name: 'deleteCount', type: 'number', description: 'Number of elements to remove', optional: true },
+      {
+        name: 'deleteCount',
+        type: 'number',
+        description: 'Number of elements to remove',
+        optional: true,
+      },
       { name: 'items', type: 'any', description: 'Elements to add to the array', optional: true },
     ],
     returns: { type: 'Array', description: 'An array containing the deleted elements' },
     examples: [
       { code: 'let arr = [1, 2, 3, 4]; arr.splice(1, 2); arr', output: '[1, 4]' },
-      { code: 'let arr = [1, 2, 3]; arr.splice(1, 0, "a", "b"); arr', output: '[1, "a", "b", 2, 3]' },
+      {
+        code: 'let arr = [1, 2, 3]; arr.splice(1, 0, "a", "b"); arr',
+        output: '[1, "a", "b", 2, 3]',
+      },
       { code: 'let arr = [1, 2, 3]; arr.splice(1, 1, "x"); arr', output: '[1, "x", 3]' },
     ],
     timeComplexity: 'O(n)',
@@ -260,9 +474,14 @@ export const javascriptMethods: Method[] = [
     name: 'concat',
     category: 'Array Methods',
     syntax: 'array.concat(value1, value2, ...)',
-    description: 'Merges two or more arrays. This method does not change the existing arrays, but instead returns a new array.',
+    description:
+      'Merges two or more arrays. This method does not change the existing arrays, but instead returns a new array.',
     arguments: [
-      { name: 'values', type: 'any | Array', description: 'Arrays and/or values to concatenate into a new array' },
+      {
+        name: 'values',
+        type: 'any | Array',
+        description: 'Arrays and/or values to concatenate into a new array',
+      },
     ],
     returns: { type: 'Array', description: 'A new Array instance containing all elements' },
     examples: [
@@ -279,15 +498,25 @@ export const javascriptMethods: Method[] = [
     name: 'sort',
     category: 'Array Methods',
     syntax: 'array.sort(compareFunction)',
-    description: 'Sorts the elements of an array in place and returns the reference to the same array, now sorted.',
+    description:
+      'Sorts the elements of an array in place and returns the reference to the same array, now sorted.',
     arguments: [
-      { name: 'compareFunction', type: 'Function', description: 'Function that defines the sort order', optional: true },
+      {
+        name: 'compareFunction',
+        type: 'Function',
+        description: 'Function that defines the sort order',
+        optional: true,
+      },
     ],
     returns: { type: 'Array', description: 'The sorted array (same reference)' },
     examples: [
       { code: '[3, 1, 4, 1, 5].sort((a, b) => a - b)', output: '[1, 1, 3, 4, 5]' },
       { code: '["banana", "apple", "cherry"].sort()', output: '["apple", "banana", "cherry"]' },
-      { code: '[10, 2, 1].sort()', output: '[1, 10, 2]', explanation: 'Default sort is lexicographic!' },
+      {
+        code: '[10, 2, 1].sort()',
+        output: '[1, 10, 2]',
+        explanation: 'Default sort is lexicographic!',
+      },
       { code: '[{n: 3}, {n: 1}].sort((a, b) => a.n - b.n)', output: '[{n: 1}, {n: 3}]' },
     ],
     timeComplexity: 'O(n log n)',
@@ -317,11 +546,22 @@ export const javascriptMethods: Method[] = [
     name: 'flat',
     category: 'Array Methods',
     syntax: 'array.flat(depth)',
-    description: 'Creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.',
+    description:
+      'Creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.',
     arguments: [
-      { name: 'depth', type: 'number', description: 'The depth level specifying how deep a nested array structure should be flattened', optional: true, defaultValue: '1' },
+      {
+        name: 'depth',
+        type: 'number',
+        description:
+          'The depth level specifying how deep a nested array structure should be flattened',
+        optional: true,
+        defaultValue: '1',
+      },
     ],
-    returns: { type: 'Array', description: 'A new array with the sub-array elements concatenated into it' },
+    returns: {
+      type: 'Array',
+      description: 'A new array with the sub-array elements concatenated into it',
+    },
     examples: [
       { code: '[1, [2, 3], [4, [5]]].flat()', output: '[1, 2, 3, 4, [5]]' },
       { code: '[1, [2, [3, [4]]]].flat(2)', output: '[1, 2, 3, [4]]' },
@@ -336,19 +576,50 @@ export const javascriptMethods: Method[] = [
     name: 'flatMap',
     category: 'Array Methods',
     syntax: 'array.flatMap(callback(element, index, array), thisArg)',
-    description: 'Returns a new array formed by applying a given callback function to each element of the array, and then flattening the result by one level.',
+    description:
+      'Returns a new array formed by applying a given callback function to each element of the array, and then flattening the result by one level.',
     arguments: [
-      { name: 'callback', type: 'Function', description: 'Function that produces an element of the new array' },
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Function that produces an element of the new array',
+      },
       { name: 'element', type: 'any', description: 'The current element being processed' },
-      { name: 'index', type: 'number', description: 'The index of the current element', optional: true },
-      { name: 'array', type: 'Array', description: 'The array flatMap was called on', optional: true },
-      { name: 'thisArg', type: 'any', description: 'Value to use as this in callback', optional: true },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'The index of the current element',
+        optional: true,
+      },
+      {
+        name: 'array',
+        type: 'Array',
+        description: 'The array flatMap was called on',
+        optional: true,
+      },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this in callback',
+        optional: true,
+      },
     ],
-    returns: { type: 'Array', description: 'A new array with each element being the result of the callback function and flattened to a depth of 1' },
+    returns: {
+      type: 'Array',
+      description:
+        'A new array with each element being the result of the callback function and flattened to a depth of 1',
+    },
     examples: [
       { code: '[1, 2, 3].flatMap(x => [x, x * 2])', output: '[1, 2, 2, 4, 3, 6]' },
-      { code: '["hello world", "foo bar"].flatMap(s => s.split(" "))', output: '["hello", "world", "foo", "bar"]' },
-      { code: '[1, 2, 3].flatMap(x => x % 2 === 0 ? [x] : [])', output: '[2]', explanation: 'Filter and map in one operation' },
+      {
+        code: '["hello world", "foo bar"].flatMap(s => s.split(" "))',
+        output: '["hello", "world", "foo", "bar"]',
+      },
+      {
+        code: '[1, 2, 3].flatMap(x => x % 2 === 0 ? [x] : [])',
+        output: '[2]',
+        explanation: 'Filter and map in one operation',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -359,9 +630,16 @@ export const javascriptMethods: Method[] = [
     name: 'join',
     category: 'Array Methods',
     syntax: 'array.join(separator)',
-    description: 'Creates and returns a new string by concatenating all of the elements in an array, separated by commas or a specified separator string.',
+    description:
+      'Creates and returns a new string by concatenating all of the elements in an array, separated by commas or a specified separator string.',
     arguments: [
-      { name: 'separator', type: 'string', description: 'String to separate each pair of adjacent elements', optional: true, defaultValue: '"," ' },
+      {
+        name: 'separator',
+        type: 'string',
+        description: 'String to separate each pair of adjacent elements',
+        optional: true,
+        defaultValue: '"," ',
+      },
     ],
     returns: { type: 'string', description: 'A string with all array elements joined' },
     examples: [
@@ -378,7 +656,8 @@ export const javascriptMethods: Method[] = [
     name: 'push',
     category: 'Array Methods',
     syntax: 'array.push(element1, element2, ...)',
-    description: 'Adds one or more elements to the end of an array and returns the new length of the array.',
+    description:
+      'Adds one or more elements to the end of an array and returns the new length of the array.',
     arguments: [
       { name: 'elements', type: 'any', description: 'The elements to add to the end of the array' },
     ],
@@ -400,7 +679,10 @@ export const javascriptMethods: Method[] = [
     syntax: 'array.pop()',
     description: 'Removes the last element from an array and returns that element.',
     arguments: [],
-    returns: { type: 'any', description: 'The removed element, or undefined if the array is empty' },
+    returns: {
+      type: 'any',
+      description: 'The removed element, or undefined if the array is empty',
+    },
     examples: [
       { code: 'let arr = [1, 2, 3]; arr.pop()', output: '3' },
       { code: 'let arr = [1, 2, 3]; arr.pop(); arr', output: '[1, 2]' },
@@ -418,7 +700,10 @@ export const javascriptMethods: Method[] = [
     syntax: 'array.shift()',
     description: 'Removes the first element from an array and returns that removed element.',
     arguments: [],
-    returns: { type: 'any', description: 'The removed element, or undefined if the array is empty' },
+    returns: {
+      type: 'any',
+      description: 'The removed element, or undefined if the array is empty',
+    },
     examples: [
       { code: 'let arr = [1, 2, 3]; arr.shift()', output: '1' },
       { code: 'let arr = [1, 2, 3]; arr.shift(); arr', output: '[2, 3]' },
@@ -433,9 +718,14 @@ export const javascriptMethods: Method[] = [
     name: 'unshift',
     category: 'Array Methods',
     syntax: 'array.unshift(element1, element2, ...)',
-    description: 'Adds one or more elements to the beginning of an array and returns the new length of the array.',
+    description:
+      'Adds one or more elements to the beginning of an array and returns the new length of the array.',
     arguments: [
-      { name: 'elements', type: 'any', description: 'The elements to add to the front of the array' },
+      {
+        name: 'elements',
+        type: 'any',
+        description: 'The elements to add to the front of the array',
+      },
     ],
     returns: { type: 'number', description: 'The new length of the array' },
     examples: [
@@ -452,12 +742,22 @@ export const javascriptMethods: Method[] = [
     name: 'indexOf',
     category: 'Array Methods',
     syntax: 'array.indexOf(searchElement, fromIndex)',
-    description: 'Returns the first index at which a given element can be found in the array, or -1 if it is not present.',
+    description:
+      'Returns the first index at which a given element can be found in the array, or -1 if it is not present.',
     arguments: [
       { name: 'searchElement', type: 'any', description: 'Element to locate in the array' },
-      { name: 'fromIndex', type: 'number', description: 'The index to start the search at', optional: true, defaultValue: '0' },
+      {
+        name: 'fromIndex',
+        type: 'number',
+        description: 'The index to start the search at',
+        optional: true,
+        defaultValue: '0',
+      },
     ],
-    returns: { type: 'number', description: 'The first index of the element in the array, or -1 if not found' },
+    returns: {
+      type: 'number',
+      description: 'The first index of the element in the array, or -1 if not found',
+    },
     examples: [
       { code: '[1, 2, 3, 2].indexOf(2)', output: '1' },
       { code: '[1, 2, 3].indexOf(4)', output: '-1' },
@@ -467,17 +767,33 @@ export const javascriptMethods: Method[] = [
     spaceComplexity: 'O(1)',
     relatedMethods: ['lastIndexOf', 'includes', 'findIndex'],
     sinceVersion: 'ES5',
-    notes: ['Uses strict equality (===) for comparison', 'Does not handle NaN correctly - use includes() instead'],
+    notes: [
+      'Uses strict equality (===) for comparison',
+      'Does not handle NaN correctly - use includes() instead',
+    ],
   },
   {
     name: 'fill',
     category: 'Array Methods',
     syntax: 'array.fill(value, start, end)',
-    description: 'Fills all the elements of an array from a start index to an end index with a static value.',
+    description:
+      'Fills all the elements of an array from a start index to an end index with a static value.',
     arguments: [
       { name: 'value', type: 'any', description: 'Value to fill the array with' },
-      { name: 'start', type: 'number', description: 'Start index', optional: true, defaultValue: '0' },
-      { name: 'end', type: 'number', description: 'End index', optional: true, defaultValue: 'array.length' },
+      {
+        name: 'start',
+        type: 'number',
+        description: 'Start index',
+        optional: true,
+        defaultValue: '0',
+      },
+      {
+        name: 'end',
+        type: 'number',
+        description: 'End index',
+        optional: true,
+        defaultValue: 'array.length',
+      },
     ],
     returns: { type: 'Array', description: 'The modified array' },
     examples: [
@@ -495,9 +811,14 @@ export const javascriptMethods: Method[] = [
     name: 'at',
     category: 'Array Methods',
     syntax: 'array.at(index)',
-    description: 'Returns the element at the given index, allowing for positive and negative integers. Negative integers count back from the last element.',
+    description:
+      'Returns the element at the given index, allowing for positive and negative integers. Negative integers count back from the last element.',
     arguments: [
-      { name: 'index', type: 'number', description: 'Zero-based index of the array element to be returned' },
+      {
+        name: 'index',
+        type: 'number',
+        description: 'Zero-based index of the array element to be returned',
+      },
     ],
     returns: { type: 'any', description: 'The element at the given index, or undefined' },
     examples: [
@@ -518,12 +839,25 @@ export const javascriptMethods: Method[] = [
     name: 'split',
     category: 'String Methods',
     syntax: 'string.split(separator, limit)',
-    description: 'Divides a String into an ordered list of substrings, puts these substrings into an array, and returns the array.',
+    description:
+      'Divides a String into an ordered list of substrings, puts these substrings into an array, and returns the array.',
     arguments: [
-      { name: 'separator', type: 'string | RegExp', description: 'The pattern describing where each split should occur' },
-      { name: 'limit', type: 'number', description: 'Limits the number of pieces the string is split into', optional: true },
+      {
+        name: 'separator',
+        type: 'string | RegExp',
+        description: 'The pattern describing where each split should occur',
+      },
+      {
+        name: 'limit',
+        type: 'number',
+        description: 'Limits the number of pieces the string is split into',
+        optional: true,
+      },
     ],
-    returns: { type: 'string[]', description: 'An array of strings split at each point where the separator occurs' },
+    returns: {
+      type: 'string[]',
+      description: 'An array of strings split at each point where the separator occurs',
+    },
     examples: [
       { code: '"a,b,c".split(",")', output: '["a", "b", "c"]' },
       { code: '"hello world".split(" ")', output: '["hello", "world"]' },
@@ -539,12 +873,25 @@ export const javascriptMethods: Method[] = [
     name: 'substring',
     category: 'String Methods',
     syntax: 'string.substring(indexStart, indexEnd)',
-    description: 'Returns the part of the string between the start and end indexes, or to the end of the string.',
+    description:
+      'Returns the part of the string between the start and end indexes, or to the end of the string.',
     arguments: [
-      { name: 'indexStart', type: 'number', description: 'The index of the first character to include' },
-      { name: 'indexEnd', type: 'number', description: 'The index of the first character to exclude', optional: true },
+      {
+        name: 'indexStart',
+        type: 'number',
+        description: 'The index of the first character to include',
+      },
+      {
+        name: 'indexEnd',
+        type: 'number',
+        description: 'The index of the first character to exclude',
+        optional: true,
+      },
     ],
-    returns: { type: 'string', description: 'A new string containing the specified part of the given string' },
+    returns: {
+      type: 'string',
+      description: 'A new string containing the specified part of the given string',
+    },
     examples: [
       { code: '"Mozilla".substring(1, 3)', output: '"oz"' },
       { code: '"Mozilla".substring(2)', output: '"zilla"' },
@@ -561,7 +908,10 @@ export const javascriptMethods: Method[] = [
     syntax: 'string.toLowerCase()',
     description: 'Returns the calling string value converted to lower case.',
     arguments: [],
-    returns: { type: 'string', description: 'A new string representing the calling string converted to lower case' },
+    returns: {
+      type: 'string',
+      description: 'A new string representing the calling string converted to lower case',
+    },
     examples: [
       { code: '"HELLO".toLowerCase()', output: '"hello"' },
       { code: '"Hello World".toLowerCase()', output: '"hello world"' },
@@ -577,7 +927,10 @@ export const javascriptMethods: Method[] = [
     syntax: 'string.toUpperCase()',
     description: 'Returns the calling string value converted to upper case.',
     arguments: [],
-    returns: { type: 'string', description: 'A new string representing the calling string converted to upper case' },
+    returns: {
+      type: 'string',
+      description: 'A new string representing the calling string converted to upper case',
+    },
     examples: [
       { code: '"hello".toUpperCase()', output: '"HELLO"' },
       { code: '"Hello World".toUpperCase()', output: '"HELLO WORLD"' },
@@ -607,7 +960,8 @@ export const javascriptMethods: Method[] = [
     name: 'replace',
     category: 'String Methods',
     syntax: 'string.replace(searchValue, replaceValue)',
-    description: 'Returns a new string with one, some, or all matches of a pattern replaced by a replacement.',
+    description:
+      'Returns a new string with one, some, or all matches of a pattern replaced by a replacement.',
     arguments: [
       { name: 'searchValue', type: 'string | RegExp', description: 'The value to search for' },
       { name: 'replaceValue', type: 'string | Function', description: 'The value to replace with' },
@@ -650,9 +1004,18 @@ export const javascriptMethods: Method[] = [
     description: 'Determines whether a string begins with the characters of a specified string.',
     arguments: [
       { name: 'searchString', type: 'string', description: 'The characters to be searched for' },
-      { name: 'position', type: 'number', description: 'The position to begin searching', optional: true, defaultValue: '0' },
+      {
+        name: 'position',
+        type: 'number',
+        description: 'The position to begin searching',
+        optional: true,
+        defaultValue: '0',
+      },
     ],
-    returns: { type: 'boolean', description: 'true if the string begins with the search string, false otherwise' },
+    returns: {
+      type: 'boolean',
+      description: 'true if the string begins with the search string, false otherwise',
+    },
     examples: [
       { code: '"hello world".startsWith("hello")', output: 'true' },
       { code: '"hello world".startsWith("world")', output: 'false' },
@@ -670,9 +1033,17 @@ export const javascriptMethods: Method[] = [
     description: 'Determines whether a string ends with the characters of a specified string.',
     arguments: [
       { name: 'searchString', type: 'string', description: 'The characters to be searched for' },
-      { name: 'length', type: 'number', description: 'The length of string to search', optional: true },
+      {
+        name: 'length',
+        type: 'number',
+        description: 'The length of string to search',
+        optional: true,
+      },
     ],
-    returns: { type: 'boolean', description: 'true if the string ends with the search string, false otherwise' },
+    returns: {
+      type: 'boolean',
+      description: 'true if the string ends with the search string, false otherwise',
+    },
     examples: [
       { code: '"hello world".endsWith("world")', output: 'true' },
       { code: '"hello world".endsWith("hello")', output: 'false' },
@@ -687,10 +1058,17 @@ export const javascriptMethods: Method[] = [
     name: 'padStart',
     category: 'String Methods',
     syntax: 'string.padStart(targetLength, padString)',
-    description: 'Pads the current string with another string until the resulting string reaches the given length. Padding is applied from the start.',
+    description:
+      'Pads the current string with another string until the resulting string reaches the given length. Padding is applied from the start.',
     arguments: [
       { name: 'targetLength', type: 'number', description: 'The length of the resulting string' },
-      { name: 'padString', type: 'string', description: 'The string to pad with', optional: true, defaultValue: '" "' },
+      {
+        name: 'padString',
+        type: 'string',
+        description: 'The string to pad with',
+        optional: true,
+        defaultValue: '" "',
+      },
     ],
     returns: { type: 'string', description: 'A new string padded to the given length' },
     examples: [
@@ -707,11 +1085,19 @@ export const javascriptMethods: Method[] = [
     name: 'repeat',
     category: 'String Methods',
     syntax: 'string.repeat(count)',
-    description: 'Constructs and returns a new string which contains the specified number of copies of the string.',
+    description:
+      'Constructs and returns a new string which contains the specified number of copies of the string.',
     arguments: [
-      { name: 'count', type: 'number', description: 'An integer indicating the number of times to repeat the string' },
+      {
+        name: 'count',
+        type: 'number',
+        description: 'An integer indicating the number of times to repeat the string',
+      },
     ],
-    returns: { type: 'string', description: 'A new string containing the specified number of copies' },
+    returns: {
+      type: 'string',
+      description: 'A new string containing the specified number of copies',
+    },
     examples: [
       { code: '"abc".repeat(3)', output: '"abcabcabc"' },
       { code: '"x".repeat(5)', output: '"xxxxx"' },
@@ -726,11 +1112,15 @@ export const javascriptMethods: Method[] = [
     name: 'charAt',
     category: 'String Methods',
     syntax: 'string.charAt(index)',
-    description: 'Returns a new string consisting of the single UTF-16 code unit located at the specified offset into the string.',
+    description:
+      'Returns a new string consisting of the single UTF-16 code unit located at the specified offset into the string.',
     arguments: [
       { name: 'index', type: 'number', description: 'An integer between 0 and string.length - 1' },
     ],
-    returns: { type: 'string', description: 'A string representing the character at the specified index' },
+    returns: {
+      type: 'string',
+      description: 'A string representing the character at the specified index',
+    },
     examples: [
       { code: '"hello".charAt(1)', output: '"e"' },
       { code: '"hello".charAt(0)', output: '"h"' },
@@ -749,11 +1139,19 @@ export const javascriptMethods: Method[] = [
     name: 'Object.keys',
     category: 'Object Methods',
     syntax: 'Object.keys(obj)',
-    description: 'Returns an array of a given object\'s own enumerable property names, iterated in the same order as a normal loop.',
+    description:
+      "Returns an array of a given object's own enumerable property names, iterated in the same order as a normal loop.",
     arguments: [
-      { name: 'obj', type: 'Object', description: 'The object whose enumerable own properties are to be returned' },
+      {
+        name: 'obj',
+        type: 'Object',
+        description: 'The object whose enumerable own properties are to be returned',
+      },
     ],
-    returns: { type: 'string[]', description: 'An array of strings representing all enumerable properties' },
+    returns: {
+      type: 'string[]',
+      description: 'An array of strings representing all enumerable properties',
+    },
     examples: [
       { code: 'Object.keys({ a: 1, b: 2, c: 3 })', output: '["a", "b", "c"]' },
       { code: 'Object.keys([1, 2, 3])', output: '["0", "1", "2"]' },
@@ -768,11 +1166,15 @@ export const javascriptMethods: Method[] = [
     name: 'Object.values',
     category: 'Object Methods',
     syntax: 'Object.values(obj)',
-    description: 'Returns an array of a given object\'s own enumerable property values.',
+    description: "Returns an array of a given object's own enumerable property values.",
     arguments: [
-      { name: 'obj', type: 'Object', description: 'The object whose enumerable own property values are to be returned' },
+      {
+        name: 'obj',
+        type: 'Object',
+        description: 'The object whose enumerable own property values are to be returned',
+      },
     ],
-    returns: { type: 'any[]', description: 'An array containing the object\'s property values' },
+    returns: { type: 'any[]', description: "An array containing the object's property values" },
     examples: [
       { code: 'Object.values({ a: 1, b: 2, c: 3 })', output: '[1, 2, 3]' },
       { code: 'Object.values({ name: "John", age: 30 })', output: '["John", 30]' },
@@ -786,9 +1188,14 @@ export const javascriptMethods: Method[] = [
     name: 'Object.entries',
     category: 'Object Methods',
     syntax: 'Object.entries(obj)',
-    description: 'Returns an array of a given object\'s own enumerable string-keyed property [key, value] pairs.',
+    description:
+      "Returns an array of a given object's own enumerable string-keyed property [key, value] pairs.",
     arguments: [
-      { name: 'obj', type: 'Object', description: 'The object whose enumerable own property pairs are to be returned' },
+      {
+        name: 'obj',
+        type: 'Object',
+        description: 'The object whose enumerable own property pairs are to be returned',
+      },
     ],
     returns: { type: '[string, any][]', description: 'An array of [key, value] pairs' },
     examples: [
@@ -806,9 +1213,16 @@ export const javascriptMethods: Method[] = [
     syntax: 'Object.fromEntries(iterable)',
     description: 'Transforms a list of key-value pairs into an object.',
     arguments: [
-      { name: 'iterable', type: 'Iterable', description: 'An iterable such as Array or Map containing key-value pairs' },
+      {
+        name: 'iterable',
+        type: 'Iterable',
+        description: 'An iterable such as Array or Map containing key-value pairs',
+      },
     ],
-    returns: { type: 'Object', description: 'A new object whose properties are given by the entries of the iterable' },
+    returns: {
+      type: 'Object',
+      description: 'A new object whose properties are given by the entries of the iterable',
+    },
     examples: [
       { code: 'Object.fromEntries([["a", 1], ["b", 2]])', output: '{ a: 1, b: 2 }' },
       { code: 'Object.fromEntries(new Map([["name", "John"]]))', output: '{ name: "John" }' },
@@ -822,7 +1236,8 @@ export const javascriptMethods: Method[] = [
     name: 'Object.assign',
     category: 'Object Methods',
     syntax: 'Object.assign(target, ...sources)',
-    description: 'Copies all enumerable own properties from one or more source objects to a target object. It returns the modified target object.',
+    description:
+      'Copies all enumerable own properties from one or more source objects to a target object. It returns the modified target object.',
     arguments: [
       { name: 'target', type: 'Object', description: 'The target object to copy to' },
       { name: 'sources', type: 'Object', description: 'The source object(s) to copy from' },
@@ -842,10 +1257,9 @@ export const javascriptMethods: Method[] = [
     name: 'Object.freeze',
     category: 'Object Methods',
     syntax: 'Object.freeze(obj)',
-    description: 'Freezes an object. A frozen object can no longer be changed; freezing prevents adding new properties, removing existing properties, and changing values.',
-    arguments: [
-      { name: 'obj', type: 'Object', description: 'The object to freeze' },
-    ],
+    description:
+      'Freezes an object. A frozen object can no longer be changed; freezing prevents adding new properties, removing existing properties, and changing values.',
+    arguments: [{ name: 'obj', type: 'Object', description: 'The object to freeze' }],
     returns: { type: 'Object', description: 'The same object that was passed to the function' },
     examples: [
       { code: 'const obj = Object.freeze({ a: 1 }); obj.a = 2; obj.a', output: '1' },
@@ -861,15 +1275,23 @@ export const javascriptMethods: Method[] = [
     name: 'hasOwnProperty',
     category: 'Object Methods',
     syntax: 'object.hasOwnProperty(prop)',
-    description: 'Returns a boolean indicating whether the object has the specified property as its own property.',
+    description:
+      'Returns a boolean indicating whether the object has the specified property as its own property.',
     arguments: [
       { name: 'prop', type: 'string | Symbol', description: 'The name of the property to test' },
     ],
-    returns: { type: 'boolean', description: 'true if the object has the specified property as own property; false otherwise' },
+    returns: {
+      type: 'boolean',
+      description: 'true if the object has the specified property as own property; false otherwise',
+    },
     examples: [
       { code: '({ a: 1 }).hasOwnProperty("a")', output: 'true' },
       { code: '({ a: 1 }).hasOwnProperty("b")', output: 'false' },
-      { code: '({ a: 1 }).hasOwnProperty("toString")', output: 'false', explanation: 'Inherited properties return false' },
+      {
+        code: '({ a: 1 }).hasOwnProperty("toString")',
+        output: 'false',
+        explanation: 'Inherited properties return false',
+      },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
@@ -886,10 +1308,11 @@ export const javascriptMethods: Method[] = [
     category: 'Math Operations',
     syntax: 'Math.max(value1, value2, ...)',
     description: 'Returns the largest of zero or more numbers.',
-    arguments: [
-      { name: 'values', type: 'number', description: 'Zero or more numbers to compare' },
-    ],
-    returns: { type: 'number', description: 'The largest of the given numbers, or -Infinity if no arguments' },
+    arguments: [{ name: 'values', type: 'number', description: 'Zero or more numbers to compare' }],
+    returns: {
+      type: 'number',
+      description: 'The largest of the given numbers, or -Infinity if no arguments',
+    },
     examples: [
       { code: 'Math.max(1, 3, 2)', output: '3' },
       { code: 'Math.max(...[1, 2, 3])', output: '3' },
@@ -905,10 +1328,11 @@ export const javascriptMethods: Method[] = [
     category: 'Math Operations',
     syntax: 'Math.min(value1, value2, ...)',
     description: 'Returns the smallest of zero or more numbers.',
-    arguments: [
-      { name: 'values', type: 'number', description: 'Zero or more numbers to compare' },
-    ],
-    returns: { type: 'number', description: 'The smallest of the given numbers, or Infinity if no arguments' },
+    arguments: [{ name: 'values', type: 'number', description: 'Zero or more numbers to compare' }],
+    returns: {
+      type: 'number',
+      description: 'The smallest of the given numbers, or Infinity if no arguments',
+    },
     examples: [
       { code: 'Math.min(1, 3, 2)', output: '1' },
       { code: 'Math.min(...[1, 2, 3])', output: '1' },
@@ -924,9 +1348,7 @@ export const javascriptMethods: Method[] = [
     category: 'Math Operations',
     syntax: 'Math.floor(x)',
     description: 'Returns the largest integer less than or equal to a given number.',
-    arguments: [
-      { name: 'x', type: 'number', description: 'A number' },
-    ],
+    arguments: [{ name: 'x', type: 'number', description: 'A number' }],
     returns: { type: 'number', description: 'The largest integer less than or equal to x' },
     examples: [
       { code: 'Math.floor(5.9)', output: '5' },
@@ -943,9 +1365,7 @@ export const javascriptMethods: Method[] = [
     category: 'Math Operations',
     syntax: 'Math.ceil(x)',
     description: 'Returns the smallest integer greater than or equal to a given number.',
-    arguments: [
-      { name: 'x', type: 'number', description: 'A number' },
-    ],
+    arguments: [{ name: 'x', type: 'number', description: 'A number' }],
     returns: { type: 'number', description: 'The smallest integer greater than or equal to x' },
     examples: [
       { code: 'Math.ceil(5.1)', output: '6' },
@@ -962,9 +1382,7 @@ export const javascriptMethods: Method[] = [
     category: 'Math Operations',
     syntax: 'Math.round(x)',
     description: 'Returns the value of a number rounded to the nearest integer.',
-    arguments: [
-      { name: 'x', type: 'number', description: 'A number' },
-    ],
+    arguments: [{ name: 'x', type: 'number', description: 'A number' }],
     returns: { type: 'number', description: 'The value of x rounded to the nearest integer' },
     examples: [
       { code: 'Math.round(5.5)', output: '6' },
@@ -981,9 +1399,7 @@ export const javascriptMethods: Method[] = [
     category: 'Math Operations',
     syntax: 'Math.abs(x)',
     description: 'Returns the absolute value of a number.',
-    arguments: [
-      { name: 'x', type: 'number', description: 'A number' },
-    ],
+    arguments: [{ name: 'x', type: 'number', description: 'A number' }],
     returns: { type: 'number', description: 'The absolute value of x' },
     examples: [
       { code: 'Math.abs(-5)', output: '5' },
@@ -1001,11 +1417,17 @@ export const javascriptMethods: Method[] = [
     syntax: 'Math.random()',
     description: 'Returns a floating-point, pseudo-random number in the range 0 to less than 1.',
     arguments: [],
-    returns: { type: 'number', description: 'A floating-point number from 0 (inclusive) to 1 (exclusive)' },
+    returns: {
+      type: 'number',
+      description: 'A floating-point number from 0 (inclusive) to 1 (exclusive)',
+    },
     examples: [
       { code: 'Math.random()', output: '0.123456789... (example)' },
       { code: 'Math.floor(Math.random() * 10)', output: '0-9 (random integer)' },
-      { code: 'Math.floor(Math.random() * (max - min + 1)) + min', output: 'Random integer between min and max' },
+      {
+        code: 'Math.floor(Math.random() * (max - min + 1)) + min',
+        output: 'Random integer between min and max',
+      },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
@@ -1038,9 +1460,7 @@ export const javascriptMethods: Method[] = [
     category: 'Math Operations',
     syntax: 'Math.sqrt(x)',
     description: 'Returns the square root of a number.',
-    arguments: [
-      { name: 'x', type: 'number', description: 'A number greater than or equal to 0' },
-    ],
+    arguments: [{ name: 'x', type: 'number', description: 'A number greater than or equal to 0' }],
     returns: { type: 'number', description: 'The square root of x, or NaN if x is negative' },
     examples: [
       { code: 'Math.sqrt(9)', output: '3' },
@@ -1060,15 +1480,24 @@ export const javascriptMethods: Method[] = [
     name: 'JSON.parse',
     category: 'JSON Methods',
     syntax: 'JSON.parse(text, reviver)',
-    description: 'Parses a JSON string, constructing the JavaScript value or object described by the string.',
+    description:
+      'Parses a JSON string, constructing the JavaScript value or object described by the string.',
     arguments: [
       { name: 'text', type: 'string', description: 'The string to parse as JSON' },
-      { name: 'reviver', type: 'Function', description: 'Function to transform the results', optional: true },
+      {
+        name: 'reviver',
+        type: 'Function',
+        description: 'Function to transform the results',
+        optional: true,
+      },
     ],
-    returns: { type: 'any', description: 'The JavaScript value corresponding to the given JSON text' },
+    returns: {
+      type: 'any',
+      description: 'The JavaScript value corresponding to the given JSON text',
+    },
     examples: [
       { code: 'JSON.parse(\'{"a": 1, "b": 2}\')', output: '{ a: 1, b: 2 }' },
-      { code: 'JSON.parse(\'[1, 2, 3]\')', output: '[1, 2, 3]' },
+      { code: "JSON.parse('[1, 2, 3]')", output: '[1, 2, 3]' },
       { code: 'JSON.parse(\'"hello"\')', output: '"hello"' },
     ],
     timeComplexity: 'O(n)',
@@ -1081,17 +1510,28 @@ export const javascriptMethods: Method[] = [
     name: 'JSON.stringify',
     category: 'JSON Methods',
     syntax: 'JSON.stringify(value, replacer, space)',
-    description: 'Converts a JavaScript value to a JSON string, optionally replacing values if a replacer function is specified.',
+    description:
+      'Converts a JavaScript value to a JSON string, optionally replacing values if a replacer function is specified.',
     arguments: [
       { name: 'value', type: 'any', description: 'The value to convert to a JSON string' },
-      { name: 'replacer', type: 'Function | Array', description: 'Function or array to filter properties', optional: true },
-      { name: 'space', type: 'string | number', description: 'Indentation space for formatting', optional: true },
+      {
+        name: 'replacer',
+        type: 'Function | Array',
+        description: 'Function or array to filter properties',
+        optional: true,
+      },
+      {
+        name: 'space',
+        type: 'string | number',
+        description: 'Indentation space for formatting',
+        optional: true,
+      },
     ],
     returns: { type: 'string', description: 'A JSON string representing the given value' },
     examples: [
       { code: 'JSON.stringify({ a: 1, b: 2 })', output: '\'{"a":1,"b":2}\'' },
       { code: 'JSON.stringify({ a: 1 }, null, 2)', output: '\'{\\n  "a": 1\\n}\'' },
-      { code: 'JSON.stringify([1, 2, 3])', output: '\'[1,2,3]\'' },
+      { code: 'JSON.stringify([1, 2, 3])', output: "'[1,2,3]'" },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -1107,11 +1547,15 @@ export const javascriptMethods: Method[] = [
     name: 'Promise.all',
     category: 'Promise Methods',
     syntax: 'Promise.all(iterable)',
-    description: 'Takes an iterable of promises and returns a single Promise that resolves when all of the promises resolve, or rejects when any promise rejects.',
+    description:
+      'Takes an iterable of promises and returns a single Promise that resolves when all of the promises resolve, or rejects when any promise rejects.',
     arguments: [
       { name: 'iterable', type: 'Iterable<Promise>', description: 'An iterable of promises' },
     ],
-    returns: { type: 'Promise<Array>', description: 'A promise that resolves to an array of all resolved values' },
+    returns: {
+      type: 'Promise<Array>',
+      description: 'A promise that resolves to an array of all resolved values',
+    },
     examples: [
       { code: 'Promise.all([Promise.resolve(1), Promise.resolve(2)])', output: 'Promise<[1, 2]>' },
       { code: 'await Promise.all([fetch(url1), fetch(url2)])', output: '[response1, response2]' },
@@ -1126,13 +1570,20 @@ export const javascriptMethods: Method[] = [
     name: 'Promise.allSettled',
     category: 'Promise Methods',
     syntax: 'Promise.allSettled(iterable)',
-    description: 'Returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects describing the outcome of each promise.',
+    description:
+      'Returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects describing the outcome of each promise.',
     arguments: [
       { name: 'iterable', type: 'Iterable<Promise>', description: 'An iterable of promises' },
     ],
-    returns: { type: 'Promise<Array>', description: 'A promise resolving to an array of outcome objects' },
+    returns: {
+      type: 'Promise<Array>',
+      description: 'A promise resolving to an array of outcome objects',
+    },
     examples: [
-      { code: 'Promise.allSettled([Promise.resolve(1), Promise.reject("error")])', output: '[{status: "fulfilled", value: 1}, {status: "rejected", reason: "error"}]' },
+      {
+        code: 'Promise.allSettled([Promise.resolve(1), Promise.reject("error")])',
+        output: '[{status: "fulfilled", value: 1}, {status: "rejected", reason: "error"}]',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -1144,13 +1595,20 @@ export const javascriptMethods: Method[] = [
     name: 'Promise.race',
     category: 'Promise Methods',
     syntax: 'Promise.race(iterable)',
-    description: 'Returns a promise that fulfills or rejects as soon as one of the promises in an iterable fulfills or rejects.',
+    description:
+      'Returns a promise that fulfills or rejects as soon as one of the promises in an iterable fulfills or rejects.',
     arguments: [
       { name: 'iterable', type: 'Iterable<Promise>', description: 'An iterable of promises' },
     ],
-    returns: { type: 'Promise', description: 'A promise that settles with the state of the first promise to settle' },
+    returns: {
+      type: 'Promise',
+      description: 'A promise that settles with the state of the first promise to settle',
+    },
     examples: [
-      { code: 'Promise.race([slowPromise, fastPromise])', output: 'Result of whichever resolves/rejects first' },
+      {
+        code: 'Promise.race([slowPromise, fastPromise])',
+        output: 'Result of whichever resolves/rejects first',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -1166,9 +1624,7 @@ export const javascriptMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.add(value)',
     description: 'Appends a new element with a specified value to the end of a Set object.',
-    arguments: [
-      { name: 'value', type: 'any', description: 'The value to add to the Set' },
-    ],
+    arguments: [{ name: 'value', type: 'any', description: 'The value to add to the Set' }],
     returns: { type: 'Set', description: 'The Set object with the added value' },
     examples: [
       { code: 'new Set().add(1).add(2).add(1)', output: 'Set { 1, 2 }' },
@@ -1183,11 +1639,15 @@ export const javascriptMethods: Method[] = [
     name: 'Set.has',
     category: 'Set Methods',
     syntax: 'set.has(value)',
-    description: 'Returns a boolean indicating whether an element with the specified value exists in a Set object.',
+    description:
+      'Returns a boolean indicating whether an element with the specified value exists in a Set object.',
     arguments: [
       { name: 'value', type: 'any', description: 'The value to test for presence in the Set' },
     ],
-    returns: { type: 'boolean', description: 'true if the value exists in the Set, false otherwise' },
+    returns: {
+      type: 'boolean',
+      description: 'true if the value exists in the Set, false otherwise',
+    },
     examples: [
       { code: 'new Set([1, 2, 3]).has(2)', output: 'true' },
       { code: 'new Set([1, 2, 3]).has(4)', output: 'false' },
@@ -1202,10 +1662,11 @@ export const javascriptMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.delete(value)',
     description: 'Removes a specified value from a Set object, if it is in the set.',
-    arguments: [
-      { name: 'value', type: 'any', description: 'The value to remove from the Set' },
-    ],
-    returns: { type: 'boolean', description: 'true if the element was removed, false if it was not in the Set' },
+    arguments: [{ name: 'value', type: 'any', description: 'The value to remove from the Set' }],
+    returns: {
+      type: 'boolean',
+      description: 'true if the element was removed, false if it was not in the Set',
+    },
     examples: [
       { code: 'const s = new Set([1, 2, 3]); s.delete(2); [...s]', output: '[1, 3]' },
       { code: 'new Set([1, 2]).delete(3)', output: 'false' },
@@ -1243,10 +1704,11 @@ export const javascriptMethods: Method[] = [
     category: 'Map Methods',
     syntax: 'map.get(key)',
     description: 'Returns a specified element from a Map object.',
-    arguments: [
-      { name: 'key', type: 'any', description: 'The key of the element to return' },
-    ],
-    returns: { type: 'any', description: 'The element associated with the key, or undefined if not found' },
+    arguments: [{ name: 'key', type: 'any', description: 'The key of the element to return' }],
+    returns: {
+      type: 'any',
+      description: 'The element associated with the key, or undefined if not found',
+    },
     examples: [
       { code: 'new Map([["a", 1], ["b", 2]]).get("a")', output: '1' },
       { code: 'new Map([["a", 1]]).get("b")', output: 'undefined' },
@@ -1260,7 +1722,8 @@ export const javascriptMethods: Method[] = [
     name: 'Map.has',
     category: 'Map Methods',
     syntax: 'map.has(key)',
-    description: 'Returns a boolean indicating whether an element with the specified key exists in a Map object.',
+    description:
+      'Returns a boolean indicating whether an element with the specified key exists in a Map object.',
     arguments: [
       { name: 'key', type: 'any', description: 'The key to test for presence in the Map' },
     ],

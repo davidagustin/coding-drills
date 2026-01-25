@@ -117,7 +117,11 @@ export const rubyProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4, 5]',
     expected: 15,
     sample: 'numbers.reduce(0) { |sum, n| sum + n }',
-    hints: ['reduce accumulates a value', 'Start with 0 as initial value', 'Can also use numbers.reduce(:+) shorthand'],
+    hints: [
+      'reduce accumulates a value',
+      'Start with 0 as initial value',
+      'Can also use numbers.reduce(:+) shorthand',
+    ],
     validPatterns: [
       /numbers\.reduce\s*\(\s*0\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\+\s*\2\s*\}/,
       /numbers\.reduce\s*\(\s*:\+\s*\)/,
@@ -138,7 +142,11 @@ export const rubyProblems: Problem[] = [
     setupCode: 'numbers = [1, 2, 3, 4]',
     expected: 24,
     sample: 'numbers.inject(1) { |product, n| product * n }',
-    hints: ['inject is an alias for reduce', 'Start with 1 for multiplication', 'Can also use numbers.inject(:*) shorthand'],
+    hints: [
+      'inject is an alias for reduce',
+      'Start with 1 for multiplication',
+      'Can also use numbers.inject(:*) shorthand',
+    ],
     validPatterns: [
       /numbers\.inject\s*\(\s*1\s*\)\s*\{\s*\|(\w+),\s*(\w+)\|\s*\1\s*\*\s*\2\s*\}/,
       /numbers\.inject\s*\(\s*:\*\s*\)/,
@@ -200,9 +208,7 @@ export const rubyProblems: Problem[] = [
     expected: [1, 2, 5, 8, 9],
     sample: 'numbers.sort',
     hints: ['sort returns a sorted array', 'Default is ascending order'],
-    validPatterns: [
-      /numbers\.sort\b/,
-    ],
+    validPatterns: [/numbers\.sort\b/],
     tags: ['sort', 'ascending'],
   },
   {
@@ -255,10 +261,7 @@ export const rubyProblems: Problem[] = [
     expected: [1, 2, 3],
     sample: 'numbers.each { |n| puts n }',
     hints: ['each returns the original array', 'Block is for side effects'],
-    validPatterns: [
-      /numbers\.each\s*\{\s*\|(\w+)\|/,
-      /numbers\.each\s+do\s*\|(\w+)\|/,
-    ],
+    validPatterns: [/numbers\.each\s*\{\s*\|(\w+)\|/, /numbers\.each\s+do\s*\|(\w+)\|/],
     tags: ['each', 'iteration'],
   },
   {
@@ -269,7 +272,11 @@ export const rubyProblems: Problem[] = [
     text: 'Use `each_with_index` to create an array of [element, index] pairs.',
     setup: 'letters = ["a", "b", "c"]',
     setupCode: 'letters = ["a", "b", "c"]',
-    expected: [['a', 0], ['b', 1], ['c', 2]],
+    expected: [
+      ['a', 0],
+      ['b', 1],
+      ['c', 2],
+    ],
     sample: 'letters.each_with_index.map { |letter, index| [letter, index] }',
     hints: ['each_with_index gives element and index', 'Combine with map'],
     validPatterns: [
@@ -291,10 +298,7 @@ export const rubyProblems: Problem[] = [
     expected: 10,
     sample: 'numbers.first',
     hints: ['first returns the first element'],
-    validPatterns: [
-      /numbers\.first\b/,
-      /numbers\[0\]/,
-    ],
+    validPatterns: [/numbers\.first\b/, /numbers\[0\]/],
     tags: ['first', 'access'],
   },
   {
@@ -308,10 +312,7 @@ export const rubyProblems: Problem[] = [
     expected: 40,
     sample: 'numbers.last',
     hints: ['last returns the last element'],
-    validPatterns: [
-      /numbers\.last\b/,
-      /numbers\[-1\]/,
-    ],
+    validPatterns: [/numbers\.last\b/, /numbers\[-1\]/],
     tags: ['last', 'access'],
   },
   {
@@ -344,11 +345,7 @@ export const rubyProblems: Problem[] = [
     expected: [3, 4, 5],
     sample: 'numbers.drop(2)',
     hints: ['drop(n) skips first n elements'],
-    validPatterns: [
-      /numbers\.drop\s*\(\s*2\s*\)/,
-      /numbers\[2\.\.-1\]/,
-      /numbers\[2\.\.4\]/,
-    ],
+    validPatterns: [/numbers\.drop\s*\(\s*2\s*\)/, /numbers\[2\.\.-1\]/, /numbers\[2\.\.4\]/],
     tags: ['drop', 'slice'],
   },
 
@@ -364,9 +361,7 @@ export const rubyProblems: Problem[] = [
     expected: [1, 2, 3, 4, 5],
     sample: 'nested.flatten',
     hints: ['flatten removes all nesting levels'],
-    validPatterns: [
-      /nested\.flatten\b/,
-    ],
+    validPatterns: [/nested\.flatten\b/],
     tags: ['flatten', 'nested'],
   },
   {
@@ -380,9 +375,7 @@ export const rubyProblems: Problem[] = [
     expected: [1, 2, 3],
     sample: 'values.compact',
     hints: ['compact removes nil values'],
-    validPatterns: [
-      /values\.compact\b/,
-    ],
+    validPatterns: [/values\.compact\b/],
     tags: ['compact', 'nil'],
   },
 
@@ -398,9 +391,7 @@ export const rubyProblems: Problem[] = [
     expected: [1, 2, 3, 4],
     sample: 'numbers.uniq',
     hints: ['uniq removes duplicates preserving order'],
-    validPatterns: [
-      /numbers\.uniq\b/,
-    ],
+    validPatterns: [/numbers\.uniq\b/],
     tags: ['uniq', 'duplicates'],
   },
 
@@ -416,9 +407,7 @@ export const rubyProblems: Problem[] = [
     expected: 'hello, world, ruby',
     sample: 'words.join(", ")',
     hints: ['join combines elements with separator'],
-    validPatterns: [
-      /words\.join\s*\(\s*["'],\s*["']\s*\)/,
-    ],
+    validPatterns: [/words\.join\s*\(\s*["'],\s*["']\s*\)/],
     tags: ['join', 'string'],
   },
 
@@ -434,10 +423,7 @@ export const rubyProblems: Problem[] = [
     expected: [1, 2, 3, 4],
     sample: 'numbers.push(4)',
     hints: ['push adds element to the end', 'Can also use <<'],
-    validPatterns: [
-      /numbers\.push\s*\(\s*4\s*\)/,
-      /numbers\s*<<\s*4/,
-    ],
+    validPatterns: [/numbers\.push\s*\(\s*4\s*\)/, /numbers\s*<<\s*4/],
     tags: ['push', 'append'],
   },
   {
@@ -451,9 +437,7 @@ export const rubyProblems: Problem[] = [
     expected: 4,
     sample: 'numbers.pop',
     hints: ['pop removes and returns the last element'],
-    validPatterns: [
-      /numbers\.pop\b/,
-    ],
+    validPatterns: [/numbers\.pop\b/],
     tags: ['pop', 'remove'],
   },
   {
@@ -467,9 +451,7 @@ export const rubyProblems: Problem[] = [
     expected: 1,
     sample: 'numbers.shift',
     hints: ['shift removes and returns the first element'],
-    validPatterns: [
-      /numbers\.shift\b/,
-    ],
+    validPatterns: [/numbers\.shift\b/],
     tags: ['shift', 'remove'],
   },
   {
@@ -483,10 +465,7 @@ export const rubyProblems: Problem[] = [
     expected: [0, 1, 2, 3],
     sample: 'numbers.unshift(0)',
     hints: ['unshift adds element to the beginning', 'Can also use prepend'],
-    validPatterns: [
-      /numbers\.unshift\s*\(\s*0\s*\)/,
-      /numbers\.prepend\s*\(\s*0\s*\)/,
-    ],
+    validPatterns: [/numbers\.unshift\s*\(\s*0\s*\)/, /numbers\.prepend\s*\(\s*0\s*\)/],
     tags: ['unshift', 'prepend'],
   },
 
@@ -502,9 +481,7 @@ export const rubyProblems: Problem[] = [
     expected: true,
     sample: 'numbers.include?(3)',
     hints: ['include? returns true or false'],
-    validPatterns: [
-      /numbers\.include\?\s*\(\s*3\s*\)/,
-    ],
+    validPatterns: [/numbers\.include\?\s*\(\s*3\s*\)/],
     tags: ['include?', 'membership'],
   },
 
@@ -542,9 +519,7 @@ export const rubyProblems: Problem[] = [
     expected: 'hello-world',
     sample: 'words.join("-")',
     hints: ['join combines with separator'],
-    validPatterns: [
-      /words\.join\s*\(\s*["']-["']\s*\)/,
-    ],
+    validPatterns: [/words\.join\s*\(\s*["']-["']\s*\)/],
     tags: ['join', 'concatenate'],
   },
 
@@ -560,9 +535,7 @@ export const rubyProblems: Problem[] = [
     expected: 'HELLO',
     sample: 'text.upcase',
     hints: ['upcase converts all characters to uppercase'],
-    validPatterns: [
-      /text\.upcase\b/,
-    ],
+    validPatterns: [/text\.upcase\b/],
     tags: ['upcase', 'uppercase'],
   },
   {
@@ -576,9 +549,7 @@ export const rubyProblems: Problem[] = [
     expected: 'hello',
     sample: 'text.downcase',
     hints: ['downcase converts all characters to lowercase'],
-    validPatterns: [
-      /text\.downcase\b/,
-    ],
+    validPatterns: [/text\.downcase\b/],
     tags: ['downcase', 'lowercase'],
   },
   {
@@ -592,9 +563,7 @@ export const rubyProblems: Problem[] = [
     expected: 'Hello world',
     sample: 'text.capitalize',
     hints: ['capitalize makes first letter uppercase, rest lowercase'],
-    validPatterns: [
-      /text\.capitalize\b/,
-    ],
+    validPatterns: [/text\.capitalize\b/],
     tags: ['capitalize', 'title'],
   },
 
@@ -610,9 +579,7 @@ export const rubyProblems: Problem[] = [
     expected: 'hello world',
     sample: 'text.strip',
     hints: ['strip removes whitespace from both ends'],
-    validPatterns: [
-      /text\.strip\b/,
-    ],
+    validPatterns: [/text\.strip\b/],
     tags: ['strip', 'trim'],
   },
   {
@@ -626,9 +593,7 @@ export const rubyProblems: Problem[] = [
     expected: 'hello',
     sample: 'text.chomp',
     hints: ['chomp removes trailing newline characters'],
-    validPatterns: [
-      /text\.chomp\b/,
-    ],
+    validPatterns: [/text\.chomp\b/],
     tags: ['chomp', 'newline'],
   },
 
@@ -681,9 +646,7 @@ export const rubyProblems: Problem[] = [
     expected: true,
     sample: 'text.include?("world")',
     hints: ['include? checks for substring presence'],
-    validPatterns: [
-      /text\.include\?\s*\(\s*["']world["']\s*\)/,
-    ],
+    validPatterns: [/text\.include\?\s*\(\s*["']world["']\s*\)/],
     tags: ['include?', 'contains'],
   },
   {
@@ -697,9 +660,7 @@ export const rubyProblems: Problem[] = [
     expected: true,
     sample: 'text.start_with?("hello")',
     hints: ['start_with? checks the beginning'],
-    validPatterns: [
-      /text\.start_with\?\s*\(\s*["']hello["']\s*\)/,
-    ],
+    validPatterns: [/text\.start_with\?\s*\(\s*["']hello["']\s*\)/],
     tags: ['start_with?', 'prefix'],
   },
   {
@@ -713,9 +674,7 @@ export const rubyProblems: Problem[] = [
     expected: true,
     sample: 'text.end_with?("world")',
     hints: ['end_with? checks the ending'],
-    validPatterns: [
-      /text\.end_with\?\s*\(\s*["']world["']\s*\)/,
-    ],
+    validPatterns: [/text\.end_with\?\s*\(\s*["']world["']\s*\)/],
     tags: ['end_with?', 'suffix'],
   },
 
@@ -731,9 +690,7 @@ export const rubyProblems: Problem[] = [
     expected: 'olleh',
     sample: 'text.reverse',
     hints: ['reverse returns the string backwards'],
-    validPatterns: [
-      /text\.reverse\b/,
-    ],
+    validPatterns: [/text\.reverse\b/],
     tags: ['reverse', 'backwards'],
   },
 
@@ -749,11 +706,7 @@ export const rubyProblems: Problem[] = [
     expected: ['r', 'u', 'b', 'y'],
     sample: 'text.chars',
     hints: ['chars returns array of individual characters', 'split("") also works'],
-    validPatterns: [
-      /text\.chars\b/,
-      /text\.split\s*\(\s*["']["']\s*\)/,
-      /text\.each_char\.to_a\b/,
-    ],
+    validPatterns: [/text\.chars\b/, /text\.split\s*\(\s*["']["']\s*\)/, /text\.each_char\.to_a\b/],
     tags: ['chars', 'characters'],
   },
   {
@@ -767,9 +720,7 @@ export const rubyProblems: Problem[] = [
     expected: [97, 98, 99],
     sample: 'text.bytes',
     hints: ['bytes returns ASCII values'],
-    validPatterns: [
-      /text\.bytes\b/,
-    ],
+    validPatterns: [/text\.bytes\b/],
     tags: ['bytes', 'ascii'],
   },
 
@@ -789,9 +740,7 @@ export const rubyProblems: Problem[] = [
     expected: [':name', ':age', ':city'],
     sample: 'person.keys',
     hints: ['keys returns an array of all keys (as symbols)'],
-    validPatterns: [
-      /person\.keys\b/,
-    ],
+    validPatterns: [/person\.keys\b/],
     tags: ['keys', 'hash', 'symbols'],
   },
   {
@@ -805,9 +754,7 @@ export const rubyProblems: Problem[] = [
     expected: ['Alice', 30],
     sample: 'person.values',
     hints: ['values returns an array of all values'],
-    validPatterns: [
-      /person\.values\b/,
-    ],
+    validPatterns: [/person\.values\b/],
     tags: ['values', 'hash'],
   },
 
@@ -878,9 +825,7 @@ export const rubyProblems: Problem[] = [
     expected: { a: 1, b: 3, c: 4 },
     sample: 'defaults.merge(overrides)',
     hints: ['merge combines hashes', 'Second hash values override first'],
-    validPatterns: [
-      /defaults\.merge\s*\(\s*overrides\s*\)/,
-    ],
+    validPatterns: [/defaults\.merge\s*\(\s*overrides\s*\)/],
     tags: ['merge', 'combine'],
   },
 
@@ -896,9 +841,7 @@ export const rubyProblems: Problem[] = [
     expected: 'Unknown',
     sample: 'person.fetch(:age, "Unknown")',
     hints: ['fetch takes key and default value', 'Default used if key missing'],
-    validPatterns: [
-      /person\.fetch\s*\(\s*:age,\s*["']Unknown["']\s*\)/,
-    ],
+    validPatterns: [/person\.fetch\s*\(\s*:age,\s*["']Unknown["']\s*\)/],
     tags: ['fetch', 'default'],
   },
   {
@@ -912,9 +855,7 @@ export const rubyProblems: Problem[] = [
     expected: 'Alice',
     sample: 'data.dig(:user, :profile, :name)',
     hints: ['dig navigates nested structures safely', 'Returns nil if path missing'],
-    validPatterns: [
-      /data\.dig\s*\(\s*:user,\s*:profile,\s*:name\s*\)/,
-    ],
+    validPatterns: [/data\.dig\s*\(\s*:user,\s*:profile,\s*:name\s*\)/],
     tags: ['dig', 'nested'],
   },
 
@@ -934,9 +875,7 @@ export const rubyProblems: Problem[] = [
     expected: true,
     sample: 'numbers.any? { |n| n > 10 }',
     hints: ['any? returns true if any element matches'],
-    validPatterns: [
-      /numbers\.any\?\s*\{\s*\|(\w+)\|\s*\1\s*>\s*10\s*\}/,
-    ],
+    validPatterns: [/numbers\.any\?\s*\{\s*\|(\w+)\|\s*\1\s*>\s*10\s*\}/],
     tags: ['any?', 'predicate'],
   },
   {
@@ -1005,9 +944,7 @@ export const rubyProblems: Problem[] = [
     expected: 9,
     sample: 'numbers.max',
     hints: ['max returns the largest element'],
-    validPatterns: [
-      /numbers\.max\b/,
-    ],
+    validPatterns: [/numbers\.max\b/],
     tags: ['max', 'largest'],
   },
   {
@@ -1021,9 +958,7 @@ export const rubyProblems: Problem[] = [
     expected: 1,
     sample: 'numbers.min',
     hints: ['min returns the smallest element'],
-    validPatterns: [
-      /numbers\.min\b/,
-    ],
+    validPatterns: [/numbers\.min\b/],
     tags: ['min', 'smallest'],
   },
   {
@@ -1037,9 +972,7 @@ export const rubyProblems: Problem[] = [
     expected: [1, 9],
     sample: 'numbers.minmax',
     hints: ['minmax returns [min, max] array'],
-    validPatterns: [
-      /numbers\.minmax\b/,
-    ],
+    validPatterns: [/numbers\.minmax\b/],
     tags: ['minmax', 'range'],
   },
 

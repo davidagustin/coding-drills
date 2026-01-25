@@ -2,7 +2,7 @@
 
 import Editor, { type OnMount } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
-import { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { LanguageId } from '@/lib/types';
 
 /**
@@ -100,109 +100,115 @@ export default function CodeEditor({
   const monacoLanguage = LANGUAGE_TO_MONACO[language] || 'plaintext';
   const fileExtension = LANGUAGE_EXTENSIONS[language] || '.txt';
 
-  const handleEditorDidMount: OnMount = useCallback((editor, monaco) => {
-    editorRef.current = editor;
+  const handleEditorDidMount: OnMount = useCallback(
+    (editor, monaco) => {
+      editorRef.current = editor;
 
-    // Create a unique model URI for this editor instance to prevent conflicts
-    if (!modelUriRef.current) {
-      // Use substring instead of deprecated substr (ES2023+ best practice)
-      const uniqueId = `file:///editor-${Date.now()}-${Math.random().toString(36).substring(2, 11)}${fileExtension}`;
-      modelUriRef.current = uniqueId;
+      // Create a unique model URI for this editor instance to prevent conflicts
+      if (!modelUriRef.current) {
+        // Use substring instead of deprecated substr (ES2023+ best practice)
+        const uniqueId = `file:///editor-${Date.now()}-${Math.random().toString(36).substring(2, 11)}${fileExtension}`;
+        modelUriRef.current = uniqueId;
 
-      // Create a new model with the unique URI
-      const model = monaco.editor.createModel(
-        code || '',
-        monacoLanguage,
-        monaco.Uri.parse(uniqueId)
-      );
-      editor.setModel(model);
-    }
+        // Create a new model with the unique URI
+        const model = monaco.editor.createModel(
+          code || '',
+          monacoLanguage,
+          monaco.Uri.parse(uniqueId),
+        );
+        editor.setModel(model);
+      }
 
-    // Configure TypeScript/JavaScript settings
-    if (language === 'typescript' || language === 'javascript') {
-      const isTypeScript = language === 'typescript';
+      // Configure TypeScript/JavaScript settings
+      if (language === 'typescript' || language === 'javascript') {
+        const isTypeScript = language === 'typescript';
 
-      monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-        target: monaco.languages.typescript.ScriptTarget.ES2020,
-        allowNonTsExtensions: true,
-        moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-        module: monaco.languages.typescript.ModuleKind.ESNext,
-        noEmit: true,
-        esModuleInterop: true,
-        jsx: monaco.languages.typescript.JsxEmit.React,
-        reactNamespace: 'React',
-        allowJs: !isTypeScript,
-        typeRoots: ['node_modules/@types'],
-        preserveConstEnums: false,
-        strict: false,
-        skipLibCheck: true,
-      });
-
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        target: monaco.languages.typescript.ScriptTarget.ES2020,
-        allowNonTsExtensions: true,
-        allowJs: true,
-        checkJs: false,
-      });
-
-      // Configure diagnostics
-      if (isTypeScript) {
-        const diagnosticCodesToIgnore = [
-          8006, // enum declarations
-          2451, // Cannot redeclare block-scoped variable
-          2300, // Duplicate identifier
-        ];
-
-        if (readOnly) {
-          diagnosticCodesToIgnore.push(2393, 2300);
-        }
-
-        monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-          noSemanticValidation: false,
-          noSyntaxValidation: false,
-          noSuggestionDiagnostics: false,
-          diagnosticCodesToIgnore,
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+          target: monaco.languages.typescript.ScriptTarget.ES2020,
+          allowNonTsExtensions: true,
+          moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+          module: monaco.languages.typescript.ModuleKind.ESNext,
+          noEmit: true,
+          esModuleInterop: true,
+          jsx: monaco.languages.typescript.JsxEmit.React,
+          reactNamespace: 'React',
+          allowJs: !isTypeScript,
+          typeRoots: ['node_modules/@types'],
+          preserveConstEnums: false,
+          strict: false,
+          skipLibCheck: true,
         });
 
-        const model = editor.getModel();
-        if (model) {
-          monaco.editor.setModelMarkers(model, 'typescript', []);
+        monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+          target: monaco.languages.typescript.ScriptTarget.ES2020,
+          allowNonTsExtensions: true,
+          allowJs: true,
+          checkJs: false,
+        });
+
+        // Configure diagnostics
+        if (isTypeScript) {
+          const diagnosticCodesToIgnore = [
+            8006, // enum declarations
+            2451, // Cannot redeclare block-scoped variable
+            2300, // Duplicate identifier
+          ];
+
+          if (readOnly) {
+            diagnosticCodesToIgnore.push(2393, 2300);
+          }
+
+          monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+            noSemanticValidation: false,
+            noSyntaxValidation: false,
+            noSuggestionDiagnostics: false,
+            diagnosticCodesToIgnore,
+          });
+
+          const model = editor.getModel();
+          if (model) {
+            monaco.editor.setModelMarkers(model, 'typescript', []);
+          }
         }
       }
-    }
 
-    // Enable auto-formatting action
-    editor.addAction({
-      id: 'format-document',
-      label: 'Format Document',
-      keybindings: [
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK,
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF,
-      ],
-      contextMenuGroupId: '1_modification',
-      contextMenuOrder: 1.5,
-      run: async () => {
-        await editor.getAction('editor.action.formatDocument')?.run();
-      },
-    });
+      // Enable auto-formatting action
+      editor.addAction({
+        id: 'format-document',
+        label: 'Format Document',
+        keybindings: [
+          monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK,
+          monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF,
+        ],
+        contextMenuGroupId: '1_modification',
+        contextMenuOrder: 1.5,
+        run: async () => {
+          await editor.getAction('editor.action.formatDocument')?.run();
+        },
+      });
 
-    // Format on paste
-    editor.onDidPaste(async () => {
-      if (pasteTimeoutRef.current) {
-        clearTimeout(pasteTimeoutRef.current);
+      // Format on paste
+      editor.onDidPaste(async () => {
+        if (pasteTimeoutRef.current) {
+          clearTimeout(pasteTimeoutRef.current);
+        }
+        pasteTimeoutRef.current = setTimeout(async () => {
+          await editor.getAction('editor.action.formatDocument')?.run();
+          pasteTimeoutRef.current = null;
+        }, 100);
+      });
+    },
+    [code, fileExtension, language, monacoLanguage, readOnly],
+  );
+
+  const handleEditorChange = useCallback(
+    (value: string | undefined) => {
+      if (value !== undefined && !isSettingValueRef.current) {
+        onChange(value);
       }
-      pasteTimeoutRef.current = setTimeout(async () => {
-        await editor.getAction('editor.action.formatDocument')?.run();
-        pasteTimeoutRef.current = null;
-      }, 100);
-    });
-  }, [code, fileExtension, language, monacoLanguage, readOnly]);
-
-  const handleEditorChange = useCallback((value: string | undefined) => {
-    if (value !== undefined && !isSettingValueRef.current) {
-      onChange(value);
-    }
-  }, [onChange]);
+    },
+    [onChange],
+  );
 
   // Update code when it changes externally
   useEffect(() => {
@@ -316,11 +322,13 @@ export default function CodeEditor({
           suggestOnTriggerCharacters: !readOnly,
           acceptSuggestionOnEnter: readOnly ? 'off' : 'on',
           tabCompletion: readOnly ? 'off' : 'on',
-          quickSuggestions: readOnly ? false : {
-            other: true,
-            comments: false,
-            strings: true,
-          },
+          quickSuggestions: readOnly
+            ? false
+            : {
+                other: true,
+                comments: false,
+                strings: true,
+              },
           suggestSelection: 'first',
           snippetSuggestions: readOnly ? 'none' : 'top',
           renderWhitespace: 'selection',

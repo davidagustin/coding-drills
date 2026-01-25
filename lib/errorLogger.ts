@@ -49,22 +49,23 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 // User-friendly error messages
 const USER_FRIENDLY_MESSAGES: Record<string, string> = {
   // Storage errors
-  'QuotaExceededError': 'Storage is full. Please clear some browser data or export your progress.',
-  'NS_ERROR_DOM_QUOTA_REACHED': 'Storage is full. Please clear some browser data.',
+  QuotaExceededError: 'Storage is full. Please clear some browser data or export your progress.',
+  NS_ERROR_DOM_QUOTA_REACHED: 'Storage is full. Please clear some browser data.',
 
   // Network errors
-  'NetworkError': 'Unable to connect. Please check your internet connection.',
+  NetworkError: 'Unable to connect. Please check your internet connection.',
   'Failed to fetch': 'Unable to connect to the server. Please check your internet connection.',
   'Load failed': 'Failed to load resources. Please refresh the page.',
 
   // Code execution errors
-  'Maximum call stack size exceeded': 'Your code has infinite recursion. Check your recursive functions.',
+  'Maximum call stack size exceeded':
+    'Your code has infinite recursion. Check your recursive functions.',
   'Unexpected token': 'Syntax error in your code. Check for missing brackets or typos.',
   'is not defined': 'Variable or function not found. Check for typos or missing declarations.',
   'is not a function': 'Attempted to call something that is not a function.',
 
   // Generic errors
-  'ChunkLoadError': 'Failed to load the page. Please refresh your browser.',
+  ChunkLoadError: 'Failed to load the page. Please refresh your browser.',
   'Script error': 'An error occurred loading the application. Please refresh the page.',
 };
 
@@ -110,8 +111,10 @@ export function getUserFriendlyMessage(error: Error | string): string {
   }
 
   // Default message based on common patterns
-  if (errorMessage.toLowerCase().includes('network') ||
-      errorMessage.toLowerCase().includes('fetch')) {
+  if (
+    errorMessage.toLowerCase().includes('network') ||
+    errorMessage.toLowerCase().includes('fetch')
+  ) {
     return 'A network error occurred. Please check your connection and try again.';
   }
 
@@ -154,7 +157,7 @@ function categorizeError(error: Error | string, context?: Record<string, unknown
 
   // Network-related errors
   if (
-    errorName === 'TypeError' && message.includes('fetch') ||
+    (errorName === 'TypeError' && message.includes('fetch')) ||
     message.includes('network') ||
     message.includes('NetworkError')
   ) {
@@ -177,11 +180,7 @@ function categorizeError(error: Error | string, context?: Record<string, unknown
   }
 
   // Rendering errors
-  if (
-    message.includes('render') ||
-    message.includes('component') ||
-    message.includes('React')
-  ) {
+  if (message.includes('render') || message.includes('component') || message.includes('React')) {
     return 'rendering';
   }
 
@@ -209,10 +208,7 @@ function determineSeverity(error: Error | string, category: ErrorCategory): Erro
   }
 
   // High: Important functionality affected
-  if (
-    category === 'storage' ||
-    category === 'network'
-  ) {
+  if (category === 'storage' || category === 'network') {
     return 'high';
   }
 
@@ -281,10 +277,7 @@ export function configureErrorLogger(newConfig: Partial<ErrorLoggerConfig>): voi
 /**
  * Log an error with full details
  */
-export function logError(
-  error: Error | string,
-  context?: Record<string, unknown>
-): LoggedError {
+export function logError(error: Error | string, context?: Record<string, unknown>): LoggedError {
   const errorObj = typeof error === 'string' ? new Error(error) : error;
   const category = categorizeError(errorObj, context);
   const severity = determineSeverity(errorObj, category);
@@ -302,13 +295,12 @@ export function logError(
 
   // Console logging
   if (config.enableConsole) {
-    const consoleMethod = severity === 'critical' || severity === 'high'
-      ? console.error
-      : console.warn;
+    const consoleMethod =
+      severity === 'critical' || severity === 'high' ? console.error : console.warn;
 
     consoleMethod(
       `[${severity.toUpperCase()}] ${category}: ${errorObj.message}`,
-      context ? { context } : ''
+      context ? { context } : '',
     );
 
     if (IS_DEVELOPMENT && errorObj.stack) {
@@ -336,10 +328,7 @@ export function logError(
 /**
  * Log a warning (non-error condition that might need attention)
  */
-export function logWarning(
-  message: string,
-  context?: Record<string, unknown>
-): void {
+export function logWarning(message: string, context?: Record<string, unknown>): void {
   if (config.enableConsole) {
     console.warn(`[WARNING] ${message}`, context ? { context } : '');
   }
@@ -351,7 +340,7 @@ export function logWarning(
 export function logComponentError(
   error: Error,
   componentStack?: string,
-  context?: Record<string, unknown>
+  context?: Record<string, unknown>,
 ): LoggedError {
   return logError(error, {
     ...context,
@@ -366,7 +355,7 @@ export function logComponentError(
 export function logAsyncError(
   error: Error | string,
   operation: string,
-  context?: Record<string, unknown>
+  context?: Record<string, unknown>,
 ): LoggedError {
   return logError(error, {
     ...context,
@@ -456,7 +445,7 @@ export function getErrorStats(): {
  */
 export function createAsyncErrorHandler(
   setError: (error: string | null) => void,
-  operation: string
+  operation: string,
 ) {
   return (error: unknown) => {
     const errorObj = error instanceof Error ? error : new Error(String(error));
@@ -471,7 +460,7 @@ export function createAsyncErrorHandler(
 export function withErrorHandling<T>(
   asyncFn: () => Promise<T>,
   operation: string,
-  onError?: (error: LoggedError) => void
+  onError?: (error: LoggedError) => void,
 ): () => Promise<T | null> {
   return async () => {
     try {
@@ -479,7 +468,7 @@ export function withErrorHandling<T>(
     } catch (error) {
       const logged = logAsyncError(
         error instanceof Error ? error : new Error(String(error)),
-        operation
+        operation,
       );
       onError?.(logged);
       return null;

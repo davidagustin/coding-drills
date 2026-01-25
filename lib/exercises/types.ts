@@ -47,65 +47,71 @@ export interface ExerciseSession {
 }
 
 // Category display configuration
-export const EXERCISE_CATEGORIES: Record<ExerciseCategory, {
-  name: string;
-  icon: string;
-  description: string;
-}> = {
-  'traversal': {
+export const EXERCISE_CATEGORIES: Record<
+  ExerciseCategory,
+  {
+    name: string;
+    icon: string;
+    description: string;
+  }
+> = {
+  traversal: {
     name: 'Tree & Graph Traversal',
     icon: 'tree',
-    description: 'Master DFS, BFS, and graph navigation patterns'
+    description: 'Master DFS, BFS, and graph navigation patterns',
   },
   'iteration-patterns': {
     name: 'Iteration Patterns',
     icon: 'loop',
-    description: 'Control loops with skip patterns, step sizes, and conditions'
+    description: 'Control loops with skip patterns, step sizes, and conditions',
   },
-  'recursion': {
+  recursion: {
     name: 'Recursion',
     icon: 'recursion',
-    description: 'Solve problems using recursive function calls'
+    description: 'Solve problems using recursive function calls',
   },
-  'generation': {
+  generation: {
     name: 'Generation Algorithms',
     icon: 'generate',
-    description: 'Generate sequences, primes, and mathematical patterns'
+    description: 'Generate sequences, primes, and mathematical patterns',
   },
-  'searching': {
+  searching: {
     name: 'Searching',
     icon: 'search',
-    description: 'Find elements using linear, binary, and other search methods'
+    description: 'Find elements using linear, binary, and other search methods',
   },
   'data-structures': {
     name: 'Data Structures',
     icon: 'structure',
-    description: 'Work with arrays, linked lists, stacks, and queues'
-  }
+    description: 'Work with arrays, linked lists, stacks, and queues',
+  },
 };
 
-export const DIFFICULTY_CONFIG: Record<ExerciseDifficulty, {
-  name: string;
-  color: string;
-  bgColor: string;
-  points: number;
-}> = {
+export const DIFFICULTY_CONFIG: Record<
+  ExerciseDifficulty,
+  {
+    name: string;
+    color: string;
+    bgColor: string;
+    points: number;
+  }
+> = {
   beginner: {
     name: 'Beginner',
     color: 'text-green-400',
     bgColor: 'bg-green-500/20',
-    points: 10
+    points: 10,
   },
   intermediate: {
     name: 'Intermediate',
     color: 'text-yellow-400',
     bgColor: 'bg-yellow-500/20',
-    points: 25
+    points: 25,
   },
   advanced: {
     name: 'Advanced',
     color: 'text-red-400',
     bgColor: 'bg-red-500/20',
-    points: 50
-  }
+    points: 50,
+  },
 };

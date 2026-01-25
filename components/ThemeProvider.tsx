@@ -2,13 +2,13 @@
 
 import {
   createContext,
+  type ReactNode,
+  useCallback,
   useContext,
   useEffect,
-  useState,
-  useCallback,
   useMemo,
+  useState,
   useSyncExternalStore,
-  type ReactNode,
 } from 'react';
 
 // ============================================================================
@@ -115,11 +115,7 @@ export function ThemeProvider({
   const [store] = useState(() => createThemeStore(storageKey, defaultTheme));
 
   // Use sync external store for SSR-safe theme reading
-  const theme = useSyncExternalStore(
-    store.subscribe,
-    store.getSnapshot,
-    store.getServerSnapshot
-  );
+  const theme = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
 
   // Initialize from localStorage on mount
   useEffect(() => {
@@ -142,17 +138,17 @@ export function ThemeProvider({
     // Update meta theme-color for mobile browsers
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute(
-        'content',
-        theme === 'dark' ? '#09090b' : '#ffffff'
-      );
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#09090b' : '#ffffff');
     }
   }, [theme]);
 
   // Set theme function
-  const setTheme = useCallback((newTheme: Theme) => {
-    store.setTheme(newTheme);
-  }, [store]);
+  const setTheme = useCallback(
+    (newTheme: Theme) => {
+      store.setTheme(newTheme);
+    },
+    [store],
+  );
 
   // Toggle between light and dark
   const toggleTheme = useCallback(() => {
@@ -168,14 +164,10 @@ export function ThemeProvider({
       isDark: theme === 'dark',
       isLight: theme === 'light',
     }),
-    [theme, toggleTheme, setTheme]
+    [theme, toggleTheme, setTheme],
   );
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 // ============================================================================

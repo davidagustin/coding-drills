@@ -2,13 +2,13 @@
 
 import {
   createContext,
+  type ReactNode,
+  useCallback,
   useContext,
   useEffect,
-  useState,
-  useCallback,
   useMemo,
+  useState,
   useSyncExternalStore,
-  type ReactNode,
 } from 'react';
 import type { LanguageId } from '@/lib/types';
 
@@ -90,18 +90,14 @@ interface ProgressContextValue {
   getLanguageProgress: (language: LanguageId) => LanguageProgress;
 
   // Update drill stats
-  updateDrillStats: (
-    language: LanguageId,
-    correct: boolean,
-    category?: string
-  ) => void;
+  updateDrillStats: (language: LanguageId, correct: boolean, category?: string) => void;
 
   // Update quiz stats
   updateQuizStats: (
     language: LanguageId,
     score: number,
     totalQuestions: number,
-    streak: number
+    streak: number,
   ) => void;
 
   // Get quiz high score for a language
@@ -156,9 +152,7 @@ const createDefaultProgress = (): LanguageProgress => ({
 // Serialization Helpers
 // ============================================================================
 
-function serializeProgress(
-  progress: Map<string, LanguageProgress>
-): SerializedProgress {
+function serializeProgress(progress: Map<string, LanguageProgress>): SerializedProgress {
   const result: SerializedProgress = {};
 
   progress.forEach((value, key) => {
@@ -173,9 +167,7 @@ function serializeProgress(
   return result;
 }
 
-function deserializeProgress(
-  data: SerializedProgress
-): Map<string, LanguageProgress> {
+function deserializeProgress(data: SerializedProgress): Map<string, LanguageProgress> {
   const result = new Map<string, LanguageProgress>();
 
   Object.entries(data).forEach(([key, value]) => {
@@ -217,10 +209,7 @@ function getStoredProgress(storageKey: string): Map<string, LanguageProgress> {
   return new Map();
 }
 
-function setStoredProgress(
-  storageKey: string,
-  progress: Map<string, LanguageProgress>
-): void {
+function setStoredProgress(storageKey: string, progress: Map<string, LanguageProgress>): void {
   if (typeof window === 'undefined') return;
 
   try {
@@ -269,7 +258,7 @@ function createProgressStore(storageKey: string) {
       notifyListeners();
     },
     updateProgress: (
-      updater: (prev: Map<string, LanguageProgress>) => Map<string, LanguageProgress>
+      updater: (prev: Map<string, LanguageProgress>) => Map<string, LanguageProgress>,
     ) => {
       state = { progress: updater(state.progress), isLoaded: true };
       setStoredProgress(storageKey, state.progress);
@@ -300,10 +289,7 @@ interface ProgressProviderProps {
   storageKey?: string;
 }
 
-export function ProgressProvider({
-  children,
-  storageKey = STORAGE_KEY,
-}: ProgressProviderProps) {
+export function ProgressProvider({ children, storageKey = STORAGE_KEY }: ProgressProviderProps) {
   // Create store once per provider instance
   const [store] = useState(() => createProgressStore(storageKey));
 
@@ -311,7 +297,7 @@ export function ProgressProvider({
   const storeState = useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,
-    store.getServerSnapshot
+    store.getServerSnapshot,
   );
 
   const { progress, isLoaded } = storeState;
@@ -326,7 +312,7 @@ export function ProgressProvider({
     (language: LanguageId): LanguageProgress => {
       return progress.get(language) || createDefaultProgress();
     },
-    [progress]
+    [progress],
   );
 
   // Check if a problem is solved
@@ -345,7 +331,7 @@ export function ProgressProvider({
       }
       return false;
     },
-    [progress]
+    [progress],
   );
 
   // Mark a problem as solved
@@ -367,7 +353,7 @@ export function ProgressProvider({
         return newProgress;
       });
     },
-    [store]
+    [store],
   );
 
   // Get solved count for a language
@@ -376,7 +362,7 @@ export function ProgressProvider({
       const langProgress = progress.get(language);
       return langProgress?.solvedProblems.size ?? 0;
     },
-    [progress]
+    [progress],
   );
 
   // Get all solved problems for a language
@@ -385,7 +371,7 @@ export function ProgressProvider({
       const langProgress = progress.get(language);
       return langProgress ? Array.from(langProgress.solvedProblems) : [];
     },
-    [progress]
+    [progress],
   );
 
   // Update drill stats
@@ -401,10 +387,7 @@ export function ProgressProvider({
         if (correct) {
           drillStats.totalCorrect += 1;
           drillStats.currentStreak += 1;
-          drillStats.bestStreak = Math.max(
-            drillStats.bestStreak,
-            drillStats.currentStreak
-          );
+          drillStats.bestStreak = Math.max(drillStats.bestStreak, drillStats.currentStreak);
         } else {
           drillStats.currentStreak = 0;
         }
@@ -434,17 +417,12 @@ export function ProgressProvider({
         return newProgress;
       });
     },
-    [store]
+    [store],
   );
 
   // Update quiz stats
   const updateQuizStats = useCallback(
-    (
-      language: LanguageId,
-      score: number,
-      totalQuestions: number,
-      streak: number
-    ) => {
+    (language: LanguageId, score: number, totalQuestions: number, streak: number) => {
       store.updateProgress((prev) => {
         const newProgress = new Map(prev);
         const langProgress = newProgress.get(language) || createDefaultProgress();
@@ -474,7 +452,7 @@ export function ProgressProvider({
         return newProgress;
       });
     },
-    [store]
+    [store],
   );
 
   // Get quiz high score for a language
@@ -483,7 +461,7 @@ export function ProgressProvider({
       const langProgress = progress.get(language);
       return langProgress?.quizStats.highScore ?? 0;
     },
-    [progress]
+    [progress],
   );
 
   // Get drill stats for a language
@@ -492,7 +470,7 @@ export function ProgressProvider({
       const langProgress = progress.get(language);
       return langProgress?.drillStats ?? { ...DEFAULT_DRILL_STATS, categoryStats: {} };
     },
-    [progress]
+    [progress],
   );
 
   // Get total stats across all languages
@@ -513,7 +491,7 @@ export function ProgressProvider({
       bestStreak = Math.max(
         bestStreak,
         langProgress.drillStats.bestStreak,
-        langProgress.quizStats.bestStreak
+        langProgress.quizStats.bestStreak,
       );
     });
 
@@ -530,39 +508,49 @@ export function ProgressProvider({
   }, [progress]);
 
   // Reset progress
-  const resetProgress = useCallback((language?: LanguageId) => {
-    store.updateProgress((prev) => {
-      if (language) {
-        const newProgress = new Map(prev);
-        newProgress.delete(language);
-        return newProgress;
-      }
-      return new Map();
-    });
-  }, [store]);
+  const resetProgress = useCallback(
+    (language?: LanguageId) => {
+      store.updateProgress((prev) => {
+        if (language) {
+          const newProgress = new Map(prev);
+          newProgress.delete(language);
+          return newProgress;
+        }
+        return new Map();
+      });
+    },
+    [store],
+  );
 
   // Export progress as JSON
   const exportProgress = useCallback((): string => {
     const serialized = serializeProgress(progress);
-    return JSON.stringify({
-      version: '1.0.0',
-      exportDate: new Date().toISOString(),
-      data: serialized,
-    }, null, 2);
+    return JSON.stringify(
+      {
+        version: '1.0.0',
+        exportDate: new Date().toISOString(),
+        data: serialized,
+      },
+      null,
+      2,
+    );
   }, [progress]);
 
   // Import progress from JSON
-  const importProgress = useCallback((jsonData: string): boolean => {
-    try {
-      const parsed = JSON.parse(jsonData);
-      const data = parsed.data || parsed;
-      store.setProgress(deserializeProgress(data));
-      return true;
-    } catch (error) {
-      console.error('Failed to import progress:', error);
-      return false;
-    }
-  }, [store]);
+  const importProgress = useCallback(
+    (jsonData: string): boolean => {
+      try {
+        const parsed = JSON.parse(jsonData);
+        const data = parsed.data || parsed;
+        store.setProgress(deserializeProgress(data));
+        return true;
+      } catch (error) {
+        console.error('Failed to import progress:', error);
+        return false;
+      }
+    },
+    [store],
+  );
 
   // Memoized context value
   const value = useMemo<ProgressContextValue>(
@@ -597,14 +585,10 @@ export function ProgressProvider({
       exportProgress,
       importProgress,
       isLoaded,
-    ]
+    ],
   );
 
-  return (
-    <ProgressContext.Provider value={value}>
-      {children}
-    </ProgressContext.Provider>
-  );
+  return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }
 
 // ============================================================================

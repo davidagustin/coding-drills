@@ -286,7 +286,7 @@ export function saveDrillProgress(language: string, result: DrillResult): boolea
  */
 export function saveDrillSession(
   language: string,
-  session: Omit<SessionResult, 'id' | 'date'>
+  session: Omit<SessionResult, 'id' | 'date'>,
 ): boolean {
   const progress = getProgress(language);
 
@@ -299,7 +299,10 @@ export function saveDrillSession(
   // Add to recent sessions (keep last N)
   progress.drillStats.recentSessions.unshift(sessionResult);
   if (progress.drillStats.recentSessions.length > MAX_RECENT_SESSIONS) {
-    progress.drillStats.recentSessions = progress.drillStats.recentSessions.slice(0, MAX_RECENT_SESSIONS);
+    progress.drillStats.recentSessions = progress.drillStats.recentSessions.slice(
+      0,
+      MAX_RECENT_SESSIONS,
+    );
   }
 
   progress.lastPlayed = getCurrentDate();
@@ -323,9 +326,8 @@ export function saveQuizProgress(language: string, result: QuizResult): boolean 
   quizStats.totalCorrect += Math.round(result.totalQuestions * result.accuracy);
 
   // Recalculate average accuracy
-  quizStats.avgAccuracy = quizStats.totalQuestions > 0
-    ? quizStats.totalCorrect / quizStats.totalQuestions
-    : 0;
+  quizStats.avgAccuracy =
+    quizStats.totalQuestions > 0 ? quizStats.totalCorrect / quizStats.totalQuestions : 0;
 
   progress.lastPlayed = getCurrentDate();
   return saveLanguageProgress(language, progress);
@@ -379,7 +381,7 @@ function isSessionResult(result: unknown): result is Omit<SessionResult, 'id' | 
 export function saveProgress(
   language: string,
   type: 'drill' | 'quiz' | 'session',
-  result: DrillResult | QuizResult | Omit<SessionResult, 'id' | 'date'>
+  result: DrillResult | QuizResult | Omit<SessionResult, 'id' | 'date'>,
 ): boolean {
   switch (type) {
     case 'drill':
@@ -479,10 +481,7 @@ export function getSetting<K extends keyof UserSettings>(key: K): UserSettings[K
 /**
  * Set a single setting value
  */
-export function setSetting<K extends keyof UserSettings>(
-  key: K,
-  value: UserSettings[K]
-): boolean {
+export function setSetting<K extends keyof UserSettings>(key: K, value: UserSettings[K]): boolean {
   return saveSettings({ [key]: value });
 }
 
@@ -609,10 +608,7 @@ export function getLanguageAccuracy(language: string): number {
  */
 export function getTotalTimeSpent(language: string): number {
   const progress = getProgress(language);
-  return progress.drillStats.recentSessions.reduce(
-    (total, session) => total + session.duration,
-    0
-  );
+  return progress.drillStats.recentSessions.reduce((total, session) => total + session.duration, 0);
 }
 
 /**
@@ -622,9 +618,7 @@ export function getTotalTimeSpent(language: string): number {
 export function getLanguagesByRecent(): string[] {
   const allProgress = getAllProgress();
   return Object.entries(allProgress)
-    .toSorted(([, a], [, b]) =>
-      new Date(b.lastPlayed).getTime() - new Date(a.lastPlayed).getTime()
-    )
+    .toSorted(([, a], [, b]) => new Date(b.lastPlayed).getTime() - new Date(a.lastPlayed).getTime())
     .map(([lang]) => lang);
 }
 

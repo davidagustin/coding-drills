@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getSetting } from '@/lib/storage';
 import { useProgress } from './useProgress';
 import { useTimer } from './useTimer';
-import { getSetting } from '@/lib/storage';
 
 // ============================================================================
 // Types
@@ -130,7 +130,7 @@ function shuffleArray<T>(array: T[]): T[] {
 function filterProblems(
   problems: DrillProblem[],
   difficulty?: 'easy' | 'medium' | 'hard' | 'mixed',
-  category?: string
+  category?: string,
 ): DrillProblem[] {
   let filtered = [...problems];
 
@@ -145,11 +145,7 @@ function filterProblems(
   return filtered;
 }
 
-function normalizeAnswer(
-  answer: string,
-  caseSensitive: boolean,
-  trim: boolean
-): string {
+function normalizeAnswer(answer: string, caseSensitive: boolean, trim: boolean): string {
   let normalized = answer;
   if (trim) normalized = normalized.trim();
   if (!caseSensitive) normalized = normalized.toLowerCase();
@@ -161,7 +157,7 @@ function checkAnswer(
   correctAnswer: string,
   alternatives: string[] | undefined,
   caseSensitive: boolean,
-  trim: boolean
+  trim: boolean,
 ): boolean {
   const normalizedUser = normalizeAnswer(userAnswer, caseSensitive, trim);
   const normalizedCorrect = normalizeAnswer(correctAnswer, caseSensitive, trim);
@@ -169,9 +165,7 @@ function checkAnswer(
   if (normalizedUser === normalizedCorrect) return true;
 
   if (alternatives) {
-    return alternatives.some(
-      (alt) => normalizeAnswer(alt, caseSensitive, trim) === normalizedUser
-    );
+    return alternatives.some((alt) => normalizeAnswer(alt, caseSensitive, trim) === normalizedUser);
   }
 
   return false;
@@ -270,16 +264,14 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
       correctAnswers: correctCount,
       incorrectAnswers: incorrectCount,
       skipped: skippedCount,
-      accuracy: problemResults.current.length > 0
-        ? correctCount / problemResults.current.length
-        : 0,
+      accuracy:
+        problemResults.current.length > 0 ? correctCount / problemResults.current.length : 0,
       streak,
       bestStreak,
       duration: timer.time,
       problems: [...problemResults.current],
     };
   }, [correctCount, incorrectCount, skippedCount, streak, bestStreak, timer.time]);
-
 
   // Complete the session
   const completeSession = useCallback(() => {
@@ -305,12 +297,7 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
 
   // Record problem result
   const recordProblemResult = useCallback(
-    (
-      problem: DrillProblem,
-      userAnswer: string | null,
-      correct: boolean,
-      skipped: boolean
-    ) => {
+    (problem: DrillProblem, userAnswer: string | null, correct: boolean, skipped: boolean) => {
       const timeSpent = Math.floor((Date.now() - problemStartTime.current) / 1000);
       problemResults.current.push({
         problem,
@@ -320,7 +307,7 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
         timeSpent,
       });
     },
-    []
+    [],
   );
 
   // Move to next problem
@@ -346,7 +333,7 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
         currentProblem.answer,
         currentProblem.alternatives,
         caseSensitive,
-        trimAnswers
+        trimAnswers,
       );
 
       setLastAnswer(answer);
@@ -395,7 +382,7 @@ export function useDrill(language: string, options: DrillOptions): UseDrillRetur
       autoAdvance,
       autoAdvanceDelay,
       moveToNext,
-    ]
+    ],
   );
 
   // Skip current problem

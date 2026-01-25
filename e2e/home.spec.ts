@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import {
-  TestUtils,
-  SUPPORTED_LANGUAGES,
   LANGUAGE_NAMES,
+  SUPPORTED_LANGUAGES,
+  TestUtils,
   waitForAnimations,
 } from './fixtures/test-utils';
 
@@ -24,9 +24,7 @@ test.describe('Home Page', () => {
     await expect(heading).toContainText('Code Drills');
   });
 
-  test('should display the hero section with title and description', async ({
-    page,
-  }) => {
+  test('should display the hero section with title and description', async ({ page }) => {
     // Wait for animations to complete
     await waitForAnimations(page);
 
@@ -35,9 +33,7 @@ test.describe('Home Page', () => {
     await expect(heroTitle).toBeVisible();
 
     // Check description text
-    const description = page.getByText(
-      /Master programming methods through practice/i
-    );
+    const description = page.getByText(/Master programming methods through practice/i);
     await expect(description).toBeVisible();
 
     // Check secondary description
@@ -56,9 +52,7 @@ test.describe('Home Page', () => {
     }
   });
 
-  test('should have correct number of language cards (9 languages)', async ({
-    page,
-  }) => {
+  test('should have correct number of language cards (9 languages)', async ({ page }) => {
     await waitForAnimations(page);
 
     // Count language cards by looking for h3 elements within links
@@ -177,9 +171,7 @@ test.describe('Home Page', () => {
 });
 
 test.describe('Home Page - Navigation', () => {
-  test('should navigate to JavaScript page when clicking JavaScript card', async ({
-    page,
-  }) => {
+  test('should navigate to JavaScript page when clicking JavaScript card', async ({ page }) => {
     const utils = new TestUtils(page);
     await utils.goToHome();
     await waitForAnimations(page);
@@ -189,9 +181,7 @@ test.describe('Home Page - Navigation', () => {
     await expect(page).toHaveURL('/javascript');
   });
 
-  test('should navigate to Python page when clicking Python card', async ({
-    page,
-  }) => {
+  test('should navigate to Python page when clicking Python card', async ({ page }) => {
     const utils = new TestUtils(page);
     await utils.goToHome();
     await waitForAnimations(page);
@@ -235,9 +225,7 @@ test.describe('Home Page - Visual Regression', () => {
     await waitForAnimations(page);
 
     // Take screenshot of language grid
-    const languageSection = page
-      .locator('section')
-      .filter({ hasText: 'Choose Your Language' });
+    const languageSection = page.locator('section').filter({ hasText: 'Choose Your Language' });
     await expect(languageSection).toHaveScreenshot('language-grid.png', {
       maxDiffPixelRatio: 0.1,
     });
@@ -271,8 +259,7 @@ test.describe('Home Page - Performance', () => {
 
     // Filter out known acceptable errors (like favicon 404)
     const criticalErrors = errors.filter(
-      (error) =>
-        !error.includes('favicon') && !error.includes('Failed to load resource')
+      (error) => !error.includes('favicon') && !error.includes('Failed to load resource'),
     );
 
     expect(criticalErrors).toHaveLength(0);

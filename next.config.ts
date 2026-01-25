@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // Enable React strict mode for better development warnings
@@ -12,11 +12,7 @@ const nextConfig: NextConfig = {
   // Enable experimental features for better performance
   experimental: {
     // Enable optimized package imports
-    optimizePackageImports: [
-      'lucide-react',
-      '@tanstack/react-query',
-      'zustand',
-    ],
+    optimizePackageImports: ['lucide-react', '@tanstack/react-query', 'zustand'],
   },
 
   // Production source maps for debugging (optional, can be removed for smaller builds)

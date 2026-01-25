@@ -5,7 +5,7 @@
  * This prevents magic numbers and strings scattered throughout the codebase.
  */
 
-import type { UserSettings, DrillStats, QuizStats, ProblemDifficulty, SkillLevel } from './types';
+import type { DrillStats, ProblemDifficulty, QuizStats, SkillLevel, UserSettings } from './types';
 
 // ============================================================================
 // Storage Keys
@@ -74,12 +74,15 @@ export const DEFAULT_QUIZ_STATS: QuizStats = {
 // Difficulty Configurations
 // ============================================================================
 
-export const PROBLEM_DIFFICULTY_CONFIG: Record<ProblemDifficulty, {
-  label: string;
-  color: string;
-  bgColor: string;
-  points: number;
-}> = {
+export const PROBLEM_DIFFICULTY_CONFIG: Record<
+  ProblemDifficulty,
+  {
+    label: string;
+    color: string;
+    bgColor: string;
+    points: number;
+  }
+> = {
   easy: {
     label: 'Easy',
     color: 'text-green-600 dark:text-green-400',
@@ -100,12 +103,15 @@ export const PROBLEM_DIFFICULTY_CONFIG: Record<ProblemDifficulty, {
   },
 };
 
-export const SKILL_LEVEL_CONFIG: Record<SkillLevel, {
-  label: string;
-  color: string;
-  bgColor: string;
-  points: number;
-}> = {
+export const SKILL_LEVEL_CONFIG: Record<
+  SkillLevel,
+  {
+    label: string;
+    color: string;
+    bgColor: string;
+    points: number;
+  }
+> = {
   beginner: {
     label: 'Beginner',
     color: 'text-emerald-600 dark:text-emerald-400',
@@ -142,7 +148,7 @@ export const METHOD_CATEGORIES = [
   'utility',
 ] as const;
 
-export type MethodCategory = typeof METHOD_CATEGORIES[number];
+export type MethodCategory = (typeof METHOD_CATEGORIES)[number];
 
 export const CATEGORY_LABELS: Record<string, string> = {
   arrays: 'Arrays',
@@ -181,7 +187,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
 // ============================================================================
 
 export const EXERCISE_CATEGORY_CONFIG = {
-  'traversal': {
+  traversal: {
     name: 'Tree & Graph Traversal',
     icon: 'tree',
     description: 'Master DFS, BFS, and graph navigation patterns',
@@ -191,17 +197,17 @@ export const EXERCISE_CATEGORY_CONFIG = {
     icon: 'loop',
     description: 'Control loops with skip patterns, step sizes, and conditions',
   },
-  'recursion': {
+  recursion: {
     name: 'Recursion',
     icon: 'recursion',
     description: 'Solve problems using recursive function calls',
   },
-  'generation': {
+  generation: {
     name: 'Generation Algorithms',
     icon: 'generate',
     description: 'Generate sequences, primes, and mathematical patterns',
   },
-  'searching': {
+  searching: {
     name: 'Searching',
     icon: 'search',
     description: 'Find elements using linear, binary, and other search methods',

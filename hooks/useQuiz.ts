@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getSetting } from '@/lib/storage';
 import { useProgress } from './useProgress';
 import { useTimer } from './useTimer';
-import { getSetting } from '@/lib/storage';
 
 // ============================================================================
 // Types
@@ -139,7 +139,7 @@ function shuffleArray<T>(array: T[]): T[] {
 
 function createShuffledOptions(
   options: string[],
-  correctIndex: number
+  correctIndex: number,
 ): { shuffledOptions: string[]; mapping: number[]; newCorrectIndex: number } {
   const indices = options.map((_, i) => i);
   const shuffledIndices = shuffleArray(indices);
@@ -157,7 +157,7 @@ function createShuffledOptions(
 function filterQuestions(
   questions: QuizQuestion[],
   difficulty?: 'easy' | 'medium' | 'hard' | 'mixed',
-  category?: string
+  category?: string,
 ): QuizQuestion[] {
   let filtered = [...questions];
 
@@ -256,8 +256,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
   });
 
   // Question timer (per-question time limit)
-  const effectiveQuestionTimeLimit =
-    questionTimeLimit || currentQuestion?.timeLimit || 0;
+  const effectiveQuestionTimeLimit = questionTimeLimit || currentQuestion?.timeLimit || 0;
 
   const questionTimer = useTimer({
     mode: 'down',
@@ -277,7 +276,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
       if (shuffleOptions) {
         const { shuffledOptions, mapping, newCorrectIndex } = createShuffledOptions(
           currentQuestion.options,
-          currentQuestion.correctIndex
+          currentQuestion.correctIndex,
         );
         setCurrentOptions(shuffledOptions);
         setOptionMapping(mapping);
@@ -297,8 +296,15 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
 
       questionStartTime.current = Date.now();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- questionTimer methods are stable, adding object causes infinite loop
-  }, [currentQuestion, shuffleOptions, effectiveQuestionTimeLimit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- questionTimer methods are stable, adding object causes infinite loop
+  }, [
+    currentQuestion,
+    shuffleOptions,
+    effectiveQuestionTimeLimit,
+    questionTimer.reset,
+    questionTimer.setTime,
+    questionTimer.start,
+  ]);
 
   // Clear auto-advance timeout on unmount
   useEffect(() => {
@@ -316,9 +322,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
       correctAnswers: correctCount,
       incorrectAnswers: incorrectCount,
       accuracy:
-        questionResults.current.length > 0
-          ? correctCount / questionResults.current.length
-          : 0,
+        questionResults.current.length > 0 ? correctCount / questionResults.current.length : 0,
       score,
       streak,
       bestStreak,
@@ -326,7 +330,6 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
       questions: [...questionResults.current],
     };
   }, [correctCount, incorrectCount, score, streak, bestStreak, quizTimer.time]);
-
 
   // Complete the quiz
   const completeQuiz = useCallback(() => {
@@ -355,7 +358,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
       question: QuizQuestion,
       selectedIdx: number | null,
       correct: boolean,
-      pointsEarned: number
+      pointsEarned: number,
     ) => {
       const timeSpent = Math.floor((Date.now() - questionStartTime.current) / 1000);
       questionResults.current.push({
@@ -366,7 +369,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
         pointsEarned,
       });
     },
-    [optionMapping]
+    [optionMapping],
   );
 
   // Move to next question
@@ -454,7 +457,7 @@ export function useQuiz(language: string, options: QuizOptions): UseQuizReturn {
       recordQuestionResult,
       moveToNext,
       answerDelay,
-    ]
+    ],
   );
 
   // Next question (manual advance)

@@ -19,12 +19,8 @@ export default function Loading() {
 
         {/* Loading text */}
         <div className="text-center space-y-2">
-          <p className="text-lg font-medium text-gray-300">
-            Loading...
-          </p>
-          <p className="text-sm text-gray-500">
-            Preparing your coding drills
-          </p>
+          <p className="text-lg font-medium text-gray-300">Loading...</p>
+          <p className="text-sm text-gray-500">Preparing your coding drills</p>
         </div>
 
         {/* Animated dots */}

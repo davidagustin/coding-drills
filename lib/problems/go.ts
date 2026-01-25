@@ -22,9 +22,7 @@ export const goProblems: Problem[] = [
     expected: [1, 2, 3, 4],
     sample: 'append(numbers, 4)',
     hints: ['append returns a new slice', 'First arg is slice, rest are elements to add'],
-    validPatterns: [
-      /append\s*\(\s*numbers\s*,\s*4\s*\)/,
-    ],
+    validPatterns: [/append\s*\(\s*numbers\s*,\s*4\s*\)/],
     tags: ['append', 'add', 'slice'],
   },
   {
@@ -38,9 +36,7 @@ export const goProblems: Problem[] = [
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'append(numbers, 4, 5, 6)',
     hints: ['append can take multiple values', 'All values are added at the end'],
-    validPatterns: [
-      /append\s*\(\s*numbers\s*,\s*4\s*,\s*5\s*,\s*6\s*\)/,
-    ],
+    validPatterns: [/append\s*\(\s*numbers\s*,\s*4\s*,\s*5\s*,\s*6\s*\)/],
     tags: ['append', 'variadic', 'slice'],
   },
   {
@@ -54,9 +50,7 @@ export const goProblems: Problem[] = [
     expected: [1, 2, 3, 4],
     sample: 'append(a, b...)',
     hints: ['Use ... to unpack a slice', 'This expands b into individual elements'],
-    validPatterns: [
-      /append\s*\(\s*a\s*,\s*b\s*\.\.\.\s*\)/,
-    ],
+    validPatterns: [/append\s*\(\s*a\s*,\s*b\s*\.\.\.\s*\)/],
     tags: ['append', 'spread', 'concat'],
   },
 
@@ -72,9 +66,7 @@ export const goProblems: Problem[] = [
     expected: 5,
     sample: 'len(numbers)',
     hints: ['len() returns the number of elements'],
-    validPatterns: [
-      /len\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/len\s*\(\s*numbers\s*\)/],
     tags: ['len', 'length', 'size'],
   },
   {
@@ -88,9 +80,7 @@ export const goProblems: Problem[] = [
     expected: 10,
     sample: 'cap(numbers)',
     hints: ['cap() returns the capacity', 'Capacity is max elements before reallocation'],
-    validPatterns: [
-      /cap\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/cap\s*\(\s*numbers\s*\)/],
     tags: ['cap', 'capacity'],
   },
 
@@ -106,9 +96,7 @@ export const goProblems: Problem[] = [
     expected: 3,
     sample: 'copy(dst, src)',
     hints: ['copy(dst, src) copies from src to dst', 'Returns number of elements copied'],
-    validPatterns: [
-      /copy\s*\(\s*dst\s*,\s*src\s*\)/,
-    ],
+    validPatterns: [/copy\s*\(\s*dst\s*,\s*src\s*\)/],
     tags: ['copy', 'duplicate'],
   },
   {
@@ -122,10 +110,7 @@ export const goProblems: Problem[] = [
     expected: 2,
     sample: 'copy(dst, src)',
     hints: ['copy copies min(len(dst), len(src)) elements', 'dst length limits the copy'],
-    validPatterns: [
-      /copy\s*\(\s*dst\s*,\s*src\s*\)/,
-      /copy\s*\(\s*dst\s*,\s*src\[:2\]\s*\)/,
-    ],
+    validPatterns: [/copy\s*\(\s*dst\s*,\s*src\s*\)/, /copy\s*\(\s*dst\s*,\s*src\[:2\]\s*\)/],
     tags: ['copy', 'partial'],
   },
 
@@ -141,9 +126,7 @@ export const goProblems: Problem[] = [
     expected: [30, 40, 50],
     sample: 'numbers[2:]',
     hints: ['[start:] gives elements from start to end', 'Index is 0-based'],
-    validPatterns: [
-      /numbers\s*\[\s*2\s*:\s*\]/,
-    ],
+    validPatterns: [/numbers\s*\[\s*2\s*:\s*\]/],
     tags: ['slice', 'range'],
   },
   {
@@ -157,9 +140,7 @@ export const goProblems: Problem[] = [
     expected: [10, 20, 30],
     sample: 'numbers[:3]',
     hints: ['[:end] gives elements from 0 to end-1', 'End index is exclusive'],
-    validPatterns: [
-      /numbers\s*\[\s*:\s*3\s*\]/,
-    ],
+    validPatterns: [/numbers\s*\[\s*:\s*3\s*\]/],
     tags: ['slice', 'range'],
   },
   {
@@ -173,9 +154,7 @@ export const goProblems: Problem[] = [
     expected: [20, 30],
     sample: 'numbers[1:3]',
     hints: ['[start:end] gives elements from start to end-1', 'Both indices are provided'],
-    validPatterns: [
-      /numbers\s*\[\s*1\s*:\s*3\s*\]/,
-    ],
+    validPatterns: [/numbers\s*\[\s*1\s*:\s*3\s*\]/],
     tags: ['slice', 'range', 'subslice'],
   },
   {
@@ -189,9 +168,7 @@ export const goProblems: Problem[] = [
     expected: 50,
     sample: 'numbers[len(numbers)-1]',
     hints: ['Use len() to get the length', 'Last index is len - 1'],
-    validPatterns: [
-      /numbers\s*\[\s*len\s*\(\s*numbers\s*\)\s*-\s*1\s*\]/,
-    ],
+    validPatterns: [/numbers\s*\[\s*len\s*\(\s*numbers\s*\)\s*-\s*1\s*\]/],
     tags: ['slice', 'last', 'len'],
   },
 
@@ -207,9 +184,7 @@ export const goProblems: Problem[] = [
     expected: [0, 0, 0, 0, 0],
     sample: 'make([]int, 5)',
     hints: ['make(type, length) creates a slice', 'Elements are initialized to zero value'],
-    validPatterns: [
-      /make\s*\(\s*\[\s*\]\s*int\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/make\s*\(\s*\[\s*\]\s*int\s*,\s*5\s*\)/],
     tags: ['make', 'create', 'initialize'],
   },
   {
@@ -223,9 +198,7 @@ export const goProblems: Problem[] = [
     expected: 'make([]string, 3, 10)',
     sample: 'make([]string, 3, 10)',
     hints: ['make(type, length, capacity)', 'Capacity pre-allocates memory'],
-    validPatterns: [
-      /make\s*\(\s*\[\s*\]\s*string\s*,\s*3\s*,\s*10\s*\)/,
-    ],
+    validPatterns: [/make\s*\(\s*\[\s*\]\s*string\s*,\s*3\s*,\s*10\s*\)/],
     tags: ['make', 'capacity', 'preallocate'],
   },
 
@@ -245,9 +218,7 @@ export const goProblems: Problem[] = [
     expected: ['hello', 'world', 'go'],
     sample: 'strings.Split(s, " ")',
     hints: ['strings.Split(str, separator)', 'Returns a slice of strings'],
-    validPatterns: [
-      /strings\.Split\s*\(\s*s\s*,\s*["'] ["']\s*\)/,
-    ],
+    validPatterns: [/strings\.Split\s*\(\s*s\s*,\s*["'] ["']\s*\)/],
     tags: ['Split', 'tokenize', 'strings'],
   },
   {
@@ -261,9 +232,7 @@ export const goProblems: Problem[] = [
     expected: ['a', 'b', 'c', 'd'],
     sample: 'strings.Split(csv, ",")',
     hints: ['Use comma as separator'],
-    validPatterns: [
-      /strings\.Split\s*\(\s*csv\s*,\s*["'],["']\s*\)/,
-    ],
+    validPatterns: [/strings\.Split\s*\(\s*csv\s*,\s*["'],["']\s*\)/],
     tags: ['Split', 'CSV'],
   },
   {
@@ -277,9 +246,7 @@ export const goProblems: Problem[] = [
     expected: 'go-is-fun',
     sample: 'strings.Join(words, "-")',
     hints: ['strings.Join(slice, separator)', 'Returns a single string'],
-    validPatterns: [
-      /strings\.Join\s*\(\s*words\s*,\s*["']-["']\s*\)/,
-    ],
+    validPatterns: [/strings\.Join\s*\(\s*words\s*,\s*["']-["']\s*\)/],
     tags: ['Join', 'concatenate'],
   },
 
@@ -295,9 +262,7 @@ export const goProblems: Problem[] = [
     expected: true,
     sample: 'strings.Contains(s, "world")',
     hints: ['strings.Contains(str, substr)', 'Returns bool'],
-    validPatterns: [
-      /strings\.Contains\s*\(\s*s\s*,\s*["']world["']\s*\)/,
-    ],
+    validPatterns: [/strings\.Contains\s*\(\s*s\s*,\s*["']world["']\s*\)/],
     tags: ['Contains', 'substring'],
   },
 
@@ -313,9 +278,7 @@ export const goProblems: Problem[] = [
     expected: true,
     sample: 'strings.HasPrefix(s, "hello")',
     hints: ['strings.HasPrefix(str, prefix)', 'Returns bool'],
-    validPatterns: [
-      /strings\.HasPrefix\s*\(\s*s\s*,\s*["']hello["']\s*\)/,
-    ],
+    validPatterns: [/strings\.HasPrefix\s*\(\s*s\s*,\s*["']hello["']\s*\)/],
     tags: ['HasPrefix', 'prefix'],
   },
   {
@@ -329,9 +292,7 @@ export const goProblems: Problem[] = [
     expected: true,
     sample: 'strings.HasSuffix(filename, ".go")',
     hints: ['strings.HasSuffix(str, suffix)', 'Returns bool'],
-    validPatterns: [
-      /strings\.HasSuffix\s*\(\s*filename\s*,\s*["']\.go["']\s*\)/,
-    ],
+    validPatterns: [/strings\.HasSuffix\s*\(\s*filename\s*,\s*["']\.go["']\s*\)/],
     tags: ['HasSuffix', 'suffix'],
   },
 
@@ -347,9 +308,7 @@ export const goProblems: Problem[] = [
     expected: 'HELLO',
     sample: 'strings.ToUpper(s)',
     hints: ['strings.ToUpper(str)', 'Returns uppercase string'],
-    validPatterns: [
-      /strings\.ToUpper\s*\(\s*s\s*\)/,
-    ],
+    validPatterns: [/strings\.ToUpper\s*\(\s*s\s*\)/],
     tags: ['ToUpper', 'uppercase'],
   },
   {
@@ -363,9 +322,7 @@ export const goProblems: Problem[] = [
     expected: 'hello',
     sample: 'strings.ToLower(s)',
     hints: ['strings.ToLower(str)', 'Returns lowercase string'],
-    validPatterns: [
-      /strings\.ToLower\s*\(\s*s\s*\)/,
-    ],
+    validPatterns: [/strings\.ToLower\s*\(\s*s\s*\)/],
     tags: ['ToLower', 'lowercase'],
   },
 
@@ -381,9 +338,7 @@ export const goProblems: Problem[] = [
     expected: 'hello world',
     sample: 'strings.TrimSpace(s)',
     hints: ['strings.TrimSpace(str)', 'Removes spaces, tabs, newlines'],
-    validPatterns: [
-      /strings\.TrimSpace\s*\(\s*s\s*\)/,
-    ],
+    validPatterns: [/strings\.TrimSpace\s*\(\s*s\s*\)/],
     tags: ['TrimSpace', 'trim'],
   },
   {
@@ -397,9 +352,7 @@ export const goProblems: Problem[] = [
     expected: 'hello',
     sample: 'strings.Trim(s, "-")',
     hints: ['strings.Trim(str, cutset)', 'cutset is characters to remove'],
-    validPatterns: [
-      /strings\.Trim\s*\(\s*s\s*,\s*["']-["']\s*\)/,
-    ],
+    validPatterns: [/strings\.Trim\s*\(\s*s\s*,\s*["']-["']\s*\)/],
     tags: ['Trim', 'characters'],
   },
 
@@ -432,9 +385,7 @@ export const goProblems: Problem[] = [
     expected: 'hello_world go',
     sample: 'strings.Replace(s, " ", "_", 1)',
     hints: ['strings.Replace(str, old, new, n)', 'n=1 replaces first occurrence'],
-    validPatterns: [
-      /strings\.Replace\s*\(\s*s\s*,\s*["'] ["']\s*,\s*["']_["']\s*,\s*1\s*\)/,
-    ],
+    validPatterns: [/strings\.Replace\s*\(\s*s\s*,\s*["'] ["']\s*,\s*["']_["']\s*,\s*1\s*\)/],
     tags: ['Replace', 'first'],
   },
 
@@ -450,9 +401,7 @@ export const goProblems: Problem[] = [
     expected: 5,
     sample: 'len(s)',
     hints: ['len() returns byte count for strings', 'ASCII chars are 1 byte each'],
-    validPatterns: [
-      /len\s*\(\s*s\s*\)/,
-    ],
+    validPatterns: [/len\s*\(\s*s\s*\)/],
     tags: ['len', 'length', 'bytes'],
   },
   {
@@ -485,10 +434,7 @@ export const goProblems: Problem[] = [
     expected: '42',
     sample: 'strconv.Itoa(n)',
     hints: ['strconv.Itoa = Integer to ASCII', 'Returns string representation'],
-    validPatterns: [
-      /strconv\.Itoa\s*\(\s*n\s*\)/,
-      /fmt\.Sprintf\s*\(\s*["']%d["']\s*,\s*n\s*\)/,
-    ],
+    validPatterns: [/strconv\.Itoa\s*\(\s*n\s*\)/, /fmt\.Sprintf\s*\(\s*["']%d["']\s*,\s*n\s*\)/],
     tags: ['Itoa', 'convert', 'strconv'],
   },
   {
@@ -525,9 +471,7 @@ export const goProblems: Problem[] = [
     expected: 'make(map[string]int)',
     sample: 'make(map[string]int)',
     hints: ['make(map[KeyType]ValueType)', 'Creates an empty initialized map'],
-    validPatterns: [
-      /make\s*\(\s*map\s*\[\s*string\s*\]\s*int\s*\)/,
-    ],
+    validPatterns: [/make\s*\(\s*map\s*\[\s*string\s*\]\s*int\s*\)/],
     tags: ['make', 'map', 'create'],
   },
   {
@@ -559,9 +503,7 @@ export const goProblems: Problem[] = [
     expected: 'Alice',
     sample: 'm["name"]',
     hints: ['Use m[key] to access values', 'Returns zero value if key missing'],
-    validPatterns: [
-      /m\s*\[\s*["']name["']\s*\]/,
-    ],
+    validPatterns: [/m\s*\[\s*["']name["']\s*\]/],
     tags: ['map', 'access', 'read'],
   },
   {
@@ -592,9 +534,7 @@ export const goProblems: Problem[] = [
     expected: { score: 100 },
     sample: 'm["score"] = 100',
     hints: ['Use m[key] = value', 'Creates or updates the key'],
-    validPatterns: [
-      /m\s*\[\s*["']score["']\s*\]\s*=\s*100/,
-    ],
+    validPatterns: [/m\s*\[\s*["']score["']\s*\]\s*=\s*100/],
     tags: ['map', 'assign', 'set'],
   },
 
@@ -610,9 +550,7 @@ export const goProblems: Problem[] = [
     expected: { score: 100 },
     sample: 'delete(m, "temp")',
     hints: ['delete(map, key)', 'No-op if key does not exist'],
-    validPatterns: [
-      /delete\s*\(\s*m\s*,\s*["']temp["']\s*\)/,
-    ],
+    validPatterns: [/delete\s*\(\s*m\s*,\s*["']temp["']\s*\)/],
     tags: ['delete', 'remove', 'map'],
   },
 
@@ -628,9 +566,7 @@ export const goProblems: Problem[] = [
     expected: 'for k, v := range m',
     sample: 'for k, v := range m { fmt.Println(k, v) }',
     hints: ['for key, value := range map', 'Order is not guaranteed'],
-    validPatterns: [
-      /for\s+\w+\s*,\s*\w+\s*:=\s*range\s+m/,
-    ],
+    validPatterns: [/for\s+\w+\s*,\s*\w+\s*:=\s*range\s+m/],
     tags: ['range', 'iterate', 'loop'],
   },
   {
@@ -644,9 +580,7 @@ export const goProblems: Problem[] = [
     expected: 'for k := range m',
     sample: 'for k := range m { fmt.Println(k) }',
     hints: ['for key := range map', 'Omit value variable'],
-    validPatterns: [
-      /for\s+\w+\s*:=\s*range\s+m/,
-    ],
+    validPatterns: [/for\s+\w+\s*:=\s*range\s+m/],
     tags: ['range', 'keys', 'loop'],
   },
   {
@@ -660,9 +594,7 @@ export const goProblems: Problem[] = [
     expected: 3,
     sample: 'len(m)',
     hints: ['len() works on maps', 'Returns number of key-value pairs'],
-    validPatterns: [
-      /len\s*\(\s*m\s*\)/,
-    ],
+    validPatterns: [/len\s*\(\s*m\s*\)/],
     tags: ['len', 'size', 'map'],
   },
 
@@ -682,9 +614,7 @@ export const goProblems: Problem[] = [
     expected: [1, 2, 5, 8, 9],
     sample: 'sort.Ints(numbers)',
     hints: ['sort.Ints(slice)', 'Sorts in place, ascending order'],
-    validPatterns: [
-      /sort\.Ints\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/sort\.Ints\s*\(\s*numbers\s*\)/],
     tags: ['sort', 'Ints', 'ascending'],
   },
   {
@@ -716,9 +646,7 @@ export const goProblems: Problem[] = [
     expected: ['go', 'java', 'python', 'rust'],
     sample: 'sort.Strings(words)',
     hints: ['sort.Strings(slice)', 'Sorts alphabetically in place'],
-    validPatterns: [
-      /sort\.Strings\s*\(\s*words\s*\)/,
-    ],
+    validPatterns: [/sort\.Strings\s*\(\s*words\s*\)/],
     tags: ['sort', 'Strings', 'alphabetical'],
   },
 
@@ -745,9 +673,15 @@ export const goProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Sort Structs by Field',
     text: 'Use `sort.Slice()` to sort people by age.',
-    setup: 'import "sort"\ntype Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 35}}',
-    setupCode: 'import "sort"\ntype Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 35}}',
-    expected: [{ Name: 'Bob', Age: 25 }, { Name: 'Alice', Age: 30 }, { Name: 'Carol', Age: 35 }],
+    setup:
+      'import "sort"\ntype Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 35}}',
+    setupCode:
+      'import "sort"\ntype Person struct { Name string; Age int }\npeople := []Person{{"Alice", 30}, {"Bob", 25}, {"Carol", 35}}',
+    expected: [
+      { Name: 'Bob', Age: 25 },
+      { Name: 'Alice', Age: 30 },
+      { Name: 'Carol', Age: 35 },
+    ],
     sample: 'sort.Slice(people, func(i, j int) bool { return people[i].Age < people[j].Age })',
     hints: ['Access struct fields in comparison', 'Compare .Age for sorting'],
     validPatterns: [
@@ -768,9 +702,7 @@ export const goProblems: Problem[] = [
     expected: 2,
     sample: 'sort.SearchInts(numbers, 5)',
     hints: ['sort.SearchInts(slice, value)', 'Slice must be sorted', 'Returns insertion index'],
-    validPatterns: [
-      /sort\.SearchInts\s*\(\s*numbers\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/sort\.SearchInts\s*\(\s*numbers\s*,\s*5\s*\)/],
     tags: ['search', 'binary', 'SearchInts'],
   },
 
@@ -786,9 +718,7 @@ export const goProblems: Problem[] = [
     expected: true,
     sample: 'sort.IntsAreSorted(numbers)',
     hints: ['sort.IntsAreSorted(slice)', 'Returns true if ascending order'],
-    validPatterns: [
-      /sort\.IntsAreSorted\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/sort\.IntsAreSorted\s*\(\s*numbers\s*\)/],
     tags: ['sort', 'check', 'IsSorted'],
   },
 
@@ -803,7 +733,11 @@ export const goProblems: Problem[] = [
     setupCode: 'numbers := []int{1, 2, 3, 4, 5}',
     expected: [1, 2, 4, 5],
     sample: 'append(numbers[:2], numbers[3:]...)',
-    hints: ['Combine slice before and after index', 'Use append with ... to unpack', 'In Go 1.21+ consider slices.Delete()'],
+    hints: [
+      'Combine slice before and after index',
+      'Use append with ... to unpack',
+      'In Go 1.21+ consider slices.Delete()',
+    ],
     validPatterns: [
       /append\s*\(\s*numbers\s*\[\s*:\s*2\s*\]\s*,\s*numbers\s*\[\s*3\s*:\s*\]\s*\.\.\.\s*\)/,
       /slices\.Delete\s*\(\s*numbers\s*,\s*2\s*,\s*3\s*\)/,
@@ -820,7 +754,11 @@ export const goProblems: Problem[] = [
     setupCode: 'numbers := []int{1, 2, 3, 4}',
     expected: [1, 2, 99, 3, 4],
     sample: 'append(numbers[:2], append([]int{99}, numbers[2:]...)...)',
-    hints: ['Create slice with new element', 'Append rest of original slice', 'In Go 1.21+ consider slices.Insert()'],
+    hints: [
+      'Create slice with new element',
+      'Append rest of original slice',
+      'In Go 1.21+ consider slices.Insert()',
+    ],
     validPatterns: [
       /append\s*\(\s*numbers\s*\[\s*:\s*2\s*\]\s*,\s*append\s*\(\s*\[\s*\]\s*int\s*\{\s*99\s*\}\s*,\s*numbers\s*\[\s*2\s*:\s*\]\s*\.\.\.\s*\)\s*\.\.\.\s*\)/,
       /slices\.Insert\s*\(\s*numbers\s*,\s*2\s*,\s*99\s*\)/,
@@ -843,9 +781,7 @@ export const goProblems: Problem[] = [
     expected: true,
     sample: 'slices.Contains(numbers, 3)',
     hints: ['slices.Contains(slice, value)', 'Returns bool'],
-    validPatterns: [
-      /slices\.Contains\s*\(\s*numbers\s*,\s*3\s*\)/,
-    ],
+    validPatterns: [/slices\.Contains\s*\(\s*numbers\s*,\s*3\s*\)/],
     tags: ['slices', 'contains', 'Go1.21'],
   },
   {
@@ -859,9 +795,7 @@ export const goProblems: Problem[] = [
     expected: 2,
     sample: 'slices.Index(numbers, 30)',
     hints: ['slices.Index(slice, value)', 'Returns -1 if not found'],
-    validPatterns: [
-      /slices\.Index\s*\(\s*numbers\s*,\s*30\s*\)/,
-    ],
+    validPatterns: [/slices\.Index\s*\(\s*numbers\s*,\s*30\s*\)/],
     tags: ['slices', 'index', 'find', 'Go1.21'],
   },
   {
@@ -875,9 +809,7 @@ export const goProblems: Problem[] = [
     expected: [5, 4, 3, 2, 1],
     sample: 'slices.Reverse(numbers)',
     hints: ['slices.Reverse modifies in place', 'No return value'],
-    validPatterns: [
-      /slices\.Reverse\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/slices\.Reverse\s*\(\s*numbers\s*\)/],
     tags: ['slices', 'reverse', 'Go1.21'],
   },
   {
@@ -891,9 +823,7 @@ export const goProblems: Problem[] = [
     expected: [1, 2, 5, 8, 9],
     sample: 'slices.Sort(numbers)',
     hints: ['slices.Sort is simpler than sort.Ints', 'Works with any ordered type'],
-    validPatterns: [
-      /slices\.Sort\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/slices\.Sort\s*\(\s*numbers\s*\)/],
     tags: ['slices', 'sort', 'Go1.21'],
   },
   {
@@ -907,9 +837,7 @@ export const goProblems: Problem[] = [
     expected: 9,
     sample: 'slices.Max(numbers)',
     hints: ['slices.Max returns the largest element', 'Panics on empty slice'],
-    validPatterns: [
-      /slices\.Max\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/slices\.Max\s*\(\s*numbers\s*\)/],
     tags: ['slices', 'max', 'Go1.21'],
   },
   {
@@ -923,9 +851,7 @@ export const goProblems: Problem[] = [
     expected: 1,
     sample: 'slices.Min(numbers)',
     hints: ['slices.Min returns the smallest element', 'Panics on empty slice'],
-    validPatterns: [
-      /slices\.Min\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/slices\.Min\s*\(\s*numbers\s*\)/],
     tags: ['slices', 'min', 'Go1.21'],
   },
   {
@@ -939,9 +865,7 @@ export const goProblems: Problem[] = [
     expected: [1, 2, 3],
     sample: 'slices.Clone(original)',
     hints: ['slices.Clone creates a shallow copy', 'Changes to clone do not affect original'],
-    validPatterns: [
-      /slices\.Clone\s*\(\s*original\s*\)/,
-    ],
+    validPatterns: [/slices\.Clone\s*\(\s*original\s*\)/],
     tags: ['slices', 'clone', 'copy', 'Go1.21'],
   },
 
@@ -960,9 +884,7 @@ export const goProblems: Problem[] = [
     expected: { a: 1, b: 2 },
     sample: 'maps.Clone(original)',
     hints: ['maps.Clone creates a shallow copy', 'Modifying clone does not affect original'],
-    validPatterns: [
-      /maps\.Clone\s*\(\s*original\s*\)/,
-    ],
+    validPatterns: [/maps\.Clone\s*\(\s*original\s*\)/],
     tags: ['maps', 'clone', 'copy', 'Go1.21'],
   },
   {
@@ -998,9 +920,7 @@ export const goProblems: Problem[] = [
     expected: 'wrapped error',
     sample: 'fmt.Errorf("failed to open config: %w", originalErr)',
     hints: ['Use %w verb to wrap errors', 'Preserves original error for errors.Is/As'],
-    validPatterns: [
-      /fmt\.Errorf\s*\([^)]*%w[^)]*,\s*originalErr\s*\)/,
-    ],
+    validPatterns: [/fmt\.Errorf\s*\([^)]*%w[^)]*,\s*originalErr\s*\)/],
     tags: ['error', 'wrap', 'fmt.Errorf'],
   },
   {
@@ -1014,9 +934,7 @@ export const goProblems: Problem[] = [
     expected: true,
     sample: 'errors.Is(err, os.ErrNotExist)',
     hints: ['errors.Is checks error chain', 'Works with wrapped errors'],
-    validPatterns: [
-      /errors\.Is\s*\(\s*err\s*,\s*os\.ErrNotExist\s*\)/,
-    ],
+    validPatterns: [/errors\.Is\s*\(\s*err\s*,\s*os\.ErrNotExist\s*\)/],
     tags: ['error', 'errors.Is', 'sentinel'],
   },
   {
@@ -1030,9 +948,7 @@ export const goProblems: Problem[] = [
     expected: 'invalid input',
     sample: 'errors.New("invalid input")',
     hints: ['errors.New creates a simple error', 'For formatted errors use fmt.Errorf'],
-    validPatterns: [
-      /errors\.New\s*\(\s*["']invalid input["']\s*\)/,
-    ],
+    validPatterns: [/errors\.New\s*\(\s*["']invalid input["']\s*\)/],
     tags: ['error', 'errors.New', 'create'],
   },
 
@@ -1051,9 +967,7 @@ export const goProblems: Problem[] = [
     expected: {},
     sample: 'clear(m)',
     hints: ['clear() removes all map entries', 'Map is still usable after clear'],
-    validPatterns: [
-      /clear\s*\(\s*m\s*\)/,
-    ],
+    validPatterns: [/clear\s*\(\s*m\s*\)/],
     tags: ['clear', 'map', 'builtin', 'Go1.21'],
   },
   {
@@ -1067,9 +981,7 @@ export const goProblems: Problem[] = [
     expected: [0, 0, 0, 0, 0],
     sample: 'clear(numbers)',
     hints: ['clear() sets slice elements to zero value', 'Length remains the same'],
-    validPatterns: [
-      /clear\s*\(\s*numbers\s*\)/,
-    ],
+    validPatterns: [/clear\s*\(\s*numbers\s*\)/],
     tags: ['clear', 'slice', 'builtin', 'Go1.21'],
   },
   {
@@ -1083,9 +995,7 @@ export const goProblems: Problem[] = [
     expected: 25,
     sample: 'max(a, b, c)',
     hints: ['max() is a built-in since Go 1.21', 'Works with any ordered type'],
-    validPatterns: [
-      /max\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)/,
-    ],
+    validPatterns: [/max\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)/],
     tags: ['max', 'builtin', 'Go1.21'],
   },
   {
@@ -1099,9 +1009,7 @@ export const goProblems: Problem[] = [
     expected: 10,
     sample: 'min(a, b, c)',
     hints: ['min() is a built-in since Go 1.21', 'Works with any ordered type'],
-    validPatterns: [
-      /min\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)/,
-    ],
+    validPatterns: [/min\s*\(\s*a\s*,\s*b\s*,\s*c\s*\)/],
     tags: ['min', 'builtin', 'Go1.21'],
   },
 
@@ -1120,9 +1028,7 @@ export const goProblems: Problem[] = [
     expected: 'Alice is 30 years old',
     sample: 'fmt.Sprintf("%s is %d years old", name, age)',
     hints: ['%s for strings, %d for integers', 'Returns formatted string'],
-    validPatterns: [
-      /fmt\.Sprintf\s*\(\s*["']%s is %d years old["']\s*,\s*name\s*,\s*age\s*\)/,
-    ],
+    validPatterns: [/fmt\.Sprintf\s*\(\s*["']%s is %d years old["']\s*,\s*name\s*,\s*age\s*\)/],
     tags: ['fmt', 'Sprintf', 'format'],
   },
   {
@@ -1136,9 +1042,7 @@ export const goProblems: Problem[] = [
     expected: 'float64',
     sample: 'fmt.Sprintf("%T", value)',
     hints: ['%T prints the type of a value', 'Useful for debugging'],
-    validPatterns: [
-      /fmt\.Sprintf\s*\(\s*["']%T["']\s*,\s*value\s*\)/,
-    ],
+    validPatterns: [/fmt\.Sprintf\s*\(\s*["']%T["']\s*,\s*value\s*\)/],
     tags: ['fmt', 'Sprintf', 'type'],
   },
   {
@@ -1152,9 +1056,7 @@ export const goProblems: Problem[] = [
     expected: '[]int{1, 2, 3}',
     sample: 'fmt.Sprintf("%#v", data)',
     hints: ['%#v shows Go syntax representation', 'Useful for debugging complex types'],
-    validPatterns: [
-      /fmt\.Sprintf\s*\(\s*["']%#v["']\s*,\s*data\s*\)/,
-    ],
+    validPatterns: [/fmt\.Sprintf\s*\(\s*["']%#v["']\s*,\s*data\s*\)/],
     tags: ['fmt', 'Sprintf', 'debug'],
   },
 ];

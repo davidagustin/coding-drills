@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface BackLinkProps {
   href?: string;
@@ -13,10 +13,10 @@ interface BackLinkProps {
 
 export function BackLink({
   href,
-  label = "Back",
+  label = 'Back',
   onClick,
   useRouterBack = false,
-  className = "",
+  className = '',
 }: BackLinkProps) {
   const router = useRouter();
 
@@ -39,12 +39,9 @@ export function BackLink({
         viewBox="0 0 24 24"
         stroke="currentColor"
         strokeWidth={2}
+        aria-hidden="true"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15 19l-7-7 7-7"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
       </svg>
 
       {/* Label */}
@@ -74,11 +71,7 @@ export function BackLink({
 
   // Otherwise, render as button
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className={baseClasses}
-    >
+    <button type="button" onClick={handleClick} className={baseClasses}>
       {linkContent}
     </button>
   );

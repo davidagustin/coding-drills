@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type TimerMode = 'countdown' | 'stopwatch';
 
@@ -82,9 +82,8 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
   }, [mode, initialTime]);
 
   // Calculate urgency level for countdown
-  const urgencyLevel = mode === 'countdown'
-    ? time <= 10 ? 'critical' : time <= 30 ? 'warning' : 'normal'
-    : 'normal';
+  const urgencyLevel =
+    mode === 'countdown' ? (time <= 10 ? 'critical' : time <= 30 ? 'warning' : 'normal') : 'normal';
 
   const getUrgencyStyles = () => {
     switch (urgencyLevel) {
@@ -130,12 +129,7 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
         aria-atomic="true"
       >
         {mode === 'countdown' && (time === 30 || time === 10 || time === 5 || time === 0) && (
-          <span>
-            {time === 0 
-              ? 'Time is up!' 
-              : `${formatTimeForScreenReader(time)} remaining`
-            }
-          </span>
+          <span>{time === 0 ? 'Time is up!' : `${formatTimeForScreenReader(time)} remaining`}</span>
         )}
       </div>
 
@@ -173,7 +167,7 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
       </div>
 
       {/* Mode indicator */}
-      <span 
+      <span
         className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400"
         id="timer-mode-label"
       >
@@ -181,9 +175,10 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
       </span>
 
       {/* Controls */}
-      <div className="flex items-center gap-2" role="group" aria-label="Timer controls">
+      <div className="flex items-center gap-2">
         {!isRunning ? (
           <button
+            type="button"
             onClick={handleStart}
             disabled={hasCompleted && mode === 'countdown'}
             className="
@@ -192,11 +187,15 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
               text-white rounded-lg transition-colors duration-200
               focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900
             "
-            aria-label={hasCompleted && mode === 'countdown' ? 'Timer completed, reset to start again' : 'Start timer'}
+            aria-label={
+              hasCompleted && mode === 'countdown'
+                ? 'Timer completed, reset to start again'
+                : 'Start timer'
+            }
           >
-            <svg 
-              className="w-4 h-4" 
-              fill="currentColor" 
+            <svg
+              className="w-4 h-4"
+              fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
               focusable="false"
@@ -207,6 +206,7 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
           </button>
         ) : (
           <button
+            type="button"
             onClick={handlePause}
             className="
               flex items-center gap-1.5 px-4 py-2 text-sm font-medium
@@ -216,9 +216,9 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
             "
             aria-label="Pause timer"
           >
-            <svg 
-              className="w-4 h-4" 
-              fill="currentColor" 
+            <svg
+              className="w-4 h-4"
+              fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
               focusable="false"
@@ -230,6 +230,7 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
         )}
 
         <button
+          type="button"
           onClick={handleReset}
           className="
             flex items-center gap-1.5 px-4 py-2 text-sm font-medium
@@ -239,10 +240,10 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
           "
           aria-label="Reset timer"
         >
-          <svg 
-            className="w-4 h-4" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
             aria-hidden="true"
             focusable="false"
@@ -260,7 +261,7 @@ export function Timer({ mode, initialTime = 60, onComplete, ariaLabel }: TimerPr
 
       {/* Completion message */}
       {hasCompleted && mode === 'countdown' && (
-        <div 
+        <div
           className="text-sm font-medium text-red-400 dark:text-red-300 animate-bounce"
           role="alert"
           aria-live="assertive"

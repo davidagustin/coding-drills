@@ -8,10 +8,9 @@ export const cppMethods: Method[] = [
     name: 'push_back',
     category: 'Vector Methods',
     syntax: 'vector.push_back(value)',
-    description: 'Adds an element to the end of the vector. May cause reallocation if capacity is exceeded.',
-    arguments: [
-      { name: 'value', type: 'T', description: 'The value to add to the vector' },
-    ],
+    description:
+      'Adds an element to the end of the vector. May cause reallocation if capacity is exceeded.',
+    arguments: [{ name: 'value', type: 'T', description: 'The value to add to the vector' }],
     returns: { type: 'void', description: 'No return value' },
     examples: [
       { code: 'vector<int> v = {1, 2, 3};\nv.push_back(4);', output: 'v = {1, 2, 3, 4}' },
@@ -28,9 +27,7 @@ export const cppMethods: Method[] = [
     description: 'Removes the last element from the vector. Does not return the removed element.',
     arguments: [],
     returns: { type: 'void', description: 'No return value' },
-    examples: [
-      { code: 'vector<int> v = {1, 2, 3};\nv.pop_back();', output: 'v = {1, 2}' },
-    ],
+    examples: [{ code: 'vector<int> v = {1, 2, 3};\nv.pop_back();', output: 'v = {1, 2}' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['push_back', 'back', 'erase'],
@@ -40,14 +37,25 @@ export const cppMethods: Method[] = [
     name: 'emplace_back',
     category: 'Vector Methods',
     syntax: 'vector.emplace_back(args...)',
-    description: 'Constructs an element in-place at the end of the vector. More efficient than push_back for complex types.',
+    description:
+      'Constructs an element in-place at the end of the vector. More efficient than push_back for complex types.',
     arguments: [
-      { name: 'args', type: 'Args&&...', description: 'Arguments to forward to the element constructor' },
+      {
+        name: 'args',
+        type: 'Args&&...',
+        description: 'Arguments to forward to the element constructor',
+      },
     ],
     returns: { type: 'reference', description: 'Reference to the inserted element (C++17)' },
     examples: [
-      { code: 'vector<pair<int, string>> v;\nv.emplace_back(1, "one");', output: 'v = {{1, "one"}}' },
-      { code: 'vector<pair<string, int>> data;\ndata.emplace_back("key", 42);', output: 'Constructs pair in-place' },
+      {
+        code: 'vector<pair<int, string>> v;\nv.emplace_back(1, "one");',
+        output: 'v = {{1, "one"}}',
+      },
+      {
+        code: 'vector<pair<string, int>> data;\ndata.emplace_back("key", 42);',
+        output: 'Constructs pair in-place',
+      },
     ],
     timeComplexity: 'O(1) amortized',
     spaceComplexity: 'O(1) amortized',
@@ -89,9 +97,7 @@ export const cppMethods: Method[] = [
     category: 'Vector Methods',
     syntax: 'vector.at(index)',
     description: 'Returns a reference to the element at specified position with bounds checking.',
-    arguments: [
-      { name: 'index', type: 'size_type', description: 'Position of the element' },
-    ],
+    arguments: [{ name: 'index', type: 'size_type', description: 'Position of the element' }],
     returns: { type: 'reference', description: 'Reference to the element' },
     examples: [
       { code: 'vector<int> v = {1, 2, 3};\nv.at(1);', output: '2' },
@@ -109,9 +115,7 @@ export const cppMethods: Method[] = [
     description: 'Returns a reference to the first element in the vector.',
     arguments: [],
     returns: { type: 'reference', description: 'Reference to the first element' },
-    examples: [
-      { code: 'vector<int> v = {1, 2, 3};\nv.front();', output: '1' },
-    ],
+    examples: [{ code: 'vector<int> v = {1, 2, 3};\nv.front();', output: '1' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['back', 'at', 'begin'],
@@ -124,9 +128,7 @@ export const cppMethods: Method[] = [
     description: 'Returns a reference to the last element in the vector.',
     arguments: [],
     returns: { type: 'reference', description: 'Reference to the last element' },
-    examples: [
-      { code: 'vector<int> v = {1, 2, 3};\nv.back();', output: '3' },
-    ],
+    examples: [{ code: 'vector<int> v = {1, 2, 3};\nv.back();', output: '3' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['front', 'at', 'end'],
@@ -139,9 +141,7 @@ export const cppMethods: Method[] = [
     description: 'Removes all elements from the vector. Capacity remains unchanged.',
     arguments: [],
     returns: { type: 'void', description: 'No return value' },
-    examples: [
-      { code: 'vector<int> v = {1, 2, 3};\nv.clear();\nv.size();', output: '0' },
-    ],
+    examples: [{ code: 'vector<int> v = {1, 2, 3};\nv.clear();\nv.size();', output: '0' }],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['erase', 'resize', 'shrink_to_fit'],
@@ -171,7 +171,12 @@ export const cppMethods: Method[] = [
     description: 'Removes elements from the vector at the specified position or range.',
     arguments: [
       { name: 'position', type: 'iterator', description: 'Position of element to remove' },
-      { name: 'first, last', type: 'iterator', description: 'Range of elements to remove', optional: true },
+      {
+        name: 'first, last',
+        type: 'iterator',
+        description: 'Range of elements to remove',
+        optional: true,
+      },
     ],
     returns: { type: 'iterator', description: 'Iterator following the last removed element' },
     examples: [
@@ -191,9 +196,7 @@ export const cppMethods: Method[] = [
       { name: 'new_capacity', type: 'size_type', description: 'Minimum capacity to reserve' },
     ],
     returns: { type: 'void', description: 'No return value' },
-    examples: [
-      { code: 'vector<int> v;\nv.reserve(1000);\nv.capacity();', output: '>= 1000' },
-    ],
+    examples: [{ code: 'vector<int> v;\nv.reserve(1000);\nv.capacity();', output: '>= 1000' }],
     timeComplexity: 'O(n) if reallocation occurs',
     spaceComplexity: 'O(n)',
     relatedMethods: ['capacity', 'shrink_to_fit', 'resize'],
@@ -206,7 +209,12 @@ export const cppMethods: Method[] = [
     description: 'Resizes the container to contain count elements.',
     arguments: [
       { name: 'count', type: 'size_type', description: 'New size of the container' },
-      { name: 'value', type: 'T', description: 'Value to initialize new elements with', optional: true },
+      {
+        name: 'value',
+        type: 'T',
+        description: 'Value to initialize new elements with',
+        optional: true,
+      },
     ],
     returns: { type: 'void', description: 'No return value' },
     examples: [
@@ -228,7 +236,13 @@ export const cppMethods: Method[] = [
     description: 'Returns a substring starting at pos with length count.',
     arguments: [
       { name: 'pos', type: 'size_type', description: 'Starting position', defaultValue: '0' },
-      { name: 'count', type: 'size_type', description: 'Length of substring', optional: true, defaultValue: 'npos' },
+      {
+        name: 'count',
+        type: 'size_type',
+        description: 'Length of substring',
+        optional: true,
+        defaultValue: 'npos',
+      },
     ],
     returns: { type: 'string', description: 'The substring' },
     examples: [
@@ -246,7 +260,13 @@ export const cppMethods: Method[] = [
     description: 'Finds the first occurrence of the substring. Returns npos if not found.',
     arguments: [
       { name: 'str', type: 'string', description: 'Substring to search for' },
-      { name: 'pos', type: 'size_type', description: 'Position to start searching', optional: true, defaultValue: '0' },
+      {
+        name: 'pos',
+        type: 'size_type',
+        description: 'Position to start searching',
+        optional: true,
+        defaultValue: '0',
+      },
     ],
     returns: { type: 'size_type', description: 'Position of first match, or npos if not found' },
     examples: [
@@ -262,13 +282,11 @@ export const cppMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.append(str)',
     description: 'Appends characters to the end of the string.',
-    arguments: [
-      { name: 'str', type: 'string', description: 'String to append' },
-    ],
+    arguments: [{ name: 'str', type: 'string', description: 'String to append' }],
     returns: { type: 'string&', description: 'Reference to the modified string' },
     examples: [
       { code: 'string s = "Hello";\ns.append(" World");', output: '"Hello World"' },
-      { code: 's.append(3, \'!\');', output: '"Hello World!!!"' },
+      { code: "s.append(3, '!');", output: '"Hello World!!!"' },
     ],
     timeComplexity: 'O(m) where m is length of appended string',
     spaceComplexity: 'O(m)',
@@ -312,9 +330,7 @@ export const cppMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.compare(str)',
     description: 'Compares two strings lexicographically.',
-    arguments: [
-      { name: 'str', type: 'string', description: 'String to compare with' },
-    ],
+    arguments: [{ name: 'str', type: 'string', description: 'String to compare with' }],
     returns: { type: 'int', description: '0 if equal, <0 if less, >0 if greater' },
     examples: [
       { code: 'string s1 = "abc";\ns1.compare("abc");', output: '0' },
@@ -333,7 +349,8 @@ export const cppMethods: Method[] = [
     name: 'sort',
     category: 'Algorithm Library',
     syntax: 'std::sort(first, last, comp)',
-    description: 'Sorts elements in the range [first, last) in ascending order or using a custom comparator.',
+    description:
+      'Sorts elements in the range [first, last) in ascending order or using a custom comparator.',
     arguments: [
       { name: 'first', type: 'RandomIt', description: 'Iterator to the beginning' },
       { name: 'last', type: 'RandomIt', description: 'Iterator to the end' },
@@ -341,13 +358,19 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'void', description: 'No return value' },
     examples: [
-      { code: 'vector<int> v = {3, 1, 4, 1, 5};\nsort(v.begin(), v.end());', output: 'v = {1, 1, 3, 4, 5}' },
+      {
+        code: 'vector<int> v = {3, 1, 4, 1, 5};\nsort(v.begin(), v.end());',
+        output: 'v = {1, 1, 3, 4, 5}',
+      },
       { code: 'sort(v.begin(), v.end(), greater<int>());', output: 'v = {5, 4, 3, 1, 1}' },
     ],
     timeComplexity: 'O(n log n)',
     spaceComplexity: 'O(log n)',
     relatedMethods: ['stable_sort', 'partial_sort', 'nth_element'],
-    notes: ['C++20: Use std::ranges::sort for cleaner syntax', 'Comparator must define strict weak ordering'],
+    notes: [
+      'C++20: Use std::ranges::sort for cleaner syntax',
+      'Comparator must define strict weak ordering',
+    ],
   },
   {
     name: 'binary_search',
@@ -361,7 +384,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'bool', description: 'true if found, false otherwise' },
     examples: [
-      { code: 'vector<int> v = {1, 2, 3, 4, 5};\nbinary_search(v.begin(), v.end(), 3);', output: 'true' },
+      {
+        code: 'vector<int> v = {1, 2, 3, 4, 5};\nbinary_search(v.begin(), v.end(), 3);',
+        output: 'true',
+      },
       { code: 'binary_search(v.begin(), v.end(), 10);', output: 'false' },
     ],
     timeComplexity: 'O(log n)',
@@ -381,7 +407,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'ForwardIt', description: 'Iterator to first element >= value' },
     examples: [
-      { code: 'vector<int> v = {1, 2, 4, 5, 5, 6};\nauto it = lower_bound(v.begin(), v.end(), 5);', output: 'Iterator to first 5 (index 3)' },
+      {
+        code: 'vector<int> v = {1, 2, 4, 5, 5, 6};\nauto it = lower_bound(v.begin(), v.end(), 5);',
+        output: 'Iterator to first 5 (index 3)',
+      },
       { code: 'lower_bound(v.begin(), v.end(), 3);', output: 'Iterator to 4 (index 2)' },
     ],
     timeComplexity: 'O(log n)',
@@ -400,7 +429,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'ForwardIt', description: 'Iterator to first element > value' },
     examples: [
-      { code: 'vector<int> v = {1, 2, 4, 5, 5, 6};\nauto it = upper_bound(v.begin(), v.end(), 5);', output: 'Iterator to 6 (index 5)' },
+      {
+        code: 'vector<int> v = {1, 2, 4, 5, 5, 6};\nauto it = upper_bound(v.begin(), v.end(), 5);',
+        output: 'Iterator to 6 (index 5)',
+      },
     ],
     timeComplexity: 'O(log n)',
     spaceComplexity: 'O(1)',
@@ -418,7 +450,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'InputIt', description: 'Iterator to the element, or last if not found' },
     examples: [
-      { code: 'vector<int> v = {1, 2, 3, 4};\nauto it = find(v.begin(), v.end(), 3);', output: 'Iterator to 3' },
+      {
+        code: 'vector<int> v = {1, 2, 3, 4};\nauto it = find(v.begin(), v.end(), 3);',
+        output: 'Iterator to 3',
+      },
       { code: 'find(v.begin(), v.end(), 10);', output: 'v.end()' },
     ],
     timeComplexity: 'O(n)',
@@ -437,7 +472,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'InputIt', description: 'Iterator to the element, or last if not found' },
     examples: [
-      { code: 'vector<int> v = {1, 2, 3, 4, 5};\nauto it = find_if(v.begin(), v.end(), [](int n) { return n > 3; });', output: 'Iterator to 4' },
+      {
+        code: 'vector<int> v = {1, 2, 3, 4, 5};\nauto it = find_if(v.begin(), v.end(), [](int n) { return n > 3; });',
+        output: 'Iterator to 4',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -472,7 +510,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'void', description: 'No return value' },
     examples: [
-      { code: 'vector<int> v = {1, 2, 3, 4};\nreverse(v.begin(), v.end());', output: 'v = {4, 3, 2, 1}' },
+      {
+        code: 'vector<int> v = {1, 2, 3, 4};\nreverse(v.begin(), v.end());',
+        output: 'v = {4, 3, 2, 1}',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -489,7 +530,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'ForwardIt', description: 'Iterator to the new end of the range' },
     examples: [
-      { code: 'vector<int> v = {1, 1, 2, 2, 3};\nauto last = unique(v.begin(), v.end());\nv.erase(last, v.end());', output: 'v = {1, 2, 3}' },
+      {
+        code: 'vector<int> v = {1, 1, 2, 2, 3};\nauto last = unique(v.begin(), v.end());\nv.erase(last, v.end());',
+        output: 'v = {1, 2, 3}',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -507,7 +551,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'ForwardIt', description: 'Iterator to the largest element' },
     examples: [
-      { code: 'vector<int> v = {1, 5, 3, 4, 2};\nauto it = max_element(v.begin(), v.end());', output: '*it = 5' },
+      {
+        code: 'vector<int> v = {1, 5, 3, 4, 2};\nauto it = max_element(v.begin(), v.end());',
+        output: '*it = 5',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -524,7 +571,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'ForwardIt', description: 'Iterator to the smallest element' },
     examples: [
-      { code: 'vector<int> v = {3, 1, 4, 1, 5};\nauto it = min_element(v.begin(), v.end());', output: '*it = 1' },
+      {
+        code: 'vector<int> v = {3, 1, 4, 1, 5};\nauto it = min_element(v.begin(), v.end());',
+        output: '*it = 1',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -563,7 +613,10 @@ export const cppMethods: Method[] = [
     ],
     returns: { type: 'OutputIt', description: 'Iterator to the end of the output range' },
     examples: [
-      { code: 'vector<int> v = {1, 2, 3};\nvector<int> result(3);\ntransform(v.begin(), v.end(), result.begin(), [](int n) { return n * 2; });', output: 'result = {2, 4, 6}' },
+      {
+        code: 'vector<int> v = {1, 2, 3};\nvector<int> result(3);\ntransform(v.begin(), v.end(), result.begin(), [](int n) { return n * 2; });',
+        output: 'result = {2, 4, 6}',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
@@ -578,9 +631,7 @@ export const cppMethods: Method[] = [
     category: 'Map Methods',
     syntax: 'map.insert({key, value})',
     description: 'Inserts element(s) if key does not exist.',
-    arguments: [
-      { name: 'value', type: 'pair<Key, T>', description: 'Key-value pair to insert' },
-    ],
+    arguments: [{ name: 'value', type: 'pair<Key, T>', description: 'Key-value pair to insert' }],
     returns: { type: 'pair<iterator, bool>', description: 'Iterator and success status' },
     examples: [
       { code: 'map<string, int> m;\nm.insert({"apple", 1});', output: '{iterator, true}' },
@@ -595,12 +646,13 @@ export const cppMethods: Method[] = [
     category: 'Map Methods',
     syntax: 'map.find(key)',
     description: 'Finds an element with the specified key.',
-    arguments: [
-      { name: 'key', type: 'Key', description: 'Key to search for' },
-    ],
+    arguments: [{ name: 'key', type: 'Key', description: 'Key to search for' }],
     returns: { type: 'iterator', description: 'Iterator to element, or end() if not found' },
     examples: [
-      { code: 'map<string, int> m = {{"a", 1}, {"b", 2}};\nauto it = m.find("a");', output: 'it->second = 1' },
+      {
+        code: 'map<string, int> m = {{"a", 1}, {"b", 2}};\nauto it = m.find("a");',
+        output: 'it->second = 1',
+      },
       { code: 'm.find("c");', output: 'm.end()' },
     ],
     timeComplexity: 'O(log n)',
@@ -612,10 +664,9 @@ export const cppMethods: Method[] = [
     name: 'count',
     category: 'Map Methods',
     syntax: 'map.count(key)',
-    description: 'Returns the number of elements with the specified key (0 or 1 for map, 0+ for multimap).',
-    arguments: [
-      { name: 'key', type: 'Key', description: 'Key to count' },
-    ],
+    description:
+      'Returns the number of elements with the specified key (0 or 1 for map, 0+ for multimap).',
+    arguments: [{ name: 'key', type: 'Key', description: 'Key to count' }],
     returns: { type: 'size_type', description: 'Number of elements with the key' },
     examples: [
       { code: 'map<string, int> m = {{"a", 1}};\nm.count("a");', output: '1' },
@@ -635,9 +686,15 @@ export const cppMethods: Method[] = [
       { name: 'key', type: 'Key', description: 'Key to remove' },
       { name: 'position', type: 'iterator', description: 'Position to remove', optional: true },
     ],
-    returns: { type: 'size_type | iterator', description: 'Number removed (by key) or iterator (by position)' },
+    returns: {
+      type: 'size_type | iterator',
+      description: 'Number removed (by key) or iterator (by position)',
+    },
     examples: [
-      { code: 'map<string, int> m = {{"a", 1}, {"b", 2}};\nm.erase("a");', output: '1, m = {{"b", 2}}' },
+      {
+        code: 'map<string, int> m = {{"a", 1}, {"b", 2}};\nm.erase("a");',
+        output: '1, m = {{"b", 2}}',
+      },
     ],
     timeComplexity: 'O(log n)',
     spaceComplexity: 'O(1)',
@@ -652,9 +709,7 @@ export const cppMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.insert(value)',
     description: 'Inserts an element if it does not already exist.',
-    arguments: [
-      { name: 'value', type: 'T', description: 'Value to insert' },
-    ],
+    arguments: [{ name: 'value', type: 'T', description: 'Value to insert' }],
     returns: { type: 'pair<iterator, bool>', description: 'Iterator and success status' },
     examples: [
       { code: 'set<int> s;\ns.insert(1);\ns.insert(2);\ns.insert(1);', output: 's = {1, 2}' },
@@ -668,9 +723,7 @@ export const cppMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.find(value)',
     description: 'Finds an element with the specified value.',
-    arguments: [
-      { name: 'value', type: 'T', description: 'Value to search for' },
-    ],
+    arguments: [{ name: 'value', type: 'T', description: 'Value to search for' }],
     returns: { type: 'iterator', description: 'Iterator to element, or end() if not found' },
     examples: [
       { code: 'set<int> s = {1, 2, 3};\ns.find(2);', output: 'Iterator to 2' },
@@ -686,9 +739,7 @@ export const cppMethods: Method[] = [
     category: 'Set Methods',
     syntax: 'set.count(value)',
     description: 'Returns 1 if the value exists, 0 otherwise.',
-    arguments: [
-      { name: 'value', type: 'T', description: 'Value to count' },
-    ],
+    arguments: [{ name: 'value', type: 'T', description: 'Value to count' }],
     returns: { type: 'size_type', description: '1 if found, 0 otherwise' },
     examples: [
       { code: 'set<int> s = {1, 2, 3};\ns.count(2);', output: '1' },
@@ -708,9 +759,7 @@ export const cppMethods: Method[] = [
     category: 'Stack/Queue',
     syntax: 'container.push(value)',
     description: 'Adds an element to the stack (top) or queue (back).',
-    arguments: [
-      { name: 'value', type: 'T', description: 'Value to add' },
-    ],
+    arguments: [{ name: 'value', type: 'T', description: 'Value to add' }],
     returns: { type: 'void', description: 'No return value' },
     examples: [
       { code: 'stack<int> s;\ns.push(1);\ns.push(2);', output: 'Stack: bottom [1, 2] top' },
@@ -724,12 +773,19 @@ export const cppMethods: Method[] = [
     name: 'pop',
     category: 'Stack/Queue',
     syntax: 'container.pop()',
-    description: 'Removes the top element (stack) or front element (queue). Does not return the element.',
+    description:
+      'Removes the top element (stack) or front element (queue). Does not return the element.',
     arguments: [],
     returns: { type: 'void', description: 'No return value' },
     examples: [
-      { code: 'stack<int> s;\ns.push(1); s.push(2); s.push(3);\ns.pop();', output: 'Removes 3 (top), s now has {1, 2}' },
-      { code: 'queue<int> q;\nq.push(1); q.push(2); q.push(3);\nq.pop();', output: 'Removes 1 (front), q now has {2, 3}' },
+      {
+        code: 'stack<int> s;\ns.push(1); s.push(2); s.push(3);\ns.pop();',
+        output: 'Removes 3 (top), s now has {1, 2}',
+      },
+      {
+        code: 'queue<int> q;\nq.push(1); q.push(2); q.push(3);\nq.pop();',
+        output: 'Removes 1 (front), q now has {2, 3}',
+      },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
@@ -743,9 +799,7 @@ export const cppMethods: Method[] = [
     description: 'Returns a reference to the top element of the stack.',
     arguments: [],
     returns: { type: 'reference', description: 'Reference to the top element' },
-    examples: [
-      { code: 'stack<int> s;\ns.push(1);\ns.push(2);\ns.top();', output: '2' },
-    ],
+    examples: [{ code: 'stack<int> s;\ns.push(1);\ns.push(2);\ns.top();', output: '2' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['push', 'pop', 'empty'],
@@ -757,9 +811,7 @@ export const cppMethods: Method[] = [
     description: 'Returns a reference to the front element of the queue.',
     arguments: [],
     returns: { type: 'reference', description: 'Reference to the front element' },
-    examples: [
-      { code: 'queue<int> q;\nq.push(1);\nq.push(2);\nq.front();', output: '1' },
-    ],
+    examples: [{ code: 'queue<int> q;\nq.push(1);\nq.push(2);\nq.front();', output: '1' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['back', 'push', 'pop'],

@@ -11,6 +11,7 @@
 export function GoBackButton() {
   return (
     <button
+      type="button"
       onClick={() => window.history.back()}
       className="
         inline-flex items-center gap-2 px-6 py-3
@@ -26,6 +27,7 @@ export function GoBackButton() {
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"

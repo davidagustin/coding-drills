@@ -123,7 +123,10 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::vector<int> nums(5);',
     expected: '{7, 7, 7, 7, 7}',
     sample: 'std::fill(nums.begin(), nums.end(), 7);',
-    hints: ['begin() returns an iterator to the first element', 'end() returns an iterator past the last element'],
+    hints: [
+      'begin() returns an iterator to the first element',
+      'end() returns an iterator past the last element',
+    ],
     tags: ['vector', 'begin', 'end', 'iterators', 'stl'],
   },
   {
@@ -244,7 +247,10 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::vector<int> nums = {1, 2, 3, 4, 5};',
     expected: '15',
     sample: 'std::accumulate(nums.begin(), nums.end(), 0)',
-    hints: ['std::accumulate() is in the <numeric> header', 'The third argument is the initial value'],
+    hints: [
+      'std::accumulate() is in the <numeric> header',
+      'The third argument is the initial value',
+    ],
     tags: ['algorithm', 'accumulate', 'numeric', 'stl'],
   },
   {
@@ -257,7 +263,10 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::vector<int> nums = {1, 2, 3, 4, 5};',
     expected: '{2, 4, 6, 8, 10}',
     sample: 'std::transform(nums.begin(), nums.end(), nums.begin(), [](int x) { return x * 2; });',
-    hints: ['std::transform() applies a function to each element', 'Use a lambda for the transformation'],
+    hints: [
+      'std::transform() applies a function to each element',
+      'Use a lambda for the transformation',
+    ],
     tags: ['algorithm', 'transform', 'lambda', 'stl'],
   },
   {
@@ -269,8 +278,12 @@ export const cppProblems: Problem[] = [
     setup: 'std::vector<int> nums = {1, 2, 3, 4, 5, 6};\nstd::vector<int> evens;',
     setupCode: 'std::vector<int> nums = {1, 2, 3, 4, 5, 6};\nstd::vector<int> evens;',
     expected: 'evens = {2, 4, 6}',
-    sample: 'std::copy_if(nums.begin(), nums.end(), std::back_inserter(evens), [](int x) { return x % 2 == 0; });',
-    hints: ['std::copy_if() copies elements where the predicate returns true', 'Use std::back_inserter() to append to the destination'],
+    sample:
+      'std::copy_if(nums.begin(), nums.end(), std::back_inserter(evens), [](int x) { return x % 2 == 0; });',
+    hints: [
+      'std::copy_if() copies elements where the predicate returns true',
+      'Use std::back_inserter() to append to the destination',
+    ],
     tags: ['algorithm', 'copy_if', 'stl'],
   },
   {
@@ -282,8 +295,12 @@ export const cppProblems: Problem[] = [
     setup: 'std::vector<int> nums = {1, 2, 3, 4, 5, 6};',
     setupCode: 'std::vector<int> nums = {1, 2, 3, 4, 5, 6};',
     expected: '{2, 4, 6}',
-    sample: 'nums.erase(std::remove_if(nums.begin(), nums.end(), [](int x) { return x % 2 != 0; }), nums.end());',
-    hints: ['std::remove_if() moves non-matching elements to the front', 'Combine with erase() to actually remove elements (erase-remove idiom)'],
+    sample:
+      'nums.erase(std::remove_if(nums.begin(), nums.end(), [](int x) { return x % 2 != 0; }), nums.end());',
+    hints: [
+      'std::remove_if() moves non-matching elements to the front',
+      'Combine with erase() to actually remove elements (erase-remove idiom)',
+    ],
     tags: ['algorithm', 'remove_if', 'erase', 'stl'],
   },
   {
@@ -335,7 +352,10 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::vector<int> nums = {3, 7, 2, 9, 4};',
     expected: '9',
     sample: '*std::max_element(nums.begin(), nums.end())',
-    hints: ['std::max_element() returns an iterator to the largest element', 'Dereference the iterator to get the value'],
+    hints: [
+      'std::max_element() returns an iterator to the largest element',
+      'Dereference the iterator to get the value',
+    ],
     tags: ['algorithm', 'max_element', 'stl'],
   },
   {
@@ -348,7 +368,10 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::vector<int> nums = {3, 7, 2, 9, 4};',
     expected: '2',
     sample: '*std::min_element(nums.begin(), nums.end())',
-    hints: ['std::min_element() returns an iterator to the smallest element', 'Dereference the iterator to get the value'],
+    hints: [
+      'std::min_element() returns an iterator to the smallest element',
+      'Dereference the iterator to get the value',
+    ],
     tags: ['algorithm', 'min_element', 'stl'],
   },
 
@@ -404,7 +427,9 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::string str = "Hello, World!";',
     expected: '7',
     sample: 'str.find("World")',
-    hints: ['find() returns the position of the first occurrence or std::string::npos if not found'],
+    hints: [
+      'find() returns the position of the first occurrence or std::string::npos if not found',
+    ],
     tags: ['string', 'find', 'stl'],
   },
   {
@@ -412,11 +437,11 @@ export const cppProblems: Problem[] = [
     category: 'String Methods',
     difficulty: 'medium',
     title: 'Find Last Occurrence',
-    text: 'Find the position of the last \'o\' in the string using rfind()',
+    text: "Find the position of the last 'o' in the string using rfind()",
     setup: 'std::string str = "Hello, World!";',
     setupCode: 'std::string str = "Hello, World!";',
     expected: '8',
-    sample: 'str.rfind(\'o\')',
+    sample: "str.rfind('o')",
     hints: ['rfind() searches from the end of the string'],
     tags: ['string', 'rfind', 'stl'],
   },
@@ -486,7 +511,10 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::map<std::string, int> fruits;',
     expected: 'fruits["apple"] = 5',
     sample: 'fruits.insert({"apple", 5});',
-    hints: ['insert() takes a std::pair or initializer list', 'Alternative: fruits.insert(std::make_pair("apple", 5));'],
+    hints: [
+      'insert() takes a std::pair or initializer list',
+      'Alternative: fruits.insert(std::make_pair("apple", 5));',
+    ],
     tags: ['map', 'insert', 'stl'],
   },
   {
@@ -538,7 +566,10 @@ export const cppProblems: Problem[] = [
     setupCode: 'std::map<std::string, int> fruits = {{"apple", 5}, {"banana", 3}};',
     expected: '1 (key exists)',
     sample: 'fruits.count("apple")',
-    hints: ['count() returns 1 if key exists, 0 if not (for std::map)', 'For multimap, it can return values > 1'],
+    hints: [
+      'count() returns 1 if key exists, 0 if not (for std::map)',
+      'For multimap, it can return values > 1',
+    ],
     tags: ['map', 'count', 'stl'],
   },
   {

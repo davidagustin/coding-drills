@@ -1,20 +1,20 @@
-import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { ProgressProvider } from "@/components/ProgressProvider";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import type { Metadata, Viewport } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
+import './globals.css';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { ProgressProvider } from '@/components/ProgressProvider';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
+  variable: '--font-inter',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  display: "swap",
+  variable: '--font-jetbrains',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 /**
@@ -23,62 +23,60 @@ const jetbrainsMono = JetBrains_Mono({
  */
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
   ],
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://coding-drills.vercel.app"
-  ),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://coding-drills.vercel.app'),
   title: {
-    default: "Code Drills - Master Programming Methods",
-    template: "%s | Code Drills",
+    default: 'Code Drills - Master Programming Methods',
+    template: '%s | Code Drills',
   },
   description:
-    "Sharpen your coding skills with focused drills across JavaScript, Python, Java, C++, and more. Practice array methods, string manipulation, and essential algorithms.",
+    'Sharpen your coding skills with focused drills across JavaScript, Python, Java, C++, and more. Practice array methods, string manipulation, and essential algorithms.',
   keywords: [
-    "coding",
-    "programming",
-    "drills",
-    "practice",
-    "javascript",
-    "python",
-    "java",
-    "algorithms",
-    "typescript",
-    "coding practice",
-    "learn to code",
+    'coding',
+    'programming',
+    'drills',
+    'practice',
+    'javascript',
+    'python',
+    'java',
+    'algorithms',
+    'typescript',
+    'coding practice',
+    'learn to code',
   ],
-  authors: [{ name: "Code Drills" }],
-  creator: "Code Drills",
+  authors: [{ name: 'Code Drills' }],
+  creator: 'Code Drills',
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   openGraph: {
-    title: "Code Drills - Master Programming Methods",
+    title: 'Code Drills - Master Programming Methods',
     description:
-      "Sharpen your coding skills with focused drills across multiple programming languages.",
-    type: "website",
-    siteName: "Code Drills",
-    locale: "en_US",
+      'Sharpen your coding skills with focused drills across multiple programming languages.',
+    type: 'website',
+    siteName: 'Code Drills',
+    locale: 'en_US',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Code Drills - Master Programming Methods",
+    card: 'summary_large_image',
+    title: 'Code Drills - Master Programming Methods',
     description:
-      "Sharpen your coding skills with focused drills across multiple programming languages.",
+      'Sharpen your coding skills with focused drills across multiple programming languages.',
   },
 };
 
@@ -89,14 +87,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
-      >
-        <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
+        <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
           <ThemeProvider defaultTheme="dark">
-            <ProgressProvider>
-              {children}
-            </ProgressProvider>
+            <ProgressProvider>{children}</ProgressProvider>
           </ThemeProvider>
         </ErrorBoundary>
       </body>

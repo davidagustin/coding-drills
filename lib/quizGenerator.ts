@@ -1,5 +1,5 @@
-import { QuizQuestion, LanguageId, Method, Difficulty } from './types';
 import { getMethodsByLanguage } from './problems';
+import type { Difficulty, LanguageId, Method, QuizQuestion } from './types';
 
 export interface QuizConfig {
   language: LanguageId;
@@ -43,7 +43,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (objectMethodMatch) {
     return {
       dataInput: objectMethodMatch[2].trim(),
-      methodHint: 'Object method'
+      methodHint: 'Object method',
     };
   }
 
@@ -52,7 +52,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (mathMethodMatch) {
     return {
       dataInput: mathMethodMatch[2].trim(),
-      methodHint: 'Math method'
+      methodHint: 'Math method',
     };
   }
 
@@ -61,7 +61,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (numberMethodMatch) {
     return {
       dataInput: numberMethodMatch[2].trim(),
-      methodHint: 'Number method'
+      methodHint: 'Number method',
     };
   }
 
@@ -70,7 +70,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (arrayMethodMatch) {
     return {
       dataInput: arrayMethodMatch[1],
-      methodHint: 'Array method'
+      methodHint: 'Array method',
     };
   }
 
@@ -79,7 +79,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (stringMethodMatch) {
     return {
       dataInput: stringMethodMatch[1],
-      methodHint: 'String method'
+      methodHint: 'String method',
     };
   }
 
@@ -88,7 +88,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (numberInstanceMatch) {
     return {
       dataInput: numberInstanceMatch[1],
-      methodHint: 'Number method'
+      methodHint: 'Number method',
     };
   }
 
@@ -97,7 +97,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (spreadMatch) {
     return {
       dataInput: spreadMatch[3],
-      methodHint: `${spreadMatch[1]} method`
+      methodHint: `${spreadMatch[1]} method`,
     };
   }
 
@@ -106,14 +106,14 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
   if (parenMatch) {
     return {
       dataInput: parenMatch[1].trim(),
-      methodHint: 'Method call'
+      methodHint: 'Method call',
     };
   }
 
   // Last resort: return a generic hint (but this shouldn't happen often)
   return {
     dataInput: '[data]',
-    methodHint: 'Apply a method'
+    methodHint: 'Apply a method',
   };
 }
 
@@ -130,9 +130,9 @@ function getRandomElements<T>(array: T[], count: number): T[] {
  */
 function getDifficultyForMethod(method: Method): Difficulty {
   const argCount = method.arguments.length;
-  const hasCallback = method.arguments.some(arg =>
-    arg.type.toLowerCase().includes('function') ||
-    arg.type.toLowerCase().includes('callback')
+  const hasCallback = method.arguments.some(
+    (arg) =>
+      arg.type.toLowerCase().includes('function') || arg.type.toLowerCase().includes('callback'),
   );
 
   if (hasCallback && argCount > 2) return 'hard';
@@ -147,7 +147,7 @@ function getDifficultyForMethod(method: Method): Difficulty {
 function generateWrongOptions(
   correctMethod: Method,
   allMethods: Method[],
-  count: number = 3
+  count: number = 3,
 ): string[] {
   const wrongOptions: string[] = [];
   const usedMethods = new Set<string>([correctMethod.name]);
@@ -156,7 +156,7 @@ function generateWrongOptions(
   if (correctMethod.relatedMethods) {
     for (const related of correctMethod.relatedMethods) {
       if (wrongOptions.length >= count) break;
-      const relatedMethod = allMethods.find(m => m.name === related);
+      const relatedMethod = allMethods.find((m) => m.name === related);
       if (relatedMethod && !usedMethods.has(relatedMethod.name)) {
         wrongOptions.push(relatedMethod.name);
         usedMethods.add(relatedMethod.name);
@@ -166,7 +166,7 @@ function generateWrongOptions(
 
   // Then add methods from the same category
   const sameCategoryMethods = allMethods.filter(
-    m => m.category === correctMethod.category && !usedMethods.has(m.name)
+    (m) => m.category === correctMethod.category && !usedMethods.has(m.name),
   );
 
   for (const method of shuffleArray(sameCategoryMethods)) {
@@ -176,7 +176,7 @@ function generateWrongOptions(
   }
 
   // Fill remaining with random methods from other categories
-  const otherMethods = allMethods.filter(m => !usedMethods.has(m.name));
+  const otherMethods = allMethods.filter((m) => !usedMethods.has(m.name));
   for (const method of shuffleArray(otherMethods)) {
     if (wrongOptions.length >= count) break;
     wrongOptions.push(method.name);
@@ -192,7 +192,7 @@ function generateWrongOptions(
 function createQuestionFromMethod(
   method: Method,
   allMethods: Method[],
-  questionIndex: number
+  questionIndex: number,
 ): QuizQuestion {
   // Pick a random example from the method
   const example = getRandomElement(method.examples);
@@ -219,7 +219,7 @@ function createQuestionFromMethod(
     difficulty: getDifficultyForMethod(method),
     explanation: example.explanation || method.description,
     category: method.category,
-    methodHint: methodHint
+    methodHint: methodHint,
   };
 }
 
@@ -234,9 +234,7 @@ export function generateQuiz(config: QuizConfig): QuizQuestion[] {
   if (config.categories.length === 0) {
     eligibleMethods = allMethods;
   } else {
-    eligibleMethods = allMethods.filter(m =>
-      config.categories.includes(m.category)
-    );
+    eligibleMethods = allMethods.filter((m) => config.categories.includes(m.category));
   }
 
   // If we don't have enough methods, use all methods
@@ -260,7 +258,7 @@ export function generateQuiz(config: QuizConfig): QuizQuestion[] {
 
   // Generate questions
   const questions: QuizQuestion[] = selectedMethods.map((method, index) =>
-    createQuestionFromMethod(method, allMethods, index)
+    createQuestionFromMethod(method, allMethods, index),
   );
 
   return questions;
@@ -271,7 +269,7 @@ export function generateQuiz(config: QuizConfig): QuizQuestion[] {
  */
 export function getHintForQuestion(question: QuizQuestion, language: LanguageId): string {
   const methods = getMethodsByLanguage(language);
-  const method = methods.find(m => m.name === question.correctMethod);
+  const method = methods.find((m) => m.name === question.correctMethod);
   return method?.description || 'No hint available';
 }
 
@@ -280,7 +278,7 @@ export function getHintForQuestion(question: QuizQuestion, language: LanguageId)
  */
 export function getMethodInfo(methodName: string, language: LanguageId): Method | undefined {
   const methods = getMethodsByLanguage(language);
-  return methods.find(m => m.name === methodName);
+  return methods.find((m) => m.name === methodName);
 }
 
 /**
@@ -298,7 +296,7 @@ export function calculateScore(
   isCorrect: boolean,
   timeSpent: number,
   timeLimit: number,
-  currentStreak: number
+  currentStreak: number,
 ): ScoreResult {
   if (!isCorrect) {
     return {
@@ -306,7 +304,7 @@ export function calculateScore(
       bonusPoints: 0,
       totalPoints: 0,
       wasCorrect: false,
-      wasFast: false
+      wasFast: false,
     };
   }
 
@@ -331,7 +329,7 @@ export function calculateScore(
     bonusPoints: bonusPoints * streakMultiplier,
     totalPoints,
     wasCorrect: true,
-    wasFast
+    wasFast,
   };
 }
 
@@ -364,15 +362,15 @@ export function calculateQuizResults(
   answers: QuizAnswer[],
   maxStreak: number,
   startTime: number,
-  endTime: number
+  endTime: number,
 ): QuizResult {
-  const correctAnswers = answers.filter(a => a.isCorrect).length;
+  const correctAnswers = answers.filter((a) => a.isCorrect).length;
   const totalQuestions = answers.length;
   const accuracy = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
 
   const totalScore = answers.reduce((sum, a) => sum + a.points, 0);
 
-  const times = answers.map(a => a.timeSpent);
+  const times = answers.map((a) => a.timeSpent);
   const averageTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
   const fastestAnswer = times.length > 0 ? Math.min(...times) : 0;
   const slowestAnswer = times.length > 0 ? Math.max(...times) : 0;
@@ -392,7 +390,7 @@ export function calculateQuizResults(
     fastestAnswer: Math.round(fastestAnswer * 10) / 10,
     slowestAnswer: Math.round(slowestAnswer * 10) / 10,
     maxStreak,
-    totalTime: Math.round((endTime - startTime) / 1000)
+    totalTime: Math.round((endTime - startTime) / 1000),
   };
 }
 
@@ -429,7 +427,7 @@ export function addToLeaderboard(entry: Omit<LeaderboardEntry, 'id' | 'date'>): 
     ...entry,
     // Use substring instead of deprecated substr (ES2023+ best practice)
     id: `lb-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
   };
 
   if (typeof window === 'undefined') return newEntry;
@@ -453,7 +451,7 @@ export function addToLeaderboard(entry: Omit<LeaderboardEntry, 'id' | 'date'>): 
 
 export function getLeaderboardPosition(score: number): number {
   const leaderboard = getLeaderboard();
-  const position = leaderboard.filter(entry => entry.score > score).length + 1;
+  const position = leaderboard.filter((entry) => entry.score > score).length + 1;
   return position;
 }
 

@@ -19,7 +19,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'int[] numbers = { 1, 2, 3, 4, 5, 6 };',
     expected: '{ 4, 5, 6 }',
     sample: 'numbers[^3..]',
-    hints: ['^n means n elements from the end', 'Range operator (..) creates a slice without copying'],
+    hints: [
+      '^n means n elements from the end',
+      'Range operator (..) creates a slice without copying',
+    ],
     tags: ['modern', 'range', 'index', 'c#8'],
   },
   {
@@ -45,7 +48,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'string? name = null;',
     expected: '"Unknown"',
     sample: 'name ?? "Unknown"',
-    hints: ['?? returns the left operand if not null, otherwise the right', 'Works with nullable value types and reference types'],
+    hints: [
+      '?? returns the left operand if not null, otherwise the right',
+      'Works with nullable value types and reference types',
+    ],
     tags: ['modern', 'null', 'coalescing', 'nullable'],
   },
   {
@@ -71,7 +77,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'object? value = "Hello World";',
     expected: 'true',
     sample: 'value is string s && s.Length > 5',
-    hints: ['Pattern matching with is can declare a variable', 'The variable is only in scope when the pattern matches'],
+    hints: [
+      'Pattern matching with is can declare a variable',
+      'The variable is only in scope when the pattern matches',
+    ],
     tags: ['modern', 'pattern', 'is', 'c#7'],
   },
   {
@@ -83,8 +92,12 @@ export const csharpProblems: Problem[] = [
     setup: 'int day = 3;',
     setupCode: 'int day = 3;',
     expected: '"Wednesday"',
-    sample: 'day switch { 1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday", _ => "Invalid" }',
-    hints: ['Switch expressions use => instead of case/break', 'Use _ for the default/discard pattern'],
+    sample:
+      'day switch { 1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday", _ => "Invalid" }',
+    hints: [
+      'Switch expressions use => instead of case/break',
+      'Use _ for the default/discard pattern',
+    ],
     tags: ['modern', 'switch', 'expression', 'c#8'],
   },
   {
@@ -110,7 +123,11 @@ export const csharpProblems: Problem[] = [
     setupCode: 'string name = "test";',
     expected: '{"name": "test"}',
     sample: '$$"""{"name": "{{name}}"}"""',
-    hints: ['Raw strings start and end with """', 'Use $$ with {{ }} for interpolation in raw strings', 'Introduced in C# 11'],
+    hints: [
+      'Raw strings start and end with """',
+      'Use $$ with {{ }} for interpolation in raw strings',
+      'Introduced in C# 11',
+    ],
     tags: ['modern', 'string', 'raw', 'c#11'],
   },
 
@@ -127,7 +144,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 1, 2, 3 };',
     expected: '{ 1, 2, 3, 42 }',
     sample: 'numbers.Add(42);',
-    hints: ['Add() appends a single element to the end of the list', 'Add() modifies the list in-place and returns void'],
+    hints: [
+      'Add() appends a single element to the end of the list',
+      'Add() modifies the list in-place and returns void',
+    ],
     tags: ['list', 'add', 'collections'],
   },
   {
@@ -270,7 +290,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 1, 2, 3 };',
     expected: '{ 1, 99, 2, 3 }',
     sample: 'numbers.Insert(1, 99);',
-    hints: ['Insert() adds an element at the specified index', 'Existing elements shift to make room'],
+    hints: [
+      'Insert() adds an element at the specified index',
+      'Existing elements shift to make room',
+    ],
     tags: ['list', 'insert', 'collections'],
   },
   {
@@ -283,7 +306,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 1, 2, 3, 4, 5 };',
     expected: '{ } (empty list with Count = 0)',
     sample: 'numbers.Clear();',
-    hints: ['Clear() removes all elements but keeps the list object', 'Count becomes 0, but Capacity may remain'],
+    hints: [
+      'Clear() removes all elements but keeps the list object',
+      'Count becomes 0, but Capacity may remain',
+    ],
     tags: ['list', 'clear', 'collections'],
   },
   {
@@ -296,7 +322,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 5, 10, 20, 25, 30 };',
     expected: '20',
     sample: 'numbers.Find(x => x > 15)',
-    hints: ['Find() returns default(T) if no match is found', 'For reference types, default is null'],
+    hints: [
+      'Find() returns default(T) if no match is found',
+      'For reference types, default is null',
+    ],
     tags: ['list', 'find', 'predicate', 'collections'],
   },
   {
@@ -309,7 +338,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 5, 10, 20, 25, 30 };',
     expected: '{ 20, 25, 30 }',
     sample: 'numbers.FindAll(x => x > 15)',
-    hints: ['FindAll() returns a new List<T> with matching elements', 'Returns empty list if no matches'],
+    hints: [
+      'FindAll() returns a new List<T> with matching elements',
+      'Returns empty list if no matches',
+    ],
     tags: ['list', 'findall', 'predicate', 'collections'],
   },
   {
@@ -322,7 +354,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 5, -3, 10, 8 };',
     expected: 'true',
     sample: 'numbers.Exists(x => x < 0)',
-    hints: ['Exists() is similar to LINQ Any() but is a List<T> method', 'Returns true if any element matches the predicate'],
+    hints: [
+      'Exists() is similar to LINQ Any() but is a List<T> method',
+      'Returns true if any element matches the predicate',
+    ],
     tags: ['list', 'exists', 'predicate', 'collections'],
   },
   {
@@ -335,7 +370,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 1, 5, 10, 8 };',
     expected: 'true',
     sample: 'numbers.TrueForAll(x => x > 0)',
-    hints: ['TrueForAll() is similar to LINQ All() but is a List<T> method', 'Returns true if all elements match the predicate'],
+    hints: [
+      'TrueForAll() is similar to LINQ All() but is a List<T> method',
+      'Returns true if all elements match the predicate',
+    ],
     tags: ['list', 'trueforall', 'predicate', 'collections'],
   },
 
@@ -348,11 +386,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Add Key-Value Pair',
     text: 'Add a new entry with key "grape" and value 4 using Add()',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: '{ apple: 1, banana: 2, grape: 4 }',
     sample: 'fruits.Add("grape", 4);',
-    hints: ['Add() throws ArgumentException if key already exists', 'Use indexer fruits["key"] = value to add or update'],
+    hints: [
+      'Add() throws ArgumentException if key already exists',
+      'Use indexer fruits["key"] = value to add or update',
+    ],
     tags: ['dictionary', 'add', 'collections'],
   },
   {
@@ -361,11 +404,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Safely Get Value with TryGetValue',
     text: 'Try to get the value for key "banana" using TryGetValue()',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: 'true and out value = 2',
     sample: 'fruits.TryGetValue("banana", out int value)',
-    hints: ['TryGetValue() returns bool and sets out parameter', 'Avoids KeyNotFoundException when key might not exist'],
+    hints: [
+      'TryGetValue() returns bool and sets out parameter',
+      'Avoids KeyNotFoundException when key might not exist',
+    ],
     tags: ['dictionary', 'trygetvalue', 'collections'],
   },
   {
@@ -374,11 +422,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Check if Key Exists',
     text: 'Check if the dictionary contains the key "banana" using ContainsKey()',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: 'true',
     sample: 'fruits.ContainsKey("banana")',
-    hints: ['ContainsKey() is O(1) average time complexity', 'Prefer TryGetValue() if you also need the value'],
+    hints: [
+      'ContainsKey() is O(1) average time complexity',
+      'Prefer TryGetValue() if you also need the value',
+    ],
     tags: ['dictionary', 'containskey', 'collections'],
   },
   {
@@ -387,11 +440,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Check if Value Exists',
     text: 'Check if the dictionary contains the value 2 using ContainsValue()',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: 'true',
     sample: 'fruits.ContainsValue(2)',
-    hints: ['ContainsValue() is O(n) as it must scan all values', 'Consider using a reverse lookup dictionary if needed frequently'],
+    hints: [
+      'ContainsValue() is O(n) as it must scan all values',
+      'Consider using a reverse lookup dictionary if needed frequently',
+    ],
     tags: ['dictionary', 'containsvalue', 'collections'],
   },
   {
@@ -400,11 +458,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Remove Key-Value Pair',
     text: 'Remove the entry with key "apple" using Remove()',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: '{ banana: 2 }',
     sample: 'fruits.Remove("apple");',
-    hints: ['Remove() returns true if key was found and removed', 'Use Remove(key, out value) to also get the removed value'],
+    hints: [
+      'Remove() returns true if key was found and removed',
+      'Use Remove(key, out value) to also get the removed value',
+    ],
     tags: ['dictionary', 'remove', 'collections'],
   },
   {
@@ -413,11 +476,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Get All Keys',
     text: 'Get all keys from the dictionary using the Keys property',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: '{ "apple", "banana" }',
     sample: 'fruits.Keys',
-    hints: ['Keys returns KeyCollection which implements IEnumerable<TKey>', 'Use .ToList() or .ToArray() if you need a concrete collection'],
+    hints: [
+      'Keys returns KeyCollection which implements IEnumerable<TKey>',
+      'Use .ToList() or .ToArray() if you need a concrete collection',
+    ],
     tags: ['dictionary', 'keys', 'collections'],
   },
   {
@@ -426,11 +494,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Get All Values',
     text: 'Get all values from the dictionary using the Values property',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: '{ 1, 2 }',
     sample: 'fruits.Values',
-    hints: ['Values returns ValueCollection which implements IEnumerable<TValue>', 'Use .ToList() or .ToArray() if you need a concrete collection'],
+    hints: [
+      'Values returns ValueCollection which implements IEnumerable<TValue>',
+      'Use .ToList() or .ToArray() if you need a concrete collection',
+    ],
     tags: ['dictionary', 'values', 'collections'],
   },
   {
@@ -439,11 +512,16 @@ export const csharpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Get Value or Default',
     text: 'Get the value for "cherry" or 0 if not found using GetValueOrDefault()',
-    setup: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
-    setupCode: 'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setup:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
+    setupCode:
+      'Dictionary<string, int> fruits = new Dictionary<string, int> { ["apple"] = 1, ["banana"] = 2 };',
     expected: '0',
     sample: 'fruits.GetValueOrDefault("cherry")',
-    hints: ['GetValueOrDefault() returns default(TValue) if key not found', 'Can also specify a custom default: GetValueOrDefault("cherry", -1)'],
+    hints: [
+      'GetValueOrDefault() returns default(TValue) if key not found',
+      'Can also specify a custom default: GetValueOrDefault("cherry", -1)',
+    ],
     tags: ['dictionary', 'getvalueordefault', 'collections'],
   },
 
@@ -460,7 +538,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 3, 7, 2, 9, 4, 8 };',
     expected: '{ 7, 9, 8 }',
     sample: 'numbers.Where(x => x > 5)',
-    hints: ['Where() filters elements based on a predicate', 'Remember to add .ToList() if you need a List<T>'],
+    hints: [
+      'Where() filters elements based on a predicate',
+      'Remember to add .ToList() if you need a List<T>',
+    ],
     tags: ['linq', 'where', 'filter'],
   },
   {
@@ -512,7 +593,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 10, 20, 30 };',
     expected: '10',
     sample: 'numbers.First()',
-    hints: ['First() throws an exception if the sequence is empty', 'Use FirstOrDefault() for safe access'],
+    hints: [
+      'First() throws an exception if the sequence is empty',
+      'Use FirstOrDefault() for safe access',
+    ],
     tags: ['linq', 'first', 'element'],
   },
   {
@@ -538,7 +622,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 5, 8, 12, 3 };',
     expected: 'true',
     sample: 'numbers.Any(x => x > 10)',
-    hints: ['Any() with a predicate checks if at least one element matches', 'Any() without arguments checks if the sequence is non-empty'],
+    hints: [
+      'Any() with a predicate checks if at least one element matches',
+      'Any() without arguments checks if the sequence is non-empty',
+    ],
     tags: ['linq', 'any', 'predicate'],
   },
   {
@@ -564,7 +651,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6 };',
     expected: '3',
     sample: 'numbers.Count(x => x % 2 == 0)',
-    hints: ['Count() with a predicate counts matching elements', 'Count() without arguments returns total count'],
+    hints: [
+      'Count() with a predicate counts matching elements',
+      'Count() without arguments returns total count',
+    ],
     tags: ['linq', 'count', 'aggregate'],
   },
   {
@@ -668,7 +758,11 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6 };',
     expected: 'IEnumerable<IGrouping<bool, int>> with Key=false: {1,3,5} and Key=true: {2,4,6}',
     sample: 'numbers.GroupBy(x => x % 2 == 0)',
-    hints: ['GroupBy() returns IEnumerable<IGrouping<TKey, TElement>>', 'Access the key with group.Key and iterate elements with foreach', 'Consider using ToDictionary() or ToLookup() for direct key access'],
+    hints: [
+      'GroupBy() returns IEnumerable<IGrouping<TKey, TElement>>',
+      'Access the key with group.Key and iterate elements with foreach',
+      'Consider using ToDictionary() or ToLookup() for direct key access',
+    ],
     tags: ['linq', 'groupby', 'grouping'],
   },
   {
@@ -681,7 +775,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<int> numbers = new List<int> { 1, 2, 3, 4 };',
     expected: '24',
     sample: 'numbers.Aggregate((acc, x) => acc * x)',
-    hints: ['Aggregate() applies a function cumulatively', 'The accumulator starts with the first element'],
+    hints: [
+      'Aggregate() applies a function cumulatively',
+      'The accumulator starts with the first element',
+    ],
     tags: ['linq', 'aggregate', 'reduce'],
   },
   {
@@ -694,7 +791,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'List<string> names = new List<string> { "Alice", "Bob", "Charlie" };',
     expected: '"Names: Alice Bob Charlie"',
     sample: 'names.Aggregate("Names:", (acc, name) => acc + " " + name)',
-    hints: ['Aggregate with a seed starts accumulation from that value', 'The seed becomes the initial accumulator value'],
+    hints: [
+      'Aggregate with a seed starts accumulation from that value',
+      'The seed becomes the initial accumulator value',
+    ],
     tags: ['linq', 'aggregate', 'reduce'],
   },
 
@@ -762,7 +862,7 @@ export const csharpProblems: Problem[] = [
     setup: 'string text = "apple,banana,cherry";',
     setupCode: 'string text = "apple,banana,cherry";',
     expected: '["apple", "banana", "cherry"]',
-    sample: 'text.Split(\',\')',
+    sample: "text.Split(',')",
     hints: ['Split() returns a string array', 'Use char literals with single quotes'],
     tags: ['string', 'split'],
   },
@@ -815,7 +915,10 @@ export const csharpProblems: Problem[] = [
     setupCode: 'string text = "  Hello, World!  ";',
     expected: '"Hello, World!"',
     sample: 'text.Trim()',
-    hints: ['Trim() removes whitespace from both ends', 'Use TrimStart() or TrimEnd() for one side only'],
+    hints: [
+      'Trim() removes whitespace from both ends',
+      'Use TrimStart() or TrimEnd() for one side only',
+    ],
     tags: ['string', 'trim'],
   },
   {

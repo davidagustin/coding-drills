@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // ============================================================================
 // Types
@@ -178,12 +178,15 @@ export function useTimer(options: UseTimerOptions = {}): UseTimerReturn {
     }
   }, [isRunning, pause, start]);
 
-  const setTimeValue = useCallback((seconds: number) => {
-    setTime(Math.max(0, Math.floor(seconds)));
-    if (mode === 'down' && seconds > 0) {
-      setIsComplete(false);
-    }
-  }, [mode]);
+  const setTimeValue = useCallback(
+    (seconds: number) => {
+      setTime(Math.max(0, Math.floor(seconds)));
+      if (mode === 'down' && seconds > 0) {
+        setIsComplete(false);
+      }
+    },
+    [mode],
+  );
 
   const formatted = formatTime(time);
   const parts = getTimeParts(time);
@@ -222,7 +225,7 @@ export function useStopwatch(options: Omit<UseTimerOptions, 'mode'> = {}): UseTi
  */
 export function useCountdown(
   initialSeconds: number,
-  options: Omit<UseTimerOptions, 'mode' | 'initialSeconds'> = {}
+  options: Omit<UseTimerOptions, 'mode' | 'initialSeconds'> = {},
 ): UseTimerReturn {
   return useTimer({ ...options, mode: 'down', initialSeconds });
 }

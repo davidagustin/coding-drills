@@ -13,12 +13,12 @@
  * Service Level Indicator types
  */
 export type SLIType =
-  | 'availability'      // Service is up and responding
-  | 'latency'           // Response time percentiles
-  | 'throughput'        // Requests per second
-  | 'error_rate'        // Percentage of failed requests
-  | 'saturation'        // Resource utilization
-  | 'freshness';        // Data staleness
+  | 'availability' // Service is up and responding
+  | 'latency' // Response time percentiles
+  | 'throughput' // Requests per second
+  | 'error_rate' // Percentage of failed requests
+  | 'saturation' // Resource utilization
+  | 'freshness'; // Data staleness
 
 /**
  * SLI measurement configuration
@@ -38,9 +38,9 @@ export interface SLIConfig {
 export interface SLOConfig {
   name: string;
   sli: SLIConfig;
-  target: number;           // Target percentage (e.g., 99.9)
-  window_days: number;      // Measurement window in days
-  error_budget: number;     // Allowed failures as percentage
+  target: number; // Target percentage (e.g., 99.9)
+  window_days: number; // Measurement window in days
+  error_budget: number; // Allowed failures as percentage
   alerting_threshold: number; // Alert when burn rate exceeds this
 }
 
@@ -49,10 +49,10 @@ export interface SLOConfig {
  */
 export interface ErrorBudgetStatus {
   slo_name: string;
-  remaining_budget: number;     // Percentage remaining
-  consumed_budget: number;      // Percentage consumed
-  burn_rate: number;            // Current burn rate (budget consumed per hour)
-  projected_exhaustion?: Date;  // When budget will be exhausted at current rate
+  remaining_budget: number; // Percentage remaining
+  consumed_budget: number; // Percentage consumed
+  burn_rate: number; // Current burn rate (budget consumed per hour)
+  projected_exhaustion?: Date; // When budget will be exhausted at current rate
   status: 'healthy' | 'warning' | 'critical' | 'exhausted';
 }
 
@@ -152,7 +152,7 @@ export interface MetricDataPoint {
  * Histogram bucket
  */
 export interface HistogramBucket {
-  le: number;        // Less than or equal
+  le: number; // Less than or equal
   count: number;
 }
 
@@ -186,7 +186,7 @@ export interface ErrorEvent {
   message: string;
   stack?: string;
   context: ErrorContext;
-  fingerprint?: string;     // For grouping similar errors
+  fingerprint?: string; // For grouping similar errors
   tags?: Record<string, string>;
 }
 
@@ -210,10 +210,10 @@ export interface ErrorContext {
  */
 export interface ErrorTrackingConfig {
   enabled: boolean;
-  sample_rate: number;           // 0-1, percentage of errors to track
-  ignored_errors?: string[];     // Error messages to ignore
-  context_lines?: number;        // Lines of code context
-  max_breadcrumbs?: number;      // Max number of breadcrumbs to keep
+  sample_rate: number; // 0-1, percentage of errors to track
+  ignored_errors?: string[]; // Error messages to ignore
+  context_lines?: number; // Lines of code context
+  max_breadcrumbs?: number; // Max number of breadcrumbs to keep
   environment: string;
 }
 
@@ -225,12 +225,12 @@ export interface ErrorTrackingConfig {
  * Core Web Vitals metrics
  */
 export interface WebVitals {
-  LCP?: number;  // Largest Contentful Paint (ms)
-  FID?: number;  // First Input Delay (ms)
-  CLS?: number;  // Cumulative Layout Shift (score)
-  FCP?: number;  // First Contentful Paint (ms)
+  LCP?: number; // Largest Contentful Paint (ms)
+  FID?: number; // First Input Delay (ms)
+  CLS?: number; // Cumulative Layout Shift (score)
+  FCP?: number; // First Contentful Paint (ms)
   TTFB?: number; // Time to First Byte (ms)
-  INP?: number;  // Interaction to Next Paint (ms)
+  INP?: number; // Interaction to Next Paint (ms)
 }
 
 /**
@@ -282,11 +282,11 @@ export type CircuitState = 'closed' | 'open' | 'half-open';
  */
 export interface CircuitBreakerConfig {
   name: string;
-  failure_threshold: number;      // Failures before opening
-  success_threshold: number;      // Successes before closing
-  timeout_ms: number;             // Time in open state before half-open
-  reset_timeout_ms?: number;      // Time to reset failure count
-  volume_threshold?: number;      // Min requests before tripping
+  failure_threshold: number; // Failures before opening
+  success_threshold: number; // Successes before closing
+  timeout_ms: number; // Time in open state before half-open
+  reset_timeout_ms?: number; // Time to reset failure count
+  volume_threshold?: number; // Min requests before tripping
 }
 
 /**
@@ -319,9 +319,9 @@ export interface AlertDefinition {
   id: string;
   name: string;
   description: string;
-  condition: string;              // Expression to evaluate
+  condition: string; // Expression to evaluate
   severity: AlertSeverity;
-  for_duration?: string;          // Duration condition must be true (e.g., "5m")
+  for_duration?: string; // Duration condition must be true (e.g., "5m")
   labels?: Record<string, string>;
   annotations?: Record<string, string>;
 }

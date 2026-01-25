@@ -52,9 +52,7 @@ export function ProgressBar({
     <div className="w-full">
       {showLabel && (
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Progress
-          </span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Progress</span>
           <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
             {current} / {total}
             <span className="ml-2 text-gray-500 dark:text-gray-400">

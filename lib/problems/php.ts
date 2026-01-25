@@ -155,9 +155,7 @@ export const phpProblems: Problem[] = [
     expected: [1, 2, 3, 4],
     sample: 'array_values(array_unique($nums))',
     hints: ['Use array_unique then array_values to reset keys'],
-    validPatterns: [
-      /array_values\s*\(\s*array_unique\s*\(\s*\$nums\s*\)\s*\)/,
-    ],
+    validPatterns: [/array_values\s*\(\s*array_unique\s*\(\s*\$nums\s*\)\s*\)/],
     tags: ['array_unique', 'array_values'],
   },
   {
@@ -166,14 +164,14 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Extract Column from Array of Arrays',
     text: 'Extract the "name" values from an array of associative arrays',
-    setup: '$users = [["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"], ["id" => 3, "name" => "Charlie"]];',
-    setupCode: '$users = [["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"], ["id" => 3, "name" => "Charlie"]];',
+    setup:
+      '$users = [["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"], ["id" => 3, "name" => "Charlie"]];',
+    setupCode:
+      '$users = [["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"], ["id" => 3, "name" => "Charlie"]];',
     expected: ['Alice', 'Bob', 'Charlie'],
     sample: 'array_column($users, "name")',
     hints: ['Use array_column to extract values by key'],
-    validPatterns: [
-      /array_column\s*\(\s*\$users\s*,\s*['"]name['"]\s*\)/,
-    ],
+    validPatterns: [/array_column\s*\(\s*\$users\s*,\s*['"]name['"]\s*\)/],
     tags: ['array_column'],
   },
   {
@@ -187,9 +185,7 @@ export const phpProblems: Problem[] = [
     expected: { 1: { id: 1, name: 'Alice' }, 2: { id: 2, name: 'Bob' } },
     sample: 'array_column($users, null, "id")',
     hints: ['Use array_column with null as second parameter to keep full rows'],
-    validPatterns: [
-      /array_column\s*\(\s*\$users\s*,\s*null\s*,\s*['"]id['"]\s*\)/,
-    ],
+    validPatterns: [/array_column\s*\(\s*\$users\s*,\s*null\s*,\s*['"]id['"]\s*\)/],
     tags: ['array_column'],
   },
   {
@@ -219,9 +215,7 @@ export const phpProblems: Problem[] = [
     expected: [2, 3, 4],
     sample: 'array_slice($nums, 2, 3)',
     hints: ['Use array_slice with offset and length'],
-    validPatterns: [
-      /array_slice\s*\(\s*\$nums\s*,\s*2\s*,\s*3\s*\)/,
-    ],
+    validPatterns: [/array_slice\s*\(\s*\$nums\s*,\s*2\s*,\s*3\s*\)/],
     tags: ['array_slice'],
   },
   {
@@ -249,12 +243,14 @@ export const phpProblems: Problem[] = [
     text: 'Split the array into chunks of 3 elements each',
     setup: '$nums = [1, 2, 3, 4, 5, 6, 7, 8];',
     setupCode: '$nums = [1, 2, 3, 4, 5, 6, 7, 8];',
-    expected: [[1, 2, 3], [4, 5, 6], [7, 8]],
+    expected: [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8],
+    ],
     sample: 'array_chunk($nums, 3)',
     hints: ['Use array_chunk with size parameter'],
-    validPatterns: [
-      /array_chunk\s*\(\s*\$nums\s*,\s*3\s*\)/,
-    ],
+    validPatterns: [/array_chunk\s*\(\s*\$nums\s*,\s*3\s*\)/],
     tags: ['array_chunk'],
   },
 
@@ -272,9 +268,7 @@ export const phpProblems: Problem[] = [
     expected: true,
     sample: 'str_contains($str, "World")',
     hints: ['Use str_contains (PHP 8.0+)'],
-    validPatterns: [
-      /str_contains\s*\(\s*\$str\s*,\s*['"]World['"]\s*\)/,
-    ],
+    validPatterns: [/str_contains\s*\(\s*\$str\s*,\s*['"]World['"]\s*\)/],
     tags: ['str_contains', 'php8'],
   },
   {
@@ -288,9 +282,7 @@ export const phpProblems: Problem[] = [
     expected: true,
     sample: 'str_starts_with($str, "Hello")',
     hints: ['Use str_starts_with (PHP 8.0+)'],
-    validPatterns: [
-      /str_starts_with\s*\(\s*\$str\s*,\s*['"]Hello['"]\s*\)/,
-    ],
+    validPatterns: [/str_starts_with\s*\(\s*\$str\s*,\s*['"]Hello['"]\s*\)/],
     tags: ['str_starts_with', 'php8'],
   },
   {
@@ -304,9 +296,7 @@ export const phpProblems: Problem[] = [
     expected: true,
     sample: 'str_ends_with($filename, ".jpg")',
     hints: ['Use str_ends_with (PHP 8.0+)'],
-    validPatterns: [
-      /str_ends_with\s*\(\s*\$filename\s*,\s*['"]\.jpg['"]\s*\)/,
-    ],
+    validPatterns: [/str_ends_with\s*\(\s*\$filename\s*,\s*['"]\.jpg['"]\s*\)/],
     tags: ['str_ends_with', 'php8'],
   },
   {
@@ -320,9 +310,7 @@ export const phpProblems: Problem[] = [
     expected: ['apple', 'banana', 'cherry'],
     sample: 'explode(",", $str)',
     hints: ['Use explode with comma as delimiter'],
-    validPatterns: [
-      /explode\s*\(\s*['"],['"],\s*\$str\s*\)/,
-    ],
+    validPatterns: [/explode\s*\(\s*['"],['"],\s*\$str\s*\)/],
     tags: ['explode'],
   },
   {
@@ -353,9 +341,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello World',
     sample: 'trim($str)',
     hints: ['Use trim to remove whitespace'],
-    validPatterns: [
-      /trim\s*\(\s*\$str\s*\)/,
-    ],
+    validPatterns: [/trim\s*\(\s*\$str\s*\)/],
     tags: ['trim'],
   },
   {
@@ -385,9 +371,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello PHP',
     sample: 'str_replace("world", "PHP", $str)',
     hints: ['Use str_replace'],
-    validPatterns: [
-      /str_replace\s*\(\s*['"]world['"]\s*,\s*['"]PHP['"]\s*,\s*\$str\s*\)/,
-    ],
+    validPatterns: [/str_replace\s*\(\s*['"]world['"]\s*,\s*['"]PHP['"]\s*,\s*\$str\s*\)/],
     tags: ['str_replace'],
   },
   {
@@ -401,10 +385,7 @@ export const phpProblems: Problem[] = [
     expected: 'World',
     sample: 'substr($str, 6)',
     hints: ['Use substr with starting position'],
-    validPatterns: [
-      /substr\s*\(\s*\$str\s*,\s*6\s*\)/,
-      /substr\s*\(\s*\$str\s*,\s*6\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/substr\s*\(\s*\$str\s*,\s*6\s*\)/, /substr\s*\(\s*\$str\s*,\s*6\s*,\s*5\s*\)/],
     tags: ['substr'],
   },
   {
@@ -418,9 +399,7 @@ export const phpProblems: Problem[] = [
     expected: '42.99',
     sample: 'preg_match("/\\d+\\.\\d+/", $str, $m) ? $m[0] : null',
     hints: ['Use preg_match with a regex pattern for decimals'],
-    validPatterns: [
-      /preg_match\s*\(\s*['"]/,
-    ],
+    validPatterns: [/preg_match\s*\(\s*['"]/],
     tags: ['preg_match', 'regex'],
   },
   {
@@ -451,9 +430,7 @@ export const phpProblems: Problem[] = [
     expected: ['Hello', 'World Today'],
     sample: 'explode(" ", $str, 2)',
     hints: ['Use explode with limit parameter'],
-    validPatterns: [
-      /explode\s*\(\s*['"]\s*['"]\s*,\s*\$str\s*,\s*2\s*\)/,
-    ],
+    validPatterns: [/explode\s*\(\s*['"]\s*['"]\s*,\s*\$str\s*,\s*2\s*\)/],
     tags: ['explode', 'destructuring'],
   },
   {
@@ -483,9 +460,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello world',
     sample: 'ucfirst(strtolower($str))',
     hints: ['Chain strtolower and ucfirst'],
-    validPatterns: [
-      /ucfirst\s*\(\s*strtolower\s*\(\s*\$str\s*\)\s*\)/,
-    ],
+    validPatterns: [/ucfirst\s*\(\s*strtolower\s*\(\s*\$str\s*\)\s*\)/],
     tags: ['strtolower', 'ucfirst'],
   },
   {
@@ -497,11 +472,10 @@ export const phpProblems: Problem[] = [
     setup: '$date = "2024-01-15";',
     setupCode: '$date = "2024-01-15";',
     expected: { year: '2024', month: '01', day: '15' },
-    sample: 'preg_match("/(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})/", $date, $m) ? ["year" => $m["year"], "month" => $m["month"], "day" => $m["day"]] : null',
+    sample:
+      'preg_match("/(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})/", $date, $m) ? ["year" => $m["year"], "month" => $m["month"], "day" => $m["day"]] : null',
     hints: ['Use named capture groups (?<name>pattern)'],
-    validPatterns: [
-      /preg_match\s*\(\s*['"]\/\(\?<year>/,
-    ],
+    validPatterns: [/preg_match\s*\(\s*['"]\/\(\?<year>/],
     tags: ['preg_match', 'named-groups'],
   },
 
@@ -563,14 +537,14 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Collection Pluck',
     text: 'Extract all "name" values from users collection',
-    setup: 'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
+    setup:
+      'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
     expected: ['Alice', 'Bob'],
     sample: '$users->pluck("name")->all()',
     hints: ['Use the pluck method with the key name'],
-    validPatterns: [
-      /\$users->pluck\s*\(\s*['"]name['"]\s*\)->all\s*\(\s*\)/,
-    ],
+    validPatterns: [/\$users->pluck\s*\(\s*['"]name['"]\s*\)->all\s*\(\s*\)/],
     tags: ['collection', 'pluck', 'laravel'],
   },
   {
@@ -579,14 +553,17 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Collection Where',
     text: 'Filter users where role is "admin"',
-    setup: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
-    expected: [{ name: 'Alice', role: 'admin' }, { name: 'Charlie', role: 'admin' }],
+    setup:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
+    expected: [
+      { name: 'Alice', role: 'admin' },
+      { name: 'Charlie', role: 'admin' },
+    ],
     sample: '$users->where("role", "admin")->values()->all()',
     hints: ['Use where for key-value filtering'],
-    validPatterns: [
-      /\$users->where\s*\(\s*['"]role['"]\s*,\s*['"]admin['"]\s*\)/,
-    ],
+    validPatterns: [/\$users->where\s*\(\s*['"]role['"]\s*,\s*['"]admin['"]\s*\)/],
     tags: ['collection', 'where', 'laravel'],
   },
   {
@@ -595,14 +572,20 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Collection GroupBy',
     text: 'Group users by their role',
-    setup: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
-    expected: { admin: [{ name: 'Alice', role: 'admin' }, { name: 'Charlie', role: 'admin' }], user: [{ name: 'Bob', role: 'user' }] },
+    setup:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "admin"], ["name" => "Bob", "role" => "user"], ["name" => "Charlie", "role" => "admin"]]);',
+    expected: {
+      admin: [
+        { name: 'Alice', role: 'admin' },
+        { name: 'Charlie', role: 'admin' },
+      ],
+      user: [{ name: 'Bob', role: 'user' }],
+    },
     sample: '$users->groupBy("role")->toArray()',
     hints: ['Use groupBy with the key to group by'],
-    validPatterns: [
-      /\$users->groupBy\s*\(\s*['"]role['"]\s*\)/,
-    ],
+    validPatterns: [/\$users->groupBy\s*\(\s*['"]role['"]\s*\)/],
     tags: ['collection', 'groupBy', 'laravel'],
   },
   {
@@ -611,14 +594,14 @@ export const phpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Collection SortBy',
     text: 'Sort users by name alphabetically',
-    setup: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie"], ["name" => "Alice"], ["name" => "Bob"]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie"], ["name" => "Alice"], ["name" => "Bob"]]);',
+    setup:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie"], ["name" => "Alice"], ["name" => "Bob"]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie"], ["name" => "Alice"], ["name" => "Bob"]]);',
     expected: [{ name: 'Alice' }, { name: 'Bob' }, { name: 'Charlie' }],
     sample: '$users->sortBy("name")->values()->all()',
     hints: ['Use sortBy then values to reset keys'],
-    validPatterns: [
-      /\$users->sortBy\s*\(\s*['"]name['"]\s*\)->values\s*\(\s*\)->all\s*\(\s*\)/,
-    ],
+    validPatterns: [/\$users->sortBy\s*\(\s*['"]name['"]\s*\)->values\s*\(\s*\)->all\s*\(\s*\)/],
     tags: ['collection', 'sortBy', 'laravel'],
   },
   {
@@ -627,8 +610,10 @@ export const phpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Collection First',
     text: 'Get the first user with role "admin"',
-    setup: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "user"], ["name" => "Bob", "role" => "admin"], ["name" => "Charlie", "role" => "admin"]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "user"], ["name" => "Bob", "role" => "admin"], ["name" => "Charlie", "role" => "admin"]]);',
+    setup:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "user"], ["name" => "Bob", "role" => "admin"], ["name" => "Charlie", "role" => "admin"]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Alice", "role" => "user"], ["name" => "Bob", "role" => "admin"], ["name" => "Charlie", "role" => "admin"]]);',
     expected: { name: 'Bob', role: 'admin' },
     sample: '$users->first(fn($u) => $u["role"] === "admin")',
     hints: ['Use first with a callback'],
@@ -646,12 +631,14 @@ export const phpProblems: Problem[] = [
     text: 'Split the collection into chunks of 3',
     setup: 'use Illuminate\\Support\\Collection; $nums = collect([1, 2, 3, 4, 5, 6, 7, 8]);',
     setupCode: 'use Illuminate\\Support\\Collection; $nums = collect([1, 2, 3, 4, 5, 6, 7, 8]);',
-    expected: [[1, 2, 3], [4, 5, 6], [7, 8]],
+    expected: [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8],
+    ],
     sample: '$nums->chunk(3)->map(fn($c) => $c->values()->all())->all()',
     hints: ['Use chunk method'],
-    validPatterns: [
-      /\$nums->chunk\s*\(\s*3\s*\)/,
-    ],
+    validPatterns: [/\$nums->chunk\s*\(\s*3\s*\)/],
     tags: ['collection', 'chunk', 'laravel'],
   },
   {
@@ -660,8 +647,10 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Collection FlatMap',
     text: 'FlatMap to get all tags from posts',
-    setup: 'use Illuminate\\Support\\Collection; $posts = collect([["tags" => ["php", "laravel"]], ["tags" => ["javascript", "vue"]]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $posts = collect([["tags" => ["php", "laravel"]], ["tags" => ["javascript", "vue"]]]);',
+    setup:
+      'use Illuminate\\Support\\Collection; $posts = collect([["tags" => ["php", "laravel"]], ["tags" => ["javascript", "vue"]]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $posts = collect([["tags" => ["php", "laravel"]], ["tags" => ["javascript", "vue"]]]);',
     expected: ['php', 'laravel', 'javascript', 'vue'],
     sample: '$posts->flatMap(fn($p) => $p["tags"])->all()',
     hints: ['Use flatMap to map and flatten in one step'],
@@ -681,9 +670,7 @@ export const phpProblems: Problem[] = [
     expected: [1, 2, 3],
     sample: '$nums->unique()->values()->all()',
     hints: ['Use unique then values to reset keys'],
-    validPatterns: [
-      /\$nums->unique\s*\(\s*\)->values\s*\(\s*\)->all\s*\(\s*\)/,
-    ],
+    validPatterns: [/\$nums->unique\s*\(\s*\)->values\s*\(\s*\)->all\s*\(\s*\)/],
     tags: ['collection', 'unique', 'laravel'],
   },
   {
@@ -692,8 +679,10 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Collection Method Chaining',
     text: 'Get names of active users sorted alphabetically',
-    setup: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie", "active" => true], ["name" => "Alice", "active" => false], ["name" => "Bob", "active" => true]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie", "active" => true], ["name" => "Alice", "active" => false], ["name" => "Bob", "active" => true]]);',
+    setup:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie", "active" => true], ["name" => "Alice", "active" => false], ["name" => "Bob", "active" => true]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $users = collect([["name" => "Charlie", "active" => true], ["name" => "Alice", "active" => false], ["name" => "Bob", "active" => true]]);',
     expected: ['Bob', 'Charlie'],
     sample: '$users->where("active", true)->sortBy("name")->pluck("name")->values()->all()',
     hints: ['Chain where, sortBy, pluck, values'],
@@ -711,11 +700,10 @@ export const phpProblems: Problem[] = [
     setup: 'use Illuminate\\Support\\Collection; $nums = collect([1, 2, 3, 4, 5]);',
     setupCode: 'use Illuminate\\Support\\Collection; $nums = collect([1, 2, 3, 4, 5]);',
     expected: { count: 5, sum: 15, avg: 3 },
-    sample: '$nums->pipe(fn($c) => ["count" => $c->count(), "sum" => $c->sum(), "avg" => $c->avg()])',
+    sample:
+      '$nums->pipe(fn($c) => ["count" => $c->count(), "sum" => $c->sum(), "avg" => $c->avg()])',
     hints: ['Use pipe to break out of method chaining'],
-    validPatterns: [
-      /\$nums->pipe\s*\(\s*fn\s*\(\s*\$\w+\s*\)\s*=>/,
-    ],
+    validPatterns: [/\$nums->pipe\s*\(\s*fn\s*\(\s*\$\w+\s*\)\s*=>/],
     tags: ['collection', 'pipe', 'laravel'],
   },
   {
@@ -729,9 +717,7 @@ export const phpProblems: Problem[] = [
     expected: true,
     sample: '$nums->contains(3)',
     hints: ['Use contains method'],
-    validPatterns: [
-      /\$nums->contains\s*\(\s*3\s*\)/,
-    ],
+    validPatterns: [/\$nums->contains\s*\(\s*3\s*\)/],
     tags: ['collection', 'contains', 'laravel'],
   },
   {
@@ -740,14 +726,14 @@ export const phpProblems: Problem[] = [
     difficulty: 'medium',
     title: 'Collection KeyBy',
     text: 'Index the users collection by their id',
-    setup: 'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
-    setupCode: 'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
+    setup:
+      'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
+    setupCode:
+      'use Illuminate\\Support\\Collection; $users = collect([["id" => 1, "name" => "Alice"], ["id" => 2, "name" => "Bob"]]);',
     expected: { 1: { id: 1, name: 'Alice' }, 2: { id: 2, name: 'Bob' } },
     sample: '$users->keyBy("id")->toArray()',
     hints: ['Use keyBy to index by a key'],
-    validPatterns: [
-      /\$users->keyBy\s*\(\s*['"]id['"]\s*\)/,
-    ],
+    validPatterns: [/\$users->keyBy\s*\(\s*['"]id['"]\s*\)/],
     tags: ['collection', 'keyBy', 'laravel'],
   },
 
@@ -765,9 +751,7 @@ export const phpProblems: Problem[] = [
     expected: 'User model or null',
     sample: 'User::find(1)',
     hints: ['Use the static find method'],
-    validPatterns: [
-      /User::find\s*\(\s*1\s*\)/,
-    ],
+    validPatterns: [/User::find\s*\(\s*1\s*\)/],
     tags: ['eloquent', 'find', 'laravel'],
   },
   {
@@ -781,9 +765,7 @@ export const phpProblems: Problem[] = [
     expected: 'Collection of active users',
     sample: 'User::where("active", true)->get()',
     hints: ['Use where with get to retrieve results'],
-    validPatterns: [
-      /User::where\s*\(\s*['"]active['"]\s*,\s*true\s*\)->get\s*\(\s*\)/,
-    ],
+    validPatterns: [/User::where\s*\(\s*['"]active['"]\s*,\s*true\s*\)->get\s*\(\s*\)/],
     tags: ['eloquent', 'where', 'laravel'],
   },
   {
@@ -797,9 +779,7 @@ export const phpProblems: Problem[] = [
     expected: 'Collection of posts with authors',
     sample: 'Post::with("author")->get()',
     hints: ['Use with() to eager load relationships'],
-    validPatterns: [
-      /Post::with\s*\(\s*['"]author['"]\s*\)->get\s*\(\s*\)/,
-    ],
+    validPatterns: [/Post::with\s*\(\s*['"]author['"]\s*\)->get\s*\(\s*\)/],
     tags: ['eloquent', 'eager-loading', 'laravel'],
   },
   {
@@ -829,9 +809,7 @@ export const phpProblems: Problem[] = [
     expected: 'User model (created or updated)',
     sample: 'User::updateOrCreate(["email" => "john@example.com"], ["name" => "John Doe"])',
     hints: ['First array is for lookup, second is for data'],
-    validPatterns: [
-      /User::updateOrCreate\s*\(\s*\[\s*['"]email['"]\s*=>/,
-    ],
+    validPatterns: [/User::updateOrCreate\s*\(\s*\[\s*['"]email['"]\s*=>/],
     tags: ['eloquent', 'updateOrCreate', 'laravel'],
   },
   {
@@ -878,9 +856,7 @@ export const phpProblems: Problem[] = [
     expected: 'Active users',
     sample: 'User::active()->get()',
     hints: ['Scopes are called without the "scope" prefix'],
-    validPatterns: [
-      /User::active\s*\(\s*\)->get\s*\(\s*\)/,
-    ],
+    validPatterns: [/User::active\s*\(\s*\)->get\s*\(\s*\)/],
     tags: ['eloquent', 'scope', 'laravel'],
   },
   {
@@ -930,9 +906,7 @@ export const phpProblems: Problem[] = [
     expected: 'Hello World',
     sample: 'Str::of("hello world")->title()->toString()',
     hints: ['Use Str::of for fluent string manipulation'],
-    validPatterns: [
-      /Str::of\s*\(\s*['"]hello world['"]\s*\)->title\s*\(\s*\)/,
-    ],
+    validPatterns: [/Str::of\s*\(\s*['"]hello world['"]\s*\)->title\s*\(\s*\)/],
     tags: ['str', 'fluent', 'laravel'],
   },
   {
@@ -946,9 +920,7 @@ export const phpProblems: Problem[] = [
     expected: 'hello-world',
     sample: 'Str::slug("Hello World!")',
     hints: ['Use Str::slug for URL-friendly strings'],
-    validPatterns: [
-      /Str::slug\s*\(\s*['"]Hello World!['"]\s*\)/,
-    ],
+    validPatterns: [/Str::slug\s*\(\s*['"]Hello World!['"]\s*\)/],
     tags: ['str', 'slug', 'laravel'],
   },
   {
@@ -958,13 +930,12 @@ export const phpProblems: Problem[] = [
     title: 'Nested Array Access',
     text: 'Get the value at "user.profile.name" from a nested array',
     setup: 'use Illuminate\\Support\\Arr; $data = ["user" => ["profile" => ["name" => "John"]]];',
-    setupCode: 'use Illuminate\\Support\\Arr; $data = ["user" => ["profile" => ["name" => "John"]]];',
+    setupCode:
+      'use Illuminate\\Support\\Arr; $data = ["user" => ["profile" => ["name" => "John"]]];',
     expected: 'John',
     sample: 'Arr::get($data, "user.profile.name")',
     hints: ['Use Arr::get with dot notation'],
-    validPatterns: [
-      /Arr::get\s*\(\s*\$data\s*,\s*['"]user\.profile\.name['"]\s*\)/,
-    ],
+    validPatterns: [/Arr::get\s*\(\s*\$data\s*,\s*['"]user\.profile\.name['"]\s*\)/],
     tags: ['arr', 'dot-notation', 'laravel'],
   },
   {
@@ -973,8 +944,10 @@ export const phpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Array Only',
     text: 'Get only "name" and "email" from the user array',
-    setup: 'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "email" => "john@example.com", "password" => "secret"];',
-    setupCode: 'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "email" => "john@example.com", "password" => "secret"];',
+    setup:
+      'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "email" => "john@example.com", "password" => "secret"];',
+    setupCode:
+      'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "email" => "john@example.com", "password" => "secret"];',
     expected: { name: 'John', email: 'john@example.com' },
     sample: 'Arr::only($user, ["name", "email"])',
     hints: ['Use Arr::only to whitelist keys'],
@@ -989,14 +962,14 @@ export const phpProblems: Problem[] = [
     difficulty: 'easy',
     title: 'Array Except',
     text: 'Remove "password" from the user array',
-    setup: 'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "password" => "secret"];',
-    setupCode: 'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "password" => "secret"];',
+    setup:
+      'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "password" => "secret"];',
+    setupCode:
+      'use Illuminate\\Support\\Arr; $user = ["id" => 1, "name" => "John", "password" => "secret"];',
     expected: { id: 1, name: 'John' },
     sample: 'Arr::except($user, ["password"])',
     hints: ['Use Arr::except to blacklist keys'],
-    validPatterns: [
-      /Arr::except\s*\(\s*\$user\s*,\s*\[\s*['"]password['"]\s*\]\s*\)/,
-    ],
+    validPatterns: [/Arr::except\s*\(\s*\$user\s*,\s*\[\s*['"]password['"]\s*\]\s*\)/],
     tags: ['arr', 'except', 'laravel'],
   },
   {
@@ -1010,10 +983,7 @@ export const phpProblems: Problem[] = [
     expected: null,
     sample: 'optional($user)->name',
     hints: ['Use optional() to avoid null errors'],
-    validPatterns: [
-      /optional\s*\(\s*\$user\s*\)->name/,
-      /\$user\?->name/,
-    ],
+    validPatterns: [/optional\s*\(\s*\$user\s*\)->name/, /\$user\?->name/],
     tags: ['optional', 'null-safety', 'laravel'],
   },
   {
@@ -1027,9 +997,7 @@ export const phpProblems: Problem[] = [
     expected: 'User with updated last_login',
     sample: 'tap($user)->update(["last_login" => now()])',
     hints: ['Use tap to perform action and return original'],
-    validPatterns: [
-      /tap\s*\(\s*\$user\s*\)->update/,
-    ],
+    validPatterns: [/tap\s*\(\s*\$user\s*\)->update/],
     tags: ['tap', 'fluent', 'laravel'],
   },
   {
@@ -1043,9 +1011,7 @@ export const phpProblems: Problem[] = [
     expected: 'Carbon instance',
     sample: 'now()',
     hints: ['now() returns a Carbon instance'],
-    validPatterns: [
-      /now\s*\(\s*\)/,
-    ],
+    validPatterns: [/now\s*\(\s*\)/],
     tags: ['now', 'carbon', 'laravel'],
   },
   {
@@ -1071,13 +1037,12 @@ export const phpProblems: Problem[] = [
     title: 'Arr Has',
     text: 'Check if nested key "user.profile.name" exists in array',
     setup: 'use Illuminate\\Support\\Arr; $data = ["user" => ["profile" => ["name" => "John"]]];',
-    setupCode: 'use Illuminate\\Support\\Arr; $data = ["user" => ["profile" => ["name" => "John"]]];',
+    setupCode:
+      'use Illuminate\\Support\\Arr; $data = ["user" => ["profile" => ["name" => "John"]]];',
     expected: true,
     sample: 'Arr::has($data, "user.profile.name")',
     hints: ['Use Arr::has with dot notation'],
-    validPatterns: [
-      /Arr::has\s*\(\s*\$data\s*,\s*['"]user\.profile\.name['"]\s*\)/,
-    ],
+    validPatterns: [/Arr::has\s*\(\s*\$data\s*,\s*['"]user\.profile\.name['"]\s*\)/],
     tags: ['arr', 'has', 'laravel'],
   },
 
@@ -1095,9 +1060,7 @@ export const phpProblems: Problem[] = [
     expected: 'fn($n) => $n * 2',
     sample: 'fn($n) => $n * 2',
     hints: ['Use fn() => syntax for arrow functions'],
-    validPatterns: [
-      /fn\s*\(\s*\$\w+\s*\)\s*=>\s*\$\w+\s*\*\s*2/,
-    ],
+    validPatterns: [/fn\s*\(\s*\$\w+\s*\)\s*=>\s*\$\w+\s*\*\s*2/],
     tags: ['arrow-function', 'php74'],
   },
   {
@@ -1111,9 +1074,7 @@ export const phpProblems: Problem[] = [
     expected: null,
     sample: '$user?->profile?->name',
     hints: ['Use ?-> for nullsafe property access'],
-    validPatterns: [
-      /\$user\?->profile\?->name/,
-    ],
+    validPatterns: [/\$user\?->profile\?->name/],
     tags: ['nullsafe', 'php8'],
   },
   {
@@ -1127,9 +1088,7 @@ export const phpProblems: Problem[] = [
     expected: [3, 4, 5],
     sample: 'array_slice(array: $arr, offset: 2)',
     hints: ['Use argument: value syntax for named arguments'],
-    validPatterns: [
-      /array_slice\s*\(\s*array:\s*\$arr\s*,\s*offset:\s*2\s*\)/,
-    ],
+    validPatterns: [/array_slice\s*\(\s*array:\s*\$arr\s*,\s*offset:\s*2\s*\)/],
     tags: ['named-arguments', 'php8'],
   },
   {
@@ -1141,11 +1100,10 @@ export const phpProblems: Problem[] = [
     setup: '$day = 1;',
     setupCode: '$day = 1;',
     expected: 'Monday',
-    sample: 'match($day) { 1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday" }',
+    sample:
+      'match($day) { 1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday" }',
     hints: ['Use match expression (PHP 8+) instead of switch'],
-    validPatterns: [
-      /match\s*\(\s*\$day\s*\)\s*\{/,
-    ],
+    validPatterns: [/match\s*\(\s*\$day\s*\)\s*\{/],
     tags: ['match', 'php8'],
   },
   {
@@ -1159,9 +1117,7 @@ export const phpProblems: Problem[] = [
     expected: 'default',
     sample: '$config["timeout"] ?? "default"',
     hints: ['Use ?? for null coalescing'],
-    validPatterns: [
-      /\$config\s*\[\s*['"]timeout['"]\s*\]\s*\?\?\s*['"]default['"]/,
-    ],
+    validPatterns: [/\$config\s*\[\s*['"]timeout['"]\s*\]\s*\?\?\s*['"]default['"]/],
     tags: ['null-coalescing', 'php7'],
   },
   {
@@ -1175,9 +1131,7 @@ export const phpProblems: Problem[] = [
     expected: 1,
     sample: '$a <=> $b',
     hints: ['<=> returns -1, 0, or 1'],
-    validPatterns: [
-      /\$a\s*<=>\s*\$b/,
-    ],
+    validPatterns: [/\$a\s*<=>\s*\$b/],
     tags: ['spaceship', 'php7'],
   },
   {
@@ -1191,9 +1145,7 @@ export const phpProblems: Problem[] = [
     expected: [1, 2, 3, 4, 5],
     sample: '[1, ...$middle, 5]',
     hints: ['Use ... to spread array elements'],
-    validPatterns: [
-      /\[\s*1\s*,\s*\.\.\.\$middle\s*,\s*5\s*\]/,
-    ],
+    validPatterns: [/\[\s*1\s*,\s*\.\.\.\$middle\s*,\s*5\s*\]/],
     tags: ['spread', 'php74'],
   },
   {
@@ -1207,9 +1159,7 @@ export const phpProblems: Problem[] = [
     expected: [2, 5, 5],
     sample: 'array_map(strlen(...), $words)',
     hints: ['Use function_name(...) for first-class callable'],
-    validPatterns: [
-      /array_map\s*\(\s*strlen\s*\(\s*\.\.\.\s*\)\s*,\s*\$words\s*\)/,
-    ],
+    validPatterns: [/array_map\s*\(\s*strlen\s*\(\s*\.\.\.\s*\)\s*,\s*\$words\s*\)/],
     tags: ['first-class-callable', 'php81'],
   },
   {
@@ -1223,9 +1173,7 @@ export const phpProblems: Problem[] = [
     expected: { first: 1, second: 2 },
     sample: '[$first, $second] = $arr; ["first" => $first, "second" => $second]',
     hints: ['Use [$a, $b] = $arr for destructuring'],
-    validPatterns: [
-      /\[\s*\$\w+\s*,\s*\$\w+\s*\]\s*=\s*\$arr/,
-    ],
+    validPatterns: [/\[\s*\$\w+\s*,\s*\$\w+\s*\]\s*=\s*\$arr/],
     tags: ['destructuring', 'php71'],
   },
   {
@@ -1239,9 +1187,7 @@ export const phpProblems: Problem[] = [
     expected: 'class User { public function __construct(public readonly string $name) {} }',
     sample: 'class User { public function __construct(public readonly string $name) {} }',
     hints: ['Use readonly modifier with constructor promotion'],
-    validPatterns: [
-      /public\s+readonly\s+string\s+\$name/,
-    ],
+    validPatterns: [/public\s+readonly\s+string\s+\$name/],
     tags: ['readonly', 'php81'],
   },
 
@@ -1259,9 +1205,7 @@ export const phpProblems: Problem[] = [
     expected: '{\n    "name": "John",\n    "age": 30\n}',
     sample: 'json_encode($data, JSON_PRETTY_PRINT)',
     hints: ['Use JSON_PRETTY_PRINT flag'],
-    validPatterns: [
-      /json_encode\s*\(\s*\$data\s*,\s*JSON_PRETTY_PRINT\s*\)/,
-    ],
+    validPatterns: [/json_encode\s*\(\s*\$data\s*,\s*JSON_PRETTY_PRINT\s*\)/],
     tags: ['json_encode'],
   },
   {
@@ -1275,9 +1219,7 @@ export const phpProblems: Problem[] = [
     expected: { name: 'John', age: 30 },
     sample: 'json_decode($json, true)',
     hints: ['Pass true as second argument for associative array'],
-    validPatterns: [
-      /json_decode\s*\(\s*\$json\s*,\s*true\s*\)/,
-    ],
+    validPatterns: [/json_decode\s*\(\s*\$json\s*,\s*true\s*\)/],
     tags: ['json_decode'],
   },
   {
@@ -1307,9 +1249,7 @@ export const phpProblems: Problem[] = [
     expected: 'int',
     sample: 'get_debug_type($value)',
     hints: ['get_debug_type returns actual type names'],
-    validPatterns: [
-      /get_debug_type\s*\(\s*\$value\s*\)/,
-    ],
+    validPatterns: [/get_debug_type\s*\(\s*\$value\s*\)/],
     tags: ['get_debug_type', 'php8'],
   },
   {
@@ -1323,9 +1263,7 @@ export const phpProblems: Problem[] = [
     expected: true,
     sample: '$user instanceof User',
     hints: ['Use instanceof operator'],
-    validPatterns: [
-      /\$user\s+instanceof\s+User/,
-    ],
+    validPatterns: [/\$user\s+instanceof\s+User/],
     tags: ['instanceof'],
   },
 ];

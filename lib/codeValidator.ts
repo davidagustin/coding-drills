@@ -3,8 +3,8 @@
  * Wraps the existing codeRunner for drill-specific validation
  */
 
-import type { LanguageId, Problem, Difficulty } from './types';
-import { executeJavaScript, deepEqual } from './codeRunner';
+import { deepEqual, executeJavaScript } from './codeRunner';
+import type { Difficulty, LanguageId, Problem } from './types';
 
 // ============================================================================
 // Types for Drill Mode
@@ -32,7 +32,7 @@ export type { LanguageId, Problem, Difficulty };
 export function validateJavaScript(
   setupCode: string,
   userAnswer: string,
-  expectedOutput: unknown
+  expectedOutput: unknown,
 ): DrillValidationResult {
   try {
     // Security: Basic check for dangerous operations
@@ -53,7 +53,8 @@ export function validateJavaScript(
       if (pattern.test(userAnswer)) {
         return {
           success: false,
-          error: 'Your answer contains forbidden patterns. Please use only basic JavaScript operations.',
+          error:
+            'Your answer contains forbidden patterns. Please use only basic JavaScript operations.',
         };
       }
     }
@@ -98,14 +99,14 @@ export function validateJavaScript(
 export function checkRequiredPatterns(
   userAnswer: string,
   requiredPatterns: RegExp[] | undefined,
-  setupCode: string
+  setupCode: string,
 ): DrillValidationResult | null {
   // Extract variable names from setup code
   const varMatches = setupCode.match(/(?:const|let|var)\s+(\w+)/g);
-  const setupVars = varMatches?.map(m => m.split(/\s+/)[1]) || [];
+  const setupVars = varMatches?.map((m) => m.split(/\s+/)[1]) || [];
 
   // Check that user is using at least one setup variable
-  const usesSetupVar = setupVars.some(varName => {
+  const usesSetupVar = setupVars.some((varName) => {
     const regex = new RegExp(`\\b${varName}\\b`);
     return regex.test(userAnswer);
   });
@@ -136,10 +137,10 @@ export function checkRequiredPatterns(
  * Validates Python code using pattern matching
  */
 export function validatePython(
-  setupCode: string,
+  _setupCode: string,
   userAnswer: string,
   expectedOutput: unknown,
-  sampleSolution: string
+  sampleSolution: string,
 ): DrillValidationResult {
   // Normalize whitespace for comparison
   const normalizedAnswer = userAnswer.trim().replace(/\s+/g, ' ');
@@ -155,7 +156,7 @@ export function validatePython(
       .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       .replace(/\s+/g, '\\s*')
       .replace(/\\\(/g, '\\s*\\(\\s*')
-      .replace(/\\\)/g, '\\s*\\)\\s*')
+      .replace(/\\\)/g, '\\s*\\)\\s*'),
   );
 
   if (flexiblePattern.test(userAnswer)) {
@@ -175,7 +176,7 @@ export function validatePython(
 export function validateByPattern(
   userAnswer: string,
   expectedOutput: unknown,
-  sampleSolution: string
+  sampleSolution: string,
 ): DrillValidationResult {
   const normalizedAnswer = userAnswer.trim();
   const normalizedSolution = sampleSolution.trim();
@@ -212,7 +213,7 @@ export function validateDrillAnswer(
   userAnswer: string,
   expectedOutput: unknown,
   sampleSolution: string,
-  validPatterns?: RegExp[]
+  validPatterns?: RegExp[],
 ): DrillValidationResult {
   // First check required patterns
   const patternCheck = checkRequiredPatterns(userAnswer, validPatterns, setupCode);
@@ -225,7 +226,7 @@ export function validateDrillAnswer(
   if (userAnswer.trim() === expectedStr || userAnswer.trim() === String(expectedOutput)) {
     // If the answer is just the literal expected value, reject it
     const setupVars = setupCode.match(/(?:const|let|var)\s+(\w+)/g);
-    const usesSetupVar = setupVars?.some(v => {
+    const usesSetupVar = setupVars?.some((v) => {
       const varName = v.split(/\s+/)[1];
       return userAnswer.includes(varName);
     });
@@ -233,7 +234,8 @@ export function validateDrillAnswer(
     if (!usesSetupVar) {
       return {
         success: false,
-        error: 'Your answer appears to be hardcoded. Please write code that computes the result using the provided variables.',
+        error:
+          'Your answer appears to be hardcoded. Please write code that computes the result using the provided variables.',
       };
     }
   }
@@ -269,7 +271,7 @@ export function validateDrillAnswer(
 export function validateProblemAnswer(
   problem: Problem,
   userAnswer: string,
-  language: LanguageId
+  language: LanguageId,
 ): DrillValidationResult {
   return validateDrillAnswer(
     language,
@@ -277,7 +279,7 @@ export function validateProblemAnswer(
     userAnswer,
     problem.expected,
     problem.sample,
-    problem.validPatterns
+    problem.validPatterns,
   );
 }
 

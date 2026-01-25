@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   getSettings,
-  saveSettings,
   resetSettings,
+  saveSettings,
   setSetting,
   type UserSettings,
 } from '@/lib/storage';
@@ -120,18 +120,21 @@ export function useSettings(): UseSettingsReturn {
     }
   }, []);
 
-  const updateSettings = useCallback((updates: Partial<UserSettings>) => {
-    const newSettings = { ...settings, ...updates };
-    saveSettings(updates);
-    setSettings(newSettings);
-  }, [settings]);
+  const updateSettings = useCallback(
+    (updates: Partial<UserSettings>) => {
+      const newSettings = { ...settings, ...updates };
+      saveSettings(updates);
+      setSettings(newSettings);
+    },
+    [settings],
+  );
 
   const updateSetting = useCallback(
     <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
       setSetting(key, value);
       setSettings((prev) => ({ ...prev, [key]: value }));
     },
-    []
+    [],
   );
 
   const reset = useCallback(() => {
@@ -195,7 +198,7 @@ export function useTheme(): UseThemeReturn {
     (theme: Theme) => {
       updateSetting('theme', theme);
     },
-    [updateSetting]
+    [updateSetting],
   );
 
   const toggleTheme = useCallback(() => {
@@ -239,7 +242,7 @@ export function useSound(): UseSoundReturn {
     (enabled: boolean) => {
       updateSetting('soundEffects', enabled);
     },
-    [updateSetting]
+    [updateSetting],
   );
 
   // Play sound helper (uses Web Audio API)
@@ -248,8 +251,10 @@ export function useSound(): UseSoundReturn {
       if (!settings.soundEffects || typeof window === 'undefined') return;
 
       try {
-        const audioContext = new (window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+        const audioContext = new (
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        )();
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
@@ -260,10 +265,7 @@ export function useSound(): UseSoundReturn {
         oscillator.type = type;
 
         gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(
-          0.01,
-          audioContext.currentTime + duration
-        );
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
 
         oscillator.start(audioContext.currentTime);
         oscillator.stop(audioContext.currentTime + duration);
@@ -272,7 +274,7 @@ export function useSound(): UseSoundReturn {
         console.debug('Audio not available:', error);
       }
     },
-    [settings.soundEffects]
+    [settings.soundEffects],
   );
 
   const playCorrect = useCallback(() => {

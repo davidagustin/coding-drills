@@ -26,13 +26,9 @@ export function QuestionCounter({
   if (variant === 'pill') {
     return (
       <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full">
-        <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-          {current}
-        </span>
+        <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{current}</span>
         <span className="text-gray-400 dark:text-gray-500">/</span>
-        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-          {total}
-        </span>
+        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{total}</span>
       </div>
     );
   }
@@ -68,8 +64,8 @@ export function QuestionCounter({
                   num < current
                     ? 'bg-emerald-500 dark:bg-emerald-400'
                     : num === current
-                    ? 'bg-blue-500 dark:bg-blue-400 ring-2 ring-blue-500/30 scale-125'
-                    : 'bg-gray-300 dark:bg-gray-600'
+                      ? 'bg-blue-500 dark:bg-blue-400 ring-2 ring-blue-500/30 scale-125'
+                      : 'bg-gray-300 dark:bg-gray-600'
                 }
               `}
               aria-hidden="true"

@@ -1,8 +1,13 @@
 // Exercise data index - exports all language exercises
 
-import { Exercise, ExerciseCategory, EXERCISE_CATEGORIES, DIFFICULTY_CONFIG } from './types';
 import { javascriptExercises } from './javascript';
 import { pythonExercises } from './python';
+import {
+  DIFFICULTY_CONFIG,
+  EXERCISE_CATEGORIES,
+  type Exercise,
+  type ExerciseCategory,
+} from './types';
 
 // Re-export types
 export * from './types';
@@ -30,11 +35,11 @@ export function getExercisesForLanguage(language: string): Exercise[] {
 export function getExercisesByCategory(language: string): Record<ExerciseCategory, Exercise[]> {
   const exercises = getExercisesForLanguage(language);
   const byCategory: Record<ExerciseCategory, Exercise[]> = {
-    'traversal': [],
+    traversal: [],
     'iteration-patterns': [],
-    'recursion': [],
-    'generation': [],
-    'searching': [],
+    recursion: [],
+    generation: [],
+    searching: [],
     'data-structures': [],
   };
 
@@ -48,14 +53,14 @@ export function getExercisesByCategory(language: string): Record<ExerciseCategor
 // Get a single exercise by ID
 export function getExerciseById(language: string, exerciseId: string): Exercise | undefined {
   const exercises = getExercisesForLanguage(language);
-  return exercises.find(ex => ex.id === exerciseId);
+  return exercises.find((ex) => ex.id === exerciseId);
 }
 
 // Get categories that have exercises for a language
 export function getAvailableCategories(language: string): ExerciseCategory[] {
   const byCategory = getExercisesByCategory(language);
   return (Object.keys(byCategory) as ExerciseCategory[]).filter(
-    cat => byCategory[cat].length > 0
+    (cat) => byCategory[cat].length > 0,
   );
 }
 

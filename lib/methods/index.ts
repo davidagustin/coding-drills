@@ -2,35 +2,32 @@
  * Methods index - exports all language-specific method references
  */
 
-import type { Method } from '../types';
-import type { LanguageId } from '../types';
-
-// Import language-specific methods
-import { javascriptMethods } from './javascript';
-import { pythonMethods } from './python';
-import { typescriptMethods } from './typescript';
-import { javaMethods } from './java';
+import type { LanguageId, Method } from '../types';
+import { cMethods } from './c';
 import { cppMethods } from './cpp';
 import { csharpMethods } from './csharp';
 import { goMethods } from './go';
-import { rubyMethods } from './ruby';
-import { cMethods } from './c';
+import { javaMethods } from './java';
+// Import language-specific methods
+import { javascriptMethods } from './javascript';
 import { phpMethods } from './php';
+import { pythonMethods } from './python';
+import { rubyMethods } from './ruby';
+import { typescriptMethods } from './typescript';
 
-// Export individual method sets
-export { javascriptMethods } from './javascript';
-export { pythonMethods } from './python';
-export { typescriptMethods } from './typescript';
-export { javaMethods } from './java';
+export { cMethods } from './c';
 export { cppMethods } from './cpp';
 export { csharpMethods } from './csharp';
 export { goMethods } from './go';
-export { rubyMethods } from './ruby';
-export { cMethods } from './c';
+export { javaMethods } from './java';
+// Export individual method sets
+export { javascriptMethods } from './javascript';
 export { phpMethods } from './php';
-
+export { pythonMethods } from './python';
+export { rubyMethods } from './ruby';
 // Export types
 export * from './types';
+export { typescriptMethods } from './typescript';
 
 // Combined methods map by language
 export const methodsByLanguage: Partial<Record<LanguageId, Method[]>> = {
@@ -57,10 +54,7 @@ export const getAllMethods = (): Method[] => {
 };
 
 // Get methods by category for a language
-export const getMethodsByCategory = (
-  languageId: LanguageId,
-  category: string
-): Method[] => {
+export const getMethodsByCategory = (languageId: LanguageId, category: string): Method[] => {
   const methods = methodsByLanguage[languageId] || [];
   return methods.filter((m) => m.category === category);
 };
@@ -84,20 +78,14 @@ export const getMethodCountByLanguage = (): Record<string, number> => {
 };
 
 // Search methods by name
-export const searchMethodsByName = (
-  languageId: LanguageId,
-  query: string
-): Method[] => {
+export const searchMethodsByName = (languageId: LanguageId, query: string): Method[] => {
   const methods = methodsByLanguage[languageId] || [];
   const lowerQuery = query.toLowerCase();
   return methods.filter((m) => m.name.toLowerCase().includes(lowerQuery));
 };
 
 // Get method by name
-export const getMethodByName = (
-  languageId: LanguageId,
-  name: string
-): Method | undefined => {
+export const getMethodByName = (languageId: LanguageId, name: string): Method | undefined => {
   const methods = methodsByLanguage[languageId] || [];
   return methods.find((m) => m.name === name);
 };

@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 /**
  * E2E Tests for Quiz Mode in Coding Drills App
@@ -16,9 +16,19 @@ import { test, expect, Page } from '@playwright/test';
 // Test Data & Constants
 // =============================================================================
 
-const QUIZ_URL = '/javascript/quiz';
+const _QUIZ_URL = '/javascript/quiz';
 const DEFAULT_LANGUAGE = 'javascript';
-const SUPPORTED_LANGUAGES = ['javascript', 'typescript', 'python', 'java', 'cpp', 'csharp', 'go', 'ruby', 'c'];
+const _SUPPORTED_LANGUAGES = [
+  'javascript',
+  'typescript',
+  'python',
+  'java',
+  'cpp',
+  'csharp',
+  'go',
+  'ruby',
+  'c',
+];
 
 // Selectors - using data-testid for reliability
 const SELECTORS = {
@@ -114,14 +124,16 @@ async function startQuiz(
     categories?: string[];
     questionCount?: number;
     timePerQuestion?: number;
-  } = {}
+  } = {},
 ): Promise<void> {
   const { categories, questionCount, timePerQuestion } = options;
 
   // Select categories if specified
   if (categories && categories.length > 0) {
     for (const category of categories) {
-      const categoryCheckbox = page.locator(`${SELECTORS.categoryOption}[data-category="${category}"]`);
+      const categoryCheckbox = page.locator(
+        `${SELECTORS.categoryOption}[data-category="${category}"]`,
+      );
       if (await categoryCheckbox.isVisible()) {
         await categoryCheckbox.click();
       }
@@ -206,7 +218,7 @@ async function getCurrentStreak(page: Page): Promise<number> {
 async function completeQuiz(
   page: Page,
   answerCorrectly: boolean = true,
-  questionCount: number = 5
+  questionCount: number = 5,
 ): Promise<void> {
   for (let i = 0; i < questionCount; i++) {
     const options = page.locator(SELECTORS.optionCard);
@@ -409,14 +421,16 @@ test.describe('Quiz Gameplay Tests', () => {
     const hasIncorrectState = await firstOption.getAttribute('data-incorrect');
 
     // Should have some state change after clicking
-    expect(hasSelectedState === 'true' || hasCorrectState === 'true' || hasIncorrectState === 'true').toBeTruthy();
+    expect(
+      hasSelectedState === 'true' || hasCorrectState === 'true' || hasIncorrectState === 'true',
+    ).toBeTruthy();
   });
 
   test('correct answer shows green feedback', async ({ page }) => {
     // Find and click correct answer (if available via data attribute)
     const correctOption = page.locator(`${SELECTORS.optionCard}[data-correct-answer="true"]`);
 
-    if (await correctOption.count() > 0) {
+    if ((await correctOption.count()) > 0) {
       await correctOption.click();
 
       // Wait for feedback
@@ -424,11 +438,13 @@ test.describe('Quiz Gameplay Tests', () => {
 
       // Check for green/correct feedback styling
       const hasCorrectClass = await correctOption.evaluate((el) => {
-        return el.classList.contains('bg-green') ||
-               el.classList.contains('border-green') ||
-               el.getAttribute('data-correct') === 'true' ||
-               getComputedStyle(el).borderColor.includes('green') ||
-               getComputedStyle(el).backgroundColor.includes('green');
+        return (
+          el.classList.contains('bg-green') ||
+          el.classList.contains('border-green') ||
+          el.getAttribute('data-correct') === 'true' ||
+          getComputedStyle(el).borderColor.includes('green') ||
+          getComputedStyle(el).backgroundColor.includes('green')
+        );
       });
 
       expect(hasCorrectClass).toBeTruthy();
@@ -441,7 +457,8 @@ test.describe('Quiz Gameplay Tests', () => {
       const feedbackCorrect = page.locator(SELECTORS.feedbackCorrect);
       const feedbackIncorrect = page.locator(SELECTORS.feedbackIncorrect);
 
-      const hasFeedback = await feedbackCorrect.isVisible() || await feedbackIncorrect.isVisible();
+      const hasFeedback =
+        (await feedbackCorrect.isVisible()) || (await feedbackIncorrect.isVisible());
       expect(hasFeedback).toBeTruthy();
     }
   });
@@ -472,7 +489,7 @@ test.describe('Quiz Gameplay Tests', () => {
 
     // The correct answer should be highlighted
     const correctHighlight = page.locator(`${SELECTORS.optionCard}[data-correct="true"]`);
-    const correctHighlightVisible = await correctHighlight.count() > 0;
+    const correctHighlightVisible = (await correctHighlight.count()) > 0;
 
     expect(hasIncorrectState === 'true' || correctHighlightVisible).toBeTruthy();
   });
@@ -509,7 +526,7 @@ test.describe('Quiz Gameplay Tests', () => {
     // Find and click correct answer
     const correctOption = page.locator(`${SELECTORS.optionCard}[data-correct-answer="true"]`);
 
-    if (await correctOption.count() > 0) {
+    if ((await correctOption.count()) > 0) {
       await correctOption.click();
 
       // Wait for score update
@@ -560,16 +577,18 @@ test.describe('Timer Tests', () => {
 
     // Check for low timer state
     const timerLow = page.locator(SELECTORS.timerLow);
-    const hasLowState = await timerLow.count() > 0;
+    const hasLowState = (await timerLow.count()) > 0;
 
     // Or check for visual indication (red color, animation, etc.)
     const timerElement = page.locator(SELECTORS.timer);
     const hasRedStyling = await timerElement.evaluate((el) => {
       const style = getComputedStyle(el);
-      return style.color.includes('red') ||
-             style.color.includes('rgb(239') || // red-500
-             el.classList.contains('text-red') ||
-             el.classList.contains('animate');
+      return (
+        style.color.includes('red') ||
+        style.color.includes('rgb(239') || // red-500
+        el.classList.contains('text-red') ||
+        el.classList.contains('animate')
+      );
     });
 
     expect(hasLowState || hasRedStyling).toBeTruthy();
@@ -612,7 +631,8 @@ test.describe('Timer Tests', () => {
     const timeoutFeedback = page.locator(SELECTORS.feedbackTimeout);
     const incorrectFeedback = page.locator(SELECTORS.feedbackIncorrect);
 
-    const hasTimeoutIndicator = await timeoutFeedback.isVisible() || await incorrectFeedback.isVisible();
+    const hasTimeoutIndicator =
+      (await timeoutFeedback.isVisible()) || (await incorrectFeedback.isVisible());
     // At minimum, question should advance without score increase
     expect(newScore === initialScore || hasTimeoutIndicator).toBeTruthy();
   });
@@ -675,7 +695,7 @@ test.describe('Scoring Tests', () => {
       // Find and click correct answer
       const correctOption = page.locator(`${SELECTORS.optionCard}[data-correct-answer="true"]`);
 
-      if (await correctOption.count() > 0) {
+      if ((await correctOption.count()) > 0) {
         await correctOption.click();
         await page.waitForTimeout(1000);
 
@@ -696,7 +716,7 @@ test.describe('Scoring Tests', () => {
       // Answer immediately (fast answer)
       const correctOption = page.locator(`${SELECTORS.optionCard}[data-correct-answer="true"]`);
 
-      if (await correctOption.count() > 0) {
+      if ((await correctOption.count()) > 0) {
         await correctOption.click();
         await page.waitForTimeout(500);
 
@@ -724,7 +744,7 @@ test.describe('Scoring Tests', () => {
     for (let i = 0; i < 3; i++) {
       const correctOption = page.locator(`${SELECTORS.optionCard}[data-correct-answer="true"]`);
 
-      if (await correctOption.count() > 0) {
+      if ((await correctOption.count()) > 0) {
         await correctOption.click();
         await waitForAutoAdvance(page, 2000);
 
@@ -759,7 +779,7 @@ test.describe('Scoring Tests', () => {
     // First answer correctly to build streak
     const correctOption = page.locator(`${SELECTORS.optionCard}[data-correct-answer="true"]`);
 
-    if (await correctOption.count() > 0) {
+    if ((await correctOption.count()) > 0) {
       await correctOption.click();
       await waitForAutoAdvance(page, 2000);
     }
@@ -772,7 +792,7 @@ test.describe('Scoring Tests', () => {
     const options = page.locator(SELECTORS.optionCard);
     let incorrectIndex = 0;
 
-    for (let i = 0; i < await options.count(); i++) {
+    for (let i = 0; i < (await options.count()); i++) {
       const isCorrect = await options.nth(i).getAttribute('data-correct-answer');
       if (isCorrect !== 'true') {
         incorrectIndex = i;
@@ -1015,7 +1035,7 @@ test.describe('Edge Cases', () => {
     await waitForAutoAdvance(page, 2000);
 
     // Get current state
-    const scoreBeforeRefresh = await getCurrentScore(page);
+    const _scoreBeforeRefresh = await getCurrentScore(page);
 
     // Refresh page
     await page.reload();
@@ -1042,8 +1062,14 @@ test.describe('Edge Cases', () => {
       expect(url).toContain(language);
 
       // Try to interact with setup (may not exist yet for all languages)
-      const setupVisible = await page.locator(SELECTORS.setupScreen).isVisible({ timeout: 5000 }).catch(() => false);
-      const quizVisible = await page.locator(SELECTORS.quizScreen).isVisible({ timeout: 5000 }).catch(() => false);
+      const setupVisible = await page
+        .locator(SELECTORS.setupScreen)
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
+      const quizVisible = await page
+        .locator(SELECTORS.quizScreen)
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
 
       // Page should load without errors
       expect(setupVisible || quizVisible || page.url().includes(language)).toBeTruthy();
@@ -1094,9 +1120,10 @@ test.describe('Accessibility Tests', () => {
     const correctOption = page.locator(`${SELECTORS.optionCard}[data-correct="true"]`);
     const incorrectOption = page.locator(`${SELECTORS.optionCard}[data-incorrect="true"]`);
 
-    const hasSelection = await selectedOption.count() > 0 ||
-                        await correctOption.count() > 0 ||
-                        await incorrectOption.count() > 0;
+    const hasSelection =
+      (await selectedOption.count()) > 0 ||
+      (await correctOption.count()) > 0 ||
+      (await incorrectOption.count()) > 0;
 
     // Keyboard interaction should work
     expect(hasSelection).toBeTruthy();
@@ -1113,10 +1140,12 @@ test.describe('Accessibility Tests', () => {
     const startButton = page.locator(SELECTORS.startButton);
     const hasFocusIndicator = await startButton.evaluate((el) => {
       const style = getComputedStyle(el);
-      return style.outline !== 'none' ||
-             style.boxShadow !== 'none' ||
-             el.classList.contains('focus:') ||
-             el.matches(':focus-visible');
+      return (
+        style.outline !== 'none' ||
+        style.boxShadow !== 'none' ||
+        el.classList.contains('focus:') ||
+        el.matches(':focus-visible')
+      );
     });
 
     // Should have some focus indication
@@ -1155,7 +1184,7 @@ test.describe('Visual Consistency Tests', () => {
     // Check for essential layout elements
     const hasTimer = await page.locator(SELECTORS.timer).isVisible();
     const hasQuestion = await page.locator(SELECTORS.questionText).isVisible();
-    const hasOptions = await page.locator(SELECTORS.optionCard).count() > 0;
+    const hasOptions = (await page.locator(SELECTORS.optionCard).count()) > 0;
 
     expect(hasTimer && hasQuestion && hasOptions).toBeTruthy();
   });

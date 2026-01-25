@@ -30,12 +30,14 @@ const STYLES = {
     icon: null,
   },
   selected: {
-    container: 'bg-blue-50 border-blue-500 dark:bg-blue-900/30 dark:border-blue-500 ring-2 ring-blue-500/30',
+    container:
+      'bg-blue-50 border-blue-500 dark:bg-blue-900/30 dark:border-blue-500 ring-2 ring-blue-500/30',
     text: 'text-blue-700 dark:text-blue-300',
     icon: 'selected' as const,
   },
   defaultEnabled: {
-    container: 'bg-white border-gray-300 dark:bg-gray-800 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50/50 dark:hover:border-blue-500 dark:hover:bg-blue-900/20',
+    container:
+      'bg-white border-gray-300 dark:bg-gray-800 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50/50 dark:hover:border-blue-500 dark:hover:bg-blue-900/20',
     text: 'text-gray-900 dark:text-gray-100',
     icon: null,
   },
@@ -51,7 +53,7 @@ function getCardStyles(
   isRevealed: boolean,
   isCorrect: boolean | null | undefined,
   isSelected: boolean,
-  disabled: boolean
+  disabled: boolean,
 ) {
   if (isRevealed) {
     if (isCorrect === true) return STYLES.correct;
@@ -74,7 +76,7 @@ export const MethodCard = memo(function MethodCard({
   // Memoize styles to avoid recalculation on every render
   const styles = useMemo(
     () => getCardStyles(isRevealed, isCorrect, isSelected, disabled),
-    [isRevealed, isCorrect, isSelected, disabled]
+    [isRevealed, isCorrect, isSelected, disabled],
   );
 
   const renderIcon = () => {
@@ -82,16 +84,38 @@ export const MethodCard = memo(function MethodCard({
       case 'correct':
         return (
           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center animate-scale-in">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-4 h-4 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
         );
       case 'incorrect':
         return (
           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500 flex items-center justify-center animate-shake">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-4 h-4 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </div>
         );
@@ -110,6 +134,7 @@ export const MethodCard = memo(function MethodCard({
 
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled || isRevealed}
       className={`
@@ -153,6 +178,7 @@ export const MethodCard = memo(function MethodCard({
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>

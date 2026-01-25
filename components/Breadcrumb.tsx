@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export interface BreadcrumbItem {
   label: string;
@@ -18,22 +18,22 @@ interface BreadcrumbProps {
 
 // Language display names mapping
 const LANGUAGE_NAMES: Record<string, string> = {
-  javascript: "JavaScript",
-  typescript: "TypeScript",
-  python: "Python",
-  java: "Java",
-  cpp: "C++",
-  csharp: "C#",
-  go: "Go",
-  ruby: "Ruby",
-  c: "C",
+  javascript: 'JavaScript',
+  typescript: 'TypeScript',
+  python: 'Python',
+  java: 'Java',
+  cpp: 'C++',
+  csharp: 'C#',
+  go: 'Go',
+  ruby: 'Ruby',
+  c: 'C',
 };
 
 // Mode display names mapping
 const MODE_NAMES: Record<string, string> = {
-  drill: "Drill Mode",
-  quiz: "Quiz Mode",
-  reference: "Reference",
+  drill: 'Drill Mode',
+  quiz: 'Quiz Mode',
+  reference: 'Reference',
 };
 
 function formatSegment(segment: string): string {
@@ -47,40 +47,40 @@ function formatSegment(segment: string): string {
 
   // Default: capitalize and replace hyphens with spaces
   return segment
-    .split("-")
+    .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+    .join(' ');
 }
 
 export function Breadcrumb({
   items,
   autoGenerate = true,
-  className = "",
+  className = '',
   maxItems = 4,
 }: BreadcrumbProps) {
   const pathname = usePathname();
 
   // Auto-generate breadcrumb items from pathname if not provided
-  const breadcrumbItems: BreadcrumbItem[] = items || (() => {
-    if (!autoGenerate) return [];
+  const breadcrumbItems: BreadcrumbItem[] =
+    items ||
+    (() => {
+      if (!autoGenerate) return [];
 
-    const segments = pathname.split("/").filter(Boolean);
-    const generatedItems: BreadcrumbItem[] = [
-      { label: "Home", href: "/" },
-    ];
+      const segments = pathname.split('/').filter(Boolean);
+      const generatedItems: BreadcrumbItem[] = [{ label: 'Home', href: '/' }];
 
-    segments.forEach((segment, index) => {
-      const href = "/" + segments.slice(0, index + 1).join("/");
-      const isLast = index === segments.length - 1;
+      segments.forEach((segment, index) => {
+        const href = `/${segments.slice(0, index + 1).join('/')}`;
+        const isLast = index === segments.length - 1;
 
-      generatedItems.push({
-        label: formatSegment(segment),
-        href: isLast ? undefined : href,
+        generatedItems.push({
+          label: formatSegment(segment),
+          href: isLast ? undefined : href,
+        });
       });
-    });
 
-    return generatedItems;
-  })();
+      return generatedItems;
+    })();
 
   // Handle truncation for mobile
   const displayItems = (() => {
@@ -92,11 +92,7 @@ export function Breadcrumb({
     const first = breadcrumbItems[0];
     const lastItems = breadcrumbItems.slice(-(maxItems - 2));
 
-    return [
-      first,
-      { label: "...", href: undefined },
-      ...lastItems,
-    ];
+    return [first, { label: '...', href: undefined }, ...lastItems];
   })();
 
   if (displayItems.length === 0) {
@@ -104,20 +100,14 @@ export function Breadcrumb({
   }
 
   return (
-    <nav
-      className={`flex items-center ${className}`}
-      aria-label="Breadcrumb"
-    >
+    <nav className={`flex items-center ${className}`} aria-label="Breadcrumb">
       <ol className="flex items-center gap-1 sm:gap-2 flex-wrap">
         {displayItems.map((item, index) => {
           const isLast = index === displayItems.length - 1;
-          const isEllipsis = item.label === "...";
+          const isEllipsis = item.label === '...';
 
           return (
-            <li
-              key={`${item.label}-${index}`}
-              className="flex items-center gap-1 sm:gap-2"
-            >
+            <li key={`${item.label}-${index}`} className="flex items-center gap-1 sm:gap-2">
               {/* Separator */}
               {index > 0 && (
                 <svg
@@ -128,11 +118,7 @@ export function Breadcrumb({
                   strokeWidth={2}
                   aria-hidden="true"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               )}
 
@@ -161,11 +147,11 @@ export function Breadcrumb({
                   className={`
                     flex items-center gap-1.5
                     text-sm font-medium
-                    ${isLast ? "text-text-primary" : "text-text-muted"}
+                    ${isLast ? 'text-text-primary' : 'text-text-muted'}
                     truncate max-w-[120px] sm:max-w-[200px]
                   `}
                   title={item.label}
-                  aria-current={isLast ? "page" : undefined}
+                  aria-current={isLast ? 'page' : undefined}
                 >
                   {item.icon}
                   <span className="truncate">{item.label}</span>

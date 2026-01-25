@@ -19,20 +19,48 @@ interface StatsBarProps {
 const TrendIcon = memo(function TrendIcon({ trend }: { trend: 'up' | 'down' | 'neutral' }) {
   if (trend === 'up') {
     return (
-      <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      <svg
+        className="w-4 h-4 text-emerald-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        />
       </svg>
     );
   }
   if (trend === 'down') {
     return (
-      <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      <svg
+        className="w-4 h-4 text-red-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M19 14l-7 7m0 0l-7-7m7 7V3"
+        />
       </svg>
     );
   }
   return (
-    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg
+      className="w-4 h-4 text-gray-400"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14" />
     </svg>
   );
@@ -50,9 +78,7 @@ export function StatsBar({ stats, variant = 'default' }: StatsBarProps) {
               ${index !== stats.length - 1 ? 'pr-4 border-r border-gray-300 dark:border-gray-600' : ''}
             `}
           >
-            {stat.icon && (
-              <span className="text-gray-500 dark:text-gray-400">{stat.icon}</span>
-            )}
+            {stat.icon && <span className="text-gray-500 dark:text-gray-400">{stat.icon}</span>}
             <span className="text-sm text-gray-600 dark:text-gray-400">{stat.label}:</span>
             <span
               className={`
@@ -114,14 +140,9 @@ export function StatsBar({ stats, variant = 'default' }: StatsBarProps) {
   return (
     <div className="flex flex-wrap justify-between items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
       {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="flex flex-col items-center min-w-[80px]"
-        >
+        <div key={stat.label} className="flex flex-col items-center min-w-[80px]">
           <div className="flex items-center gap-2 mb-1">
-            {stat.icon && (
-              <span className="text-gray-500 dark:text-gray-400">{stat.icon}</span>
-            )}
+            {stat.icon && <span className="text-gray-500 dark:text-gray-400">{stat.icon}</span>}
             <span
               className={`
                 text-xl sm:text-2xl font-bold

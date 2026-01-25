@@ -1,10 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import {
-  TestUtils,
-  SUPPORTED_LANGUAGES,
   LANGUAGE_NAMES,
+  type LanguageSlug,
+  SUPPORTED_LANGUAGES,
+  TestUtils,
   waitForAnimations,
-  LanguageSlug,
 } from './fixtures/test-utils';
 
 test.describe('Language Selection', () => {
@@ -14,9 +14,7 @@ test.describe('Language Selection', () => {
     utils = new TestUtils(page);
   });
 
-  test('should display language selection page for each language', async ({
-    page,
-  }) => {
+  test('should display language selection page for each language', async ({ page }) => {
     for (const language of SUPPORTED_LANGUAGES) {
       await utils.goToLanguage(language);
 
@@ -36,15 +34,15 @@ test.describe('Language Selection', () => {
 
     // Check for mode navigation options
     // These might be links, buttons, or cards depending on implementation
-    const drillOption = page.getByRole('link', { name: /drill/i }).or(
-      page.getByRole('button', { name: /drill/i })
-    );
-    const quizOption = page.getByRole('link', { name: /quiz/i }).or(
-      page.getByRole('button', { name: /quiz/i })
-    );
-    const referenceOption = page.getByRole('link', { name: /reference/i }).or(
-      page.getByRole('button', { name: /reference/i })
-    );
+    const drillOption = page
+      .getByRole('link', { name: /drill/i })
+      .or(page.getByRole('button', { name: /drill/i }));
+    const quizOption = page
+      .getByRole('link', { name: /quiz/i })
+      .or(page.getByRole('button', { name: /quiz/i }));
+    const referenceOption = page
+      .getByRole('link', { name: /reference/i })
+      .or(page.getByRole('button', { name: /reference/i }));
 
     // At least one mode option should be visible if the page is implemented
     const anyModeVisible =
@@ -55,9 +53,7 @@ test.describe('Language Selection', () => {
     // This test will pass even if the page is not fully implemented yet
     // It checks the structure is there or logs a note
     if (!anyModeVisible) {
-      console.log(
-        'Note: Language selection page modes not yet implemented for javascript'
-      );
+      console.log('Note: Language selection page modes not yet implemented for javascript');
     }
   });
 
@@ -95,9 +91,7 @@ test.describe('Language Selection', () => {
     }
   });
 
-  test('should navigate from language page to reference mode', async ({
-    page,
-  }) => {
+  test('should navigate from language page to reference mode', async ({ page }) => {
     await utils.goToLanguage('typescript');
     await waitForAnimations(page);
 
@@ -144,18 +138,17 @@ test.describe('Language Selection', () => {
 });
 
 test.describe('Language Selection - Each Language', () => {
-  const languageTestCases: { language: LanguageSlug; expectedContent: string }[] =
-    [
-      { language: 'javascript', expectedContent: 'JavaScript' },
-      { language: 'typescript', expectedContent: 'TypeScript' },
-      { language: 'python', expectedContent: 'Python' },
-      { language: 'java', expectedContent: 'Java' },
-      { language: 'cpp', expectedContent: 'C++' },
-      { language: 'csharp', expectedContent: 'C#' },
-      { language: 'go', expectedContent: 'Go' },
-      { language: 'ruby', expectedContent: 'Ruby' },
-      { language: 'c', expectedContent: 'C' },
-    ];
+  const languageTestCases: { language: LanguageSlug; expectedContent: string }[] = [
+    { language: 'javascript', expectedContent: 'JavaScript' },
+    { language: 'typescript', expectedContent: 'TypeScript' },
+    { language: 'python', expectedContent: 'Python' },
+    { language: 'java', expectedContent: 'Java' },
+    { language: 'cpp', expectedContent: 'C++' },
+    { language: 'csharp', expectedContent: 'C#' },
+    { language: 'go', expectedContent: 'Go' },
+    { language: 'ruby', expectedContent: 'Ruby' },
+    { language: 'c', expectedContent: 'C' },
+  ];
 
   for (const { language, expectedContent } of languageTestCases) {
     test(`${expectedContent} language page should load`, async ({ page }) => {
@@ -167,7 +160,7 @@ test.describe('Language Selection - Each Language', () => {
 
       // Page should not show error
       const errorIndicator = page.getByText(/error|not found|404/i);
-      const hasError = await errorIndicator.count() > 0;
+      const hasError = (await errorIndicator.count()) > 0;
 
       // If there's a 404, it means the page isn't implemented yet
       if (!hasError) {
@@ -178,9 +171,7 @@ test.describe('Language Selection - Each Language', () => {
 });
 
 test.describe('Language Selection - URL Routing', () => {
-  test('should handle direct URL navigation to drill mode', async ({
-    page,
-  }) => {
+  test('should handle direct URL navigation to drill mode', async ({ page }) => {
     await page.goto('/javascript/drill');
 
     // Should arrive at drill page or show appropriate message
@@ -193,17 +184,13 @@ test.describe('Language Selection - URL Routing', () => {
     await expect(page).toHaveURL('/python/quiz');
   });
 
-  test('should handle direct URL navigation to reference mode', async ({
-    page,
-  }) => {
+  test('should handle direct URL navigation to reference mode', async ({ page }) => {
     await page.goto('/go/reference');
 
     await expect(page).toHaveURL('/go/reference');
   });
 
-  test('should preserve language context across mode switches', async ({
-    page,
-  }) => {
+  test('should preserve language context across mode switches', async ({ page }) => {
     // Start at drill
     await page.goto('/ruby/drill');
     await expect(page).toHaveURL('/ruby/drill');

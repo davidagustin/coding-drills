@@ -39,10 +39,7 @@ export function hasLocalStorage(): boolean {
  * @param randomFn - Optional custom random function (useful for seeded randomness)
  * @returns A new shuffled array
  */
-export function shuffleArray<T>(
-  array: T[],
-  randomFn: () => number = Math.random
-): T[] {
+export function shuffleArray<T>(array: T[], randomFn: () => number = Math.random): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(randomFn() * (i + 1));
@@ -59,7 +56,7 @@ export function shuffleArray<T>(
  */
 export function getRandomElement<T>(
   array: T[],
-  randomFn: () => number = Math.random
+  randomFn: () => number = Math.random,
 ): T | undefined {
   if (array.length === 0) return undefined;
   return array[Math.floor(randomFn() * array.length)];
@@ -75,7 +72,7 @@ export function getRandomElement<T>(
 export function getRandomElements<T>(
   array: T[],
   count: number,
-  randomFn: () => number = Math.random
+  randomFn: () => number = Math.random,
 ): T[] {
   const shuffled = shuffleArray(array, randomFn);
   return shuffled.slice(0, Math.min(count, array.length));
@@ -101,29 +98,25 @@ export function formatValue(value: unknown, options: FormatOptions = {}): string
 
   if (value === undefined) return 'undefined';
   if (value === null) return 'null';
-  if (typeof value === 'string') return '"' + value + '"';
+  if (typeof value === 'string') return `"${value}"`;
   if (typeof value === 'function') return '[Function]';
   if (typeof value === 'symbol') return value.toString();
-  if (typeof value === 'bigint') return value.toString() + 'n';
-  
+  if (typeof value === 'bigint') return `${value.toString()}n`;
+
   if (Array.isArray(value)) {
     if (maxDepth <= 0) return '[...]';
-    const items = value.map(function(v) {
-      return formatValue(v, { prettyPrint, maxDepth: maxDepth - 1 });
-    });
-    return '[' + items.join(', ') + ']';
+    const items = value.map((v) => formatValue(v, { prettyPrint, maxDepth: maxDepth - 1 }));
+    return `[${items.join(', ')}]`;
   }
-  
+
   if (typeof value === 'object') {
     try {
-      return prettyPrint 
-        ? JSON.stringify(value, null, 2)
-        : JSON.stringify(value);
+      return prettyPrint ? JSON.stringify(value, null, 2) : JSON.stringify(value);
     } catch {
       return '[Object]';
     }
   }
-  
+
   return String(value);
 }
 
@@ -141,10 +134,10 @@ export function formatValue(value: unknown, options: FormatOptions = {}): string
 export function generateId(
   prefix: string = '',
   timestamp: number = Date.now(),
-  randomFn: () => number = Math.random
+  randomFn: () => number = Math.random,
 ): string {
   const randomPart = randomFn().toString(36).substring(2, 11);
-  return prefix ? prefix + '-' + timestamp + '-' + randomPart : timestamp + '-' + randomPart;
+  return prefix ? `${prefix}-${timestamp}-${randomPart}` : `${timestamp}-${randomPart}`;
 }
 
 /**
@@ -235,7 +228,7 @@ export function isNonEmptyString(value: unknown): value is string {
  * Check if a value is a positive number
  */
 export function isPositiveNumber(value: unknown): value is number {
-  return typeof value === 'number' && !isNaN(value) && value > 0;
+  return typeof value === 'number' && !Number.isNaN(value) && value > 0;
 }
 
 /**
@@ -245,14 +238,14 @@ export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
-  
+
   if (Array.isArray(obj)) {
-    return obj.map(function(item) { return deepClone(item); }) as unknown as T;
+    return obj.map((item) => deepClone(item)) as unknown as T;
   }
-  
+
   const cloned: Record<string, unknown> = {};
   for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+    if (Object.hasOwn(obj, key)) {
       cloned[key] = deepClone((obj as Record<string, unknown>)[key]);
     }
   }
@@ -275,7 +268,7 @@ export function escapeRegex(str: string): string {
  */
 export function normalizeString(
   str: string,
-  options: { trim?: boolean; lowercase?: boolean; removeSpaces?: boolean } = {}
+  options: { trim?: boolean; lowercase?: boolean; removeSpaces?: boolean } = {},
 ): string {
   let result = str;
   if (options.trim !== false) result = result.trim();

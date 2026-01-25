@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 interface ModalProps {
@@ -42,7 +42,7 @@ export function Modal({
         onClose();
       }
     },
-    [onClose, closeOnEscape]
+    [onClose, closeOnEscape],
   );
 
   // Handle overlay click
@@ -52,7 +52,7 @@ export function Modal({
         onClose();
       }
     },
-    [onClose, closeOnOverlayClick]
+    [onClose, closeOnOverlayClick],
   );
 
   // Focus management and event listeners
@@ -125,6 +125,7 @@ export function Modal({
 
             {showCloseButton && (
               <button
+                type="button"
                 onClick={onClose}
                 className="
                   ml-auto p-2 -mr-2
@@ -135,7 +136,13 @@ export function Modal({
                 "
                 aria-label="Close modal"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -149,9 +156,7 @@ export function Modal({
         )}
 
         {/* Content */}
-        <div className="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-          {children}
-        </div>
+        <div className="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">{children}</div>
       </div>
     </div>
   );
@@ -166,19 +171,11 @@ export function Modal({
 
 // Convenience components for common modal patterns
 export function ModalHeader({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-4">
-      {children}
-    </div>
-  );
+  return <div className="mb-4">{children}</div>;
 }
 
 export function ModalBody({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-gray-600 dark:text-gray-300">
-      {children}
-    </div>
-  );
+  return <div className="text-gray-600 dark:text-gray-300">{children}</div>;
 }
 
 export function ModalFooter({ children }: { children: React.ReactNode }) {

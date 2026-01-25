@@ -16,7 +16,7 @@ const difficultyConfig = {
     borderColor: 'border-emerald-300 dark:border-emerald-700',
     dotColor: 'bg-emerald-500',
     icon: (
-      <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="12" r="3" />
       </svg>
     ),
@@ -28,7 +28,7 @@ const difficultyConfig = {
     borderColor: 'border-amber-300 dark:border-amber-700',
     dotColor: 'bg-amber-500',
     icon: (
-      <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="8" cy="12" r="3" />
         <circle cx="16" cy="12" r="3" />
       </svg>
@@ -41,7 +41,7 @@ const difficultyConfig = {
     borderColor: 'border-red-300 dark:border-red-700',
     dotColor: 'bg-red-500',
     icon: (
-      <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="6" cy="12" r="2.5" />
         <circle cx="12" cy="12" r="2.5" />
         <circle cx="18" cy="12" r="2.5" />
@@ -84,8 +84,6 @@ export function DifficultyBadge({
         ${sizes.padding} ${sizes.text}
         transition-all duration-200
       `}
-      role="status"
-      aria-label={`Difficulty: ${config.label}`}
     >
       {showIcon && (
         <span className={`${sizes.iconSize} flex-shrink-0`} aria-hidden="true">

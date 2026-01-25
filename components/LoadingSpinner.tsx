@@ -33,8 +33,7 @@ export function LoadingSpinner({
         animate-spin
         ${className}
       `}
-      role="status"
-      aria-label="Loading"
+      aria-hidden="true"
     >
       <span className="sr-only">Loading...</span>
     </div>

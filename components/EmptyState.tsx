@@ -20,6 +20,7 @@ const defaultIcon = (
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
+    aria-hidden="true"
   >
     <path
       strokeLinecap="round"
@@ -48,7 +49,13 @@ function ActionButton({ action }: { action?: EmptyStateProps['action'] }) {
     return (
       <Link href={action.href} className={buttonClasses}>
         {action.label}
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </Link>
@@ -57,7 +64,7 @@ function ActionButton({ action }: { action?: EmptyStateProps['action'] }) {
 
   if (action.onClick) {
     return (
-      <button onClick={action.onClick} className={buttonClasses}>
+      <button type="button" onClick={action.onClick} className={buttonClasses}>
         {action.label}
       </button>
     );
@@ -90,16 +97,10 @@ export function EmptyState({
       </div>
 
       {/* Title */}
-      <h3 className="text-xl font-semibold text-gray-200 mb-2">
-        {title}
-      </h3>
+      <h3 className="text-xl font-semibold text-gray-200 mb-2">{title}</h3>
 
       {/* Description */}
-      {description && (
-        <p className="text-gray-500 max-w-md mb-6">
-          {description}
-        </p>
-      )}
+      {description && <p className="text-gray-500 max-w-md mb-6">{description}</p>}
 
       {/* Action button */}
       {action && <ActionButton action={action} />}
@@ -123,6 +124,7 @@ export function NoResultsFound({
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -152,6 +154,7 @@ export function NoDrillsAvailable() {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -177,6 +180,7 @@ export function CompletedAllDrills() {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"

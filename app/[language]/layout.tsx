@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import {
-  SUPPORTED_LANGUAGES,
-  LANGUAGE_CONFIG,
   isValidLanguage,
+  LANGUAGE_CONFIG,
+  SUPPORTED_LANGUAGES,
   type SupportedLanguage,
-} from "./config";
-import { LanguageIcon } from "./LanguageIcon";
+} from './config';
+import { LanguageIcon } from './LanguageIcon';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ export async function generateMetadata({
 
   if (!isValidLanguage(language)) {
     return {
-      title: "Language Not Found - Coding Drills",
+      title: 'Language Not Found - Coding Drills',
     };
   }
 
@@ -68,9 +68,7 @@ export default async function LanguageLayout({ children, params }: LayoutProps) 
               <span className="text-zinc-600">/</span>
               <div className="flex items-center gap-2">
                 <LanguageIcon language={language as SupportedLanguage} className="w-5 h-5" />
-                <span className={`font-semibold ${config.color}`}>
-                  {config.name}
-                </span>
+                <span className={`font-semibold ${config.color}`}>{config.name}</span>
               </div>
             </div>
 
@@ -79,9 +77,7 @@ export default async function LanguageLayout({ children, params }: LayoutProps) 
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${config.bgColor} ${config.borderColor} border`}
             >
               <LanguageIcon language={language as SupportedLanguage} className="w-4 h-4" />
-              <span className={`text-sm font-medium ${config.color}`}>
-                {config.name}
-              </span>
+              <span className={`text-sm font-medium ${config.color}`}>{config.name}</span>
             </div>
           </div>
         </div>

@@ -86,7 +86,7 @@ export interface QuizQuestion {
   difficulty: Difficulty;
   explanation?: string;
   category?: string;
-  methodHint?: string;  // Hint about the method type (e.g., "Array method", "Object method")
+  methodHint?: string; // Hint about the method type (e.g., "Array method", "Object method")
 }
 
 export interface UserProgress {

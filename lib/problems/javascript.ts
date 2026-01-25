@@ -79,7 +79,10 @@ export const javascriptProblems: Problem[] = [
     setupCode: 'const numbers = [1, 2, 2, 3, 4, 4, 5, 1, 3];',
     expected: [1, 2, 3, 4, 5],
     sample: 'numbers.filter((n, i) => numbers.indexOf(n) === i)',
-    hints: ['indexOf returns the first occurrence index', 'Compare current index with first occurrence'],
+    hints: [
+      'indexOf returns the first occurrence index',
+      'Compare current index with first occurrence',
+    ],
     validPatterns: [
       /\.filter\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\.indexOf\s*\(\s*\w+\s*\)\s*===?\s*\w+\s*\)/,
     ],
@@ -185,10 +188,12 @@ export const javascriptProblems: Problem[] = [
       { fullName: 'Bob Brown', isAdult: false },
     ],
     sample: 'users.map(u => ({ fullName: `${u.firstName} ${u.lastName}`, isAdult: u.age >= 18 }))',
-    hints: ['Create a new object in map', 'Concatenate firstName and lastName', 'Check if age >= 18'],
-    validPatterns: [
-      /\.map\s*\(\s*\w+\s*=>\s*\(\s*\{/,
+    hints: [
+      'Create a new object in map',
+      'Concatenate firstName and lastName',
+      'Check if age >= 18',
     ],
+    validPatterns: [/\.map\s*\(\s*\w+\s*=>\s*\(\s*\{/],
     tags: ['map', 'objects', 'transformation'],
   },
   {
@@ -202,9 +207,7 @@ export const javascriptProblems: Problem[] = [
     expected: ['HELLO', 'WORLD', 'JAVASCRIPT'],
     sample: 'words.map(w => w.toUpperCase())',
     hints: ['Use the toUpperCase() method', 'map returns a new array'],
-    validPatterns: [
-      /\.map\s*\(\s*\w+\s*=>\s*\w+\.toUpperCase\s*\(\s*\)\s*\)/,
-    ],
+    validPatterns: [/\.map\s*\(\s*\w+\s*=>\s*\w+\.toUpperCase\s*\(\s*\)\s*\)/],
     tags: ['map', 'strings', 'toUpperCase'],
   },
   {
@@ -223,9 +226,7 @@ export const javascriptProblems: Problem[] = [
     ],
     sample: 'letters.map((value, index) => ({ value, index }))',
     hints: ['map callback receives index as second argument', 'Use shorthand property syntax'],
-    validPatterns: [
-      /\.map\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/,
-    ],
+    validPatterns: [/\.map\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/],
     tags: ['map', 'index', 'objects'],
   },
 
@@ -243,9 +244,7 @@ export const javascriptProblems: Problem[] = [
     expected: 15,
     sample: 'numbers.reduce((sum, n) => sum + n, 0)',
     hints: ['Start with initial value 0', 'Add each number to the accumulator'],
-    validPatterns: [
-      /\.reduce\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\s*\+\s*\w+\s*,\s*0\s*\)/,
-    ],
+    validPatterns: [/\.reduce\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\s*\+\s*\w+\s*,\s*0\s*\)/],
     tags: ['reduce', 'sum', 'basics'],
   },
   {
@@ -275,10 +274,12 @@ export const javascriptProblems: Problem[] = [
     setupCode: 'const fruits = ["apple", "banana", "apple", "orange", "banana", "apple"];',
     expected: { apple: 3, banana: 2, orange: 1 },
     sample: 'fruits.reduce((acc, fruit) => ({ ...acc, [fruit]: (acc[fruit] || 0) + 1 }), {})',
-    hints: ['Start with an empty object', 'Use computed property names [fruit]', 'Initialize count to 0 if undefined'],
-    validPatterns: [
-      /\.reduce\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/,
+    hints: [
+      'Start with an empty object',
+      'Use computed property names [fruit]',
+      'Initialize count to 0 if undefined',
     ],
+    validPatterns: [/\.reduce\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/],
     tags: ['reduce', 'counting', 'objects'],
   },
   {
@@ -336,10 +337,12 @@ export const javascriptProblems: Problem[] = [
   groups[key].push(emp);
   return groups;
 }, {})`,
-    hints: ['Use department as the key', 'Initialize empty array for new departments', 'Push employee to appropriate group'],
-    validPatterns: [
-      /\.reduce\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/,
+    hints: [
+      'Use department as the key',
+      'Initialize empty array for new departments',
+      'Push employee to appropriate group',
     ],
+    validPatterns: [/\.reduce\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>/],
     tags: ['reduce', 'groupBy', 'objects'],
   },
 
@@ -357,9 +360,7 @@ export const javascriptProblems: Problem[] = [
     expected: 8,
     sample: 'numbers.find(n => n % 2 === 0)',
     hints: ['find returns the first matching element', 'Use modulo to check for even'],
-    validPatterns: [
-      /\.find\s*\(\s*\w+\s*=>\s*\w+\s*%\s*2\s*===?\s*0\s*\)/,
-    ],
+    validPatterns: [/\.find\s*\(\s*\w+\s*=>\s*\w+\s*%\s*2\s*===?\s*0\s*\)/],
     tags: ['find', 'modulo', 'basics'],
   },
   {
@@ -383,9 +384,7 @@ export const javascriptProblems: Problem[] = [
     expected: { id: 3, name: 'Charlie' },
     sample: 'users.find(u => u.id === 3)',
     hints: ['Compare id property to 3', 'find returns the matching object'],
-    validPatterns: [
-      /\.find\s*\(\s*\w+\s*=>\s*\w+\.id\s*===?\s*3\s*\)/,
-    ],
+    validPatterns: [/\.find\s*\(\s*\w+\s*=>\s*\w+\.id\s*===?\s*3\s*\)/],
     tags: ['find', 'objects', 'property-access'],
   },
   {
@@ -399,9 +398,7 @@ export const javascriptProblems: Problem[] = [
     expected: 2,
     sample: 'numbers.findIndex(n => n < 0)',
     hints: ['findIndex returns the index, not the element', 'Negative numbers are less than 0'],
-    validPatterns: [
-      /\.findIndex\s*\(\s*\w+\s*=>\s*\w+\s*<\s*0\s*\)/,
-    ],
+    validPatterns: [/\.findIndex\s*\(\s*\w+\s*=>\s*\w+\s*<\s*0\s*\)/],
     tags: ['findIndex', 'comparison', 'basics'],
   },
 
@@ -418,10 +415,11 @@ export const javascriptProblems: Problem[] = [
     setupCode: 'const numbers = [1, 5, -3, 8, 2];',
     expected: true,
     sample: 'numbers.some(n => n < 0)',
-    hints: ['some returns true if at least one element matches', 'Negative numbers are less than 0'],
-    validPatterns: [
-      /\.some\s*\(\s*\w+\s*=>\s*\w+\s*<\s*0\s*\)/,
+    hints: [
+      'some returns true if at least one element matches',
+      'Negative numbers are less than 0',
     ],
+    validPatterns: [/\.some\s*\(\s*\w+\s*=>\s*\w+\s*<\s*0\s*\)/],
     tags: ['some', 'comparison', 'basics'],
   },
   {
@@ -443,9 +441,7 @@ export const javascriptProblems: Problem[] = [
     expected: true,
     sample: 'users.some(u => u.role === "admin")',
     hints: ['Check the role property', 'Compare to "admin"'],
-    validPatterns: [
-      /\.some\s*\(\s*\w+\s*=>\s*\w+\.role\s*===?\s*['"]admin['"]\s*\)/,
-    ],
+    validPatterns: [/\.some\s*\(\s*\w+\s*=>\s*\w+\.role\s*===?\s*['"]admin['"]\s*\)/],
     tags: ['some', 'objects', 'property-access'],
   },
   {
@@ -459,9 +455,7 @@ export const javascriptProblems: Problem[] = [
     expected: true,
     sample: 'numbers.every(n => n > 0)',
     hints: ['every returns true if ALL elements match', 'Positive numbers are greater than 0'],
-    validPatterns: [
-      /\.every\s*\(\s*\w+\s*=>\s*\w+\s*>\s*0\s*\)/,
-    ],
+    validPatterns: [/\.every\s*\(\s*\w+\s*=>\s*\w+\s*>\s*0\s*\)/],
     tags: ['every', 'comparison', 'basics'],
   },
   {
@@ -475,9 +469,7 @@ export const javascriptProblems: Problem[] = [
     expected: true,
     sample: 'emails.every(e => e.includes("@"))',
     hints: ['Use the includes method', 'Check for @ symbol'],
-    validPatterns: [
-      /\.every\s*\(\s*\w+\s*=>\s*\w+\.includes\s*\(\s*['"]@['"]\s*\)\s*\)/,
-    ],
+    validPatterns: [/\.every\s*\(\s*\w+\s*=>\s*\w+\.includes\s*\(\s*['"]@['"]\s*\)\s*\)/],
     tags: ['every', 'includes', 'strings'],
   },
 
@@ -495,9 +487,7 @@ export const javascriptProblems: Problem[] = [
     expected: [1, 2, 3, 5, 8, 9],
     sample: 'numbers.sort((a, b) => a - b)',
     hints: ['Default sort converts to strings', 'Use comparison function for numbers'],
-    validPatterns: [
-      /\.sort\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\s*-\s*\w+\s*\)/,
-    ],
+    validPatterns: [/\.sort\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\s*-\s*\w+\s*\)/],
     tags: ['sort', 'numbers', 'comparison'],
   },
   {
@@ -511,9 +501,7 @@ export const javascriptProblems: Problem[] = [
     expected: [9, 8, 5, 3, 2, 1],
     sample: 'numbers.sort((a, b) => b - a)',
     hints: ['Reverse the subtraction order', 'b - a gives descending'],
-    validPatterns: [
-      /\.sort\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\s*-\s*\w+\s*\)/,
-    ],
+    validPatterns: [/\.sort\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\s*-\s*\w+\s*\)/],
     tags: ['sort', 'numbers', 'descending'],
   },
   {
@@ -539,9 +527,7 @@ export const javascriptProblems: Problem[] = [
     ],
     sample: 'users.sort((a, b) => a.age - b.age)',
     hints: ['Access the age property', 'Subtract ages for comparison'],
-    validPatterns: [
-      /\.sort\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\.age\s*-\s*\w+\.age\s*\)/,
-    ],
+    validPatterns: [/\.sort\s*\(\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>\s*\w+\.age\s*-\s*\w+\.age\s*\)/],
     tags: ['sort', 'objects', 'property-access'],
   },
   {
@@ -575,9 +561,7 @@ export const javascriptProblems: Problem[] = [
     expected: [1, 2, 3],
     sample: 'numbers.slice(0, 3)',
     hints: ['slice(start, end) - end is exclusive', 'Start at 0, end at 3'],
-    validPatterns: [
-      /\.slice\s*\(\s*0\s*,\s*3\s*\)/,
-    ],
+    validPatterns: [/\.slice\s*\(\s*0\s*,\s*3\s*\)/],
     tags: ['slice', 'basics'],
   },
   {
@@ -591,9 +575,7 @@ export const javascriptProblems: Problem[] = [
     expected: [4, 5],
     sample: 'numbers.slice(-2)',
     hints: ['Negative index counts from end', '-2 means last 2 elements'],
-    validPatterns: [
-      /\.slice\s*\(\s*-2\s*\)/,
-    ],
+    validPatterns: [/\.slice\s*\(\s*-2\s*\)/],
     tags: ['slice', 'negative-index'],
   },
   {
@@ -607,9 +589,7 @@ export const javascriptProblems: Problem[] = [
     expected: ['c', 'd', 'e'],
     sample: 'letters.slice(2, 5)',
     hints: ['slice end is exclusive', 'To include index 4, use 5 as end'],
-    validPatterns: [
-      /\.slice\s*\(\s*2\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/\.slice\s*\(\s*2\s*,\s*5\s*\)/],
     tags: ['slice', 'range'],
   },
 
@@ -627,9 +607,7 @@ export const javascriptProblems: Problem[] = [
     expected: true,
     sample: 'numbers.includes(5)',
     hints: ['includes returns true/false', 'Direct method call'],
-    validPatterns: [
-      /\.includes\s*\(\s*5\s*\)/,
-    ],
+    validPatterns: [/\.includes\s*\(\s*5\s*\)/],
     tags: ['includes', 'search', 'basics'],
   },
   {
@@ -643,9 +621,7 @@ export const javascriptProblems: Problem[] = [
     expected: 2,
     sample: 'fruits.indexOf("orange")',
     hints: ['indexOf returns the index', 'Returns -1 if not found'],
-    validPatterns: [
-      /\.indexOf\s*\(\s*['"]orange['"]\s*\)/,
-    ],
+    validPatterns: [/\.indexOf\s*\(\s*['"]orange['"]\s*\)/],
     tags: ['indexOf', 'search'],
   },
 
@@ -665,10 +641,7 @@ const arr2 = [4, 5, 6];`,
     expected: [1, 2, 3, 4, 5, 6],
     sample: 'arr1.concat(arr2)',
     hints: ['concat returns a new array', 'Does not modify original'],
-    validPatterns: [
-      /arr1\.concat\s*\(\s*arr2\s*\)/,
-      /\[\s*\.\.\.arr1\s*,\s*\.\.\.arr2\s*\]/,
-    ],
+    validPatterns: [/arr1\.concat\s*\(\s*arr2\s*\)/, /\[\s*\.\.\.arr1\s*,\s*\.\.\.arr2\s*\]/],
     tags: ['concat', 'combine', 'basics'],
   },
   {
@@ -682,9 +655,7 @@ const arr2 = [4, 5, 6];`,
     expected: 'Hello - World - JavaScript',
     sample: 'words.join(" - ")',
     hints: ['join takes a separator string', 'Returns a string'],
-    validPatterns: [
-      /\.join\s*\(\s*['"]\s*-\s*['"]\s*\)/,
-    ],
+    validPatterns: [/\.join\s*\(\s*['"]\s*-\s*['"]\s*\)/],
     tags: ['join', 'strings'],
   },
   {
@@ -719,10 +690,7 @@ const arr2 = [4, 5, 6];`,
     expected: [1, 2, 3, 4, [5, 6]],
     sample: 'nested.flat()',
     hints: ['flat() flattens one level by default', 'Returns new array'],
-    validPatterns: [
-      /\.flat\s*\(\s*\)/,
-      /\.flat\s*\(\s*1\s*\)/,
-    ],
+    validPatterns: [/\.flat\s*\(\s*\)/, /\.flat\s*\(\s*1\s*\)/],
     tags: ['flat', 'nested'],
   },
   {
@@ -736,10 +704,7 @@ const arr2 = [4, 5, 6];`,
     expected: [1, 2, 3, 4, 5],
     sample: 'deep.flat(Infinity)',
     hints: ['Use Infinity for complete flattening', 'Or use a large number'],
-    validPatterns: [
-      /\.flat\s*\(\s*Infinity\s*\)/,
-      /\.flat\s*\(\s*\d+\s*\)/,
-    ],
+    validPatterns: [/\.flat\s*\(\s*Infinity\s*\)/, /\.flat\s*\(\s*\d+\s*\)/],
     tags: ['flat', 'deep-nested'],
   },
   {
@@ -753,9 +718,7 @@ const arr2 = [4, 5, 6];`,
     expected: [1, 2, 2, 4, 3, 6],
     sample: 'numbers.flatMap(n => [n, n * 2])',
     hints: ['flatMap combines map and flat', 'Return an array from callback'],
-    validPatterns: [
-      /\.flatMap\s*\(\s*\w+\s*=>\s*\[\s*\w+\s*,\s*\w+\s*\*\s*2\s*\]\s*\)/,
-    ],
+    validPatterns: [/\.flatMap\s*\(\s*\w+\s*=>\s*\[\s*\w+\s*,\s*\w+\s*\*\s*2\s*\]\s*\)/],
     tags: ['flatMap', 'transform'],
   },
 
@@ -773,10 +736,7 @@ const arr2 = [4, 5, 6];`,
     expected: ['Hello', 'World', 'JavaScript'],
     sample: 'sentence.split(" ")',
     hints: ['split takes a separator', 'Space character separates words'],
-    validPatterns: [
-      /\.split\s*\(\s*['"] ['"]\s*\)/,
-      /\.split\s*\(\s*\/\s+\/\s*\)/,
-    ],
+    validPatterns: [/\.split\s*\(\s*['"] ['"]\s*\)/, /\.split\s*\(\s*\/\s+\/\s*\)/],
     tags: ['split', 'strings', 'basics'],
   },
   {
@@ -790,9 +750,7 @@ const arr2 = [4, 5, 6];`,
     expected: 'Hello World',
     sample: 'text.trim()',
     hints: ['trim removes whitespace from both ends', 'Does not affect middle spaces'],
-    validPatterns: [
-      /\.trim\s*\(\s*\)/,
-    ],
+    validPatterns: [/\.trim\s*\(\s*\)/],
     tags: ['trim', 'whitespace'],
   },
   {
@@ -806,9 +764,7 @@ const arr2 = [4, 5, 6];`,
     expected: 'Hello JavaScript',
     sample: 'greeting.replace("World", "JavaScript")',
     hints: ['replace takes search and replacement', 'Returns new string'],
-    validPatterns: [
-      /\.replace\s*\(\s*['"]World['"]\s*,\s*['"]JavaScript['"]\s*\)/,
-    ],
+    validPatterns: [/\.replace\s*\(\s*['"]World['"]\s*,\s*['"]JavaScript['"]\s*\)/],
     tags: ['replace', 'strings'],
   },
   {
@@ -856,9 +812,7 @@ const arr2 = [4, 5, 6];`,
     expected: true,
     sample: 'greeting.startsWith("Hello")',
     hints: ['startsWith checks the beginning', 'Case-sensitive'],
-    validPatterns: [
-      /\.startsWith\s*\(\s*['"]Hello['"]\s*\)/,
-    ],
+    validPatterns: [/\.startsWith\s*\(\s*['"]Hello['"]\s*\)/],
     tags: ['startsWith', 'strings'],
   },
   {
@@ -872,9 +826,7 @@ const arr2 = [4, 5, 6];`,
     expected: true,
     sample: 'filename.endsWith(".js")',
     hints: ['endsWith checks the ending', 'Include the dot'],
-    validPatterns: [
-      /\.endsWith\s*\(\s*['"]\.js['"]\s*\)/,
-    ],
+    validPatterns: [/\.endsWith\s*\(\s*['"]\.js['"]\s*\)/],
     tags: ['endsWith', 'strings'],
   },
   {
@@ -888,9 +840,7 @@ const arr2 = [4, 5, 6];`,
     expected: '00042',
     sample: 'num.padStart(5, "0")',
     hints: ['padStart adds to the beginning', 'Second argument is the fill string'],
-    validPatterns: [
-      /\.padStart\s*\(\s*5\s*,\s*['"]0['"]\s*\)/,
-    ],
+    validPatterns: [/\.padStart\s*\(\s*5\s*,\s*['"]0['"]\s*\)/],
     tags: ['padStart', 'formatting'],
   },
   {
@@ -904,9 +854,7 @@ const arr2 = [4, 5, 6];`,
     expected: '* * * ',
     sample: 'star.repeat(3)',
     hints: ['repeat takes a count', 'Returns new string'],
-    validPatterns: [
-      /\.repeat\s*\(\s*3\s*\)/,
-    ],
+    validPatterns: [/\.repeat\s*\(\s*3\s*\)/],
     tags: ['repeat', 'strings'],
   },
   {
@@ -920,10 +868,7 @@ const arr2 = [4, 5, 6];`,
     expected: 'S',
     sample: 'word.charAt(4)',
     hints: ['charAt returns single character', 'Index starts at 0'],
-    validPatterns: [
-      /\.charAt\s*\(\s*4\s*\)/,
-      /word\s*\[\s*4\s*\]/,
-    ],
+    validPatterns: [/\.charAt\s*\(\s*4\s*\)/, /word\s*\[\s*4\s*\]/],
     tags: ['charAt', 'indexing'],
   },
   {
@@ -959,9 +904,7 @@ const arr2 = [4, 5, 6];`,
     expected: ['name', 'age', 'city'],
     sample: 'Object.keys(person)',
     hints: ['Object.keys returns array of keys', 'Static method on Object'],
-    validPatterns: [
-      /Object\.keys\s*\(\s*person\s*\)/,
-    ],
+    validPatterns: [/Object\.keys\s*\(\s*person\s*\)/],
     tags: ['Object.keys', 'objects'],
   },
   {
@@ -975,9 +918,7 @@ const arr2 = [4, 5, 6];`,
     expected: ['Alice', 30, 'NYC'],
     sample: 'Object.values(person)',
     hints: ['Object.values returns array of values', 'Static method on Object'],
-    validPatterns: [
-      /Object\.values\s*\(\s*person\s*\)/,
-    ],
+    validPatterns: [/Object\.values\s*\(\s*person\s*\)/],
     tags: ['Object.values', 'objects'],
   },
   {
@@ -994,9 +935,7 @@ const arr2 = [4, 5, 6];`,
     ],
     sample: 'Object.entries(person)',
     hints: ['Object.entries returns array of pairs', 'Each pair is [key, value]'],
-    validPatterns: [
-      /Object\.entries\s*\(\s*person\s*\)/,
-    ],
+    validPatterns: [/Object\.entries\s*\(\s*person\s*\)/],
     tags: ['Object.entries', 'objects'],
   },
   {
@@ -1010,9 +949,7 @@ const arr2 = [4, 5, 6];`,
     expected: { a: 1, b: 2, c: 3 },
     sample: 'Object.fromEntries(entries)',
     hints: ['Object.fromEntries is inverse of entries', 'Takes array of pairs'],
-    validPatterns: [
-      /Object\.fromEntries\s*\(\s*entries\s*\)/,
-    ],
+    validPatterns: [/Object\.fromEntries\s*\(\s*entries\s*\)/],
     tags: ['Object.fromEntries', 'objects'],
   },
   {
@@ -1124,9 +1061,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: 9,
     sample: 'Math.max(...numbers)',
     hints: ['Math.max takes individual arguments', 'Use spread to expand array'],
-    validPatterns: [
-      /Math\.max\s*\(\s*\.\.\.numbers\s*\)/,
-    ],
+    validPatterns: [/Math\.max\s*\(\s*\.\.\.numbers\s*\)/],
     tags: ['Math.max', 'spread'],
   },
   {
@@ -1140,9 +1075,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: 1,
     sample: 'Math.min(...numbers)',
     hints: ['Math.min finds smallest', 'Spread the array'],
-    validPatterns: [
-      /Math\.min\s*\(\s*\.\.\.numbers\s*\)/,
-    ],
+    validPatterns: [/Math\.min\s*\(\s*\.\.\.numbers\s*\)/],
     tags: ['Math.min', 'spread'],
   },
   {
@@ -1156,9 +1089,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: 5,
     sample: 'Math.round(num)',
     hints: ['Math.round rounds to nearest', '4.5 and up rounds up'],
-    validPatterns: [
-      /Math\.round\s*\(\s*num\s*\)/,
-    ],
+    validPatterns: [/Math\.round\s*\(\s*num\s*\)/],
     tags: ['Math.round', 'rounding'],
   },
   {
@@ -1172,9 +1103,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: 4,
     sample: 'Math.floor(num)',
     hints: ['Math.floor always rounds down', 'Towards negative infinity'],
-    validPatterns: [
-      /Math\.floor\s*\(\s*num\s*\)/,
-    ],
+    validPatterns: [/Math\.floor\s*\(\s*num\s*\)/],
     tags: ['Math.floor', 'rounding'],
   },
   {
@@ -1188,9 +1117,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: 5,
     sample: 'Math.ceil(num)',
     hints: ['Math.ceil always rounds up', 'Towards positive infinity'],
-    validPatterns: [
-      /Math\.ceil\s*\(\s*num\s*\)/,
-    ],
+    validPatterns: [/Math\.ceil\s*\(\s*num\s*\)/],
     tags: ['Math.ceil', 'rounding'],
   },
   {
@@ -1204,9 +1131,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: 42,
     sample: 'Math.abs(num)',
     hints: ['Math.abs removes sign', 'Always returns positive'],
-    validPatterns: [
-      /Math\.abs\s*\(\s*num\s*\)/,
-    ],
+    validPatterns: [/Math\.abs\s*\(\s*num\s*\)/],
     tags: ['Math.abs', 'absolute'],
   },
   {
@@ -1238,10 +1163,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: 12,
     sample: 'Math.sqrt(num)',
     hints: ['Math.sqrt for square root', 'Returns the positive root'],
-    validPatterns: [
-      /Math\.sqrt\s*\(\s*num\s*\)/,
-      /Math\.sqrt\s*\(\s*144\s*\)/,
-    ],
+    validPatterns: [/Math\.sqrt\s*\(\s*num\s*\)/, /Math\.sqrt\s*\(\s*144\s*\)/],
     tags: ['Math.sqrt', 'root'],
   },
 
@@ -1269,9 +1191,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: ['Bob', 'Charlie'],
     sample: 'users.filter(u => u.age >= 30).map(u => u.name)',
     hints: ['Filter first, then map', 'Chain the methods'],
-    validPatterns: [
-      /\.filter\s*\([^)]+\)\.map\s*\([^)]+\)/,
-    ],
+    validPatterns: [/\.filter\s*\([^)]+\)\.map\s*\([^)]+\)/],
     tags: ['filter', 'map', 'chaining'],
   },
   {
@@ -1312,9 +1232,7 @@ const arr2 = [4, 5, 6, 7, 8];`,
     expected: [96, 92, 91],
     sample: 'scores.slice().sort((a, b) => b - a).slice(0, 3)',
     hints: ['Sort descending first', 'Slice to get top 3', 'Use slice() to avoid mutation'],
-    validPatterns: [
-      /\.sort\s*\([^)]+\)\.slice\s*\(\s*0\s*,\s*3\s*\)/,
-    ],
+    validPatterns: [/\.sort\s*\([^)]+\)\.slice\s*\(\s*0\s*,\s*3\s*\)/],
     tags: ['sort', 'slice', 'chaining'],
   },
 
@@ -1374,10 +1292,7 @@ const values = [1, 2, 3];`,
     expected: [1, 3, 6, 10, 15],
     sample: 'numbers.map((n, i) => numbers.slice(0, i + 1).reduce((a, b) => a + b, 0))',
     hints: ['For each position, sum all previous', 'Or use reduce to track running total'],
-    validPatterns: [
-      /\.map\s*\(/,
-      /\.reduce\s*\(/,
-    ],
+    validPatterns: [/\.map\s*\(/, /\.reduce\s*\(/],
     tags: ['running-total', 'reduce', 'advanced'],
   },
   {
@@ -1390,10 +1305,12 @@ const values = [1, 2, 3];`,
     setupCode: 'const obj = { a: 1, b: 2, c: 3 };',
     expected: { 1: 'a', 2: 'b', 3: 'c' },
     sample: 'Object.fromEntries(Object.entries(obj).map(([k, v]) => [v, k]))',
-    hints: ['Use Object.entries to get pairs', 'Swap positions in each pair', 'Use Object.fromEntries to rebuild'],
-    validPatterns: [
-      /Object\.fromEntries\s*\(\s*Object\.entries\s*\([^)]+\)\.map/,
+    hints: [
+      'Use Object.entries to get pairs',
+      'Swap positions in each pair',
+      'Use Object.fromEntries to rebuild',
     ],
+    validPatterns: [/Object\.fromEntries\s*\(\s*Object\.entries\s*\([^)]+\)\.map/],
     tags: ['Object.entries', 'Object.fromEntries', 'transform'],
   },
   {
@@ -1407,10 +1324,7 @@ const values = [1, 2, 3];`,
     expected: { h: 1, e: 1, l: 2, o: 1 },
     sample: 'str.split("").reduce((acc, char) => ({ ...acc, [char]: (acc[char] || 0) + 1 }), {})',
     hints: ['Split string into array', 'Use reduce to count'],
-    validPatterns: [
-      /\.split\s*\(\s*['"]{2}\s*\)\.reduce/,
-      /\[\s*\.\.\.str\s*\]\.reduce/,
-    ],
+    validPatterns: [/\.split\s*\(\s*['"]{2}\s*\)\.reduce/, /\[\s*\.\.\.str\s*\]\.reduce/],
     tags: ['frequency', 'reduce', 'strings'],
   },
   {
@@ -1436,10 +1350,7 @@ const values = [1, 2, 3];`,
     },
     sample: 'Object.fromEntries(users.map(u => [u.id, u]))',
     hints: ['Map to [id, user] pairs', 'Use Object.fromEntries'],
-    validPatterns: [
-      /Object\.fromEntries\s*\(\s*users\.map/,
-      /users\.reduce\s*\(/,
-    ],
+    validPatterns: [/Object\.fromEntries\s*\(\s*users\.map/, /users\.reduce\s*\(/],
     tags: ['Object.fromEntries', 'map', 'transform'],
   },
 ];

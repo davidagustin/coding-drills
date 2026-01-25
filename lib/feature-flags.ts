@@ -1,4 +1,4 @@
-import { OpenFeature, InMemoryProvider } from '@openfeature/web-sdk';
+import { InMemoryProvider, OpenFeature } from '@openfeature/web-sdk';
 
 /**
  * Feature flag definitions for the app.

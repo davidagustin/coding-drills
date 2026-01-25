@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import type { Problem, LanguageId, Difficulty } from '@/lib/types';
-import { validateProblemAnswer, formatOutput } from '@/lib/codeValidator';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
 import { problemsByLanguage } from '@/lib/problems/index';
+import type { Difficulty, LanguageId, Problem } from '@/lib/types';
 
 // Static problems reference for synchronous access (fallback for lazy loading)
 const PROBLEMS_BY_LANGUAGE: Partial<Record<LanguageId, Problem[]>> = problemsByLanguage;
@@ -45,7 +45,10 @@ interface AnswerRecord {
 // ============================================================================
 
 // Problem loaders - dynamically imported only when needed
-const problemLoaders: Record<LanguageId, () => Promise<{ default: Problem[] } | { [key: string]: Problem[] }>> = {
+const problemLoaders: Record<
+  LanguageId,
+  () => Promise<{ default: Problem[] } | { [key: string]: Problem[] }>
+> = {
   javascript: () => import('@/lib/problems/javascript'),
   typescript: () => import('@/lib/problems/typescript'),
   python: () => import('@/lib/problems/python'),
@@ -60,7 +63,10 @@ const problemLoaders: Record<LanguageId, () => Promise<{ default: Problem[] } | 
 };
 
 // Extract problems from module based on naming convention
-function extractProblems(mod: { default?: Problem[]; [key: string]: Problem[] | undefined }, language: LanguageId): Problem[] {
+function extractProblems(
+  mod: { default?: Problem[]; [key: string]: Problem[] | undefined },
+  language: LanguageId,
+): Problem[] {
   // Try default export first
   if (mod.default && Array.isArray(mod.default)) {
     return mod.default;
@@ -93,7 +99,10 @@ async function _loadProblems(language: LanguageId): Promise<Problem[]> {
 
   try {
     const mod = await loader();
-    const problems = extractProblems(mod as { default?: Problem[]; [key: string]: Problem[] | undefined }, language);
+    const problems = extractProblems(
+      mod as { default?: Problem[]; [key: string]: Problem[] | undefined },
+      language,
+    );
     problemsCache.set(language, problems);
     return problems;
   } catch (error) {
@@ -128,10 +137,7 @@ function getCategories(language: LanguageId): string[] {
   return Array.from(categories);
 }
 
-function selectProblems(
-  language: LanguageId,
-  config: DrillConfig
-): Problem[] {
+function selectProblems(language: LanguageId, config: DrillConfig): Problem[] {
   let problems = PROBLEMS_BY_LANGUAGE[language] || [];
 
   // Filter by categories
@@ -150,7 +156,19 @@ function selectProblems(
 }
 
 function isValidLanguage(lang: string): lang is LanguageId {
-  return ['javascript', 'typescript', 'python', 'java', 'cpp', 'csharp', 'go', 'ruby', 'c', 'php', 'kotlin'].includes(lang);
+  return [
+    'javascript',
+    'typescript',
+    'python',
+    'java',
+    'cpp',
+    'csharp',
+    'go',
+    'ruby',
+    'c',
+    'php',
+    'kotlin',
+  ].includes(lang);
 }
 
 // ============================================================================
@@ -166,11 +184,10 @@ interface ChipProps {
 function Chip({ label, selected, onClick }: ChipProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-        selected
-          ? 'bg-blue-600 text-white'
-          : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+        selected ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
       }`}
     >
       {label}
@@ -192,6 +209,7 @@ function CountSelector({ value, onChange }: CountSelectorProps) {
     <div className="flex flex-wrap gap-2">
       {presets.map((preset) => (
         <button
+          type="button"
           key={preset}
           onClick={() => {
             onChange(preset);
@@ -207,11 +225,10 @@ function CountSelector({ value, onChange }: CountSelectorProps) {
         </button>
       ))}
       <button
+        type="button"
         onClick={() => setShowCustom(true)}
         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-          showCustom
-            ? 'bg-blue-600 text-white'
-            : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+          showCustom ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
         }`}
       >
         Custom
@@ -254,6 +271,7 @@ function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
     <div className="flex gap-2">
       {options.map((option) => (
         <button
+          type="button"
           key={option.value}
           onClick={() => onChange(option.value)}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
@@ -291,9 +309,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],
     );
   };
 
@@ -316,20 +332,16 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-zinc-100 mb-2">
-          {languageName} Drill Mode
-        </h1>
-        <p className="text-zinc-400">
-          Configure your practice session
-        </p>
+        <h1 className="text-3xl font-bold text-zinc-100 mb-2">{languageName} Drill Mode</h1>
+        <p className="text-zinc-400">Configure your practice session</p>
       </div>
 
       <div className="bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-800 space-y-6">
         {/* Categories */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
+          <span className="block text-sm font-medium text-zinc-300 mb-3">
             Categories {selectedCategories.length > 0 && `(${selectedCategories.length} selected)`}
-          </label>
+          </span>
           <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <Chip
@@ -349,33 +361,28 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
 
         {/* Question Count */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
-            Number of Questions
-          </label>
+          <span className="block text-sm font-medium text-zinc-300 mb-3">Number of Questions</span>
           <CountSelector value={questionCount} onChange={setQuestionCount} />
         </div>
 
         {/* Difficulty */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
-            Difficulty
-          </label>
+          <span className="block text-sm font-medium text-zinc-300 mb-3">Difficulty</span>
           <DifficultyFilter value={difficulty} onChange={setDifficulty} />
         </div>
 
         {/* Available Questions Info */}
         <div className="bg-zinc-800 rounded-lg p-4">
           <p className="text-sm text-zinc-400">
-            <span className="font-medium text-zinc-100">
-              {availableCount}
-            </span>{' '}
-            questions available with current filters
+            <span className="font-medium text-zinc-100">{availableCount}</span> questions available
+            with current filters
           </p>
         </div>
       </div>
 
       {/* Start Button */}
       <button
+        type="button"
         onClick={handleStart}
         disabled={availableCount === 0}
         className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 text-white font-semibold rounded-xl transition-colors text-lg"
@@ -411,7 +418,7 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
   // Auto-focus on input
   useEffect(() => {
     inputRef.current?.focus();
-  }, [state.currentIndex]);
+  }, []);
 
   const handleSubmit = () => {
     if (userAnswer.trim()) {
@@ -452,9 +459,7 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
           </div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold text-orange-500">
-            {state.streak}
-          </div>
+          <div className="text-2xl font-bold text-orange-500">{state.streak}</div>
           <div className="text-xs text-zinc-500">Streak</div>
         </div>
       </div>
@@ -464,36 +469,30 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
         {/* Problem Header */}
         <div className="border-b border-zinc-800 p-4">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-semibold text-zinc-100">
-              {currentProblem.title}
-            </h2>
+            <h2 className="text-lg font-semibold text-zinc-100">{currentProblem.title}</h2>
             <div className="flex items-center gap-2">
               <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
                 {currentProblem.category}
               </span>
-              <span className={`text-xs px-2 py-1 rounded border ${difficultyColors[currentProblem.difficulty]}`}>
+              <span
+                className={`text-xs px-2 py-1 rounded border ${difficultyColors[currentProblem.difficulty]}`}
+              >
                 {currentProblem.difficulty}
               </span>
             </div>
           </div>
-          <p className="text-zinc-400">
-            {currentProblem.text}
-          </p>
+          <p className="text-zinc-400">{currentProblem.text}</p>
         </div>
 
         {/* Setup Code */}
         <div className="p-4 border-b border-zinc-800">
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Setup Code
-          </label>
+          <span className="block text-sm font-medium text-zinc-300 mb-2">Setup Code</span>
           <CodeDisplay code={currentProblem.setupCode} />
         </div>
 
         {/* Expected Output */}
         <div className="p-4 border-b border-zinc-800">
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Expected Output
-          </label>
+          <span className="block text-sm font-medium text-zinc-300 mb-2">Expected Output</span>
           <div className="bg-zinc-800 p-3 rounded-lg font-mono text-sm text-green-400 border border-zinc-700">
             {formatOutput(currentProblem.expected)}
           </div>
@@ -501,10 +500,11 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
 
         {/* Answer Input */}
         <div className="p-4">
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+          <label htmlFor="answer-input" className="block text-sm font-medium text-zinc-300 mb-2">
             Your Answer
           </label>
           <textarea
+            id="answer-input"
             ref={inputRef}
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
@@ -512,14 +512,13 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
             placeholder="Type your expression here..."
             className="w-full h-24 px-4 py-3 font-mono text-sm bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-zinc-100 placeholder-zinc-500"
           />
-          <p className="text-xs text-zinc-500 mt-2">
-            Press Cmd/Ctrl + Enter to submit
-          </p>
+          <p className="text-xs text-zinc-500 mt-2">Press Cmd/Ctrl + Enter to submit</p>
         </div>
 
         {/* Actions */}
         <div className="flex gap-3 p-4 bg-zinc-800/50 border-t border-zinc-800">
           <button
+            type="button"
             onClick={handleSubmit}
             disabled={!userAnswer.trim()}
             className="flex-1 py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 text-white font-medium rounded-lg transition-colors"
@@ -527,6 +526,7 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
             Submit
           </button>
           <button
+            type="button"
             onClick={onSkip}
             className="py-3 px-6 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 font-medium rounded-lg transition-colors"
           >
@@ -554,35 +554,25 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
           skipped
             ? 'bg-zinc-800 border-zinc-700'
             : isCorrect
-            ? 'bg-green-500/20 border-green-500/30'
-            : 'bg-red-500/20 border-red-500/30'
+              ? 'bg-green-500/20 border-green-500/30'
+              : 'bg-red-500/20 border-red-500/30'
         }`}
       >
         <div
           className={`text-4xl mb-2 font-bold ${
-            skipped
-              ? 'text-zinc-400'
-              : isCorrect
-              ? 'text-green-400'
-              : 'text-red-400'
+            skipped ? 'text-zinc-400' : isCorrect ? 'text-green-400' : 'text-red-400'
           }`}
         >
           {skipped ? 'Skipped' : isCorrect ? 'Correct!' : 'Incorrect'}
         </div>
-        {!skipped && !isCorrect && error && (
-          <p className="text-sm text-red-400">
-            {error}
-          </p>
-        )}
+        {!skipped && !isCorrect && error && <p className="text-sm text-red-400">{error}</p>}
       </div>
 
       {/* Comparison */}
       <div className="bg-zinc-900 rounded-xl shadow-sm border border-zinc-800 overflow-hidden">
         {/* Your Answer */}
         <div className="p-4 border-b border-zinc-800">
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Your Answer
-          </label>
+          <span className="block text-sm font-medium text-zinc-300 mb-2">Your Answer</span>
           <div className="bg-zinc-800 text-zinc-100 p-4 rounded-lg font-mono text-sm border border-zinc-700">
             {skipped ? <span className="text-zinc-500">(skipped)</span> : userAnswer}
           </div>
@@ -591,9 +581,7 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
         {/* Your Output */}
         {!skipped && userOutput !== undefined && (
           <div className="p-4 border-b border-zinc-800">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
-              Your Output
-            </label>
+            <span className="block text-sm font-medium text-zinc-300 mb-2">Your Output</span>
             <div
               className={`p-3 rounded-lg font-mono text-sm border ${
                 isCorrect
@@ -608,9 +596,7 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
 
         {/* Expected Output */}
         <div className="p-4 border-b border-zinc-800">
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Expected Output
-          </label>
+          <span className="block text-sm font-medium text-zinc-300 mb-2">Expected Output</span>
           <div className="bg-green-500/10 border border-green-500/30 p-3 rounded-lg font-mono text-sm text-green-400">
             {formatOutput(problem.expected)}
           </div>
@@ -619,9 +605,7 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
         {/* Sample Solution (shown when incorrect or skipped) */}
         {(!isCorrect || skipped) && (
           <div className="p-4">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
-              Sample Solution
-            </label>
+            <span className="block text-sm font-medium text-zinc-300 mb-2">Sample Solution</span>
             <CodeDisplay code={problem.sample} />
           </div>
         )}
@@ -629,6 +613,7 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
 
       {/* Next Button */}
       <button
+        type="button"
         onClick={onNext}
         className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors text-lg"
       >
@@ -661,12 +646,8 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Results Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-zinc-100 mb-2">
-          Drill Complete!
-        </h1>
-        <p className="text-zinc-400">
-          Here is how you did
-        </p>
+        <h1 className="text-3xl font-bold text-zinc-100 mb-2">Drill Complete!</h1>
+        <p className="text-zinc-400">Here is how you did</p>
       </div>
 
       {/* Stats Grid */}
@@ -682,9 +663,7 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
           <div className="text-sm text-zinc-500 mt-1">Accuracy</div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
-          <div className="text-3xl font-bold text-zinc-100 font-mono">
-            {formatTime(totalTime)}
-          </div>
+          <div className="text-3xl font-bold text-zinc-100 font-mono">{formatTime(totalTime)}</div>
           <div className="text-sm text-zinc-500 mt-1">Time</div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
@@ -695,36 +674,28 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
 
       {/* Breakdown */}
       <div className="bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-800">
-        <h3 className="text-lg font-semibold text-zinc-100 mb-4">
-          Breakdown
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-100 mb-4">Breakdown</h3>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-green-500" />
               <span className="text-zinc-300">Correct</span>
             </span>
-            <span className="font-medium text-zinc-100">
-              {correctAnswers}
-            </span>
+            <span className="font-medium text-zinc-100">{correctAnswers}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-red-500" />
               <span className="text-zinc-300">Incorrect</span>
             </span>
-            <span className="font-medium text-zinc-100">
-              {incorrectAnswers}
-            </span>
+            <span className="font-medium text-zinc-100">{incorrectAnswers}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-zinc-500" />
               <span className="text-zinc-300">Skipped</span>
             </span>
-            <span className="font-medium text-zinc-100">
-              {skippedAnswers}
-            </span>
+            <span className="font-medium text-zinc-100">{skippedAnswers}</span>
           </div>
         </div>
         {/* Progress Bar */}
@@ -748,6 +719,7 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
       {missedQuestions.length > 0 && (
         <div className="bg-zinc-900 rounded-xl shadow-sm border border-zinc-800 overflow-hidden">
           <button
+            type="button"
             onClick={() => setShowMissed(!showMissed)}
             className="w-full p-4 flex items-center justify-between text-left hover:bg-zinc-800 transition-colors"
           >
@@ -759,14 +731,9 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
           {showMissed && (
             <div className="border-t border-zinc-800">
               {missedQuestions.map((record, index) => (
-                <div
-                  key={index}
-                  className="p-4 border-b last:border-b-0 border-zinc-800"
-                >
+                <div key={index} className="p-4 border-b last:border-b-0 border-zinc-800">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-medium text-zinc-100">
-                      {record.problem.title}
-                    </h4>
+                    <h4 className="font-medium text-zinc-100">{record.problem.title}</h4>
                     <span
                       className={`text-xs px-2 py-1 rounded border ${
                         record.skipped
@@ -777,9 +744,7 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
                       {record.skipped ? 'Skipped' : 'Incorrect'}
                     </span>
                   </div>
-                  <p className="text-sm text-zinc-400 mb-3">
-                    {record.problem.text}
-                  </p>
+                  <p className="text-sm text-zinc-400 mb-3">{record.problem.text}</p>
                   <div className="text-sm">
                     <span className="text-zinc-500">Solution: </span>
                     <code className="bg-zinc-800 px-2 py-1 rounded text-blue-400 border border-zinc-700">
@@ -796,12 +761,14 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
       {/* Actions */}
       <div className="flex gap-4">
         <button
+          type="button"
           onClick={onTryAgain}
           className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
         >
           Try Again
         </button>
         <button
+          type="button"
           onClick={onBackToMenu}
           className="flex-1 py-4 px-6 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-xl transition-colors border border-zinc-700"
         >
@@ -837,57 +804,63 @@ export default function DrillPage() {
   const [currentAnswer, setCurrentAnswer] = useState<AnswerRecord | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState(0);
 
-  const handleStart = useCallback((newConfig: DrillConfig) => {
-    const selectedProblems = selectProblems(language, newConfig);
+  const handleStart = useCallback(
+    (newConfig: DrillConfig) => {
+      const selectedProblems = selectProblems(language, newConfig);
 
-    if (selectedProblems.length === 0) {
-      alert('No problems available with the selected filters. Please adjust your selection.');
-      return;
-    }
+      if (selectedProblems.length === 0) {
+        alert('No problems available with the selected filters. Please adjust your selection.');
+        return;
+      }
 
-    setConfig(newConfig);
-    setProblems(selectedProblems);
-    setDrillState({
-      currentIndex: 0,
-      answers: [],
-      streak: 0,
-      maxStreak: 0,
-      startTime: Date.now(),
-    });
-    setQuestionStartTime(Date.now());
-    setPhase('drilling');
-  }, [language]);
+      setConfig(newConfig);
+      setProblems(selectedProblems);
+      setDrillState({
+        currentIndex: 0,
+        answers: [],
+        streak: 0,
+        maxStreak: 0,
+        startTime: Date.now(),
+      });
+      setQuestionStartTime(Date.now());
+      setPhase('drilling');
+    },
+    [language],
+  );
 
-  const handleAnswer = useCallback((userAnswer: string) => {
-    const currentProblem = problems[drillState.currentIndex];
-    const result = validateProblemAnswer(currentProblem, userAnswer, language);
-    const timeTaken = Date.now() - questionStartTime;
+  const handleAnswer = useCallback(
+    (userAnswer: string) => {
+      const currentProblem = problems[drillState.currentIndex];
+      const result = validateProblemAnswer(currentProblem, userAnswer, language);
+      const timeTaken = Date.now() - questionStartTime;
 
-    const answerRecord: AnswerRecord = {
-      problem: currentProblem,
-      userAnswer,
-      isCorrect: result.success,
-      error: result.success ? undefined : result.error,
-      userOutput: 'output' in result ? result.output : undefined,
-      skipped: false,
-      timeTaken,
-    };
-
-    setCurrentAnswer(answerRecord);
-
-    // Update state with answer
-    setDrillState((prev) => {
-      const newStreak = result.success ? prev.streak + 1 : 0;
-      return {
-        ...prev,
-        answers: [...prev.answers, answerRecord],
-        streak: newStreak,
-        maxStreak: Math.max(prev.maxStreak, newStreak),
+      const answerRecord: AnswerRecord = {
+        problem: currentProblem,
+        userAnswer,
+        isCorrect: result.success,
+        error: result.success ? undefined : result.error,
+        userOutput: 'output' in result ? result.output : undefined,
+        skipped: false,
+        timeTaken,
       };
-    });
 
-    setPhase('feedback');
-  }, [problems, drillState.currentIndex, questionStartTime, language]);
+      setCurrentAnswer(answerRecord);
+
+      // Update state with answer
+      setDrillState((prev) => {
+        const newStreak = result.success ? prev.streak + 1 : 0;
+        return {
+          ...prev,
+          answers: [...prev.answers, answerRecord],
+          streak: newStreak,
+          maxStreak: Math.max(prev.maxStreak, newStreak),
+        };
+      });
+
+      setPhase('feedback');
+    },
+    [problems, drillState.currentIndex, questionStartTime, language],
+  );
 
   const handleSkip = useCallback(() => {
     const currentProblem = problems[drillState.currentIndex];
@@ -948,9 +921,7 @@ export default function DrillPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 py-8 px-4">
-      {phase === 'setup' && (
-        <SetupPhase language={language} onStart={handleStart} />
-      )}
+      {phase === 'setup' && <SetupPhase language={language} onStart={handleStart} />}
 
       {phase === 'drilling' && problems.length > 0 && (
         <DrillPhaseComponent

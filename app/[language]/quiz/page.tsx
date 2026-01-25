@@ -1,23 +1,23 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getCategoriesForLanguage } from '@/lib/problems';
 import {
-  generateQuiz,
-  calculateScore,
-  calculateQuizResults,
   addToLeaderboard,
-  getLeaderboardPosition,
+  calculateQuizResults,
+  calculateScore,
+  generateQuiz,
   getLeaderboard,
+  getLeaderboardPosition,
   getMethodInfo,
-  type QuizConfig,
+  type LeaderboardEntry,
   type QuizAnswer,
+  type QuizConfig,
   type QuizResult,
   type ScoreResult,
-  type LeaderboardEntry
 } from '@/lib/quizGenerator';
-import { getCategoriesForLanguage } from '@/lib/problems';
-import type { QuizQuestion, LanguageId } from '@/lib/types';
+import type { LanguageId, QuizQuestion } from '@/lib/types';
 
 // ============================================================================
 // Types
@@ -50,31 +50,37 @@ function useSoundEffects(enabled: boolean) {
 
   const getAudioContext = useCallback(() => {
     if (!audioContextRef.current && typeof window !== 'undefined') {
-      audioContextRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      audioContextRef.current = new (
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      )();
     }
     return audioContextRef.current;
   }, []);
 
-  const playTone = useCallback((frequency: number, duration: number, type: OscillatorType = 'sine') => {
-    if (!enabled) return;
-    const ctx = getAudioContext();
-    if (!ctx) return;
+  const playTone = useCallback(
+    (frequency: number, duration: number, type: OscillatorType = 'sine') => {
+      if (!enabled) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
 
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
 
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
 
-    oscillator.frequency.value = frequency;
-    oscillator.type = type;
+      oscillator.frequency.value = frequency;
+      oscillator.type = type;
 
-    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+      gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
 
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + duration);
-  }, [enabled, getAudioContext]);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + duration);
+    },
+    [enabled, getAudioContext],
+  );
 
   const playCorrect = useCallback(() => {
     playTone(523.25, 0.1); // C5
@@ -92,7 +98,7 @@ function useSoundEffects(enabled: boolean) {
   }, [playTone]);
 
   const playComplete = useCallback(() => {
-    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
     notes.forEach((freq, i) => {
       setTimeout(() => playTone(freq, 0.2), i * 150);
     });
@@ -120,7 +126,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
 
   const toggleCategory = (category: string) => {
     const newCategories = config.categories.includes(category)
-      ? config.categories.filter(c => c !== category)
+      ? config.categories.filter((c) => c !== category)
       : [...config.categories, category];
     onConfigChange({ ...config, categories: newCategories });
   };
@@ -141,9 +147,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Quiz Mode
           </h1>
-          <p className="text-slate-400 text-lg">
-            Test your knowledge of {config.language} methods
-          </p>
+          <p className="text-slate-400 text-lg">Test your knowledge of {config.language} methods</p>
         </div>
 
         {/* Category Selection */}
@@ -152,6 +156,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
             <h2 className="text-xl font-semibold">Categories</h2>
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={selectAllCategories}
                 className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
               >
@@ -159,6 +164,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
               </button>
               <span className="text-slate-600">|</span>
               <button
+                type="button"
                 onClick={clearAllCategories}
                 className="text-sm text-slate-400 hover:text-slate-300 transition-colors"
               >
@@ -167,8 +173,9 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            {availableCategories.map(category => (
+            {availableCategories.map((category) => (
               <button
+                type="button"
                 key={category}
                 onClick={() => toggleCategory(category)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize ${
@@ -192,8 +199,9 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <h2 className="text-xl font-semibold mb-4">Number of Questions</h2>
           <div className="flex gap-3">
-            {questionCountOptions.map(count => (
+            {questionCountOptions.map((count) => (
               <button
+                type="button"
                 key={count}
                 onClick={() => onConfigChange({ ...config, questionCount: count })}
                 className={`flex-1 py-3 rounded-lg font-semibold text-lg transition-all duration-200 ${
@@ -212,8 +220,9 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <h2 className="text-xl font-semibold mb-4">Time Per Question</h2>
           <div className="flex gap-3">
-            {timeOptions.map(time => (
+            {timeOptions.map((time) => (
               <button
+                type="button"
                 key={time}
                 onClick={() => onConfigChange({ ...config, timePerQuestion: time })}
                 className={`flex-1 py-3 rounded-lg font-semibold transition-all duration-200 ${
@@ -236,6 +245,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
               <p className="text-slate-400 text-sm">Audio feedback for answers and timer</p>
             </div>
             <button
+              type="button"
               onClick={() => setSoundEnabled(!soundEnabled)}
               className={`relative w-14 h-8 rounded-full transition-colors duration-200 ${
                 soundEnabled ? 'bg-blue-500' : 'bg-slate-600'
@@ -252,6 +262,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
 
         {/* Start Button */}
         <button
+          type="button"
           onClick={onStart}
           className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-bold text-xl
                      hover:from-blue-600 hover:to-purple-700 transition-all duration-200
@@ -284,12 +295,12 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
     if (isLow && onTick) {
       onTick();
     }
-  }, [timeLeft, isLow, onTick]);
+  }, [isLow, onTick]);
 
   return (
     <div className="relative">
       {/* Background circle */}
-      <svg className="w-20 h-20 transform -rotate-90">
+      <svg className="w-20 h-20 transform -rotate-90" aria-hidden="true">
         <circle
           cx="40"
           cy="40"
@@ -336,12 +347,14 @@ interface ProgressBarProps {
 }
 
 function ProgressBar({ current, total }: ProgressBarProps) {
-  const percentage = ((current) / total) * 100;
+  const percentage = (current / total) * 100;
 
   return (
     <div className="w-full">
       <div className="flex justify-between text-sm text-slate-400 mb-2">
-        <span>Question {current + 1} of {total}</span>
+        <span>
+          Question {current + 1} of {total}
+        </span>
         <span>{Math.round(percentage)}% Complete</span>
       </div>
       <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -409,7 +422,7 @@ function MethodCard({
   isRevealed,
   onClick,
   disabled,
-  language
+  language,
 }: MethodCardProps) {
   const methodInfo = getMethodInfo(method, language);
   const [isHovered, setIsHovered] = useState(false);
@@ -439,6 +452,7 @@ function MethodCard({
 
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
       onMouseEnter={() => setIsHovered(true)}
@@ -448,13 +462,30 @@ function MethodCard({
       <div className="flex items-center justify-between">
         <span className="font-mono font-semibold text-lg">{method}</span>
         {isRevealed && isCorrect && (
-          <svg className="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg
+            className="w-6 h-6 text-emerald-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         )}
         {isRevealed && isSelected && !isCorrect && (
-          <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-6 h-6 text-red-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         )}
       </div>
@@ -463,7 +494,7 @@ function MethodCard({
       {isHovered && !isRevealed && methodInfo && (
         <div className="absolute left-0 right-0 -bottom-2 transform translate-y-full z-10 p-3 bg-slate-900 rounded-lg border border-slate-600 shadow-xl text-sm text-slate-300 text-left">
           {methodInfo.description.length > 100
-            ? methodInfo.description.slice(0, 100) + '...'
+            ? `${methodInfo.description.slice(0, 100)}...`
             : methodInfo.description}
         </div>
       )}
@@ -535,7 +566,7 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
     // Reset timer when question changes
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer sync is intentional
     setTimeLeft(state.config.timePerQuestion);
-  }, [state.currentQuestionIndex, state.config.timePerQuestion]);
+  }, [state.config.timePerQuestion]);
 
   useEffect(() => {
     if (state.showingAnswer) {
@@ -546,7 +577,7 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
     }
 
     timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           if (timerRef.current) {
             clearInterval(timerRef.current);
@@ -563,7 +594,7 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
         clearInterval(timerRef.current);
       }
     };
-  }, [state.currentQuestionIndex, state.showingAnswer, onTimeout]);
+  }, [state.showingAnswer, onTimeout]);
 
   const handleTick = useCallback(() => {
     if (timeLeft <= 5 && timeLeft > 0) {
@@ -577,11 +608,7 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
         {/* Header with timer and score */}
         <div className="flex items-center justify-between mb-8">
           <ScoreDisplay score={state.score} streak={state.streak} />
-          <Timer
-            timeLeft={timeLeft}
-            totalTime={state.config.timePerQuestion}
-            onTick={handleTick}
-          />
+          <Timer timeLeft={timeLeft} totalTime={state.config.timePerQuestion} onTick={handleTick} />
         </div>
 
         {/* Progress bar */}
@@ -596,7 +623,7 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
 
         {/* Method Cards */}
         <div className="grid grid-cols-2 gap-4">
-          {currentQuestion.options.map(option => (
+          {currentQuestion.options.map((option) => (
             <MethodCard
               key={option}
               method={option}
@@ -619,13 +646,11 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
               </div>
             ) : (
               <div className="text-red-400 text-xl font-semibold">
-                {state.selectedOption === null ? 'Time\'s up!' : 'Incorrect!'} The answer was{' '}
+                {state.selectedOption === null ? "Time's up!" : 'Incorrect!'} The answer was{' '}
                 <span className="text-emerald-400 font-mono">{currentQuestion.correctMethod}</span>
               </div>
             )}
-            <p className="text-slate-400 mt-2 text-sm">
-              {currentQuestion.explanation}
-            </p>
+            <p className="text-slate-400 mt-2 text-sm">{currentQuestion.explanation}</p>
           </div>
         )}
       </div>
@@ -646,7 +671,14 @@ interface ResultsPhaseProps {
   questions: QuizQuestion[];
 }
 
-function ResultsPhase({ result, config, onPlayAgain, onChangeSettings, answers, questions }: ResultsPhaseProps) {
+function ResultsPhase({
+  result,
+  config,
+  onPlayAgain,
+  onChangeSettings,
+  answers,
+  questions,
+}: ResultsPhaseProps) {
   const [playerName, setPlayerName] = useState('');
   const [savedToLeaderboard, setSavedToLeaderboard] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -666,7 +698,7 @@ function ResultsPhase({ result, config, onPlayAgain, onChangeSettings, answers, 
         score: result.totalScore,
         accuracy: result.accuracy,
         language: config.language,
-        questionCount: config.questionCount
+        questionCount: config.questionCount,
       });
       setSavedToLeaderboard(true);
       setLeaderboard(getLeaderboard().slice(0, 10));
@@ -683,7 +715,7 @@ Try it yourself!`;
       try {
         await navigator.share({
           title: 'Coding Drills Quiz Score',
-          text: shareText
+          text: shareText,
         });
       } catch {
         // User cancelled or share failed
@@ -782,12 +814,13 @@ Try it yourself!`;
               <input
                 type="text"
                 value={playerName}
-                onChange={e => setPlayerName(e.target.value)}
+                onChange={(e) => setPlayerName(e.target.value)}
                 placeholder="Enter your name"
                 maxLength={20}
                 className="flex-1 px-4 py-2 bg-slate-700 rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none text-white placeholder-slate-500"
               />
               <button
+                type="button"
                 onClick={handleSaveScore}
                 disabled={!playerName.trim()}
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
@@ -802,7 +835,9 @@ Try it yourself!`;
         {savedToLeaderboard && (
           <div className="bg-emerald-500/20 rounded-xl p-4 mb-6 border border-emerald-500/50 text-center">
             <div className="text-emerald-400 font-semibold">Score saved!</div>
-            <div className="text-slate-300">You ranked #{leaderboardPosition} on the leaderboard</div>
+            <div className="text-slate-300">
+              You ranked #{leaderboardPosition} on the leaderboard
+            </div>
           </div>
         )}
 
@@ -819,7 +854,9 @@ Try it yourself!`;
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className={`font-bold ${index === 0 ? 'text-yellow-400' : 'text-slate-400'}`}>
+                    <span
+                      className={`font-bold ${index === 0 ? 'text-yellow-400' : 'text-slate-400'}`}
+                    >
                       #{index + 1}
                     </span>
                     <span className="font-medium">{entry.playerName}</span>
@@ -849,19 +886,39 @@ Try it yourself!`;
                 >
                   <div className="flex items-center gap-3">
                     {answer?.isCorrect ? (
-                      <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="w-5 h-5 text-emerald-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     ) : (
-                      <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="w-5 h-5 text-red-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     )}
                     <span className="font-mono text-sm">{question.correctMethod}</span>
                   </div>
-                  <div className="text-sm text-slate-400">
-                    {answer?.timeSpent.toFixed(1)}s
-                  </div>
+                  <div className="text-sm text-slate-400">{answer?.timeSpent.toFixed(1)}s</div>
                 </div>
               );
             })}
@@ -871,12 +928,14 @@ Try it yourself!`;
         {/* Action Buttons */}
         <div className="flex gap-4">
           <button
+            type="button"
             onClick={onChangeSettings}
             className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-colors"
           >
             Change Settings
           </button>
           <button
+            type="button"
             onClick={onPlayAgain}
             className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl font-semibold transition-all"
           >
@@ -886,11 +945,23 @@ Try it yourself!`;
 
         {/* Share Button */}
         <button
+          type="button"
           onClick={handleShare}
           className="w-full mt-4 py-3 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+            />
           </svg>
           Share Score
         </button>
@@ -918,7 +989,7 @@ export default function QuizPage() {
       language,
       categories: [],
       questionCount: 10,
-      timePerQuestion: 15
+      timePerQuestion: 15,
     },
     questions: [],
     currentQuestionIndex: 0,
@@ -930,7 +1001,7 @@ export default function QuizPage() {
     endTime: null,
     selectedOption: null,
     showingAnswer: false,
-    questionStartTime: null
+    questionStartTime: null,
   });
 
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
@@ -938,13 +1009,13 @@ export default function QuizPage() {
 
   // Update config
   const handleConfigChange = (config: QuizConfig) => {
-    setState(prev => ({ ...prev, config: { ...config, language } }));
+    setState((prev) => ({ ...prev, config: { ...config, language } }));
   };
 
   // Start quiz
   const handleStartQuiz = () => {
     const questions = generateQuiz(state.config);
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       phase: 'playing',
       questions,
@@ -957,7 +1028,7 @@ export default function QuizPage() {
       endTime: null,
       selectedOption: null,
       showingAnswer: false,
-      questionStartTime: Date.now()
+      questionStartTime: Date.now(),
     }));
   };
 
@@ -967,7 +1038,7 @@ export default function QuizPage() {
       clearTimeout(autoAdvanceTimeoutRef.current);
     }
 
-    setState(prev => {
+    setState((prev) => {
       const nextIndex = prev.currentQuestionIndex + 1;
 
       if (nextIndex >= prev.questions.length) {
@@ -977,7 +1048,7 @@ export default function QuizPage() {
           prev.answers,
           prev.maxStreak,
           prev.startTime || endTime,
-          endTime
+          endTime,
         );
         setQuizResult(result);
         playComplete();
@@ -985,7 +1056,7 @@ export default function QuizPage() {
         return {
           ...prev,
           phase: 'results' as Phase,
-          endTime
+          endTime,
         };
       }
 
@@ -995,70 +1066,71 @@ export default function QuizPage() {
         currentQuestionIndex: nextIndex,
         selectedOption: null,
         showingAnswer: false,
-        questionStartTime: Date.now()
+        questionStartTime: Date.now(),
       };
     });
   }, [playComplete]);
 
   // Handle option selection - using functional setState to avoid stale closure issues
-  const handleSelectOption = useCallback((option: string) => {
-    setState(prev => {
-      if (prev.showingAnswer || prev.selectedOption !== null) return prev;
+  const handleSelectOption = useCallback(
+    (option: string) => {
+      setState((prev) => {
+        if (prev.showingAnswer || prev.selectedOption !== null) return prev;
 
-      const currentQuestion = prev.questions[prev.currentQuestionIndex];
-      const isCorrect = option === currentQuestion.correctMethod;
-      const timeSpent = prev.questionStartTime
-        ? (Date.now() - prev.questionStartTime) / 1000
-        : 0;
+        const currentQuestion = prev.questions[prev.currentQuestionIndex];
+        const isCorrect = option === currentQuestion.correctMethod;
+        const timeSpent = prev.questionStartTime ? (Date.now() - prev.questionStartTime) / 1000 : 0;
 
-      // Calculate score
-      const scoreResult: ScoreResult = calculateScore(
-        isCorrect,
-        timeSpent,
-        prev.config.timePerQuestion,
-        prev.streak
-      );
+        // Calculate score
+        const scoreResult: ScoreResult = calculateScore(
+          isCorrect,
+          timeSpent,
+          prev.config.timePerQuestion,
+          prev.streak,
+        );
 
-      // Play sound (side effect)
-      if (isCorrect) {
-        playCorrect();
-      } else {
-        playIncorrect();
-      }
+        // Play sound (side effect)
+        if (isCorrect) {
+          playCorrect();
+        } else {
+          playIncorrect();
+        }
 
-      // Create answer record
-      const answer: QuizAnswer = {
-        questionId: currentQuestion.id,
-        selectedOption: option,
-        isCorrect,
-        timeSpent,
-        points: scoreResult.totalPoints
-      };
+        // Create answer record
+        const answer: QuizAnswer = {
+          questionId: currentQuestion.id,
+          selectedOption: option,
+          isCorrect,
+          timeSpent,
+          points: scoreResult.totalPoints,
+        };
 
-      // Update state
-      const newStreak = isCorrect ? prev.streak + 1 : 0;
-      const newMaxStreak = Math.max(prev.maxStreak, newStreak);
+        // Update state
+        const newStreak = isCorrect ? prev.streak + 1 : 0;
+        const newMaxStreak = Math.max(prev.maxStreak, newStreak);
 
-      // Schedule auto-advance (side effect)
-      autoAdvanceTimeoutRef.current = setTimeout(() => {
-        advanceToNextQuestion();
-      }, 2000);
+        // Schedule auto-advance (side effect)
+        autoAdvanceTimeoutRef.current = setTimeout(() => {
+          advanceToNextQuestion();
+        }, 2000);
 
-      return {
-        ...prev,
-        selectedOption: option,
-        showingAnswer: true,
-        score: prev.score + scoreResult.totalPoints,
-        streak: newStreak,
-        maxStreak: newMaxStreak,
-        answers: [...prev.answers, answer]
-      };
-    });
-  }, [playCorrect, playIncorrect, advanceToNextQuestion]);
+        return {
+          ...prev,
+          selectedOption: option,
+          showingAnswer: true,
+          score: prev.score + scoreResult.totalPoints,
+          streak: newStreak,
+          maxStreak: newMaxStreak,
+          answers: [...prev.answers, answer],
+        };
+      });
+    },
+    [playCorrect, playIncorrect, advanceToNextQuestion],
+  );
 
   // Handle timeout - using functional setState to avoid stale closure issues
   const handleTimeout = useCallback(() => {
-    setState(prev => {
+    setState((prev) => {
       if (prev.showingAnswer) return prev;
 
       const currentQuestion = prev.questions[prev.currentQuestionIndex];
@@ -1071,7 +1143,7 @@ export default function QuizPage() {
         selectedOption: null,
         isCorrect: false,
         timeSpent,
-        points: 0
+        points: 0,
       };
 
       // Schedule auto-advance (side effect)
@@ -1084,7 +1156,7 @@ export default function QuizPage() {
         selectedOption: null,
         showingAnswer: true,
         streak: 0,
-        answers: [...prev.answers, answer]
+        answers: [...prev.answers, answer],
       };
     });
   }, [playIncorrect, advanceToNextQuestion]);
@@ -1092,7 +1164,7 @@ export default function QuizPage() {
   // Play again with same settings
   const handlePlayAgain = () => {
     const questions = generateQuiz(state.config);
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       phase: 'playing',
       questions,
@@ -1105,14 +1177,14 @@ export default function QuizPage() {
       endTime: null,
       selectedOption: null,
       showingAnswer: false,
-      questionStartTime: Date.now()
+      questionStartTime: Date.now(),
     }));
     setQuizResult(null);
   };
 
   // Go back to setup
   const handleChangeSettings = () => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       phase: 'setup',
       questions: [],
@@ -1125,7 +1197,7 @@ export default function QuizPage() {
       endTime: null,
       selectedOption: null,
       showingAnswer: false,
-      questionStartTime: null
+      questionStartTime: null,
     }));
     setQuizResult(null);
   };

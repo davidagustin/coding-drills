@@ -1,21 +1,21 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { logError } from '@/lib/errorLogger';
 import {
-  getProgress,
-  saveProgress,
-  saveDrillSession,
   clearProgress,
-  resetStreak,
+  type DrillResult,
   getAllProgress,
   getOverallStats,
+  getProgress,
   type LanguageProgress,
-  type DrillResult,
   type QuizResult,
+  resetStreak,
   type SessionResult,
+  saveDrillSession,
+  saveProgress,
   type UserProgress,
 } from '@/lib/storage';
-import { logError } from '@/lib/errorLogger';
 
 // ============================================================================
 // Types
@@ -144,10 +144,10 @@ export function useProgress(language: string): UseProgressReturn {
           const savedProgress = getProgress(language);
           setProgress(savedProgress);
         } catch (err) {
-          logError(
-            err instanceof Error ? err : new Error('Error syncing progress'),
-            { operation: 'syncProgress', language }
-          );
+          logError(err instanceof Error ? err : new Error('Error syncing progress'), {
+            operation: 'syncProgress',
+            language,
+          });
         }
       }
     };
@@ -175,7 +175,7 @@ export function useProgress(language: string): UseProgressReturn {
       saveProgress(language, 'drill', result);
       refresh();
     },
-    [language, refresh]
+    [language, refresh],
   );
 
   const saveQuiz = useCallback(
@@ -183,7 +183,7 @@ export function useProgress(language: string): UseProgressReturn {
       saveProgress(language, 'quiz', result);
       refresh();
     },
-    [language, refresh]
+    [language, refresh],
   );
 
   const saveSession = useCallback(
@@ -191,7 +191,7 @@ export function useProgress(language: string): UseProgressReturn {
       saveDrillSession(language, session);
       refresh();
     },
-    [language, refresh]
+    [language, refresh],
   );
 
   const clear = useCallback(() => {
@@ -207,9 +207,8 @@ export function useProgress(language: string): UseProgressReturn {
   const stats = useMemo(() => {
     const { drillStats, quizStats } = progress;
     return {
-      accuracy: drillStats.totalAttempted > 0
-        ? drillStats.totalCorrect / drillStats.totalAttempted
-        : 0,
+      accuracy:
+        drillStats.totalAttempted > 0 ? drillStats.totalCorrect / drillStats.totalAttempted : 0,
       totalAttempted: drillStats.totalAttempted,
       totalCorrect: drillStats.totalCorrect,
       currentStreak: drillStats.currentStreak,
@@ -250,10 +249,9 @@ export function useAllProgress(): UseAllProgressReturn {
       const progress = getAllProgress();
       setAllProgress(progress);
     } catch (err) {
-      logError(
-        err instanceof Error ? err : new Error('Error loading all progress'),
-        { operation: 'loadAllProgress' }
-      );
+      logError(err instanceof Error ? err : new Error('Error loading all progress'), {
+        operation: 'loadAllProgress',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -267,10 +265,9 @@ export function useAllProgress(): UseAllProgressReturn {
           const progress = getAllProgress();
           setAllProgress(progress);
         } catch (err) {
-          logError(
-            err instanceof Error ? err : new Error('Error syncing all progress'),
-            { operation: 'syncAllProgress' }
-          );
+          logError(err instanceof Error ? err : new Error('Error syncing all progress'), {
+            operation: 'syncAllProgress',
+          });
         }
       }
     };
@@ -288,8 +285,8 @@ export function useAllProgress(): UseAllProgressReturn {
       if (typeof window === 'undefined') return DEFAULT_OVERALL_STATS;
       return getOverallStats();
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- allProgress triggers recalculation when any progress changes
-    [allProgress]
+     
+    [],
   );
 
   const refresh = useCallback(() => {
@@ -306,10 +303,13 @@ export function useAllProgress(): UseAllProgressReturn {
     setAllProgress({});
   }, []);
 
-  const clearLanguage = useCallback((language: string) => {
-    clearProgress(language);
-    refresh();
-  }, [refresh]);
+  const clearLanguage = useCallback(
+    (language: string) => {
+      clearProgress(language);
+      refresh();
+    },
+    [refresh],
+  );
 
   return {
     allProgress,

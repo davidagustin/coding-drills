@@ -1,15 +1,11 @@
 'use client';
 
-import { useState, useMemo, useCallback, memo } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import {
-  LANGUAGE_CONFIG,
-  isValidLanguage,
-  type SupportedLanguage,
-} from '../config';
-import { getMethodsForLanguage, getCategoriesForLanguage } from '@/lib/methods';
+import { useParams } from 'next/navigation';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { getCategoriesForLanguage, getMethodsForLanguage } from '@/lib/methods';
 import type { Method } from '@/lib/types';
+import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from '../config';
 
 type SortOption = 'alphabetical' | 'category' | 'default';
 
@@ -55,7 +51,7 @@ const MethodCard = memo(function MethodCard({
   method: Method;
   isExpanded: boolean;
   onToggle: () => void;
-  languageConfig: typeof LANGUAGE_CONFIG[SupportedLanguage];
+  languageConfig: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
 }) {
   // Memoize the category color to avoid recalculation
   const categoryColor = useMemo(() => getCategoryColor(method.category), [method.category]);
@@ -71,6 +67,7 @@ const MethodCard = memo(function MethodCard({
     >
       {/* Card Header - Always Visible */}
       <button
+        type="button"
         onClick={onToggle}
         className="w-full text-left p-4 flex items-start justify-between gap-4"
       >
@@ -79,15 +76,11 @@ const MethodCard = memo(function MethodCard({
             <code className={`text-lg font-mono font-semibold ${languageConfig.color}`}>
               {method.name}
             </code>
-            <span
-              className={`text-xs px-2 py-0.5 rounded-full border ${categoryColor}`}
-            >
+            <span className={`text-xs px-2 py-0.5 rounded-full border ${categoryColor}`}>
               {method.category}
             </span>
           </div>
-          <p className="text-zinc-400 text-sm mt-1 line-clamp-1">
-            {method.description}
-          </p>
+          <p className="text-zinc-400 text-sm mt-1 line-clamp-1">{method.description}</p>
         </div>
         <div className="flex-shrink-0 mt-1">
           <svg
@@ -97,13 +90,9 @@ const MethodCard = memo(function MethodCard({
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            aria-hidden="true"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </button>
@@ -117,9 +106,7 @@ const MethodCard = memo(function MethodCard({
               Syntax
             </h4>
             <pre className="bg-zinc-950 rounded-lg p-3 overflow-x-auto">
-              <code className="text-sm font-mono text-emerald-400">
-                {method.syntax}
-              </code>
+              <code className="text-sm font-mono text-emerald-400">{method.syntax}</code>
             </pre>
           </div>
 
@@ -128,9 +115,7 @@ const MethodCard = memo(function MethodCard({
             <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
               Description
             </h4>
-            <p className="text-zinc-300 text-sm leading-relaxed">
-              {method.description}
-            </p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{method.description}</p>
           </div>
 
           {/* Arguments Table */}
@@ -154,15 +139,11 @@ const MethodCard = memo(function MethodCard({
                         <td className="py-2 pr-4">
                           <code className="text-cyan-400 font-mono">
                             {arg.name}
-                            {arg.optional && (
-                              <span className="text-zinc-500 text-xs ml-1">?</span>
-                            )}
+                            {arg.optional && <span className="text-zinc-500 text-xs ml-1">?</span>}
                           </code>
                         </td>
                         <td className="py-2 pr-4">
-                          <code className="text-purple-400 font-mono text-xs">
-                            {arg.type}
-                          </code>
+                          <code className="text-purple-400 font-mono text-xs">{arg.type}</code>
                         </td>
                         <td className="py-2 text-zinc-400">
                           {arg.description}
@@ -189,9 +170,7 @@ const MethodCard = memo(function MethodCard({
               <code className="text-purple-400 font-mono text-sm flex-shrink-0">
                 {method.returns.type}
               </code>
-              <span className="text-zinc-400 text-sm">
-                {method.returns.description}
-              </span>
+              <span className="text-zinc-400 text-sm">{method.returns.description}</span>
             </div>
           </div>
 
@@ -206,16 +185,12 @@ const MethodCard = memo(function MethodCard({
                   <div key={idx} className="bg-zinc-950 rounded-lg overflow-hidden">
                     <div className="p-3 border-b border-zinc-800">
                       <pre className="overflow-x-auto">
-                        <code className="text-sm font-mono text-zinc-100">
-                          {example.code}
-                        </code>
+                        <code className="text-sm font-mono text-zinc-100">{example.code}</code>
                       </pre>
                     </div>
                     <div className="p-3 bg-zinc-950/50 flex items-center gap-2">
                       <span className="text-zinc-500 text-xs">Output:</span>
-                      <code className="text-sm font-mono text-emerald-400">
-                        {example.output}
-                      </code>
+                      <code className="text-sm font-mono text-emerald-400">{example.output}</code>
                     </div>
                     {example.explanation && (
                       <div className="px-3 pb-3 text-xs text-zinc-500 italic">
@@ -234,17 +209,13 @@ const MethodCard = memo(function MethodCard({
               {method.timeComplexity && (
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-zinc-500">Time:</span>
-                  <code className="text-xs font-mono text-amber-400">
-                    {method.timeComplexity}
-                  </code>
+                  <code className="text-xs font-mono text-amber-400">{method.timeComplexity}</code>
                 </div>
               )}
               {method.spaceComplexity && (
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-zinc-500">Space:</span>
-                  <code className="text-xs font-mono text-amber-400">
-                    {method.spaceComplexity}
-                  </code>
+                  <code className="text-xs font-mono text-amber-400">{method.spaceComplexity}</code>
                 </div>
               )}
             </div>
@@ -292,9 +263,25 @@ const MethodCard = memo(function MethodCard({
               href={`?method=${encodeURIComponent(method.name)}`}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${languageConfig.bgColor} ${languageConfig.color} ${languageConfig.hoverBg} transition-colors font-medium text-sm`}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               Try in Drill Mode
             </Link>
@@ -313,7 +300,7 @@ const QuickNav = memo(function QuickNav({
 }: {
   categories: string[];
   methods: Method[];
-  languageConfig: typeof LANGUAGE_CONFIG[SupportedLanguage];
+  languageConfig: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -330,16 +317,19 @@ const QuickNav = memo(function QuickNav({
     setIsOpen(false);
   }, []);
 
-  const scrollToLetter = useCallback((letter: string) => {
-    const method = methods.find((m) => m.name[0].toUpperCase() === letter);
-    if (method) {
-      const element = document.getElementById(`method-${method.name.replace(/\./g, '-')}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToLetter = useCallback(
+    (letter: string) => {
+      const method = methods.find((m) => m.name[0].toUpperCase() === letter);
+      if (method) {
+        const element = document.getElementById(`method-${method.name.replace(/\./g, '-')}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
-    }
-    setIsOpen(false);
-  }, [methods]);
+      setIsOpen(false);
+    },
+    [methods],
+  );
 
   return (
     <>
@@ -354,6 +344,7 @@ const QuickNav = memo(function QuickNav({
               {categories.map((category) => (
                 <li key={category}>
                   <button
+                    type="button"
                     onClick={() => scrollToCategory(category)}
                     className="text-sm text-zinc-400 hover:text-white transition-colors text-left w-full truncate"
                   >
@@ -370,6 +361,7 @@ const QuickNav = memo(function QuickNav({
             <div className="flex flex-wrap gap-1">
               {alphabet.map((letter) => (
                 <button
+                  type="button"
                   key={letter}
                   onClick={() => scrollToLetter(letter)}
                   className="w-6 h-6 text-xs font-mono text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"
@@ -385,11 +377,23 @@ const QuickNav = memo(function QuickNav({
       {/* Mobile Floating Button */}
       <div className="lg:hidden fixed bottom-6 right-6 z-40">
         <button
+          type="button"
           onClick={() => setIsOpen(!isOpen)}
           className={`w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors ${languageConfig.bgColor} ${languageConfig.color} border ${languageConfig.borderColor}`}
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
 
@@ -405,6 +409,7 @@ const QuickNav = memo(function QuickNav({
                   {categories.map((category) => (
                     <li key={category}>
                       <button
+                        type="button"
                         onClick={() => scrollToCategory(category)}
                         className="text-sm text-zinc-400 hover:text-white transition-colors text-left w-full"
                       >
@@ -421,6 +426,7 @@ const QuickNav = memo(function QuickNav({
                 <div className="flex flex-wrap gap-1">
                   {alphabet.map((letter) => (
                     <button
+                      type="button"
                       key={letter}
                       onClick={() => scrollToLetter(letter)}
                       className="w-7 h-7 text-xs font-mono text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"
@@ -477,8 +483,14 @@ export default function ReferencePage() {
 
   // Get data - memoized to prevent unnecessary recalculations
   const languageConfig = isValid ? LANGUAGE_CONFIG[language] : null;
-  const methods = useMemo(() => isValid ? getMethodsForLanguage(language) : [], [isValid, language]);
-  const categories = useMemo(() => isValid ? getCategoriesForLanguage(language) : [], [isValid, language]);
+  const methods = useMemo(
+    () => (isValid ? getMethodsForLanguage(language) : []),
+    [isValid, language],
+  );
+  const categories = useMemo(
+    () => (isValid ? getCategoriesForLanguage(language) : []),
+    [isValid, language],
+  );
 
   // Filter and sort methods - hooks must be called unconditionally
   const filteredMethods = useMemo(() => {
@@ -492,7 +504,7 @@ export default function ReferencePage() {
         (m) =>
           m.name.toLowerCase().includes(query) ||
           m.description.toLowerCase().includes(query) ||
-          m.category.toLowerCase().includes(query)
+          m.category.toLowerCase().includes(query),
       );
     }
 
@@ -523,13 +535,16 @@ export default function ReferencePage() {
     if (sortBy === 'alphabetical') {
       return { 'All Methods': filteredMethods };
     }
-    return filteredMethods.reduce((acc, method) => {
-      if (!acc[method.category]) {
-        acc[method.category] = [];
-      }
-      acc[method.category].push(method);
-      return acc;
-    }, {} as Record<string, Method[]>);
+    return filteredMethods.reduce(
+      (acc, method) => {
+        if (!acc[method.category]) {
+          acc[method.category] = [];
+        }
+        acc[method.category].push(method);
+        return acc;
+      },
+      {} as Record<string, Method[]>,
+    );
   }, [isValid, filteredMethods, sortBy]);
 
   // Toggle method expansion
@@ -603,6 +618,7 @@ export default function ReferencePage() {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -620,11 +636,23 @@ export default function ReferencePage() {
               />
               {searchQuery && (
                 <button
+                  type="button"
                   onClick={() => setSearchQuery('')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               )}
@@ -663,6 +691,7 @@ export default function ReferencePage() {
             </div>
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={expandAll}
                 className="text-sm text-zinc-400 hover:text-white transition-colors"
               >
@@ -670,6 +699,7 @@ export default function ReferencePage() {
               </button>
               <span className="text-zinc-700">|</span>
               <button
+                type="button"
                 onClick={collapseAll}
                 className="text-sm text-zinc-400 hover:text-white transition-colors"
               >
@@ -677,11 +707,23 @@ export default function ReferencePage() {
               </button>
               <span className="text-zinc-700">|</span>
               <button
+                type="button"
                 onClick={handlePrint}
                 className="text-sm text-zinc-400 hover:text-white transition-colors flex items-center gap-1"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                  />
                 </svg>
                 Print
               </button>
@@ -695,9 +737,7 @@ export default function ReferencePage() {
             <section key={category} id={`category-${category.replace(/\s+/g, '-')}`}>
               {sortBy !== 'alphabetical' && (
                 <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3 print-break">
-                  <span
-                    className={`w-3 h-3 rounded-full ${getCategoryBgColor(category)}`}
-                  />
+                  <span className={`w-3 h-3 rounded-full ${getCategoryBgColor(category)}`} />
                   {category}
                   <span className="text-sm font-normal text-zinc-500">
                     ({categoryMethods.length})
@@ -726,6 +766,7 @@ export default function ReferencePage() {
               className="w-16 h-16 mx-auto text-zinc-700 mb-4"
               fill="none"
               viewBox="0 0 24 24"
+              aria-hidden="true"
               stroke="currentColor"
             >
               <path
@@ -736,10 +777,9 @@ export default function ReferencePage() {
               />
             </svg>
             <h3 className="text-lg font-medium text-zinc-300 mb-2">No methods found</h3>
-            <p className="text-zinc-500">
-              Try adjusting your search or filter criteria
-            </p>
+            <p className="text-zinc-500">Try adjusting your search or filter criteria</p>
             <button
+              type="button"
               onClick={() => {
                 setSearchQuery('');
                 setSelectedCategory('all');
@@ -752,11 +792,7 @@ export default function ReferencePage() {
         )}
 
         {/* Quick Navigation */}
-        <QuickNav
-          categories={categories}
-          methods={methods}
-          languageConfig={languageConfig}
-        />
+        <QuickNav categories={categories} methods={methods} languageConfig={languageConfig} />
       </div>
     </>
   );

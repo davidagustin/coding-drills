@@ -1,31 +1,45 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import {
-  getExercisesForLanguage,
-  getExercisesByCategory,
-  getExerciseStats,
-  EXERCISE_CATEGORIES,
   DIFFICULTY_CONFIG,
+  EXERCISE_CATEGORIES,
   type Exercise,
   type ExerciseCategory,
-} from "@/lib/exercises";
-import { LANGUAGE_CONFIG, isValidLanguage, type SupportedLanguage } from "../config";
+  getExerciseStats,
+  getExercisesByCategory,
+  getExercisesForLanguage,
+} from '@/lib/exercises';
+import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from '../config';
 
 // Icon components
-function ArrowLeftIcon({ className = "w-5 h-5" }: { className?: string }) {
+function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+      aria-hidden="true"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
     </svg>
   );
 }
 
-function TreeIcon({ className = "w-6 h-6" }: { className?: string }) {
+function TreeIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m-6-6l6-6 6 6" />
       <circle cx="12" cy="6" r="2" />
       <circle cx="6" cy="15" r="2" />
@@ -34,68 +48,130 @@ function TreeIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-function LoopIcon({ className = "w-6 h-6" }: { className?: string }) {
+function LoopIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+      />
     </svg>
   );
 }
 
-function RecursionIcon({ className = "w-6 h-6" }: { className?: string }) {
+function RecursionIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25"
+      />
     </svg>
   );
 }
 
-function GenerateIcon({ className = "w-6 h-6" }: { className?: string }) {
+function GenerateIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+      />
     </svg>
   );
 }
 
-function SearchIcon({ className = "w-6 h-6" }: { className?: string }) {
+function SearchIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+      />
     </svg>
   );
 }
 
-function StructureIcon({ className = "w-6 h-6" }: { className?: string }) {
+function StructureIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+      />
     </svg>
   );
 }
 
-function PlayIcon({ className = "w-5 h-5" }: { className?: string }) {
+function PlayIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
       <path d="M8 5v14l11-7z" />
     </svg>
   );
 }
 
-function CheckIcon({ className = "w-5 h-5" }: { className?: string }) {
+function CheckIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+      aria-hidden="true"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
     </svg>
   );
 }
 
 const CATEGORY_ICONS: Record<ExerciseCategory, React.ReactNode> = {
-  'traversal': <TreeIcon />,
+  traversal: <TreeIcon />,
   'iteration-patterns': <LoopIcon />,
-  'recursion': <RecursionIcon />,
-  'generation': <GenerateIcon />,
-  'searching': <SearchIcon />,
+  recursion: <RecursionIcon />,
+  generation: <GenerateIcon />,
+  searching: <SearchIcon />,
   'data-structures': <StructureIcon />,
 };
 
@@ -112,7 +188,7 @@ function ExerciseCard({
   onClick,
 }: {
   exercise: Exercise;
-  languageConfig: typeof LANGUAGE_CONFIG[SupportedLanguage];
+  languageConfig: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
   progress?: ExerciseProgress;
   onClick: () => void;
 }) {
@@ -120,6 +196,7 @@ function ExerciseCard({
 
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`
         group relative w-full text-left p-4 rounded-xl border transition-all duration-300
@@ -130,7 +207,9 @@ function ExerciseCard({
       {/* Completed indicator */}
       {progress?.completed && (
         <div className="absolute top-3 right-3">
-          <div className={`w-6 h-6 rounded-full ${languageConfig.bgColor} flex items-center justify-center`}>
+          <div
+            className={`w-6 h-6 rounded-full ${languageConfig.bgColor} flex items-center justify-center`}
+          >
             <CheckIcon className={`w-4 h-4 ${languageConfig.color}`} />
           </div>
         </div>
@@ -145,7 +224,9 @@ function ExerciseCard({
 
       {/* Difficulty badge */}
       <div className="flex items-center gap-2 mb-3">
-        <span className={`text-xs px-2 py-0.5 rounded-full ${diffConfig.bgColor} ${diffConfig.color}`}>
+        <span
+          className={`text-xs px-2 py-0.5 rounded-full ${diffConfig.bgColor} ${diffConfig.color}`}
+        >
           {diffConfig.name}
         </span>
         {exercise.timeLimit && (
@@ -156,9 +237,7 @@ function ExerciseCard({
       </div>
 
       {/* Description */}
-      <p className="text-sm text-zinc-400 line-clamp-2 mb-3">
-        {exercise.description}
-      </p>
+      <p className="text-sm text-zinc-400 line-clamp-2 mb-3">{exercise.description}</p>
 
       {/* Concepts */}
       <div className="flex flex-wrap gap-1">
@@ -175,9 +254,14 @@ function ExerciseCard({
       {/* Attempts info */}
       {progress && progress.attempts > 0 && (
         <div className="mt-3 pt-3 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
-          <span>{progress.attempts} attempt{progress.attempts !== 1 ? 's' : ''}</span>
+          <span>
+            {progress.attempts} attempt{progress.attempts !== 1 ? 's' : ''}
+          </span>
           {progress.bestTime && (
-            <span>Best: {Math.floor(progress.bestTime / 60)}:{String(progress.bestTime % 60).padStart(2, '0')}</span>
+            <span>
+              Best: {Math.floor(progress.bestTime / 60)}:
+              {String(progress.bestTime % 60).padStart(2, '0')}
+            </span>
           )}
         </div>
       )}
@@ -194,19 +278,21 @@ function CategorySection({
 }: {
   category: ExerciseCategory;
   exercises: Exercise[];
-  languageConfig: typeof LANGUAGE_CONFIG[SupportedLanguage];
+  languageConfig: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
   progress: Record<string, ExerciseProgress>;
   onExerciseClick: (exercise: Exercise) => void;
 }) {
   const categoryConfig = EXERCISE_CATEGORIES[category];
-  const completedCount = exercises.filter(ex => progress[ex.id]?.completed).length;
+  const completedCount = exercises.filter((ex) => progress[ex.id]?.completed).length;
 
   if (exercises.length === 0) return null;
 
   return (
     <section className="mb-12">
       <div className="flex items-center gap-3 mb-6">
-        <div className={`w-10 h-10 rounded-lg ${languageConfig.bgColor} flex items-center justify-center ${languageConfig.color}`}>
+        <div
+          className={`w-10 h-10 rounded-lg ${languageConfig.bgColor} flex items-center justify-center ${languageConfig.color}`}
+        >
           {CATEGORY_ICONS[category]}
         </div>
         <div>
@@ -241,11 +327,11 @@ function StatsOverview({
   progress,
 }: {
   language: string;
-  languageConfig: typeof LANGUAGE_CONFIG[SupportedLanguage];
+  languageConfig: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
   progress: Record<string, ExerciseProgress>;
 }) {
   const stats = getExerciseStats(language);
-  const completedCount = Object.values(progress).filter(p => p.completed).length;
+  const completedCount = Object.values(progress).filter((p) => p.completed).length;
   const totalAttempts = Object.values(progress).reduce((sum, p) => sum + (p.attempts || 0), 0);
 
   return (
@@ -338,12 +424,12 @@ export default function ExercisesPage() {
         </Link>
 
         <div className="text-center py-20">
-          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl ${config.bgColor} ${config.color} mb-6`}>
+          <div
+            className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl ${config.bgColor} ${config.color} mb-6`}
+          >
             <LoopIcon className="w-10 h-10" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-4">
-            Coming Soon
-          </h1>
+          <h1 className="text-3xl font-bold text-white mb-4">Coming Soon</h1>
           <p className="text-xl text-zinc-400 max-w-md mx-auto mb-8">
             Algorithm and traversal exercises for {config.name} are currently being developed.
           </p>
@@ -372,24 +458,19 @@ export default function ExercisesPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-3">
-          Algorithm Exercises
-        </h1>
+        <h1 className="text-4xl font-bold text-white mb-3">Algorithm Exercises</h1>
         <p className="text-xl text-zinc-400">
           Master iteration patterns, traversal algorithms, and recursive thinking in {config.name}.
         </p>
       </div>
 
       {/* Stats Overview */}
-      <StatsOverview
-        language={language}
-        languageConfig={config}
-        progress={progress}
-      />
+      <StatsOverview language={language} languageConfig={config} progress={progress} />
 
       {/* Category Filter */}
       <div className="flex flex-wrap gap-2 mb-8">
         <button
+          type="button"
           onClick={() => setSelectedCategory('all')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
             selectedCategory === 'all'
@@ -404,6 +485,7 @@ export default function ExercisesPage() {
           if (count === 0) return null;
           return (
             <button
+              type="button"
               key={category}
               onClick={() => setSelectedCategory(category)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${

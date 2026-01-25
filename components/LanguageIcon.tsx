@@ -115,6 +115,7 @@ export function LanguageIconGrid({
         const isSelected = selected === lang;
         return (
           <button
+            type="button"
             key={lang}
             onClick={() => onSelect?.(lang)}
             className={`

@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  validateJavaScript,
-  validatePython,
-  validateByPattern,
-  validateDrillAnswer,
   checkRequiredPatterns,
   formatOutput,
+  validateByPattern,
+  validateDrillAnswer,
+  validateJavaScript,
+  validatePython,
 } from '../codeValidator';
 
 // ============================================================================
@@ -233,7 +233,10 @@ describe('validateJavaScript', () => {
     it('should handle deep object comparison', () => {
       const setupCode = 'const obj = { a: 1, b: 2 };';
       const userAnswer = 'Object.entries(obj)';
-      const expected = [['a', 1], ['b', 2]];
+      const expected = [
+        ['a', 1],
+        ['b', 2],
+      ];
 
       const result = validateJavaScript(setupCode, userAnswer, expected);
 
@@ -400,7 +403,7 @@ describe('validateDrillAnswer', () => {
         'const arr = [1, 2, 3];',
         'arr.length',
         3,
-        'arr.length'
+        'arr.length',
       );
 
       expect(result.success).toBe(true);
@@ -412,7 +415,7 @@ describe('validateDrillAnswer', () => {
         'const arr = [1, 2, 3];',
         '3',
         3,
-        'arr.length'
+        'arr.length',
       );
 
       expect(result.success).toBe(false);
@@ -427,7 +430,7 @@ describe('validateDrillAnswer', () => {
         'const arr: number[] = [1, 2, 3];',
         'arr.length',
         3,
-        'arr.length'
+        'arr.length',
       );
 
       expect(result.success).toBe(true);
@@ -441,7 +444,7 @@ describe('validateDrillAnswer', () => {
         'numbers = [1, 2, 3]',
         'len(numbers)',
         3,
-        'len(numbers)'
+        'len(numbers)',
       );
 
       expect(result.success).toBe(true);
@@ -455,7 +458,7 @@ describe('validateDrillAnswer', () => {
         'int[] arr = {1, 2, 3};',
         'arr.length',
         3,
-        'arr.length'
+        'arr.length',
       );
 
       expect(result.success).toBe(true);
@@ -467,20 +470,14 @@ describe('validateDrillAnswer', () => {
         'vector<int> arr = {1, 2, 3};',
         'arr.size()',
         3,
-        'arr.size()'
+        'arr.size()',
       );
 
       expect(result.success).toBe(true);
     });
 
     it('should validate Go by pattern', () => {
-      const result = validateDrillAnswer(
-        'go',
-        'arr := []int{1, 2, 3}',
-        'len(arr)',
-        3,
-        'len(arr)'
-      );
+      const result = validateDrillAnswer('go', 'arr := []int{1, 2, 3}', 'len(arr)', 3, 'len(arr)');
 
       expect(result.success).toBe(true);
     });
@@ -493,7 +490,7 @@ describe('validateDrillAnswer', () => {
         '',
         'answer',
         null,
-        'answer'
+        'answer',
       );
 
       expect(result.success).toBe(false);
@@ -509,7 +506,7 @@ describe('validateDrillAnswer', () => {
         '[2, 4, 6]', // Hardcoded without using arr
         [2, 4, 6],
         'arr.map(x => x * 2)',
-        [/\.map\(/]
+        [/\.map\(/],
       );
 
       expect(result.success).toBe(false);

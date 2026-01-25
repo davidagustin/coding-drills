@@ -1,11 +1,11 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 interface FooterProps {
   className?: string;
   showFullFooter?: boolean;
 }
 
-export function Footer({ className = "", showFullFooter = true }: FooterProps) {
+export function Footer({ className = '', showFullFooter = true }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -30,6 +30,7 @@ export function Footer({ className = "", showFullFooter = true }: FooterProps) {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={2}
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -38,13 +39,11 @@ export function Footer({ className = "", showFullFooter = true }: FooterProps) {
                     />
                   </svg>
                 </div>
-                <span className="text-lg font-bold gradient-text">
-                  Code Drills
-                </span>
+                <span className="text-lg font-bold gradient-text">Code Drills</span>
               </Link>
               <p className="text-sm text-text-muted max-w-xs">
-                Master programming methods through focused practice. Build muscle
-                memory for the code patterns you use every day.
+                Master programming methods through focused practice. Build muscle memory for the
+                code patterns you use every day.
               </p>
             </div>
 
@@ -55,10 +54,10 @@ export function Footer({ className = "", showFullFooter = true }: FooterProps) {
               </h3>
               <ul className="space-y-2">
                 {[
-                  { name: "JavaScript", slug: "javascript" },
-                  { name: "TypeScript", slug: "typescript" },
-                  { name: "Python", slug: "python" },
-                  { name: "Java", slug: "java" },
+                  { name: 'JavaScript', slug: 'javascript' },
+                  { name: 'TypeScript', slug: 'typescript' },
+                  { name: 'Python', slug: 'python' },
+                  { name: 'Java', slug: 'java' },
                 ].map((lang) => (
                   <li key={lang.slug}>
                     <Link
@@ -91,12 +90,13 @@ export function Footer({ className = "", showFullFooter = true }: FooterProps) {
                     transition-all duration-200
                     group
                   "
-                  aria-label="GitHub"
                 >
+                  <span className="sr-only">GitHub</span>
                   <svg
                     className="w-5 h-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden="true"
                   >
                     <path
                       fillRule="evenodd"
@@ -119,12 +119,13 @@ export function Footer({ className = "", showFullFooter = true }: FooterProps) {
                     transition-all duration-200
                     group
                   "
-                  aria-label="Twitter"
                 >
+                  <span className="sr-only">Twitter</span>
                   <svg
                     className="w-5 h-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden="true"
                   >
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                   </svg>
@@ -138,7 +139,7 @@ export function Footer({ className = "", showFullFooter = true }: FooterProps) {
         <div
           className={`
             py-4 flex flex-col sm:flex-row items-center justify-between gap-4
-            ${showFullFooter ? "border-t border-border-subtle/50" : ""}
+            ${showFullFooter ? 'border-t border-border-subtle/50' : ''}
           `}
         >
           {/* Copyright */}
@@ -150,11 +151,7 @@ export function Footer({ className = "", showFullFooter = true }: FooterProps) {
           <p className="text-sm text-text-muted flex items-center gap-1.5">
             Made with
             <span className="text-red-500 animate-pulse inline-block">
-              <svg
-                className="w-4 h-4"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
               </svg>
             </span>

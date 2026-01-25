@@ -7,15 +7,15 @@
  */
 
 import type {
-  LanguageId,
-  Problem,
-  ExecutableProblem,
-  ExecutionResult,
-  ValidationResult,
   AntiCheatFlag,
   ComparisonOptions,
   ErrorHint,
   ErrorType,
+  ExecutableProblem,
+  ExecutionResult,
+  LanguageId,
+  Problem,
+  ValidationResult,
 } from './types';
 
 // ============================================================
@@ -30,32 +30,38 @@ const ERROR_HINTS: ErrorHint[] = [
   {
     pattern: /(\w+) is not defined/i,
     hint: 'Make sure you have declared the variable "$1" before using it. Check for typos in variable names.',
-    documentation: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Not_defined',
+    documentation:
+      'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Not_defined',
   },
   {
     pattern: /Cannot read propert(?:y|ies) .+ of (undefined|null)/i,
     hint: 'You are trying to access a property on a value that is $1. Check that your variable has been assigned a value.',
-    documentation: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cant_access_property',
+    documentation:
+      'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cant_access_property',
   },
   {
     pattern: /(\w+) is not a function/i,
     hint: '"$1" is not a function. Make sure you are calling a method that exists and is spelled correctly.',
-    documentation: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Not_a_function',
+    documentation:
+      'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Not_a_function',
   },
   {
     pattern: /Unexpected token/i,
     hint: 'There is a syntax error in your code. Check for missing brackets, parentheses, or semicolons.',
-    documentation: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Unexpected_token',
+    documentation:
+      'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Unexpected_token',
   },
   {
     pattern: /Maximum call stack size exceeded/i,
     hint: 'Your code has infinite recursion. Make sure your recursive function has a proper base case.',
-    documentation: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Too_much_recursion',
+    documentation:
+      'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Too_much_recursion',
   },
   {
     pattern: /Assignment to constant variable/i,
     hint: 'You are trying to reassign a variable declared with "const". Use "let" if you need to reassign it.',
-    documentation: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Invalid_const_assignment',
+    documentation:
+      'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Invalid_const_assignment',
   },
   {
     pattern: /Invalid left-hand side in assignment/i,
@@ -89,7 +95,7 @@ const ERROR_HINTS: ErrorHint[] = [
 export function executeJavaScript(
   setupCode: string,
   userCode: string,
-  timeout: number = DEFAULT_TIMEOUT
+  timeout: number = DEFAULT_TIMEOUT,
 ): ExecutionResult {
   const startTime = performance.now();
   const logs: string[] = [];
@@ -183,7 +189,7 @@ export function executeJavaScript(
 export async function executeJavaScriptAsync(
   setupCode: string,
   userCode: string,
-  timeout: number = DEFAULT_TIMEOUT
+  timeout: number = DEFAULT_TIMEOUT,
 ): Promise<ExecutionResult> {
   const startTime = performance.now();
   const logs: string[] = [];
@@ -274,7 +280,7 @@ export function validatePython(
   setupCode: string,
   userCode: string,
   expected: unknown,
-  validPatterns: RegExp[]
+  validPatterns: RegExp[],
 ): { valid: boolean; feedback: string; matchedPatterns: string[] } {
   const matchedPatterns: string[] = [];
   const feedback: string[] = [];
@@ -319,7 +325,8 @@ export function validatePython(
   if (isHardcodedOutput(userCode, expected)) {
     return {
       valid: false,
-      feedback: 'It looks like you hardcoded the expected output. Please write code that computes the result.',
+      feedback:
+        'It looks like you hardcoded the expected output. Please write code that computes the result.',
       matchedPatterns,
     };
   }
@@ -336,7 +343,9 @@ export function validatePython(
   }
 
   if (!allPatternsMatched) {
-    feedback.unshift('Your code does not match the expected patterns. Check that you are using the correct methods and syntax.');
+    feedback.unshift(
+      'Your code does not match the expected patterns. Check that you are using the correct methods and syntax.',
+    );
   }
 
   return {
@@ -442,7 +451,7 @@ export function validateCode(
   setupCode: string,
   userCode: string,
   expected: unknown,
-  problem: Problem | ExecutableProblem
+  problem: Problem | ExecutableProblem,
 ): ValidationResult {
   const startTime = performance.now();
 
@@ -502,8 +511,8 @@ function validateJavaScript(
   setupCode: string,
   userCode: string,
   expected: unknown,
-  problem: Problem | ExecutableProblem,
-  antiCheatFlags: AntiCheatFlag[]
+  _problem: Problem | ExecutableProblem,
+  antiCheatFlags: AntiCheatFlag[],
 ): ValidationResult {
   const startTime = performance.now();
 
@@ -589,7 +598,7 @@ function validatePythonCode(
   userCode: string,
   expected: unknown,
   problem: Problem | ExecutableProblem,
-  antiCheatFlags: AntiCheatFlag[]
+  antiCheatFlags: AntiCheatFlag[],
 ): ValidationResult {
   const startTime = performance.now();
   const validPatterns = problem.validPatterns || [];
@@ -620,11 +629,11 @@ function validatePythonCode(
  */
 function validateByPattern(
   language: LanguageId,
-  setupCode: string,
+  _setupCode: string,
   userCode: string,
   expected: unknown,
   problem: Problem | ExecutableProblem,
-  antiCheatFlags: AntiCheatFlag[]
+  antiCheatFlags: AntiCheatFlag[],
 ): ValidationResult {
   const startTime = performance.now();
   const validPatterns = problem.validPatterns || [];
@@ -666,7 +675,8 @@ function validateByPattern(
       passed: 0,
       failed: 1,
       total: 1,
-      feedback: 'It looks like you hardcoded the expected output. Please write code that computes the result.',
+      feedback:
+        'It looks like you hardcoded the expected output. Please write code that computes the result.',
       details: [],
       antiCheatFlags,
       executionTime: performance.now() - startTime,
@@ -732,7 +742,9 @@ function checkLanguageSyntax(language: LanguageId, code: string): string[] {
     case 'c':
     case 'cpp':
       if (/\bfunction\b/.test(code)) {
-        issues.push('C/C++ does not use the "function" keyword. Define functions with return types.');
+        issues.push(
+          'C/C++ does not use the "function" keyword. Define functions with return types.',
+        );
       }
       break;
 
@@ -756,7 +768,7 @@ function checkLanguageSyntax(language: LanguageId, code: string): string[] {
 export function detectCheating(
   userCode: string,
   expected: unknown,
-  problem: Problem | ExecutableProblem
+  problem: Problem | ExecutableProblem,
 ): AntiCheatFlag[] {
   const flags: AntiCheatFlag[] = [];
 
@@ -764,7 +776,8 @@ export function detectCheating(
   if (isHardcodedOutput(userCode, expected)) {
     flags.push({
       type: 'literal_output',
-      message: 'Your code appears to contain the hardcoded answer. Please write code that computes the result.',
+      message:
+        'Your code appears to contain the hardcoded answer. Please write code that computes the result.',
       severity: 'error',
     });
   }
@@ -775,7 +788,8 @@ export function detectCheating(
   if (setupVars.length > 0 && !usesSetup) {
     flags.push({
       type: 'no_setup_usage',
-      message: 'Your code does not use the provided variables. Make sure to use the setup code variables.',
+      message:
+        'Your code does not use the provided variables. Make sure to use the setup code variables.',
       severity: 'warning',
     });
   }
@@ -786,7 +800,8 @@ export function detectCheating(
       if (pattern.test(userCode)) {
         flags.push({
           type: 'forbidden_pattern',
-          message: 'Your code contains a forbidden pattern. Please solve the problem using the intended approach.',
+          message:
+            'Your code contains a forbidden pattern. Please solve the problem using the intended approach.',
           severity: 'error',
         });
         break;
@@ -836,7 +851,10 @@ function isHardcodedOutput(userCode: string, expected: unknown): boolean {
     // Check if the expected string is directly in quotes as the return value
     const quotedString = `"${expected}"`;
     const singleQuoted = `'${expected}'`;
-    const returnPattern = new RegExp(`return\\s*(${escapeRegex(quotedString)}|${escapeRegex(singleQuoted)})`, 'i');
+    const returnPattern = new RegExp(
+      `return\\s*(${escapeRegex(quotedString)}|${escapeRegex(singleQuoted)})`,
+      'i',
+    );
     if (returnPattern.test(normalizedCode)) {
       return true;
     }
@@ -861,15 +879,15 @@ function extractSetupVariables(setupCode: string): string[] {
   const variables: string[] = [];
 
   // JavaScript/TypeScript patterns
-  const jsPatterns = [
-    /(?:const|let|var)\s+(\w+)/g,
-    /(\w+)\s*=/g,
-  ];
+  const jsPatterns = [/(?:const|let|var)\s+(\w+)/g, /(\w+)\s*=/g];
 
   for (const pattern of jsPatterns) {
     let match;
     while ((match = pattern.exec(setupCode)) !== null) {
-      if (!variables.includes(match[1]) && !['const', 'let', 'var', 'function'].includes(match[1])) {
+      if (
+        !variables.includes(match[1]) &&
+        !['const', 'let', 'var', 'function'].includes(match[1])
+      ) {
         variables.push(match[1]);
       }
     }
@@ -885,11 +903,7 @@ function extractSetupVariables(setupCode: string): string[] {
 /**
  * Deep equality comparison with options
  */
-export function deepEqual(
-  a: unknown,
-  b: unknown,
-  options: ComparisonOptions = {}
-): boolean {
+export function deepEqual(a: unknown, b: unknown, options: ComparisonOptions = {}): boolean {
   const {
     ignoreCase = false,
     trimStrings = true,
@@ -935,7 +949,7 @@ export function deepEqual(
       const sortedA = [...a].sort((x, y) => JSON.stringify(x).localeCompare(JSON.stringify(y)));
       const sortedB = [...b].sort((x, y) => JSON.stringify(x).localeCompare(JSON.stringify(y)));
       return sortedA.every((item, index) =>
-        deepEqual(item, sortedB[index], { ...options, arrayOrderMatters: true })
+        deepEqual(item, sortedB[index], { ...options, arrayOrderMatters: true }),
       );
     }
 
@@ -954,7 +968,7 @@ export function deepEqual(
       return deepEqual(
         (a as Record<string, unknown>)[key],
         (b as Record<string, unknown>)[key],
-        options
+        options,
       );
     });
   }
@@ -975,7 +989,7 @@ export function floatEqual(a: number, b: number, tolerance: number = 1e-9): bool
  */
 export function normalizeString(
   str: string,
-  options: { trim?: boolean; lowercase?: boolean; removeSpaces?: boolean } = {}
+  options: { trim?: boolean; lowercase?: boolean; removeSpaces?: boolean } = {},
 ): string {
   let result = str;
   if (options.trim !== false) result = result.trim();
@@ -1056,16 +1070,14 @@ function generateSuggestions(expected: unknown, actual: unknown): string[] {
   // Type mismatch suggestions
   if (typeof expected !== typeof actual) {
     suggestions.push(
-      `Expected type "${typeof expected}" but got "${typeof actual}". Check your return statement.`
+      `Expected type "${typeof expected}" but got "${typeof actual}". Check your return statement.`,
     );
   }
 
   // Array suggestions
   if (Array.isArray(expected) && Array.isArray(actual)) {
     if (expected.length !== actual.length) {
-      suggestions.push(
-        `Expected array of length ${expected.length} but got ${actual.length}.`
-      );
+      suggestions.push(`Expected array of length ${expected.length} but got ${actual.length}.`);
     }
     // Check if it's a sorting issue
     const sortedExpected = [...expected].sort();

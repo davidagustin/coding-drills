@@ -8,14 +8,26 @@ export const javaMethods: Method[] = [
     name: 'add',
     category: 'ArrayList Methods',
     syntax: 'list.add(element) | list.add(index, element)',
-    description: 'Appends the specified element to the end of the list, or inserts it at the specified position.',
+    description:
+      'Appends the specified element to the end of the list, or inserts it at the specified position.',
     arguments: [
-      { name: 'index', type: 'int', description: 'Index at which to insert (optional)', optional: true },
+      {
+        name: 'index',
+        type: 'int',
+        description: 'Index at which to insert (optional)',
+        optional: true,
+      },
       { name: 'element', type: 'E', description: 'Element to be inserted' },
     ],
-    returns: { type: 'boolean | void', description: 'true if list changed (for single arg), void for indexed insert' },
+    returns: {
+      type: 'boolean | void',
+      description: 'true if list changed (for single arg), void for indexed insert',
+    },
     examples: [
-      { code: 'List<Integer> list = new ArrayList<>(); list.add(1); list.add(2);', output: '[1, 2]' },
+      {
+        code: 'List<Integer> list = new ArrayList<>(); list.add(1); list.add(2);',
+        output: '[1, 2]',
+      },
       { code: 'list.add(0, 10);', output: '[10, 1, 2]' },
     ],
     timeComplexity: 'O(1) amortized for append, O(n) for indexed insert',
@@ -27,9 +39,7 @@ export const javaMethods: Method[] = [
     category: 'ArrayList Methods',
     syntax: 'list.get(index)',
     description: 'Returns the element at the specified position in this list.',
-    arguments: [
-      { name: 'index', type: 'int', description: 'Index of the element to return' },
-    ],
+    arguments: [{ name: 'index', type: 'int', description: 'Index of the element to return' }],
     returns: { type: 'E', description: 'The element at the specified position' },
     examples: [
       { code: 'List<String> list = Arrays.asList("a", "b", "c"); list.get(1)', output: '"b"' },
@@ -50,7 +60,10 @@ export const javaMethods: Method[] = [
     ],
     returns: { type: 'E', description: 'The element previously at the specified position' },
     examples: [
-      { code: 'List<String> list = new ArrayList<>(Arrays.asList("a", "b")); list.set(0, "x");', output: 'Returns "a", list is ["x", "b"]' },
+      {
+        code: 'List<String> list = new ArrayList<>(Arrays.asList("a", "b")); list.set(0, "x");',
+        output: 'Returns "a", list is ["x", "b"]',
+      },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
@@ -60,14 +73,21 @@ export const javaMethods: Method[] = [
     name: 'remove',
     category: 'ArrayList Methods',
     syntax: 'list.remove(index) | list.remove(object)',
-    description: 'Removes the element at the specified position or the first occurrence of the specified element.',
+    description:
+      'Removes the element at the specified position or the first occurrence of the specified element.',
     arguments: [
       { name: 'index', type: 'int', description: 'Index of element to remove' },
       { name: 'object', type: 'Object', description: 'Element to be removed if present' },
     ],
-    returns: { type: 'E | boolean', description: 'Removed element (by index) or true if element was found (by object)' },
+    returns: {
+      type: 'E | boolean',
+      description: 'Removed element (by index) or true if element was found (by object)',
+    },
     examples: [
-      { code: 'List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3)); list.remove(1);', output: 'Returns 2, list is [1, 3]' },
+      {
+        code: 'List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3)); list.remove(1);',
+        output: 'Returns 2, list is [1, 3]',
+      },
       { code: 'list.remove(Integer.valueOf(1));', output: 'Returns true, list is [3]' },
     ],
     timeComplexity: 'O(n)',
@@ -110,9 +130,7 @@ export const javaMethods: Method[] = [
     category: 'ArrayList Methods',
     syntax: 'list.contains(object)',
     description: 'Returns true if this list contains the specified element.',
-    arguments: [
-      { name: 'object', type: 'Object', description: 'Element to search for' },
-    ],
+    arguments: [{ name: 'object', type: 'Object', description: 'Element to search for' }],
     returns: { type: 'boolean', description: 'true if list contains the element' },
     examples: [
       { code: 'Arrays.asList(1, 2, 3).contains(2)', output: 'true' },
@@ -126,10 +144,9 @@ export const javaMethods: Method[] = [
     name: 'indexOf',
     category: 'ArrayList Methods',
     syntax: 'list.indexOf(object)',
-    description: 'Returns the index of the first occurrence of the specified element, or -1 if not found.',
-    arguments: [
-      { name: 'object', type: 'Object', description: 'Element to search for' },
-    ],
+    description:
+      'Returns the index of the first occurrence of the specified element, or -1 if not found.',
+    arguments: [{ name: 'object', type: 'Object', description: 'Element to search for' }],
     returns: { type: 'int', description: 'Index of first occurrence, or -1' },
     examples: [
       { code: 'Arrays.asList("a", "b", "c", "b").indexOf("b")', output: '1' },
@@ -149,9 +166,7 @@ export const javaMethods: Method[] = [
       { name: 'toIndex', type: 'int', description: 'High endpoint (exclusive)' },
     ],
     returns: { type: 'List<E>', description: 'A view of the specified range within this list' },
-    examples: [
-      { code: 'Arrays.asList(1, 2, 3, 4, 5).subList(1, 4)', output: '[2, 3, 4]' },
-    ],
+    examples: [{ code: 'Arrays.asList(1, 2, 3, 4, 5).subList(1, 4)', output: '[2, 3, 4]' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['get', 'toArray'],
@@ -163,7 +178,12 @@ export const javaMethods: Method[] = [
     syntax: 'list.toArray() | list.toArray(T[] array)',
     description: 'Returns an array containing all elements in this list in proper sequence.',
     arguments: [
-      { name: 'array', type: 'T[]', description: 'Array to store elements (optional)', optional: true },
+      {
+        name: 'array',
+        type: 'T[]',
+        description: 'Array to store elements (optional)',
+        optional: true,
+      },
     ],
     returns: { type: 'Object[] | T[]', description: 'An array containing all elements' },
     examples: [
@@ -183,9 +203,7 @@ export const javaMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.charAt(index)',
     description: 'Returns the char value at the specified index.',
-    arguments: [
-      { name: 'index', type: 'int', description: 'Index of the char value' },
-    ],
+    arguments: [{ name: 'index', type: 'int', description: 'Index of the char value' }],
     returns: { type: 'char', description: 'The char value at the specified index' },
     examples: [
       { code: '"hello".charAt(1)', output: "'e'" },
@@ -226,7 +244,11 @@ export const javaMethods: Method[] = [
     examples: [
       { code: '"a,b,c".split(",")', output: '["a", "b", "c"]' },
       { code: '"hello world".split(" ")', output: '["hello", "world"]' },
-      { code: '"a.b.c".split("\\\\.")', output: '["a", "b", "c"]', explanation: 'Escape regex special characters' },
+      {
+        code: '"a.b.c".split("\\\\.")',
+        output: '["a", "b", "c"]',
+        explanation: 'Escape regex special characters',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -254,9 +276,7 @@ export const javaMethods: Method[] = [
     description: 'Converts all characters in this string to uppercase.',
     arguments: [],
     returns: { type: 'String', description: 'String converted to uppercase' },
-    examples: [
-      { code: '"hello".toUpperCase()', output: '"HELLO"' },
-    ],
+    examples: [{ code: '"hello".toUpperCase()', output: '"HELLO"' }],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
     relatedMethods: ['toLowerCase', 'equalsIgnoreCase'],
@@ -283,12 +303,20 @@ export const javaMethods: Method[] = [
     syntax: 'string.replace(oldChar, newChar) | string.replace(target, replacement)',
     description: 'Returns a string with all occurrences of a character or sequence replaced.',
     arguments: [
-      { name: 'target', type: 'char | CharSequence', description: 'Character or sequence to be replaced' },
-      { name: 'replacement', type: 'char | CharSequence', description: 'Replacement character or sequence' },
+      {
+        name: 'target',
+        type: 'char | CharSequence',
+        description: 'Character or sequence to be replaced',
+      },
+      {
+        name: 'replacement',
+        type: 'char | CharSequence',
+        description: 'Replacement character or sequence',
+      },
     ],
     returns: { type: 'String', description: 'String with replacements made' },
     examples: [
-      { code: '"hello".replace(\'l\', \'w\')', output: '"hewwo"' },
+      { code: "\"hello\".replace('l', 'w')", output: '"hewwo"' },
       { code: '"hello world".replace("world", "Java")', output: '"hello Java"' },
     ],
     timeComplexity: 'O(n)',
@@ -318,9 +346,7 @@ export const javaMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.startsWith(prefix)',
     description: 'Tests if this string starts with the specified prefix.',
-    arguments: [
-      { name: 'prefix', type: 'String', description: 'The prefix to check' },
-    ],
+    arguments: [{ name: 'prefix', type: 'String', description: 'The prefix to check' }],
     returns: { type: 'boolean', description: 'true if string starts with prefix' },
     examples: [
       { code: '"hello world".startsWith("hello")', output: 'true' },
@@ -335,9 +361,7 @@ export const javaMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.endsWith(suffix)',
     description: 'Tests if this string ends with the specified suffix.',
-    arguments: [
-      { name: 'suffix', type: 'String', description: 'The suffix to check' },
-    ],
+    arguments: [{ name: 'suffix', type: 'String', description: 'The suffix to check' }],
     returns: { type: 'boolean', description: 'true if string ends with suffix' },
     examples: [
       { code: '"hello world".endsWith("world")', output: 'true' },
@@ -369,9 +393,7 @@ export const javaMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.equals(anObject)',
     description: 'Compares this string to the specified object for equality.',
-    arguments: [
-      { name: 'anObject', type: 'Object', description: 'Object to compare' },
-    ],
+    arguments: [{ name: 'anObject', type: 'Object', description: 'Object to compare' }],
     returns: { type: 'boolean', description: 'true if strings are equal' },
     examples: [
       { code: '"hello".equals("hello")', output: 'true' },
@@ -387,9 +409,7 @@ export const javaMethods: Method[] = [
     category: 'String Methods',
     syntax: 'string.equalsIgnoreCase(anotherString)',
     description: 'Compares this string to another string, ignoring case considerations.',
-    arguments: [
-      { name: 'anotherString', type: 'String', description: 'String to compare' },
-    ],
+    arguments: [{ name: 'anotherString', type: 'String', description: 'String to compare' }],
     returns: { type: 'boolean', description: 'true if strings are equal ignoring case' },
     examples: [
       { code: '"Hello".equalsIgnoreCase("hello")', output: 'true' },
@@ -409,12 +429,19 @@ export const javaMethods: Method[] = [
     syntax: 'stream.filter(predicate)',
     description: 'Returns a stream consisting of elements that match the given predicate.',
     arguments: [
-      { name: 'predicate', type: 'Predicate<T>', description: 'Predicate to apply to each element' },
+      {
+        name: 'predicate',
+        type: 'Predicate<T>',
+        description: 'Predicate to apply to each element',
+      },
     ],
     returns: { type: 'Stream<T>', description: 'A stream of matching elements' },
     examples: [
       { code: 'List.of(1, 2, 3, 4).stream().filter(n -> n > 2).toList()', output: '[3, 4]' },
-      { code: 'names.stream().filter(s -> s.startsWith("A")).toList()', output: 'Names starting with A' },
+      {
+        code: 'names.stream().filter(s -> s.startsWith("A")).toList()',
+        output: 'Names starting with A',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1) lazy',
@@ -425,9 +452,14 @@ export const javaMethods: Method[] = [
     name: 'map',
     category: 'Stream API',
     syntax: 'stream.map(function)',
-    description: 'Returns a stream consisting of the results of applying the given function to the elements.',
+    description:
+      'Returns a stream consisting of the results of applying the given function to the elements.',
     arguments: [
-      { name: 'function', type: 'Function<T, R>', description: 'Function to apply to each element' },
+      {
+        name: 'function',
+        type: 'Function<T, R>',
+        description: 'Function to apply to each element',
+      },
     ],
     returns: { type: 'Stream<R>', description: 'A stream of transformed elements' },
     examples: [
@@ -443,14 +475,25 @@ export const javaMethods: Method[] = [
     name: 'flatMap',
     category: 'Stream API',
     syntax: 'stream.flatMap(function)',
-    description: 'Returns a stream consisting of the results of replacing each element with the contents of a mapped stream.',
+    description:
+      'Returns a stream consisting of the results of replacing each element with the contents of a mapped stream.',
     arguments: [
-      { name: 'function', type: 'Function<T, Stream<R>>', description: 'Function producing a stream for each element' },
+      {
+        name: 'function',
+        type: 'Function<T, Stream<R>>',
+        description: 'Function producing a stream for each element',
+      },
     ],
     returns: { type: 'Stream<R>', description: 'A flattened stream' },
     examples: [
-      { code: 'List.of(List.of(1, 2), List.of(3, 4)).stream().flatMap(Collection::stream).toList()', output: '[1, 2, 3, 4]' },
-      { code: 'words.stream().flatMap(s -> Arrays.stream(s.split(""))).toList()', output: 'Individual characters' },
+      {
+        code: 'List.of(List.of(1, 2), List.of(3, 4)).stream().flatMap(Collection::stream).toList()',
+        output: '[1, 2, 3, 4]',
+      },
+      {
+        code: 'words.stream().flatMap(s -> Arrays.stream(s.split(""))).toList()',
+        output: 'Individual characters',
+      },
     ],
     timeComplexity: 'O(n * m)',
     spaceComplexity: 'O(1) lazy',
@@ -464,7 +507,11 @@ export const javaMethods: Method[] = [
     description: 'Performs a reduction on the elements using an associative accumulation function.',
     arguments: [
       { name: 'identity', type: 'T', description: 'Identity value for the accumulator' },
-      { name: 'accumulator', type: 'BinaryOperator<T>', description: 'Associative accumulation function' },
+      {
+        name: 'accumulator',
+        type: 'BinaryOperator<T>',
+        description: 'Associative accumulation function',
+      },
     ],
     returns: { type: 'T | Optional<T>', description: 'Result of the reduction' },
     examples: [
@@ -482,13 +529,20 @@ export const javaMethods: Method[] = [
     syntax: 'stream.collect(collector)',
     description: 'Performs a mutable reduction operation on the elements using a Collector.',
     arguments: [
-      { name: 'collector', type: 'Collector<T, A, R>', description: 'Collector describing the reduction' },
+      {
+        name: 'collector',
+        type: 'Collector<T, A, R>',
+        description: 'Collector describing the reduction',
+      },
     ],
     returns: { type: 'R', description: 'Result of the reduction' },
     examples: [
       { code: 'stream.collect(Collectors.toList())', output: 'List of elements' },
       { code: 'stream.collect(Collectors.joining(", "))', output: 'Joined string' },
-      { code: 'stream.collect(Collectors.groupingBy(Person::getCity))', output: 'Map grouped by city' },
+      {
+        code: 'stream.collect(Collectors.groupingBy(Person::getCity))',
+        output: 'Map grouped by city',
+      },
     ],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
@@ -499,14 +553,23 @@ export const javaMethods: Method[] = [
     name: 'sorted',
     category: 'Stream API',
     syntax: 'stream.sorted() | stream.sorted(comparator)',
-    description: 'Returns a stream with elements sorted according to natural order or the provided comparator.',
+    description:
+      'Returns a stream with elements sorted according to natural order or the provided comparator.',
     arguments: [
-      { name: 'comparator', type: 'Comparator<T>', description: 'Comparator for ordering', optional: true },
+      {
+        name: 'comparator',
+        type: 'Comparator<T>',
+        description: 'Comparator for ordering',
+        optional: true,
+      },
     ],
     returns: { type: 'Stream<T>', description: 'A sorted stream' },
     examples: [
       { code: 'List.of(3, 1, 2).stream().sorted().toList()', output: '[1, 2, 3]' },
-      { code: 'names.stream().sorted(Comparator.reverseOrder()).toList()', output: 'Reverse sorted names' },
+      {
+        code: 'names.stream().sorted(Comparator.reverseOrder()).toList()',
+        output: 'Reverse sorted names',
+      },
     ],
     timeComplexity: 'O(n log n)',
     spaceComplexity: 'O(n)',
@@ -532,7 +595,8 @@ export const javaMethods: Method[] = [
     name: 'findFirst',
     category: 'Stream API',
     syntax: 'stream.findFirst()',
-    description: 'Returns an Optional describing the first element of this stream, or empty if stream is empty.',
+    description:
+      'Returns an Optional describing the first element of this stream, or empty if stream is empty.',
     arguments: [],
     returns: { type: 'Optional<T>', description: 'Optional containing first element or empty' },
     examples: [
@@ -549,9 +613,7 @@ export const javaMethods: Method[] = [
     category: 'Stream API',
     syntax: 'stream.anyMatch(predicate)',
     description: 'Returns whether any elements of this stream match the provided predicate.',
-    arguments: [
-      { name: 'predicate', type: 'Predicate<T>', description: 'Predicate to apply' },
-    ],
+    arguments: [{ name: 'predicate', type: 'Predicate<T>', description: 'Predicate to apply' }],
     returns: { type: 'boolean', description: 'true if any element matches' },
     examples: [
       { code: 'List.of(1, 2, 3).stream().anyMatch(n -> n > 2)', output: 'true' },
@@ -567,9 +629,7 @@ export const javaMethods: Method[] = [
     category: 'Stream API',
     syntax: 'stream.allMatch(predicate)',
     description: 'Returns whether all elements of this stream match the provided predicate.',
-    arguments: [
-      { name: 'predicate', type: 'Predicate<T>', description: 'Predicate to apply' },
-    ],
+    arguments: [{ name: 'predicate', type: 'Predicate<T>', description: 'Predicate to apply' }],
     returns: { type: 'boolean', description: 'true if all elements match' },
     examples: [
       { code: 'List.of(2, 4, 6).stream().allMatch(n -> n % 2 == 0)', output: 'true' },
@@ -595,7 +655,10 @@ export const javaMethods: Method[] = [
     ],
     returns: { type: 'V', description: 'Previous value associated with key, or null' },
     examples: [
-      { code: 'Map<String, Integer> map = new HashMap<>(); map.put("a", 1);', output: 'null (no previous value)' },
+      {
+        code: 'Map<String, Integer> map = new HashMap<>(); map.put("a", 1);',
+        output: 'null (no previous value)',
+      },
       { code: 'map.put("a", 2);', output: '1 (previous value)' },
     ],
     timeComplexity: 'O(1) average',
@@ -607,9 +670,7 @@ export const javaMethods: Method[] = [
     category: 'HashMap Methods',
     syntax: 'map.get(key)',
     description: 'Returns the value to which the specified key is mapped, or null if not present.',
-    arguments: [
-      { name: 'key', type: 'Object', description: 'Key whose value is to be returned' },
-    ],
+    arguments: [{ name: 'key', type: 'Object', description: 'Key whose value is to be returned' }],
     returns: { type: 'V', description: 'Value mapped to key, or null' },
     examples: [
       { code: 'Map.of("a", 1, "b", 2).get("a")', output: '1' },
@@ -643,9 +704,7 @@ export const javaMethods: Method[] = [
     category: 'HashMap Methods',
     syntax: 'map.containsKey(key)',
     description: 'Returns true if this map contains a mapping for the specified key.',
-    arguments: [
-      { name: 'key', type: 'Object', description: 'Key to check' },
-    ],
+    arguments: [{ name: 'key', type: 'Object', description: 'Key to check' }],
     returns: { type: 'boolean', description: 'true if key is present' },
     examples: [
       { code: 'Map.of("a", 1).containsKey("a")', output: 'true' },
@@ -662,9 +721,7 @@ export const javaMethods: Method[] = [
     description: 'Returns a Set view of the keys contained in this map.',
     arguments: [],
     returns: { type: 'Set<K>', description: 'A set view of the keys' },
-    examples: [
-      { code: 'Map.of("a", 1, "b", 2).keySet()', output: 'Set of ["a", "b"]' },
-    ],
+    examples: [{ code: 'Map.of("a", 1, "b", 2).keySet()', output: 'Set of ["a", "b"]' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['values', 'entrySet'],
@@ -676,9 +733,7 @@ export const javaMethods: Method[] = [
     description: 'Returns a Collection view of the values contained in this map.',
     arguments: [],
     returns: { type: 'Collection<V>', description: 'A collection view of the values' },
-    examples: [
-      { code: 'Map.of("a", 1, "b", 2).values()', output: 'Collection of [1, 2]' },
-    ],
+    examples: [{ code: 'Map.of("a", 1, "b", 2).values()', output: 'Collection of [1, 2]' }],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['keySet', 'entrySet'],
@@ -691,7 +746,10 @@ export const javaMethods: Method[] = [
     arguments: [],
     returns: { type: 'Set<Map.Entry<K, V>>', description: 'A set view of the mappings' },
     examples: [
-      { code: 'for (Map.Entry<String, Integer> e : map.entrySet()) { ... }', output: 'Iterate over entries' },
+      {
+        code: 'for (Map.Entry<String, Integer> e : map.entrySet()) { ... }',
+        output: 'Iterate over entries',
+      },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
@@ -701,7 +759,8 @@ export const javaMethods: Method[] = [
     name: 'putIfAbsent',
     category: 'HashMap Methods',
     syntax: 'map.putIfAbsent(key, value)',
-    description: 'If the key is not already associated with a value, associates it with the given value.',
+    description:
+      'If the key is not already associated with a value, associates it with the given value.',
     arguments: [
       { name: 'key', type: 'K', description: 'Key to check' },
       { name: 'value', type: 'V', description: 'Value to associate' },
@@ -727,7 +786,12 @@ export const javaMethods: Method[] = [
     description: 'Sorts the specified array into ascending order.',
     arguments: [
       { name: 'array', type: 'T[]', description: 'Array to be sorted' },
-      { name: 'comparator', type: 'Comparator<T>', description: 'Comparator to determine order', optional: true },
+      {
+        name: 'comparator',
+        type: 'Comparator<T>',
+        description: 'Comparator to determine order',
+        optional: true,
+      },
     ],
     returns: { type: 'void', description: 'Sorts in place' },
     examples: [
@@ -747,10 +811,16 @@ export const javaMethods: Method[] = [
       { name: 'array', type: 'T[]', description: 'Sorted array to search' },
       { name: 'key', type: 'T', description: 'Value to search for' },
     ],
-    returns: { type: 'int', description: 'Index of key if found, otherwise (-(insertion point) - 1)' },
+    returns: {
+      type: 'int',
+      description: 'Index of key if found, otherwise (-(insertion point) - 1)',
+    },
     examples: [
       { code: 'Arrays.binarySearch(new int[]{1, 2, 3, 4}, 3)', output: '2' },
-      { code: 'Arrays.binarySearch(new int[]{1, 2, 4}, 3)', output: '-3 (insertion point would be 2)' },
+      {
+        code: 'Arrays.binarySearch(new int[]{1, 2, 4}, 3)',
+        output: '-3 (insertion point would be 2)',
+      },
     ],
     timeComplexity: 'O(log n)',
     spaceComplexity: 'O(1)',
@@ -762,9 +832,7 @@ export const javaMethods: Method[] = [
     category: 'Arrays Utility',
     syntax: 'Arrays.asList(elements)',
     description: 'Returns a fixed-size list backed by the specified array.',
-    arguments: [
-      { name: 'elements', type: 'T...', description: 'Elements to create list from' },
-    ],
+    arguments: [{ name: 'elements', type: 'T...', description: 'Elements to create list from' }],
     returns: { type: 'List<T>', description: 'A fixed-size list' },
     examples: [
       { code: 'Arrays.asList(1, 2, 3)', output: '[1, 2, 3]' },
@@ -785,9 +853,7 @@ export const javaMethods: Method[] = [
       { name: 'value', type: 'T', description: 'Value to fill with' },
     ],
     returns: { type: 'void', description: 'Modifies array in place' },
-    examples: [
-      { code: 'int[] arr = new int[3]; Arrays.fill(arr, 5);', output: '[5, 5, 5]' },
-    ],
+    examples: [{ code: 'int[] arr = new int[3]; Arrays.fill(arr, 5);', output: '[5, 5, 5]' }],
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     relatedMethods: ['Arrays.setAll', 'Collections.fill'],
@@ -819,9 +885,7 @@ export const javaMethods: Method[] = [
     category: 'Optional Methods',
     syntax: 'Optional.of(value)',
     description: 'Returns an Optional with the specified non-null value.',
-    arguments: [
-      { name: 'value', type: 'T', description: 'Non-null value to wrap' },
-    ],
+    arguments: [{ name: 'value', type: 'T', description: 'Non-null value to wrap' }],
     returns: { type: 'Optional<T>', description: 'An Optional with the value' },
     examples: [
       { code: 'Optional.of("hello")', output: 'Optional[hello]' },
@@ -836,10 +900,9 @@ export const javaMethods: Method[] = [
     name: 'Optional.ofNullable',
     category: 'Optional Methods',
     syntax: 'Optional.ofNullable(value)',
-    description: 'Returns an Optional describing the value if non-null, otherwise returns empty Optional.',
-    arguments: [
-      { name: 'value', type: 'T', description: 'Value to wrap (can be null)' },
-    ],
+    description:
+      'Returns an Optional describing the value if non-null, otherwise returns empty Optional.',
+    arguments: [{ name: 'value', type: 'T', description: 'Value to wrap (can be null)' }],
     returns: { type: 'Optional<T>', description: 'An Optional with value or empty' },
     examples: [
       { code: 'Optional.ofNullable("hello")', output: 'Optional[hello]' },
@@ -855,9 +918,7 @@ export const javaMethods: Method[] = [
     category: 'Optional Methods',
     syntax: 'optional.orElse(other)',
     description: 'Returns the value if present, otherwise returns the specified default value.',
-    arguments: [
-      { name: 'other', type: 'T', description: 'Default value to return' },
-    ],
+    arguments: [{ name: 'other', type: 'T', description: 'Default value to return' }],
     returns: { type: 'T', description: 'The value if present, otherwise default' },
     examples: [
       { code: 'Optional.of("hello").orElse("default")', output: '"hello"' },
@@ -872,13 +933,21 @@ export const javaMethods: Method[] = [
     name: 'orElseGet',
     category: 'Optional Methods',
     syntax: 'optional.orElseGet(supplier)',
-    description: 'Returns the value if present, otherwise invokes the supplier and returns its result.',
+    description:
+      'Returns the value if present, otherwise invokes the supplier and returns its result.',
     arguments: [
-      { name: 'supplier', type: 'Supplier<T>', description: 'Supplier to invoke if value not present' },
+      {
+        name: 'supplier',
+        type: 'Supplier<T>',
+        description: 'Supplier to invoke if value not present',
+      },
     ],
     returns: { type: 'T', description: 'The value if present, otherwise supplier result' },
     examples: [
-      { code: 'Optional.empty().orElseGet(() -> computeDefault())', output: 'Result of computeDefault()' },
+      {
+        code: 'Optional.empty().orElseGet(() -> computeDefault())',
+        output: 'Result of computeDefault()',
+      },
     ],
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',

@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { javascriptProblems } from '../../lib/problems/javascript';
 
 /**
@@ -36,19 +36,22 @@ async function startDrill(page: Page, category?: string): Promise<void> {
   await page.waitForLoadState('networkidle');
 
   // Wait for setup screen
-  const setupScreen = page.locator('[data-testid="drill-setup"]').or(
-    page.getByRole('heading', { name: /select|choose|categories/i })
-  ).or(page.locator('button').filter({ hasText: /start/i }));
+  const setupScreen = page
+    .locator('[data-testid="drill-setup"]')
+    .or(page.getByRole('heading', { name: /select|choose|categories/i }))
+    .or(page.locator('button').filter({ hasText: /start/i }));
 
   await setupScreen.first().waitFor({ state: 'visible', timeout: 10000 });
 
   // If a specific category is requested, try to select it
   if (category) {
-    const categoryButton = page.locator(`[data-category="${category}"]`).or(
-      page.locator(`[data-testid="category-${category.toLowerCase().replace(/\s+/g, '-')}"]`).or(
-        page.locator('button').filter({ hasText: new RegExp(category, 'i') })
-      )
-    );
+    const categoryButton = page
+      .locator(`[data-category="${category}"]`)
+      .or(
+        page
+          .locator(`[data-testid="category-${category.toLowerCase().replace(/\s+/g, '-')}"]`)
+          .or(page.locator('button').filter({ hasText: new RegExp(category, 'i') })),
+      );
 
     if (await categoryButton.first().isVisible()) {
       await categoryButton.first().click();
@@ -56,16 +59,16 @@ async function startDrill(page: Page, category?: string): Promise<void> {
   }
 
   // Click start button
-  const startButton = page.locator('[data-testid="start-drill"]').or(
-    page.getByRole('button', { name: /start|begin|go/i })
-  );
+  const startButton = page
+    .locator('[data-testid="start-drill"]')
+    .or(page.getByRole('button', { name: /start|begin|go/i }));
 
   await startButton.first().click();
 
   // Wait for drill to load
   await page.waitForSelector(
     '[data-testid="drill-problem"], [data-testid="code-input"], input[type="text"], textarea',
-    { timeout: 10000 }
+    { timeout: 10000 },
   );
 }
 
@@ -73,13 +76,13 @@ async function startDrill(page: Page, category?: string): Promise<void> {
  * Get the input field for entering answers
  */
 function getInputField(page: Page) {
-  return page.locator('[data-testid="code-input"]').or(
-    page.locator('[data-testid="answer-input"]').or(
-      page.locator('input[type="text"]').or(
-        page.locator('textarea')
-      )
-    )
-  );
+  return page
+    .locator('[data-testid="code-input"]')
+    .or(
+      page
+        .locator('[data-testid="answer-input"]')
+        .or(page.locator('input[type="text"]').or(page.locator('textarea'))),
+    );
 }
 
 /**
@@ -87,9 +90,9 @@ function getInputField(page: Page) {
  */
 async function getCurrentProblemId(page: Page): Promise<string | null> {
   // Try different ways to get problem ID
-  const problemIdElement = page.locator('[data-testid="problem-id"]').or(
-    page.locator('[data-problem-id]')
-  );
+  const problemIdElement = page
+    .locator('[data-testid="problem-id"]')
+    .or(page.locator('[data-problem-id]'));
 
   if (await problemIdElement.first().isVisible()) {
     const id = await problemIdElement.first().getAttribute('data-problem-id');
@@ -99,7 +102,7 @@ async function getCurrentProblemId(page: Page): Promise<string | null> {
 
   // Try to extract from URL
   const url = page.url();
-  const match = url.match(/problem[=\/]([^&\/]+)/);
+  const match = url.match(/problem[=/]([^&/]+)/);
   if (match) return match[1];
 
   return null;
@@ -112,9 +115,12 @@ async function getCurrentProblemText(page: Page): Promise<string | null> {
   const problemText = page.locator('[data-testid="problem-text"]').or(
     page.locator('[data-testid="problem-description"]').or(
       page.locator('.problem-text').or(
-        page.locator('p').filter({ hasText: /.{20,}/ }).first()
-      )
-    )
+        page
+          .locator('p')
+          .filter({ hasText: /.{20,}/ })
+          .first(),
+      ),
+    ),
   );
 
   if (await problemText.first().isVisible()) {
@@ -128,9 +134,9 @@ async function getCurrentProblemText(page: Page): Promise<string | null> {
  * Skip to next problem
  */
 async function skipProblem(page: Page): Promise<void> {
-  const skipButton = page.locator('[data-testid="skip-button"]').or(
-    page.getByRole('button', { name: /skip|next|pass/i })
-  );
+  const skipButton = page
+    .locator('[data-testid="skip-button"]')
+    .or(page.getByRole('button', { name: /skip|next|pass/i }));
 
   if (await skipButton.first().isVisible()) {
     await skipButton.first().click();
@@ -141,7 +147,10 @@ async function skipProblem(page: Page): Promise<void> {
 /**
  * Submit an answer and wait for feedback
  */
-async function submitAnswer(page: Page, answer: string): Promise<{
+async function submitAnswer(
+  page: Page,
+  answer: string,
+): Promise<{
   isCorrect: boolean;
   feedback: string | null;
   yourOutput: string | null;
@@ -160,47 +169,68 @@ async function submitAnswer(page: Page, answer: string): Promise<{
   await page.waitForTimeout(1000);
 
   // Check for success/error feedback
-  const successFeedback = page.locator('[data-testid="success-feedback"]').or(
-    page.locator('.success').or(
-      page.locator('.correct').or(
-        page.locator('text=/correct|right|good|nice|passed/i')
-      )
-    )
-  );
+  const successFeedback = page
+    .locator('[data-testid="success-feedback"]')
+    .or(
+      page
+        .locator('.success')
+        .or(page.locator('.correct').or(page.locator('text=/correct|right|good|nice|passed/i'))),
+    );
 
-  const errorFeedback = page.locator('[data-testid="error-feedback"]').or(
-    page.locator('.error').or(
-      page.locator('.incorrect').or(
-        page.locator('text=/incorrect|wrong|error|failed/i')
-      )
-    )
-  );
+  const errorFeedback = page
+    .locator('[data-testid="error-feedback"]')
+    .or(
+      page
+        .locator('.error')
+        .or(page.locator('.incorrect').or(page.locator('text=/incorrect|wrong|error|failed/i'))),
+    );
 
   const isCorrect = await successFeedback.first().isVisible();
 
   // Get feedback text
   const feedbackElement = isCorrect ? successFeedback : errorFeedback;
-  const feedback = await feedbackElement.first().textContent().catch(() => null);
+  const feedback = await feedbackElement
+    .first()
+    .textContent()
+    .catch(() => null);
 
   // Get output values
-  const yourOutputElement = page.locator('[data-testid="your-output"]').or(
-    page.locator('#your-output').or(
-      page.locator('.your-output').or(
-        page.locator('text=/your (output|result)/i').locator('xpath=following-sibling::*')
-      )
-    )
-  );
+  const yourOutputElement = page
+    .locator('[data-testid="your-output"]')
+    .or(
+      page
+        .locator('#your-output')
+        .or(
+          page
+            .locator('.your-output')
+            .or(page.locator('text=/your (output|result)/i').locator('xpath=following-sibling::*')),
+        ),
+    );
 
-  const expectedOutputElement = page.locator('[data-testid="expected-output"]').or(
-    page.locator('#expected-output').or(
-      page.locator('.expected-output').or(
-        page.locator('text=/expected (output|result)/i').locator('xpath=following-sibling::*')
-      )
-    )
-  );
+  const expectedOutputElement = page
+    .locator('[data-testid="expected-output"]')
+    .or(
+      page
+        .locator('#expected-output')
+        .or(
+          page
+            .locator('.expected-output')
+            .or(
+              page
+                .locator('text=/expected (output|result)/i')
+                .locator('xpath=following-sibling::*'),
+            ),
+        ),
+    );
 
-  const yourOutput = await yourOutputElement.first().textContent().catch(() => null);
-  const expectedOutput = await expectedOutputElement.first().textContent().catch(() => null);
+  const yourOutput = await yourOutputElement
+    .first()
+    .textContent()
+    .catch(() => null);
+  const expectedOutput = await expectedOutputElement
+    .first()
+    .textContent()
+    .catch(() => null);
 
   return { isCorrect, feedback, yourOutput, expectedOutput };
 }
@@ -218,7 +248,7 @@ async function findProblemById(page: Page, problemId: string): Promise<boolean> 
 
     // Check if problem text matches
     const problemText = await getCurrentProblemText(page);
-    const targetProblem = javascriptProblems.find(p => p.id === problemId);
+    const targetProblem = javascriptProblems.find((p) => p.id === problemId);
 
     if (targetProblem && problemText?.includes(targetProblem.text)) {
       return true;
@@ -227,15 +257,15 @@ async function findProblemById(page: Page, problemId: string): Promise<boolean> 
     await skipProblem(page);
 
     // Check if we've reached results screen (end of drill)
-    const resultsScreen = page.locator('[data-testid="results-screen"]').or(
-      page.locator('text=/results|completed|finished|summary/i')
-    );
+    const resultsScreen = page
+      .locator('[data-testid="results-screen"]')
+      .or(page.locator('text=/results|completed|finished|summary/i'));
 
     if (await resultsScreen.first().isVisible()) {
       // Restart drill
-      const tryAgainButton = page.locator('[data-testid="try-again"]').or(
-        page.getByRole('button', { name: /try again|restart|play again/i })
-      );
+      const tryAgainButton = page
+        .locator('[data-testid="try-again"]')
+        .or(page.getByRole('button', { name: /try again|restart|play again/i }));
 
       if (await tryAgainButton.first().isVisible()) {
         await tryAgainButton.first().click();
@@ -271,7 +301,9 @@ async function navigateToProbleDirect(page: Page, problemId: string): Promise<bo
 test.describe('JavaScript Problems - Comprehensive E2E Tests', () => {
   // Generate a test for each JavaScript problem
   for (const problem of javascriptProblems) {
-    test(`Problem: ${problem.id} - ${problem.title || problem.text.slice(0, 50)}`, async ({ page }) => {
+    test(`Problem: ${problem.id} - ${problem.title || problem.text.slice(0, 50)}`, async ({
+      page,
+    }) => {
       // Clear state
       await page.goto('/');
       await clearLocalStorage(page);
@@ -393,7 +425,9 @@ test.describe('JavaScript Problems - Anti-Hardcode Tests', () => {
       const result = await submitAnswer(page, hardcodedAnswer);
 
       // Should be rejected - look for hardcode error or general rejection
-      const hardcodeError = page.locator('text=/hardcode|must use|provided variables|use the method|literal/i');
+      const hardcodeError = page.locator(
+        'text=/hardcode|must use|provided variables|use the method|literal/i',
+      );
       const isHardcodeRejected = await hardcodeError.isVisible().catch(() => false);
 
       // Either marked incorrect or specific hardcode error
@@ -411,13 +445,7 @@ test.describe('JavaScript Problems - Anti-Hardcode Tests', () => {
     await expect(inputField.first()).toBeVisible({ timeout: 5000 });
 
     // Try common hardcoded outputs
-    const hardcodedValues = [
-      '[2, 4, 6, 8, 10]',
-      '"hello world"',
-      '15',
-      'true',
-      '{ a: 1, b: 2 }',
-    ];
+    const hardcodedValues = ['[2, 4, 6, 8, 10]', '"hello world"', '15', 'true', '{ a: 1, b: 2 }'];
 
     for (const hardcoded of hardcodedValues) {
       await inputField.first().fill('');
@@ -427,21 +455,19 @@ test.describe('JavaScript Problems - Anti-Hardcode Tests', () => {
       await page.waitForTimeout(500);
 
       // Check for rejection
-      const error = page.locator('[data-testid="error-feedback"]').or(
-        page.locator('.error').or(
-          page.locator('text=/incorrect|hardcode|must use/i')
-        )
-      );
+      const error = page
+        .locator('[data-testid="error-feedback"]')
+        .or(page.locator('.error').or(page.locator('text=/incorrect|hardcode|must use/i')));
 
-      const errorVisible = await error.first().isVisible();
+      const _errorVisible = await error.first().isVisible();
 
       // Skip to next problem for next test
       await skipProblem(page);
 
       // Check if we reached end
-      const resultsScreen = page.locator('[data-testid="results-screen"]').or(
-        page.locator('text=/results|completed|finished/i')
-      );
+      const resultsScreen = page
+        .locator('[data-testid="results-screen"]')
+        .or(page.locator('text=/results|completed|finished/i'));
 
       if (await resultsScreen.first().isVisible()) {
         break;
@@ -465,9 +491,9 @@ test.describe('JavaScript Problems - Skip Functionality', () => {
     const initialProblemText = await getCurrentProblemText(page);
 
     // Skip
-    const skipButton = page.locator('[data-testid="skip-button"]').or(
-      page.getByRole('button', { name: /skip|next|pass/i })
-    );
+    const skipButton = page
+      .locator('[data-testid="skip-button"]')
+      .or(page.getByRole('button', { name: /skip|next|pass/i }));
 
     await expect(skipButton.first()).toBeVisible();
     await skipButton.first().click();
@@ -478,9 +504,9 @@ test.describe('JavaScript Problems - Skip Functionality', () => {
     const newProblemText = await getCurrentProblemText(page);
 
     // Either text changed or we reached results
-    const resultsScreen = page.locator('[data-testid="results-screen"]').or(
-      page.locator('text=/results|completed|finished/i')
-    );
+    const resultsScreen = page
+      .locator('[data-testid="results-screen"]')
+      .or(page.locator('text=/results|completed|finished/i'));
 
     const reachedResults = await resultsScreen.first().isVisible();
 
@@ -493,9 +519,9 @@ test.describe('JavaScript Problems - Skip Functionality', () => {
 
     await startDrill(page);
 
-    const skipButton = page.locator('[data-testid="skip-button"]').or(
-      page.getByRole('button', { name: /skip|next|pass/i })
-    );
+    const skipButton = page
+      .locator('[data-testid="skip-button"]')
+      .or(page.getByRole('button', { name: /skip|next|pass/i }));
 
     // Skip 5 problems
     for (let i = 0; i < 5; i++) {
@@ -505,9 +531,9 @@ test.describe('JavaScript Problems - Skip Functionality', () => {
       }
 
       // Check if we reached results
-      const resultsScreen = page.locator('[data-testid="results-screen"]').or(
-        page.locator('text=/results|completed|finished/i')
-      );
+      const resultsScreen = page
+        .locator('[data-testid="results-screen"]')
+        .or(page.locator('text=/results|completed|finished/i'));
 
       if (await resultsScreen.first().isVisible()) {
         break;
@@ -516,7 +542,10 @@ test.describe('JavaScript Problems - Skip Functionality', () => {
 
     // Should have either skipped or reached results
     const drillActive = await getInputField(page).first().isVisible();
-    const resultsVisible = await page.locator('text=/results|completed|finished/i').first().isVisible();
+    const resultsVisible = await page
+      .locator('text=/results|completed|finished/i')
+      .first()
+      .isVisible();
 
     expect(drillActive || resultsVisible).toBeTruthy();
   });
@@ -528,18 +557,20 @@ test.describe('JavaScript Problems - Skip Functionality', () => {
     await startDrill(page);
 
     // Skip
-    const skipButton = page.locator('[data-testid="skip-button"]').or(
-      page.getByRole('button', { name: /skip|next|pass/i })
-    );
+    const skipButton = page
+      .locator('[data-testid="skip-button"]')
+      .or(page.getByRole('button', { name: /skip|next|pass/i }));
 
     await skipButton.first().click();
 
     // Look for sample solution display
-    const sampleSolution = page.locator('[data-testid="sample-solution"]').or(
-      page.locator('.sample-solution').or(
-        page.locator('text=/solution|answer was|correct answer/i')
-      )
-    );
+    const sampleSolution = page
+      .locator('[data-testid="sample-solution"]')
+      .or(
+        page
+          .locator('.sample-solution')
+          .or(page.locator('text=/solution|answer was|correct answer/i')),
+      );
 
     // Sample solution might be shown briefly or on skip
     await page.waitForTimeout(500);
@@ -564,13 +595,9 @@ test.describe('JavaScript Problems - Timer Tests', () => {
 
     await startDrill(page);
 
-    const timer = page.locator('[data-testid="timer"]').or(
-      page.locator('.timer').or(
-        page.locator('time').or(
-          page.locator('text=/\\d+:\\d+/')
-        )
-      )
-    );
+    const timer = page
+      .locator('[data-testid="timer"]')
+      .or(page.locator('.timer').or(page.locator('time').or(page.locator('text=/\\d+:\\d+/'))));
 
     await expect(timer.first()).toBeVisible({ timeout: 5000 });
   });
@@ -581,13 +608,9 @@ test.describe('JavaScript Problems - Timer Tests', () => {
 
     await startDrill(page);
 
-    const timer = page.locator('[data-testid="timer"]').or(
-      page.locator('.timer').or(
-        page.locator('time').or(
-          page.locator('text=/\\d+:\\d+/')
-        )
-      )
-    );
+    const timer = page
+      .locator('[data-testid="timer"]')
+      .or(page.locator('.timer').or(page.locator('time').or(page.locator('text=/\\d+:\\d+/'))));
 
     // Get initial time
     const initialTime = await timer.first().textContent();
@@ -608,11 +631,9 @@ test.describe('JavaScript Problems - Timer Tests', () => {
 
     await startDrill(page);
 
-    const timer = page.locator('[data-testid="timer"]').or(
-      page.locator('.timer').or(
-        page.locator('text=/\\d+:\\d+/')
-      )
-    );
+    const timer = page
+      .locator('[data-testid="timer"]')
+      .or(page.locator('.timer').or(page.locator('text=/\\d+:\\d+/')));
 
     // Timer should be visible
     await expect(timer.first()).toBeVisible();
@@ -628,20 +649,20 @@ test.describe('JavaScript Problems - Timer Tests', () => {
     await expect(timer.first()).toBeVisible();
 
     // Skip to next
-    const skipButton = page.locator('[data-testid="skip-button"]').or(
-      page.getByRole('button', { name: /skip|next|continue/i })
-    );
+    const skipButton = page
+      .locator('[data-testid="skip-button"]')
+      .or(page.getByRole('button', { name: /skip|next|continue/i }));
 
     if (await skipButton.first().isVisible()) {
       await skipButton.first().click();
       await page.waitForTimeout(500);
 
       // Timer should still be visible (unless we hit results)
-      const resultsScreen = page.locator('[data-testid="results-screen"]').or(
-        page.locator('text=/results|completed|finished/i')
-      );
+      const resultsScreen = page
+        .locator('[data-testid="results-screen"]')
+        .or(page.locator('text=/results|completed|finished/i'));
 
-      if (!await resultsScreen.first().isVisible()) {
+      if (!(await resultsScreen.first().isVisible())) {
         await expect(timer.first()).toBeVisible();
       }
     }
@@ -670,20 +691,22 @@ test.describe('JavaScript Problems - Category Tests', () => {
       await page.waitForLoadState('networkidle');
 
       // Try to select specific category
-      const categoryButton = page.locator(`[data-category="${category}"]`).or(
-        page.locator(`[data-testid="category-${category.toLowerCase().replace(/\s+/g, '-')}"]`).or(
-          page.locator('button').filter({ hasText: new RegExp(category, 'i') })
-        )
-      );
+      const categoryButton = page
+        .locator(`[data-category="${category}"]`)
+        .or(
+          page
+            .locator(`[data-testid="category-${category.toLowerCase().replace(/\s+/g, '-')}"]`)
+            .or(page.locator('button').filter({ hasText: new RegExp(category, 'i') })),
+        );
 
       if (await categoryButton.first().isVisible()) {
         await categoryButton.first().click();
       }
 
       // Start drill
-      const startButton = page.locator('[data-testid="start-drill"]').or(
-        page.getByRole('button', { name: /start|begin|go/i })
-      );
+      const startButton = page
+        .locator('[data-testid="start-drill"]')
+        .or(page.getByRole('button', { name: /start|begin|go/i }));
 
       await startButton.first().click();
 
@@ -724,13 +747,17 @@ test.describe('JavaScript Problems - Output Verification', () => {
       }
 
       // Look for expected output display
-      const expectedOutput = page.locator('[data-testid="expected-output"]').or(
-        page.locator('#expected-output').or(
-          page.locator('.expected-output').or(
-            page.locator('text=/expected/i').locator('xpath=following-sibling::*')
-          )
-        )
-      );
+      const expectedOutput = page
+        .locator('[data-testid="expected-output"]')
+        .or(
+          page
+            .locator('#expected-output')
+            .or(
+              page
+                .locator('.expected-output')
+                .or(page.locator('text=/expected/i').locator('xpath=following-sibling::*')),
+            ),
+        );
 
       if (await expectedOutput.first().isVisible()) {
         const displayedExpected = await expectedOutput.first().textContent();
@@ -742,7 +769,7 @@ test.describe('JavaScript Problems - Output Verification', () => {
           // Check if displayed output contains expected value
           expect(
             displayedExpected.includes(expectedString) ||
-            displayedExpected.replace(/\s/g, '') === expectedString.replace(/\s/g, '')
+              displayedExpected.replace(/\s/g, '') === expectedString.replace(/\s/g, ''),
           ).toBeTruthy();
         }
       }
@@ -758,7 +785,7 @@ test.describe('JavaScript Problems - Output Verification', () => {
           // String comparison fallback
           const expectedStr = JSON.stringify(problem.expected);
           expect(result.yourOutput.replace(/\s/g, '')).toContain(
-            expectedStr.replace(/[\s"]/g, '').slice(0, 10)
+            expectedStr.replace(/[\s"]/g, '').slice(0, 10),
           );
         }
       }
@@ -802,7 +829,7 @@ test.describe('JavaScript Problems - Edge Cases', () => {
     await expect(inputField.first()).toBeVisible();
 
     // Create very long input
-    const longInput = 'arr.' + 'filter(x => x > 0).map(x => x * 2).'.repeat(20) + 'slice(0, 10)';
+    const longInput = `arr.${'filter(x => x > 0).map(x => x * 2).'.repeat(20)}slice(0, 10)`;
 
     await inputField.first().fill(longInput);
     await inputField.first().press('Enter');
@@ -848,11 +875,9 @@ test.describe('JavaScript Problems - Edge Cases', () => {
     // Should show error feedback, not crash
     await page.waitForTimeout(1000);
 
-    const errorFeedback = page.locator('[data-testid="error-feedback"]').or(
-      page.locator('.error').or(
-        page.locator('text=/error|syntax|invalid/i')
-      )
-    );
+    const errorFeedback = page
+      .locator('[data-testid="error-feedback"]')
+      .or(page.locator('.error').or(page.locator('text=/error|syntax|invalid/i')));
 
     // Either shows error or app is still functional
     const errorShown = await errorFeedback.first().isVisible();
@@ -881,7 +906,7 @@ test.describe('JavaScript Problems - Statistics', () => {
   });
 
   test('should have unique problem IDs', async () => {
-    const ids = javascriptProblems.map(p => p.id);
+    const ids = javascriptProblems.map((p) => p.id);
     const uniqueIds = new Set(ids);
     expect(uniqueIds.size).toBe(ids.length);
   });
@@ -907,9 +932,9 @@ test.describe('JavaScript Problems - Statistics', () => {
 
   test('should have sufficient problems per difficulty', async () => {
     const byDifficulty = {
-      easy: javascriptProblems.filter(p => p.difficulty === 'easy').length,
-      medium: javascriptProblems.filter(p => p.difficulty === 'medium').length,
-      hard: javascriptProblems.filter(p => p.difficulty === 'hard').length,
+      easy: javascriptProblems.filter((p) => p.difficulty === 'easy').length,
+      medium: javascriptProblems.filter((p) => p.difficulty === 'medium').length,
+      hard: javascriptProblems.filter((p) => p.difficulty === 'hard').length,
     };
 
     // Should have at least some problems at each difficulty

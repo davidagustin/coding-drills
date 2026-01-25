@@ -5,24 +5,23 @@
  * aggregates results, and provides comprehensive testing capabilities.
  */
 
+import {
+  deepEqual,
+  detectCheating,
+  executeJavaScript,
+  executeJavaScriptAsync,
+  formatValue,
+} from './codeRunner';
 import type {
-  LanguageId,
   ExecutableProblem,
+  LanguageId,
+  ProblemVariation,
   TestCase,
+  TestCaseResult,
   TestRunnerConfig,
   TestRunResults,
   ValidationResult,
-  TestCaseResult,
-  ProblemVariation,
 } from './types';
-
-import {
-  executeJavaScript,
-  executeJavaScriptAsync,
-  deepEqual,
-  detectCheating,
-  formatValue,
-} from './codeRunner';
 
 // ============================================================
 // Default Configuration
@@ -47,7 +46,7 @@ export function runTestCase(
   setupCode: string,
   userCode: string,
   testCase: TestCase,
-  timeout: number = 5000
+  timeout: number = 5000,
 ): TestCaseResult {
   const startTime = performance.now();
 
@@ -104,7 +103,7 @@ export async function runTestCaseAsync(
   setupCode: string,
   userCode: string,
   testCase: TestCase,
-  timeout: number = 5000
+  timeout: number = 5000,
 ): Promise<TestCaseResult> {
   const startTime = performance.now();
   const testSetup = buildTestSetup(setupCode, testCase);
@@ -157,7 +156,7 @@ export function runAllTestCases(
   setupCode: string,
   userCode: string,
   testCases: TestCase[],
-  config: Partial<TestRunnerConfig> = {}
+  config: Partial<TestRunnerConfig> = {},
 ): ValidationResult {
   const startTime = performance.now();
   const mergedConfig = { ...DEFAULT_CONFIG, ...config };
@@ -169,7 +168,7 @@ export function runAllTestCases(
       setupCode,
       userCode,
       testCase,
-      mergedConfig.maxExecutionTime
+      mergedConfig.maxExecutionTime,
     );
     results.push(result);
   }
@@ -215,19 +214,13 @@ export async function runAllTestCasesAsync(
   setupCode: string,
   userCode: string,
   testCases: TestCase[],
-  config: Partial<TestRunnerConfig> = {}
+  config: Partial<TestRunnerConfig> = {},
 ): Promise<ValidationResult> {
   const startTime = performance.now();
   const mergedConfig = { ...DEFAULT_CONFIG, ...config };
 
   const resultPromises = testCases.map((testCase) =>
-    runTestCaseAsync(
-      language,
-      setupCode,
-      userCode,
-      testCase,
-      mergedConfig.maxExecutionTime
-    )
+    runTestCaseAsync(language, setupCode, userCode, testCase, mergedConfig.maxExecutionTime),
   );
 
   const results = await Promise.all(resultPromises);
@@ -324,7 +317,7 @@ class SeededRandom {
  */
 export function generateProblemVariation(
   problem: ExecutableProblem,
-  seed?: number
+  seed?: number,
 ): ProblemVariation {
   const actualSeed = seed ?? Date.now();
   const rng = new SeededRandom(actualSeed);
@@ -352,22 +345,14 @@ export function generateProblemVariation(
 /**
  * Generate a varied version of a test case
  */
-function generateVariedTestCase(
-  original: TestCase,
-  rng: SeededRandom,
-  index: number
-): TestCase {
-  const variedInput: unknown[] = original.input.map((input) =>
-    varyValue(input, rng)
-  );
+function generateVariedTestCase(original: TestCase, rng: SeededRandom, index: number): TestCase {
+  const variedInput: unknown[] = original.input.map((input) => varyValue(input, rng));
 
   return {
     id: `${original.id}-varied-${index}`,
     input: variedInput,
     expected: original.expected, // Expected will need to be recalculated by actual execution
-    description: original.description
-      ? `${original.description} (varied)`
-      : undefined,
+    description: original.description ? `${original.description} (varied)` : undefined,
     isHidden: original.isHidden,
   };
 }
@@ -445,7 +430,7 @@ export async function runMultipleRounds(
   language: LanguageId,
   problem: ExecutableProblem,
   userCode: string,
-  config: Partial<TestRunnerConfig> = {}
+  config: Partial<TestRunnerConfig> = {},
 ): Promise<TestRunResults> {
   const mergedConfig = { ...DEFAULT_CONFIG, ...config };
   const runCount = mergedConfig.runCount;
@@ -458,7 +443,7 @@ export async function runMultipleRounds(
     problem.setupCode,
     userCode,
     problem.testCases,
-    mergedConfig
+    mergedConfig,
   );
   results.push(originalResult);
   totalTime += originalResult.executionTime || 0;
@@ -474,7 +459,7 @@ export async function runMultipleRounds(
       variation.setupCode,
       userCode,
       variation.testCases,
-      mergedConfig
+      mergedConfig,
     );
     results.push(variedResult);
     totalTime += variedResult.executionTime || 0;
@@ -517,7 +502,7 @@ export async function validateProblemSolution(
   language: LanguageId,
   problem: ExecutableProblem,
   userCode: string,
-  config: Partial<TestRunnerConfig> = {}
+  config: Partial<TestRunnerConfig> = {},
 ): Promise<ValidationResult> {
   const startTime = performance.now();
   const mergedConfig = { ...DEFAULT_CONFIG, ...config };
@@ -546,7 +531,7 @@ export async function validateProblemSolution(
     problem.setupCode,
     userCode,
     problem.testCases,
-    mergedConfig
+    mergedConfig,
   );
 
   // Add anti-cheat flags if any warnings exist
@@ -691,18 +676,14 @@ export function calculateTestStats(results: ValidationResult[]): {
       totalPassed: acc.totalPassed + r.passed,
       totalFailed: acc.totalFailed + r.failed,
     }),
-    { totalTests: 0, totalPassed: 0, totalFailed: 0 }
+    { totalTests: 0, totalPassed: 0, totalFailed: 0 },
   );
 
   // Filter and map execution times using nullish coalescing
-  const times = results
-    .map((r) => r.executionTime ?? 0)
-    .filter((t) => t > 0);
+  const times = results.map((r) => r.executionTime ?? 0).filter((t) => t > 0);
 
   // Calculate time stats with early returns for empty arrays
-  const averageTime = times.length > 0
-    ? times.reduce((a, b) => a + b, 0) / times.length
-    : 0;
+  const averageTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
 
   // Use spread with fallback for empty arrays
   const minTime = times.length > 0 ? Math.min(...times) : 0;

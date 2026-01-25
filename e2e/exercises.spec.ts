@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 /**
  * E2E Tests for Exercises Page
@@ -119,9 +119,12 @@ test.describe('Exercises Page - Categories', () => {
     const initialCount = await initialCards.count();
 
     // Find a category button (not "All")
-    const categoryButtons = page.locator('button').filter({ hasText: /^(?!all)/i }).filter({ hasText: /\(\d+\)$/ });
+    const categoryButtons = page
+      .locator('button')
+      .filter({ hasText: /^(?!all)/i })
+      .filter({ hasText: /\(\d+\)$/ });
 
-    if (await categoryButtons.count() > 0) {
+    if ((await categoryButtons.count()) > 0) {
       // Click first category
       await categoryButtons.first().click();
       await page.waitForTimeout(300);
@@ -138,9 +141,12 @@ test.describe('Exercises Page - Categories', () => {
 
   test('should show all exercises when "All" is selected', async ({ page }) => {
     // First filter by a specific category
-    const categoryButtons = page.locator('button').filter({ hasText: /^(?!all)/i }).filter({ hasText: /\(\d+\)$/ });
+    const categoryButtons = page
+      .locator('button')
+      .filter({ hasText: /^(?!all)/i })
+      .filter({ hasText: /\(\d+\)$/ });
 
-    if (await categoryButtons.count() > 0) {
+    if ((await categoryButtons.count()) > 0) {
       await categoryButtons.first().click();
       await page.waitForTimeout(300);
 
@@ -196,12 +202,12 @@ test.describe('Exercises Page - Exercise Cards', () => {
   test('should display difficulty badges on cards', async ({ page }) => {
     const cards = await getExerciseCards(page);
 
-    if (await cards.count() > 0) {
+    if ((await cards.count()) > 0) {
       const firstCard = cards.first();
 
       // Look for difficulty badge (beginner, intermediate, advanced)
       const difficultyBadge = firstCard.locator('span').filter({
-        hasText: /beginner|intermediate|advanced/i
+        hasText: /beginner|intermediate|advanced/i,
       });
 
       await expect(difficultyBadge.first()).toBeVisible();
@@ -211,7 +217,7 @@ test.describe('Exercises Page - Exercise Cards', () => {
   test('should display exercise descriptions', async ({ page }) => {
     const cards = await getExerciseCards(page);
 
-    if (await cards.count() > 0) {
+    if ((await cards.count()) > 0) {
       const firstCard = cards.first();
 
       // Card should have a description paragraph
@@ -223,16 +229,16 @@ test.describe('Exercises Page - Exercise Cards', () => {
   test('should display concept tags on cards', async ({ page }) => {
     const cards = await getExerciseCards(page);
 
-    if (await cards.count() > 0) {
+    if ((await cards.count()) > 0) {
       const firstCard = cards.first();
 
       // Should have concept tags
       const concepts = firstCard.locator('span').filter({
-        hasText: /loop|array|recursion|iteration|traverse/i
+        hasText: /loop|array|recursion|iteration|traverse/i,
       });
 
       // At least some cards should have concepts
-      const hasConceptTags = await concepts.count() > 0;
+      const hasConceptTags = (await concepts.count()) > 0;
       expect(hasConceptTags || true).toBeTruthy(); // Soft check
     }
   });
@@ -240,7 +246,7 @@ test.describe('Exercises Page - Exercise Cards', () => {
   test('should navigate to exercise detail on click', async ({ page }) => {
     const cards = await getExerciseCards(page);
 
-    if (await cards.count() > 0) {
+    if ((await cards.count()) > 0) {
       // Click first exercise card
       await cards.first().click();
 
@@ -252,7 +258,7 @@ test.describe('Exercises Page - Exercise Cards', () => {
   test('should show hover effect on cards', async ({ page }) => {
     const cards = await getExerciseCards(page);
 
-    if (await cards.count() > 0) {
+    if ((await cards.count()) > 0) {
       const firstCard = cards.first();
 
       // Hover over card
@@ -278,7 +284,7 @@ test.describe('Exercises Page - Progress', () => {
 
   test('should start with zero completed exercises', async ({ page }) => {
     // Check completed count is 0
-    const completedStat = page.locator('text=/^0$/').first();
+    const _completedStat = page.locator('text=/^0$/').first();
 
     // Either shows 0 or shows 0%
     const zeroIndicator = page.getByText('0').first();
@@ -301,7 +307,7 @@ test.describe('Exercises Page - Progress', () => {
     // Set some mock progress in localStorage
     await page.evaluate(() => {
       const progress = {
-        'js-skip-every-other': { completed: true, attempts: 2 }
+        'js-skip-every-other': { completed: true, attempts: 2 },
       };
       localStorage.setItem('coding-drills-exercises-javascript', JSON.stringify(progress));
     });
@@ -319,7 +325,7 @@ test.describe('Exercises Page - Progress', () => {
     // Set progress for an exercise
     await page.evaluate(() => {
       const progress = {
-        'js-skip-every-other': { completed: true, attempts: 1, bestTime: 60 }
+        'js-skip-every-other': { completed: true, attempts: 1, bestTime: 60 },
       };
       localStorage.setItem('coding-drills-exercises-javascript', JSON.stringify(progress));
     });
@@ -331,7 +337,7 @@ test.describe('Exercises Page - Progress', () => {
     const checkIcon = page.locator('svg').filter({ has: page.locator('path[d*="4.5 12.75"]') });
 
     // May or may not be visible depending on data
-    const hasCompletedIndicator = await checkIcon.count() > 0;
+    const hasCompletedIndicator = (await checkIcon.count()) > 0;
     expect(hasCompletedIndicator || true).toBeTruthy();
   });
 });
@@ -363,7 +369,7 @@ test.describe('Exercises Page - Cross-Language', () => {
     const comingSoon = page.getByText(/coming soon/i);
     const exercises = page.getByRole('heading', { name: /algorithm exercises/i });
 
-    const hasContent = await comingSoon.isVisible() || await exercises.isVisible();
+    const hasContent = (await comingSoon.isVisible()) || (await exercises.isVisible());
     expect(hasContent).toBeTruthy();
   });
 });
@@ -404,7 +410,7 @@ test.describe('Exercises Page - Responsive Design', () => {
 
     // Cards should still be visible
     const cards = await getExerciseCards(page);
-    if (await cards.count() > 0) {
+    if ((await cards.count()) > 0) {
       await expect(cards.first()).toBeVisible();
     }
   });

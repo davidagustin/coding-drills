@@ -7,20 +7,19 @@
  * Architecture Pattern: Repository Pattern
  */
 
-import type {
-  UserProgress,
-  LanguageProgress,
-  SessionResult,
-  CategoryProgress,
-  ProblemDifficulty,
-} from '../../core/types';
-
 import {
-  STORAGE_KEYS,
-  SESSION_LIMITS,
   DEFAULT_DRILL_STATS,
   DEFAULT_QUIZ_STATS,
+  SESSION_LIMITS,
+  STORAGE_KEYS,
 } from '../../core/constants';
+import type {
+  CategoryProgress,
+  LanguageProgress,
+  ProblemDifficulty,
+  SessionResult,
+  UserProgress,
+} from '../../core/types';
 
 import { getStorageAdapter, type IStorageAdapter } from './StorageAdapter';
 
@@ -87,10 +86,7 @@ export class ProgressService {
   saveLanguageProgress(language: string, progress: LanguageProgress): boolean {
     const allProgress = this.getAllProgress();
     allProgress[language] = progress;
-    return this.adapter.setItem(
-      STORAGE_KEYS.PROGRESS,
-      JSON.stringify(allProgress)
-    );
+    return this.adapter.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(allProgress));
   }
 
   /**
@@ -100,10 +96,7 @@ export class ProgressService {
     if (language) {
       const allProgress = this.getAllProgress();
       delete allProgress[language];
-      return this.adapter.setItem(
-        STORAGE_KEYS.PROGRESS,
-        JSON.stringify(allProgress)
-      );
+      return this.adapter.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(allProgress));
     }
     return this.adapter.removeItem(STORAGE_KEYS.PROGRESS);
   }
@@ -125,10 +118,7 @@ export class ProgressService {
     if (result.correct) {
       drillStats.totalCorrect += 1;
       drillStats.currentStreak += 1;
-      drillStats.bestStreak = Math.max(
-        drillStats.bestStreak,
-        drillStats.currentStreak
-      );
+      drillStats.bestStreak = Math.max(drillStats.bestStreak, drillStats.currentStreak);
     } else {
       drillStats.currentStreak = 0;
     }
@@ -157,10 +147,7 @@ export class ProgressService {
   /**
    * Save a complete drill session
    */
-  saveDrillSession(
-    language: string,
-    session: Omit<SessionResult, 'id' | 'date'>
-  ): boolean {
+  saveDrillSession(language: string, session: Omit<SessionResult, 'id' | 'date'>): boolean {
     const progress = this.getLanguageProgress(language);
 
     const sessionResult: SessionResult = {
@@ -171,12 +158,10 @@ export class ProgressService {
 
     // Add to recent sessions (keep limited history)
     progress.drillStats.recentSessions.unshift(sessionResult);
-    if (
-      progress.drillStats.recentSessions.length > SESSION_LIMITS.MAX_RECENT_SESSIONS
-    ) {
+    if (progress.drillStats.recentSessions.length > SESSION_LIMITS.MAX_RECENT_SESSIONS) {
       progress.drillStats.recentSessions = progress.drillStats.recentSessions.slice(
         0,
-        SESSION_LIMITS.MAX_RECENT_SESSIONS
+        SESSION_LIMITS.MAX_RECENT_SESSIONS,
       );
     }
 
@@ -211,15 +196,11 @@ export class ProgressService {
     // Update totals
     quizStats.totalPlayed += 1;
     quizStats.totalQuestions += result.totalQuestions;
-    quizStats.totalCorrect += Math.round(
-      result.totalQuestions * result.accuracy
-    );
+    quizStats.totalCorrect += Math.round(result.totalQuestions * result.accuracy);
 
     // Recalculate average accuracy
     quizStats.avgAccuracy =
-      quizStats.totalQuestions > 0
-        ? quizStats.totalCorrect / quizStats.totalQuestions
-        : 0;
+      quizStats.totalQuestions > 0 ? quizStats.totalCorrect / quizStats.totalQuestions : 0;
 
     progress.lastPlayed = this.getCurrentDate();
     return this.saveLanguageProgress(language, progress);
@@ -245,7 +226,7 @@ export class ProgressService {
     const progress = this.getLanguageProgress(language);
     return progress.drillStats.recentSessions.reduce(
       (total, session) => total + session.duration,
-      0
+      0,
     );
   }
 
@@ -255,10 +236,7 @@ export class ProgressService {
   getLanguagesByRecent(): string[] {
     const allProgress = this.getAllProgress();
     return Object.entries(allProgress)
-      .sort(
-        ([, a], [, b]) =>
-          new Date(b.lastPlayed).getTime() - new Date(a.lastPlayed).getTime()
-      )
+      .sort(([, a], [, b]) => new Date(b.lastPlayed).getTime() - new Date(a.lastPlayed).getTime())
       .map(([lang]) => lang);
   }
 

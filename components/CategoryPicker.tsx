@@ -42,7 +42,7 @@ export function CategoryPicker({
         onChange([...selected, categoryId]);
       }
     },
-    [selected, onChange]
+    [selected, onChange],
   );
 
   return (
@@ -59,6 +59,7 @@ export function CategoryPicker({
         </span>
 
         <button
+          type="button"
           onClick={handleToggleAll}
           className={`
             px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200
@@ -80,6 +81,7 @@ export function CategoryPicker({
 
           return (
             <button
+              type="button"
               key={category.id}
               onClick={() => handleToggleCategory(category.id)}
               className={`
@@ -128,6 +130,7 @@ export function CategoryPicker({
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"

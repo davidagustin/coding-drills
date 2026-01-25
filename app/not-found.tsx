@@ -33,9 +33,7 @@ export default function NotFound() {
 
         {/* Message */}
         <div className="space-y-3">
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-100">
-            Page Not Found
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-100">Page Not Found</h2>
           <p className="text-gray-400 text-lg">
             Looks like this code path doesn&apos;t exist.
             <br />
@@ -62,6 +60,7 @@ export default function NotFound() {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

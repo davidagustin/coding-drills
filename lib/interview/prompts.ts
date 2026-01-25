@@ -188,9 +188,10 @@ export function buildAdaptiveHintPrompt(config: InterviewConfig): string {
     hard: 'Be minimal with hints. Users should deeply explore before assistance.',
   };
 
-  const hintAggressiveness = config.strugglingIndicators > 2
-    ? 'User has been stuck for a while. Provide a more substantial hint.'
-    : 'Maintain standard hint progression.';
+  const hintAggressiveness =
+    config.strugglingIndicators > 2
+      ? 'User has been stuck for a while. Provide a more substantial hint.'
+      : 'Maintain standard hint progression.';
 
   return `${AI_HINTS_SYSTEM_PROMPT}
 
@@ -224,9 +225,7 @@ export function createProblemContext(problem: AlgorithmProblem): string {
 
   const constraintsText = problem.constraints.map((c) => `- ${c}`).join('\n');
 
-  const patternsForContext = problem.patterns
-    .map((p) => PATTERN_DISPLAY_NAMES[p] || p)
-    .join(', ');
+  const patternsForContext = problem.patterns.map((p) => PATTERN_DISPLAY_NAMES[p] || p).join(', ');
 
   let context = `## Current Problem: ${problem.title}
 
@@ -297,10 +296,7 @@ const PATTERN_DISPLAY_NAMES: Record<AlgorithmPattern, string> = {
  * Guide for when to use each algorithmic pattern.
  * This helps the AI provide appropriate hints based on problem characteristics.
  */
-export const PATTERN_RECOGNITION_GUIDE: Record<
-  AlgorithmPattern,
-  PatternGuide
-> = {
+export const PATTERN_RECOGNITION_GUIDE: Record<AlgorithmPattern, PatternGuide> = {
   'hash-table': {
     pattern: 'hash-table',
     displayName: 'Hash Table / Hash Map',
@@ -1002,7 +998,7 @@ export const CONVERSATION_STARTERS: string[] = [
 
   "Good to meet you! Please read through the problem statement. A good first step is to make sure we understand exactly what's being asked. Any initial questions?",
 
-  "Hi! Take a moment to read the problem carefully. I find it helps to think about what the inputs look like and what the expected outputs should be. Let me know when you want to discuss.",
+  'Hi! Take a moment to read the problem carefully. I find it helps to think about what the inputs look like and what the expected outputs should be. Let me know when you want to discuss.',
 
   "Welcome to your practice session! Please review the problem. Before jumping into a solution, let's make sure we're clear on the requirements. Ready when you are.",
 ];
@@ -1422,7 +1418,7 @@ export const HINT_PROGRESSIONS: Record<AlgorithmPattern, HintProgression> = {
       },
       {
         level: 3,
-        hint: "Track how many dependencies each item has. When that count reaches zero, the item is ready. Use a queue to process ready items.",
+        hint: 'Track how many dependencies each item has. When that count reaches zero, the item is ready. Use a queue to process ready items.',
         context: 'Describing indegree tracking',
       },
       {
@@ -1464,7 +1460,7 @@ export const HINT_PROGRESSIONS: Record<AlgorithmPattern, HintProgression> = {
     hints: [
       {
         level: 1,
-        hint: "Before coding, think mathematically. Is there a formula or pattern that describes the answer?",
+        hint: 'Before coding, think mathematically. Is there a formula or pattern that describes the answer?',
         context: 'Encouraging mathematical thinking',
       },
       {
@@ -1479,7 +1475,7 @@ export const HINT_PROGRESSIONS: Record<AlgorithmPattern, HintProgression> = {
       },
       {
         level: 4,
-        hint: "Sometimes the best algorithm is a mathematical formula. Think about whether you can compute the answer directly rather than simulating. Watch for integer overflow if numbers are large.",
+        hint: 'Sometimes the best algorithm is a mathematical formula. Think about whether you can compute the answer directly rather than simulating. Watch for integer overflow if numbers are large.',
         context: 'Direct computation suggestion with warning',
       },
     ],
@@ -1500,12 +1496,12 @@ export const HINT_PROGRESSIONS: Record<AlgorithmPattern, HintProgression> = {
       },
       {
         level: 3,
-        hint: "After sorting, adjacent elements have some relationship. What can you conclude about them? What becomes easier to find or compare?",
+        hint: 'After sorting, adjacent elements have some relationship. What can you conclude about them? What becomes easier to find or compare?',
         context: 'Highlighting post-sort properties',
       },
       {
         level: 4,
-        hint: "Sorting in O(n log n) is often a worthwhile preprocessing step. Consider custom comparators for complex criteria. Think about what the sorted order tells you.",
+        hint: 'Sorting in O(n log n) is often a worthwhile preprocessing step. Consider custom comparators for complex criteria. Think about what the sorted order tells you.',
         context: 'Cost-benefit and custom sorting',
       },
     ],
@@ -1526,7 +1522,7 @@ export const HINT_PROGRESSIONS: Record<AlgorithmPattern, HintProgression> = {
       },
       {
         level: 3,
-        hint: "Consider using multiple pointers: one to track the current node, another to track the previous, and maybe a dummy head to simplify edge cases.",
+        hint: 'Consider using multiple pointers: one to track the current node, another to track the previous, and maybe a dummy head to simplify edge cases.',
         context: 'Suggesting pointer strategies',
       },
       {
@@ -1616,10 +1612,7 @@ export function getRandomConversationStarter(): string {
 /**
  * Gets hints for a specific pattern at a given level
  */
-export function getHintForPattern(
-  pattern: AlgorithmPattern,
-  level: number
-): string | null {
+export function getHintForPattern(pattern: AlgorithmPattern, level: number): string | null {
   const progression = HINT_PROGRESSIONS[pattern];
   if (!progression) return null;
 
@@ -1630,10 +1623,7 @@ export function getHintForPattern(
 /**
  * Gets the next available hint level for a pattern
  */
-export function getNextHintLevel(
-  pattern: AlgorithmPattern,
-  currentLevel: number
-): number | null {
+export function getNextHintLevel(pattern: AlgorithmPattern, currentLevel: number): number | null {
   const progression = HINT_PROGRESSIONS[pattern];
   if (!progression) return null;
 
@@ -1659,33 +1649,33 @@ export function identifyPatternsFromTags(tags: string[]): AlgorithmPattern[] {
   const tagSet = new Set(tags.map((t) => t.toLowerCase()));
 
   const tagToPattern: Record<string, AlgorithmPattern> = {
-    'hash': 'hash-table',
-    'hashmap': 'hash-table',
+    hash: 'hash-table',
+    hashmap: 'hash-table',
     'hash map': 'hash-table',
-    'hashtable': 'hash-table',
-    'dictionary': 'hash-table',
+    hashtable: 'hash-table',
+    dictionary: 'hash-table',
     'two pointers': 'two-pointers',
     'two-pointers': 'two-pointers',
     'sliding window': 'sliding-window',
     'sliding-window': 'sliding-window',
-    'bfs': 'bfs',
+    bfs: 'bfs',
     'breadth-first': 'bfs',
     'level order': 'bfs',
-    'dfs': 'dfs',
+    dfs: 'dfs',
     'depth-first': 'dfs',
-    'recursion': 'dfs',
-    'dp': 'dynamic-programming',
+    recursion: 'dfs',
+    dp: 'dynamic-programming',
     'dynamic programming': 'dynamic-programming',
-    'memoization': 'dynamic-programming',
+    memoization: 'dynamic-programming',
     'binary search': 'binary-search',
     'binary-search': 'binary-search',
-    'stack': 'stack',
-    'heap': 'heap',
+    stack: 'stack',
+    heap: 'heap',
     'priority queue': 'heap',
-    'greedy': 'greedy',
-    'backtracking': 'backtracking',
+    greedy: 'greedy',
+    backtracking: 'backtracking',
     'divide and conquer': 'divide-and-conquer',
-    'trie': 'trie',
+    trie: 'trie',
     'prefix tree': 'trie',
     'union find': 'union-find',
     'union-find': 'union-find',
@@ -1694,21 +1684,21 @@ export function identifyPatternsFromTags(tags: string[]): AlgorithmPattern[] {
     'monotonic-stack': 'monotonic-stack',
     'topological sort': 'topological-sort',
     'topological-sort': 'topological-sort',
-    'bit': 'bit-manipulation',
+    bit: 'bit-manipulation',
     'bit manipulation': 'bit-manipulation',
-    'bitwise': 'bit-manipulation',
-    'math': 'math',
-    'mathematical': 'math',
+    bitwise: 'bit-manipulation',
+    math: 'math',
+    mathematical: 'math',
     'number theory': 'math',
-    'sorting': 'sorting',
-    'sort': 'sorting',
+    sorting: 'sorting',
+    sort: 'sorting',
     'linked list': 'linked-list',
     'linked-list': 'linked-list',
-    'tree': 'tree',
+    tree: 'tree',
     'binary tree': 'tree',
-    'bst': 'tree',
-    'graph': 'graph',
-    'network': 'graph',
+    bst: 'tree',
+    graph: 'graph',
+    network: 'graph',
   };
 
   for (const tag of tagSet) {
@@ -1738,13 +1728,13 @@ export function getFollowUpQuestion(
     | 'missing-complexity'
     | 'no-edge-cases'
     | 'stuck'
-    | 'good-progress'
+    | 'good-progress',
 ): string {
   const followUps: Record<string, string[]> = {
     'vague-approach': [
       "That's a start. Can you be more specific about how you'd implement that step?",
       'I want to make sure I understand. Can you walk me through what happens with a concrete example?',
-      "What data structure would you use for that, and why?",
+      'What data structure would you use for that, and why?',
       "Let's break that down further. What's the very first thing you'd do?",
     ],
     'missing-complexity': [
@@ -1759,15 +1749,15 @@ export function getFollowUpQuestion(
       'What if the input has only one element?',
       'Are there any inputs that might break your approach?',
     ],
-    'stuck': [
+    stuck: [
       "Let's step back. What's the key insight we need here?",
       'What information would help you make progress?',
-      "Is there a simpler version of this problem you could solve first?",
+      'Is there a simpler version of this problem you could solve first?',
       'What patterns have you seen in similar problems?',
     ],
     'good-progress': [
       'Excellent! Shall we trace through an example to verify?',
-      "Great thinking. Can you think of any follow-up questions an interviewer might ask?",
+      'Great thinking. Can you think of any follow-up questions an interviewer might ask?',
       'Nice! How would you modify this if the constraints changed?',
       "That's solid. Let's make sure it handles all the edge cases.",
     ],

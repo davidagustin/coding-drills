@@ -24,9 +24,7 @@ export const cProblems: Problem[] = [
       'strlen returns the number of characters before null terminator',
       'Return type is size_t',
     ],
-    validPatterns: [
-      /strlen\s*\(\s*str\s*\)/,
-    ],
+    validPatterns: [/strlen\s*\(\s*str\s*\)/],
     tags: ['strlen', 'string.h'],
   },
   {
@@ -39,13 +37,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar src[] = "Hello";\nchar dest[20];',
     expected: 'strcpy(dest, src)',
     sample: 'strcpy(dest, src)',
-    hints: [
-      'strcpy(destination, source)',
-      'Destination must have enough space',
-    ],
-    validPatterns: [
-      /strcpy\s*\(\s*dest\s*,\s*src\s*\)/,
-    ],
+    hints: ['strcpy(destination, source)', 'Destination must have enough space'],
+    validPatterns: [/strcpy\s*\(\s*dest\s*,\s*src\s*\)/],
     tags: ['strcpy', 'string.h'],
   },
   {
@@ -62,9 +55,7 @@ export const cProblems: Problem[] = [
       'strncpy(dest, src, n) copies at most n characters',
       'May not null-terminate if src is longer than n',
     ],
-    validPatterns: [
-      /strncpy\s*\(\s*dest\s*,\s*src\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/strncpy\s*\(\s*dest\s*,\s*src\s*,\s*5\s*\)/],
     tags: ['strncpy', 'string.h', 'safe'],
   },
   {
@@ -81,9 +72,7 @@ export const cProblems: Problem[] = [
       'strcat appends src to the end of dest',
       'dest must have enough space for both strings',
     ],
-    validPatterns: [
-      /strcat\s*\(\s*dest\s*,\s*src\s*\)/,
-    ],
+    validPatterns: [/strcat\s*\(\s*dest\s*,\s*src\s*\)/],
     tags: ['strcat', 'string.h'],
   },
   {
@@ -96,13 +85,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar dest[20] = "Hello ";\nchar src[] = "World";',
     expected: 'strncat(dest, src, 3)',
     sample: 'strncat(dest, src, 3)',
-    hints: [
-      'strncat appends at most n characters',
-      'Always null-terminates the result',
-    ],
-    validPatterns: [
-      /strncat\s*\(\s*dest\s*,\s*src\s*,\s*3\s*\)/,
-    ],
+    hints: ['strncat appends at most n characters', 'Always null-terminates the result'],
+    validPatterns: [/strncat\s*\(\s*dest\s*,\s*src\s*,\s*3\s*\)/],
     tags: ['strncat', 'string.h', 'safe'],
   },
   {
@@ -119,9 +103,7 @@ export const cProblems: Problem[] = [
       'Returns 0 if equal, negative if str1 < str2, positive if str1 > str2',
       'Comparison is lexicographic',
     ],
-    validPatterns: [
-      /strcmp\s*\(\s*str1\s*,\s*str2\s*\)/,
-    ],
+    validPatterns: [/strcmp\s*\(\s*str1\s*,\s*str2\s*\)/],
     tags: ['strcmp', 'string.h'],
   },
   {
@@ -134,13 +116,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar str1[] = "Hello World";\nchar str2[] = "Hello There";',
     expected: 'strncmp(str1, str2, 3)',
     sample: 'strncmp(str1, str2, 3)',
-    hints: [
-      'strncmp compares at most n characters',
-      'Useful for prefix comparisons',
-    ],
-    validPatterns: [
-      /strncmp\s*\(\s*str1\s*,\s*str2\s*,\s*3\s*\)/,
-    ],
+    hints: ['strncmp compares at most n characters', 'Useful for prefix comparisons'],
+    validPatterns: [/strncmp\s*\(\s*str1\s*,\s*str2\s*,\s*3\s*\)/],
     tags: ['strncmp', 'string.h'],
   },
   {
@@ -153,13 +130,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar str[] = "Hello World";',
     expected: "strchr(str, 'o')",
     sample: "strchr(str, 'o')",
-    hints: [
-      'strchr returns pointer to first occurrence',
-      'Returns NULL if not found',
-    ],
-    validPatterns: [
-      /strchr\s*\(\s*str\s*,\s*['"]?o['"]?\s*\)/,
-    ],
+    hints: ['strchr returns pointer to first occurrence', 'Returns NULL if not found'],
+    validPatterns: [/strchr\s*\(\s*str\s*,\s*['"]?o['"]?\s*\)/],
     tags: ['strchr', 'string.h'],
   },
   {
@@ -172,13 +144,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar str[] = "Hello World";',
     expected: "strrchr(str, 'o')",
     sample: "strrchr(str, 'o')",
-    hints: [
-      'strrchr searches from the end',
-      'Returns pointer to last occurrence',
-    ],
-    validPatterns: [
-      /strrchr\s*\(\s*str\s*,\s*['"]?o['"]?\s*\)/,
-    ],
+    hints: ['strrchr searches from the end', 'Returns pointer to last occurrence'],
+    validPatterns: [/strrchr\s*\(\s*str\s*,\s*['"]?o['"]?\s*\)/],
     tags: ['strrchr', 'string.h'],
   },
   {
@@ -191,13 +158,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar str[] = "Hello World";',
     expected: 'strstr(str, "World")',
     sample: 'strstr(str, "World")',
-    hints: [
-      'strstr returns pointer to first occurrence of substring',
-      'Returns NULL if not found',
-    ],
-    validPatterns: [
-      /strstr\s*\(\s*str\s*,\s*["']World["']\s*\)/,
-    ],
+    hints: ['strstr returns pointer to first occurrence of substring', 'Returns NULL if not found'],
+    validPatterns: [/strstr\s*\(\s*str\s*,\s*["']World["']\s*\)/],
     tags: ['strstr', 'string.h'],
   },
   {
@@ -210,13 +172,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar src[] = "Hello";\nchar dest[10];',
     expected: 'memcpy(dest, src, 5)',
     sample: 'memcpy(dest, src, 5)',
-    hints: [
-      'memcpy(dest, src, n) copies n bytes',
-      'Does not handle overlapping memory',
-    ],
-    validPatterns: [
-      /memcpy\s*\(\s*dest\s*,\s*src\s*,\s*5\s*\)/,
-    ],
+    hints: ['memcpy(dest, src, n) copies n bytes', 'Does not handle overlapping memory'],
+    validPatterns: [/memcpy\s*\(\s*dest\s*,\s*src\s*,\s*5\s*\)/],
     tags: ['memcpy', 'string.h', 'memory'],
   },
   {
@@ -233,9 +190,7 @@ export const cProblems: Problem[] = [
       'memmove handles overlapping memory safely',
       'Use when source and destination may overlap',
     ],
-    validPatterns: [
-      /memmove\s*\(\s*str\s*,\s*str\s*\+\s*6\s*,\s*5\s*\)/,
-    ],
+    validPatterns: [/memmove\s*\(\s*str\s*,\s*str\s*\+\s*6\s*,\s*5\s*\)/],
     tags: ['memmove', 'string.h', 'memory'],
   },
   {
@@ -248,13 +203,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar buffer[20];',
     expected: 'memset(buffer, 0, 10)',
     sample: 'memset(buffer, 0, 10)',
-    hints: [
-      'memset(ptr, value, n) sets n bytes to value',
-      'Commonly used for zeroing memory',
-    ],
-    validPatterns: [
-      /memset\s*\(\s*buffer\s*,\s*0\s*,\s*10\s*\)/,
-    ],
+    hints: ['memset(ptr, value, n) sets n bytes to value', 'Commonly used for zeroing memory'],
+    validPatterns: [/memset\s*\(\s*buffer\s*,\s*0\s*,\s*10\s*\)/],
     tags: ['memset', 'string.h', 'memory'],
   },
   {
@@ -267,13 +217,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <string.h>\nchar a[] = "Hello";\nchar b[] = "Hello World";',
     expected: 'memcmp(a, b, 5)',
     sample: 'memcmp(a, b, 5)',
-    hints: [
-      'memcmp compares n bytes',
-      'Returns 0 if equal, like strcmp',
-    ],
-    validPatterns: [
-      /memcmp\s*\(\s*a\s*,\s*b\s*,\s*5\s*\)/,
-    ],
+    hints: ['memcmp compares n bytes', 'Returns 0 if equal, like strcmp'],
+    validPatterns: [/memcmp\s*\(\s*a\s*,\s*b\s*,\s*5\s*\)/],
     tags: ['memcmp', 'string.h', 'memory'],
   },
 
@@ -290,13 +235,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>',
     expected: 'malloc(10 * sizeof(int))',
     sample: 'int *arr = (int *)malloc(10 * sizeof(int))',
-    hints: [
-      'malloc returns void*, cast to appropriate type',
-      'Always use sizeof for portability',
-    ],
-    validPatterns: [
-      /malloc\s*\(\s*10\s*\*\s*sizeof\s*\(\s*int\s*\)\s*\)/,
-    ],
+    hints: ['malloc returns void*, cast to appropriate type', 'Always use sizeof for portability'],
+    validPatterns: [/malloc\s*\(\s*10\s*\*\s*sizeof\s*\(\s*int\s*\)\s*\)/],
     tags: ['malloc', 'stdlib.h', 'memory'],
   },
   {
@@ -309,13 +249,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>',
     expected: 'calloc(10, sizeof(int))',
     sample: 'int *arr = (int *)calloc(10, sizeof(int))',
-    hints: [
-      'calloc(n, size) allocates n elements of size bytes',
-      'Memory is zero-initialized',
-    ],
-    validPatterns: [
-      /calloc\s*\(\s*10\s*,\s*sizeof\s*\(\s*int\s*\)\s*\)/,
-    ],
+    hints: ['calloc(n, size) allocates n elements of size bytes', 'Memory is zero-initialized'],
+    validPatterns: [/calloc\s*\(\s*10\s*,\s*sizeof\s*\(\s*int\s*\)\s*\)/],
     tags: ['calloc', 'stdlib.h', 'memory'],
   },
   {
@@ -328,13 +263,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\nint *arr = (int *)malloc(10 * sizeof(int));',
     expected: 'realloc(arr, 20 * sizeof(int))',
     sample: 'arr = (int *)realloc(arr, 20 * sizeof(int))',
-    hints: [
-      'realloc may move the memory block',
-      'Original contents are preserved',
-    ],
-    validPatterns: [
-      /realloc\s*\(\s*arr\s*,\s*20\s*\*\s*sizeof\s*\(\s*int\s*\)\s*\)/,
-    ],
+    hints: ['realloc may move the memory block', 'Original contents are preserved'],
+    validPatterns: [/realloc\s*\(\s*arr\s*,\s*20\s*\*\s*sizeof\s*\(\s*int\s*\)\s*\)/],
     tags: ['realloc', 'stdlib.h', 'memory'],
   },
   {
@@ -351,9 +281,7 @@ export const cProblems: Problem[] = [
       'Always free allocated memory when done',
       'Set pointer to NULL after freeing to avoid dangling pointer',
     ],
-    validPatterns: [
-      /free\s*\(\s*arr\s*\)/,
-    ],
+    validPatterns: [/free\s*\(\s*arr\s*\)/],
     tags: ['free', 'stdlib.h', 'memory'],
   },
   {
@@ -366,13 +294,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\nchar str[] = "42";',
     expected: 'atoi(str)',
     sample: 'int num = atoi(str)',
-    hints: [
-      'atoi returns 0 on failure',
-      'Consider strtol for better error handling',
-    ],
-    validPatterns: [
-      /atoi\s*\(\s*str\s*\)/,
-    ],
+    hints: ['atoi returns 0 on failure', 'Consider strtol for better error handling'],
+    validPatterns: [/atoi\s*\(\s*str\s*\)/],
     tags: ['atoi', 'stdlib.h', 'conversion'],
   },
   {
@@ -385,13 +308,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\nchar str[] = "3.14";',
     expected: 'atof(str)',
     sample: 'double num = atof(str)',
-    hints: [
-      'atof returns double, not float',
-      'Returns 0.0 on failure',
-    ],
-    validPatterns: [
-      /atof\s*\(\s*str\s*\)/,
-    ],
+    hints: ['atof returns double, not float', 'Returns 0.0 on failure'],
+    validPatterns: [/atof\s*\(\s*str\s*\)/],
     tags: ['atof', 'stdlib.h', 'conversion'],
   },
   {
@@ -424,13 +342,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\nint num = -42;',
     expected: 'abs(num)',
     sample: 'int result = abs(num)',
-    hints: [
-      'abs works with integers',
-      'Use fabs from math.h for floating point',
-    ],
-    validPatterns: [
-      /abs\s*\(\s*num\s*\)/,
-    ],
+    hints: ['abs works with integers', 'Use fabs from math.h for floating point'],
+    validPatterns: [/abs\s*\(\s*num\s*\)/],
     tags: ['abs', 'stdlib.h', 'math'],
   },
   {
@@ -439,17 +352,17 @@ export const cProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Sort Array with qsort',
     text: 'Sort the integer array in ascending order using qsort()',
-    setup: '#include <stdlib.h>\nint arr[] = {5, 2, 8, 1, 9};\nint n = 5;\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}',
-    setupCode: '#include <stdlib.h>\nint arr[] = {5, 2, 8, 1, 9};\nint n = 5;\nint compare(const void *a, const void *b) { return (*(int*)a - *(int*)b); }',
+    setup:
+      '#include <stdlib.h>\nint arr[] = {5, 2, 8, 1, 9};\nint n = 5;\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}',
+    setupCode:
+      '#include <stdlib.h>\nint arr[] = {5, 2, 8, 1, 9};\nint n = 5;\nint compare(const void *a, const void *b) { return (*(int*)a - *(int*)b); }',
     expected: 'qsort(arr, n, sizeof(int), compare)',
     sample: 'qsort(arr, n, sizeof(int), compare)',
     hints: [
       'qsort(array, count, size, comparator)',
       'Comparator returns negative, zero, or positive',
     ],
-    validPatterns: [
-      /qsort\s*\(\s*arr\s*,\s*n\s*,\s*sizeof\s*\(\s*int\s*\)\s*,\s*compare\s*\)/,
-    ],
+    validPatterns: [/qsort\s*\(\s*arr\s*,\s*n\s*,\s*sizeof\s*\(\s*int\s*\)\s*,\s*compare\s*\)/],
     tags: ['qsort', 'stdlib.h', 'sorting'],
   },
   {
@@ -458,14 +371,13 @@ export const cProblems: Problem[] = [
     difficulty: 'hard',
     title: 'Binary Search with bsearch',
     text: 'Search for the value 5 in the sorted array using bsearch()',
-    setup: '#include <stdlib.h>\nint arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};\nint n = 9;\nint key = 5;\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}',
-    setupCode: '#include <stdlib.h>\nint arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};\nint n = 9;\nint key = 5;\nint compare(const void *a, const void *b) { return (*(int*)a - *(int*)b); }',
+    setup:
+      '#include <stdlib.h>\nint arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};\nint n = 9;\nint key = 5;\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}',
+    setupCode:
+      '#include <stdlib.h>\nint arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};\nint n = 9;\nint key = 5;\nint compare(const void *a, const void *b) { return (*(int*)a - *(int*)b); }',
     expected: 'bsearch(&key, arr, n, sizeof(int), compare)',
     sample: 'int *result = (int *)bsearch(&key, arr, n, sizeof(int), compare)',
-    hints: [
-      'bsearch requires a sorted array',
-      'Returns NULL if not found',
-    ],
+    hints: ['bsearch requires a sorted array', 'Returns NULL if not found'],
     validPatterns: [
       /bsearch\s*\(\s*&key\s*,\s*arr\s*,\s*n\s*,\s*sizeof\s*\(\s*int\s*\)\s*,\s*compare\s*\)/,
     ],
@@ -481,13 +393,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>',
     expected: 'rand()',
     sample: 'int random = rand()',
-    hints: [
-      'rand() returns int from 0 to RAND_MAX',
-      'Use srand() to seed the generator',
-    ],
-    validPatterns: [
-      /rand\s*\(\s*\)/,
-    ],
+    hints: ['rand() returns int from 0 to RAND_MAX', 'Use srand() to seed the generator'],
+    validPatterns: [/rand\s*\(\s*\)/],
     tags: ['rand', 'stdlib.h', 'random'],
   },
   {
@@ -500,13 +407,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdlib.h>\n#include <time.h>',
     expected: 'srand(time(NULL))',
     sample: 'srand(time(NULL))',
-    hints: [
-      'srand sets the seed for rand()',
-      'time(NULL) provides varying seed',
-    ],
-    validPatterns: [
-      /srand\s*\(\s*time\s*\(\s*NULL\s*\)\s*\)/,
-    ],
+    hints: ['srand sets the seed for rand()', 'time(NULL) provides varying seed'],
+    validPatterns: [/srand\s*\(\s*time\s*\(\s*NULL\s*\)\s*\)/],
     tags: ['srand', 'stdlib.h', 'random'],
   },
 
@@ -523,13 +425,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdio.h>\nchar buffer[50];\nint num = 42;',
     expected: 'sprintf(buffer, "%d", num)',
     sample: 'sprintf(buffer, "%d", num)',
-    hints: [
-      'sprintf writes formatted output to string',
-      'Buffer must be large enough',
-    ],
-    validPatterns: [
-      /sprintf\s*\(\s*buffer\s*,\s*['"]\%d['"]\s*,\s*num\s*\)/,
-    ],
+    hints: ['sprintf writes formatted output to string', 'Buffer must be large enough'],
+    validPatterns: [/sprintf\s*\(\s*buffer\s*,\s*['"]%d['"]\s*,\s*num\s*\)/],
     tags: ['sprintf', 'stdio.h', 'format'],
   },
   {
@@ -542,12 +439,9 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdio.h>\nchar buffer[20];\nint num = 42;',
     expected: 'snprintf(buffer, sizeof(buffer), "%d", num)',
     sample: 'snprintf(buffer, sizeof(buffer), "%d", num)',
-    hints: [
-      'snprintf prevents buffer overflow',
-      'Second argument is maximum bytes to write',
-    ],
+    hints: ['snprintf prevents buffer overflow', 'Second argument is maximum bytes to write'],
     validPatterns: [
-      /snprintf\s*\(\s*buffer\s*,\s*(sizeof\s*\(\s*buffer\s*\)|20)\s*,\s*['"]\%d['"]\s*,\s*num\s*\)/,
+      /snprintf\s*\(\s*buffer\s*,\s*(sizeof\s*\(\s*buffer\s*\)|20)\s*,\s*['"]%d['"]\s*,\s*num\s*\)/,
     ],
     tags: ['snprintf', 'stdio.h', 'format', 'safe'],
   },
@@ -565,9 +459,7 @@ export const cProblems: Problem[] = [
       'sscanf reads formatted input from string',
       'Returns number of items successfully read',
     ],
-    validPatterns: [
-      /sscanf\s*\(\s*str\s*,\s*['"]\%d['"]\s*,\s*&num\s*\)/,
-    ],
+    validPatterns: [/sscanf\s*\(\s*str\s*,\s*['"]%d['"]\s*,\s*&num\s*\)/],
     tags: ['sscanf', 'stdio.h', 'parse'],
   },
   {
@@ -580,13 +472,8 @@ export const cProblems: Problem[] = [
     setupCode: '#include <stdio.h>\nchar name[] = "Alice";\nint age = 30;',
     expected: 'printf("%s is %d years old", name, age)',
     sample: 'printf("%s is %d years old\\n", name, age)',
-    hints: [
-      '%s for strings, %d for integers',
-      'Arguments must match format specifiers',
-    ],
-    validPatterns: [
-      /printf\s*\(\s*["'].*\%s.*\%d.*["']\s*,\s*name\s*,\s*age\s*\)/,
-    ],
+    hints: ['%s for strings, %d for integers', 'Arguments must match format specifiers'],
+    validPatterns: [/printf\s*\(\s*["'].*%s.*%d.*["']\s*,\s*name\s*,\s*age\s*\)/],
     tags: ['printf', 'stdio.h', 'format'],
   },
 
@@ -602,16 +489,10 @@ export const cProblems: Problem[] = [
     setup: 'int arr[] = {3, 1, 4, 1, 5, 9, 2, 6};\nint n = 8;',
     setupCode: 'int arr[] = {3, 1, 4, 1, 5, 9, 2, 6};\nint n = 8;',
     expected: '9',
-    sample: 'int max = arr[0];\nfor (int i = 1; i < n; i++) {\n    if (arr[i] > max) max = arr[i];\n}',
-    hints: [
-      'Initialize max with first element',
-      'Compare each element with current max',
-    ],
-    validPatterns: [
-      /for\s*\([^)]+\)/,
-      /if\s*\([^)]*>\s*max/,
-      /max\s*=\s*arr\s*\[/,
-    ],
+    sample:
+      'int max = arr[0];\nfor (int i = 1; i < n; i++) {\n    if (arr[i] > max) max = arr[i];\n}',
+    hints: ['Initialize max with first element', 'Compare each element with current max'],
+    validPatterns: [/for\s*\([^)]+\)/, /if\s*\([^)]*>\s*max/, /max\s*=\s*arr\s*\[/],
     tags: ['array', 'max', 'loop'],
   },
   {
@@ -623,16 +504,10 @@ export const cProblems: Problem[] = [
     setup: 'int arr[] = {3, 1, 4, 1, 5, 9, 2, 6};\nint n = 8;',
     setupCode: 'int arr[] = {3, 1, 4, 1, 5, 9, 2, 6};\nint n = 8;',
     expected: '1',
-    sample: 'int min = arr[0];\nfor (int i = 1; i < n; i++) {\n    if (arr[i] < min) min = arr[i];\n}',
-    hints: [
-      'Initialize min with first element',
-      'Compare each element with current min',
-    ],
-    validPatterns: [
-      /for\s*\([^)]+\)/,
-      /if\s*\([^)]*<\s*min/,
-      /min\s*=\s*arr\s*\[/,
-    ],
+    sample:
+      'int min = arr[0];\nfor (int i = 1; i < n; i++) {\n    if (arr[i] < min) min = arr[i];\n}',
+    hints: ['Initialize min with first element', 'Compare each element with current min'],
+    validPatterns: [/for\s*\([^)]+\)/, /if\s*\([^)]*<\s*min/, /min\s*=\s*arr\s*\[/],
     tags: ['array', 'min', 'loop'],
   },
   {
@@ -645,14 +520,8 @@ export const cProblems: Problem[] = [
     setupCode: 'int arr[] = {1, 2, 3, 4, 5};\nint n = 5;',
     expected: '15',
     sample: 'int sum = 0;\nfor (int i = 0; i < n; i++) {\n    sum += arr[i];\n}',
-    hints: [
-      'Initialize sum to 0',
-      'Add each element to sum',
-    ],
-    validPatterns: [
-      /for\s*\([^)]+\)/,
-      /sum\s*\+=|sum\s*=\s*sum\s*\+/,
-    ],
+    hints: ['Initialize sum to 0', 'Add each element to sum'],
+    validPatterns: [/for\s*\([^)]+\)/, /sum\s*\+=|sum\s*=\s*sum\s*\+/],
     tags: ['array', 'sum', 'loop'],
   },
   {
@@ -664,16 +533,10 @@ export const cProblems: Problem[] = [
     setup: 'int arr[] = {1, 2, 3, 4, 5};\nint n = 5;',
     setupCode: 'int arr[] = {1, 2, 3, 4, 5};\nint n = 5;',
     expected: '{5, 4, 3, 2, 1}',
-    sample: 'for (int i = 0; i < n / 2; i++) {\n    int temp = arr[i];\n    arr[i] = arr[n - 1 - i];\n    arr[n - 1 - i] = temp;\n}',
-    hints: [
-      'Swap elements from both ends',
-      'Only iterate to middle of array',
-    ],
-    validPatterns: [
-      /for\s*\([^)]+n\s*\/\s*2/,
-      /temp|swap/i,
-      /arr\s*\[\s*n\s*-\s*1\s*-\s*i\s*\]/,
-    ],
+    sample:
+      'for (int i = 0; i < n / 2; i++) {\n    int temp = arr[i];\n    arr[i] = arr[n - 1 - i];\n    arr[n - 1 - i] = temp;\n}',
+    hints: ['Swap elements from both ends', 'Only iterate to middle of array'],
+    validPatterns: [/for\s*\([^)]+n\s*\/\s*2/, /temp|swap/i, /arr\s*\[\s*n\s*-\s*1\s*-\s*i\s*\]/],
     tags: ['array', 'reverse', 'loop'],
   },
   {
@@ -685,16 +548,10 @@ export const cProblems: Problem[] = [
     setup: 'int arr[] = {10, 20, 30, 40, 50};\nint n = 5;\nint target = 30;',
     setupCode: 'int arr[] = {10, 20, 30, 40, 50};\nint n = 5;\nint target = 30;',
     expected: '2',
-    sample: 'int index = -1;\nfor (int i = 0; i < n; i++) {\n    if (arr[i] == target) {\n        index = i;\n        break;\n    }\n}',
-    hints: [
-      'Initialize index to -1 for not found',
-      'Break when element is found',
-    ],
-    validPatterns: [
-      /for\s*\([^)]+\)/,
-      /if\s*\([^)]*==\s*target/,
-      /break/,
-    ],
+    sample:
+      'int index = -1;\nfor (int i = 0; i < n; i++) {\n    if (arr[i] == target) {\n        index = i;\n        break;\n    }\n}',
+    hints: ['Initialize index to -1 for not found', 'Break when element is found'],
+    validPatterns: [/for\s*\([^)]+\)/, /if\s*\([^)]*==\s*target/, /break/],
     tags: ['array', 'search', 'linear'],
   },
   {
@@ -706,16 +563,10 @@ export const cProblems: Problem[] = [
     setup: 'int arr[] = {1, 3, 5, 7, 9, 11, 13};\nint n = 7;\nint target = 7;',
     setupCode: 'int arr[] = {1, 3, 5, 7, 9, 11, 13};\nint n = 7;\nint target = 7;',
     expected: '3',
-    sample: 'int left = 0, right = n - 1, result = -1;\nwhile (left <= right) {\n    int mid = left + (right - left) / 2;\n    if (arr[mid] == target) { result = mid; break; }\n    else if (arr[mid] < target) left = mid + 1;\n    else right = mid - 1;\n}',
-    hints: [
-      'Use left, right, and mid pointers',
-      'Avoid overflow: mid = left + (right - left) / 2',
-    ],
-    validPatterns: [
-      /while\s*\([^)]*<=|for\s*\([^)]+\)/,
-      /mid\s*=/,
-      /left.*right|low.*high/i,
-    ],
+    sample:
+      'int left = 0, right = n - 1, result = -1;\nwhile (left <= right) {\n    int mid = left + (right - left) / 2;\n    if (arr[mid] == target) { result = mid; break; }\n    else if (arr[mid] < target) left = mid + 1;\n    else right = mid - 1;\n}',
+    hints: ['Use left, right, and mid pointers', 'Avoid overflow: mid = left + (right - left) / 2'],
+    validPatterns: [/while\s*\([^)]*<=|for\s*\([^)]+\)/, /mid\s*=/, /left.*right|low.*high/i],
     tags: ['array', 'binary-search', 'algorithm'],
   },
   {
@@ -728,14 +579,8 @@ export const cProblems: Problem[] = [
     setupCode: 'int src[] = {1, 2, 3, 4, 5};\nint dest[5];\nint n = 5;',
     expected: 'dest = {1, 2, 3, 4, 5}',
     sample: 'for (int i = 0; i < n; i++) {\n    dest[i] = src[i];\n}',
-    hints: [
-      'Iterate through all elements',
-      'Can also use memcpy for this',
-    ],
-    validPatterns: [
-      /for\s*\([^)]+\)/,
-      /dest\s*\[\s*i\s*\]\s*=\s*src\s*\[\s*i\s*\]/,
-    ],
+    hints: ['Iterate through all elements', 'Can also use memcpy for this'],
+    validPatterns: [/for\s*\([^)]+\)/, /dest\s*\[\s*i\s*\]\s*=\s*src\s*\[\s*i\s*\]/],
     tags: ['array', 'copy', 'loop'],
   },
   {
@@ -748,15 +593,8 @@ export const cProblems: Problem[] = [
     setupCode: 'int arr[] = {1, 2, 2, 3, 2, 4, 2};\nint n = 7;\nint target = 2;',
     expected: '4',
     sample: 'int count = 0;\nfor (int i = 0; i < n; i++) {\n    if (arr[i] == target) count++;\n}',
-    hints: [
-      'Initialize counter to 0',
-      'Increment when element matches target',
-    ],
-    validPatterns: [
-      /for\s*\([^)]+\)/,
-      /if\s*\([^)]*==\s*target/,
-      /count\s*\+\+|count\s*\+=\s*1/,
-    ],
+    hints: ['Initialize counter to 0', 'Increment when element matches target'],
+    validPatterns: [/for\s*\([^)]+\)/, /if\s*\([^)]*==\s*target/, /count\s*\+\+|count\s*\+=\s*1/],
     tags: ['array', 'count', 'loop'],
   },
 
@@ -772,16 +610,10 @@ export const cProblems: Problem[] = [
     setup: 'int a = 5, b = 10;',
     setupCode: 'int a = 5, b = 10;',
     expected: 'a = 10, b = 5',
-    sample: 'void swap(int *x, int *y) {\n    int temp = *x;\n    *x = *y;\n    *y = temp;\n}\nswap(&a, &b);',
-    hints: [
-      'Use pointers to modify values in caller',
-      'Dereference with * to access values',
-    ],
-    validPatterns: [
-      /\*\s*\w+\s*=\s*\*\s*\w+/,
-      /temp|tmp/i,
-      /&\w+/,
-    ],
+    sample:
+      'void swap(int *x, int *y) {\n    int temp = *x;\n    *x = *y;\n    *y = temp;\n}\nswap(&a, &b);',
+    hints: ['Use pointers to modify values in caller', 'Dereference with * to access values'],
+    validPatterns: [/\*\s*\w+\s*=\s*\*\s*\w+/, /temp|tmp/i, /&\w+/],
     tags: ['pointer', 'swap', 'function'],
   },
   {
@@ -793,15 +625,10 @@ export const cProblems: Problem[] = [
     setup: 'int arr[] = {1, 2, 3, 4, 5};\nint n = 5;',
     setupCode: 'int arr[] = {1, 2, 3, 4, 5};\nint n = 5;',
     expected: '15',
-    sample: 'int sum = 0;\nint *ptr = arr;\nfor (int i = 0; i < n; i++) {\n    sum += *(ptr + i);\n}',
-    hints: [
-      'Array name is pointer to first element',
-      'ptr + i points to arr[i]',
-    ],
-    validPatterns: [
-      /\*\s*\(\s*ptr\s*\+|\*\s*ptr\s*\+\+|\*ptr\s*\+\+/,
-      /ptr\s*=\s*arr/,
-    ],
+    sample:
+      'int sum = 0;\nint *ptr = arr;\nfor (int i = 0; i < n; i++) {\n    sum += *(ptr + i);\n}',
+    hints: ['Array name is pointer to first element', 'ptr + i points to arr[i]'],
+    validPatterns: [/\*\s*\(\s*ptr\s*\+|\*\s*ptr\s*\+\+|\*ptr\s*\+\+/, /ptr\s*=\s*arr/],
     tags: ['pointer', 'array', 'arithmetic'],
   },
 ];
@@ -815,9 +642,7 @@ export function getCProblemsByCategory(category: string): Problem[] {
   return cProblems.filter((p) => p.category === category);
 }
 
-export function getCProblemsByDifficulty(
-  difficulty: Problem['difficulty']
-): Problem[] {
+export function getCProblemsByDifficulty(difficulty: Problem['difficulty']): Problem[] {
   return cProblems.filter((p) => p.difficulty === difficulty);
 }
 
