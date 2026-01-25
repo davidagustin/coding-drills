@@ -1,0 +1,65 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":automergeDigest",
+    ":automergePr",
+    ":automergeRequireAllStatusChecksPassed"
+  ],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "automerge": true,
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major"]
+    },
+    {
+      "matchPackagePatterns": ["^@types/"],
+      "automerge": true,
+      "groupName": "type definitions"
+    },
+    {
+      "matchPackagePatterns": ["eslint", "prettier", "stylelint"],
+      "groupName": "linting tools",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["storybook", "@storybook/", "chromatic"],
+      "groupName": "storybook",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["playwright", "@playwright/"],
+      "groupName": "playwright",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["vitest", "@vitest/"],
+      "groupName": "vitest",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["next", "react", "react-dom"],
+      "groupName": "react and next.js",
+      "automerge": true,
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["tailwindcss", "@tailwindcss/"],
+      "groupName": "tailwind",
+      "automerge": true
+    }
+  ],
+  "schedule": ["at any time"],
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 10
+}
