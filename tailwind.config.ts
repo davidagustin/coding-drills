@@ -47,14 +47,7 @@ const config: Config = {
         warning: 'var(--warning)',
         info: 'var(--info)',
       },
-      spacing: {
-        'space-xs': 'var(--spacing-space-xs)',
-        'space-sm': 'var(--spacing-space-sm)',
-        'space-md': 'var(--spacing-space-md)',
-        'space-lg': 'var(--spacing-space-lg)',
-        'space-xl': 'var(--spacing-space-xl)',
-        'space-2xl': 'var(--spacing-space-2xl)',
-      },
+      /* Note: Removed custom spacing to avoid Tailwind v4 conflicts */
       borderRadius: {
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',
