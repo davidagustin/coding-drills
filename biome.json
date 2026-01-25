@@ -19,7 +19,8 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noUselessFragments": "warn"
+        "noUselessFragments": "warn",
+        "noImportantStyles": "off"
       },
       "suspicious": {
         "noExplicitAny": "warn"
@@ -33,6 +34,12 @@
     "formatter": {
       "quoteStyle": "single",
       "semicolons": "always"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
     }
   },
   "assist": {
