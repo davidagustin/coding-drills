@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import CodeEditor from '@/components/CodeEditor';
 import {
   DIFFICULTY_CONFIG,
   EXERCISE_CATEGORIES,
   type Exercise,
   getExerciseById,
 } from '@/lib/exercises';
+import type { LanguageId } from '@/lib/types';
 import { isValidLanguage, LANGUAGE_CONFIG } from '../../config';
 
 // Icon components
@@ -498,25 +500,33 @@ export default function ExerciseDetailPage() {
               </div>
 
               {viewMode === 'learn' ? (
-                <pre className="p-4 overflow-x-auto">
-                  <code className="text-sm text-zinc-300 font-mono whitespace-pre">
-                    {exercise.starterCode}
-                  </code>
-                </pre>
+                <CodeEditor
+                  code={exercise.starterCode}
+                  onChange={() => {}}
+                  language={language as LanguageId}
+                  readOnly
+                  height={300}
+                  minHeight={200}
+                  lineNumbers
+                />
               ) : (
-                <div className="p-4">
-                  <textarea
-                    value={userCode}
-                    onChange={(e) => setUserCode(e.target.value)}
-                    className="w-full h-80 bg-zinc-950 text-zinc-300 font-mono text-sm p-4 rounded-lg border border-zinc-800 focus:border-zinc-600 focus:outline-none resize-none"
-                    spellCheck={false}
+                <div className="flex flex-col">
+                  <CodeEditor
+                    code={userCode}
+                    onChange={setUserCode}
+                    language={language as LanguageId}
+                    height={320}
+                    minHeight={280}
+                    lineNumbers
+                    autoFocus
+                    onSubmitShortcut={runCode}
                   />
-                  <div className="flex justify-end mt-4 gap-3">
+                  <div className="flex justify-end p-4 gap-3 border-t border-zinc-800">
                     <button
                       type="button"
                       onClick={runCode}
                       disabled={isRunning}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${config.bgColor} ${config.color} hover:opacity-80 disabled:opacity-50`}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all cursor-pointer ${config.bgColor} ${config.color} hover:opacity-80 disabled:opacity-50`}
                     >
                       {isRunning ? (
                         <>
@@ -531,6 +541,9 @@ export default function ExerciseDetailPage() {
                       )}
                     </button>
                   </div>
+                  <p className="text-xs text-zinc-500 px-4 pb-3">
+                    Press Cmd/Ctrl + Enter to run tests
+                  </p>
                 </div>
               )}
             </div>
@@ -584,11 +597,17 @@ export default function ExerciseDetailPage() {
                   </span>
                 </button>
                 {showSolution && (
-                  <pre className="p-4 border-t border-zinc-800 overflow-x-auto">
-                    <code className="text-sm text-green-400 font-mono whitespace-pre">
-                      {exercise.solutionCode}
-                    </code>
-                  </pre>
+                  <div className="border-t border-zinc-800">
+                    <CodeEditor
+                      code={exercise.solutionCode}
+                      onChange={() => {}}
+                      language={language as LanguageId}
+                      readOnly
+                      height={280}
+                      minHeight={200}
+                      lineNumbers
+                    />
+                  </div>
                 )}
               </div>
             )}
@@ -651,20 +670,26 @@ export default function ExerciseDetailPage() {
             </div>
 
             {/* Test Cases */}
-            <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
+            <div
+              className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6 overflow-hidden`}
+            >
               <h2 className="text-lg font-semibold text-white mb-4">Test Cases</h2>
               <div className="space-y-3">
                 {exercise.testCases.map((testCase, i) => (
-                  <div key={i} className="p-3 rounded-lg bg-zinc-800/50 text-sm">
-                    <div className="text-zinc-400 mb-1">{testCase.description}</div>
-                    <div className="font-mono text-xs">
+                  <div key={i} className="p-3 rounded-lg bg-zinc-800/50 text-sm overflow-hidden">
+                    <div className="text-zinc-400 mb-2">{testCase.description}</div>
+                    <div className="font-mono text-xs space-y-1">
                       <div className="text-zinc-500">
-                        Input:{' '}
-                        <span className="text-zinc-300">{JSON.stringify(testCase.input)}</span>
+                        <span className="block">Input:</span>
+                        <pre className="text-zinc-300 whitespace-pre-wrap break-all bg-zinc-900/50 p-2 rounded mt-1 overflow-x-auto">
+                          {JSON.stringify(testCase.input, null, 2)}
+                        </pre>
                       </div>
                       <div className="text-zinc-500">
-                        Expected:{' '}
-                        <span className="text-green-400">{JSON.stringify(testCase.expected)}</span>
+                        <span className="block">Expected:</span>
+                        <pre className="text-green-400 whitespace-pre-wrap break-all bg-zinc-900/50 p-2 rounded mt-1 overflow-x-auto">
+                          {JSON.stringify(testCase.expected, null, 2)}
+                        </pre>
                       </div>
                     </div>
                   </div>

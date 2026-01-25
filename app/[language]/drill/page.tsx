@@ -1,7 +1,8 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import CodeEditor from '@/components/CodeEditor';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
 import { problemsByLanguage } from '@/lib/problems/index';
@@ -30,6 +31,11 @@ const SIBLING_LANGUAGES: Partial<Record<LanguageId, LanguageId>> = {
   typescript: 'javascript',
 };
 
+// Extended problem type that tracks source language
+interface ProblemWithLanguage extends Problem {
+  sourceLanguage: LanguageId;
+}
+
 interface DrillState {
   currentIndex: number;
   answers: AnswerRecord[];
@@ -41,7 +47,7 @@ interface DrillState {
 }
 
 interface AnswerRecord {
-  problem: Problem;
+  problem: ProblemWithLanguage;
   userAnswer: string;
   isCorrect: boolean;
   error?: string;
@@ -207,14 +213,25 @@ function getCategories(language: LanguageId, includeSibling = false): string[] {
   return Array.from(categories).sort();
 }
 
-function selectProblems(language: LanguageId, config: DrillConfig): Problem[] {
-  let problems = PROBLEMS_BY_LANGUAGE[language] || [];
+function selectProblems(language: LanguageId, config: DrillConfig): ProblemWithLanguage[] {
+  // Tag problems with their source language
+  const baseProblems: ProblemWithLanguage[] = (PROBLEMS_BY_LANGUAGE[language] || []).map((p) => ({
+    ...p,
+    sourceLanguage: language,
+  }));
+
+  let problems: ProblemWithLanguage[] = baseProblems;
 
   // Include sibling language problems if requested
   if (config.includeSiblingLanguage) {
     const siblingLang = SIBLING_LANGUAGES[language];
     if (siblingLang) {
-      const siblingProblems = PROBLEMS_BY_LANGUAGE[siblingLang] || [];
+      const siblingProblems: ProblemWithLanguage[] = (PROBLEMS_BY_LANGUAGE[siblingLang] || []).map(
+        (p) => ({
+          ...p,
+          sourceLanguage: siblingLang,
+        }),
+      );
       problems = [...problems, ...siblingProblems];
     }
   }
@@ -702,7 +719,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
 }
 
 interface DrillPhaseProps {
-  problems: Problem[];
+  problems: ProblemWithLanguage[];
   state: DrillState;
   language: LanguageId;
   onAnswer: (answer: string) => void;
@@ -713,6 +730,7 @@ interface DrillPhaseProps {
 function DrillPhaseComponent({
   problems,
   state,
+  language,
   onAnswer,
   onSkip,
   questionStartTime,
@@ -720,7 +738,6 @@ function DrillPhaseComponent({
   const [userAnswer, setUserAnswer] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
   const [questionTime, setQuestionTime] = useState(0);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const currentProblem = problems[state.currentIndex];
 
   // Total time timer effect
@@ -742,24 +759,12 @@ function DrillPhaseComponent({
     return () => clearInterval(interval);
   }, [questionStartTime, state.currentIndex]);
 
-  // Auto-focus on input
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (userAnswer.trim()) {
       onAnswer(userAnswer.trim());
       setUserAnswer('');
     }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
+  }, [userAnswer, onAnswer]);
 
   const difficultyColors = {
     easy: 'bg-green-500/20 text-green-400 border-green-500/30',
@@ -842,17 +847,30 @@ function DrillPhaseComponent({
 
         {/* Answer Input */}
         <div className="p-4">
-          <label htmlFor="answer-input" className="block text-sm font-medium text-zinc-300 mb-2">
-            Your Answer
-          </label>
-          <textarea
-            id="answer-input"
-            ref={inputRef}
-            value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your expression here..."
-            className="w-full h-24 px-4 py-3 font-mono text-sm bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-zinc-100 placeholder-zinc-500"
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-zinc-300">Your Answer</span>
+            {currentProblem.sourceLanguage !== language && (
+              <span
+                className={`text-xs px-2 py-0.5 rounded ${
+                  currentProblem.sourceLanguage === 'typescript'
+                    ? 'bg-blue-500/20 text-blue-400'
+                    : 'bg-yellow-500/20 text-yellow-400'
+                }`}
+              >
+                {currentProblem.sourceLanguage === 'typescript' ? 'TypeScript' : 'JavaScript'}
+              </span>
+            )}
+          </div>
+          <CodeEditor
+            code={userAnswer}
+            onChange={setUserAnswer}
+            language={currentProblem.sourceLanguage}
+            height={120}
+            minHeight={120}
+            lineNumbers={false}
+            autoFocus
+            onSubmitShortcut={handleSubmit}
+            className="border-zinc-700"
           />
           <p className="text-xs text-zinc-500 mt-2">Press Cmd/Ctrl + Enter to submit</p>
         </div>
@@ -1152,7 +1170,7 @@ export default function DrillPage() {
 
   const [phase, setPhase] = useState<DrillPhase>('setup');
   const [config, setConfig] = useState<DrillConfig | null>(null);
-  const [problems, setProblems] = useState<Problem[]>([]);
+  const [problems, setProblems] = useState<ProblemWithLanguage[]>([]);
   const [drillState, setDrillState] = useState<DrillState>({
     currentIndex: 0,
     answers: [],

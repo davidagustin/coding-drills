@@ -8,6 +8,7 @@ import {
   type SupportedLanguage,
 } from './config';
 import { LanguageIcon } from './LanguageIcon';
+import { SettingsMenu } from './SettingsMenu';
 
 // Mode definitions for navigation
 const MODES = [
@@ -117,12 +118,17 @@ export default async function LanguageLayout({ children, params }: LayoutProps) 
               </Link>
             </div>
 
-            {/* Language indicator badge */}
-            <div
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${config.bgColor} ${config.borderColor} border`}
-            >
-              <LanguageIcon language={language as SupportedLanguage} className="w-4 h-4" />
-              <span className={`text-sm font-medium ${config.color}`}>{config.name}</span>
+            <div className="flex items-center gap-3">
+              {/* Language indicator badge */}
+              <div
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${config.bgColor} ${config.borderColor} border`}
+              >
+                <LanguageIcon language={language as SupportedLanguage} className="w-4 h-4" />
+                <span className={`text-sm font-medium ${config.color}`}>{config.name}</span>
+              </div>
+
+              {/* Settings Menu */}
+              <SettingsMenu />
             </div>
           </div>
         </div>

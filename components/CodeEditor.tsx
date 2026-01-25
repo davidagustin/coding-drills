@@ -61,6 +61,10 @@ interface CodeEditorProps {
   placeholder?: string;
   /** Custom className for the container */
   className?: string;
+  /** Callback when Cmd/Ctrl+Enter is pressed (for submit actions) */
+  onSubmitShortcut?: () => void;
+  /** Whether to auto-focus the editor on mount */
+  autoFocus?: boolean;
 }
 
 /**
@@ -87,6 +91,8 @@ export default function CodeEditor({
   lineNumbers = true,
   placeholder,
   className = '',
+  onSubmitShortcut,
+  autoFocus = false,
 }: CodeEditorProps) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const isSettingValueRef = useRef(false);
@@ -95,6 +101,12 @@ export default function CodeEditor({
   const setValueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retrySetValueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryInnerTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const onSubmitShortcutRef = useRef(onSubmitShortcut);
+
+  // Keep the ref updated with the latest callback
+  useEffect(() => {
+    onSubmitShortcutRef.current = onSubmitShortcut;
+  }, [onSubmitShortcut]);
 
   // Get Monaco language from our language ID
   const monacoLanguage = LANGUAGE_TO_MONACO[language] || 'plaintext';
@@ -187,6 +199,23 @@ export default function CodeEditor({
         },
       });
 
+      // Submit shortcut action (Cmd/Ctrl + Enter)
+      editor.addAction({
+        id: 'submit-code',
+        label: 'Submit Code',
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+        run: () => {
+          if (onSubmitShortcutRef.current) {
+            onSubmitShortcutRef.current();
+          }
+        },
+      });
+
+      // Auto-focus if requested
+      if (autoFocus) {
+        editor.focus();
+      }
+
       // Format on paste
       editor.onDidPaste(async () => {
         if (pasteTimeoutRef.current) {
@@ -198,7 +227,7 @@ export default function CodeEditor({
         }, 100);
       });
     },
-    [code, fileExtension, language, monacoLanguage, readOnly],
+    [code, fileExtension, language, monacoLanguage, readOnly, autoFocus],
   );
 
   const handleEditorChange = useCallback(

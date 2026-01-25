@@ -28,7 +28,7 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 
 ## The Solution
 
-**Coding Drills** transforms syntax learning into an interactive, game-like experience. Practice typing real code, test your knowledge with timed quizzes, and build lasting muscle memory across **9 programming languages**.
+**Coding Drills** transforms syntax learning into an interactive, game-like experience. Practice typing real code, test your knowledge with timed quizzes, and build lasting muscle memory across **11 programming languages**.
 
 ---
 
@@ -38,12 +38,12 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 
 | Mode | Description |
 |------|-------------|
-| **Drill Mode** | Type code solutions to method challenges. Real-time execution for JS/TS with anti-hardcoding validation. |
+| **Drill Mode** | Type code solutions with Monaco Editor (syntax highlighting, IntelliSense). Real-time execution for JS/TS with scoring based on speed and streaks. |
 | **Quiz Mode** | Timed card selection matching inputs to methods. Scoring system with streaks and leaderboards. |
 | **Algorithm Exercises** | Master traversal patterns (DFS, BFS), recursion, prime generation, Fibonacci, and iteration control. |
 | **Method Reference** | Browse 717+ methods with full documentation, examples, and complexity analysis. |
 
-### 🌍 Nine Languages Supported
+### 🌍 Eleven Languages Supported
 
 <div align="center">
 
@@ -52,6 +52,7 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) |
 | ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white) | ![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white) | ![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=csharp&logoColor=white) |
 | ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white) | ![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=flat-square&logo=ruby&logoColor=white) | ![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black) |
+| ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white) | ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white) | |
 
 </div>
 
@@ -86,6 +87,7 @@ str.split(" ").join("-")
 | **Framework** | Next.js 16 (App Router) |
 | **Language** | TypeScript 5 |
 | **Styling** | Tailwind CSS 4 |
+| **Code Editor** | Monaco Editor (VS Code's editor) |
 | **Testing** | Playwright (3,000+ lines of E2E tests) |
 | **State** | React Context + localStorage |
 | **Code Execution** | Browser-based JS execution, pattern matching for compiled languages |
@@ -248,11 +250,14 @@ git push origin feature/add-rust-support
 
 ## Roadmap
 
-- [ ] **Monaco Editor** - Syntax highlighting and IntelliSense in drill mode
+- [x] **Monaco Editor** - Syntax highlighting and IntelliSense in drill mode
+- [x] **Scoring System** - Points based on speed, difficulty, and streaks
+- [x] **JS/TS Toggle** - Practice JavaScript and TypeScript together
+- [x] **Data Management** - Clear saved data with selective deletion dialog
 - [ ] **User Accounts** - Cloud sync for progress across devices
 - [ ] **Spaced Repetition** - Smart review scheduling based on performance
 - [ ] **Multiplayer Mode** - Race against friends in real-time
-- [ ] **More Languages** - Rust, Kotlin, Swift, PHP, Scala
+- [ ] **More Languages** - Rust, Swift, Scala
 - [ ] **Mobile App** - Native iOS/Android apps
 - [ ] **API** - Public API for integration with other learning platforms
 
@@ -264,7 +269,7 @@ git push origin feature/add-rust-support
 
 | Metric | Count |
 |--------|-------|
-| **Languages** | 9 |
+| **Languages** | 11 |
 | **Coding Problems** | 450+ |
 | **Method References** | 717 |
 | **Algorithm Exercises** | 15+ per language |

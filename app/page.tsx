@@ -1,8 +1,9 @@
-import Link from 'next/link';
+import { LanguageGrid } from '@/components/LanguageGrid';
 
 const languages = [
   {
     name: 'JavaScript',
+    subtitle: '+ TypeScript in Drill Mode',
     slug: 'javascript',
     icon: 'JS',
     emoji: null,
@@ -14,6 +15,7 @@ const languages = [
   },
   {
     name: 'TypeScript',
+    subtitle: '+ JavaScript in Drill Mode',
     slug: 'typescript',
     icon: 'TS',
     emoji: null,
@@ -100,6 +102,28 @@ const languages = [
     iconBg: 'bg-gray-600',
     iconText: 'text-white font-bold',
   },
+  {
+    name: 'PHP',
+    slug: 'php',
+    icon: 'PHP',
+    emoji: null,
+    bgGradient: 'from-indigo-500/20 to-indigo-600/10',
+    borderColor: 'border-indigo-500/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(99,102,241,0.4)]',
+    iconBg: 'bg-indigo-600',
+    iconText: 'text-white font-bold text-sm',
+  },
+  {
+    name: 'Kotlin',
+    slug: 'kotlin',
+    icon: 'K',
+    emoji: null,
+    bgGradient: 'from-violet-500/20 to-orange-500/10',
+    borderColor: 'border-violet-500/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(139,92,246,0.4)]',
+    iconBg: 'bg-gradient-to-br from-violet-500 to-orange-400',
+    iconText: 'text-white font-bold',
+  },
 ];
 
 const modes = [
@@ -161,8 +185,9 @@ export default function Home() {
             </p>
 
             <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-              Sharpen your coding skills across 9 programming languages. Practice essential methods,
-              test your knowledge with quizzes, and build the muscle memory every developer needs.
+              Sharpen your coding skills across 11 programming languages. Practice essential
+              methods, test your knowledge with quizzes, and build the muscle memory every developer
+              needs.
             </p>
 
             {/* CTA Arrow */}
@@ -193,67 +218,11 @@ export default function Home() {
         <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100 animate-fade-in-up delay-400">
           Choose Your Language
         </h2>
-        <p className="text-gray-500 text-center mb-10 animate-fade-in-up delay-500">
+        <p className="text-gray-500 text-center mb-8 animate-fade-in-up delay-500">
           Select a programming language to start practicing
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {languages.map((lang, index) => (
-            <Link
-              key={lang.slug}
-              href={`/${lang.slug}`}
-              className={`
-                group relative overflow-hidden rounded-2xl border ${lang.borderColor}
-                bg-gradient-to-br ${lang.bgGradient} backdrop-blur-sm
-                p-6 md:p-8 card-hover ${lang.hoverGlow}
-                animate-fade-in-up delay-${Math.min(400 + index * 50, 800)}
-              `}
-            >
-              {/* Hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              <div className="relative flex flex-col items-center text-center space-y-3">
-                {/* Icon */}
-                <div
-                  className={`
-                  w-14 h-14 md:w-16 md:h-16 rounded-xl ${lang.iconBg}
-                  flex items-center justify-center
-                  transform group-hover:scale-110 transition-transform duration-300
-                `}
-                >
-                  {lang.emoji ? (
-                    <span className="text-3xl md:text-4xl">{lang.emoji}</span>
-                  ) : (
-                    <span className={`text-lg md:text-xl ${lang.iconText}`}>{lang.icon}</span>
-                  )}
-                </div>
-
-                {/* Language Name */}
-                <h3 className="text-lg md:text-xl font-semibold text-gray-100 group-hover:text-white transition-colors">
-                  {lang.name}
-                </h3>
-
-                {/* Arrow indicator */}
-                <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                  <svg
-                    className="w-5 h-5 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <LanguageGrid languages={languages} />
       </section>
 
       {/* Mode Selection Preview */}
@@ -295,7 +264,7 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
-            { stat: '9', label: 'Languages', icon: '🌐' },
+            { stat: '11', label: 'Languages', icon: '🌐' },
             { stat: '100+', label: 'Methods', icon: '⚡' },
             { stat: '∞', label: 'Practice', icon: '🔄' },
             { stat: 'Free', label: 'Forever', icon: '✨' },

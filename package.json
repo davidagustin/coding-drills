@@ -47,7 +47,7 @@
       "biome check --write",
       "eslint --fix --max-warnings 0"
     ],
-    "*.{json,css,md}": [
+    "*.{json,css}": [
       "biome check --write"
     ]
   },
