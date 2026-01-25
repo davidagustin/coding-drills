@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface QuestionCountSliderProps {
   /** Current value */
@@ -15,6 +15,8 @@ interface QuestionCountSliderProps {
   label?: string;
   /** Whether to show the label */
   showLabel?: boolean;
+  /** Whether to show quick preset buttons (default: false) */
+  showPresets?: boolean;
 }
 
 export function QuestionCountSlider({
@@ -24,28 +26,43 @@ export function QuestionCountSlider({
   max = 50,
   label = 'Questions',
   showLabel = true,
+  showPresets = false,
 }: QuestionCountSliderProps) {
   const [inputValue, setInputValue] = useState(value.toString());
+
+  // Sync inputValue when external value changes (from slider or presets)
+  useEffect(() => {
+    setInputValue(value.toString());
+  }, [value]);
 
   // Handle slider change
   const handleSliderChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = parseInt(e.target.value, 10);
       onChange(newValue);
-      setInputValue(newValue.toString());
     },
     [onChange],
   );
 
-  // Handle input change
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  }, []);
+  // Handle input change - update slider in real-time
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const rawValue = e.target.value;
+      setInputValue(rawValue);
 
-  // Handle input blur - validate and apply
+      // Update the slider in real-time if the value is valid
+      const num = parseInt(rawValue, 10);
+      if (!Number.isNaN(num) && num >= min && num <= max) {
+        onChange(num);
+      }
+    },
+    [min, max, onChange],
+  );
+
+  // Handle input blur - validate and clamp
   const handleInputBlur = useCallback(() => {
     const num = parseInt(inputValue, 10);
-    if (Number.isNaN(num)) {
+    if (Number.isNaN(num) || inputValue === '') {
       setInputValue(value.toString());
     } else {
       const clampedValue = Math.min(Math.max(num, min), max);
@@ -113,27 +130,26 @@ export function QuestionCountSlider({
         </div>
       </div>
 
-      {/* Quick preset buttons */}
-      <div className="flex flex-wrap gap-2">
-        {[5, 10, 15, 20, 25, 30].map((preset) => (
-          <button
-            key={preset}
-            type="button"
-            onClick={() => {
-              onChange(preset);
-              setInputValue(preset.toString());
-            }}
-            disabled={preset > max}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-              value === preset
-                ? 'bg-blue-600 text-white'
-                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200'
-            } ${preset > max ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {preset}
-          </button>
-        ))}
-      </div>
+      {/* Quick preset buttons (optional) */}
+      {showPresets && (
+        <div className="flex flex-wrap gap-2">
+          {[5, 10, 15, 20, 25, 30].map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => onChange(preset)}
+              disabled={preset > max}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                value === preset
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200'
+              } ${preset > max ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {preset}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

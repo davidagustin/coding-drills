@@ -20,6 +20,7 @@ interface DrillConfig {
   categories: string[];
   questionCount: number;
   difficulty: Difficulty | 'all';
+  selectedQuestionIds?: string[];
 }
 
 interface DrillState {
@@ -29,6 +30,7 @@ interface DrillState {
   maxStreak: number;
   startTime: number;
   endTime?: number;
+  totalScore: number;
 }
 
 interface AnswerRecord {
@@ -39,6 +41,53 @@ interface AnswerRecord {
   userOutput?: unknown;
   skipped: boolean;
   timeTaken: number;
+  pointsEarned: number;
+}
+
+// ============================================================================
+// Scoring System
+// ============================================================================
+
+/**
+ * Calculate points for an answer based on correctness and speed
+ * - Base points: 100 for correct, 0 for incorrect/skipped
+ * - Speed bonus: Up to 50 extra points for fast answers
+ * - Streak bonus: Multiplier for consecutive correct answers
+ */
+function calculatePoints(
+  isCorrect: boolean,
+  timeTaken: number,
+  streak: number,
+  difficulty: Difficulty,
+): number {
+  if (!isCorrect) return 0;
+
+  // Base points by difficulty
+  const basePoints: Record<Difficulty, number> = {
+    easy: 100,
+    medium: 150,
+    hard: 200,
+  };
+
+  // Speed bonus thresholds (in ms)
+  const FAST_THRESHOLD = 5000; // Under 5 seconds = max bonus
+  const MEDIUM_THRESHOLD = 15000; // Under 15 seconds = partial bonus
+  const MAX_SPEED_BONUS = 50;
+
+  let speedBonus = 0;
+  if (timeTaken <= FAST_THRESHOLD) {
+    speedBonus = MAX_SPEED_BONUS;
+  } else if (timeTaken <= MEDIUM_THRESHOLD) {
+    // Linear interpolation between fast and medium thresholds
+    const ratio = 1 - (timeTaken - FAST_THRESHOLD) / (MEDIUM_THRESHOLD - FAST_THRESHOLD);
+    speedBonus = Math.round(MAX_SPEED_BONUS * ratio);
+  }
+
+  // Streak multiplier: 1.0 base, +0.1 per streak up to 2.0 max
+  const streakMultiplier = Math.min(1 + streak * 0.1, 2.0);
+
+  const totalPoints = Math.round((basePoints[difficulty] + speedBonus) * streakMultiplier);
+  return totalPoints;
 }
 
 // ============================================================================
@@ -91,8 +140,9 @@ const problemsCache = new Map<LanguageId, Problem[]>();
 
 async function _loadProblems(language: LanguageId): Promise<Problem[]> {
   // Check cache first
-  if (problemsCache.has(language)) {
-    return problemsCache.get(language)!;
+  const cached = problemsCache.get(language);
+  if (cached) {
+    return cached;
   }
 
   const loader = problemLoaders[language];
@@ -141,6 +191,14 @@ function getCategories(language: LanguageId): string[] {
 function selectProblems(language: LanguageId, config: DrillConfig): Problem[] {
   let problems = PROBLEMS_BY_LANGUAGE[language] || [];
 
+  // If specific questions are selected, use only those
+  if (config.selectedQuestionIds && config.selectedQuestionIds.length > 0) {
+    const selectedSet = new Set(config.selectedQuestionIds);
+    problems = problems.filter((p) => selectedSet.has(p.id));
+    // Shuffle the selected problems
+    return shuffleArray(problems);
+  }
+
   // Filter by categories
   if (config.categories.length > 0) {
     problems = problems.filter((p) => config.categories.includes(p.category));
@@ -187,7 +245,7 @@ function Chip({ label, selected, onClick }: ChipProps) {
     <button
       type="button"
       onClick={onClick}
-      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${
         selected ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
       }`}
     >
@@ -216,7 +274,7 @@ function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
           type="button"
           key={option.value}
           onClick={() => onChange(option.value)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${
             value === option.value
               ? 'bg-blue-600 text-white'
               : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
@@ -248,6 +306,9 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [questionCount, setQuestionCount] = useState(10);
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
+  const [showQuestionBrowser, setShowQuestionBrowser] = useState(false);
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
@@ -258,18 +319,75 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const handleStart = () => {
     onStart({
       categories: selectedCategories,
-      questionCount,
+      questionCount: selectedQuestionIds.size > 0 ? selectedQuestionIds.size : questionCount,
       difficulty,
+      selectedQuestionIds:
+        selectedQuestionIds.size > 0 ? Array.from(selectedQuestionIds) : undefined,
     });
   };
 
-  const availableCount = selectProblems(language, {
-    categories: selectedCategories,
-    questionCount: 1000,
-    difficulty,
-  }).length;
+  // Get all problems for browsing (without the random selection limit)
+  const allFilteredProblems = (() => {
+    let problems = PROBLEMS_BY_LANGUAGE[language] || [];
+
+    // Filter by categories
+    if (selectedCategories.length > 0) {
+      problems = problems.filter((p) => selectedCategories.includes(p.category));
+    }
+
+    // Filter by difficulty
+    if (difficulty !== 'all') {
+      problems = problems.filter((p) => p.difficulty === difficulty);
+    }
+
+    return problems;
+  })();
+
+  // Further filter by search query for display
+  const displayedProblems = searchQuery.trim()
+    ? allFilteredProblems.filter(
+        (p) =>
+          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.text.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : allFilteredProblems;
+
+  const availableCount = allFilteredProblems.length;
+
+  const toggleQuestion = (id: string) => {
+    setSelectedQuestionIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAllVisible = () => {
+    setSelectedQuestionIds((prev) => {
+      const newSet = new Set(prev);
+      for (const p of displayedProblems) {
+        newSet.add(p.id);
+      }
+      return newSet;
+    });
+  };
+
+  const clearSelectedQuestions = () => {
+    setSelectedQuestionIds(new Set());
+  };
 
   const languageName = language.charAt(0).toUpperCase() + language.slice(1);
+
+  const difficultyColors: Record<Difficulty, string> = {
+    easy: 'bg-green-500/20 text-green-400 border-green-500/30',
+    medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    hard: 'bg-red-500/20 text-red-400 border-red-500/30',
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
@@ -318,12 +436,186 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
           <DifficultyFilter value={difficulty} onChange={setDifficulty} />
         </div>
 
-        {/* Available Questions Info */}
-        <div className="bg-zinc-800 rounded-lg p-4">
-          <p className="text-sm text-zinc-400">
-            <span className="font-medium text-zinc-100">{availableCount}</span> questions available
-            with current filters
-          </p>
+        {/* Question Browser Toggle */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-medium text-zinc-300">
+              Questions ({availableCount} available)
+              {selectedQuestionIds.size > 0 && (
+                <span className="ml-2 text-blue-400">({selectedQuestionIds.size} selected)</span>
+              )}
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowQuestionBrowser(!showQuestionBrowser)}
+              className="text-sm text-blue-400 hover:text-blue-300 cursor-pointer"
+            >
+              {showQuestionBrowser ? 'Hide List' : 'Browse Questions'}
+            </button>
+          </div>
+
+          {/* Question Browser Panel */}
+          {showQuestionBrowser && (
+            <div className="bg-zinc-800 rounded-lg border border-zinc-700 overflow-hidden">
+              {/* Search and Actions */}
+              <div className="p-3 border-b border-zinc-700 space-y-3">
+                {/* Search Input */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search by title, category, or description..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 pl-10 bg-zinc-900 border border-zinc-700 rounded-lg text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <svg
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={selectAllVisible}
+                    className="px-3 py-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 text-zinc-300 rounded-lg transition-colors cursor-pointer"
+                  >
+                    Select All Visible ({displayedProblems.length})
+                  </button>
+                  {selectedQuestionIds.size > 0 && (
+                    <button
+                      type="button"
+                      onClick={clearSelectedQuestions}
+                      className="px-3 py-1.5 text-xs bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors cursor-pointer"
+                    >
+                      Clear Selection
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Question List */}
+              <div className="max-h-64 overflow-y-auto">
+                {displayedProblems.length === 0 ? (
+                  <div className="p-4 text-center text-zinc-500 text-sm">
+                    {searchQuery ? 'No questions match your search' : 'No questions available'}
+                  </div>
+                ) : (
+                  displayedProblems.map((problem) => (
+                    <button
+                      key={problem.id}
+                      type="button"
+                      onClick={() => toggleQuestion(problem.id)}
+                      className={`w-full p-3 flex items-center justify-between text-left border-b border-zinc-700 last:border-b-0 transition-colors cursor-pointer ${
+                        selectedQuestionIds.has(problem.id)
+                          ? 'bg-blue-500/20'
+                          : 'hover:bg-zinc-700/50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {/* Checkbox */}
+                        <div
+                          className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                            selectedQuestionIds.has(problem.id)
+                              ? 'bg-blue-500 border-blue-500'
+                              : 'border-zinc-600'
+                          }`}
+                        >
+                          {selectedQuestionIds.has(problem.id) && (
+                            <svg
+                              className="w-3 h-3 text-white"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={3}
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                        {/* Title and Category */}
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-zinc-100 truncate">
+                            {problem.title}
+                          </div>
+                          <div className="text-xs text-zinc-500">{problem.category}</div>
+                        </div>
+                      </div>
+                      {/* Difficulty Badge */}
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded border flex-shrink-0 ${difficultyColors[problem.difficulty]}`}
+                      >
+                        {problem.difficulty}
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+
+              {/* Footer with count */}
+              {displayedProblems.length > 0 && (
+                <div className="p-2 border-t border-zinc-700 bg-zinc-900/50 text-xs text-zinc-500 text-center">
+                  Showing {displayedProblems.length} of {availableCount} questions
+                  {searchQuery && ` matching "${searchQuery}"`}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Selected Questions Summary (when browser is hidden but questions are selected) */}
+          {!showQuestionBrowser && selectedQuestionIds.size > 0 && (
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 flex items-center justify-between">
+              <span className="text-sm text-blue-400">
+                {selectedQuestionIds.size} specific question
+                {selectedQuestionIds.size !== 1 ? 's' : ''} selected
+              </span>
+              <button
+                type="button"
+                onClick={clearSelectedQuestions}
+                className="text-xs text-red-400 hover:text-red-300 cursor-pointer"
+              >
+                Clear
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -331,10 +623,12 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
       <button
         type="button"
         onClick={handleStart}
-        disabled={availableCount === 0}
-        className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 text-white font-semibold rounded-xl transition-colors text-lg"
+        disabled={availableCount === 0 && selectedQuestionIds.size === 0}
+        className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-lg cursor-pointer"
       >
-        Start Drilling
+        {selectedQuestionIds.size > 0
+          ? `Start Drilling (${selectedQuestionIds.size} questions)`
+          : 'Start Drilling'}
       </button>
     </div>
   );
@@ -346,21 +640,40 @@ interface DrillPhaseProps {
   language: LanguageId;
   onAnswer: (answer: string) => void;
   onSkip: () => void;
+  questionStartTime: number;
 }
 
-function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhaseProps) {
+function DrillPhaseComponent({
+  problems,
+  state,
+  onAnswer,
+  onSkip,
+  questionStartTime,
+}: DrillPhaseProps) {
   const [userAnswer, setUserAnswer] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [questionTime, setQuestionTime] = useState(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const currentProblem = problems[state.currentIndex];
 
-  // Timer effect
+  // Total time timer effect
   useEffect(() => {
     const interval = setInterval(() => {
       setElapsedTime(Date.now() - state.startTime);
     }, 1000);
     return () => clearInterval(interval);
   }, [state.startTime]);
+
+  // Per-question stopwatch effect
+  // biome-ignore lint/correctness/useExhaustiveDependencies: currentIndex needed to reset timer on question change
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer reset is intentional on question change
+    setQuestionTime(0); // Reset when question changes
+    const interval = setInterval(() => {
+      setQuestionTime(Date.now() - questionStartTime);
+    }, 100); // Update more frequently for smoother display
+    return () => clearInterval(interval);
+  }, [questionStartTime, state.currentIndex]);
 
   // Auto-focus on input
   useEffect(() => {
@@ -402,12 +715,27 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
             <div className="text-2xl font-bold text-zinc-100 font-mono">
               {formatTime(elapsedTime)}
             </div>
-            <div className="text-xs text-zinc-500">Time</div>
+            <div className="text-xs text-zinc-500">Total Time</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-500">
+              {state.totalScore.toLocaleString()}
+            </div>
+            <div className="text-xs text-zinc-500">Score</div>
           </div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-orange-500">{state.streak}</div>
-          <div className="text-xs text-zinc-500">Streak</div>
+        <div className="flex items-center gap-6">
+          {/* Per-question stopwatch */}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-400 font-mono">
+              {(questionTime / 1000).toFixed(1)}s
+            </div>
+            <div className="text-xs text-zinc-500">Question</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-orange-500">{state.streak}</div>
+            <div className="text-xs text-zinc-500">Streak</div>
+          </div>
         </div>
       </div>
 
@@ -468,14 +796,14 @@ function DrillPhaseComponent({ problems, state, onAnswer, onSkip }: DrillPhasePr
             type="button"
             onClick={handleSubmit}
             disabled={!userAnswer.trim()}
-            className="flex-1 py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 text-white font-medium rounded-lg transition-colors"
+            className="flex-1 py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors cursor-pointer"
           >
             Submit
           </button>
           <button
             type="button"
             onClick={onSkip}
-            className="py-3 px-6 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 font-medium rounded-lg transition-colors"
+            className="py-3 px-6 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 font-medium rounded-lg transition-colors cursor-pointer"
           >
             Skip
           </button>
@@ -512,7 +840,16 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
         >
           {skipped ? 'Skipped' : isCorrect ? 'Correct!' : 'Incorrect'}
         </div>
+        {isCorrect && answerRecord.pointsEarned > 0 && (
+          <div className="text-xl text-blue-400 font-semibold animate-pulse">
+            +{answerRecord.pointsEarned} points
+          </div>
+        )}
         {!skipped && !isCorrect && error && <p className="text-sm text-red-400">{error}</p>}
+        {/* Time taken */}
+        <p className="text-sm text-zinc-500 mt-2">
+          Answered in {(answerRecord.timeTaken / 1000).toFixed(1)}s
+        </p>
       </div>
 
       {/* Comparison */}
@@ -562,7 +899,7 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
       <button
         type="button"
         onClick={onNext}
-        className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors text-lg"
+        className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors text-lg cursor-pointer"
       >
         Next Question
       </button>
@@ -597,16 +934,24 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
         <p className="text-zinc-400">Here is how you did</p>
       </div>
 
+      {/* Total Score Highlight */}
+      <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-8 text-center border border-blue-500/30">
+        <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+          {state.totalScore.toLocaleString()}
+        </div>
+        <div className="text-sm text-zinc-400 mt-1 uppercase tracking-wider">Total Points</div>
+      </div>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
-          <div className="text-3xl font-bold text-blue-500">
+          <div className="text-3xl font-bold text-green-500">
             {correctAnswers} / {totalQuestions}
           </div>
-          <div className="text-sm text-zinc-500 mt-1">Score</div>
+          <div className="text-sm text-zinc-500 mt-1">Correct</div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
-          <div className="text-3xl font-bold text-green-500">{accuracy}%</div>
+          <div className="text-3xl font-bold text-blue-500">{accuracy}%</div>
           <div className="text-sm text-zinc-500 mt-1">Accuracy</div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
@@ -668,7 +1013,7 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
           <button
             type="button"
             onClick={() => setShowMissed(!showMissed)}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-zinc-800 transition-colors"
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <span className="font-semibold text-zinc-100">
               Review Missed Questions ({missedQuestions.length})
@@ -710,14 +1055,14 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
         <button
           type="button"
           onClick={onTryAgain}
-          className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
+          className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
         >
           Try Again
         </button>
         <button
           type="button"
           onClick={onBackToMenu}
-          className="flex-1 py-4 px-6 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-xl transition-colors border border-zinc-700"
+          className="flex-1 py-4 px-6 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-xl transition-colors border border-zinc-700 cursor-pointer"
         >
           Back to Menu
         </button>
@@ -747,6 +1092,7 @@ export default function DrillPage() {
     streak: 0,
     maxStreak: 0,
     startTime: 0,
+    totalScore: 0,
   });
   const [currentAnswer, setCurrentAnswer] = useState<AnswerRecord | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState(0);
@@ -762,14 +1108,16 @@ export default function DrillPage() {
 
       setConfig(newConfig);
       setProblems(selectedProblems);
+      const now = Date.now();
       setDrillState({
         currentIndex: 0,
         answers: [],
         streak: 0,
         maxStreak: 0,
-        startTime: Date.now(),
+        startTime: now,
+        totalScore: 0,
       });
-      setQuestionStartTime(Date.now());
+      setQuestionStartTime(now);
       setPhase('drilling');
     },
     [language],
@@ -781,6 +1129,14 @@ export default function DrillPage() {
       const result = validateProblemAnswer(currentProblem, userAnswer, language);
       const timeTaken = Date.now() - questionStartTime;
 
+      // Calculate points (use current streak before updating)
+      const pointsEarned = calculatePoints(
+        result.success,
+        timeTaken,
+        drillState.streak,
+        currentProblem.difficulty,
+      );
+
       const answerRecord: AnswerRecord = {
         problem: currentProblem,
         userAnswer,
@@ -789,11 +1145,12 @@ export default function DrillPage() {
         userOutput: 'output' in result ? result.output : undefined,
         skipped: false,
         timeTaken,
+        pointsEarned,
       };
 
       setCurrentAnswer(answerRecord);
 
-      // Update state with answer
+      // Update state with answer and score
       setDrillState((prev) => {
         const newStreak = result.success ? prev.streak + 1 : 0;
         return {
@@ -801,12 +1158,13 @@ export default function DrillPage() {
           answers: [...prev.answers, answerRecord],
           streak: newStreak,
           maxStreak: Math.max(prev.maxStreak, newStreak),
+          totalScore: prev.totalScore + pointsEarned,
         };
       });
 
       setPhase('feedback');
     },
-    [problems, drillState.currentIndex, questionStartTime, language],
+    [problems, drillState.currentIndex, drillState.streak, questionStartTime, language],
   );
 
   const handleSkip = useCallback(() => {
@@ -820,6 +1178,7 @@ export default function DrillPage() {
       error: 'Skipped',
       skipped: true,
       timeTaken,
+      pointsEarned: 0,
     };
 
     setCurrentAnswer(answerRecord);
@@ -877,6 +1236,7 @@ export default function DrillPage() {
           language={language}
           onAnswer={handleAnswer}
           onSkip={handleSkip}
+          questionStartTime={questionStartTime}
         />
       )}
 

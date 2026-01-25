@@ -158,7 +158,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
               <button
                 type="button"
                 onClick={selectAllCategories}
-                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
               >
                 Select All
               </button>
@@ -166,7 +166,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
               <button
                 type="button"
                 onClick={clearAllCategories}
-                className="text-sm text-slate-400 hover:text-slate-300 transition-colors"
+                className="text-sm text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
               >
                 Clear
               </button>
@@ -178,7 +178,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
                 type="button"
                 key={category}
                 onClick={() => toggleCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize ${
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer ${
                   config.categories.includes(category)
                     ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
                     : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
@@ -216,7 +216,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
                 type="button"
                 key={time}
                 onClick={() => onConfigChange({ ...config, timePerQuestion: time })}
-                className={`flex-1 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                className={`flex-1 py-3 rounded-lg font-semibold transition-all duration-200 cursor-pointer ${
                   config.timePerQuestion === time
                     ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
                     : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
@@ -238,7 +238,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
             <button
               type="button"
               onClick={() => setSoundEnabled(!soundEnabled)}
-              className={`relative w-14 h-8 rounded-full transition-colors duration-200 ${
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
                 soundEnabled ? 'bg-blue-500' : 'bg-slate-600'
               }`}
             >
@@ -255,7 +255,7 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
         <button
           type="button"
           onClick={onStart}
-          className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-bold text-xl
+          className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-bold text-xl cursor-pointer
                      hover:from-blue-600 hover:to-purple-700 transition-all duration-200
                      shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40
                      transform hover:scale-[1.02] active:scale-[0.98]"
@@ -553,11 +553,12 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
 
   const currentQuestion = state.questions[state.currentQuestionIndex];
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: currentQuestionIndex needed to reset timer on question change
   useEffect(() => {
     // Reset timer when question changes
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer sync is intentional
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer reset is intentional on question change
     setTimeLeft(state.config.timePerQuestion);
-  }, [state.config.timePerQuestion]);
+  }, [state.config.timePerQuestion, state.currentQuestionIndex]);
 
   useEffect(() => {
     if (state.showingAnswer) {
@@ -814,7 +815,7 @@ Try it yourself!`;
                 type="button"
                 onClick={handleSaveScore}
                 disabled={!playerName.trim()}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors cursor-pointer"
               >
                 Save
               </button>
@@ -921,14 +922,14 @@ Try it yourself!`;
           <button
             type="button"
             onClick={onChangeSettings}
-            className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-colors"
+            className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-colors cursor-pointer"
           >
             Change Settings
           </button>
           <button
             type="button"
             onClick={onPlayAgain}
-            className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl font-semibold transition-all"
+            className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl font-semibold transition-all cursor-pointer"
           >
             Play Again
           </button>
@@ -938,7 +939,7 @@ Try it yourself!`;
         <button
           type="button"
           onClick={handleShare}
-          className="w-full mt-4 py-3 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+          className="w-full mt-4 py-3 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <svg
             className="w-5 h-5"
