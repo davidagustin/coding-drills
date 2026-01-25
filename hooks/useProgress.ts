@@ -280,14 +280,10 @@ export function useAllProgress(): UseAllProgressReturn {
 
   const languages = useMemo(() => Object.keys(allProgress), [allProgress]);
 
-  const overallStats = useMemo(
-    () => {
-      if (typeof window === 'undefined') return DEFAULT_OVERALL_STATS;
-      return getOverallStats();
-    },
-     
-    [],
-  );
+  const overallStats = useMemo(() => {
+    if (typeof window === 'undefined') return DEFAULT_OVERALL_STATS;
+    return getOverallStats();
+  }, []);
 
   const refresh = useCallback(() => {
     try {
