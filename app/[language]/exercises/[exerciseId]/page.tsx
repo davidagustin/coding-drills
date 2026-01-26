@@ -178,7 +178,7 @@ export default function ExerciseDetailPage() {
 
   const [mounted, setMounted] = useState(false);
   const [exercise, setExercise] = useState<Exercise | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('learn');
+  const [viewMode, setViewMode] = useState<ViewMode>('practice');
   const [showHints, setShowHints] = useState(false);
   const [revealedHints, setRevealedHints] = useState<number[]>([]);
   const [showSolution, setShowSolution] = useState(false);
@@ -198,6 +198,11 @@ export default function ExerciseDetailPage() {
       if (ex) {
         setExercise(ex);
         setUserCode(ex.starterCode);
+        // Auto-start practice mode by default
+        setViewMode('practice');
+        setTimer(0);
+        setTimerRunning(true);
+        setResult(null);
       }
 
       // Load progress from localStorage
