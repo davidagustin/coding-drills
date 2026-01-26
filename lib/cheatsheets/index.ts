@@ -23,8 +23,11 @@ import { javaCheatsheet } from './java';
 import { javascriptCheatsheet } from './javascript';
 import { kotlinCheatsheet } from './kotlin';
 import { luaCheatsheet } from './lua';
+import { mongodbCheatsheet } from './mongodb';
+import { mysqlCheatsheet } from './mysql';
 import { perlCheatsheet } from './perl';
 import { phpCheatsheet } from './php';
+import { postgresqlCheatsheet } from './postgresql';
 import { pythonCheatsheet } from './python';
 import { rCheatsheet } from './r';
 import { rubyCheatsheet } from './ruby';
@@ -56,10 +59,10 @@ export const cheatsheetsByLanguage: Record<LanguageId, CheatsheetEntry[]> = {
   elixir: elixirCheatsheet,
   dart: dartCheatsheet,
   clojure: clojureCheatsheet,
-  // Database languages (empty for now, can be added later)
-  postgresql: [],
-  mysql: [],
-  mongodb: [],
+  // Database languages
+  postgresql: postgresqlCheatsheet,
+  mysql: mysqlCheatsheet,
+  mongodb: mongodbCheatsheet,
 };
 
 /**
