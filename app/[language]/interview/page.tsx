@@ -401,7 +401,7 @@ function InterviewPhaseComponent({
       </div>
 
       {/* Problem Panel (Collapsible) */}
-      <details className="flex-none bg-zinc-900/50 border-b border-zinc-800">
+      <details open className="flex-none bg-zinc-900/50 border-b border-zinc-800">
         <summary className="max-w-4xl mx-auto p-3 cursor-pointer text-sm text-cyan-400 hover:text-cyan-300">
           View Problem Details
         </summary>
