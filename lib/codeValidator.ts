@@ -277,6 +277,23 @@ export function validateDrillAnswer(
     case 'go':
     case 'ruby':
     case 'c':
+    case 'php':
+    case 'kotlin':
+    case 'rust':
+    case 'swift':
+    case 'scala':
+    case 'r':
+    case 'perl':
+    case 'lua':
+    case 'haskell':
+    case 'elixir':
+    case 'dart':
+    case 'clojure':
+    // Database languages - use pattern matching since they can't be executed in browser
+    case 'sql':
+    case 'postgresql':
+    case 'mysql':
+    case 'mongodb':
       return validateByPattern(userAnswer, expectedOutput, sampleSolution);
 
     default:
