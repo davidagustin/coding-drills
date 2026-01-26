@@ -347,6 +347,9 @@ export default function LanguagePage() {
 
   const config = LANGUAGE_CONFIG[language];
 
+  // Database languages don't have algorithm exercises or method references
+  const isDatabaseLanguage = ['sql', 'postgresql', 'mysql', 'mongodb'].includes(language);
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Back to home link */}
@@ -367,8 +370,9 @@ export default function LanguagePage() {
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{config.name}</h1>
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-          Master {config.name} methods through interactive drills, quizzes, and comprehensive
-          references.
+          {isDatabaseLanguage
+            ? `Master ${config.name} through interactive drills, quizzes, and problem-solving.`
+            : `Master ${config.name} methods through interactive drills, quizzes, and comprehensive references.`}
         </p>
       </div>
 
@@ -402,23 +406,27 @@ export default function LanguagePage() {
           badge={`${problemsByLanguage[language as LanguageId]?.length || 0} problems`}
         />
 
-        <ModeCard
-          href={`/${language}/exercises`}
-          icon={<LoopIcon className="w-8 h-8" />}
-          title="Algorithm Exercises"
-          description="Master traversal patterns, DFS/BFS, recursion, and iteration control with guided exercises."
-          buttonText="Start Exercises"
-          config={config}
-        />
+        {!isDatabaseLanguage && (
+          <>
+            <ModeCard
+              href={`/${language}/exercises`}
+              icon={<LoopIcon className="w-8 h-8" />}
+              title="Algorithm Exercises"
+              description="Master traversal patterns, DFS/BFS, recursion, and iteration control with guided exercises."
+              buttonText="Start Exercises"
+              config={config}
+            />
 
-        <ModeCard
-          href={`/${language}/reference`}
-          icon={<BookIcon className="w-8 h-8" />}
-          title="Method Reference"
-          description="Browse all methods with examples. A comprehensive guide to the language's built-in methods."
-          buttonText="View Reference"
-          config={config}
-        />
+            <ModeCard
+              href={`/${language}/reference`}
+              icon={<BookIcon className="w-8 h-8" />}
+              title="Method Reference"
+              description="Browse all methods with examples. A comprehensive guide to the language's built-in methods."
+              buttonText="View Reference"
+              config={config}
+            />
+          </>
+        )}
 
         <ModeCard
           href={`/${language}/cheatsheet`}
@@ -446,18 +454,31 @@ export default function LanguagePage() {
       <div className="mt-12 text-center">
         <h3 className="text-lg font-medium text-zinc-300 mb-4">Quick Tips for {config.name}</h3>
         <div className="flex flex-wrap justify-center gap-3">
-          {[
-            'Start with Drill Mode to build muscle memory',
-            'Use Quiz Mode to test retention',
-            'Reference section for quick lookups',
-          ].map((tip, index) => (
-            <span
-              key={index}
-              className={`inline-flex items-center px-4 py-2 rounded-full text-sm ${config.bgColor} ${config.color} ${config.borderColor} border`}
-            >
-              {tip}
-            </span>
-          ))}
+          {isDatabaseLanguage
+            ? [
+                'Start with Drill Mode to practice queries',
+                'Use Quiz Mode to test your knowledge',
+                'Browse Problems for real-world scenarios',
+              ].map((tip, index) => (
+                <span
+                  key={index}
+                  className={`inline-flex items-center px-4 py-2 rounded-full text-sm ${config.bgColor} ${config.color} ${config.borderColor} border`}
+                >
+                  {tip}
+                </span>
+              ))
+            : [
+                'Start with Drill Mode to build muscle memory',
+                'Use Quiz Mode to test retention',
+                'Reference section for quick lookups',
+              ].map((tip, index) => (
+                <span
+                  key={index}
+                  className={`inline-flex items-center px-4 py-2 rounded-full text-sm ${config.bgColor} ${config.color} ${config.borderColor} border`}
+                >
+                  {tip}
+                </span>
+              ))}
         </div>
       </div>
     </div>
