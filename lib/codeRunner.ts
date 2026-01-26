@@ -132,9 +132,15 @@ export function executeJavaScript(
     } catch (compileError) {
       const executionTime = performance.now() - startTime;
       const error = compileError instanceof Error ? compileError : new Error(String(compileError));
+      // Provide clear syntax error message without duplication
+      let errorMessage = error.message;
+      // Remove any existing "Syntax error:" prefix to avoid duplication
+      if (errorMessage.startsWith('Syntax error:')) {
+        errorMessage = errorMessage.replace(/^Syntax error:\s*/i, '');
+      }
       return {
         success: false,
-        error: `Syntax error: ${error.message}. Please check your code for typos, missing brackets, or incorrect syntax.`,
+        error: `Syntax error: ${errorMessage}. Please check your code for typos, missing brackets, or incorrect syntax.`,
         errorType: classifyError(error),
         executionTime,
         logs,

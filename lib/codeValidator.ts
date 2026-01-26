@@ -86,7 +86,24 @@ export function validateJavaScript(
 
     // Construct the code that returns the user's expression result
     // This ensures the code is compiled and executed, not just parsed
-    const fullCode = `return (${normalizedAnswer});`;
+    // Handle both expressions and statements properly
+    const trimmedAnswer = normalizedAnswer.trim();
+    let fullCode: string;
+
+    // If the answer is already a return statement, use it as-is
+    if (trimmedAnswer.startsWith('return ')) {
+      fullCode = trimmedAnswer;
+    } else {
+      // Otherwise, wrap it in a return statement
+      // Check if it's already a valid expression (ends with semicolon or is a simple expression)
+      if (trimmedAnswer.endsWith(';')) {
+        // It's a statement, just add return
+        fullCode = `return ${trimmedAnswer.slice(0, -1)};`;
+      } else {
+        // It's an expression, wrap it
+        fullCode = `return (${trimmedAnswer});`;
+      }
+    }
 
     // Use the existing executeJavaScript from codeRunner
     // This will compile and execute the code
@@ -97,8 +114,16 @@ export function validateJavaScript(
       let errorMessage = result.error || 'Execution failed';
 
       // Check if it's a syntax error
+      // Avoid duplicating "Syntax error:" prefix if already present
       if (errorMessage.includes('Syntax') || errorMessage.includes('Unexpected')) {
-        errorMessage = `Syntax error: ${errorMessage}. Please check your code for typos, missing brackets, or incorrect syntax.`;
+        if (!errorMessage.startsWith('Syntax error:')) {
+          errorMessage = `Syntax error: ${errorMessage}. Please check your code for typos, missing brackets, or incorrect syntax.`;
+        } else {
+          // Already has "Syntax error:" prefix, just ensure it has helpful message
+          if (!errorMessage.includes('Please check')) {
+            errorMessage = `${errorMessage} Please check your code for typos, missing brackets, or incorrect syntax.`;
+          }
+        }
       } else if (errorMessage.includes('is not defined')) {
         errorMessage = `${errorMessage}. Make sure you're using the variables provided in the setup code.`;
       } else if (errorMessage.includes('is not a function')) {
