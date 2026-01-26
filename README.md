@@ -18,7 +18,11 @@
 
 ---
 
-## The Problem
+## Overview
+
+**Coding Drills** is a comprehensive, interactive learning platform that transforms programming syntax mastery into an engaging, game-like experience. Built with modern web technologies, it provides hands-on practice across **24 programming languages** through multiple learning modes, real-time code validation, and extensive problem databases.
+
+### The Problem
 
 Learning programming syntax is like learning vocabulary in a new language—you need **repetition** and **active recall**, not passive reading. Most developers:
 
@@ -26,32 +30,32 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 - Rely on autocomplete without understanding what methods do
 - Can't write code fluently without constant documentation checks
 
-## The Solution
+### The Solution
 
-**Coding Drills** transforms syntax learning into an interactive, game-like experience. Practice typing real code, test your knowledge with timed quizzes, solve LeetCode-style problems, and prepare for interviews across **22 programming languages**.
-
-### 📈 Problem Database Expansion
-
-We're currently expanding our problem database with **500 new problems per language** (11,000+ total). See [PROBLEM_GENERATION_PLAN.md](./PROBLEM_GENERATION_PLAN.md) for the detailed roadmap and progress tracking.
+**Coding Drills** addresses this through interactive, hands-on practice with:
+- **Real-time code execution** and validation
+- **Anti-hardcoding protection** to ensure genuine learning
+- **Multiple learning modes** tailored to different learning styles
+- **Comprehensive problem databases** with 3,400+ coding challenges
+- **Progress tracking** with detailed analytics
 
 ---
 
-## Features
+## Key Features
 
 ### 🎯 Seven Learning Modes
 
 | Mode | Description |
 |------|-------------|
-| **Drill Mode** | Type code solutions with Monaco Editor (syntax highlighting, IntelliSense). Real-time execution for JS/TS with scoring based on speed and streaks. Browse problems and jump to individual practice. |
+| **Drill Mode** | Type code solutions with Monaco Editor (VS Code's editor) featuring syntax highlighting and IntelliSense. Real-time execution for JavaScript/TypeScript with scoring based on speed and streaks. Browse problems and jump to individual practice sessions. |
 | **Quiz Mode** | Timed card selection matching inputs to methods. Supports unlimited time option, shows method arguments for context. Scoring system with streaks and leaderboards. |
 | **Problems** | LeetCode-style browsable problem list with filtering by category, difficulty, and completion status. Individual problem pages with split-view layout (description + code editor), prev/next navigation, and progress tracking. |
 | **AI Mock Interview** | Practice coding interviews with AI-powered feedback. Simulates real interview scenarios with hints and explanations. Quick access from homepage for popular languages. |
 | **Algorithm Exercises** | Master traversal patterns (DFS, BFS), recursion, prime generation, Fibonacci, and iteration control. |
 | **Method Reference** | Browse 469+ methods with full documentation, examples, and complexity analysis. |
-| **Problem Database** | 4,000+ coding problems across 22 languages, with 11,000+ more in development. |
-| **Cheatsheets** | Comprehensive language cheatsheets covering syntax, data structures, common patterns, and best practices for all 21 languages. |
+| **Cheatsheets** | Comprehensive language cheatsheets covering syntax, data structures, common patterns, and best practices for all 24 languages. |
 
-### 🌍 Twenty-One Languages Supported
+### 🌍 Twenty-Four Languages Supported
 
 <div align="center">
 
@@ -62,13 +66,13 @@ We're currently expanding our problem database with **500 new problems per langu
 | ![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black) | ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white) | ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white) | ![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white) |
 | ![Swift](https://img.shields.io/badge/Swift-FA7343?style=flat-square&logo=swift&logoColor=white) | ![Scala](https://img.shields.io/badge/Scala-DC322F?style=flat-square&logo=scala&logoColor=white) | ![R](https://img.shields.io/badge/R-276DC3?style=flat-square&logo=r&logoColor=white) | ![Perl](https://img.shields.io/badge/Perl-39457E?style=flat-square&logo=perl&logoColor=white) |
 | ![Lua](https://img.shields.io/badge/Lua-2C2D72?style=flat-square&logo=lua&logoColor=white) | ![Haskell](https://img.shields.io/badge/Haskell-5D4F85?style=flat-square&logo=haskell&logoColor=white) | ![Elixir](https://img.shields.io/badge/Elixir-4B275F?style=flat-square&logo=elixir&logoColor=white) | ![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=dart&logoColor=white) |
-| ![Clojure](https://img.shields.io/badge/Clojure-5881D8?style=flat-square&logo=clojure&logoColor=white) | | | |
+| ![Clojure](https://img.shields.io/badge/Clojure-5881D8?style=flat-square&logo=clojure&logoColor=white) | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white) | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white) | ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white) |
 
 </div>
 
 ### 🛡️ Anti-Hardcoding Protection
 
-Our validation system ensures you actually **learn** the methods:
+Our validation system ensures you actually **learn** the methods, not just memorize outputs:
 
 ```javascript
 // ❌ Rejected - hardcoded answer
@@ -99,9 +103,12 @@ str.split(" ").join("-")
 | **Language** | TypeScript 5 |
 | **Styling** | Tailwind CSS 4 |
 | **Code Editor** | Monaco Editor (VS Code's editor) |
-| **Testing** | Playwright (7,000+ lines of E2E tests) |
-| **State** | React Context + localStorage |
+| **Testing** | Playwright (8,000+ lines of E2E tests) |
+| **State Management** | React Context + Zustand + localStorage |
 | **Code Execution** | Browser-based JS execution, pattern matching for compiled languages |
+| **AI Integration** | OpenAI SDK + Web LLM for offline AI interviews |
+| **Build Tool** | Turbopack (Next.js) |
+| **Code Quality** | ESLint + Biome + TypeScript strict mode |
 
 ### Architecture Highlights
 
@@ -111,6 +118,41 @@ str.split(" ").join("-")
 - **Responsive** design from mobile to desktop
 - **Dark mode** by default with theme provider
 - **SEO optimized** with sitemap.ts and robots.ts
+- **Comprehensive E2E testing** with 100% coverage for database languages
+
+---
+
+## Project Statistics
+
+<div align="center">
+
+| Metric | Count |
+|--------|-------|
+| **Languages Supported** | 24 |
+| **Coding Problems** | 3,417 |
+| **Method References** | 469 |
+| **Cheatsheets** | 24 |
+| **E2E Test Lines** | 8,156 |
+| **Total Lines of Code** | 137,554+ |
+
+</div>
+
+### Problem Distribution by Language
+
+| Language | Problems | Language | Problems |
+|----------|----------|----------|----------|
+| JavaScript | 738 | TypeScript | 679 |
+| Python | 235 | Java | 196 |
+| Kotlin | 170 | Go | 169 |
+| PHP | 155 | C# | 147 |
+| Ruby | 136 | MongoDB | 130 |
+| Rust | 113 | Dart | 91 |
+| C | 90 | Elixir | 84 |
+| MySQL | 70 | PostgreSQL | 63 |
+| R | 56 | Clojure | 50 |
+| Haskell | 50 | Lua | 50 |
+| Perl | 50 | Scala | 50 |
+| Swift | 50 | C++ | 46 |
 
 ---
 
@@ -149,7 +191,19 @@ pnpm test:e2e:ui
 # Run specific test suites
 pnpm test:e2e:drill      # Drill mode tests
 pnpm test:e2e:quiz       # Quiz mode tests
-pnpm test:e2e:problems   # Individual problem tests
+pnpm test:e2e:problems  # Individual problem tests
+```
+
+### Development Commands
+
+```bash
+pnpm dev              # Start dev server with Turbopack
+pnpm build           # Production build
+pnpm start            # Start production server
+pnpm lint             # Run ESLint
+pnpm lint:biome       # Run Biome linter
+pnpm typecheck        # TypeScript type checking
+pnpm validate         # Run all validation checks
 ```
 
 ---
@@ -163,7 +217,7 @@ coding-drills/
 │   │   ├── drill/            # Drill mode - type code solutions
 │   │   ├── quiz/             # Quiz mode - timed method matching
 │   │   ├── problems/         # LeetCode-style problem browser
-│   │   │   └── [problemId]/  # Individual problem pages
+│   │   │   └── [problemId]/ # Individual problem pages
 │   │   ├── interview/        # AI Mock Interview mode
 │   │   ├── exercises/        # Algorithm exercises
 │   │   │   └── [exerciseId]/ # Individual exercise pages
@@ -179,17 +233,17 @@ coding-drills/
 │   ├── ErrorBoundary.tsx     # Error handling
 │   └── ...                   # UI components
 ├── lib/
-│   ├── problems/             # 3,500+ coding problems (21 languages)
+│   ├── problems/             # 3,417 coding problems (24 languages)
 │   ├── methods/              # 469 method references (10 languages)
-│   ├── cheatsheets/          # Comprehensive cheatsheets (21 languages)
+│   ├── cheatsheets/          # Comprehensive cheatsheets (24 languages)
 │   ├── exercises/            # Algorithm exercise definitions
 │   ├── constants/            # Shared constants (difficulty colors, etc.)
 │   ├── codeValidator.ts      # Anti-hardcoding validation
+│   ├── codeRunner.ts         # Code execution engine
 │   ├── quizGenerator.ts      # Quiz question generation
 │   └── types.ts              # TypeScript interfaces
 ├── hooks/
 │   ├── useDrill.ts           # Drill mode state management
-│   ├── useQuiz.ts            # Quiz mode state management
 │   ├── useProblemProgress.ts # Problem progress tracking
 │   └── useProgress.ts        # General progress tracking hook
 ├── e2e/
@@ -273,205 +327,28 @@ git push origin feature/add-new-problems
 
 ## Roadmap
 
+### ✅ Completed Features
+
 - [x] **Monaco Editor** - Syntax highlighting and IntelliSense in drill mode
 - [x] **Scoring System** - Points based on speed, difficulty, and streaks
 - [x] **JS/TS Toggle** - Practice JavaScript and TypeScript together
 - [x] **Data Management** - Clear saved data with selective deletion dialog
-- [x] **22 Languages** - JavaScript, TypeScript, Python, Java, C++, C#, Go, Ruby, C, PHP, Kotlin, Rust, Swift, Scala, R, Perl, Lua, Haskell, Elixir, Dart, Clojure, MySQL, PostgreSQL
-- [ ] **Problem Database Expansion** - Adding 500 problems per language (11,000+ total) - See Problem Generation Plan below
+- [x] **24 Languages** - Full support for 24 programming languages including databases
 - [x] **LeetCode-style Problems** - Browsable problem list with individual problem pages
 - [x] **AI Mock Interview** - Practice coding interviews with AI feedback
 - [x] **Cheatsheets** - Comprehensive language reference guides
 - [x] **Unlimited Quiz Time** - Option for untimed practice
 - [x] **SEO Optimization** - Sitemap and robots.txt generation
+- [x] **Comprehensive E2E Testing** - 8,000+ lines of test coverage
+
+### 🚀 Planned Features
+
 - [ ] **User Accounts** - Cloud sync for progress across devices
 - [ ] **Spaced Repetition** - Smart review scheduling based on performance
 - [ ] **Multiplayer Mode** - Race against friends in real-time
 - [ ] **Mobile App** - Native iOS/Android apps
 - [ ] **API** - Public API for integration with other learning platforms
-
----
-
-## Stats
-
-<div align="center">
-
-| Metric | Count |
-|--------|-------|
-| **Languages** | 22 |
-| **Coding Problems** | 4,000+ (11,000+ in expansion) |
-| **Method References** | 469 |
-| **Cheatsheets** | 22 |
-| **Algorithm Exercises** | 15+ per language |
-| **E2E Test Lines** | 7,000+ |
-| **Total Lines of Code** | 126,000+ |
-
-</div>
-
-### Problem Distribution by Language
-
-| Language | Problems | Language | Problems |
-|----------|----------|----------|----------|
-| JavaScript | 922 | TypeScript | 678 |
-| Python | 235 | Java | 196 |
-| Kotlin | 170 | Go | 169 |
-| PHP | 155 | C# | 147 |
-| Ruby | 136 | Rust | 113 |
-| Dart | 91 | C | 90 |
-| Elixir | 84 | R | 56 |
-| Clojure | 50 | Haskell | 50 |
-| Lua | 50 | Perl | 50 |
-| Scala | 50 | Swift | 50 |
-| C++ | 46 | | |
-
----
-
-## Problem Generation Plan
-
-### Overview
-Goal: Add 500 new problems to each of the 22 supported languages, bringing the total to 11,000+ new problems.
-
-### Current Problem Counts & Targets
-- JavaScript: 826 → 1,326 (need 500)
-- TypeScript: 837 → 1,337 (need 500)
-- Python: 235 → 735 (need 500)
-- Java: 196 → 696 (need 500)
-- C++: 46 → 546 (need 500)
-- C#: 147 → 647 (need 500)
-- Ruby: 136 → 636 (need 500)
-- Go: 169 → 669 (need 500)
-- C: 91 → 591 (need 500)
-- PHP: 159 → 659 (need 500)
-- Kotlin: 170 → 670 (need 500)
-- Rust: 113 → 613 (need 500)
-- Swift: 50 → 550 (need 500)
-- Scala: 50 → 550 (need 500)
-- R: 57 → 557 (need 500)
-- Perl: 50 → 550 (need 500)
-- Lua: 50 → 550 (need 500)
-- Haskell: 50 → 550 (need 500)
-- Elixir: 84 → 584 (need 500)
-- Dart: 91 → 591 (need 500)
-- Clojure: 50 → 550 (need 500)
-- MySQL: 70 → 570 (need 500)
-- PostgreSQL: 114 → 614 (need 500)
-
-**Total: 11,000 new problems needed**
-
-### Agent Task Distribution
-
-**Agent 1: JavaScript (500 problems)**
-- Focus: Array Methods, String Methods, Object Methods, Async Patterns, Promises
-- Difficulty: 40% easy, 40% medium, 20% hard
-
-**Agent 2: TypeScript (500 problems)**
-- Focus: Type system, Generics, Interfaces, Type Guards, Utility Types
-- Difficulty: 30% easy, 45% medium, 25% hard
-
-**Agent 3: Python (500 problems)**
-- Focus: List comprehensions, Dictionary operations, Set methods, Generators, Decorators
-- Difficulty: 35% easy, 40% medium, 25% hard
-
-**Agent 4: Java & C++ (500 problems each)**
-- Java: Collections, Streams, Lambda expressions, Optional, Concurrency
-- C++: STL containers, Algorithms, Smart pointers, Templates, RAII
-- Difficulty: 30% easy, 40% medium, 30% hard
-
-**Agent 5: C# & Ruby (500 problems each)**
-- C#: LINQ, Async/Await, Collections, Delegates, Extension methods
-- Ruby: Enumerable methods, Blocks/Procs, Metaprogramming, String manipulation
-- Difficulty: 35% easy, 40% medium, 25% hard
-
-**Agent 6: Go, C, PHP (500 problems each)**
-- Go: Slices, Maps, Goroutines, Channels, Interfaces, Error handling
-- C: Pointers, Memory management, Arrays, Strings, Structs
-- PHP: Array functions, String functions, OOP, Traits, Namespaces
-- Difficulty: 40% easy, 35% medium, 25% hard
-
-**Agent 7: Kotlin & Rust (500 problems each)**
-- Kotlin: Collections, Extension functions, Coroutines, Null safety, Data classes
-- Rust: Ownership, Borrowing, Slices, Enums, Pattern matching, Error handling
-- Difficulty: 30% easy, 40% medium, 30% hard
-
-**Agent 8: Swift, Scala, R (500 problems each)**
-- Swift: Collections, Optionals, Closures, Protocols, Generics
-- Scala: Collections, Pattern matching, Case classes, Higher-order functions
-- R: Vector operations, Data frames, Statistical functions, Apply family
-- Difficulty: 35% easy, 40% medium, 25% hard
-
-**Agent 9: Perl, Lua, Haskell (500 problems each)**
-- Perl: Regular expressions, String manipulation, Hash operations, File I/O
-- Lua: Tables, String operations, Coroutines, Metatables
-- Haskell: List operations, Higher-order functions, Monads, Pattern matching
-- Difficulty: 30% easy, 40% medium, 30% hard
-
-**Agent 10: Elixir, Dart, Clojure (500 problems each)**
-- Elixir: Enum, Pipe operator, Pattern matching, Processes, GenServer
-- Dart: Lists, Maps, Futures, Streams, Extension methods
-- Clojure: Collections, Sequences, Higher-order functions, Macros
-- Difficulty: 35% easy, 40% medium, 25% hard
-
-**Agent 11: MySQL & PostgreSQL (500 problems each)**
-- MySQL: JOINs, Subqueries, Window functions, JSON operations, Stored procedures
-- PostgreSQL: JSONB, Arrays, CTEs, Window functions, Full-text search, Advanced aggregations
-- Difficulty: 30% easy, 40% medium, 30% hard
-
-### Problem Structure Template
-
-Each problem must follow this structure:
-
-```typescript
-{
-  id: 'lang-category-###', // e.g., 'js-array-501'
-  category: 'Category Name',
-  difficulty: 'easy' | 'medium' | 'hard',
-  title: 'Clear, descriptive title',
-  text: 'Problem description explaining what to do',
-  setup: 'Context description',
-  setupCode: 'Code that sets up the problem context',
-  expected: <expected_output>, // Can be any type
-  sample: 'Sample solution code',
-  hints?: ['Hint 1', 'Hint 2'],
-  validPatterns?: [/regex pattern 1/, /regex pattern 2/],
-  tags?: ['tag1', 'tag2', 'tag3'],
-}
-```
-
-### Quality Guidelines
-
-1. **Uniqueness**: Each problem should be unique and not duplicate existing ones
-2. **Progressive Difficulty**: Start with basics, progress to advanced concepts
-3. **Real-world Relevance**: Problems should reflect real-world usage patterns
-4. **Clear Instructions**: Text should be unambiguous
-5. **Valid Solutions**: Sample solutions must be correct and testable
-6. **Pattern Matching**: Include validPatterns for validation when possible
-7. **Category Balance**: Distribute problems across all relevant categories
-
-### Progress Tracking
-
-- [ ] Agent 1: JavaScript (0/500)
-- [ ] Agent 2: TypeScript (0/500)
-- [ ] Agent 3: Python (0/500)
-- [ ] Agent 4: Java (0/500)
-- [ ] Agent 4: C++ (0/500)
-- [ ] Agent 5: C# (0/500)
-- [ ] Agent 5: Ruby (0/500)
-- [ ] Agent 6: Go (0/500)
-- [ ] Agent 6: C (0/500)
-- [ ] Agent 6: PHP (0/500)
-- [ ] Agent 7: Kotlin (0/500)
-- [ ] Agent 7: Rust (0/500)
-- [ ] Agent 8: Swift (0/500)
-- [ ] Agent 8: Scala (0/500)
-- [ ] Agent 8: R (0/500)
-- [ ] Agent 9: Perl (0/500)
-- [ ] Agent 9: Lua (0/500)
-- [ ] Agent 9: Haskell (0/500)
-- [ ] Agent 10: Elixir (0/500)
-- [ ] Agent 10: Dart (0/500)
-- [ ] Agent 10: Clojure (0/500)
-- [ ] Agent 11: MySQL (0/500)
-- [ ] Agent 11: PostgreSQL (0/500)
+- [ ] **Problem Database Expansion** - Adding more problems per language
 
 ---
 
@@ -486,6 +363,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by [LeetCode](https://leetcode.com/), [Exercism](https://exercism.org/), and [Typing.io](https://typing.io/)
 - Built with [Next.js](https://nextjs.org/) and [Tailwind CSS](https://tailwindcss.com/)
 - Icons from [Heroicons](https://heroicons.com/)
+- Code editor powered by [Monaco Editor](https://microsoft.github.io/monaco-editor/)
 
 ---
 

@@ -8198,6 +8198,21 @@ export const typescriptProblems: Problem[] = [
     hints: ['K inferred from event name', 'Handler data type follows from K'],
     tags: ['utility-types', 'noinfer', 'events', 'advanced'],
   },
+  {
+    id: 'ts-utility-086',
+    category: 'Utility Types',
+    difficulty: 'hard',
+    title: 'Branded Type with Utility',
+    text: 'Create a branded type for UserId using intersection with a unique symbol',
+    setup:
+      'type UserId = string & { readonly __brand: unique symbol };\nfunction createUserId(id: string): UserId { return id as UserId; }\nconst userId = createUserId("123");',
+    setupCode:
+      'type UserId = string & { readonly __brand: unique symbol };\nfunction createUserId(id: string): UserId { return id as UserId; }\nconst userId = createUserId("123");',
+    expected: '123',
+    sample: 'String(userId)',
+    hints: ['Branded types prevent accidental mixing', 'Use unique symbol for brand'],
+    tags: ['utility-types', 'branded', 'type-safety', 'advanced'],
+  },
 
   // ============================================================
   // Function Types & Overloads
