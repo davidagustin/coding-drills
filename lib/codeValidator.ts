@@ -78,16 +78,30 @@ export function validateJavaScript(
     }
 
     // Construct the code that returns the user's expression result
-    const fullCode = `const __result__ = ${normalizedAnswer}; return __result__;`;
+    // This ensures the code is compiled and executed, not just parsed
+    const fullCode = `return (${normalizedAnswer});`;
 
     // Use the existing executeJavaScript from codeRunner
+    // This will compile and execute the code
     const result = executeJavaScript(setupCode, fullCode);
 
     if (!result.success) {
+      // Provide more helpful error messages
+      let errorMessage = result.error || 'Execution failed';
+
+      // Check if it's a syntax error
+      if (errorMessage.includes('Syntax') || errorMessage.includes('Unexpected')) {
+        errorMessage = `Syntax error: ${errorMessage}. Please check your code for typos, missing brackets, or incorrect syntax.`;
+      } else if (errorMessage.includes('is not defined')) {
+        errorMessage = `${errorMessage}. Make sure you're using the variables provided in the setup code.`;
+      } else if (errorMessage.includes('is not a function')) {
+        errorMessage = `${errorMessage}. Check that you're calling the correct method name.`;
+      }
+
       return {
         success: false,
-        error: result.error || 'Execution failed',
-        output: undefined,
+        error: errorMessage,
+        output: result.logs && result.logs.length > 0 ? result.logs.join('\n') : undefined,
       };
     }
 

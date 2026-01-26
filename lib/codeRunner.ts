@@ -125,7 +125,21 @@ export function executeJavaScript(
     `;
 
     // Create function with limited scope
-    const fn = new Function('console', fullCode);
+    // Wrap in try-catch to catch syntax errors during compilation
+    let fn: (console: typeof mockConsole) => unknown;
+    try {
+      fn = new Function('console', fullCode) as (console: typeof mockConsole) => unknown;
+    } catch (compileError) {
+      const executionTime = performance.now() - startTime;
+      const error = compileError instanceof Error ? compileError : new Error(String(compileError));
+      return {
+        success: false,
+        error: `Syntax error: ${error.message}. Please check your code for typos, missing brackets, or incorrect syntax.`,
+        errorType: classifyError(error),
+        executionTime,
+        logs,
+      };
+    }
 
     // Execute with timeout using a synchronous approach
     // Note: True async timeout requires Web Workers in browser
@@ -134,8 +148,12 @@ export function executeJavaScript(
 
     // For browser environments, we use a simple try-catch
     // True timeout protection would require Web Workers
+    // Execute the compiled function - this actually runs the code
     try {
       result = fn(mockConsole);
+      // Verify code was actually executed (not just parsed)
+      // If result is undefined and no error, the code executed but returned nothing
+      // This is valid for expressions that evaluate to undefined
     } catch (e) {
       error = e instanceof Error ? e : new Error(String(e));
     }
@@ -154,15 +172,30 @@ export function executeJavaScript(
     }
 
     if (error) {
+      // Provide more detailed error messages
+      let errorMessage = error.message;
+
+      // Enhance error messages for common issues
+      if (error.name === 'SyntaxError') {
+        errorMessage = `Syntax error: ${error.message}. Please check your code for typos, missing brackets, parentheses, or semicolons.`;
+      } else if (error.name === 'ReferenceError') {
+        errorMessage = `${error.message}. Make sure all variables are defined before use.`;
+      } else if (error.name === 'TypeError') {
+        errorMessage = `${error.message}. Check that you're using the correct data types and method names.`;
+      }
+
       return {
         success: false,
-        error: error.message,
+        error: errorMessage,
         errorType: classifyError(error),
         executionTime,
         logs,
       };
     }
 
+    // Ensure result is actually computed (not undefined due to missing return)
+    // If the code doesn't return anything, result will be undefined
+    // This is expected for expressions that evaluate to a value
     return {
       success: true,
       result,
