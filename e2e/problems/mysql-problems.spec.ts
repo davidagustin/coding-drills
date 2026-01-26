@@ -39,7 +39,7 @@ async function submitCode(
   await editor.fill('');
   await editor.fill(code);
   await editor.press('Enter');
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(2000);
 
   const successIndicator = page.locator(
     '[data-testid="success"], .success, .correct, text=/correct|right|passed|success/i',
@@ -90,9 +90,11 @@ test.describe(`MySQL Problems - Comprehensive E2E Tests (ALL ${mysqlProblems.len
       await clearLocalStorage(page);
 
       // CRITICAL: Direct navigation MUST work
-      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(2000);
+      page.setDefaultTimeout(30000);
+      page.setDefaultNavigationTimeout(30000);
+      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForTimeout(1000);
 
       // Verify we're on the correct problem page
       const problemTitle = page

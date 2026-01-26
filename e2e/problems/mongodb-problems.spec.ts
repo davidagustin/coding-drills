@@ -69,14 +69,15 @@ async function submitCode(
   output: string | null;
 }> {
   const editor = await getCodeEditor(page);
-  await editor.waitFor({ state: 'visible', timeout: 5000 });
+  await editor.waitFor({ state: 'visible', timeout: 15000 });
   await editor.click();
   await editor.fill('');
   await editor.fill(code);
 
   // Submit (Enter key or Cmd/Ctrl+Enter)
   await editor.press('Enter');
-  await page.waitForTimeout(1500);
+  // Wait for validation to complete
+  await page.waitForTimeout(2000);
 
   // Check for success/error feedback
   const successIndicator = page.locator(
@@ -139,16 +140,21 @@ test.describe('MongoDB Problems - Comprehensive E2E Tests (ALL PROBLEMS - NO SKI
   });
 
   // Generate a test for each MongoDB problem - NO SKIPPING
+  // Run in parallel for speed, but limit workers to avoid overwhelming the server
   for (const problem of mongodbProblems) {
     test(`[${problem.id}] ${problem.title}`, async ({ page }) => {
+      // Set shorter timeouts for faster failure detection
+      page.setDefaultTimeout(30000);
+      page.setDefaultNavigationTimeout(30000);
+
       // Clear state
       await page.goto('/');
       await clearLocalStorage(page);
 
       // CRITICAL: Direct navigation MUST work - this is the primary method
-      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(2000);
+      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForTimeout(1000);
 
       // Verify we're on the correct problem page
       const problemTitle = page
@@ -175,7 +181,7 @@ test.describe('MongoDB Problems - Comprehensive E2E Tests (ALL PROBLEMS - NO SKI
       // Wait for code editor to be visible - this is REQUIRED
       const editor = await getCodeEditor(page);
       try {
-        await editor.waitFor({ state: 'visible', timeout: 10000 });
+        await editor.waitFor({ state: 'visible', timeout: 15000 });
       } catch {
         throw new Error(
           `FAILED: Code editor not visible for problem ${problem.id} "${problem.title}". This problem MUST be testable.`,

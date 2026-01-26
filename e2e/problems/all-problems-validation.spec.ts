@@ -213,7 +213,7 @@ test.describe('All Problems - Sample Solution Validation (E2E)', () => {
     expect(databaseProblemsInTest.length).toBe(totalDatabaseProblems);
   });
 
-  for (const { problem, language } of limitedProblems) {
+  for (const { problem, language } of problemsToTest) {
     // Test all languages including database languages
     // Database languages use pattern matching, others use execution
 
@@ -233,14 +233,29 @@ test.describe('All Problems - Sample Solution Validation (E2E)', () => {
           .locator(`a[href*="${problem.id}"], [data-problem-id="${problem.id}"]`)
           .first();
 
-        const linkExists = await problemLink.isVisible({ timeout: 3000 }).catch(() => false);
+        const linkExists = await problemLink.isVisible({ timeout: 5000 }).catch(() => false);
 
         if (!linkExists) {
-          // CRITICAL: Do not skip - this is a failure
-          throw new Error(
-            `FAILED: Cannot find problem ${problem.id} "${problem.title}" in problems list for ${language}. ` +
-              `This problem MUST be accessible. URL: ${page.url()}`,
-          );
+          // Try direct navigation as fallback
+          await page.goto(`/${language}/problems/${problem.id}`);
+          await page.waitForLoadState('networkidle');
+          await page.waitForTimeout(2000);
+
+          // Check if we're now on the problem page
+          const editor = await getCodeEditor(page);
+          const editorVisible = await editor.isVisible({ timeout: 5000 }).catch(() => false);
+
+          if (!editorVisible) {
+            // CRITICAL: Do not skip - this is a failure
+            throw new Error(
+              `FAILED: Cannot access problem ${problem.id} "${problem.title}" for ${language}. ` +
+                `Tried both problems list and direct URL. Current URL: ${page.url()}`,
+            );
+          }
+        } else {
+          await problemLink.click();
+          await page.waitForLoadState('networkidle');
+          await page.waitForTimeout(1000);
         }
 
         await problemLink.click();

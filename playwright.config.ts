@@ -8,8 +8,11 @@ export default defineConfig({
   // Test directory
   testDir: './e2e',
 
-  // Run tests in files in parallel
+  // Run tests in files in parallel (but limit workers for database language tests)
   fullyParallel: true,
+
+  // Limit workers for large test suites to avoid overwhelming the server
+  workers: process.env.CI ? 1 : 4,
 
   // Fail the build on CI if you accidentally left test.only in the source code
   forbidOnly: !!process.env.CI,
@@ -17,8 +20,7 @@ export default defineConfig({
   // Retry on CI only
   retries: process.env.CI ? 2 : 0,
 
-  // Opt out of parallel tests on CI
-  workers: process.env.CI ? 1 : undefined,
+  // Workers are set above
 
   // Reporter to use
   reporter: [
@@ -89,7 +91,7 @@ export default defineConfig({
   webServer: {
     command: 'pnpm dev',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true, // Always reuse existing server if available
     timeout: 120000,
   },
 
