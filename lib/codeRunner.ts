@@ -488,6 +488,23 @@ export function validateCode(
     case 'c':
     case 'cpp':
     case 'csharp':
+    case 'php':
+    case 'kotlin':
+    case 'rust':
+    case 'swift':
+    case 'scala':
+    case 'r':
+    case 'perl':
+    case 'lua':
+    case 'haskell':
+    case 'elixir':
+    case 'dart':
+    case 'clojure':
+    // Database languages - use pattern matching since they can't be executed in browser
+    case 'sql':
+    case 'postgresql':
+    case 'mysql':
+    case 'mongodb':
       return validateByPattern(language, setupCode, userCode, expected, problem, antiCheatFlags);
 
     default:
