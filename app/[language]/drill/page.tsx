@@ -450,6 +450,14 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
 
   const availableCount = allFilteredProblems.length;
 
+  // Clamp questionCount when availableCount decreases
+  useEffect(() => {
+    const maxQuestions = Math.min(50, availableCount || 50);
+    if (questionCount > maxQuestions) {
+      setQuestionCount(maxQuestions);
+    }
+  }, [availableCount, questionCount]);
+
   const toggleQuestion = (id: string) => {
     setSelectedQuestionIds((prev) => {
       const newSet = new Set(prev);
