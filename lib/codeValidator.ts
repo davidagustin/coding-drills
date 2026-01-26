@@ -404,7 +404,8 @@ export function validateByPattern(
   return {
     success: false,
     error: 'Output does not match expected result. Try a different approach.',
-    output: userAnswer,
+    // Don't return user's code as output for database languages - we can't execute queries
+    // output: undefined means the UI won't show "Your Output" section
   };
 }
 
@@ -427,6 +428,15 @@ export function validateDrillAnswer(
   const patternCheck = checkRequiredPatterns(userAnswer, validPatterns, setupCode);
   if (patternCheck) {
     return patternCheck;
+  }
+
+  // For database languages: if validPatterns were provided and matched (patternCheck is null),
+  // return success immediately with expected output
+  const isDatabaseLanguage =
+    language === 'postgresql' || language === 'mysql' || language === 'mongodb';
+  if (isDatabaseLanguage && validPatterns && validPatterns.length > 0) {
+    // Patterns matched (patternCheck is null), return success
+    return { success: true, output: expectedOutput };
   }
 
   // Enhanced hardcoded answer detection
@@ -505,6 +515,7 @@ export function validateDrillAnswer(
     case 'postgresql':
     case 'mysql':
     case 'mongodb':
+      // Fall back to sample solution matching if no validPatterns or patterns didn't match
       return validateByPattern(userAnswer, expectedOutput, sampleSolution);
 
     default:
