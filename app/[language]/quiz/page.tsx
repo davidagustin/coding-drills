@@ -137,8 +137,8 @@ function SetupPhase({
       ? Object.values(categoryCounts).reduce((a, b) => a + b, 0) // All categories
       : config.categories.reduce((sum, cat) => sum + (categoryCounts[cat] || 0), 0);
 
-  // Max questions is the lesser of 30 or available methods (minimum 1)
-  const maxQuestions = Math.max(1, Math.min(30, availableMethodsCount));
+  // Max questions equals available methods (minimum 1)
+  const maxQuestions = Math.max(1, availableMethodsCount);
 
   const toggleCategory = (category: string) => {
     const newCategories = config.categories.includes(category)
@@ -150,7 +150,7 @@ function SetupPhase({
       newCategories.length === 0
         ? Object.values(categoryCounts).reduce((a, b) => a + b, 0)
         : newCategories.reduce((sum, cat) => sum + (categoryCounts[cat] || 0), 0);
-    const newMax = Math.max(1, Math.min(30, newAvailable));
+    const newMax = Math.max(1, newAvailable);
 
     // Adjust questionCount if it exceeds the new max
     const newQuestionCount = Math.min(config.questionCount, newMax);
