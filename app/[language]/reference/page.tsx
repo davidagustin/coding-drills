@@ -184,8 +184,10 @@ const MethodCard = memo(function MethodCard({
                 {method.examples.map((example, idx) => (
                   <div key={idx} className="bg-zinc-950 rounded-lg overflow-hidden">
                     <div className="p-3 border-b border-zinc-800">
-                      <pre className="overflow-x-auto">
-                        <code className="text-sm font-mono text-zinc-100">{example.code}</code>
+                      <pre className="whitespace-pre-wrap break-words overflow-wrap-anywhere">
+                        <code className="text-sm font-mono text-zinc-100 block">
+                          {example.code}
+                        </code>
                       </pre>
                     </div>
                     <div className="p-3 bg-zinc-950/50 flex items-center gap-2">
