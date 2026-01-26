@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
-import { getCategoriesForLanguage } from '@/lib/problems';
+import { getCategoriesForLanguage, getCategoryCountsForLanguage } from '@/lib/problems';
 import {
   addToLeaderboard,
   calculateQuizResults,
@@ -117,18 +117,45 @@ interface SetupPhaseProps {
   onConfigChange: (config: QuizConfig) => void;
   onStart: () => void;
   availableCategories: string[];
+  categoryCounts: Record<string, number>;
 }
 
-function SetupPhase({ config, onConfigChange, onStart, availableCategories }: SetupPhaseProps) {
+function SetupPhase({
+  config,
+  onConfigChange,
+  onStart,
+  availableCategories,
+  categoryCounts,
+}: SetupPhaseProps) {
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   const timeOptions = [10, 15, 20, 30, 0] as const; // 0 = unlimited
+
+  // Calculate available methods based on selected categories
+  const availableMethodsCount =
+    config.categories.length === 0
+      ? Object.values(categoryCounts).reduce((a, b) => a + b, 0) // All categories
+      : config.categories.reduce((sum, cat) => sum + (categoryCounts[cat] || 0), 0);
+
+  // Max questions is the lesser of 30 or available methods (minimum 1)
+  const maxQuestions = Math.max(1, Math.min(30, availableMethodsCount));
 
   const toggleCategory = (category: string) => {
     const newCategories = config.categories.includes(category)
       ? config.categories.filter((c) => c !== category)
       : [...config.categories, category];
-    onConfigChange({ ...config, categories: newCategories });
+
+    // Calculate new available count
+    const newAvailable =
+      newCategories.length === 0
+        ? Object.values(categoryCounts).reduce((a, b) => a + b, 0)
+        : newCategories.reduce((sum, cat) => sum + (categoryCounts[cat] || 0), 0);
+    const newMax = Math.max(1, Math.min(30, newAvailable));
+
+    // Adjust questionCount if it exceeds the new max
+    const newQuestionCount = Math.min(config.questionCount, newMax);
+
+    onConfigChange({ ...config, categories: newCategories, questionCount: newQuestionCount });
   };
 
   const selectAllCategories = () => {
@@ -178,13 +205,22 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
                 type="button"
                 key={category}
                 onClick={() => toggleCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer ${
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer flex items-center gap-2 ${
                   config.categories.includes(category)
                     ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
                     : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                 }`}
               >
                 {category}
+                <span
+                  className={`text-xs px-1.5 py-0.5 rounded-full ${
+                    config.categories.includes(category)
+                      ? 'bg-blue-400/30 text-blue-100'
+                      : 'bg-slate-600 text-slate-400'
+                  }`}
+                >
+                  {categoryCounts[category] || 0}
+                </span>
               </button>
             ))}
           </div>
@@ -197,12 +233,17 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
 
         {/* Question Count */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
-          <h2 className="text-xl font-semibold mb-4">Number of Questions</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Number of Questions</h2>
+            <span className="text-sm text-slate-400">
+              {availableMethodsCount} methods available
+            </span>
+          </div>
           <QuestionCountSlider
-            value={config.questionCount}
+            value={Math.min(config.questionCount, maxQuestions)}
             onChange={(value) => onConfigChange({ ...config, questionCount: value })}
             min={1}
-            max={30}
+            max={maxQuestions}
             showLabel={false}
           />
         </div>
@@ -1036,6 +1077,7 @@ export default function QuizPage() {
   const language = (params?.language as LanguageId) || 'javascript';
 
   const availableCategories = getCategoriesForLanguage(language);
+  const categoryCounts = getCategoryCountsForLanguage(language);
 
   const [soundEnabled] = useState(true);
   const { playCorrect, playIncorrect, playComplete } = useSoundEffects(soundEnabled);
@@ -1277,6 +1319,7 @@ export default function QuizPage() {
           onConfigChange={handleConfigChange}
           onStart={handleStartQuiz}
           availableCategories={availableCategories}
+          categoryCounts={categoryCounts}
         />
       );
 

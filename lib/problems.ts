@@ -3816,6 +3816,16 @@ export function getCategoriesForLanguage(language: LanguageId): string[] {
   return Array.from(categories);
 }
 
+// Get method counts per category
+export function getCategoryCountsForLanguage(language: LanguageId): Record<string, number> {
+  const methods = getMethodsByLanguage(language);
+  const counts: Record<string, number> = {};
+  for (const method of methods) {
+    counts[method.category] = (counts[method.category] || 0) + 1;
+  }
+  return counts;
+}
+
 // Get methods by category
 export function getMethodsByCategory(language: LanguageId, category: string): Method[] {
   const methods = getMethodsByLanguage(language);
