@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Breadcrumb } from '@/components/Breadcrumb';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { getCategoriesForLanguage, getCategoryCountsForLanguage } from '@/lib/problems';
 import {
@@ -118,6 +120,7 @@ interface SetupPhaseProps {
   onStart: () => void;
   availableCategories: string[];
   categoryCounts: Record<string, number>;
+  language: LanguageId;
 }
 
 function SetupPhase({
@@ -126,6 +129,7 @@ function SetupPhase({
   onStart,
   availableCategories,
   categoryCounts,
+  language,
 }: SetupPhaseProps) {
   const [soundEnabled, setSoundEnabled] = useState(false);
 
@@ -169,6 +173,35 @@ function SetupPhase({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
+        {/* Breadcrumbs and Exit Button */}
+        <div className="flex items-center justify-between mb-8">
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: language.charAt(0).toUpperCase() + language.slice(1), href: `/${language}` },
+              { label: 'Quiz Mode' },
+            ]}
+            className="text-sm"
+          />
+          <Link
+            href={`/${language}`}
+            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              role="img"
+              aria-label="Exit"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span className="text-sm font-medium">Exit</span>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
@@ -660,9 +693,18 @@ interface PlayingPhaseProps {
   onSelectOption: (option: string) => void;
   onTimeout: () => void;
   soundEnabled: boolean;
+  language: LanguageId;
+  onExit: () => void;
 }
 
-function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: PlayingPhaseProps) {
+function PlayingPhase({
+  state,
+  onSelectOption,
+  onTimeout,
+  soundEnabled,
+  language,
+  onExit,
+}: PlayingPhaseProps) {
   const [timeLeft, setTimeLeft] = useState<number>(state.config.timePerQuestion * 1000);
   const { playTick } = useSoundEffects(soundEnabled);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -717,9 +759,61 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
     }
   }, [timeLeft, playTick]);
 
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  const handleExitClick = () => {
+    if (showExitConfirm) {
+      onExit();
+    } else {
+      setShowExitConfirm(true);
+      // Auto-hide confirmation after 3 seconds
+      setTimeout(() => setShowExitConfirm(false), 3000);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="container mx-auto px-4 py-8 max-w-3xl">
+        {/* Breadcrumbs and Exit Button */}
+        <div className="flex items-center justify-between mb-6">
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              {
+                label: language.charAt(0).toUpperCase() + language.slice(1),
+                href: `/${language}`,
+              },
+              { label: 'Quiz Mode', href: `/${language}/quiz` },
+              {
+                label: `Question ${state.currentQuestionIndex + 1} of ${state.questions.length}`,
+              },
+            ]}
+            className="text-sm"
+          />
+          <button
+            type="button"
+            onClick={handleExitClick}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              showExitConfirm
+                ? 'bg-red-600 hover:bg-red-700 text-white'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+            }`}
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              role="img"
+              aria-label="Exit"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span className="text-sm font-medium">{showExitConfirm ? 'Confirm Exit' : 'Exit'}</span>
+          </button>
+        </div>
+
         {/* Header with timer and score */}
         <div className="flex items-center justify-between mb-8">
           <ScoreDisplay score={state.score} streak={state.streak} />
@@ -784,6 +878,7 @@ interface ResultsPhaseProps {
   onChangeSettings: () => void;
   answers: QuizAnswer[];
   questions: QuizQuestion[];
+  language: LanguageId;
 }
 
 function ResultsPhase({
@@ -793,6 +888,7 @@ function ResultsPhase({
   onChangeSettings,
   answers,
   questions,
+  language,
 }: ResultsPhaseProps) {
   const [playerName, setPlayerName] = useState('');
   const [savedToLeaderboard, setSavedToLeaderboard] = useState(false);
@@ -853,6 +949,36 @@ Try it yourself!`;
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
+        {/* Breadcrumbs and Exit Button */}
+        <div className="flex items-center justify-between mb-8">
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: language.charAt(0).toUpperCase() + language.slice(1), href: `/${language}` },
+              { label: 'Quiz Mode', href: `/${language}/quiz` },
+              { label: 'Results' },
+            ]}
+            className="text-sm"
+          />
+          <Link
+            href={`/${language}/quiz`}
+            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              role="img"
+              aria-label="Exit"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span className="text-sm font-medium">Exit</span>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">Quiz Complete!</h1>
@@ -1361,6 +1487,7 @@ export default function QuizPage() {
           onStart={handleStartQuiz}
           availableCategories={availableCategories}
           categoryCounts={categoryCounts}
+          language={language}
         />
       );
 
@@ -1371,6 +1498,8 @@ export default function QuizPage() {
           onSelectOption={handleSelectOption}
           onTimeout={handleTimeout}
           soundEnabled={soundEnabled}
+          language={language}
+          onExit={handleChangeSettings}
         />
       );
 
@@ -1384,6 +1513,7 @@ export default function QuizPage() {
           onChangeSettings={handleChangeSettings}
           answers={state.answers}
           questions={state.questions}
+          language={language}
         />
       );
 
