@@ -1,14 +1,25 @@
 /**
  * Comprehensive E2E Validation for ALL Problems
  *
- * This test suite validates EVERY problem through the UI to ensure:
+ * CRITICAL MEMORY: This test suite validates problems through the UI.
+ *
+ * For DATABASE LANGUAGES (MongoDB, PostgreSQL, MySQL):
+ * - Tests EVERY SINGLE PROBLEM (100% coverage)
+ * - No sampling, no skipping
+ * - Current counts: MongoDB (130), PostgreSQL (63), MySQL (70) = 263 total
+ *
+ * For OTHER LANGUAGES:
+ * - Tests a representative sample (first 10 problems per language)
+ * - This keeps the test suite manageable while still catching issues
+ *
+ * This ensures:
  * 1. Problems can be accessed via the problems page
  * 2. Sample solutions work correctly when submitted
  * 3. Validation logic works (accepts correct, rejects incorrect)
  * 4. Problems display correctly with all required information
  *
- * This runs a subset of problems through the full UI flow to catch
- * integration issues that unit tests might miss.
+ * Database language problems use pattern matching validation,
+ * while executable languages use code execution validation.
  */
 
 import { expect, type Page, test } from '@playwright/test';
@@ -20,9 +31,18 @@ import type { LanguageId, Problem } from '../../lib/types';
 // Test Configuration
 // ============================================================================
 
-// Test a sample of problems from each language to keep test suite manageable
-const PROBLEMS_PER_LANGUAGE = 5; // Test first 5 problems from each language
-const MAX_PROBLEMS_TO_TEST = 100; // Maximum total problems to test
+// CRITICAL MEMORY: Test ALL problems from each language
+// For database languages, test EVERY problem (no sampling) - 263 total problems
+// For other languages, test a representative sample to keep test suite manageable
+const PROBLEMS_PER_LANGUAGE = 10; // Test first 10 problems from each language (non-database)
+const DATABASE_LANGUAGES = ['mongodb', 'postgresql', 'mysql'] as const;
+
+// Expected problem counts for database languages (MEMORY)
+const EXPECTED_DATABASE_COUNTS = {
+  mongodb: 130,
+  postgresql: 63,
+  mysql: 70,
+} as const;
 
 // ============================================================================
 // Helper Functions
@@ -150,6 +170,15 @@ test.describe('All Problems - Accessibility and Display', () => {
 // ============================================================================
 
 test.describe('All Problems - Sample Solution Validation (E2E)', () => {
+  // CRITICAL MEMORY: Verify database language problem counts
+  test('MEMORY: Verify database language problem counts', () => {
+    for (const lang of DATABASE_LANGUAGES) {
+      const problems = problemsByLanguage[lang as LanguageId] || [];
+      const expected = EXPECTED_DATABASE_COUNTS[lang];
+      expect(problems.length).toBe(expected);
+    }
+  });
+
   // Get all problems and select a representative sample
   const problemsToTest: Array<{ problem: Problem; language: LanguageId }> = [];
 
@@ -158,18 +187,31 @@ test.describe('All Problems - Sample Solution Validation (E2E)', () => {
     const languageProblems = problemsByLanguage[language as LanguageId];
     if (!languageProblems || languageProblems.length === 0) continue;
 
-    // Take first N problems from each language
-    const sample = languageProblems.slice(0, PROBLEMS_PER_LANGUAGE);
-    for (const problem of sample) {
+    // CRITICAL: For database languages, test EVERY problem (100% coverage)
+    // For other languages, test a sample
+    const isDatabaseLanguage = DATABASE_LANGUAGES.includes(
+      language as (typeof DATABASE_LANGUAGES)[number],
+    );
+    const problemsToInclude = isDatabaseLanguage
+      ? languageProblems // ALL problems for database languages - NO SAMPLING
+      : languageProblems.slice(0, PROBLEMS_PER_LANGUAGE); // Sample for others
+
+    for (const problem of problemsToInclude) {
       problemsToTest.push({ problem, language: language as LanguageId });
     }
-
-    // Stop if we've reached max
-    if (problemsToTest.length >= MAX_PROBLEMS_TO_TEST) break;
   }
 
-  // Limit to MAX_PROBLEMS_TO_TEST
-  const limitedProblems = problemsToTest.slice(0, MAX_PROBLEMS_TO_TEST);
+  // CRITICAL: Verify we're testing all database problems
+  test('MEMORY: Verify all database problems are included in test suite', () => {
+    const databaseProblemsInTest = problemsToTest.filter(({ language }) =>
+      DATABASE_LANGUAGES.includes(language as (typeof DATABASE_LANGUAGES)[number]),
+    );
+    const totalDatabaseProblems = DATABASE_LANGUAGES.reduce(
+      (sum, lang) => sum + (problemsByLanguage[lang as LanguageId]?.length || 0),
+      0,
+    );
+    expect(databaseProblemsInTest.length).toBe(totalDatabaseProblems);
+  });
 
   for (const { problem, language } of limitedProblems) {
     // Test all languages including database languages
@@ -194,8 +236,11 @@ test.describe('All Problems - Sample Solution Validation (E2E)', () => {
         const linkExists = await problemLink.isVisible({ timeout: 3000 }).catch(() => false);
 
         if (!linkExists) {
-          test.skip();
-          return;
+          // CRITICAL: Do not skip - this is a failure
+          throw new Error(
+            `FAILED: Cannot find problem ${problem.id} "${problem.title}" in problems list for ${language}. ` +
+              `This problem MUST be accessible. URL: ${page.url()}`,
+          );
         }
 
         await problemLink.click();

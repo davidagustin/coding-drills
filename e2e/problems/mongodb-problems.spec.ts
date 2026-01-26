@@ -118,72 +118,85 @@ async function submitCode(
 // Test Suite: All MongoDB Problems
 // ============================================================================
 
-test.describe('MongoDB Problems - Comprehensive E2E Tests', () => {
-  // Generate a test for each MongoDB problem
+/**
+ * CRITICAL MEMORY: This test suite MUST test EVERY MongoDB problem.
+ *
+ * Current count: 130 problems
+ *
+ * Requirements:
+ * 1. Every problem must have a test case
+ * 2. No test.skip() allowed - if a problem can't be accessed, the test MUST fail
+ * 3. Every sample solution must be validated
+ * 4. Direct navigation to /mongodb/problems/{problemId} must work for all problems
+ *
+ * This ensures 100% coverage of MongoDB problems in e2e tests.
+ */
+test.describe('MongoDB Problems - Comprehensive E2E Tests (ALL PROBLEMS - NO SKIPPING)', () => {
+  // CRITICAL: Verify we're testing all problems
+  test(`MEMORY: Total MongoDB problems to test: ${mongodbProblems.length}`, () => {
+    expect(mongodbProblems.length).toBe(130);
+    expect(mongodbProblems.length).toBeGreaterThan(0);
+  });
+
+  // Generate a test for each MongoDB problem - NO SKIPPING
   for (const problem of mongodbProblems) {
-    test(`Problem: ${problem.id} - ${problem.title}`, async ({ page }) => {
+    test(`[${problem.id}] ${problem.title}`, async ({ page }) => {
       // Clear state
       await page.goto('/');
       await clearLocalStorage(page);
 
-      // Try to navigate directly to problem page
-      const navigated = await navigateToProblemPage(page, problem.id);
+      // CRITICAL: Direct navigation MUST work - this is the primary method
+      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`);
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(2000);
 
-      if (!navigated) {
-        // If direct navigation doesn't work, try through problems list
-        await page.goto(PROBLEMS_BASE_URL);
-        await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(1000);
+      // Verify we're on the correct problem page
+      const problemTitle = page
+        .locator('h1, h2')
+        .filter({ hasText: new RegExp(problem.title, 'i') });
+      const titleVisible = await problemTitle
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
 
-        // Try to find and click the problem
-        const problemLink = page
-          .locator(`a[href*="${problem.id}"], [data-problem-id="${problem.id}"]`)
-          .first();
+      if (!titleVisible) {
+        // Try to find problem ID in URL or page content
+        const url = page.url();
+        const hasProblemId = url.includes(problem.id);
+        const pageContent = await page.textContent('body').catch(() => '');
 
-        const linkExists = await problemLink.isVisible({ timeout: 3000 }).catch(() => false);
-
-        if (!linkExists) {
-          // Try searching for the problem title
-          const searchInput = page
-            .locator('input[type="search"], input[placeholder*="search" i]')
-            .first();
-          if (await searchInput.isVisible().catch(() => false)) {
-            await searchInput.fill(problem.title);
-            await page.waitForTimeout(500);
-          }
-
-          // Try clicking on any link that might contain the problem
-          const titleLink = page.getByText(problem.title).first();
-          if (await titleLink.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await titleLink.click();
-            await page.waitForLoadState('networkidle');
-            await page.waitForTimeout(1000);
-          } else {
-            test.skip();
-            return;
-          }
-        } else {
-          await problemLink.click();
-          await page.waitForLoadState('networkidle');
-          await page.waitForTimeout(1000);
+        if (!hasProblemId && !pageContent.includes(problem.id)) {
+          throw new Error(
+            `FAILED: Cannot access problem ${problem.id} "${problem.title}". URL: ${url}. This problem MUST be testable.`,
+          );
         }
       }
 
-      // Wait for code editor to be visible
+      // Wait for code editor to be visible - this is REQUIRED
       const editor = await getCodeEditor(page);
-      await editor.waitFor({ state: 'visible', timeout: 10000 });
-
-      // Submit sample solution
-      const result = await submitCode(page, problem.sample);
-
-      // Sample solution should be accepted
-      if (!result.isCorrect) {
+      try {
+        await editor.waitFor({ state: 'visible', timeout: 10000 });
+      } catch {
         throw new Error(
-          `Problem ${problem.id}: Sample solution was rejected. Error: ${result.error || 'Unknown error'}. Output: ${result.output || 'None'}`,
+          `FAILED: Code editor not visible for problem ${problem.id} "${problem.title}". This problem MUST be testable.`,
         );
       }
 
+      // Submit sample solution - this MUST work
+      const result = await submitCode(page, problem.sample);
+
+      // Sample solution MUST be accepted - this is the core validation
+      if (!result.isCorrect) {
+        throw new Error(
+          `FAILED: Problem ${problem.id} "${problem.title}" - Sample solution was REJECTED. ` +
+            `This indicates a validation bug. Error: ${result.error || 'Unknown error'}. ` +
+            `Output: ${result.output || 'None'}. Sample: ${problem.sample}`,
+        );
+      }
+
+      // Explicit assertion - test fails if this is false
       expect(result.isCorrect).toBe(true);
+      expect(result.error).toBeNull();
     });
   }
 });

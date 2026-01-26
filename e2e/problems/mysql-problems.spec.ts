@@ -19,21 +19,6 @@ async function clearLocalStorage(page: Page): Promise<void> {
   });
 }
 
-async function navigateToProblemPage(page: Page, problemId: string): Promise<boolean> {
-  try {
-    await page.goto(`${PROBLEMS_BASE_URL}/${problemId}`);
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
-    const problemContent = page.locator('h1, h2, [data-testid="problem-content"]');
-    return await problemContent
-      .first()
-      .isVisible({ timeout: 5000 })
-      .catch(() => false);
-  } catch {
-    return false;
-  }
-}
-
 function getCodeEditor(page: Page) {
   return page
     .locator('[data-testid="code-editor"], .monaco-editor textarea, textarea, input[type="text"]')
@@ -79,61 +64,77 @@ async function submitCode(
   return { isCorrect, error: errorText, output };
 }
 
-test.describe('MySQL Problems - Comprehensive E2E Tests', () => {
+/**
+ * CRITICAL MEMORY: This test suite MUST test EVERY MySQL problem.
+ *
+ * Current count: 70 problems
+ *
+ * Requirements:
+ * 1. Every problem must have a test case
+ * 2. No test.skip() allowed - if a problem can't be accessed, the test MUST fail
+ * 3. Every sample solution must be validated
+ * 4. Direct navigation to /mysql/problems/{problemId} must work for all problems
+ *
+ * This ensures 100% coverage of MySQL problems in e2e tests.
+ */
+test.describe(`MySQL Problems - Comprehensive E2E Tests (ALL ${mysqlProblems.length} PROBLEMS - NO SKIPPING)`, () => {
+  // CRITICAL: Verify we're testing all problems
+  test(`MEMORY: Total MySQL problems to test: ${mysqlProblems.length}`, () => {
+    expect(mysqlProblems.length).toBe(70);
+    expect(mysqlProblems.length).toBeGreaterThan(0);
+  });
+
   for (const problem of mysqlProblems) {
-    test(`Problem: ${problem.id} - ${problem.title}`, async ({ page }) => {
+    test(`[${problem.id}] ${problem.title}`, async ({ page }) => {
       await page.goto('/');
       await clearLocalStorage(page);
 
-      const navigated = await navigateToProblemPage(page, problem.id);
+      // CRITICAL: Direct navigation MUST work
+      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`);
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(2000);
 
-      if (!navigated) {
-        await page.goto(PROBLEMS_BASE_URL);
-        await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(1000);
+      // Verify we're on the correct problem page
+      const problemTitle = page
+        .locator('h1, h2')
+        .filter({ hasText: new RegExp(problem.title, 'i') });
+      const titleVisible = await problemTitle
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
 
-        const problemLink = page
-          .locator(`a[href*="${problem.id}"], [data-problem-id="${problem.id}"]`)
-          .first();
-        const linkExists = await problemLink.isVisible({ timeout: 3000 }).catch(() => false);
-
-        if (!linkExists) {
-          const searchInput = page
-            .locator('input[type="search"], input[placeholder*="search" i]')
-            .first();
-          if (await searchInput.isVisible().catch(() => false)) {
-            await searchInput.fill(problem.title);
-            await page.waitForTimeout(500);
-          }
-
-          const titleLink = page.getByText(problem.title).first();
-          if (await titleLink.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await titleLink.click();
-            await page.waitForLoadState('networkidle');
-            await page.waitForTimeout(1000);
-          } else {
-            test.skip();
-            return;
-          }
-        } else {
-          await problemLink.click();
-          await page.waitForLoadState('networkidle');
-          await page.waitForTimeout(1000);
+      if (!titleVisible) {
+        const url = page.url();
+        const hasProblemId = url.includes(problem.id);
+        if (!hasProblemId) {
+          throw new Error(
+            `FAILED: Cannot access problem ${problem.id} "${problem.title}". URL: ${url}. This problem MUST be testable.`,
+          );
         }
       }
 
+      // Wait for code editor - REQUIRED
       const editor = await getCodeEditor(page);
-      await editor.waitFor({ state: 'visible', timeout: 10000 });
+      try {
+        await editor.waitFor({ state: 'visible', timeout: 10000 });
+      } catch {
+        throw new Error(
+          `FAILED: Code editor not visible for problem ${problem.id} "${problem.title}". This problem MUST be testable.`,
+        );
+      }
 
+      // Submit sample solution - MUST work
       const result = await submitCode(page, problem.sample);
 
       if (!result.isCorrect) {
         throw new Error(
-          `Problem ${problem.id}: Sample solution was rejected. Error: ${result.error || 'Unknown error'}. Output: ${result.output || 'None'}`,
+          `FAILED: Problem ${problem.id} "${problem.title}" - Sample solution was REJECTED. ` +
+            `Error: ${result.error || 'Unknown error'}. Output: ${result.output || 'None'}. Sample: ${problem.sample}`,
         );
       }
 
       expect(result.isCorrect).toBe(true);
+      expect(result.error).toBeNull();
     });
   }
 });
