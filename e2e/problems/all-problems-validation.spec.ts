@@ -101,7 +101,8 @@ async function submitCode(
   await editor.press('Enter');
 
   // Wait for validation
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(2000);
+  console.log(`    [SUBMIT] Code submitted, waiting for validation...`);
 
   // Check for success/error feedback
   const successIndicator = page.locator(
@@ -218,12 +219,19 @@ test.describe('All Problems - Sample Solution Validation (E2E)', () => {
     // Database languages use pattern matching, others use execution
 
     test(`should accept sample solution for: ${problem.id} (${language})`, async ({ page }) => {
+      console.log(
+        `\n[TEST START] ${language.toUpperCase()} Problem: ${problem.id} - "${problem.title}"`,
+      );
+      console.log(`  Category: ${problem.category}, Difficulty: ${problem.difficulty}`);
+
       await clearLocalStorage(page);
 
       // Try to navigate to problem page
+      console.log(`  [STEP 1] Attempting direct navigation...`);
       const navigated = await navigateToProblemPage(page, language, problem.id);
 
       if (!navigated) {
+        console.log(`  [STEP 1] Direct navigation failed, trying through problems list...`);
         // If direct navigation doesn't work, try through problems list
         await page.goto(`/${language}/problems`);
         await page.waitForLoadState('networkidle');
@@ -257,10 +265,6 @@ test.describe('All Problems - Sample Solution Validation (E2E)', () => {
           await page.waitForLoadState('networkidle');
           await page.waitForTimeout(1000);
         }
-
-        await problemLink.click();
-        await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(1000);
       }
 
       // Wait for code editor to be visible

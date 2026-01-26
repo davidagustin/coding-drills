@@ -70,6 +70,8 @@ async function submitCode(
 }> {
   const editor = await getCodeEditor(page);
   await editor.waitFor({ state: 'visible', timeout: 15000 });
+
+  // Clear and fill editor
   await editor.click();
   await editor.fill('');
   await editor.fill(code);
@@ -78,6 +80,9 @@ async function submitCode(
   await editor.press('Enter');
   // Wait for validation to complete
   await page.waitForTimeout(2000);
+
+  // Log submission attempt
+  console.log(`    [SUBMIT] Code submitted, waiting for validation...`);
 
   // Check for success/error feedback
   const successIndicator = page.locator(
@@ -143,20 +148,29 @@ test.describe('MongoDB Problems - Comprehensive E2E Tests (ALL PROBLEMS - NO SKI
   // Run in parallel for speed, but limit workers to avoid overwhelming the server
   for (const problem of mongodbProblems) {
     test(`[${problem.id}] ${problem.title}`, async ({ page }) => {
+      console.log(`\n[TEST START] MongoDB Problem: ${problem.id} - "${problem.title}"`);
+      console.log(`  Category: ${problem.category}, Difficulty: ${problem.difficulty}`);
+      console.log(`  Sample solution: ${problem.sample}`);
+
       // Set shorter timeouts for faster failure detection
       page.setDefaultTimeout(30000);
       page.setDefaultNavigationTimeout(30000);
 
       // Clear state
+      console.log(`  [STEP 1] Clearing localStorage...`);
       await page.goto('/');
       await clearLocalStorage(page);
 
       // CRITICAL: Direct navigation MUST work - this is the primary method
-      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`, { waitUntil: 'domcontentloaded' });
+      const problemUrl = `${PROBLEMS_BASE_URL}/${problem.id}`;
+      console.log(`  [STEP 2] Navigating to: ${problemUrl}`);
+      await page.goto(problemUrl, { waitUntil: 'domcontentloaded' });
       await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
+      console.log(`  [STEP 2] Navigation complete. Current URL: ${page.url()}`);
 
       // Verify we're on the correct problem page
+      console.log(`  [STEP 3] Verifying problem page...`);
       const problemTitle = page
         .locator('h1, h2')
         .filter({ hasText: new RegExp(problem.title, 'i') });
@@ -166,33 +180,51 @@ test.describe('MongoDB Problems - Comprehensive E2E Tests (ALL PROBLEMS - NO SKI
         .catch(() => false);
 
       if (!titleVisible) {
+        console.log(`  [WARNING] Problem title not visible, checking URL and page content...`);
         // Try to find problem ID in URL or page content
         const url = page.url();
         const hasProblemId = url.includes(problem.id);
         const pageContent = await page.textContent('body').catch(() => '');
 
         if (!hasProblemId && !pageContent.includes(problem.id)) {
+          console.error(`  [ERROR] Cannot verify problem page. URL: ${url}`);
           throw new Error(
             `FAILED: Cannot access problem ${problem.id} "${problem.title}". URL: ${url}. This problem MUST be testable.`,
           );
         }
+        console.log(`  [INFO] Problem ID found in URL or content, continuing...`);
+      } else {
+        console.log(`  [STEP 3] Problem title verified: "${problem.title}"`);
       }
 
       // Wait for code editor to be visible - this is REQUIRED
+      console.log(`  [STEP 4] Waiting for code editor...`);
       const editor = await getCodeEditor(page);
       try {
         await editor.waitFor({ state: 'visible', timeout: 15000 });
+        console.log(`  [STEP 4] Code editor is visible`);
       } catch {
+        console.error(`  [ERROR] Code editor not visible after 15s timeout`);
         throw new Error(
           `FAILED: Code editor not visible for problem ${problem.id} "${problem.title}". This problem MUST be testable.`,
         );
       }
 
       // Submit sample solution - this MUST work
+      console.log(`  [STEP 5] Submitting sample solution: ${problem.sample}`);
       const result = await submitCode(page, problem.sample);
+      console.log(`  [STEP 5] Submission result:`, {
+        isCorrect: result.isCorrect,
+        error: result.error,
+        output: result.output?.substring(0, 100), // Truncate long outputs
+      });
 
       // Sample solution MUST be accepted - this is the core validation
       if (!result.isCorrect) {
+        console.error(`  [ERROR] Sample solution was REJECTED!`);
+        console.error(`    Error: ${result.error || 'Unknown error'}`);
+        console.error(`    Output: ${result.output || 'None'}`);
+        console.error(`    Sample: ${problem.sample}`);
         throw new Error(
           `FAILED: Problem ${problem.id} "${problem.title}" - Sample solution was REJECTED. ` +
             `This indicates a validation bug. Error: ${result.error || 'Unknown error'}. ` +
@@ -203,6 +235,7 @@ test.describe('MongoDB Problems - Comprehensive E2E Tests (ALL PROBLEMS - NO SKI
       // Explicit assertion - test fails if this is false
       expect(result.isCorrect).toBe(true);
       expect(result.error).toBeNull();
+      console.log(`  [TEST PASS] Problem ${problem.id} validated successfully ✓\n`);
     });
   }
 });

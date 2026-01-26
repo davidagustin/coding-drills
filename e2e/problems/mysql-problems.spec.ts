@@ -86,17 +86,26 @@ test.describe(`MySQL Problems - Comprehensive E2E Tests (ALL ${mysqlProblems.len
 
   for (const problem of mysqlProblems) {
     test(`[${problem.id}] ${problem.title}`, async ({ page }) => {
+      console.log(`\n[TEST START] MySQL Problem: ${problem.id} - "${problem.title}"`);
+      console.log(`  Category: ${problem.category}, Difficulty: ${problem.difficulty}`);
+      console.log(`  Sample solution: ${problem.sample}`);
+
+      console.log(`  [STEP 1] Clearing localStorage...`);
       await page.goto('/');
       await clearLocalStorage(page);
 
       // CRITICAL: Direct navigation MUST work
       page.setDefaultTimeout(30000);
       page.setDefaultNavigationTimeout(30000);
-      await page.goto(`${PROBLEMS_BASE_URL}/${problem.id}`, { waitUntil: 'domcontentloaded' });
+      const problemUrl = `${PROBLEMS_BASE_URL}/${problem.id}`;
+      console.log(`  [STEP 2] Navigating to: ${problemUrl}`);
+      await page.goto(problemUrl, { waitUntil: 'domcontentloaded' });
       await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
+      console.log(`  [STEP 2] Navigation complete. Current URL: ${page.url()}`);
 
       // Verify we're on the correct problem page
+      console.log(`  [STEP 3] Verifying problem page...`);
       const problemTitle = page
         .locator('h1, h2')
         .filter({ hasText: new RegExp(problem.title, 'i') });
@@ -106,29 +115,46 @@ test.describe(`MySQL Problems - Comprehensive E2E Tests (ALL ${mysqlProblems.len
         .catch(() => false);
 
       if (!titleVisible) {
+        console.log(`  [WARNING] Problem title not visible, checking URL...`);
         const url = page.url();
         const hasProblemId = url.includes(problem.id);
         if (!hasProblemId) {
+          console.error(`  [ERROR] Cannot verify problem page. URL: ${url}`);
           throw new Error(
             `FAILED: Cannot access problem ${problem.id} "${problem.title}". URL: ${url}. This problem MUST be testable.`,
           );
         }
+        console.log(`  [INFO] Problem ID found in URL, continuing...`);
+      } else {
+        console.log(`  [STEP 3] Problem title verified: "${problem.title}"`);
       }
 
       // Wait for code editor - REQUIRED
+      console.log(`  [STEP 4] Waiting for code editor...`);
       const editor = await getCodeEditor(page);
       try {
         await editor.waitFor({ state: 'visible', timeout: 10000 });
+        console.log(`  [STEP 4] Code editor is visible`);
       } catch {
+        console.error(`  [ERROR] Code editor not visible after 10s timeout`);
         throw new Error(
           `FAILED: Code editor not visible for problem ${problem.id} "${problem.title}". This problem MUST be testable.`,
         );
       }
 
       // Submit sample solution - MUST work
+      console.log(`  [STEP 5] Submitting sample solution: ${problem.sample}`);
       const result = await submitCode(page, problem.sample);
+      console.log(`  [STEP 5] Submission result:`, {
+        isCorrect: result.isCorrect,
+        error: result.error,
+        output: result.output?.substring(0, 100),
+      });
 
       if (!result.isCorrect) {
+        console.error(`  [ERROR] Sample solution was REJECTED!`);
+        console.error(`    Error: ${result.error || 'Unknown error'}`);
+        console.error(`    Output: ${result.output || 'None'}`);
         throw new Error(
           `FAILED: Problem ${problem.id} "${problem.title}" - Sample solution was REJECTED. ` +
             `Error: ${result.error || 'Unknown error'}. Output: ${result.output || 'None'}. Sample: ${problem.sample}`,
@@ -137,6 +163,7 @@ test.describe(`MySQL Problems - Comprehensive E2E Tests (ALL ${mysqlProblems.len
 
       expect(result.isCorrect).toBe(true);
       expect(result.error).toBeNull();
+      console.log(`  [TEST PASS] Problem ${problem.id} validated successfully ✓\n`);
     });
   }
 });
