@@ -351,81 +351,44 @@ export default function Home() {
           <div className="relative z-10">
             <div className="flex flex-col md:flex-row items-center gap-8">
               {/* Left: Icon and Title */}
-              <div className="text-center md:text-left">
+              <div className="text-center md:text-left flex-1">
                 <div className="text-6xl mb-4">🤖</div>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">
                   AI Mock Interview
                 </h2>
-                <p className="text-gray-400 max-w-md">
+                <p className="text-gray-400 max-w-lg mb-2">
                   Practice coding interviews with an AI interviewer. Get real-time feedback, hints,
                   and improve your problem-solving skills.
                 </p>
+                <p className="text-gray-500 text-sm">
+                  Language-agnostic algorithm problems • Focus on problem-solving patterns
+                </p>
               </div>
 
-              {/* Right: Language Quick Links */}
-              <div className="flex-1 w-full md:w-auto">
-                <p className="text-sm text-gray-500 mb-3 text-center md:text-left">
-                  Start an interview in:
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {[
-                    {
-                      name: 'JavaScript',
-                      slug: 'javascript',
-                      icon: 'JS',
-                      bg: 'bg-yellow-500',
-                      text: 'text-black',
-                    },
-                    {
-                      name: 'Python',
-                      slug: 'python',
-                      icon: '🐍',
-                      bg: 'bg-blue-500',
-                      text: 'text-white',
-                    },
-                    {
-                      name: 'Java',
-                      slug: 'java',
-                      icon: '☕',
-                      bg: 'bg-red-500',
-                      text: 'text-white',
-                    },
-                    {
-                      name: 'C++',
-                      slug: 'cpp',
-                      icon: '</>',
-                      bg: 'bg-blue-700',
-                      text: 'text-white',
-                    },
-                    { name: 'Go', slug: 'go', icon: 'Go', bg: 'bg-cyan-500', text: 'text-white' },
-                    {
-                      name: 'TypeScript',
-                      slug: 'typescript',
-                      icon: 'TS',
-                      bg: 'bg-blue-600',
-                      text: 'text-white',
-                    },
-                  ].map((lang) => (
-                    <Link
-                      key={lang.slug}
-                      href={`/${lang.slug}/interview`}
-                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50
-                                 hover:border-cyan-500/50 hover:bg-gray-800 transition-all duration-200 group"
-                    >
-                      <span
-                        className={`w-8 h-8 rounded-lg ${lang.bg} ${lang.text} flex items-center justify-center text-sm font-bold`}
-                      >
-                        {lang.icon}
-                      </span>
-                      <span className="text-gray-300 group-hover:text-white transition-colors">
-                        {lang.name}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-                <p className="text-xs text-gray-600 mt-3 text-center md:text-left">
-                  Or select any language above to access interview mode
-                </p>
+              {/* Right: Start Button */}
+              <div className="flex-shrink-0">
+                <Link
+                  href="/interview"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500
+                             text-white font-semibold text-lg transition-all duration-200
+                             shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105"
+                >
+                  <span>Start Interview</span>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </Link>
               </div>
             </div>
           </div>
