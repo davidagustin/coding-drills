@@ -308,6 +308,10 @@ export async function executeJavaScriptAsync(
 /**
  * Validates Python code using pattern matching
  * Since we cannot execute Python in the browser, we use intelligent pattern matching
+ *
+ * ACCEPTS MULTIPLE SOLUTIONS: Uses flexible regex matching to accept variations
+ * of the sample solution. This allows different approaches (list comprehensions,
+ * loops, map/filter, etc.) as long as they match the flexible pattern.
  */
 export function validatePython(
   setupCode: string,
@@ -331,13 +335,14 @@ export function validatePython(
   const normalizedVersions = normalizeCodeForPatternMatching(userCode);
 
   // Check for required patterns - test original and all normalized versions
-  let allPatternsMatched = true;
+  // ACCEPT MULTIPLE SOLUTIONS: Match at least ONE pattern (not all)
+  // This allows different approaches (list comprehensions, loops, map/filter, etc.)
+  let allPatternsMatched = validPatterns.length === 0; // If no patterns, allow any valid code
   for (const pattern of validPatterns) {
     const matches = normalizedVersions.some((version) => pattern.test(version));
     if (matches) {
       matchedPatterns.push(pattern.source);
-    } else {
-      allPatternsMatched = false;
+      allPatternsMatched = true; // At least one pattern matched
     }
   }
 
@@ -374,14 +379,14 @@ export function validatePython(
   if (isValid) {
     return {
       valid: true,
-      feedback: 'Your Python code structure looks correct! Pattern validation passed.',
+      feedback: 'Your Python code structure looks correct! Multiple valid solutions are accepted.',
       matchedPatterns,
     };
   }
 
-  if (!allPatternsMatched) {
+  if (!allPatternsMatched && validPatterns.length > 0) {
     feedback.unshift(
-      'Your code does not match the expected patterns. Check that you are using the correct methods and syntax.',
+      'Your code does not match any of the expected patterns. Try a different approach (list comprehension, loop, map/filter, etc.).',
     );
   }
 
@@ -750,6 +755,17 @@ function normalizeCodeForPatternMatching(code: string): string[] {
 
 /**
  * Validate other languages by pattern matching
+ *
+ * ACCEPTS MULTIPLE SOLUTIONS: This function accepts any solution that matches
+ * at least ONE of the valid patterns (not all patterns). This allows different
+ * approaches to solve the same problem.
+ *
+ * Examples of accepted variations:
+ * - MongoDB: db.users.find({age: 30}) vs db.users.find({age: {$eq: 30}})
+ * - SQL: SELECT * FROM users WHERE age > 25 vs SELECT * FROM users WHERE 25 < age
+ * - Go: if v, ok := m["key"]; ok { return v } vs if val, exists := m["key"]; exists { return val }
+ *
+ * For problems without patterns, uses flexible regex matching based on sample solution.
  */
 function validateByPattern(
   language: LanguageId,
@@ -781,6 +797,9 @@ function validateByPattern(
   const normalizedVersions = normalizeCodeForPatternMatching(userCode);
 
   // Check required patterns - test original and all normalized versions
+  // ACCEPT MULTIPLE SOLUTIONS: Match at least ONE pattern (not all)
+  // This allows different approaches to solve the same problem
+  // For example: db.users.find({age: 30}) vs db.users.find({age: {$eq: 30}})
   let patternsMatched = 0;
   for (const pattern of validPatterns) {
     // Test original and all normalized versions to handle all spacing variations
@@ -790,7 +809,9 @@ function validateByPattern(
     }
   }
 
-  const allPatternsMatched = validPatterns.length === 0 || patternsMatched === validPatterns.length;
+  // Accept if NO patterns defined (flexible validation) OR at least ONE pattern matches
+  // This allows multiple valid approaches instead of requiring ALL patterns
+  const allPatternsMatched = validPatterns.length === 0 || patternsMatched > 0;
 
   // Language-specific syntax checks
   const syntaxIssues = checkLanguageSyntax(language, userCode);
@@ -819,7 +840,30 @@ function validateByPattern(
     }
   }
 
-  const isValid = allPatternsMatched && syntaxIssues.length === 0;
+  // If no patterns defined, use flexible validation based on sample solution
+  // This allows multiple approaches when patterns aren't strictly defined
+  let isValid = allPatternsMatched && syntaxIssues.length === 0;
+
+  // For problems without patterns, try flexible matching like Python
+  if (!isValid && validPatterns.length === 0 && 'sample' in problem) {
+    const normalizedCode = normalizedVersions[0]; // Use first normalized version
+    const sampleSolution = problem.sample;
+
+    // Create flexible pattern from sample solution (similar to Python validation)
+    const flexiblePattern = new RegExp(
+      sampleSolution
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/\s+/g, '\\s*')
+        .replace(/\\\(/g, '\\s*\\(\\s*')
+        .replace(/\\\)/g, '\\s*\\)\\s*'),
+      'i',
+    );
+
+    // Check if user code matches flexible pattern (allows variations)
+    if (flexiblePattern.test(normalizedCode)) {
+      isValid = true;
+    }
+  }
 
   return {
     valid: isValid,
@@ -827,10 +871,12 @@ function validateByPattern(
     failed: isValid ? 0 : 1,
     total: 1,
     feedback: isValid
-      ? `Your ${language} code structure looks correct! Pattern validation passed.`
+      ? `Your ${language} code structure looks correct! Multiple valid solutions are accepted.`
       : feedback.length > 0
         ? feedback.join('\n')
-        : 'Your code does not match the expected patterns.',
+        : validPatterns.length > 0
+          ? `Your code does not match any of the expected patterns. Try a different approach.`
+          : 'Your code does not match the expected solution structure.',
     details: [
       {
         testCaseId: 'pattern-check',

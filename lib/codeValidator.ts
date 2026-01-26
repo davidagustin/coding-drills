@@ -257,6 +257,8 @@ export function validatePython(
 
 /**
  * Validates code for non-executable languages using pattern matching
+ * ACCEPTS MULTIPLE SOLUTIONS: Uses flexible pattern matching to allow variations
+ * This enables different approaches to solve the same problem
  */
 export function validateByPattern(
   userAnswer: string,
@@ -266,6 +268,7 @@ export function validateByPattern(
   const normalizedAnswer = userAnswer.trim();
   const normalizedSolution = sampleSolution.trim();
 
+  // Exact match
   if (normalizedAnswer === normalizedSolution) {
     return { success: true, output: expectedOutput };
   }
@@ -278,9 +281,24 @@ export function validateByPattern(
     return { success: true, output: expectedOutput };
   }
 
+  // Try flexible regex matching (allows variations in syntax)
+  // This accepts multiple valid approaches, not just the exact sample
+  const flexiblePattern = new RegExp(
+    sampleSolution
+      .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      .replace(/\s+/g, '\\s*')
+      .replace(/\\\(/g, '\\s*\\(\\s*')
+      .replace(/\\\)/g, '\\s*\\)\\s*'),
+    'i',
+  );
+
+  if (flexiblePattern.test(normalizedAnswer)) {
+    return { success: true, output: expectedOutput };
+  }
+
   return {
     success: false,
-    error: 'Output does not match expected result',
+    error: 'Output does not match expected result. Try a different approach.',
     output: userAnswer,
   };
 }
@@ -394,9 +412,17 @@ export function validateDrillAnswer(
 
 /**
  * Validates a Problem from the existing types
- * Accepts any solution that produces the correct output
- * (For JavaScript/TypeScript: executes code and compares output)
- * (For other languages: uses pattern matching or flexible validation)
+ *
+ * ACCEPTS MULTIPLE SOLUTIONS across all languages:
+ * - JavaScript/TypeScript: Executes code and compares output using deepEqual
+ *   (accepts ANY solution that produces correct output: map, reduce, for loops, etc.)
+ * - Python: Uses flexible regex pattern matching (accepts variations of sample)
+ * - Pattern-based languages: Matches at least ONE valid pattern (not all)
+ *   (allows different approaches: different operators, syntax variations, etc.)
+ * - Database languages: Matches at least ONE valid pattern OR flexible sample matching
+ *   (accepts different query styles: different operators, syntax variations, etc.)
+ *
+ * This ensures users can solve problems using their preferred approach.
  */
 export function validateProblemAnswer(
   problem: Problem,
