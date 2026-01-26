@@ -836,6 +836,16 @@ interface DrillPhaseProps {
   questionStartTime: number;
 }
 
+interface DrillPhaseProps {
+  problems: ProblemWithLanguage[];
+  state: DrillState;
+  language: LanguageId;
+  onAnswer: (answer: string) => void;
+  onSkip: () => void;
+  questionStartTime: number;
+  currentAnswer: AnswerRecord | null; // Add current answer for snackbar
+}
+
 function DrillPhaseComponent({
   problems,
   state,
@@ -843,6 +853,7 @@ function DrillPhaseComponent({
   onAnswer,
   onSkip,
   questionStartTime,
+  currentAnswer,
 }: DrillPhaseProps) {
   const [userAnswer, setUserAnswer] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -870,8 +881,9 @@ function DrillPhaseComponent({
 
   const handleSubmit = useCallback(() => {
     if (userAnswer.trim()) {
-      onAnswer(userAnswer.trim());
-      setUserAnswer('');
+      const answerToSubmit = userAnswer.trim();
+      setUserAnswer(''); // Clear immediately for better UX
+      onAnswer(answerToSubmit);
     }
   }, [userAnswer, onAnswer]);
 
@@ -882,7 +894,92 @@ function DrillPhaseComponent({
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 relative">
+      {/* Snackbar Notification */}
+      {currentAnswer && (
+        <div
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-lg shadow-2xl border px-6 py-4 min-w-[320px] max-w-md animate-in slide-in-from-top-5 fade-in-0 duration-300 ${
+            currentAnswer.skipped
+              ? 'bg-zinc-800 border-zinc-700'
+              : currentAnswer.isCorrect
+                ? 'bg-green-500/20 border-green-500/30 backdrop-blur-sm'
+                : 'bg-red-500/20 border-red-500/30 backdrop-blur-sm'
+          }`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div
+                className={`text-2xl font-bold ${
+                  currentAnswer.skipped
+                    ? 'text-zinc-400'
+                    : currentAnswer.isCorrect
+                      ? 'text-green-400'
+                      : 'text-red-400'
+                }`}
+              >
+                {currentAnswer.skipped ? '⏭️' : currentAnswer.isCorrect ? '✓' : '✗'}
+              </div>
+              <div className="flex-1">
+                <div
+                  className={`text-lg font-semibold ${
+                    currentAnswer.skipped
+                      ? 'text-zinc-300'
+                      : currentAnswer.isCorrect
+                        ? 'text-green-400'
+                        : 'text-red-400'
+                  }`}
+                >
+                  {currentAnswer.skipped
+                    ? 'Skipped'
+                    : currentAnswer.isCorrect
+                      ? 'Correct!'
+                      : 'Incorrect'}
+                </div>
+                <div className="flex items-center gap-3 mt-1 text-sm">
+                  {currentAnswer.isCorrect && currentAnswer.pointsEarned > 0 && (
+                    <span className="text-blue-400 font-medium">
+                      +{currentAnswer.pointsEarned} pts
+                    </span>
+                  )}
+                  <span className="text-zinc-500">
+                    {(currentAnswer.timeTaken / 1000).toFixed(1)}s
+                  </span>
+                </div>
+                {!currentAnswer.skipped && !currentAnswer.isCorrect && currentAnswer.error && (
+                  <p className="text-xs text-red-400 mt-1 line-clamp-2">{currentAnswer.error}</p>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                // Snackbar will auto-dismiss when currentAnswer is cleared
+                // This is just for visual feedback - auto-advance will handle dismissal
+              }}
+              className="text-zinc-400 hover:text-zinc-300 transition-colors opacity-50"
+              aria-label="Dismiss"
+              disabled
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-label="Close"
+                role="img"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header Stats */}
       <div className="flex items-center justify-between bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-800">
         <div className="flex items-center gap-6">
@@ -971,6 +1068,7 @@ function DrillPhaseComponent({
             )}
           </div>
           <CodeEditor
+            key={`${state.currentIndex}-${currentProblem.id}`}
             code={userAnswer}
             onChange={setUserAnswer}
             language={currentProblem.sourceLanguage}
@@ -1318,6 +1416,30 @@ export default function DrillPage() {
     [language],
   );
 
+  const handleNext = useCallback(() => {
+    const nextIndex = drillState.currentIndex + 1;
+
+    // Clear current answer when moving to next question
+    setCurrentAnswer(null);
+
+    if (nextIndex >= problems.length) {
+      // Drill complete
+      setDrillState((prev) => ({
+        ...prev,
+        endTime: Date.now(),
+      }));
+      setPhase('results');
+    } else {
+      // Move to next question
+      setDrillState((prev) => ({
+        ...prev,
+        currentIndex: nextIndex,
+      }));
+      setQuestionStartTime(Date.now());
+      setPhase('drilling');
+    }
+  }, [drillState.currentIndex, problems.length]);
+
   const handleAnswer = useCallback(
     (userAnswer: string) => {
       const currentProblem = problems[drillState.currentIndex];
@@ -1357,9 +1479,16 @@ export default function DrillPage() {
         };
       });
 
-      setPhase('feedback');
+      // Show snackbar feedback instead of full-page feedback
+      // Auto-advance to next question after a short delay (timed drill)
+      setTimeout(
+        () => {
+          handleNext();
+        },
+        result.success ? 2000 : 3000,
+      ); // 2s for correct, 3s for incorrect (to read error)
     },
-    [problems, drillState.currentIndex, drillState.streak, questionStartTime, language],
+    [problems, drillState.currentIndex, drillState.streak, questionStartTime, language, handleNext],
   );
 
   const handleSkip = useCallback(() => {
@@ -1384,31 +1513,11 @@ export default function DrillPage() {
       streak: 0,
     }));
 
-    setPhase('feedback');
-  }, [problems, drillState.currentIndex, questionStartTime]);
-
-  const handleNext = useCallback(() => {
-    const nextIndex = drillState.currentIndex + 1;
-
-    if (nextIndex >= problems.length) {
-      // Drill complete
-      setDrillState((prev) => ({
-        ...prev,
-        endTime: Date.now(),
-      }));
-      setPhase('results');
-    } else {
-      // Move to next question
-      setDrillState((prev) => ({
-        ...prev,
-        currentIndex: nextIndex,
-      }));
-      setQuestionStartTime(Date.now());
-      setPhase('drilling');
-    }
-
-    setCurrentAnswer(null);
-  }, [drillState.currentIndex, problems.length]);
+    // Show snackbar and auto-advance
+    setTimeout(() => {
+      handleNext();
+    }, 2000); // 2s for skipped
+  }, [problems, drillState.currentIndex, questionStartTime, handleNext]);
 
   const handleTryAgain = useCallback(() => {
     if (config) {
@@ -1432,6 +1541,7 @@ export default function DrillPage() {
           onAnswer={handleAnswer}
           onSkip={handleSkip}
           questionStartTime={questionStartTime}
+          currentAnswer={currentAnswer}
         />
       )}
 
