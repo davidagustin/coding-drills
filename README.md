@@ -28,7 +28,11 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 
 ## The Solution
 
-**Coding Drills** transforms syntax learning into an interactive, game-like experience. Practice typing real code, test your knowledge with timed quizzes, solve LeetCode-style problems, and prepare for interviews across **21 programming languages**.
+**Coding Drills** transforms syntax learning into an interactive, game-like experience. Practice typing real code, test your knowledge with timed quizzes, solve LeetCode-style problems, and prepare for interviews across **22 programming languages**.
+
+### 📈 Problem Database Expansion
+
+We're currently expanding our problem database with **500 new problems per language** (11,000+ total). See [PROBLEM_GENERATION_PLAN.md](./PROBLEM_GENERATION_PLAN.md) for the detailed roadmap and progress tracking.
 
 ---
 
@@ -44,6 +48,7 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 | **AI Mock Interview** | Practice coding interviews with AI-powered feedback. Simulates real interview scenarios with hints and explanations. Quick access from homepage for popular languages. |
 | **Algorithm Exercises** | Master traversal patterns (DFS, BFS), recursion, prime generation, Fibonacci, and iteration control. |
 | **Method Reference** | Browse 469+ methods with full documentation, examples, and complexity analysis. |
+| **Problem Database** | 4,000+ coding problems across 22 languages, with 11,000+ more in development. |
 | **Cheatsheets** | Comprehensive language cheatsheets covering syntax, data structures, common patterns, and best practices for all 21 languages. |
 
 ### 🌍 Twenty-One Languages Supported
@@ -272,7 +277,8 @@ git push origin feature/add-new-problems
 - [x] **Scoring System** - Points based on speed, difficulty, and streaks
 - [x] **JS/TS Toggle** - Practice JavaScript and TypeScript together
 - [x] **Data Management** - Clear saved data with selective deletion dialog
-- [x] **21 Languages** - JavaScript, TypeScript, Python, Java, C++, C#, Go, Ruby, C, PHP, Kotlin, Rust, Swift, Scala, R, Perl, Lua, Haskell, Elixir, Dart, Clojure
+- [x] **22 Languages** - JavaScript, TypeScript, Python, Java, C++, C#, Go, Ruby, C, PHP, Kotlin, Rust, Swift, Scala, R, Perl, Lua, Haskell, Elixir, Dart, Clojure, MySQL, PostgreSQL
+- [ ] **Problem Database Expansion** - Adding 500 problems per language (11,000+ total) - See [PROBLEM_GENERATION_PLAN.md](./PROBLEM_GENERATION_PLAN.md)
 - [x] **LeetCode-style Problems** - Browsable problem list with individual problem pages
 - [x] **AI Mock Interview** - Practice coding interviews with AI feedback
 - [x] **Cheatsheets** - Comprehensive language reference guides
@@ -292,10 +298,10 @@ git push origin feature/add-new-problems
 
 | Metric | Count |
 |--------|-------|
-| **Languages** | 21 |
-| **Coding Problems** | 3,500+ |
+| **Languages** | 22 |
+| **Coding Problems** | 4,000+ (11,000+ in expansion) |
 | **Method References** | 469 |
-| **Cheatsheets** | 21 |
+| **Cheatsheets** | 22 |
 | **Algorithm Exercises** | 15+ per language |
 | **E2E Test Lines** | 7,000+ |
 | **Total Lines of Code** | 126,000+ |
