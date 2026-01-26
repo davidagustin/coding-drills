@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { GlobalNavbar } from '@/components/GlobalNavbar';
 import { ProgressProvider } from '@/components/ProgressProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
@@ -90,7 +91,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
         <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
           <ThemeProvider defaultTheme="dark">
-            <ProgressProvider>{children}</ProgressProvider>
+            <ProgressProvider>
+              <GlobalNavbar />
+              {children}
+            </ProgressProvider>
           </ThemeProvider>
         </ErrorBoundary>
       </body>
