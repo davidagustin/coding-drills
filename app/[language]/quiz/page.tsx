@@ -656,8 +656,8 @@ function QuestionDisplay({ question }: QuestionDisplayProps) {
       {/* Code snippet */}
       <div className="mb-4">
         <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Input</div>
-        <pre className="bg-slate-900 rounded-lg p-4 overflow-x-auto font-mono text-sm text-blue-300">
-          <code>{question.input}</code>
+        <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+          <code className="block">{question.input}</code>
         </pre>
       </div>
 
@@ -667,8 +667,8 @@ function QuestionDisplay({ question }: QuestionDisplayProps) {
           <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
             Method Arguments
           </div>
-          <pre className="bg-slate-900 rounded-lg p-4 overflow-x-auto font-mono text-sm text-purple-300 border border-purple-500/20">
-            <code>({question.methodArgs})</code>
+          <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-purple-300 border border-purple-500/20 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+            <code className="block">({question.methodArgs})</code>
           </pre>
         </div>
       )}
@@ -676,8 +676,8 @@ function QuestionDisplay({ question }: QuestionDisplayProps) {
       {/* Output */}
       <div>
         <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Output</div>
-        <pre className="bg-slate-900 rounded-lg p-4 overflow-x-auto font-mono text-sm text-emerald-300">
-          <code>{question.output}</code>
+        <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-emerald-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+          <code className="block">{question.output}</code>
         </pre>
       </div>
     </div>

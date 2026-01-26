@@ -105,8 +105,8 @@ const MethodCard = memo(function MethodCard({
             <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
               Syntax
             </h4>
-            <pre className="bg-zinc-950 rounded-lg p-3 overflow-x-auto">
-              <code className="text-sm font-mono text-emerald-400">{method.syntax}</code>
+            <pre className="bg-zinc-950 rounded-lg p-3 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+              <code className="text-sm font-mono text-emerald-400 block">{method.syntax}</code>
             </pre>
           </div>
 

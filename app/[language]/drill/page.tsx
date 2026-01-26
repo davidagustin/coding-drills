@@ -377,8 +377,8 @@ function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
 
 function CodeDisplay({ code }: { code: string }) {
   return (
-    <pre className="bg-zinc-900 text-zinc-100 p-4 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed border border-zinc-800">
-      <code>{code}</code>
+    <pre className="bg-zinc-900 text-zinc-100 p-4 rounded-lg font-mono text-sm leading-relaxed border border-zinc-800 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+      <code className="block">{code}</code>
     </pre>
   );
 }

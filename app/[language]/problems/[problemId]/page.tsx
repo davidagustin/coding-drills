@@ -499,8 +499,8 @@ export default function ProblemDetailPage() {
                 <span className="text-sm font-medium text-zinc-300">Setup Code</span>
               </div>
               <div className="p-4">
-                <pre className="bg-zinc-950 text-zinc-100 p-4 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed border border-zinc-800">
-                  <code>{problem.setupCode}</code>
+                <pre className="bg-zinc-950 text-zinc-100 p-4 rounded-lg font-mono text-sm leading-relaxed border border-zinc-800 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+                  <code className="block">{problem.setupCode}</code>
                 </pre>
               </div>
             </div>
@@ -541,8 +541,8 @@ export default function ProblemDetailPage() {
               icon={<CodeBracketIcon className="w-4 h-4 text-blue-500" />}
               defaultOpen={showSolution}
             >
-              <pre className="bg-zinc-950 text-zinc-100 p-4 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed border border-zinc-800">
-                <code>{problem.sample}</code>
+              <pre className="bg-zinc-950 text-zinc-100 p-4 rounded-lg font-mono text-sm leading-relaxed border border-zinc-800 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+                <code className="block">{problem.sample}</code>
               </pre>
             </CollapsibleSection>
           </div>

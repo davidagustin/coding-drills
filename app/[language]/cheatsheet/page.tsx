@@ -165,16 +165,16 @@ function EntryCard({
           {/* Syntax */}
           <div className="mt-3">
             <span className="text-xs font-medium text-zinc-500 uppercase">Syntax</span>
-            <pre className="mt-1 bg-zinc-950 rounded p-2 overflow-x-auto">
-              <code className="text-sm font-mono text-emerald-400">{entry.syntax}</code>
+            <pre className="mt-1 bg-zinc-950 rounded p-2 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+              <code className="text-sm font-mono text-emerald-400 block">{entry.syntax}</code>
             </pre>
           </div>
 
           {/* Example */}
           <div>
             <span className="text-xs font-medium text-zinc-500 uppercase">Example</span>
-            <pre className="mt-1 bg-zinc-950 rounded p-2 overflow-x-auto">
-              <code className="text-sm font-mono text-zinc-300">{entry.example.code}</code>
+            <pre className="mt-1 bg-zinc-950 rounded p-2 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+              <code className="text-sm font-mono text-zinc-300 block">{entry.example.code}</code>
             </pre>
             <div className="mt-1 text-sm font-mono text-green-400">→ {entry.example.output}</div>
           </div>
@@ -258,8 +258,10 @@ function EntryRow({
               {/* Example */}
               <div>
                 <span className="text-xs font-medium text-zinc-500 uppercase">Example</span>
-                <pre className="mt-1 bg-zinc-950 rounded p-3 overflow-x-auto">
-                  <code className="text-sm font-mono text-zinc-300">{entry.example.code}</code>
+                <pre className="mt-1 bg-zinc-950 rounded p-3 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+                  <code className="text-sm font-mono text-zinc-300 block">
+                    {entry.example.code}
+                  </code>
                 </pre>
                 <div className="mt-1 text-sm font-mono text-green-400">
                   → {entry.example.output}
