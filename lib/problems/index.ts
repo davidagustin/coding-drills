@@ -82,7 +82,9 @@ export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
   dart: dartProblems,
   clojure: clojureProblems,
   // Database languages
-  sql: [], // SQL problems can be added later
+  // SQL uses PostgreSQL problems since PostgreSQL is SQL-compliant
+  // Most PostgreSQL queries work as standard SQL
+  sql: postgresqlProblems,
   mysql: mysqlProblems,
   postgresql: postgresqlProblems,
   mongodb: [], // MongoDB problems can be added later
