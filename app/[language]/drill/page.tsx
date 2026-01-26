@@ -8,6 +8,7 @@ import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
 import { getProblemCountsByCategory, problemsByLanguage } from '@/lib/problems/index';
 import type { Difficulty, LanguageId, Problem } from '@/lib/types';
+import { LANGUAGE_CONFIG } from '../config';
 
 // Static problems reference for synchronous access (fallback for lazy loading)
 const PROBLEMS_BY_LANGUAGE: Partial<Record<LanguageId, Problem[]>> = problemsByLanguage;
@@ -277,7 +278,8 @@ function selectProblems(language: LanguageId, config: DrillConfig): ProblemWithL
 }
 
 function isValidLanguage(lang: string): lang is LanguageId {
-  return [
+  // Use SUPPORTED_LANGUAGES from config to ensure all languages are included
+  const SUPPORTED_LANGUAGES: LanguageId[] = [
     'javascript',
     'typescript',
     'python',
@@ -289,7 +291,22 @@ function isValidLanguage(lang: string): lang is LanguageId {
     'c',
     'php',
     'kotlin',
-  ].includes(lang);
+    'rust',
+    'swift',
+    'scala',
+    'r',
+    'perl',
+    'lua',
+    'haskell',
+    'elixir',
+    'dart',
+    'clojure',
+    'sql',
+    'postgresql',
+    'mysql',
+    'mongodb',
+  ];
+  return SUPPORTED_LANGUAGES.includes(lang as LanguageId);
 }
 
 // ============================================================================
@@ -492,7 +509,9 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
     setSelectedQuestionIds(new Set());
   };
 
-  const languageName = language.charAt(0).toUpperCase() + language.slice(1);
+  // Get proper language name from config
+  const languageName =
+    LANGUAGE_CONFIG[language]?.name || language.charAt(0).toUpperCase() + language.slice(1);
 
   const difficultyColors: Record<Difficulty, string> = {
     easy: 'bg-green-500/20 text-green-400 border-green-500/30',
@@ -541,21 +560,31 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
           <span className="block text-sm font-medium text-zinc-300 mb-3">
             Categories {selectedCategories.length > 0 && `(${selectedCategories.length} selected)`}
           </span>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Chip
-                key={category}
-                label={category}
-                selected={selectedCategories.includes(category)}
-                onClick={() => toggleCategory(category)}
-                count={categoryCounts[category] || 0}
-              />
-            ))}
-          </div>
-          {selectedCategories.length === 0 && (
-            <p className="text-xs text-zinc-500 mt-2">
-              No categories selected - all categories will be included
-            </p>
+          {categories.length === 0 ? (
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+              <p className="text-yellow-400 text-sm">
+                No problems available for {languageName} yet. Problems are being added regularly!
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Chip
+                    key={category}
+                    label={category}
+                    selected={selectedCategories.includes(category)}
+                    onClick={() => toggleCategory(category)}
+                    count={categoryCounts[category] || 0}
+                  />
+                ))}
+              </div>
+              {selectedCategories.length === 0 && (
+                <p className="text-xs text-zinc-500 mt-2">
+                  No categories selected - all categories will be included
+                </p>
+              )}
+            </>
           )}
         </div>
 

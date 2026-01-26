@@ -82,8 +82,10 @@ export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
   dart: dartProblems,
   clojure: clojureProblems,
   // Database languages
+  sql: [], // SQL problems can be added later
   mysql: mysqlProblems,
   postgresql: postgresqlProblems,
+  mongodb: [], // MongoDB problems can be added later
 };
 
 // Get problems for a specific language
