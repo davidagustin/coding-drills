@@ -532,3 +532,111 @@ export async function isInViewport(locator: Locator): Promise<boolean> {
     box.y + box.height <= viewportSize.height
   );
 }
+
+/**
+ * Problem validation test utilities
+ */
+export interface ProblemTestVariation {
+  code: string;
+  description: string;
+  shouldPass: boolean;
+  expectedError?: string | RegExp;
+}
+
+/**
+ * Test a problem with multiple code variations
+ */
+export async function testProblemVariations(
+  page: Page,
+  inputField: Locator,
+  variations: ProblemTestVariation[],
+): Promise<void> {
+  for (const variation of variations) {
+    // Clear and fill input
+    await inputField.fill('');
+    await inputField.fill(variation.code);
+    await inputField.press('Enter');
+
+    // Wait for validation
+    await page.waitForTimeout(1000);
+
+    // Check result
+    const successIndicator = page.locator(
+      '[data-testid="result-success"], .success, .correct, text=/correct|right|good|nice|passed/i',
+    );
+    const errorIndicator = page.locator(
+      '[data-testid="result-error"], .error, .incorrect, text=/incorrect|wrong|error|failed|must use|expected method|pattern/i',
+    );
+
+    const isCorrect = await successIndicator
+      .first()
+      .isVisible()
+      .catch(() => false);
+    const hasError = await errorIndicator
+      .first()
+      .isVisible()
+      .catch(() => false);
+
+    if (variation.shouldPass) {
+      expect(isCorrect).toBe(true);
+    } else {
+      expect(isCorrect === false || hasError).toBeTruthy();
+
+      // If specific error expected, check for it
+      if (variation.expectedError) {
+        const errorText = await errorIndicator
+          .first()
+          .textContent()
+          .catch(() => '');
+        if (typeof variation.expectedError === 'string') {
+          expect(errorText?.toLowerCase()).toContain(variation.expectedError.toLowerCase());
+        } else {
+          expect(errorText).toMatch(variation.expectedError);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Generate Unicode arrow variations for testing
+ */
+export function generateUnicodeArrowVariations(baseCode: string): string[] {
+  const variations: string[] = [];
+
+  // Replace => with Unicode variations
+  variations.push(baseCode.replace(/=>/g, '⇒')); // Unicode arrow
+  variations.push(baseCode.replace(/=>/g, '→')); // Unicode right arrow
+  variations.push(baseCode.replace(/=>/g, '⟹')); // Unicode double arrow
+
+  // Also test with different whitespace patterns
+  variations.push(baseCode.replace(/=>/g, '⇒').replace(/\s+/g, ' '));
+  variations.push(baseCode.replace(/=>/g, '→').replace(/\s+/g, ' '));
+
+  return variations;
+}
+
+/**
+ * Generate syntax variations for arrow functions
+ */
+export function generateArrowFunctionVariations(baseCode: string): string[] {
+  const variations: string[] = [baseCode];
+
+  // Extract the core logic (e.g., "n => n % 2 === 0")
+  const arrowMatch = baseCode.match(/(\w+)\.filter\(([^)]+)\)/);
+  if (!arrowMatch) return variations;
+
+  const arrayVar = arrowMatch[1];
+  const arrowBody = arrowMatch[2];
+
+  // Different arrow function syntaxes
+  variations.push(`${arrayVar}.filter(${arrowBody})`); // Original
+  variations.push(
+    `${arrayVar}.filter((${arrowBody.split('=>')[0].trim()}) => ${arrowBody.split('=>')[1]})`,
+  ); // With parentheses
+  variations.push(
+    `${arrayVar}.filter(function(${arrowBody.split('=>')[0].trim()}) { return ${arrowBody.split('=>')[1].trim()}; })`,
+  ); // Function expression
+
+  return variations;
+}

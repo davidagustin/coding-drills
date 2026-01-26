@@ -18,8 +18,10 @@ import { javaProblems } from './java';
 import { javascriptProblems } from './javascript';
 import { kotlinProblems } from './kotlin';
 import { luaProblems } from './lua';
+import { mysqlProblems } from './mysql';
 import { perlProblems } from './perl';
 import { phpProblems } from './php';
+import { postgresqlProblems } from './postgresql';
 import { pythonProblems } from './python';
 import { rProblems } from './r';
 import { rubyProblems } from './ruby';
@@ -42,8 +44,10 @@ export { javaProblems } from './java';
 export { javascriptProblems } from './javascript';
 export { kotlinProblems } from './kotlin';
 export { luaProblems } from './lua';
+export { mysqlProblems } from './mysql';
 export { perlProblems } from './perl';
 export { phpProblems } from './php';
+export { postgresqlProblems } from './postgresql';
 export { pythonProblems } from './python';
 export { rProblems } from './r';
 export { rubyProblems } from './ruby';
@@ -77,6 +81,9 @@ export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
   elixir: elixirProblems,
   dart: dartProblems,
   clojure: clojureProblems,
+  // Database languages
+  mysql: mysqlProblems,
+  postgresql: postgresqlProblems,
 };
 
 // Get problems for a specific language

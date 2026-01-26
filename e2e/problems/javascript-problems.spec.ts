@@ -10,6 +10,18 @@ import { javascriptProblems } from '../../lib/problems/javascript';
  * 3. Submitting the sample solution
  * 4. Verifying the answer is marked correct
  * 5. Verifying the expected output matches
+ *
+ * Additional comprehensive test coverage includes:
+ * - Unicode character handling (⇒, →, ⟹ normalized to =>)
+ * - Syntax variation testing (arrow functions, function expressions, etc.)
+ * - Pattern matching validation (ensures required methods are used)
+ * - Anti-hardcoding protection (rejects literal expected values)
+ * - Whitespace variation handling
+ * - Edge cases (long inputs, special characters, syntax errors)
+ * - Problem-specific comprehensive validation
+ *
+ * These tests ensure that issues like Unicode arrow characters not being
+ * recognized are caught and prevented in the future.
  */
 
 // ============================================================================
@@ -884,6 +896,413 @@ test.describe('JavaScript Problems - Edge Cases', () => {
     const appFunctional = await inputField.first().isVisible();
 
     expect(errorShown || appFunctional).toBeTruthy();
+  });
+});
+
+// ============================================================================
+// Test Suite: Unicode and Character Encoding Edge Cases
+// ============================================================================
+
+test.describe('JavaScript Problems - Unicode and Character Encoding', () => {
+  test('should accept Unicode arrow characters (⇒, →, ⟹) and normalize to =>', async ({ page }) => {
+    await page.goto('/');
+    await clearLocalStorage(page);
+
+    // Navigate to the "Filter Even Numbers" problem specifically
+    const filterProblem = javascriptProblems.find((p) => p.id === 'js-filter-001');
+    if (!filterProblem) {
+      test.skip();
+      return;
+    }
+
+    const directNavWorked = await navigateToProbleDirect(page, filterProblem.id);
+
+    if (!directNavWorked) {
+      await startDrill(page, filterProblem.category);
+      const found = await findProblemById(page, filterProblem.id);
+      if (!found) {
+        test.skip();
+        return;
+      }
+    }
+
+    const inputField = getInputField(page);
+    await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+
+    // Test Unicode arrow variations that should be normalized
+    const unicodeVariations = [
+      { code: 'numbers.filter(n⇒ n % 2 === 0)', description: 'Unicode arrow ⇒' },
+      { code: 'numbers.filter(n→ n % 2 === 0)', description: 'Unicode right arrow →' },
+      { code: 'numbers.filter(n⟹ n % 2 === 0)', description: 'Unicode double arrow ⟹' },
+    ];
+
+    for (const { code } of unicodeVariations) {
+      await inputField.first().fill('');
+      await inputField.first().fill(code);
+      await inputField.first().press('Enter');
+
+      await page.waitForTimeout(1000);
+
+      const result = await submitAnswer(page, code);
+
+      // Should be accepted (normalized internally)
+      expect(result.isCorrect).toBe(true);
+    }
+  });
+
+  test('should handle various whitespace patterns with Unicode arrows', async ({ page }) => {
+    await page.goto('/');
+    await clearLocalStorage(page);
+
+    const filterProblem = javascriptProblems.find((p) => p.id === 'js-filter-001');
+    if (!filterProblem) {
+      test.skip();
+      return;
+    }
+
+    const directNavWorked = await navigateToProbleDirect(page, filterProblem.id);
+
+    if (!directNavWorked) {
+      await startDrill(page, filterProblem.category);
+      const found = await findProblemById(page, filterProblem.id);
+      if (!found) {
+        test.skip();
+        return;
+      }
+    }
+
+    const inputField = getInputField(page);
+    await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+
+    // Test whitespace variations with Unicode arrows
+    const whitespaceVariations = [
+      'numbers.filter(n⇒n % 2 === 0)',
+      'numbers.filter(n ⇒ n % 2 === 0)',
+      'numbers.filter( n⇒ n % 2 === 0 )',
+      'numbers.filter( n ⇒ n % 2 === 0 )',
+    ];
+
+    for (const code of whitespaceVariations) {
+      await inputField.first().fill('');
+      await inputField.first().fill(code);
+      await inputField.first().press('Enter');
+
+      await page.waitForTimeout(1000);
+
+      const result = await submitAnswer(page, code);
+
+      // Should be accepted after normalization
+      expect(result.isCorrect).toBe(true);
+    }
+  });
+});
+
+// ============================================================================
+// Test Suite: Syntax Variation Tests
+// ============================================================================
+
+test.describe('JavaScript Problems - Syntax Variations', () => {
+  test('should accept different valid syntax variations for filter problems', async ({ page }) => {
+    await page.goto('/');
+    await clearLocalStorage(page);
+
+    const filterProblem = javascriptProblems.find((p) => p.id === 'js-filter-001');
+    if (!filterProblem) {
+      test.skip();
+      return;
+    }
+
+    const directNavWorked = await navigateToProbleDirect(page, filterProblem.id);
+
+    if (!directNavWorked) {
+      await startDrill(page, filterProblem.category);
+      const found = await findProblemById(page, filterProblem.id);
+      if (!found) {
+        test.skip();
+        return;
+      }
+    }
+
+    const inputField = getInputField(page);
+    await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+
+    // Test various valid syntax variations
+    const validVariations = [
+      { code: 'numbers.filter(n => n % 2 === 0)', description: 'Arrow function with ===' },
+      { code: 'numbers.filter(n => n % 2 == 0)', description: 'Arrow function with ==' },
+      {
+        code: 'numbers.filter(function(n) { return n % 2 === 0; })',
+        description: 'Function expression',
+      },
+      {
+        code: 'numbers.filter((n) => n % 2 === 0)',
+        description: 'Arrow function with parentheses',
+      },
+      {
+        code: 'numbers.filter((n) => { return n % 2 === 0; })',
+        description: 'Arrow function with block',
+      },
+    ];
+
+    for (const { code } of validVariations) {
+      await inputField.first().fill('');
+      await inputField.first().fill(code);
+      await inputField.first().press('Enter');
+
+      await page.waitForTimeout(1000);
+
+      const result = await submitAnswer(page, code);
+
+      // All valid variations should be accepted
+      expect(result.isCorrect).toBe(true);
+    }
+  });
+
+  test('should reject invalid syntax variations that produce correct output', async ({ page }) => {
+    await page.goto('/');
+    await clearLocalStorage(page);
+
+    const filterProblem = javascriptProblems.find((p) => p.id === 'js-filter-001');
+    if (!filterProblem) {
+      test.skip();
+      return;
+    }
+
+    const directNavWorked = await navigateToProbleDirect(page, filterProblem.id);
+
+    if (!directNavWorked) {
+      await startDrill(page, filterProblem.category);
+      const found = await findProblemById(page, filterProblem.id);
+      if (!found) {
+        test.skip();
+        return;
+      }
+    }
+
+    const inputField = getInputField(page);
+    await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+
+    // These might produce correct output but don't use filter method
+    const invalidVariations = [
+      { code: '[2, 4, 6, 8, 10]', description: 'Hardcoded result' },
+      {
+        code: 'numbers.map(n => n).filter(n => n % 2 === 0)',
+        description: 'Uses map unnecessarily',
+      },
+    ];
+
+    for (const { code } of invalidVariations) {
+      await inputField.first().fill('');
+      await inputField.first().fill(code);
+      await inputField.first().press('Enter');
+
+      await page.waitForTimeout(1000);
+
+      const result = await submitAnswer(page, code);
+
+      // Should be rejected if it doesn't match the pattern requirements
+      // Note: Some might pass if they still use filter, so we check for pattern errors
+      const patternError = page.locator('text=/must use|expected method|pattern/i');
+      const hasPatternError = await patternError.isVisible().catch(() => false);
+
+      // Either rejected or has pattern error
+      expect(result.isCorrect === false || hasPatternError).toBeTruthy();
+    }
+  });
+});
+
+// ============================================================================
+// Test Suite: Pattern Matching Validation
+// ============================================================================
+
+test.describe('JavaScript Problems - Pattern Matching Validation', () => {
+  test('should validate required patterns for problems with validPatterns', async ({ page }) => {
+    await page.goto('/');
+    await clearLocalStorage(page);
+
+    // Find problems that have validPatterns defined
+    const problemsWithPatterns = javascriptProblems.filter(
+      (p) => p.validPatterns && p.validPatterns.length > 0,
+    );
+
+    if (problemsWithPatterns.length === 0) {
+      test.skip();
+      return;
+    }
+
+    // Test first few problems with patterns
+    const problemsToTest = problemsWithPatterns.slice(0, 5);
+
+    for (const problem of problemsToTest) {
+      const directNavWorked = await navigateToProbleDirect(page, problem.id);
+
+      if (!directNavWorked) {
+        await startDrill(page, problem.category);
+        const found = await findProblemById(page, problem.id);
+        if (!found) {
+          continue; // Skip if can't find
+        }
+      }
+
+      const inputField = getInputField(page);
+      await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+
+      // Submit the sample solution (should pass pattern check)
+      const result = await submitAnswer(page, problem.sample);
+
+      // Sample solution should always pass
+      expect(result.isCorrect).toBe(true);
+
+      // Clear and try a solution that doesn't match pattern
+      await inputField.first().fill('');
+      await inputField.first().fill(JSON.stringify(problem.expected));
+      await inputField.first().press('Enter');
+
+      await page.waitForTimeout(1000);
+
+      const hardcodedResult = await submitAnswer(page, JSON.stringify(problem.expected));
+
+      // Should be rejected (either hardcode or pattern mismatch)
+      const patternError = page.locator('text=/must use|expected method|pattern|hardcode/i');
+      const hasError = await patternError.isVisible().catch(() => false);
+
+      expect(hardcodedResult.isCorrect === false || hasError).toBeTruthy();
+    }
+  });
+
+  test('should validate filter method usage for filter problems', async ({ page }) => {
+    await page.goto('/');
+    await clearLocalStorage(page);
+
+    const filterProblems = javascriptProblems.filter(
+      (p) => p.id.startsWith('js-filter-') || p.text.toLowerCase().includes('filter'),
+    );
+
+    if (filterProblems.length === 0) {
+      test.skip();
+      return;
+    }
+
+    // Test first 3 filter problems
+    const problemsToTest = filterProblems.slice(0, 3);
+
+    for (const problem of problemsToTest) {
+      const directNavWorked = await navigateToProbleDirect(page, problem.id);
+
+      if (!directNavWorked) {
+        await startDrill(page, problem.category);
+        const found = await findProblemById(page, problem.id);
+        if (!found) {
+          continue;
+        }
+      }
+
+      const inputField = getInputField(page);
+      await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+
+      // Try solution without .filter
+      const withoutFilter = problem.sample.replace(/\.filter/g, '');
+      if (withoutFilter !== problem.sample) {
+        await inputField.first().fill('');
+        await inputField.first().fill(withoutFilter);
+        await inputField.first().press('Enter');
+
+        await page.waitForTimeout(1000);
+
+        const result = await submitAnswer(page, withoutFilter);
+
+        // Should be rejected if pattern requires .filter
+        if (problem.validPatterns && problem.validPatterns.some((p) => p.test(problem.sample))) {
+          const patternError = page.locator('text=/must use|expected method|filter/i');
+          const hasError = await patternError.isVisible().catch(() => false);
+          expect(result.isCorrect === false || hasError).toBeTruthy();
+        }
+      }
+    }
+  });
+});
+
+// ============================================================================
+// Test Suite: Comprehensive Problem-Specific Edge Cases
+// ============================================================================
+
+test.describe('JavaScript Problems - Problem-Specific Edge Cases', () => {
+  test('Filter Even Numbers: should handle all valid syntax variations', async ({ page }) => {
+    await page.goto('/');
+    await clearLocalStorage(page);
+
+    const problem = javascriptProblems.find((p) => p.id === 'js-filter-001');
+    if (!problem) {
+      test.skip();
+      return;
+    }
+
+    const directNavWorked = await navigateToProbleDirect(page, problem.id);
+
+    if (!directNavWorked) {
+      await startDrill(page, problem.category);
+      const found = await findProblemById(page, problem.id);
+      if (!found) {
+        test.skip();
+        return;
+      }
+    }
+
+    const inputField = getInputField(page);
+    await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+
+    // Comprehensive list of valid variations
+    const validAnswers = [
+      // Standard arrow functions
+      'numbers.filter(n => n % 2 === 0)',
+      'numbers.filter(n => n % 2 == 0)',
+      'numbers.filter((n) => n % 2 === 0)',
+      'numbers.filter((n) => n % 2 == 0)',
+      // With Unicode arrows (should be normalized)
+      'numbers.filter(n⇒ n % 2 === 0)',
+      'numbers.filter(n→ n % 2 === 0)',
+      'numbers.filter(n⟹ n % 2 === 0)',
+      // Function expressions
+      'numbers.filter(function(n) { return n % 2 === 0; })',
+      'numbers.filter(function(n) { return n % 2 == 0; })',
+      // Arrow with block
+      'numbers.filter((n) => { return n % 2 === 0; })',
+      // Different variable names (if pattern allows)
+      'numbers.filter(x => x % 2 === 0)',
+      'numbers.filter(num => num % 2 === 0)',
+    ];
+
+    for (const answer of validAnswers) {
+      await inputField.first().fill('');
+      await inputField.first().fill(answer);
+      await inputField.first().press('Enter');
+
+      await page.waitForTimeout(1000);
+
+      const result = await submitAnswer(page, answer);
+
+      // All should be accepted
+      expect(result.isCorrect).toBe(true);
+    }
+
+    // Test invalid variations
+    const invalidAnswers = [
+      '[2, 4, 6, 8, 10]', // Hardcoded
+      'numbers.map(n => n % 2 === 0 ? n : null).filter(n => n !== null)', // Doesn't use filter correctly
+    ];
+
+    for (const answer of invalidAnswers) {
+      await inputField.first().fill('');
+      await inputField.first().fill(answer);
+      await inputField.first().press('Enter');
+
+      await page.waitForTimeout(1000);
+
+      const result = await submitAnswer(page, answer);
+
+      // Should be rejected
+      expect(result.isCorrect).toBe(false);
+    }
   });
 });
 

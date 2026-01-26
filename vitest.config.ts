@@ -29,6 +29,14 @@ export default defineConfig({
           setupFiles: ['.storybook/vitest.setup.ts'],
         },
       },
+      {
+        // Regular unit tests (Node.js environment)
+        test: {
+          include: ['lib/**/*.test.ts', 'lib/**/__tests__/**/*.ts'],
+          environment: 'node',
+          globals: true,
+        },
+      },
     ],
   },
 });

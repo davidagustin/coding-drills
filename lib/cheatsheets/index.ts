@@ -56,6 +56,11 @@ export const cheatsheetsByLanguage: Record<LanguageId, CheatsheetEntry[]> = {
   elixir: elixirCheatsheet,
   dart: dartCheatsheet,
   clojure: clojureCheatsheet,
+  // Database languages (empty for now, can be added later)
+  sql: [],
+  postgresql: [],
+  mysql: [],
+  mongodb: [],
 };
 
 /**

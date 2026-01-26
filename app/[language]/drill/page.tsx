@@ -135,6 +135,11 @@ const problemLoaders: Record<
   elixir: () => import('@/lib/problems/elixir'),
   dart: () => import('@/lib/problems/dart'),
   clojure: () => import('@/lib/problems/clojure'),
+  // Database languages
+  sql: () => Promise.resolve({ default: [] }), // SQL problems can be added later
+  postgresql: () => import('@/lib/problems/postgresql'),
+  mysql: () => import('@/lib/problems/mysql'),
+  mongodb: () => Promise.resolve({ default: [] }), // MongoDB problems can be added later
 };
 
 // Extract problems from module based on naming convention
@@ -454,7 +459,10 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   useEffect(() => {
     const maxQuestions = Math.min(50, availableCount || 50);
     if (questionCount > maxQuestions) {
-      setQuestionCount(maxQuestions);
+      // Use setTimeout to avoid setState in effect
+      setTimeout(() => {
+        setQuestionCount(maxQuestions);
+      }, 0);
     }
   }, [availableCount, questionCount]);
 

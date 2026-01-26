@@ -383,6 +383,53 @@ export const languages: Record<LanguageId, Language> = {
       'Destructuring',
     ],
   },
+  // Database languages
+  sql: {
+    id: 'sql',
+    name: 'SQL',
+    icon: 'SQL',
+    color: '#4479A1',
+    secondaryColor: '#316192',
+    fileExtension: '.sql',
+    monacoLanguage: 'sql',
+    categories: ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'JOIN', 'Aggregate Functions'],
+  },
+  postgresql: {
+    id: 'postgresql',
+    name: 'PostgreSQL',
+    icon: 'PG',
+    color: '#316192',
+    secondaryColor: '#4479A1',
+    fileExtension: '.sql',
+    monacoLanguage: 'sql',
+    categories: ['JSON/JSONB', 'Arrays', 'CTEs', 'Window Functions', 'Full-Text Search'],
+  },
+  mysql: {
+    id: 'mysql',
+    name: 'MySQL',
+    icon: 'MY',
+    color: '#4479A1',
+    secondaryColor: '#F29111',
+    fileExtension: '.sql',
+    monacoLanguage: 'sql',
+    categories: [
+      'String Functions',
+      'Date Functions',
+      'Control Flow',
+      'JSON Functions',
+      'Window Functions',
+    ],
+  },
+  mongodb: {
+    id: 'mongodb',
+    name: 'MongoDB',
+    icon: 'MG',
+    color: '#47A248',
+    secondaryColor: '#13AA52',
+    fileExtension: '.js',
+    monacoLanguage: 'javascript',
+    categories: ['Query Operators', 'Update Operators', 'Aggregation Pipeline', 'Indexes'],
+  },
 };
 
 export const getLanguage = (id: LanguageId): Language => languages[id];

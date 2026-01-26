@@ -23,6 +23,21 @@ export interface DrillProblem extends Problem {
 export type { LanguageId, Problem, Difficulty };
 
 // ============================================================================
+// Utility Functions
+// ============================================================================
+
+/**
+ * Normalizes Unicode arrow characters to ASCII arrows
+ * Handles cases where users type ⇒ (Unicode) instead of => (ASCII)
+ */
+function normalizeArrows(code: string): string {
+  return code
+    .replace(/⇒/g, '=>') // Unicode arrow to ASCII
+    .replace(/→/g, '=>') // Unicode right arrow to ASCII
+    .replace(/⟹/g, '=>'); // Unicode double arrow to ASCII
+}
+
+// ============================================================================
 // JavaScript/TypeScript Validation
 // ============================================================================
 
@@ -35,6 +50,9 @@ export function validateJavaScript(
   expectedOutput: unknown,
 ): DrillValidationResult {
   try {
+    // Normalize Unicode arrow characters to ASCII before validation
+    const normalizedAnswer = normalizeArrows(userAnswer);
+
     // Security: Basic check for dangerous operations
     const dangerousPatterns = [
       /\beval\s*\(/,
@@ -50,7 +68,7 @@ export function validateJavaScript(
     ];
 
     for (const pattern of dangerousPatterns) {
-      if (pattern.test(userAnswer)) {
+      if (pattern.test(normalizedAnswer)) {
         return {
           success: false,
           error:
@@ -60,7 +78,7 @@ export function validateJavaScript(
     }
 
     // Construct the code that returns the user's expression result
-    const fullCode = `const __result__ = ${userAnswer}; return __result__;`;
+    const fullCode = `const __result__ = ${normalizedAnswer}; return __result__;`;
 
     // Use the existing executeJavaScript from codeRunner
     const result = executeJavaScript(setupCode, fullCode);
@@ -118,15 +136,19 @@ export function checkRequiredPatterns(
     };
   }
 
+  // Normalize Unicode arrow characters to ASCII before pattern matching
+  const normalizedAnswer = normalizeArrows(userAnswer);
+
   // Check required patterns if provided
+  // At least ONE pattern must match (not all of them)
   if (requiredPatterns && requiredPatterns.length > 0) {
-    for (const pattern of requiredPatterns) {
-      if (!pattern.test(userAnswer)) {
-        return {
-          success: false,
-          error: 'Your answer must use the expected method or pattern.',
-        };
-      }
+    const atLeastOneMatches = requiredPatterns.some((pattern) => pattern.test(normalizedAnswer));
+
+    if (!atLeastOneMatches) {
+      return {
+        success: false,
+        error: 'Your answer must use the expected method or pattern.',
+      };
     }
   }
 
