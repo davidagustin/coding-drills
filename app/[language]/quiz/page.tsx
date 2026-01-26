@@ -180,7 +180,14 @@ function SetupPhase({
         {/* Category Selection */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Categories</h2>
+            <h2 className="text-xl font-semibold">
+              Categories
+              {config.categories.length > 0 && (
+                <span className="text-sm font-normal text-slate-400 ml-2">
+                  ({config.categories.length} selected)
+                </span>
+              )}
+            </h2>
             <div className="flex gap-2">
               <button
                 type="button"
