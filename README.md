@@ -28,31 +28,36 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 
 ## The Solution
 
-**Coding Drills** transforms syntax learning into an interactive, game-like experience. Practice typing real code, test your knowledge with timed quizzes, and build lasting muscle memory across **11 programming languages**.
+**Coding Drills** transforms syntax learning into an interactive, game-like experience. Practice typing real code, test your knowledge with timed quizzes, solve LeetCode-style problems, and prepare for interviews across **21 programming languages**.
 
 ---
 
 ## Features
 
-### 🎯 Four Learning Modes
+### 🎯 Seven Learning Modes
 
 | Mode | Description |
 |------|-------------|
-| **Drill Mode** | Type code solutions with Monaco Editor (syntax highlighting, IntelliSense). Real-time execution for JS/TS with scoring based on speed and streaks. |
-| **Quiz Mode** | Timed card selection matching inputs to methods. Scoring system with streaks and leaderboards. |
+| **Drill Mode** | Type code solutions with Monaco Editor (syntax highlighting, IntelliSense). Real-time execution for JS/TS with scoring based on speed and streaks. Browse problems and jump to individual practice. |
+| **Quiz Mode** | Timed card selection matching inputs to methods. Supports unlimited time option, shows method arguments for context. Scoring system with streaks and leaderboards. |
+| **Problems** | LeetCode-style browsable problem list with filtering by category, difficulty, and completion status. Individual problem pages with split-view layout (description + code editor), prev/next navigation, and progress tracking. |
+| **AI Mock Interview** | Practice coding interviews with AI-powered feedback. Simulates real interview scenarios with hints and explanations. Quick access from homepage for popular languages. |
 | **Algorithm Exercises** | Master traversal patterns (DFS, BFS), recursion, prime generation, Fibonacci, and iteration control. |
-| **Method Reference** | Browse 717+ methods with full documentation, examples, and complexity analysis. |
+| **Method Reference** | Browse 469+ methods with full documentation, examples, and complexity analysis. |
+| **Cheatsheets** | Comprehensive language cheatsheets covering syntax, data structures, common patterns, and best practices for all 21 languages. |
 
-### 🌍 Eleven Languages Supported
+### 🌍 Twenty-One Languages Supported
 
 <div align="center">
 
-| | | |
-|:---:|:---:|:---:|
-| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) |
-| ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white) | ![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white) | ![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=csharp&logoColor=white) |
-| ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white) | ![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=flat-square&logo=ruby&logoColor=white) | ![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black) |
-| ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white) | ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white) | |
+| | | | |
+|:---:|:---:|:---:|:---:|
+| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white) |
+| ![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white) | ![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=csharp&logoColor=white) | ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white) | ![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=flat-square&logo=ruby&logoColor=white) |
+| ![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black) | ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white) | ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white) | ![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white) |
+| ![Swift](https://img.shields.io/badge/Swift-FA7343?style=flat-square&logo=swift&logoColor=white) | ![Scala](https://img.shields.io/badge/Scala-DC322F?style=flat-square&logo=scala&logoColor=white) | ![R](https://img.shields.io/badge/R-276DC3?style=flat-square&logo=r&logoColor=white) | ![Perl](https://img.shields.io/badge/Perl-39457E?style=flat-square&logo=perl&logoColor=white) |
+| ![Lua](https://img.shields.io/badge/Lua-2C2D72?style=flat-square&logo=lua&logoColor=white) | ![Haskell](https://img.shields.io/badge/Haskell-5D4F85?style=flat-square&logo=haskell&logoColor=white) | ![Elixir](https://img.shields.io/badge/Elixir-4B275F?style=flat-square&logo=elixir&logoColor=white) | ![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=dart&logoColor=white) |
+| ![Clojure](https://img.shields.io/badge/Clojure-5881D8?style=flat-square&logo=clojure&logoColor=white) | | | |
 
 </div>
 
@@ -73,10 +78,11 @@ str.split(" ").join("-")
 
 ### 📊 Progress Tracking
 
-- Track solved problems per language
+- Track solved problems per language with localStorage persistence
 - View accuracy percentages and streaks
-- Export/import progress data
-- Cross-tab synchronization via localStorage
+- Filter problems by completion status (Solved/Attempted/New)
+- Problem count badges showing progress at a glance
+- Cross-tab synchronization
 
 ---
 
@@ -88,7 +94,7 @@ str.split(" ").join("-")
 | **Language** | TypeScript 5 |
 | **Styling** | Tailwind CSS 4 |
 | **Code Editor** | Monaco Editor (VS Code's editor) |
-| **Testing** | Playwright (3,000+ lines of E2E tests) |
+| **Testing** | Playwright (7,000+ lines of E2E tests) |
 | **State** | React Context + localStorage |
 | **Code Execution** | Browser-based JS execution, pattern matching for compiled languages |
 
@@ -99,6 +105,7 @@ str.split(" ").join("-")
 - **Type-safe** throughout with comprehensive TypeScript interfaces
 - **Responsive** design from mobile to desktop
 - **Dark mode** by default with theme provider
+- **SEO optimized** with sitemap.ts and robots.ts
 
 ---
 
@@ -117,10 +124,10 @@ git clone https://github.com/davidagustin/coding-drills.git
 cd coding-drills
 
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm dev
 
 # Open http://localhost:3000
 ```
@@ -129,15 +136,15 @@ npm run dev
 
 ```bash
 # Run all E2E tests
-npm run test:e2e
+pnpm test:e2e
 
 # Run with interactive UI
-npm run test:e2e:ui
+pnpm test:e2e:ui
 
 # Run specific test suites
-npm run test:e2e:drill      # Drill mode tests
-npm run test:e2e:quiz       # Quiz mode tests
-npm run test:e2e:problems   # Individual problem tests
+pnpm test:e2e:drill      # Drill mode tests
+pnpm test:e2e:quiz       # Quiz mode tests
+pnpm test:e2e:problems   # Individual problem tests
 ```
 
 ---
@@ -148,29 +155,38 @@ npm run test:e2e:problems   # Individual problem tests
 coding-drills/
 ├── app/
 │   ├── [language]/           # Dynamic routes per language
-│   │   ├── drill/            # Drill mode page
-│   │   ├── quiz/             # Quiz mode page
+│   │   ├── drill/            # Drill mode - type code solutions
+│   │   ├── quiz/             # Quiz mode - timed method matching
+│   │   ├── problems/         # LeetCode-style problem browser
+│   │   │   └── [problemId]/  # Individual problem pages
+│   │   ├── interview/        # AI Mock Interview mode
 │   │   ├── exercises/        # Algorithm exercises
 │   │   │   └── [exerciseId]/ # Individual exercise pages
-│   │   └── reference/        # Method reference documentation
+│   │   ├── reference/        # Method reference documentation
+│   │   └── cheatsheet/       # Language cheatsheets
 │   ├── layout.tsx            # Root layout with providers
-│   └── page.tsx              # Home page with language grid
+│   ├── page.tsx              # Home page with language grid
+│   ├── sitemap.ts            # SEO sitemap generation
+│   └── robots.ts             # SEO robots.txt
 ├── components/
 │   ├── ThemeProvider.tsx     # Dark/light mode context
 │   ├── ProgressProvider.tsx  # Progress tracking context
 │   ├── ErrorBoundary.tsx     # Error handling
 │   └── ...                   # UI components
 ├── lib/
-│   ├── problems/             # 450+ coding problems (9 languages)
-│   ├── methods/              # 717 method references (9 languages)
+│   ├── problems/             # 3,500+ coding problems (21 languages)
+│   ├── methods/              # 469 method references (10 languages)
+│   ├── cheatsheets/          # Comprehensive cheatsheets (21 languages)
 │   ├── exercises/            # Algorithm exercise definitions
+│   ├── constants/            # Shared constants (difficulty colors, etc.)
 │   ├── codeValidator.ts      # Anti-hardcoding validation
 │   ├── quizGenerator.ts      # Quiz question generation
 │   └── types.ts              # TypeScript interfaces
 ├── hooks/
 │   ├── useDrill.ts           # Drill mode state management
 │   ├── useQuiz.ts            # Quiz mode state management
-│   └── useProgress.ts        # Progress tracking hook
+│   ├── useProblemProgress.ts # Problem progress tracking
+│   └── useProgress.ts        # General progress tracking hook
 ├── e2e/
 │   ├── problems/             # Per-problem E2E tests
 │   ├── drill-mode.spec.ts    # Drill mode tests
@@ -195,6 +211,7 @@ We welcome contributions! This project is perfect for:
 |-------------------|------------|--------|
 | Add coding problems | 🟢 Easy | High |
 | Add method documentation | 🟢 Easy | High |
+| Add cheatsheet content | 🟢 Easy | High |
 | Fix bugs | 🟡 Medium | Medium |
 | Add new features | 🟡 Medium | High |
 | Improve accessibility | 🟡 Medium | High |
@@ -211,39 +228,40 @@ We welcome contributions! This project is perfect for:
   title: 'Remove Duplicates',
   category: 'Array Methods',
   difficulty: 'medium',
-  description: 'Remove duplicate values from an array',
+  text: 'Remove duplicate values from an array',
   setup: 'const numbers = [1, 2, 2, 3, 3, 3, 4];',
-  solution: '[...new Set(numbers)]',
-  expectedOutput: '[1, 2, 3, 4]',
+  setupCode: 'const numbers = [1, 2, 2, 3, 3, 3, 4];',
+  sample: '[...new Set(numbers)]',
+  expected: [1, 2, 3, 4],
   hints: ['Consider using Set', 'Spread operator can convert Set back to array'],
   tags: ['set', 'spread', 'duplicates'],
-  validPatterns: ['new Set', 'Set('],
+  validPatterns: [/new Set/, /Set\(/],
 }
 ```
 
-3. Run tests: `npm run test:e2e:problems`
+3. Run tests: `pnpm test:e2e:problems`
 4. Submit a PR!
 
 ### Development Workflow
 
 ```bash
 # Create a feature branch
-git checkout -b feature/add-rust-support
+git checkout -b feature/add-new-problems
 
 # Make your changes
 # ...
 
 # Run linting
-npm run lint
+pnpm lint
 
 # Run tests
-npm run test:e2e
+pnpm test:e2e
 
 # Commit with conventional commits
-git commit -m "feat: add Rust language support with 50 problems"
+git commit -m "feat: add 25 new Python dictionary problems"
 
 # Push and create PR
-git push origin feature/add-rust-support
+git push origin feature/add-new-problems
 ```
 
 ---
@@ -254,10 +272,15 @@ git push origin feature/add-rust-support
 - [x] **Scoring System** - Points based on speed, difficulty, and streaks
 - [x] **JS/TS Toggle** - Practice JavaScript and TypeScript together
 - [x] **Data Management** - Clear saved data with selective deletion dialog
+- [x] **21 Languages** - JavaScript, TypeScript, Python, Java, C++, C#, Go, Ruby, C, PHP, Kotlin, Rust, Swift, Scala, R, Perl, Lua, Haskell, Elixir, Dart, Clojure
+- [x] **LeetCode-style Problems** - Browsable problem list with individual problem pages
+- [x] **AI Mock Interview** - Practice coding interviews with AI feedback
+- [x] **Cheatsheets** - Comprehensive language reference guides
+- [x] **Unlimited Quiz Time** - Option for untimed practice
+- [x] **SEO Optimization** - Sitemap and robots.txt generation
 - [ ] **User Accounts** - Cloud sync for progress across devices
 - [ ] **Spaced Repetition** - Smart review scheduling based on performance
 - [ ] **Multiplayer Mode** - Race against friends in real-time
-- [ ] **More Languages** - Rust, Swift, Scala
 - [ ] **Mobile App** - Native iOS/Android apps
 - [ ] **API** - Public API for integration with other learning platforms
 
@@ -269,14 +292,31 @@ git push origin feature/add-rust-support
 
 | Metric | Count |
 |--------|-------|
-| **Languages** | 11 |
-| **Coding Problems** | 450+ |
-| **Method References** | 717 |
+| **Languages** | 21 |
+| **Coding Problems** | 3,500+ |
+| **Method References** | 469 |
+| **Cheatsheets** | 21 |
 | **Algorithm Exercises** | 15+ per language |
-| **E2E Test Lines** | 3,000+ |
-| **Total Lines of Code** | 39,000+ |
+| **E2E Test Lines** | 7,000+ |
+| **Total Lines of Code** | 126,000+ |
 
 </div>
+
+### Problem Distribution by Language
+
+| Language | Problems | Language | Problems |
+|----------|----------|----------|----------|
+| JavaScript | 922 | TypeScript | 678 |
+| Python | 235 | Java | 196 |
+| Kotlin | 170 | Go | 169 |
+| PHP | 155 | C# | 147 |
+| Ruby | 136 | Rust | 113 |
+| Dart | 91 | C | 90 |
+| Elixir | 84 | R | 56 |
+| Clojure | 50 | Haskell | 50 |
+| Lua | 50 | Perl | 50 |
+| Scala | 50 | Swift | 50 |
+| C++ | 46 | | |
 
 ---
 
