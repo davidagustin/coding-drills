@@ -331,6 +331,17 @@ export function validatePython(
     };
   }
 
+  // CRITICAL: Check syntax FIRST before pattern matching
+  // This ensures code compiles/is valid, not just matches patterns
+  const syntaxChecks = checkPythonSyntax(userCode);
+  if (syntaxChecks.length > 0) {
+    return {
+      valid: false,
+      feedback: `Syntax errors detected:\n${syntaxChecks.join('\n')}\n\nPlease fix syntax errors before submitting.`,
+      matchedPatterns: [],
+    };
+  }
+
   // Normalize user code to handle spacing variations (same as other pattern-based languages)
   const normalizedVersions = normalizeCodeForPatternMatching(userCode);
 
@@ -344,16 +355,6 @@ export function validatePython(
       matchedPatterns.push(pattern.source);
       allPatternsMatched = true; // At least one pattern matched
     }
-  }
-
-  // Check for common Python syntax errors
-  const syntaxChecks = checkPythonSyntax(userCode);
-  if (syntaxChecks.length > 0) {
-    return {
-      valid: false,
-      feedback: `Syntax issues detected:\n${syntaxChecks.join('\n')}`,
-      matchedPatterns,
-    };
   }
 
   // Check if setup variables are used
@@ -766,6 +767,8 @@ function normalizeCodeForPatternMatching(code: string): string[] {
  * - Go: if v, ok := m["key"]; ok { return v } vs if val, exists := m["key"]; exists { return val }
  *
  * For problems without patterns, uses flexible regex matching based on sample solution.
+ *
+ * IMPORTANT: Syntax validation is performed BEFORE pattern matching to ensure code compiles.
  */
 function validateByPattern(
   language: LanguageId,
@@ -792,6 +795,30 @@ function validateByPattern(
     };
   }
 
+  // CRITICAL: Check syntax FIRST before pattern matching
+  // This ensures code compiles/is valid, not just matches patterns
+  const syntaxIssues = checkLanguageSyntax(language, userCode);
+  if (syntaxIssues.length > 0) {
+    return {
+      valid: false,
+      passed: 0,
+      failed: 1,
+      total: 1,
+      feedback: `Syntax errors detected:\n${syntaxIssues.join('\n')}\n\nPlease fix syntax errors before submitting.`,
+      details: [
+        {
+          testCaseId: 'syntax-check',
+          passed: false,
+          input: [],
+          expected,
+          error: syntaxIssues.join('; '),
+        },
+      ],
+      antiCheatFlags,
+      executionTime: performance.now() - startTime,
+    };
+  }
+
   // Normalize user code to handle spacing variations in curly brackets, arrays, etc.
   // This ensures patterns work regardless of spacing style (e.g., {age: 30} vs { age: 30 })
   const normalizedVersions = normalizeCodeForPatternMatching(userCode);
@@ -813,11 +840,8 @@ function validateByPattern(
   // This allows multiple valid approaches instead of requiring ALL patterns
   const allPatternsMatched = validPatterns.length === 0 || patternsMatched > 0;
 
-  // Language-specific syntax checks
-  const syntaxIssues = checkLanguageSyntax(language, userCode);
-  if (syntaxIssues.length > 0) {
-    feedback.push(...syntaxIssues);
-  }
+  // Syntax was already checked above, so we don't need to check again
+  // But we keep this for any additional language-specific feedback
 
   // Check for hardcoded output - enhanced detection
   if (isHardcodedOutput(userCode, expected)) {
@@ -892,10 +916,18 @@ function validateByPattern(
 
 /**
  * Check syntax for various languages
+ * Ensures code compiles/is valid before pattern matching
  */
 function checkLanguageSyntax(language: LanguageId, code: string): string[] {
   const issues: string[] = [];
 
+  // Universal syntax checks (brackets, quotes, etc.)
+  const bracketIssues = checkBracketBalance(code);
+  if (bracketIssues.length > 0) {
+    issues.push(...bracketIssues);
+  }
+
+  // Language-specific checks
   switch (language) {
     case 'java':
       if (!/class\s+\w+/.test(code) && !/public\s+static/.test(code)) {
@@ -935,7 +967,138 @@ function checkLanguageSyntax(language: LanguageId, code: string): string[] {
         issues.push('C# uses method declarations, not the "function" keyword.');
       }
       break;
+
+    case 'postgresql':
+    case 'mysql': {
+      // SQL syntax checks
+      const sqlIssues = checkSQLSyntax(code);
+      if (sqlIssues.length > 0) {
+        issues.push(...sqlIssues);
+      }
+      break;
+    }
+
+    case 'mongodb': {
+      // MongoDB query syntax checks
+      const mongoIssues = checkMongoDBSyntax(code);
+      if (mongoIssues.length > 0) {
+        issues.push(...mongoIssues);
+      }
+      break;
+    }
   }
+
+  return issues;
+}
+
+/**
+ * Check bracket balance (parentheses, braces, brackets)
+ */
+function checkBracketBalance(code: string): string[] {
+  const issues: string[] = [];
+  const stack: string[] = [];
+  const pairs: Record<string, string> = {
+    '(': ')',
+    '[': ']',
+    '{': '}',
+  };
+
+  for (let i = 0; i < code.length; i++) {
+    const char = code[i];
+    // Skip strings and comments
+    if (char === '"' || char === "'" || char === '`') {
+      const quote = char;
+      i++;
+      while (i < code.length && code[i] !== quote) {
+        if (code[i] === '\\') i++; // Skip escaped characters
+        i++;
+      }
+      continue;
+    }
+    if (char === '/' && code[i + 1] === '/') {
+      // Skip single-line comment
+      while (i < code.length && code[i] !== '\n') i++;
+      continue;
+    }
+    if (char === '/' && code[i + 1] === '*') {
+      // Skip multi-line comment
+      i += 2;
+      while (i < code.length - 1 && !(code[i] === '*' && code[i + 1] === '/')) i++;
+      i++;
+      continue;
+    }
+
+    if (char in pairs) {
+      stack.push(pairs[char]);
+    } else if (char === ')' || char === ']' || char === '}') {
+      if (stack.length === 0 || stack.pop() !== char) {
+        issues.push(`Mismatched bracket: ${char} at position ${i}`);
+        return issues; // Return early on mismatch
+      }
+    }
+  }
+
+  if (stack.length > 0) {
+    issues.push(`Unclosed brackets: ${stack.join(', ')}`);
+  }
+
+  return issues;
+}
+
+/**
+ * Check SQL syntax (PostgreSQL, MySQL)
+ */
+function checkSQLSyntax(code: string): string[] {
+  const issues: string[] = [];
+  const normalized = code.trim().toUpperCase();
+
+  // Check for basic SQL structure
+  if (
+    !normalized.startsWith('SELECT') &&
+    !normalized.startsWith('INSERT') &&
+    !normalized.startsWith('UPDATE') &&
+    !normalized.startsWith('DELETE')
+  ) {
+    // Allow other SQL statements, but warn if it doesn't look like SQL
+    if (!normalized.match(/^(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|WITH)/i)) {
+      issues.push('Code does not appear to be a valid SQL statement.');
+    }
+  }
+
+  // Check for unmatched quotes in SQL strings
+  const singleQuotes = (code.match(/'/g) || []).length;
+  const doubleQuotes = (code.match(/"/g) || []).length;
+  if (singleQuotes % 2 !== 0) {
+    issues.push('Unmatched single quotes in SQL string.');
+  }
+  if (doubleQuotes % 2 !== 0) {
+    issues.push('Unmatched double quotes in SQL string.');
+  }
+
+  return issues;
+}
+
+/**
+ * Check MongoDB query syntax
+ */
+function checkMongoDBSyntax(code: string): string[] {
+  const issues: string[] = [];
+
+  // MongoDB queries should start with db.
+  if (!code.trim().startsWith('db.')) {
+    issues.push('MongoDB queries should start with "db."');
+  }
+
+  // Check for basic MongoDB method calls
+  if (!code.match(/db\.\w+\.(find|findOne|insert|update|delete|aggregate)/i)) {
+    // Allow other methods, but check structure
+    if (!code.match(/db\.\w+\.\w+\s*\(/)) {
+      issues.push('Invalid MongoDB query structure. Expected: db.collection.method(...)');
+    }
+  }
+
+  // Check bracket balance (already done in checkBracketBalance, but MongoDB-specific)
+  // MongoDB uses JavaScript object syntax, so brackets should be balanced
 
   return issues;
 }

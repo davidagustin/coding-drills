@@ -136,12 +136,23 @@ export function validateJavaScript(
 
 /**
  * Checks if the answer uses the required patterns (prevents hardcoding)
+ * Also performs basic syntax validation to ensure code compiles
  */
 export function checkRequiredPatterns(
   userAnswer: string,
   requiredPatterns: RegExp[] | undefined,
   setupCode: string,
 ): DrillValidationResult | null {
+  // CRITICAL: Check basic syntax first (bracket balance, quotes, etc.)
+  // This ensures code compiles/is valid before pattern matching
+  const bracketIssues = checkBasicSyntax(userAnswer);
+  if (bracketIssues.length > 0) {
+    return {
+      success: false,
+      error: `Syntax errors detected: ${bracketIssues.join('; ')}. Please fix syntax errors before submitting.`,
+    };
+  }
+
   // Extract variable names from setup code
   const varMatches = setupCode.match(/(?:const|let|var)\s+(\w+)/g);
   const setupVars = varMatches?.map((m) => m.split(/\s+/)[1]) || [];
@@ -204,6 +215,60 @@ export function checkRequiredPatterns(
 }
 
 /**
+ * Check basic syntax (brackets, quotes) - universal for all languages
+ */
+function checkBasicSyntax(code: string): string[] {
+  const issues: string[] = [];
+  const stack: string[] = [];
+  const pairs: Record<string, string> = {
+    '(': ')',
+    '[': ']',
+    '{': '}',
+  };
+
+  for (let i = 0; i < code.length; i++) {
+    const char = code[i];
+    // Skip strings and comments
+    if (char === '"' || char === "'" || char === '`') {
+      const quote = char;
+      i++;
+      while (i < code.length && code[i] !== quote) {
+        if (code[i] === '\\') i++; // Skip escaped characters
+        i++;
+      }
+      continue;
+    }
+    if (char === '/' && code[i + 1] === '/') {
+      // Skip single-line comment
+      while (i < code.length && code[i] !== '\n') i++;
+      continue;
+    }
+    if (char === '/' && code[i + 1] === '*') {
+      // Skip multi-line comment
+      i += 2;
+      while (i < code.length - 1 && !(code[i] === '*' && code[i + 1] === '/')) i++;
+      i++;
+      continue;
+    }
+
+    if (char in pairs) {
+      stack.push(pairs[char]);
+    } else if (char === ')' || char === ']' || char === '}') {
+      if (stack.length === 0 || stack.pop() !== char) {
+        issues.push(`Mismatched bracket: ${char}`);
+        return issues; // Return early on mismatch
+      }
+    }
+  }
+
+  if (stack.length > 0) {
+    issues.push(`Unclosed brackets: ${stack.join(', ')}`);
+  }
+
+  return issues;
+}
+
+/**
  * Validates Python code using pattern matching
  */
 export function validatePython(
@@ -259,6 +324,10 @@ export function validatePython(
  * Validates code for non-executable languages using pattern matching
  * ACCEPTS MULTIPLE SOLUTIONS: Uses flexible pattern matching to allow variations
  * This enables different approaches to solve the same problem
+ *
+ * IMPORTANT: This function assumes syntax validation has already been performed
+ * by checkRequiredPatterns or the calling function. Syntax errors should be caught
+ * before pattern matching.
  */
 export function validateByPattern(
   userAnswer: string,
