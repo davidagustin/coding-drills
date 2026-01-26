@@ -294,10 +294,14 @@ export function validatePython(
     };
   }
 
-  // Check for required patterns
+  // Normalize user code to handle spacing variations (same as other pattern-based languages)
+  const normalizedVersions = normalizeCodeForPatternMatching(userCode);
+
+  // Check for required patterns - test original and all normalized versions
   let allPatternsMatched = true;
   for (const pattern of validPatterns) {
-    if (pattern.test(userCode)) {
+    const matches = normalizedVersions.some((version) => pattern.test(version));
+    if (matches) {
       matchedPatterns.push(pattern.source);
     } else {
       allPatternsMatched = false;
