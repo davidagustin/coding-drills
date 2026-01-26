@@ -354,16 +354,24 @@ function SetupPhase({
 // ============================================================================
 
 interface TimerProps {
-  timeLeft: number;
-  totalTime: number;
+  timeLeft: number; // in milliseconds
+  totalTime: number; // in seconds
   onTick?: () => void;
 }
 
 function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
   const isUnlimited = totalTime === 0;
-  const percentage = isUnlimited ? 100 : (timeLeft / totalTime) * 100;
-  const isLow = !isUnlimited && timeLeft <= 5;
-  const isCritical = !isUnlimited && timeLeft <= 3;
+  const timeLeftSeconds = timeLeft / 1000;
+  const percentage = isUnlimited ? 100 : (timeLeftSeconds / totalTime) * 100;
+  const isLow = !isUnlimited && timeLeftSeconds <= 5;
+  const isCritical = !isUnlimited && timeLeftSeconds <= 3;
+
+  // Format time as seconds.hundredths (e.g., "18.42")
+  const formatTime = (ms: number) => {
+    const seconds = Math.floor(ms / 1000);
+    const hundredths = Math.floor((ms % 1000) / 10);
+    return `${seconds}.${hundredths.toString().padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     if (isLow && onTick) {
@@ -374,26 +382,26 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
   return (
     <div className="relative">
       {/* Background circle */}
-      <svg className="w-20 h-20 transform -rotate-90" aria-hidden="true">
+      <svg className="w-24 h-24 transform -rotate-90" aria-hidden="true">
         <circle
-          cx="40"
-          cy="40"
-          r="36"
+          cx="48"
+          cy="48"
+          r="42"
           stroke="currentColor"
           strokeWidth="6"
           fill="none"
           className="text-slate-700"
         />
         <circle
-          cx="40"
-          cy="40"
-          r="36"
+          cx="48"
+          cy="48"
+          r="42"
           stroke="currentColor"
           strokeWidth="6"
           fill="none"
-          strokeDasharray={`${2 * Math.PI * 36}`}
-          strokeDashoffset={isUnlimited ? 0 : `${2 * Math.PI * 36 * (1 - percentage / 100)}`}
-          className={`transition-all duration-200 ${
+          strokeDasharray={`${2 * Math.PI * 42}`}
+          strokeDashoffset={isUnlimited ? 0 : `${2 * Math.PI * 42 * (1 - percentage / 100)}`}
+          className={`transition-all duration-100 ${
             isUnlimited
               ? 'text-emerald-500'
               : isCritical
@@ -407,17 +415,17 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
       </svg>
       {/* Time text */}
       <div
-        className={`absolute inset-0 flex items-center justify-center font-bold text-2xl transition-colors ${
+        className={`absolute inset-0 flex items-center justify-center font-mono font-bold transition-colors ${
           isUnlimited
-            ? 'text-emerald-400'
+            ? 'text-emerald-400 text-2xl'
             : isCritical
-              ? 'text-red-500 animate-pulse'
+              ? 'text-red-500 animate-pulse text-lg'
               : isLow
-                ? 'text-orange-500'
-                : 'text-white'
+                ? 'text-orange-500 text-lg'
+                : 'text-white text-lg'
         }`}
       >
-        {isUnlimited ? '∞' : timeLeft}
+        {isUnlimited ? '∞' : formatTime(timeLeft)}
       </div>
     </div>
   );
@@ -655,7 +663,7 @@ interface PlayingPhaseProps {
 }
 
 function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: PlayingPhaseProps) {
-  const [timeLeft, setTimeLeft] = useState<number>(state.config.timePerQuestion);
+  const [timeLeft, setTimeLeft] = useState<number>(state.config.timePerQuestion * 1000);
   const { playTick } = useSoundEffects(soundEnabled);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -663,9 +671,9 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: currentQuestionIndex needed to reset timer on question change
   useEffect(() => {
-    // Reset timer when question changes
+    // Reset timer when question changes (convert seconds to milliseconds)
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer reset is intentional on question change
-    setTimeLeft(state.config.timePerQuestion);
+    setTimeLeft(state.config.timePerQuestion * 1000);
   }, [state.config.timePerQuestion, state.currentQuestionIndex]);
 
   useEffect(() => {
@@ -681,18 +689,19 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
       return;
     }
 
+    // Update every 10ms for smooth millisecond display
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 1) {
+        if (prev <= 10) {
           if (timerRef.current) {
             clearInterval(timerRef.current);
           }
           onTimeout();
           return 0;
         }
-        return prev - 1;
+        return prev - 10;
       });
-    }, 1000);
+    }, 10);
 
     return () => {
       if (timerRef.current) {
@@ -702,7 +711,8 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
   }, [state.showingAnswer, state.config.timePerQuestion, onTimeout]);
 
   const handleTick = useCallback(() => {
-    if (timeLeft <= 5 && timeLeft > 0) {
+    // Play tick sound in the last 5 seconds (5000ms)
+    if (timeLeft <= 5000 && timeLeft > 0) {
       playTick();
     }
   }, [timeLeft, playTick]);
