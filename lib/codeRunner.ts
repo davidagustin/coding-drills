@@ -559,6 +559,19 @@ export function validateCode(
 
 /**
  * Validate JavaScript/TypeScript code by execution
+ *
+ * This function accepts ANY solution that produces the correct output.
+ * It compiles and executes the user's code, then compares the result
+ * using deepEqual. This means multiple different approaches are accepted
+ * as long as they produce the same output.
+ *
+ * Examples of accepted solutions:
+ * - arr.map(x => x * 2)
+ * - arr.map(function(x) { return x * 2; })
+ * - arr.reduce((acc, x) => [...acc, x * 2], [])
+ * - const result = []; for (let x of arr) result.push(x * 2); result
+ *
+ * All of these produce the same output and will be accepted.
  */
 function validateJavaScript(
   setupCode: string,
@@ -569,7 +582,8 @@ function validateJavaScript(
 ): ValidationResult {
   const startTime = performance.now();
 
-  // Execute the code
+  // Execute the code - this compiles and runs the user's solution
+  // Any code that produces the correct output will be accepted
   const execution = executeJavaScript(setupCode, userCode);
 
   if (!execution.success) {
@@ -596,7 +610,9 @@ function validateJavaScript(
     };
   }
 
-  // Compare results
+  // Compare results using deepEqual
+  // This accepts ANY solution that produces the correct output,
+  // regardless of how it's implemented (map, reduce, for loop, etc.)
   const isEqual = deepEqual(execution.result, expected);
 
   if (isEqual) {
@@ -605,7 +621,8 @@ function validateJavaScript(
       passed: 1,
       failed: 0,
       total: 1,
-      feedback: 'Correct! Your code produces the expected output.',
+      feedback:
+        'Correct! Your code produces the expected output. Multiple valid solutions are accepted.',
       details: [
         {
           testCaseId: 'main',
@@ -781,19 +798,25 @@ function validateByPattern(
     feedback.push(...syntaxIssues);
   }
 
-  // Check for hardcoded output
+  // Check for hardcoded output - enhanced detection
   if (isHardcodedOutput(userCode, expected)) {
-    return {
-      valid: false,
-      passed: 0,
-      failed: 1,
-      total: 1,
-      feedback:
-        'It looks like you hardcoded the expected output. Please write code that computes the result.',
-      details: [],
-      antiCheatFlags,
-      executionTime: performance.now() - startTime,
-    };
+    // Check if setup variables are used (allow hardcoded if using setup vars)
+    const setupVars = extractSetupVariables(_setupCode);
+    const usesSetup = setupVars.some((v) => userCode.includes(v));
+
+    if (!usesSetup || setupVars.length === 0) {
+      return {
+        valid: false,
+        passed: 0,
+        failed: 1,
+        total: 1,
+        feedback:
+          'It looks like you hardcoded the expected output. Please write code that computes the result using the provided variables.',
+        details: [],
+        antiCheatFlags,
+        executionTime: performance.now() - startTime,
+      };
+    }
   }
 
   const isValid = allPatternsMatched && syntaxIssues.length === 0;
@@ -939,21 +962,34 @@ export function detectCheating(
 
 /**
  * Check if user code appears to be hardcoded output
+ * Enhanced to detect various hardcoding patterns while allowing legitimate solutions
  */
 function isHardcodedOutput(userCode: string, expected: unknown): boolean {
   const normalizedCode = userCode.replace(/\s+/g, ' ').trim();
+  const codeLines = normalizedCode.split('\n').filter((line) => line.trim().length > 0);
 
   // For arrays
   if (Array.isArray(expected)) {
     const arrayString = JSON.stringify(expected);
     const arrayStringAlt = expected.toString();
+
+    // Check if the expected array is directly in the code
     if (
       normalizedCode.includes(arrayString) ||
       normalizedCode.includes(arrayStringAlt.replace(/,/g, ', '))
     ) {
-      // Check if it's just a return statement with the literal
+      // Check if it's just a return statement with the literal (hardcoded)
       const returnPattern = new RegExp(`return\\s*${escapeRegex(arrayString)}`, 'i');
       if (returnPattern.test(normalizedCode)) {
+        return true;
+      }
+
+      // Check if code is too simple (just assignment/return of literal)
+      const simplePattern = new RegExp(
+        `(const|let|var)\\s+\\w+\\s*=\\s*${escapeRegex(arrayString)}|return\\s*${escapeRegex(arrayString)}`,
+        'i',
+      );
+      if (simplePattern.test(normalizedCode) && codeLines.length <= 2) {
         return true;
       }
     }
@@ -964,11 +1000,22 @@ function isHardcodedOutput(userCode: string, expected: unknown): boolean {
     // Check if the expected string is directly in quotes as the return value
     const quotedString = `"${expected}"`;
     const singleQuoted = `'${expected}'`;
+    const backtickQuoted = `\`${expected}\``;
+
     const returnPattern = new RegExp(
-      `return\\s*(${escapeRegex(quotedString)}|${escapeRegex(singleQuoted)})`,
+      `return\\s*(${escapeRegex(quotedString)}|${escapeRegex(singleQuoted)}|${escapeRegex(backtickQuoted)})`,
       'i',
     );
     if (returnPattern.test(normalizedCode)) {
+      return true;
+    }
+
+    // Check for simple assignment without computation
+    const simplePattern = new RegExp(
+      `(const|let|var)\\s+\\w+\\s*=\\s*(${escapeRegex(quotedString)}|${escapeRegex(singleQuoted)}|${escapeRegex(backtickQuoted)})`,
+      'i',
+    );
+    if (simplePattern.test(normalizedCode) && codeLines.length <= 2) {
       return true;
     }
   }
@@ -977,7 +1024,35 @@ function isHardcodedOutput(userCode: string, expected: unknown): boolean {
   if (typeof expected === 'number') {
     const returnPattern = new RegExp(`return\\s*${expected}\\s*[;]?\\s*$`, 'im');
     // Only flag if the code is very simple (just a return statement)
-    if (returnPattern.test(normalizedCode) && normalizedCode.split('\n').length <= 2) {
+    if (returnPattern.test(normalizedCode) && codeLines.length <= 2) {
+      return true;
+    }
+
+    // Check for simple assignment
+    const simplePattern = new RegExp(
+      `(const|let|var)\\s+\\w+\\s*=\\s*${expected}\\s*[;]?\\s*$`,
+      'im',
+    );
+    if (simplePattern.test(normalizedCode) && codeLines.length <= 1) {
+      return true;
+    }
+  }
+
+  // For objects
+  if (expected !== null && typeof expected === 'object' && !Array.isArray(expected)) {
+    const objectString = JSON.stringify(expected);
+    // Check if object is directly returned without computation
+    const returnPattern = new RegExp(`return\\s*${escapeRegex(objectString)}`, 'i');
+    if (returnPattern.test(normalizedCode)) {
+      return true;
+    }
+
+    // Check for simple object literal assignment
+    const simplePattern = new RegExp(
+      `(const|let|var)\\s+\\w+\\s*=\\s*${escapeRegex(objectString)}`,
+      'i',
+    );
+    if (simplePattern.test(normalizedCode) && codeLines.length <= 2) {
       return true;
     }
   }
@@ -1255,6 +1330,9 @@ function escapeRegex(str: string): string {
 // ============================================================
 // Export for Testing
 // ============================================================
+
+// Export isHardcodedOutput for use in codeValidator
+export { isHardcodedOutput };
 
 export const _internal = {
   classifyError,

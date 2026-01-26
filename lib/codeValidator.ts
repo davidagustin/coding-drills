@@ -3,8 +3,15 @@
  * Wraps the existing codeRunner for drill-specific validation
  */
 
-import { deepEqual, executeJavaScript } from './codeRunner';
+import { deepEqual, executeJavaScript, isHardcodedOutput } from './codeRunner';
 import type { Difficulty, LanguageId, Problem } from './types';
+
+/**
+ * Escape special regex characters in a string
+ */
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 // ============================================================================
 // Types for Drill Mode
@@ -106,6 +113,8 @@ export function validateJavaScript(
     }
 
     // Compare results using deepEqual from codeRunner
+    // This accepts ANY solution that produces the correct output
+    // Multiple different approaches are accepted (map, reduce, for loops, etc.)
     if (deepEqual(result.result, expectedOutput)) {
       return { success: true, output: result.result };
     } else {
@@ -203,6 +212,21 @@ export function validatePython(
   expectedOutput: unknown,
   sampleSolution: string,
 ): DrillValidationResult {
+  // Check for hardcoded output first
+  if (isHardcodedOutput(userAnswer, expectedOutput)) {
+    // Extract setup variables
+    const setupVars = _setupCode.match(/^(\w+)\s*=/gm)?.map((m) => m.split(/\s*=/)[0]) || [];
+    const usesSetupVar = setupVars.some((v) => userAnswer.includes(v));
+
+    if (!usesSetupVar && setupVars.length > 0) {
+      return {
+        success: false,
+        error:
+          'Your answer appears to be hardcoded. Please write code that computes the result using the provided variables.',
+      };
+    }
+  }
+
   // Normalize whitespace for comparison
   const normalizedAnswer = userAnswer.trim().replace(/\s+/g, ' ');
   const normalizedSolution = sampleSolution.trim().replace(/\s+/g, ' ');
@@ -211,7 +235,7 @@ export function validatePython(
     return { success: true, output: expectedOutput };
   }
 
-  // Try flexible regex matching
+  // Try flexible regex matching to accept multiple valid solutions
   const flexiblePattern = new RegExp(
     sampleSolution
       .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -282,10 +306,13 @@ export function validateDrillAnswer(
     return patternCheck;
   }
 
-  // Check for hardcoded answers (simple check)
+  // Enhanced hardcoded answer detection
   const expectedStr = JSON.stringify(expectedOutput);
-  if (userAnswer.trim() === expectedStr || userAnswer.trim() === String(expectedOutput)) {
-    // If the answer is just the literal expected value, reject it
+  const normalizedAnswer = userAnswer.trim();
+
+  // Check if answer is just the literal expected value
+  if (normalizedAnswer === expectedStr || normalizedAnswer === String(expectedOutput)) {
+    // Extract setup variables from setup code
     const setupVars = setupCode.match(/(?:const|let|var)\s+(\w+)/g);
     const usesSetupVar = setupVars?.some((v) => {
       const varName = v.split(/\s+/)[1];
@@ -297,6 +324,29 @@ export function validateDrillAnswer(
         success: false,
         error:
           'Your answer appears to be hardcoded. Please write code that computes the result using the provided variables.',
+      };
+    }
+  }
+
+  // Additional check: look for return statements with literal expected values
+  // This catches cases like: return [1, 2, 3] when expected is [1, 2, 3]
+  const returnLiteralPattern = new RegExp(
+    `return\\s*(${escapeRegex(expectedStr)}|${escapeRegex(String(expectedOutput))})`,
+    'i',
+  );
+  if (returnLiteralPattern.test(normalizedAnswer)) {
+    // Allow if setup variables are used in the code
+    const setupVars = setupCode.match(/(?:const|let|var)\s+(\w+)/g);
+    const usesSetupVar = setupVars?.some((v) => {
+      const varName = v.split(/\s+/)[1];
+      return userAnswer.includes(varName);
+    });
+
+    if (!usesSetupVar && setupVars && setupVars.length > 0) {
+      return {
+        success: false,
+        error:
+          'Your answer appears to return a hardcoded value. Please write code that computes the result using the provided variables.',
       };
     }
   }
@@ -344,12 +394,19 @@ export function validateDrillAnswer(
 
 /**
  * Validates a Problem from the existing types
+ * Accepts any solution that produces the correct output
+ * (For JavaScript/TypeScript: executes code and compares output)
+ * (For other languages: uses pattern matching or flexible validation)
  */
 export function validateProblemAnswer(
   problem: Problem,
   userAnswer: string,
   language: LanguageId,
 ): DrillValidationResult {
+  // For JavaScript/TypeScript: Code is executed and any solution producing correct output is accepted
+  // For other languages: Pattern matching allows multiple valid approaches
+  // Anti-hardcoding checks ensure users don't just return literal values
+
   return validateDrillAnswer(
     language,
     problem.setupCode,
