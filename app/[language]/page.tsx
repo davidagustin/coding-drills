@@ -432,7 +432,11 @@ export default function LanguagePage() {
           href={`/${language}/cheatsheet`}
           icon={<ClipboardIcon className="w-8 h-8" />}
           title="Cheatsheet"
-          description="Quick reference for coding interviews. Essential methods with syntax, complexity, and tips."
+          description={
+            isDatabaseLanguage
+              ? 'Quick reference for coding interviews. Essential functions, queries, and syntax with examples and tips.'
+              : 'Quick reference for coding interviews. Essential methods with syntax, complexity, and tips.'
+          }
           buttonText="View Cheatsheet"
           config={config}
         />
