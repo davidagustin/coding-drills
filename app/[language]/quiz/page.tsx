@@ -321,7 +321,7 @@ function SetupPhase({
                 type="range"
                 min={5}
                 max={60}
-                step={5}
+                step={1}
                 value={config.timePerQuestion}
                 onChange={(e) =>
                   onConfigChange({ ...config, timePerQuestion: Number(e.target.value) })

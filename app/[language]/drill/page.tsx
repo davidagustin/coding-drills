@@ -879,6 +879,11 @@ function DrillPhaseComponent({
     return () => clearInterval(interval);
   }, [questionStartTime, state.currentIndex]);
 
+  // Scroll to top when question changes or component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [state.currentIndex]);
+
   const handleSubmit = useCallback(() => {
     if (userAnswer.trim()) {
       const answerToSubmit = userAnswer.trim();
@@ -1520,6 +1525,13 @@ export default function DrillPage() {
   const handleBackToMenu = useCallback(() => {
     router.push(`/${language}`);
   }, [router, language]);
+
+  // Scroll to top when drill phase starts
+  useEffect(() => {
+    if (phase === 'drilling') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [phase]);
 
   return (
     <div className="min-h-screen bg-zinc-950 py-8 px-4">
