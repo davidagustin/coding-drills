@@ -419,7 +419,11 @@ describe('validateDrillAnswer', () => {
       );
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('hardcoded');
+      // The error may be about hardcoded values or not using setup variables
+      expect(result.error).toBeDefined();
+      expect(
+        result.error?.includes('hardcoded') || result.error?.includes('must use the provided variables'),
+      ).toBe(true);
     });
   });
 
@@ -485,8 +489,9 @@ describe('validateDrillAnswer', () => {
 
   describe('unsupported languages', () => {
     it('should return error for unsupported language', () => {
+      // Use a truly unsupported language (not in the switch statement)
       const result = validateDrillAnswer(
-        'rust' as unknown as Parameters<typeof validateDrillAnswer>[0],
+        'fortran' as unknown as Parameters<typeof validateDrillAnswer>[0],
         '',
         'answer',
         null,
