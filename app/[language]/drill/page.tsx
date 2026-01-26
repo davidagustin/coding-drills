@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
-import { problemsByLanguage } from '@/lib/problems/index';
+import { getProblemCountsByCategory, problemsByLanguage } from '@/lib/problems/index';
 import type { Difficulty, LanguageId, Problem } from '@/lib/types';
 
 // Static problems reference for synchronous access (fallback for lazy loading)
@@ -295,18 +295,28 @@ interface ChipProps {
   label: string;
   selected: boolean;
   onClick: () => void;
+  count?: number;
 }
 
-function Chip({ label, selected, onClick }: ChipProps) {
+function Chip({ label, selected, onClick, count }: ChipProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer flex items-center gap-2 ${
         selected ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
       }`}
     >
       {label}
+      {count !== undefined && (
+        <span
+          className={`text-xs px-1.5 py-0.5 rounded-full ${
+            selected ? 'bg-blue-400/30 text-blue-100' : 'bg-zinc-700 text-zinc-400'
+          }`}
+        >
+          {count}
+        </span>
+      )}
     </button>
   );
 }
@@ -370,6 +380,23 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const [showQuestionBrowser, setShowQuestionBrowser] = useState(false);
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Get problem counts per category
+  const categoryCounts = (() => {
+    const baseCounts = getProblemCountsByCategory(language);
+
+    // Include sibling language counts if toggled
+    if (includeSibling && siblingLanguage) {
+      const siblingCounts = getProblemCountsByCategory(siblingLanguage);
+      const combined: Record<string, number> = { ...baseCounts };
+      for (const [category, count] of Object.entries(siblingCounts)) {
+        combined[category] = (combined[category] || 0) + count;
+      }
+      return combined;
+    }
+
+    return baseCounts;
+  })();
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
@@ -505,6 +532,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
                 label={category}
                 selected={selectedCategories.includes(category)}
                 onClick={() => toggleCategory(category)}
+                count={categoryCounts[category] || 0}
               />
             ))}
           </div>

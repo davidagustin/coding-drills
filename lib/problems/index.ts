@@ -111,6 +111,16 @@ export const getCategoriesForLanguage = (languageId: LanguageId): string[] => {
   return Array.from(categories);
 };
 
+// Get problem counts per category for a language
+export const getProblemCountsByCategory = (languageId: LanguageId): Record<string, number> => {
+  const problems = problemsByLanguage[languageId] || [];
+  const counts: Record<string, number> = {};
+  for (const problem of problems) {
+    counts[problem.category] = (counts[problem.category] || 0) + 1;
+  }
+  return counts;
+};
+
 // Get problem count by language
 export const getProblemCountByLanguage = (): Record<string, number> => {
   const counts: Record<string, number> = {};
