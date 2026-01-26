@@ -139,10 +139,35 @@ export function checkRequiredPatterns(
   // Normalize Unicode arrow characters to ASCII before pattern matching
   const normalizedAnswer = normalizeArrows(userAnswer);
 
+  // Normalize code for spacing variations (same as in codeRunner.ts)
+  // This handles spacing variations like {age: 30} vs { age: 30 }
+  const normalizeForPatterns = (code: string): string[] => {
+    const versions: string[] = [code];
+    // Minimal spacing version
+    const minimal = code
+      .replace(/\{\s+/g, '{')
+      .replace(/\s+\}/g, '}')
+      .replace(/\s*:\s*/g, ':')
+      .replace(/\s*,\s*/g, ',')
+      .replace(/\s*\(\s*/g, '(')
+      .replace(/\s*\)\s*/g, ')')
+      .replace(/\s*\[\s*/g, '[')
+      .replace(/\s*\]\s*/g, ']')
+      .replace(/\$\s+/g, '$')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (minimal !== code) versions.push(minimal);
+    return versions;
+  };
+
+  const codeVersions = normalizeForPatterns(normalizedAnswer);
+
   // Check required patterns if provided
   // At least ONE pattern must match (not all of them)
   if (requiredPatterns && requiredPatterns.length > 0) {
-    const atLeastOneMatches = requiredPatterns.some((pattern) => pattern.test(normalizedAnswer));
+    const atLeastOneMatches = requiredPatterns.some((pattern) =>
+      codeVersions.some((version) => pattern.test(version)),
+    );
 
     if (!atLeastOneMatches) {
       return {

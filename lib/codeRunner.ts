@@ -641,6 +641,60 @@ function validatePythonCode(
 }
 
 /**
+ * Normalizes code for pattern matching by making whitespace consistent
+ * This handles spacing variations like {age: 30} vs { age: 30 } vs {age:30}
+ * Creates multiple normalized versions to ensure patterns match regardless of spacing
+ */
+function normalizeCodeForPatternMatching(code: string): string[] {
+  const normalizedVersions: string[] = [code]; // Always include original
+
+  // Version 1: Remove all optional whitespace (minimal spacing)
+  // { age: 30 } -> {age:30}
+  const minimal = code
+    .replace(/\{\s+/g, '{')
+    .replace(/\s+\}/g, '}')
+    .replace(/\s*:\s*/g, ':')
+    .replace(/\s*,\s*/g, ',')
+    .replace(/\s*\(\s*/g, '(')
+    .replace(/\s*\)\s*/g, ')')
+    .replace(/\s*\[\s*/g, '[')
+    .replace(/\s*\]\s*/g, ']')
+    .replace(/\$\s+/g, '$')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (minimal !== code) {
+    normalizedVersions.push(minimal);
+  }
+
+  // Version 2: Add consistent single spaces (standard spacing)
+  // {age:30} -> { age: 30 }
+  const standard = code
+    .replace(/\{([^}]+)\}/g, (match, content) => {
+      const normalized = content
+        .replace(/\s*:\s*/g, ': ')
+        .replace(/\s*,\s*/g, ', ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      return `{ ${normalized} }`;
+    })
+    .replace(/\[([^\]]+)\]/g, (match, content) => {
+      const normalized = content
+        .replace(/\s*,\s*/g, ', ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      return `[ ${normalized} ]`;
+    })
+    .replace(/\$\s*(\w+)/g, '$$$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (standard !== code && standard !== minimal) {
+    normalizedVersions.push(standard);
+  }
+
+  return normalizedVersions;
+}
+
+/**
  * Validate other languages by pattern matching
  */
 function validateByPattern(
@@ -668,10 +722,16 @@ function validateByPattern(
     };
   }
 
-  // Check required patterns
+  // Normalize user code to handle spacing variations in curly brackets, arrays, etc.
+  // This ensures patterns work regardless of spacing style (e.g., {age: 30} vs { age: 30 })
+  const normalizedVersions = normalizeCodeForPatternMatching(userCode);
+
+  // Check required patterns - test original and all normalized versions
   let patternsMatched = 0;
   for (const pattern of validPatterns) {
-    if (pattern.test(userCode)) {
+    // Test original and all normalized versions to handle all spacing variations
+    const matches = normalizedVersions.some((version) => pattern.test(version));
+    if (matches) {
       patternsMatched++;
     }
   }
