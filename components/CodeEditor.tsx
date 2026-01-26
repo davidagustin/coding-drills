@@ -33,7 +33,6 @@ const LANGUAGE_TO_MONACO: Record<LanguageId, string> = {
   dart: 'dart',
   clojure: 'clojure',
   // Database languages
-  sql: 'sql',
   postgresql: 'sql',
   mysql: 'sql',
   mongodb: 'javascript', // MongoDB uses JavaScript syntax
@@ -66,7 +65,6 @@ const LANGUAGE_EXTENSIONS: Record<LanguageId, string> = {
   dart: '.dart',
   clojure: '.clj',
   // Database languages
-  sql: '.sql',
   postgresql: '.sql',
   mysql: '.sql',
   mongodb: '.js',

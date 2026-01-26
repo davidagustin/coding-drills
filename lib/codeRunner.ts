@@ -501,7 +501,6 @@ export function validateCode(
     case 'dart':
     case 'clojure':
     // Database languages - use pattern matching since they can't be executed in browser
-    case 'sql':
     case 'postgresql':
     case 'mysql':
     case 'mongodb':

@@ -348,7 +348,7 @@ export default function LanguagePage() {
   const config = LANGUAGE_CONFIG[language];
 
   // Database languages don't have algorithm exercises or method references
-  const isDatabaseLanguage = ['sql', 'postgresql', 'mysql', 'mongodb'].includes(language);
+  const isDatabaseLanguage = ['postgresql', 'mysql', 'mongodb'].includes(language);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

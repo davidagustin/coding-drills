@@ -137,7 +137,6 @@ const problemLoaders: Record<
   dart: () => import('@/lib/problems/dart'),
   clojure: () => import('@/lib/problems/clojure'),
   // Database languages
-  sql: () => Promise.resolve({ default: [] }), // SQL problems can be added later
   postgresql: () => import('@/lib/problems/postgresql'),
   mysql: () => import('@/lib/problems/mysql'),
   mongodb: () => Promise.resolve({ default: [] }), // MongoDB problems can be added later
@@ -301,7 +300,6 @@ function isValidLanguage(lang: string): lang is LanguageId {
     'elixir',
     'dart',
     'clojure',
-    'sql',
     'postgresql',
     'mysql',
     'mongodb',

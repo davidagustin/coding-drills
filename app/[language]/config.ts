@@ -24,7 +24,6 @@ export const SUPPORTED_LANGUAGES = [
   'dart',
   'clojure',
   // Database languages
-  'sql',
   'postgresql',
   'mysql',
   'mongodb',
@@ -236,15 +235,6 @@ export const LANGUAGE_CONFIG: Record<
     docsUrl: 'https://clojure.org/reference/documentation',
   },
   // Database languages
-  sql: {
-    name: 'SQL',
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-400/10',
-    borderColor: 'border-blue-400/30',
-    hoverBg: 'hover:bg-blue-400/20',
-    version: 'SQL:2023',
-    docsUrl: 'https://www.w3schools.com/sql/',
-  },
   postgresql: {
     name: 'PostgreSQL',
     color: 'text-sky-500',

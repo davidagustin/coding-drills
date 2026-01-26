@@ -239,17 +239,6 @@ const languages = [
   },
   // Database languages
   {
-    name: 'SQL',
-    slug: 'sql',
-    icon: 'SQL',
-    emoji: null,
-    bgGradient: 'from-blue-500/20 to-blue-600/10',
-    borderColor: 'border-blue-500/30',
-    hoverGlow: 'hover:shadow-[0_0_30px_rgba(59,130,246,0.4)]',
-    iconBg: 'bg-blue-600',
-    iconText: 'text-white font-bold',
-  },
-  {
     name: 'PostgreSQL',
     slug: 'postgresql',
     icon: 'PG',
