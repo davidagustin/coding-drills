@@ -172,11 +172,8 @@ test.describe('All Problems - Sample Solution Validation (E2E)', () => {
   const limitedProblems = problemsToTest.slice(0, MAX_PROBLEMS_TO_TEST);
 
   for (const { problem, language } of limitedProblems) {
-    // Only test executable languages (JavaScript/TypeScript) for now
-    // Other languages need different validation approaches
-    if (language !== 'javascript' && language !== 'typescript') {
-      continue;
-    }
+    // Test all languages including database languages
+    // Database languages use pattern matching, others use execution
 
     test(`should accept sample solution for: ${problem.id} (${language})`, async ({ page }) => {
       await clearLocalStorage(page);
