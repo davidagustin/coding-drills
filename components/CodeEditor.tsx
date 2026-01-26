@@ -95,6 +95,8 @@ interface CodeEditorProps {
   onSubmitShortcut?: () => void;
   /** Whether to auto-focus the editor on mount */
   autoFocus?: boolean;
+  /** Setup code context for TypeScript/JavaScript validation (optional) */
+  setupCode?: string;
 }
 
 /**
@@ -123,6 +125,7 @@ export default function CodeEditor({
   className = '',
   onSubmitShortcut,
   autoFocus = false,
+  setupCode,
 }: CodeEditorProps) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const isSettingValueRef = useRef(false);
@@ -185,15 +188,71 @@ export default function CodeEditor({
           target: monaco.languages.typescript.ScriptTarget.ES2020,
           allowNonTsExtensions: true,
           allowJs: true,
-          checkJs: false,
+          checkJs: false, // Don't check JavaScript for type errors - reduces red underlines
         });
 
-        // Configure diagnostics
+        // Configure JavaScript diagnostics to be less strict
+        monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+          noSemanticValidation: true, // Disable semantic validation for JS to reduce red underlines
+          noSyntaxValidation: false, // Keep syntax validation
+          noSuggestionDiagnostics: false,
+        });
+
+        // Add setup code as extra libs for better type checking context
+        // This helps TypeScript/JavaScript understand variables from setup code
+        if (setupCode && (isTypeScript || language === 'javascript')) {
+          try {
+            // Extract variable declarations and convert to type declarations
+            const declarations: string[] = [];
+            const lines = setupCode.split('\n');
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed || trimmed.startsWith('//')) continue;
+
+              // Match: const name: type = value or const name = value
+              const constMatch = trimmed.match(/(?:const|let|var)\s+(\w+)(?::\s*([^=]+))?/);
+              if (constMatch) {
+                const varName = constMatch[1];
+                let type = constMatch[2]?.trim() || 'any';
+
+                // Infer type from value if not explicitly typed
+                if (type === 'any' || !type) {
+                  if (trimmed.includes('[]')) type = 'any[]';
+                  else if (trimmed.includes('{}')) type = 'Record<string, any>';
+                  else if (trimmed.match(/['"]/)) type = 'string';
+                  else if (trimmed.match(/\d+/)) type = 'number';
+                  else if (trimmed.includes('true') || trimmed.includes('false')) type = 'boolean';
+                }
+
+                declarations.push(`declare const ${varName}: ${type};`);
+              }
+            }
+
+            if (declarations.length > 0) {
+              const setupLib = declarations.join('\n');
+              const libUri = `file:///setup-${Date.now()}.d.ts`;
+
+              monaco.languages.typescript.typescriptDefaults.addExtraLib(setupLib, libUri);
+              monaco.languages.typescript.javascriptDefaults.addExtraLib(setupLib, libUri);
+            }
+          } catch (e) {
+            // Silently fail if setup code parsing fails
+            console.debug('Failed to parse setup code for type context:', e);
+          }
+        }
+
+        // Configure diagnostics - be less strict during typing
         if (isTypeScript) {
           const diagnosticCodesToIgnore = [
             8006, // enum declarations
             2451, // Cannot redeclare block-scoped variable
             2300, // Duplicate identifier
+            2551, // Property does not exist (too strict for incomplete code)
+            2554, // Expected X arguments but got Y (too strict while typing)
+            2345, // Argument of type X is not assignable (too strict while typing)
+            2552, // Cannot find name (too strict while typing)
+            2304, // Cannot find name (variable not defined - too strict while typing)
           ];
 
           if (readOnly) {
@@ -205,12 +264,22 @@ export default function CodeEditor({
             noSyntaxValidation: false,
             noSuggestionDiagnostics: false,
             diagnosticCodesToIgnore,
+            // Only show errors, not warnings, to reduce red underlines
+            onlyVisible: false,
           });
 
           const model = editor.getModel();
           if (model) {
             monaco.editor.setModelMarkers(model, 'typescript', []);
           }
+        } else if (language === 'javascript') {
+          // For JavaScript, disable semantic validation to avoid red underlines
+          // We'll validate on submit instead
+          monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+            noSemanticValidation: true, // Disable semantic validation for JS
+            noSyntaxValidation: false, // Keep syntax validation
+            noSuggestionDiagnostics: false,
+          });
         }
       }
 
@@ -257,7 +326,7 @@ export default function CodeEditor({
         }, 100);
       });
     },
-    [code, fileExtension, language, monacoLanguage, readOnly, autoFocus],
+    [code, fileExtension, language, monacoLanguage, readOnly, autoFocus, setupCode],
   );
 
   const handleEditorChange = useCallback(

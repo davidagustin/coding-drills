@@ -117,11 +117,16 @@ export function executeJavaScript(
       },
     };
 
+    // Strip TypeScript type annotations from setup code for JavaScript execution
+    // TypeScript syntax like `: string[]` is not valid JavaScript
+    const sanitizedSetupCode = stripTypeScriptAnnotations(setupCode);
+    const sanitizedUserCode = stripTypeScriptAnnotations(userCode);
+
     // Combine setup and user code
     const fullCode = `
       "use strict";
-      ${setupCode}
-      ${userCode}
+      ${sanitizedSetupCode}
+      ${sanitizedUserCode}
     `;
 
     // Create function with limited scope
@@ -1557,12 +1562,45 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/**
+ * Strip TypeScript type annotations from code for JavaScript execution
+ * Removes type annotations like `: string[]`, `: number`, etc.
+ */
+function stripTypeScriptAnnotations(code: string): string {
+  if (!code) return code;
+
+  // Remove type annotations in variable declarations: const x: Type = value
+  let sanitized = code.replace(/(const|let|var)\s+(\w+)\s*:\s*[^=;]+=/g, '$1 $2 =');
+
+  // Remove type annotations in function parameters: function(x: Type) or (x: Type) =>
+  sanitized = sanitized.replace(/\(([^)]*)\)/g, (match, params) => {
+    // Remove type annotations from each parameter
+    const cleanedParams = params
+      .split(',')
+      .map((param: string) => {
+        const trimmed = param.trim();
+        // Remove type annotation: param: Type -> param
+        return trimmed.replace(/:\s*[^=,]+(?=\s*=|$)/g, '').trim();
+      })
+      .join(', ');
+    return `(${cleanedParams})`;
+  });
+
+  // Remove return type annotations: function(): Type { or =>: Type
+  sanitized = sanitized.replace(/\)\s*:\s*[^{=]+(\{|=>)/g, ') $1');
+
+  // Remove type assertions: as Type
+  sanitized = sanitized.replace(/\s+as\s+[A-Za-z_$][A-Za-z0-9_$<>[\]]*/g, '');
+
+  return sanitized;
+}
+
 // ============================================================
 // Export for Testing
 // ============================================================
 
-// Export isHardcodedOutput for use in codeValidator
-export { isHardcodedOutput };
+// Export isHardcodedOutput and stripTypeScriptAnnotations for use in codeValidator
+export { isHardcodedOutput, stripTypeScriptAnnotations };
 
 export const _internal = {
   classifyError,
@@ -1574,4 +1612,5 @@ export const _internal = {
   formatErrorMessage,
   generateSuggestions,
   ERROR_HINTS,
+  stripTypeScriptAnnotations,
 };

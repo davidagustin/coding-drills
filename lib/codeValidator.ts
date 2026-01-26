@@ -3,7 +3,12 @@
  * Wraps the existing codeRunner for drill-specific validation
  */
 
-import { deepEqual, executeJavaScript, isHardcodedOutput } from './codeRunner';
+import {
+  deepEqual,
+  executeJavaScript,
+  isHardcodedOutput,
+  stripTypeScriptAnnotations,
+} from './codeRunner';
 import type { Difficulty, LanguageId, Problem } from './types';
 
 /**
@@ -84,10 +89,15 @@ export function validateJavaScript(
       }
     }
 
+    // Strip TypeScript type annotations before execution
+    // TypeScript syntax is not valid JavaScript, so we need to remove type annotations
+    const sanitizedAnswer = stripTypeScriptAnnotations(normalizedAnswer);
+    const sanitizedSetupCode = stripTypeScriptAnnotations(setupCode);
+
     // Construct the code that returns the user's expression result
     // This ensures the code is compiled and executed, not just parsed
     // Handle both expressions and statements properly
-    const trimmedAnswer = normalizedAnswer.trim();
+    const trimmedAnswer = sanitizedAnswer.trim();
     let fullCode: string;
 
     // If the answer is already a return statement, use it as-is
@@ -107,7 +117,8 @@ export function validateJavaScript(
 
     // Use the existing executeJavaScript from codeRunner
     // This will compile and execute the code
-    const result = executeJavaScript(setupCode, fullCode);
+    // Note: executeJavaScript will also strip TypeScript annotations, but we do it here too for safety
+    const result = executeJavaScript(sanitizedSetupCode, fullCode);
 
     if (!result.success) {
       // Provide more helpful error messages

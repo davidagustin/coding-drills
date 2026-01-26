@@ -980,6 +980,7 @@ function DrillPhaseComponent({
             autoFocus
             onSubmitShortcut={handleSubmit}
             className="border-zinc-700"
+            setupCode={currentProblem.setupCode}
           />
           <p className="text-xs text-zinc-500 mt-2">Press Cmd/Ctrl + Enter to submit</p>
         </div>
