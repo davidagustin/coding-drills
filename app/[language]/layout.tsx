@@ -15,7 +15,7 @@ const MODES = [
   { slug: 'drill', label: 'Drill', icon: '🎯' },
   { slug: 'quiz', label: 'Quiz', icon: '🧠' },
   { slug: 'problems', label: 'Problems', icon: '📝' },
-  { slug: 'exercises', label: 'Exercises', icon: '🔄' },
+  { slug: 'exercises', label: 'Algorithm Exercises', icon: '🔄' },
   { slug: 'reference', label: 'Reference', icon: '📚' },
   { slug: 'cheatsheet', label: 'Cheatsheet', icon: '📋' },
   { slug: 'interview', label: 'AI Mock Interview', icon: '🎙️' },

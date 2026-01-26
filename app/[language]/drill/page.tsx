@@ -1479,14 +1479,8 @@ export default function DrillPage() {
         };
       });
 
-      // Show snackbar feedback instead of full-page feedback
-      // Auto-advance to next question after a short delay (timed drill)
-      setTimeout(
-        () => {
-          handleNext();
-        },
-        result.success ? 2000 : 3000,
-      ); // 2s for correct, 3s for incorrect (to read error)
+      // Instant advance to next question
+      handleNext();
     },
     [problems, drillState.currentIndex, drillState.streak, questionStartTime, language, handleNext],
   );
@@ -1513,10 +1507,8 @@ export default function DrillPage() {
       streak: 0,
     }));
 
-    // Show snackbar and auto-advance
-    setTimeout(() => {
-      handleNext();
-    }, 2000); // 2s for skipped
+    // Instant advance to next question
+    handleNext();
   }, [problems, drillState.currentIndex, questionStartTime, handleNext]);
 
   const handleTryAgain = useCallback(() => {
