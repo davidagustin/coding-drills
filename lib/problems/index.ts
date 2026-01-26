@@ -18,6 +18,7 @@ import { javaProblems } from './java';
 import { javascriptProblems } from './javascript';
 import { kotlinProblems } from './kotlin';
 import { luaProblems } from './lua';
+import { mongodbProblems } from './mongodb';
 import { mysqlProblems } from './mysql';
 import { perlProblems } from './perl';
 import { phpProblems } from './php';
@@ -44,6 +45,7 @@ export { javaProblems } from './java';
 export { javascriptProblems } from './javascript';
 export { kotlinProblems } from './kotlin';
 export { luaProblems } from './lua';
+export { mongodbProblems } from './mongodb';
 export { mysqlProblems } from './mysql';
 export { perlProblems } from './perl';
 export { phpProblems } from './php';
@@ -84,7 +86,7 @@ export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
   // Database languages
   mysql: mysqlProblems,
   postgresql: postgresqlProblems,
-  mongodb: [], // MongoDB problems can be added later
+  mongodb: mongodbProblems,
 };
 
 // Get problems for a specific language
