@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { LanguageGrid } from '@/components/LanguageGrid';
 import { getProblemCountByLanguage } from '@/lib/problems/index';
 
@@ -340,6 +341,97 @@ export default function Home() {
         <LanguageGrid languages={languages} problemCounts={problemCounts} />
       </section>
 
+      {/* AI Mock Interview Quick Access */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-purple-500/10 p-8 md:p-12">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
+
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Left: Icon and Title */}
+              <div className="text-center md:text-left">
+                <div className="text-6xl mb-4">🤖</div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">
+                  AI Mock Interview
+                </h2>
+                <p className="text-gray-400 max-w-md">
+                  Practice coding interviews with an AI interviewer. Get real-time feedback, hints,
+                  and improve your problem-solving skills.
+                </p>
+              </div>
+
+              {/* Right: Language Quick Links */}
+              <div className="flex-1 w-full md:w-auto">
+                <p className="text-sm text-gray-500 mb-3 text-center md:text-left">
+                  Start an interview in:
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {[
+                    {
+                      name: 'JavaScript',
+                      slug: 'javascript',
+                      icon: 'JS',
+                      bg: 'bg-yellow-500',
+                      text: 'text-black',
+                    },
+                    {
+                      name: 'Python',
+                      slug: 'python',
+                      icon: '🐍',
+                      bg: 'bg-blue-500',
+                      text: 'text-white',
+                    },
+                    {
+                      name: 'Java',
+                      slug: 'java',
+                      icon: '☕',
+                      bg: 'bg-red-500',
+                      text: 'text-white',
+                    },
+                    {
+                      name: 'C++',
+                      slug: 'cpp',
+                      icon: '</>',
+                      bg: 'bg-blue-700',
+                      text: 'text-white',
+                    },
+                    { name: 'Go', slug: 'go', icon: 'Go', bg: 'bg-cyan-500', text: 'text-white' },
+                    {
+                      name: 'TypeScript',
+                      slug: 'typescript',
+                      icon: 'TS',
+                      bg: 'bg-blue-600',
+                      text: 'text-white',
+                    },
+                  ].map((lang) => (
+                    <Link
+                      key={lang.slug}
+                      href={`/${lang.slug}/interview`}
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50
+                                 hover:border-cyan-500/50 hover:bg-gray-800 transition-all duration-200 group"
+                    >
+                      <span
+                        className={`w-8 h-8 rounded-lg ${lang.bg} ${lang.text} flex items-center justify-center text-sm font-bold`}
+                      >
+                        {lang.icon}
+                      </span>
+                      <span className="text-gray-300 group-hover:text-white transition-colors">
+                        {lang.name}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-600 mt-3 text-center md:text-left">
+                  Or select any language above to access interview mode
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Mode Selection Preview */}
       <section className="max-w-6xl mx-auto px-6 py-16">
         <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100">
@@ -349,21 +441,21 @@ export default function Home() {
           Multiple ways to master your chosen language
         </p>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {modes.map((mode) => (
             <div
               key={mode.name}
               className={`
                 relative overflow-hidden rounded-2xl border ${mode.border}
                 bg-gradient-to-br ${mode.gradient} backdrop-blur-sm
-                p-6 md:p-8 card-hover
+                p-6 card-hover
               `}
             >
               {/* Mode Icon */}
-              <div className="text-4xl md:text-5xl mb-4">{mode.icon}</div>
+              <div className="text-3xl md:text-4xl mb-3">{mode.icon}</div>
 
               {/* Mode Name */}
-              <h3 className="text-xl font-semibold text-gray-100 mb-3">{mode.name}</h3>
+              <h3 className="text-lg font-semibold text-gray-100 mb-2">{mode.name}</h3>
 
               {/* Description */}
               <p className="text-gray-400 text-sm leading-relaxed">{mode.description}</p>

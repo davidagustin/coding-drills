@@ -122,7 +122,7 @@ interface SetupPhaseProps {
 function SetupPhase({ config, onConfigChange, onStart, availableCategories }: SetupPhaseProps) {
   const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const timeOptions = [10, 15, 20, 30] as const;
+  const timeOptions = [10, 15, 20, 30, 0] as const; // 0 = unlimited
 
   const toggleCategory = (category: string) => {
     const newCategories = config.categories.includes(category)
@@ -223,34 +223,43 @@ function SetupPhase({ config, onConfigChange, onStart, availableCategories }: Se
                     : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                 }`}
               >
-                {time}s
+                {time === 0 ? '∞' : `${time}s`}
               </button>
             ))}
           </div>
           {/* Custom Slider */}
-          <div className="pt-2 border-t border-slate-700/50">
-            <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
-              <span>Custom time</span>
-              <span className="font-mono bg-slate-700/50 px-2 py-1 rounded">
-                {config.timePerQuestion}s
-              </span>
+          {config.timePerQuestion !== 0 && (
+            <div className="pt-2 border-t border-slate-700/50">
+              <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
+                <span>Custom time</span>
+                <span className="font-mono bg-slate-700/50 px-2 py-1 rounded">
+                  {config.timePerQuestion}s
+                </span>
+              </div>
+              <input
+                type="range"
+                min={5}
+                max={60}
+                step={5}
+                value={config.timePerQuestion}
+                onChange={(e) =>
+                  onConfigChange({ ...config, timePerQuestion: Number(e.target.value) })
+                }
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+              />
+              <div className="flex justify-between text-xs text-slate-500 mt-1">
+                <span>5s</span>
+                <span>60s</span>
+              </div>
             </div>
-            <input
-              type="range"
-              min={5}
-              max={60}
-              step={5}
-              value={config.timePerQuestion}
-              onChange={(e) =>
-                onConfigChange({ ...config, timePerQuestion: Number(e.target.value) })
-              }
-              className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
-            />
-            <div className="flex justify-between text-xs text-slate-500 mt-1">
-              <span>5s</span>
-              <span>60s</span>
+          )}
+          {config.timePerQuestion === 0 && (
+            <div className="pt-2 border-t border-slate-700/50">
+              <p className="text-sm text-slate-400 text-center py-2">
+                No time limit - take as long as you need
+              </p>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Sound Toggle */}
@@ -303,9 +312,10 @@ interface TimerProps {
 }
 
 function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
-  const percentage = (timeLeft / totalTime) * 100;
-  const isLow = timeLeft <= 5;
-  const isCritical = timeLeft <= 3;
+  const isUnlimited = totalTime === 0;
+  const percentage = isUnlimited ? 100 : (timeLeft / totalTime) * 100;
+  const isLow = !isUnlimited && timeLeft <= 5;
+  const isCritical = !isUnlimited && timeLeft <= 3;
 
   useEffect(() => {
     if (isLow && onTick) {
@@ -334,9 +344,15 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
           strokeWidth="6"
           fill="none"
           strokeDasharray={`${2 * Math.PI * 36}`}
-          strokeDashoffset={`${2 * Math.PI * 36 * (1 - percentage / 100)}`}
+          strokeDashoffset={isUnlimited ? 0 : `${2 * Math.PI * 36 * (1 - percentage / 100)}`}
           className={`transition-all duration-200 ${
-            isCritical ? 'text-red-500' : isLow ? 'text-orange-500' : 'text-blue-500'
+            isUnlimited
+              ? 'text-emerald-500'
+              : isCritical
+                ? 'text-red-500'
+                : isLow
+                  ? 'text-orange-500'
+                  : 'text-blue-500'
           }`}
           strokeLinecap="round"
         />
@@ -344,10 +360,16 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
       {/* Time text */}
       <div
         className={`absolute inset-0 flex items-center justify-center font-bold text-2xl transition-colors ${
-          isCritical ? 'text-red-500 animate-pulse' : isLow ? 'text-orange-500' : 'text-white'
+          isUnlimited
+            ? 'text-emerald-400'
+            : isCritical
+              ? 'text-red-500 animate-pulse'
+              : isLow
+                ? 'text-orange-500'
+                : 'text-white'
         }`}
       >
-        {timeLeft}
+        {isUnlimited ? '∞' : timeLeft}
       </div>
     </div>
   );
@@ -550,6 +572,18 @@ function QuestionDisplay({ question }: QuestionDisplayProps) {
         </pre>
       </div>
 
+      {/* Method Arguments */}
+      {question.methodArgs && (
+        <div className="mb-4">
+          <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
+            Method Arguments
+          </div>
+          <pre className="bg-slate-900 rounded-lg p-4 overflow-x-auto font-mono text-sm text-purple-300 border border-purple-500/20">
+            <code>({question.methodArgs})</code>
+          </pre>
+        </div>
+      )}
+
       {/* Output */}
       <div>
         <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Output</div>
@@ -587,6 +621,11 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
   }, [state.config.timePerQuestion, state.currentQuestionIndex]);
 
   useEffect(() => {
+    // Don't run timer for unlimited time mode
+    if (state.config.timePerQuestion === 0) {
+      return;
+    }
+
     if (state.showingAnswer) {
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -612,7 +651,7 @@ function PlayingPhase({ state, onSelectOption, onTimeout, soundEnabled }: Playin
         clearInterval(timerRef.current);
       }
     };
-  }, [state.showingAnswer, onTimeout]);
+  }, [state.showingAnswer, state.config.timePerQuestion, onTimeout]);
 
   const handleTick = useCallback(() => {
     if (timeLeft <= 5 && timeLeft > 0) {

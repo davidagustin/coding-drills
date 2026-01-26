@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { problemsByLanguage } from '@/lib/problems/index';
+import type { LanguageId } from '@/lib/types';
 import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from './config';
 import { LanguageIcon } from './LanguageIcon';
 
@@ -109,6 +111,25 @@ function ClipboardIcon({ className = 'w-8 h-8' }: { className?: string }) {
   );
 }
 
+function ListBulletIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+      />
+    </svg>
+  );
+}
+
 function ChatBubbleIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg
@@ -185,9 +206,10 @@ interface ModeCardProps {
   description: string;
   buttonText: string;
   config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
+  badge?: string;
 }
 
-function ModeCard({ href, icon, title, description, buttonText, config }: ModeCardProps) {
+function ModeCard({ href, icon, title, description, buttonText, config, badge }: ModeCardProps) {
   return (
     <Link
       href={href}
@@ -206,8 +228,17 @@ function ModeCard({ href, icon, title, description, buttonText, config }: ModeCa
           {icon}
         </div>
 
-        {/* Title */}
-        <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+        {/* Title with optional badge */}
+        <div className="flex items-center gap-2 mb-2">
+          <h3 className="text-xl font-semibold text-white">{title}</h3>
+          {badge && (
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full ${config.bgColor} ${config.color} border ${config.borderColor}`}
+            >
+              {badge}
+            </span>
+          )}
+        </div>
 
         {/* Description */}
         <p className="text-zinc-400 mb-6 leading-relaxed">{description}</p>
@@ -359,6 +390,16 @@ export default function LanguagePage() {
           description="Match inputs and outputs to methods. Test your knowledge and learn new patterns."
           buttonText="Start Quiz"
           config={config}
+        />
+
+        <ModeCard
+          href={`/${language}/problems`}
+          icon={<ListBulletIcon className="w-8 h-8" />}
+          title="Problems"
+          description="Browse and solve individual problems LeetCode-style. Track your progress and master each challenge."
+          buttonText="Browse Problems"
+          config={config}
+          badge={`${problemsByLanguage[language as LanguageId]?.length || 0} problems`}
         />
 
         <ModeCard

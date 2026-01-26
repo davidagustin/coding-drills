@@ -32,12 +32,17 @@ function getRandomElement<T>(array: readonly T[]): T {
 }
 
 /**
- * Extracts the data structure from a method call
- * e.g., "Object.keys({a: 1, b: 2})" -> "{a: 1, b: 2}"
- * e.g., "[1, 2, 3].map(x => x * 2)" -> "[1, 2, 3]"
- * e.g., '"hello world".split(" ")' -> '"hello world"'
+ * Extracts the data structure and method arguments from a method call
+ * e.g., "Object.keys({a: 1, b: 2})" -> dataInput: "{a: 1, b: 2}", methodArgs: undefined
+ * e.g., "[1, 2, 3].map(x => x * 2)" -> dataInput: "[1, 2, 3]", methodArgs: "x => x * 2"
+ * e.g., "[1, 5, 10, 15].indexOf(10)" -> dataInput: "[1, 5, 10, 15]", methodArgs: "10"
+ * e.g., '"hello world".split(" ")' -> dataInput: '"hello world"', methodArgs: '" "'
  */
-function extractDataStructure(code: string): { dataInput: string; methodHint: string } {
+function extractDataStructure(code: string): {
+  dataInput: string;
+  methodHint: string;
+  methodArgs?: string;
+} {
   // Handle Object.method(data) patterns
   const objectMethodMatch = code.match(/^Object\.(\w+)\((.+)\)$/);
   if (objectMethodMatch) {
@@ -65,30 +70,36 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
     };
   }
 
-  // Handle array.method() patterns - extract the array
-  const arrayMethodMatch = code.match(/^(\[.+?\])\.(\w+)\(.*\)$/);
+  // Handle array.method(args) patterns - extract both array and arguments
+  const arrayMethodMatch = code.match(/^(\[.+?\])\.(\w+)\((.*)\)$/);
   if (arrayMethodMatch) {
+    const args = arrayMethodMatch[3].trim();
     return {
       dataInput: arrayMethodMatch[1],
       methodHint: 'Array method',
+      methodArgs: args || undefined,
     };
   }
 
-  // Handle string.method() patterns - extract the string
-  const stringMethodMatch = code.match(/^(".+?"|'.+?')\.(\w+)\(.*\)$/);
+  // Handle string.method(args) patterns - extract both string and arguments
+  const stringMethodMatch = code.match(/^(".+?"|'.+?')\.(\w+)\((.*)\)$/);
   if (stringMethodMatch) {
+    const args = stringMethodMatch[3].trim();
     return {
       dataInput: stringMethodMatch[1],
       methodHint: 'String method',
+      methodArgs: args || undefined,
     };
   }
 
-  // Handle (number).method() patterns
-  const numberInstanceMatch = code.match(/^\((.+?)\)\.(\w+)\(.*\)$/);
+  // Handle (number).method(args) patterns
+  const numberInstanceMatch = code.match(/^\((.+?)\)\.(\w+)\((.*)\)$/);
   if (numberInstanceMatch) {
+    const args = numberInstanceMatch[3].trim();
     return {
       dataInput: numberInstanceMatch[1],
       methodHint: 'Number method',
+      methodArgs: args || undefined,
     };
   }
 
@@ -98,6 +109,7 @@ function extractDataStructure(code: string): { dataInput: string; methodHint: st
     return {
       dataInput: spreadMatch[3],
       methodHint: `${spreadMatch[1]} method`,
+      methodArgs: `...${spreadMatch[3]}`,
     };
   }
 
@@ -206,9 +218,9 @@ function createQuestionFromMethod(
   // Find the index of the correct answer after shuffling (used for validation)
   const _correctIndex = allOptions.indexOf(method.name);
 
-  // Extract just the data structure from the code example
-  // This prevents revealing the answer in the input display
-  const { dataInput, methodHint } = extractDataStructure(example.code);
+  // Extract the data structure and method arguments from the code example
+  // This prevents revealing the answer in the input display while showing relevant context
+  const { dataInput, methodHint, methodArgs } = extractDataStructure(example.code);
 
   return {
     id: `q-${questionIndex}-${Date.now()}`,
@@ -220,6 +232,7 @@ function createQuestionFromMethod(
     explanation: example.explanation || method.description,
     category: method.category,
     methodHint: methodHint,
+    methodArgs: methodArgs,
   };
 }
 

@@ -98,6 +98,7 @@ export interface QuizQuestion {
   explanation?: string;
   category?: string;
   methodHint?: string; // Hint about the method type (e.g., "Array method", "Object method")
+  methodArgs?: string; // Arguments passed to the method (e.g., "10" for indexOf(10))
 }
 
 export interface UserProgress {

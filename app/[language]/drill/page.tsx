@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
@@ -630,57 +631,83 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
                   </div>
                 ) : (
                   displayedProblems.map((problem) => (
-                    <button
+                    <div
                       key={problem.id}
-                      type="button"
-                      onClick={() => toggleQuestion(problem.id)}
-                      className={`w-full p-3 flex items-center justify-between text-left border-b border-zinc-700 last:border-b-0 transition-colors cursor-pointer ${
+                      className={`flex items-center border-b border-zinc-700 last:border-b-0 transition-colors ${
                         selectedQuestionIds.has(problem.id)
                           ? 'bg-blue-500/20'
                           : 'hover:bg-zinc-700/50'
                       }`}
                     >
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        {/* Checkbox */}
-                        <div
-                          className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
-                            selectedQuestionIds.has(problem.id)
-                              ? 'bg-blue-500 border-blue-500'
-                              : 'border-zinc-600'
-                          }`}
-                        >
-                          {selectedQuestionIds.has(problem.id) && (
-                            <svg
-                              className="w-3 h-3 text-white"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={3}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                          )}
-                        </div>
-                        {/* Title and Category */}
-                        <div className="min-w-0">
-                          <div className="text-sm font-medium text-zinc-100 truncate">
-                            {problem.title}
-                          </div>
-                          <div className="text-xs text-zinc-500">{problem.category}</div>
-                        </div>
-                      </div>
-                      {/* Difficulty Badge */}
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded border flex-shrink-0 ${difficultyColors[problem.difficulty]}`}
+                      <button
+                        type="button"
+                        onClick={() => toggleQuestion(problem.id)}
+                        className="flex-1 p-3 flex items-center justify-between text-left cursor-pointer"
                       >
-                        {problem.difficulty}
-                      </span>
-                    </button>
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          {/* Checkbox */}
+                          <div
+                            className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                              selectedQuestionIds.has(problem.id)
+                                ? 'bg-blue-500 border-blue-500'
+                                : 'border-zinc-600'
+                            }`}
+                          >
+                            {selectedQuestionIds.has(problem.id) && (
+                              <svg
+                                className="w-3 h-3 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={3}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                          {/* Title and Category */}
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium text-zinc-100 truncate">
+                              {problem.title}
+                            </div>
+                            <div className="text-xs text-zinc-500">{problem.category}</div>
+                          </div>
+                        </div>
+                        {/* Difficulty Badge */}
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded border flex-shrink-0 ${difficultyColors[problem.difficulty]}`}
+                        >
+                          {problem.difficulty}
+                        </span>
+                      </button>
+                      {/* Practice individually link */}
+                      <Link
+                        href={`/${language}/problems/${problem.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-3 text-zinc-500 hover:text-blue-400 transition-colors flex-shrink-0"
+                        title="Practice this problem individually"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
                   ))
                 )}
               </div>
