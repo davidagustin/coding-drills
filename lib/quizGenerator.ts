@@ -153,22 +153,91 @@ function getDifficultyForMethod(method: Method): Difficulty {
 }
 
 /**
+ * Normalizes output strings for comparison
+ * Handles formatting differences like spacing, quotes, etc.
+ */
+function normalizeOutputForComparison(output: string): string {
+  return output
+    .replace(/\s+/g, ' ') // Collapse multiple spaces
+    .replace(/'/g, '"') // Normalize single quotes to double quotes
+    .replace(/\s*:\s*/g, ':') // Remove spaces around colons
+    .replace(/\s*,\s*/g, ',') // Remove spaces around commas
+    .replace(/\s*\[\s*/g, '[') // Remove spaces around brackets
+    .replace(/\s*\]\s*/g, ']')
+    .replace(/\s*\{\s*/g, '{')
+    .replace(/\s*\}\s*/g, '}')
+    .trim()
+    .toLowerCase(); // Case-insensitive comparison
+}
+
+/**
+ * Checks if a method can produce the same output for the same input
+ * This ensures quiz questions have only one correct answer
+ */
+function canMethodProduceOutput(
+  method: Method,
+  inputData: string,
+  expectedOutput: string,
+): boolean {
+  // Check all examples of this method
+  for (const example of method.examples) {
+    // Extract input data from the example code
+    const exampleInput = extractDataStructure(example.code).dataInput;
+
+    // Normalize both inputs and outputs for comparison
+    const normalizedExampleInput = normalizeOutputForComparison(exampleInput);
+    const normalizedInputData = normalizeOutputForComparison(inputData);
+    const normalizedExampleOutput = normalizeOutputForComparison(example.output);
+    const normalizedExpectedOutput = normalizeOutputForComparison(expectedOutput);
+
+    // Check if input matches (exact or normalized) and output matches
+    const inputMatches =
+      exampleInput === inputData || normalizedExampleInput === normalizedInputData;
+
+    const outputMatches =
+      example.output === expectedOutput || normalizedExampleOutput === normalizedExpectedOutput;
+
+    if (inputMatches && outputMatches) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Generates wrong options for a quiz question
  * Prioritizes related methods and methods from the same category
+ * Excludes methods that could produce the same output for the same input
  */
 function generateWrongOptions(
   correctMethod: Method,
   allMethods: Method[],
   count: number = 3,
+  inputData?: string,
+  expectedOutput?: string,
 ): string[] {
   const wrongOptions: string[] = [];
   const usedMethods = new Set<string>([correctMethod.name]);
+
+  // Filter out methods that could produce the same output
+  const safeMethods = allMethods.filter((method) => {
+    if (usedMethods.has(method.name)) return false;
+
+    // If we have input and output, check if this method could produce the same result
+    if (inputData && expectedOutput) {
+      if (canMethodProduceOutput(method, inputData, expectedOutput)) {
+        return false; // Exclude this method - it could be a correct answer
+      }
+    }
+
+    return true;
+  });
 
   // First, try to add related methods (they make good distractors)
   if (correctMethod.relatedMethods) {
     for (const related of correctMethod.relatedMethods) {
       if (wrongOptions.length >= count) break;
-      const relatedMethod = allMethods.find((m) => m.name === related);
+      const relatedMethod = safeMethods.find((m) => m.name === related);
       if (relatedMethod && !usedMethods.has(relatedMethod.name)) {
         wrongOptions.push(relatedMethod.name);
         usedMethods.add(relatedMethod.name);
@@ -177,7 +246,7 @@ function generateWrongOptions(
   }
 
   // Then add methods from the same category
-  const sameCategoryMethods = allMethods.filter(
+  const sameCategoryMethods = safeMethods.filter(
     (m) => m.category === correctMethod.category && !usedMethods.has(m.name),
   );
 
@@ -188,7 +257,7 @@ function generateWrongOptions(
   }
 
   // Fill remaining with random methods from other categories
-  const otherMethods = allMethods.filter((m) => !usedMethods.has(m.name));
+  const otherMethods = safeMethods.filter((m) => !usedMethods.has(m.name));
   for (const method of shuffleArray(otherMethods)) {
     if (wrongOptions.length >= count) break;
     wrongOptions.push(method.name);
@@ -200,6 +269,7 @@ function generateWrongOptions(
 
 /**
  * Creates a quiz question from a method
+ * Ensures only one correct answer by filtering out methods that produce the same output
  */
 function createQuestionFromMethod(
   method: Method,
@@ -209,18 +279,67 @@ function createQuestionFromMethod(
   // Pick a random example from the method
   const example = getRandomElement(method.examples);
 
-  // Generate wrong options
-  const wrongOptions = generateWrongOptions(method, allMethods, 3);
-
-  // Create all options and shuffle
-  const allOptions = shuffleArray([method.name, ...wrongOptions]);
-
-  // Find the index of the correct answer after shuffling (used for validation)
-  const _correctIndex = allOptions.indexOf(method.name);
-
   // Extract the data structure and method arguments from the code example
   // This prevents revealing the answer in the input display while showing relevant context
   const { dataInput, methodHint, methodArgs } = extractDataStructure(example.code);
+
+  // Generate wrong options, excluding methods that could produce the same output
+  const wrongOptions = generateWrongOptions(method, allMethods, 3, dataInput, example.output);
+
+  // Validate that no other method can produce the same output
+  // Double-check all methods to ensure uniqueness
+  const conflictingMethods = allMethods.filter((m) => {
+    if (m.name === method.name) return false;
+    return canMethodProduceOutput(m, dataInput, example.output);
+  });
+
+  if (conflictingMethods.length > 0) {
+    // If conflicts found, try a different example
+    const otherExamples = method.examples.filter((e) => e !== example);
+    if (otherExamples.length > 0) {
+      // Recursively try with a different example
+      const alternativeExample = getRandomElement(otherExamples);
+      const altDataInput = extractDataStructure(alternativeExample.code).dataInput;
+      const altWrongOptions = generateWrongOptions(
+        method,
+        allMethods,
+        3,
+        altDataInput,
+        alternativeExample.output,
+      );
+
+      // Check if this alternative has conflicts
+      const altConflicts = allMethods.filter((m) => {
+        if (m.name === method.name) return false;
+        return canMethodProduceOutput(m, altDataInput, alternativeExample.output);
+      });
+
+      if (altConflicts.length === 0) {
+        // Use the alternative example
+        const allOptions = shuffleArray([method.name, ...altWrongOptions]);
+        return {
+          id: `q-${questionIndex}-${Date.now()}`,
+          input: altDataInput,
+          output: alternativeExample.output,
+          correctMethod: method.name,
+          options: allOptions,
+          difficulty: getDifficultyForMethod(method),
+          explanation: alternativeExample.explanation || method.description,
+          category: method.category,
+          methodHint: extractDataStructure(alternativeExample.code).methodHint,
+          methodArgs: extractDataStructure(alternativeExample.code).methodArgs,
+        };
+      }
+    }
+
+    // If all examples have conflicts, still proceed but log a warning
+    console.warn(
+      `Quiz question for ${method.name} may have multiple correct answers. Conflicting methods: ${conflictingMethods.map((m) => m.name).join(', ')}`,
+    );
+  }
+
+  // Create all options and shuffle
+  const allOptions = shuffleArray([method.name, ...wrongOptions]);
 
   return {
     id: `q-${questionIndex}-${Date.now()}`,
