@@ -387,14 +387,16 @@ export default function LanguagePage() {
           config={config}
         />
 
-        <ModeCard
-          href={`/${language}/quiz`}
-          icon={<LightbulbIcon className="w-8 h-8" />}
-          title="Quiz Mode"
-          description="Match inputs and outputs to methods. Test your knowledge and learn new patterns."
-          buttonText="Start Quiz"
-          config={config}
-        />
+        {!isDatabaseLanguage && (
+          <ModeCard
+            href={`/${language}/quiz`}
+            icon={<LightbulbIcon className="w-8 h-8" />}
+            title="Quiz Mode"
+            description="Match inputs and outputs to methods. Test your knowledge and learn new patterns."
+            buttonText="Start Quiz"
+            config={config}
+          />
+        )}
 
         <ModeCard
           href={`/${language}/problems`}
@@ -461,8 +463,8 @@ export default function LanguagePage() {
           {isDatabaseLanguage
             ? [
                 'Start with Drill Mode to practice queries',
-                'Use Quiz Mode to test your knowledge',
                 'Browse Problems for real-world scenarios',
+                'Use Cheatsheet for quick reference',
               ].map((tip, index) => (
                 <span
                   key={index}

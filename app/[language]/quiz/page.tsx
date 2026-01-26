@@ -127,7 +127,7 @@ function SetupPhase({
   availableCategories,
   categoryCounts,
 }: SetupPhaseProps) {
-  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [soundEnabled, setSoundEnabled] = useState(false);
 
   const timeOptions = [10, 15, 20, 30, 0] as const; // 0 = unlimited
 
@@ -1093,10 +1093,13 @@ export default function QuizPage() {
   const params = useParams();
   const language = (params?.language as LanguageId) || 'javascript';
 
+  // Database languages don't support quiz mode (no method reference data)
+  const isDatabaseLanguage = ['postgresql', 'mysql', 'mongodb'].includes(language);
+
   const availableCategories = getCategoriesForLanguage(language);
   const categoryCounts = getCategoryCountsForLanguage(language);
 
-  const [soundEnabled] = useState(true);
+  const [soundEnabled] = useState(false);
   const { playCorrect, playIncorrect, playComplete } = useSoundEffects(soundEnabled);
 
   const [state, setState] = useState<QuizState>({
@@ -1326,6 +1329,27 @@ export default function QuizPage() {
       }
     };
   }, []);
+
+  // Render error message for database languages
+  if (isDatabaseLanguage) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <h1 className="text-3xl font-bold mb-4">Quiz Mode Not Available</h1>
+          <p className="text-slate-400 mb-6">
+            Quiz mode is not available for database languages. Please use Drill Mode or Problems
+            instead.
+          </p>
+          <a
+            href={`/${language}`}
+            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+          >
+            Back to {language.charAt(0).toUpperCase() + language.slice(1)}
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   // Render based on phase
   switch (state.phase) {

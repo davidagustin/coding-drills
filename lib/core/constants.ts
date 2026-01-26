@@ -43,7 +43,7 @@ export const SESSION_LIMITS = {
 
 export const DEFAULT_SETTINGS: UserSettings = {
   preferredDifficulty: 'mixed',
-  soundEffects: true,
+  soundEffects: false,
   timerMode: 'up',
   timerDuration: 300,
   theme: 'system',
