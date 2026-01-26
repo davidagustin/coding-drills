@@ -1464,4 +1464,505 @@ db.users.insertMany([
     ],
     tags: ['index', 'unique', 'createIndex'],
   },
+
+  // ============================================================
+  // GEOSPATIAL QUERIES (10 problems)
+  // ============================================================
+  {
+    id: 'mongo-geo-001',
+    category: 'Geospatial Queries',
+    difficulty: 'medium',
+    title: 'Create 2dsphere Index',
+    text: 'Create a 2dsphere index on the location field of users collection.',
+    setup: 'Collection: users',
+    setupCode:
+      'db.users.insertOne({name: "John", location: {type: "Point", coordinates: [-73.97, 40.77]});',
+    expected: '2dsphere index created',
+    sample: 'db.users.createIndex({location: "2dsphere"})',
+    hints: ['Use "2dsphere" for geospatial index', 'Required for geospatial queries'],
+    validPatterns: [/db\.users\.createIndex\s*\(\s*\{\s*location\s*:\s*"2dsphere"\s*\}\s*\)/i],
+    tags: ['index', 'geospatial', '2dsphere'],
+  },
+  {
+    id: 'mongo-geo-002',
+    category: 'Geospatial Queries',
+    difficulty: 'medium',
+    title: 'Find Near Location',
+    text: 'Find all users within 1000 meters of coordinates [-73.97, 40.77].',
+    setup:
+      'Collection: users with 2dsphere index, document {name: "John", location: {type: "Point", coordinates: [-73.97, 40.77]}}',
+    setupCode: `db.users.createIndex({location: "2dsphere"});
+db.users.insertOne({name: "John", location: {type: "Point", coordinates: [-73.97, 40.77]}});`,
+    expected: [{ name: 'John', location: { type: 'Point', coordinates: [-73.97, 40.77] } }],
+    sample:
+      'db.users.find({location: {$near: {$geometry: {type: "Point", coordinates: [-73.97, 40.77]}, $maxDistance: 1000}}})',
+    hints: [
+      'Use $near for proximity search',
+      '$geometry specifies center point',
+      '$maxDistance in meters',
+    ],
+    validPatterns: [/db\.users\.find\s*\(\s*\{\s*location\s*:\s*\{\s*\$near\s*:/i],
+    tags: ['find', 'geospatial', '$near'],
+  },
+  {
+    id: 'mongo-geo-003',
+    category: 'Geospatial Queries',
+    difficulty: 'hard',
+    title: 'Find Within Polygon',
+    text: 'Find all users within a specified polygon area.',
+    setup: 'Collection: users with 2dsphere index',
+    setupCode: `db.users.createIndex({location: "2dsphere"});
+db.users.insertOne({name: "John", location: {type: "Point", coordinates: [-73.97, 40.77]}});`,
+    expected: [{ name: 'John', location: { type: 'Point', coordinates: [-73.97, 40.77] } }],
+    sample:
+      'db.users.find({location: {$geoWithin: {$geometry: {type: "Polygon", coordinates: [[[-74, 40], [-73, 40], [-73, 41], [-74, 41], [-74, 40]]]}}}}})',
+    hints: [
+      'Use $geoWithin to find points inside geometry',
+      'Polygon coordinates must form closed ring',
+    ],
+    validPatterns: [/db\.users\.find\s*\(\s*\{\s*location\s*:\s*\{\s*\$geoWithin\s*:/i],
+    tags: ['find', 'geospatial', '$geoWithin'],
+  },
+  {
+    id: 'mongo-geo-004',
+    category: 'Geospatial Queries',
+    difficulty: 'hard',
+    title: 'Find Intersecting Geometry',
+    text: 'Find all users whose location intersects with a specified line.',
+    setup: 'Collection: users with 2dsphere index',
+    setupCode: `db.users.createIndex({location: "2dsphere"});
+db.users.insertOne({name: "John", location: {type: "Point", coordinates: [-73.97, 40.77]}});`,
+    expected: [{ name: 'John', location: { type: 'Point', coordinates: [-73.97, 40.77] } }],
+    sample:
+      'db.users.find({location: {$geoIntersects: {$geometry: {type: "LineString", coordinates: [[-74, 40], [-73, 41]]}}}}})',
+    hints: ['Use $geoIntersects to find geometries that intersect', 'Works with any geometry type'],
+    validPatterns: [/db\.users\.find\s*\(\s*\{\s*location\s*:\s*\{\s*\$geoIntersects\s*:/i],
+    tags: ['find', 'geospatial', '$geoIntersects'],
+  },
+  {
+    id: 'mongo-geo-005',
+    category: 'Geospatial Queries',
+    difficulty: 'medium',
+    title: 'Create 2d Index',
+    text: 'Create a 2d index on coordinates array [longitude, latitude].',
+    setup: 'Collection: users',
+    setupCode: 'db.users.insertOne({name: "John", coordinates: [-73.97, 40.77]});',
+    expected: '2d index created',
+    sample: 'db.users.createIndex({coordinates: "2d"})',
+    hints: ['Use "2d" for flat coordinate pairs', 'Coordinates must be [longitude, latitude]'],
+    validPatterns: [/db\.users\.createIndex\s*\(\s*\{\s*coordinates\s*:\s*"2d"\s*\}\s*\)/i],
+    tags: ['index', 'geospatial', '2d'],
+  },
+
+  // ============================================================
+  // DATE OPERATIONS (5 problems)
+  // ============================================================
+  {
+    id: 'mongo-date-001',
+    category: 'Date Operations',
+    difficulty: 'easy',
+    title: 'Find by Date Range',
+    text: 'Find all users created between January 1, 2024 and January 31, 2024.',
+    setup:
+      'Collection: users with documents {name: "John", createdAt: ISODate("2024-01-15")}, {name: "Jane", createdAt: ISODate("2024-02-01")}',
+    setupCode: `db.users.insertMany([
+  {name: "John", createdAt: ISODate("2024-01-15")},
+  {name: "Jane", createdAt: ISODate("2024-02-01")}
+]);`,
+    expected: 'Users created in January 2024',
+    sample:
+      'db.users.find({createdAt: {$gte: ISODate("2024-01-01"), $lte: ISODate("2024-01-31")}})',
+    hints: ['Use ISODate() to create date objects', 'Use $gte and $lte for date ranges'],
+    validPatterns: [
+      /db\.users\.find\s*\(\s*\{\s*createdAt\s*:\s*\{\s*\$gte\s*:\s*ISODate/i,
+      /\$lte\s*:\s*ISODate/i,
+    ],
+    tags: ['find', 'date', 'range'],
+  },
+  {
+    id: 'mongo-date-002',
+    category: 'Date Operations',
+    difficulty: 'medium',
+    title: 'Find Documents from Last 7 Days',
+    text: 'Find all users created in the last 7 days.',
+    setup: 'Collection: users with documents',
+    setupCode: `db.users.insertOne({name: "John", createdAt: new Date()});`,
+    expected: 'Users from last 7 days',
+    sample: 'db.users.find({createdAt: {$gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)}})',
+    hints: [
+      'Use Date.now() for current timestamp',
+      'Subtract milliseconds for past dates',
+      '7 days = 7 * 24 * 60 * 60 * 1000 ms',
+    ],
+    validPatterns: [/db\.users\.find\s*\(\s*\{\s*createdAt\s*:\s*\{\s*\$gte\s*:\s*new\s+Date/i],
+    tags: ['find', 'date', 'relative'],
+  },
+  {
+    id: 'mongo-date-003',
+    category: 'Date Operations',
+    difficulty: 'medium',
+    title: 'Aggregation with Date Grouping',
+    text: 'Group users by year of creation and count documents in each year.',
+    setup:
+      'Collection: users with documents {name: "John", createdAt: ISODate("2024-01-15")}, {name: "Jane", createdAt: ISODate("2024-06-20")}, {name: "Bob", createdAt: ISODate("2023-12-01")}',
+    setupCode: `db.users.insertMany([
+  {name: "John", createdAt: ISODate("2024-01-15")},
+  {name: "Jane", createdAt: ISODate("2024-06-20")},
+  {name: "Bob", createdAt: ISODate("2023-12-01")}
+]);`,
+    expected: [
+      { _id: 2024, count: 2 },
+      { _id: 2023, count: 1 },
+    ],
+    sample: 'db.users.aggregate([{$group: {_id: {$year: "$createdAt"}, count: {$sum: 1}}}])',
+    hints: ['Use $year to extract year from date', 'Group by year field'],
+    validPatterns: [
+      /db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$group\s*:/i,
+      /\$year\s*:\s*"\$createdAt"/i,
+    ],
+    tags: ['aggregation', 'date', '$year'],
+  },
+  {
+    id: 'mongo-date-004',
+    category: 'Date Operations',
+    difficulty: 'hard',
+    title: 'Aggregation with Date Formatting',
+    text: 'Add formatted date string field using $dateToString.',
+    setup: 'Collection: users with document {name: "John", createdAt: ISODate("2024-01-15")}',
+    setupCode: `db.users.insertOne({name: "John", createdAt: ISODate("2024-01-15")});`,
+    expected: 'Document with formatted date string',
+    sample:
+      'db.users.aggregate([{$addFields: {dateStr: {$dateToString: {format: "%Y-%m-%d", date: "$createdAt"}}}}])',
+    hints: ['Use $dateToString to format dates', 'format uses strftime-style format strings'],
+    validPatterns: [
+      /db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$addFields\s*:/i,
+      /\$dateToString\s*:/i,
+    ],
+    tags: ['aggregation', 'date', '$dateToString'],
+  },
+  {
+    id: 'mongo-date-005',
+    category: 'Date Operations',
+    difficulty: 'hard',
+    title: 'Calculate Date Difference',
+    text: 'Add a field showing days since creation using $subtract.',
+    setup: 'Collection: users with document {name: "John", createdAt: ISODate("2024-01-01")}',
+    setupCode: `db.users.insertOne({name: "John", createdAt: ISODate("2024-01-01")});`,
+    expected: 'Document with daysSinceCreation field',
+    sample:
+      'db.users.aggregate([{$addFields: {daysSinceCreation: {$divide: [{$subtract: [new Date(), "$createdAt"]}, 1000 * 60 * 60 * 24]}}}])',
+    hints: [
+      'Use $subtract to get time difference in milliseconds',
+      'Divide by milliseconds per day',
+      '1000 * 60 * 60 * 24 = ms per day',
+    ],
+    validPatterns: [/db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$addFields\s*:/i, /\$subtract\s*:/i],
+    tags: ['aggregation', 'date', '$subtract'],
+  },
+
+  // ============================================================
+  // REPLACE OPERATIONS (5 problems)
+  // ============================================================
+  {
+    id: 'mongo-replace-001',
+    category: 'Replace Operations',
+    difficulty: 'easy',
+    title: 'Replace One Document',
+    text: 'Replace the entire document for user "John" with new data.',
+    setup: 'Collection: users with document {name: "John", age: 30}',
+    setupCode: `db.users.insertOne({name: "John", age: 30});`,
+    expected: { acknowledged: true, modifiedCount: 1 },
+    sample: 'db.users.replaceOne({name: "John"}, {name: "John", age: 31, city: "NYC"})',
+    hints: ['Use replaceOne() to replace entire document', 'Second parameter is new document'],
+    validPatterns: [/db\.users\.replaceOne\s*\(\s*\{\s*name\s*:\s*"John"\s*\}\s*,\s*\{/i],
+    tags: ['replace', 'replaceOne'],
+  },
+  {
+    id: 'mongo-replace-002',
+    category: 'Replace Operations',
+    difficulty: 'medium',
+    title: 'Replace with Upsert',
+    text: 'Replace user "John" or insert if not exists.',
+    setup: 'Collection: users (empty)',
+    setupCode: 'db.users.deleteMany({});',
+    expected: 'Upserted document',
+    sample: 'db.users.replaceOne({name: "John"}, {name: "John", age: 30}, {upsert: true})',
+    hints: ['Use upsert option to insert if not found', 'Third parameter is options object'],
+    validPatterns: [
+      /db\.users\.replaceOne\s*\(\s*\{\s*name\s*:\s*"John"\s*\}\s*,\s*\{/i,
+      /upsert\s*:\s*true/i,
+    ],
+    tags: ['replace', 'upsert'],
+  },
+  {
+    id: 'mongo-replace-003',
+    category: 'Replace Operations',
+    difficulty: 'hard',
+    title: 'Find and Replace',
+    text: 'Find user "John" and replace with new document, returning the original.',
+    setup: 'Collection: users with document {name: "John", age: 30}',
+    setupCode: `db.users.insertOne({name: "John", age: 30});`,
+    expected: { name: 'John', age: 30 },
+    sample:
+      'db.users.findOneAndReplace({name: "John"}, {name: "John", age: 31}, {returnDocument: "before"})',
+    hints: [
+      'Use findOneAndReplace() for atomic operation',
+      'returnDocument: "before" returns original, "after" returns new',
+    ],
+    validPatterns: [/db\.users\.findOneAndReplace\s*\(\s*\{\s*name\s*:\s*"John"\s*\}\s*,\s*\{/i],
+    tags: ['replace', 'findOneAndReplace'],
+  },
+  {
+    id: 'mongo-replace-004',
+    category: 'Replace Operations',
+    difficulty: 'hard',
+    title: 'Find and Replace with Return New',
+    text: 'Replace user "John" and return the new document.',
+    setup: 'Collection: users with document {name: "John", age: 30}',
+    setupCode: `db.users.insertOne({name: "John", age: 30});`,
+    expected: { name: 'John', age: 31 },
+    sample:
+      'db.users.findOneAndReplace({name: "John"}, {name: "John", age: 31}, {returnDocument: "after"})',
+    hints: ['Use returnDocument: "after" to get new document', 'Default is "before"'],
+    validPatterns: [
+      /db\.users\.findOneAndReplace\s*\(\s*\{\s*name\s*:\s*"John"\s*\}\s*,\s*\{/i,
+      /returnDocument\s*:\s*"after"/i,
+    ],
+    tags: ['replace', 'findOneAndReplace'],
+  },
+  {
+    id: 'mongo-replace-005',
+    category: 'Replace Operations',
+    difficulty: 'medium',
+    title: 'Bulk Replace Operations',
+    text: 'Replace multiple users in a single operation using bulkWrite.',
+    setup: 'Collection: users with documents {name: "John", age: 30}, {name: "Jane", age: 25}',
+    setupCode: `db.users.insertMany([
+  {name: "John", age: 30},
+  {name: "Jane", age: 25}
+]);`,
+    expected: { acknowledged: true, modifiedCount: 2 },
+    sample:
+      'db.users.bulkWrite([{replaceOne: {filter: {name: "John"}, replacement: {name: "John", age: 31}}}, {replaceOne: {filter: {name: "Jane"}, replacement: {name: "Jane", age: 26}}}])',
+    hints: ['Use bulkWrite() for multiple operations', 'Each operation is an object in array'],
+    validPatterns: [/db\.users\.bulkWrite\s*\(\s*\[/i, /replaceOne\s*:/i],
+    tags: ['replace', 'bulkWrite'],
+  },
+
+  // ============================================================
+  // ADVANCED AGGREGATION (10 problems)
+  // ============================================================
+  {
+    id: 'mongo-agg-016',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $filter',
+    text: 'Filter scores array to only include values greater than 80.',
+    setup: 'Collection: users with document {name: "John", scores: [80, 95, 70, 85]}',
+    setupCode: `db.users.insertOne({name: "John", scores: [80, 95, 70, 85]});`,
+    expected: [{ name: 'John', highScores: [95, 85] }],
+    sample:
+      'db.users.aggregate([{$project: {name: 1, highScores: {$filter: {input: "$scores", as: "score", cond: {$gt: ["$$score", 80]}}}}}])',
+    hints: [
+      'Use $filter to filter array elements',
+      'input: array, as: variable name, cond: condition',
+    ],
+    validPatterns: [/db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$project\s*:/i, /\$filter\s*:/i],
+    tags: ['aggregation', '$filter', 'array'],
+  },
+  {
+    id: 'mongo-agg-017',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $map',
+    text: 'Double all values in scores array.',
+    setup: 'Collection: users with document {name: "John", scores: [10, 20, 30]}',
+    setupCode: `db.users.insertOne({name: "John", scores: [10, 20, 30]});`,
+    expected: [{ name: 'John', doubledScores: [20, 40, 60] }],
+    sample:
+      'db.users.aggregate([{$project: {name: 1, doubledScores: {$map: {input: "$scores", as: "score", in: {$multiply: ["$$score", 2]}}}}}])',
+    hints: ['Use $map to transform array elements', 'in: expression to apply to each element'],
+    validPatterns: [/db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$project\s*:/i, /\$map\s*:/i],
+    tags: ['aggregation', '$map', 'array'],
+  },
+  {
+    id: 'mongo-agg-018',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $reduce',
+    text: 'Calculate sum of all scores in scores array.',
+    setup: 'Collection: users with document {name: "John", scores: [10, 20, 30]}',
+    setupCode: `db.users.insertOne({name: "John", scores: [10, 20, 30]});`,
+    expected: [{ name: 'John', totalScore: 60 }],
+    sample:
+      'db.users.aggregate([{$project: {name: 1, totalScore: {$reduce: {input: "$scores", initialValue: 0, in: {$add: ["$$value", "$$this"]}}}}}])',
+    hints: [
+      'Use $reduce to accumulate array values',
+      'initialValue: starting value, in: accumulation expression',
+    ],
+    validPatterns: [/db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$project\s*:/i, /\$reduce\s*:/i],
+    tags: ['aggregation', '$reduce', 'array'],
+  },
+  {
+    id: 'mongo-agg-019',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $bucket',
+    text: 'Group users into age buckets: 0-25, 25-50, 50+.',
+    setup:
+      'Collection: users with documents {name: "John", age: 30}, {name: "Jane", age: 20}, {name: "Bob", age: 60}',
+    setupCode: `db.users.insertMany([
+  {name: "John", age: 30},
+  {name: "Jane", age: 20},
+  {name: "Bob", age: 60}
+]);`,
+    expected: [
+      { _id: 0, count: 1 },
+      { _id: 25, count: 1 },
+      { _id: 50, count: 1 },
+    ],
+    sample:
+      'db.users.aggregate([{$bucket: {groupBy: "$age", boundaries: [0, 25, 50, 100], default: "other"}}])',
+    hints: [
+      'Use $bucket to group into ranges',
+      'boundaries: array of bucket edges',
+      'default: bucket for values outside boundaries',
+    ],
+    validPatterns: [/db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$bucket\s*:/i],
+    tags: ['aggregation', '$bucket'],
+  },
+  {
+    id: 'mongo-agg-020',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $merge',
+    text: 'Group users by age and merge results into summary collection.',
+    setup: 'Collection: users with documents',
+    setupCode: `db.users.insertMany([
+  {name: "John", age: 30},
+  {name: "Jane", age: 30}
+]);`,
+    expected: 'Results merged into summary collection',
+    sample:
+      'db.users.aggregate([{$group: {_id: "$age", count: {$sum: 1}}}, {$merge: {into: "ageSummary"}}])',
+    hints: ['Use $merge to write results to collection', 'into: target collection name'],
+    validPatterns: [
+      /db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$group\s*:/i,
+      /\{\s*\$merge\s*:\s*\{\s*into\s*:\s*"ageSummary"/i,
+    ],
+    tags: ['aggregation', '$merge'],
+  },
+  {
+    id: 'mongo-agg-021',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $out',
+    text: 'Group users by age and output to ageGroups collection.',
+    setup: 'Collection: users with documents',
+    setupCode: `db.users.insertMany([
+  {name: "John", age: 30},
+  {name: "Jane", age: 30}
+]);`,
+    expected: 'Results written to ageGroups collection',
+    sample: 'db.users.aggregate([{$group: {_id: "$age", count: {$sum: 1}}}, {$out: "ageGroups"}])',
+    hints: [
+      'Use $out to write results to new collection',
+      'Replaces existing collection if it exists',
+    ],
+    validPatterns: [
+      /db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$group\s*:/i,
+      /\{\s*\$out\s*:\s*"ageGroups"\s*\}/i,
+    ],
+    tags: ['aggregation', '$out'],
+  },
+  {
+    id: 'mongo-agg-022',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $unionWith',
+    text: 'Combine results from users and admins collections.',
+    setup: 'Collections: users and admins',
+    setupCode: `db.users.insertOne({name: "John", role: "user"});
+db.admins.insertOne({name: "Admin", role: "admin"});`,
+    expected: [
+      { name: 'John', role: 'user' },
+      { name: 'Admin', role: 'admin' },
+    ],
+    sample: 'db.users.aggregate([{$unionWith: {coll: "admins"}}])',
+    hints: ['Use $unionWith to combine collections', 'coll: collection name to union with'],
+    validPatterns: [/db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$unionWith\s*:/i],
+    tags: ['aggregation', '$unionWith'],
+  },
+  {
+    id: 'mongo-agg-023',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $graphLookup',
+    text: 'Find all managers in hierarchy using recursive lookup.',
+    setup: 'Collection: employees with manager references',
+    setupCode: `db.employees.insertMany([
+  {_id: 1, name: "CEO", managerId: null},
+  {_id: 2, name: "Manager", managerId: 1},
+  {_id: 3, name: "Employee", managerId: 2}
+]);`,
+    expected: 'Employee with all managers in hierarchy',
+    sample:
+      'db.employees.aggregate([{$match: {_id: 3}}, {$graphLookup: {from: "employees", startWith: "$managerId", connectFromField: "managerId", connectToField: "_id", as: "managers"}}])',
+    hints: [
+      'Use $graphLookup for recursive relationships',
+      'startWith: starting value, connectFromField/connectToField: relationship fields',
+    ],
+    validPatterns: [/db\.employees\.aggregate\s*\(\s*\[\s*\{\s*\$match\s*:/i, /\$graphLookup\s*:/i],
+    tags: ['aggregation', '$graphLookup'],
+  },
+  {
+    id: 'mongo-agg-024',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $densify',
+    text: 'Create missing time series data points between existing points.',
+    setup: 'Collection: metrics with time series data',
+    setupCode: `db.metrics.insertMany([
+  {time: ISODate("2024-01-01"), value: 10},
+  {time: ISODate("2024-01-03"), value: 20}
+]);`,
+    expected: 'Densified time series with interpolated points',
+    sample:
+      'db.metrics.aggregate([{$densify: {field: "time", range: {step: 1, unit: "day"}, partitionByFields: []}}])',
+    hints: [
+      'Use $densify to fill gaps in time series',
+      'range: step size and unit',
+      'partitionByFields: optional grouping',
+    ],
+    validPatterns: [/db\.metrics\.aggregate\s*\(\s*\[\s*\{\s*\$densify\s*:/i],
+    tags: ['aggregation', '$densify'],
+  },
+  {
+    id: 'mongo-agg-025',
+    category: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    title: 'Aggregation with $setWindowFields',
+    text: 'Calculate running total of scores using window function.',
+    setup:
+      'Collection: users with documents {name: "John", score: 10}, {name: "Jane", score: 20}, {name: "Bob", score: 30}',
+    setupCode: `db.users.insertMany([
+  {name: "John", score: 10},
+  {name: "Jane", score: 20},
+  {name: "Bob", score: 30}
+]);`,
+    expected: [
+      { name: 'John', score: 10, runningTotal: 10 },
+      { name: 'Jane', score: 20, runningTotal: 30 },
+      { name: 'Bob', score: 30, runningTotal: 60 },
+    ],
+    sample:
+      'db.users.aggregate([{$setWindowFields: {sortBy: {name: 1}, output: {runningTotal: {$sum: "$score", window: {documents: ["unboundedPreceding", "current"]}}}}}}])',
+    hints: [
+      'Use $setWindowFields for window functions',
+      'window: range of documents to include',
+      'unboundedPreceding: from start',
+    ],
+    validPatterns: [/db\.users\.aggregate\s*\(\s*\[\s*\{\s*\$setWindowFields\s*:/i],
+    tags: ['aggregation', '$setWindowFields'],
+  },
 ];
