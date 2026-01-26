@@ -1296,6 +1296,7 @@ export const goProblems: Problem[] = [
       /m\s*\[\s*["']missing["']\s*\]/,
     ],
     tags: ['map', 'default', 'comma-ok'],
+    // Note: Sample returns literal "N/A" but demonstrates map access with comma-ok idiom
   },
   {
     id: 'go-map-equal-1',

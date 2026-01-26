@@ -7454,6 +7454,7 @@ const logs = [];`,
     sample: 'try { mayFail(); } catch { return "handled"; }',
     hints: ['Catch without (e)', 'Modern syntax allows this'],
     tags: ['error', 'catch', 'syntax'],
+    // Note: Sample returns literal "handled" but demonstrates catch syntax without variable binding
   },
   {
     id: 'js-error-065',

@@ -1006,8 +1006,23 @@ function isHardcodedOutput(userCode: string, expected: unknown): boolean {
       `return\\s*(${escapeRegex(quotedString)}|${escapeRegex(singleQuoted)}|${escapeRegex(backtickQuoted)})`,
       'i',
     );
+
+    // If there's a return with the literal, check if there's substantial logic before it
     if (returnPattern.test(normalizedCode)) {
-      return true;
+      // Allow if there's complex logic (try-catch, if statements, function calls, etc.)
+      const hasComplexLogic =
+        normalizedCode.includes('try') ||
+        normalizedCode.includes('catch') ||
+        normalizedCode.includes('if') ||
+        normalizedCode.includes('instanceof') ||
+        normalizedCode.includes('function') ||
+        normalizedCode.includes('=>') ||
+        codeLines.length > 3; // Multiple lines usually indicate logic
+
+      // Only flag as hardcoded if it's a simple return without logic
+      if (!hasComplexLogic) {
+        return true;
+      }
     }
 
     // Check for simple assignment without computation

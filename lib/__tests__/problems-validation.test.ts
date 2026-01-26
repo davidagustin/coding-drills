@@ -18,7 +18,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { SUPPORTED_LANGUAGES } from '../../app/[language]/config';
-import { executeJavaScript } from '../codeRunner';
+import { executeJavaScript, isHardcodedOutput } from '../codeRunner';
 import { validateProblemAnswer } from '../codeValidator';
 import { getAllProblems, getProblemsForLanguage, problemsByLanguage } from '../problems/index';
 import type { LanguageId, Problem } from '../types';
@@ -198,6 +198,41 @@ describe('Problem Data Structure Validation', () => {
 
     if (errors.length > 0) {
       throw new Error(`Problems with invalid validPatterns:\n${errors.join('\n')}`);
+    }
+
+    expect(errors.length).toBe(0);
+  });
+
+  it('should not have sample solutions that hardcode the expected output', () => {
+    const allProblems = getAllProblems();
+    const errors: string[] = [];
+
+    for (const problem of allProblems) {
+      // Check if the sample solution hardcodes the expected output
+      // Sample solutions should demonstrate the approach, not reveal the answer
+      if (isHardcodedOutput(problem.sample, problem.expected)) {
+        // Check if setup variables are used (allow if using setup vars)
+        const setupVars = problem.setupCode.match(/(?:const|let|var)\s+(\w+)/g);
+        const usesSetupVar = setupVars?.some((v) => {
+          const varName = v.split(/\s+/)[1];
+          return problem.sample.includes(varName);
+        });
+
+        // If sample doesn't use setup variables, it's likely hardcoded
+        if (!usesSetupVar || !setupVars || setupVars.length === 0) {
+          errors.push(
+            `Problem ${problem.id} ("${problem.title}"): Sample solution appears to hardcode the expected output. ` +
+              `Sample: "${problem.sample.substring(0, 100)}${problem.sample.length > 100 ? '...' : ''}" ` +
+              `Expected: ${JSON.stringify(problem.expected).substring(0, 100)}${JSON.stringify(problem.expected).length > 100 ? '...' : ''}`,
+          );
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      throw new Error(
+        `Problems with hardcoded sample solutions (sample should demonstrate approach, not reveal answer):\n${errors.join('\n')}`,
+      );
     }
 
     expect(errors.length).toBe(0);
