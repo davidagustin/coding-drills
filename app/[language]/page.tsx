@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { complexityQuestions } from '@/lib/complexityProblems';
 import { getExerciseCount } from '@/lib/exercises/index';
 import { algorithmProblems } from '@/lib/interview/problems';
+import { getSystemDesignProblemCount } from '@/lib/interview/system-design-problems';
 import { getMethodCountByLanguage } from '@/lib/methods/index';
 import { problemsByLanguage } from '@/lib/problems/index';
 import { getRegexProblemCount } from '@/lib/regexTrainer';
@@ -375,7 +376,7 @@ export default function LanguagePage() {
   const methodCounts = getMethodCountByLanguage();
   const methodCount = methodCounts[language] || 0;
   const exerciseCount = !isDatabaseLanguage ? getExerciseCount(language) : 0;
-  const interviewProblemCount = algorithmProblems.length;
+  const interviewProblemCount = algorithmProblems.length + getSystemDesignProblemCount();
   const complexityCount = complexityQuestions.length;
   const quizTotalCount = methodCount + complexityCount;
   const regexProblemCount = getRegexProblemCount();
@@ -536,7 +537,7 @@ export default function LanguagePage() {
             href={`/${language}/interview`}
             icon={<ChatBubbleIcon className="w-8 h-8" />}
             title="AI Mock Interview"
-            description="Talk through coding problems with an AI interviewer. Practice explaining your approach and reasoning out loud."
+            description="Practice algorithms and system design with an AI interviewer. Explain your approach and reasoning out loud."
             buttonText="Start Mock Interview"
             config={config}
             badge={interviewProblemCount > 0 ? `${interviewProblemCount} problems` : undefined}

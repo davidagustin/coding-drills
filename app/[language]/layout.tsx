@@ -11,6 +11,7 @@ import {
   type SupportedLanguage,
 } from './config';
 import { LanguageIcon } from './LanguageIcon';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { SettingsMenu } from './SettingsMenu';
 
 // Shared icon props for nav SVGs
@@ -235,14 +236,8 @@ export default async function LanguageLayout({ children, params }: LayoutProps) 
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Language indicator badge */}
-              <div
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${config.bgColor} ${config.borderColor} border`}
-              >
-                <LanguageIcon language={language as SupportedLanguage} className="w-4 h-4" />
-                <span className={`text-sm font-medium ${config.color}`}>{config.name}</span>
-                <span className={`text-xs ${config.color} opacity-70`}>{config.version}</span>
-              </div>
+              {/* Language switcher dropdown */}
+              <LanguageSwitcher language={language as SupportedLanguage} />
 
               {/* Documentation Link */}
               <a

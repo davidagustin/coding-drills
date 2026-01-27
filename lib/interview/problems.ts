@@ -1,5 +1,5 @@
 // Algorithm Problems Data File
-// Comprehensive collection of 150+ algorithm problems organized by pattern
+// Comprehensive collection of 72 algorithm problems organized by pattern
 
 export interface AlgorithmProblem {
   id: string;

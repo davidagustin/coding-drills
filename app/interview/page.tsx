@@ -12,6 +12,17 @@ import {
   getRandomGuidedBreakdownStarter,
   INTERVIEWER_SYSTEM_PROMPT_COMPACT,
 } from '@/lib/interview/prompts';
+import {
+  type SystemDesignProblem,
+  systemDesignProblems,
+} from '@/lib/interview/system-design-problems';
+import {
+  createSystemDesignProblemContext,
+  getRandomSDConversationStarter,
+  getRandomSDGuidedBreakdownStarter,
+  SD_GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT,
+  SD_INTERVIEWER_SYSTEM_PROMPT_COMPACT,
+} from '@/lib/interview/system-design-prompts';
 // WebLLM integration
 import { checkCompatibility, initializeModel, isModelLoaded, streamChat } from '@/lib/webllm';
 
@@ -21,6 +32,7 @@ import { checkCompatibility, initializeModel, isModelLoaded, streamChat } from '
 
 type InterviewPhase = 'setup' | 'loading-model' | 'interviewing' | 'completed';
 type InterviewMode = 'solve' | 'guided-breakdown';
+type InterviewType = 'algorithm' | 'system-design';
 
 interface Message {
   id: string;
@@ -48,13 +60,18 @@ function shuffleArray<T>(array: T[]): T[] {
 
 function getProblemsbyDifficulty(
   difficulty: 'easy' | 'medium' | 'hard' | 'all',
-): AlgorithmProblem[] {
-  if (difficulty === 'all') return algorithmProblems;
-  return algorithmProblems.filter((p) => p.difficulty === difficulty);
+  interviewType: InterviewType = 'algorithm',
+): (AlgorithmProblem | SystemDesignProblem)[] {
+  const problems = interviewType === 'system-design' ? systemDesignProblems : algorithmProblems;
+  if (difficulty === 'all') return problems;
+  return problems.filter((p) => p.difficulty === difficulty);
 }
 
-function getRandomProblem(difficulty: 'easy' | 'medium' | 'hard' | 'all'): AlgorithmProblem {
-  const problems = getProblemsbyDifficulty(difficulty);
+function getRandomProblem(
+  difficulty: 'easy' | 'medium' | 'hard' | 'all',
+  interviewType: InterviewType = 'algorithm',
+): AlgorithmProblem | SystemDesignProblem {
+  const problems = getProblemsbyDifficulty(difficulty, interviewType);
   const shuffled = shuffleArray(problems);
   return shuffled[0];
 }
@@ -92,27 +109,34 @@ function DifficultyChip({ value, selected, onClick }: DifficultyChipProps) {
 }
 
 interface SetupPhaseProps {
-  onStart: (problem: AlgorithmProblem, mode: InterviewMode) => void;
+  onStart: (
+    problem: AlgorithmProblem | SystemDesignProblem,
+    mode: InterviewMode,
+    type: InterviewType,
+  ) => void;
   isCompatible: boolean | null;
   compatibilityError: string | null;
 }
 
 function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhaseProps) {
+  const [interviewType, setInterviewType] = useState<InterviewType>('algorithm');
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | 'all'>('medium');
-  const [selectedProblem, setSelectedProblem] = useState<AlgorithmProblem | null>(null);
+  const [selectedProblem, setSelectedProblem] = useState<
+    AlgorithmProblem | SystemDesignProblem | null
+  >(null);
   const [showProblemList, setShowProblemList] = useState(false);
   const [interviewMode, setInterviewMode] = useState<InterviewMode>('solve');
 
-  const availableProblems = getProblemsbyDifficulty(difficulty);
+  const availableProblems = getProblemsbyDifficulty(difficulty, interviewType);
 
   const handleRandomProblem = () => {
-    const problem = getRandomProblem(difficulty);
+    const problem = getRandomProblem(difficulty, interviewType);
     setSelectedProblem(problem);
   };
 
   const handleStart = () => {
-    const problem = selectedProblem || getRandomProblem(difficulty);
-    onStart(problem, interviewMode);
+    const problem = selectedProblem || getRandomProblem(difficulty, interviewType);
+    onStart(problem, interviewMode, interviewType);
   };
 
   return (
@@ -134,10 +158,14 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
         </div>
         <h1 className="text-3xl font-bold text-zinc-100 mb-2">AI Mock Interview</h1>
         <p className="text-zinc-400">
-          Practice algorithm problems with an AI interviewer that guides you through the solution
+          {interviewType === 'algorithm'
+            ? 'Practice algorithm problems with an AI interviewer that guides you through the solution'
+            : 'Practice system design with an AI interviewer that guides you through architecture decisions'}
         </p>
         <p className="text-zinc-500 text-sm mt-2">
-          Language-agnostic • Focus on problem-solving • Real interview experience
+          {interviewType === 'algorithm'
+            ? 'Language-agnostic • Focus on problem-solving • Real interview experience'
+            : 'Large-scale systems • Architecture & trade-offs • Real interview experience'}
         </p>
       </div>
 
@@ -157,6 +185,43 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
 
       {isCompatible && (
         <div className="bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-800 space-y-6">
+          {/* Interview Type Toggle */}
+          <div>
+            <span className="block text-sm font-medium text-zinc-300 mb-3">Interview Type</span>
+            <div className="flex gap-1 p-1 bg-zinc-800 rounded-lg">
+              <button
+                type="button"
+                onClick={() => {
+                  setInterviewType('algorithm');
+                  setSelectedProblem(null);
+                  setShowProblemList(false);
+                }}
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all cursor-pointer ${
+                  interviewType === 'algorithm'
+                    ? 'bg-cyan-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                Algorithm
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setInterviewType('system-design');
+                  setSelectedProblem(null);
+                  setShowProblemList(false);
+                }}
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all cursor-pointer ${
+                  interviewType === 'system-design'
+                    ? 'bg-cyan-600 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                System Design
+              </button>
+            </div>
+          </div>
+
           {/* Difficulty Selection */}
           <div>
             <span className="block text-sm font-medium text-zinc-300 mb-3">Difficulty</span>
@@ -267,7 +332,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
                     : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 }`}
               >
-                Solve Problem
+                {interviewType === 'system-design' ? 'Mock Interview' : 'Solve Problem'}
               </button>
               <button
                 type="button"
@@ -286,17 +351,32 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
           {/* Info Box */}
           <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
             <p className="text-sm text-cyan-400">
-              {interviewMode === 'solve' ? (
+              {interviewType === 'algorithm' ? (
+                interviewMode === 'solve' ? (
+                  <>
+                    <span className="font-medium">Solve Mode:</span> The AI interviewer will present
+                    the problem and guide you through solving it with questions and hints, just like
+                    a real technical interview.
+                  </>
+                ) : (
+                  <>
+                    <span className="font-medium">Guided Breakdown:</span> The AI coach will teach
+                    you a structured 7-step framework for breaking down algorithm problems, walking
+                    through each step interactively using the selected problem.
+                  </>
+                )
+              ) : interviewMode === 'solve' ? (
                 <>
-                  <span className="font-medium">Solve Mode:</span> The AI interviewer will present
-                  the problem and guide you through solving it with questions and hints, just like a
-                  real technical interview.
+                  <span className="font-medium">Mock Interview:</span> The AI interviewer will guide
+                  you through a system design discussion covering requirements, estimation, API
+                  design, architecture, and trade-offs.
                 </>
               ) : (
                 <>
-                  <span className="font-medium">Guided Breakdown:</span> The AI coach will teach you
-                  a structured 7-step framework for breaking down algorithm problems, walking
-                  through each step interactively using the selected problem.
+                  <span className="font-medium">Guided Breakdown:</span> The AI coach will walk you
+                  through a structured 7-phase framework for system design: Requirements,
+                  Estimation, API Design, Data Model, High-Level Design, Detailed Design, and
+                  Trade-offs.
                 </>
               )}{' '}
               The AI runs locally in your browser using WebGPU.
@@ -384,7 +464,8 @@ function ChatMessageComponent({ message }: ChatMessageProps) {
 }
 
 interface InterviewPhaseProps {
-  problem: AlgorithmProblem;
+  problem: AlgorithmProblem | SystemDesignProblem;
+  interviewType: InterviewType;
   messages: Message[];
   isStreaming: boolean;
   streamingContent: string;
@@ -394,6 +475,7 @@ interface InterviewPhaseProps {
 
 function InterviewPhaseComponent({
   problem,
+  interviewType,
   messages,
   isStreaming,
   streamingContent,
@@ -471,24 +553,63 @@ function InterviewPhaseComponent({
             <span className="text-xs font-medium text-zinc-500 uppercase">Description</span>
             <p className="text-sm text-zinc-300 mt-1">{problem.description}</p>
           </div>
-          <div>
-            <span className="text-xs font-medium text-zinc-500 uppercase">Examples</span>
-            <div className="space-y-2 mt-1">
-              {problem.examples.map((example, idx) => (
-                <div key={idx} className="bg-zinc-800 rounded-lg p-3 text-xs font-mono">
-                  <p className="text-zinc-400">
-                    <span className="text-zinc-500">Input:</span> {example.input}
-                  </p>
-                  <p className="text-zinc-400">
-                    <span className="text-zinc-500">Output:</span> {example.output}
-                  </p>
-                  {example.explanation && (
-                    <p className="text-zinc-500 mt-1 font-sans">{example.explanation}</p>
-                  )}
-                </div>
-              ))}
+          {interviewType === 'algorithm' && 'examples' in problem && (
+            <div>
+              <span className="text-xs font-medium text-zinc-500 uppercase">Examples</span>
+              <div className="space-y-2 mt-1">
+                {(problem as AlgorithmProblem).examples.map((example, idx) => (
+                  <div key={idx} className="bg-zinc-800 rounded-lg p-3 text-xs font-mono">
+                    <p className="text-zinc-400">
+                      <span className="text-zinc-500">Input:</span> {example.input}
+                    </p>
+                    <p className="text-zinc-400">
+                      <span className="text-zinc-500">Output:</span> {example.output}
+                    </p>
+                    {example.explanation && (
+                      <p className="text-zinc-500 mt-1 font-sans">{example.explanation}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+          {interviewType === 'system-design' && 'functionalRequirements' in problem && (
+            <>
+              <div>
+                <span className="text-xs font-medium text-zinc-500 uppercase">
+                  Functional Requirements
+                </span>
+                <ul className="list-disc list-inside text-xs text-zinc-400 mt-1">
+                  {(problem as SystemDesignProblem).functionalRequirements.map((req, idx) => (
+                    <li key={idx}>{req}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-zinc-500 uppercase">
+                  Non-Functional Requirements
+                </span>
+                <ul className="list-disc list-inside text-xs text-zinc-400 mt-1">
+                  {(problem as SystemDesignProblem).nonFunctionalRequirements.map((req, idx) => (
+                    <li key={idx}>{req}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-zinc-500 uppercase">Key Components</span>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {(problem as SystemDesignProblem).keyComponents.map((component, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-300 border border-zinc-700"
+                    >
+                      {component}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
           <div>
             <span className="text-xs font-medium text-zinc-500 uppercase">Constraints</span>
             <ul className="list-disc list-inside text-xs text-zinc-400 mt-1">
@@ -573,7 +694,8 @@ function InterviewPhaseComponent({
 }
 
 interface CompletedPhaseProps {
-  problem: AlgorithmProblem;
+  problem: AlgorithmProblem | SystemDesignProblem;
+  interviewType: InterviewType;
   messageCount: number;
   onNewInterview: () => void;
   onBackToHome: () => void;
@@ -581,6 +703,7 @@ interface CompletedPhaseProps {
 
 function CompletedPhase({
   problem,
+  interviewType,
   messageCount,
   onNewInterview,
   onBackToHome,
@@ -609,18 +732,54 @@ function CompletedPhase({
           </div>
         </div>
 
-        <div className="bg-zinc-800 rounded-lg p-4">
-          <p className="text-sm font-medium text-zinc-300 mb-2">Optimal Approach</p>
-          <p className="text-xs text-zinc-500">
-            <span className="text-zinc-400">Pattern:</span> {problem.optimalPattern}
-          </p>
-          <p className="text-xs text-zinc-500">
-            <span className="text-zinc-400">Time:</span> {problem.optimalTimeComplexity}
-          </p>
-          <p className="text-xs text-zinc-500">
-            <span className="text-zinc-400">Space:</span> {problem.optimalSpaceComplexity}
-          </p>
-        </div>
+        {interviewType === 'algorithm' && 'optimalPattern' in problem && (
+          <div className="bg-zinc-800 rounded-lg p-4">
+            <p className="text-sm font-medium text-zinc-300 mb-2">Optimal Approach</p>
+            <p className="text-xs text-zinc-500">
+              <span className="text-zinc-400">Pattern:</span>{' '}
+              {(problem as AlgorithmProblem).optimalPattern}
+            </p>
+            <p className="text-xs text-zinc-500">
+              <span className="text-zinc-400">Time:</span>{' '}
+              {(problem as AlgorithmProblem).optimalTimeComplexity}
+            </p>
+            <p className="text-xs text-zinc-500">
+              <span className="text-zinc-400">Space:</span>{' '}
+              {(problem as AlgorithmProblem).optimalSpaceComplexity}
+            </p>
+          </div>
+        )}
+
+        {interviewType === 'system-design' && 'keyComponents' in problem && (
+          <div className="bg-zinc-800 rounded-lg p-4 space-y-3">
+            <div>
+              <p className="text-sm font-medium text-zinc-300 mb-2">Key Components</p>
+              <div className="flex flex-wrap gap-1.5">
+                {(problem as SystemDesignProblem).keyComponents.map((component, idx) => (
+                  <span
+                    key={idx}
+                    className="text-xs px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
+                  >
+                    {component}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-zinc-300 mb-2">Design Topics</p>
+              <div className="flex flex-wrap gap-1.5">
+                {(problem as SystemDesignProblem).topics.map((topic, idx) => (
+                  <span
+                    key={idx}
+                    className="text-xs px-2 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/30"
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-4">
@@ -662,7 +821,10 @@ export default function InterviewPage() {
   const [loadStatusText, setLoadStatusText] = useState('Initializing...');
 
   // Interview state
-  const [currentProblem, setCurrentProblem] = useState<AlgorithmProblem | null>(null);
+  const [interviewType, setInterviewType] = useState<InterviewType>('algorithm');
+  const [currentProblem, setCurrentProblem] = useState<
+    AlgorithmProblem | SystemDesignProblem | null
+  >(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
@@ -683,54 +845,75 @@ export default function InterviewPage() {
   }, []);
 
   // Start the actual interview (must be defined before handleStart)
-  const startInterview = useCallback((problem: AlgorithmProblem, mode: InterviewMode) => {
-    // Build the system message with problem context
-    const problemContext = createProblemContext({
-      id: problem.id,
-      title: problem.title,
-      difficulty: problem.difficulty,
-      description: problem.description,
-      examples: problem.examples,
-      constraints: problem.constraints,
-      hints: problem.hints,
-      tags: problem.patterns,
-      patterns: problem.patterns as AlgorithmPattern[],
-    });
+  const startInterview = useCallback(
+    (problem: AlgorithmProblem | SystemDesignProblem, mode: InterviewMode, type: InterviewType) => {
+      let problemContext: string;
+      let systemPrompt: string;
+      let starterMessage: string;
 
-    // Use different system prompts based on interview mode
-    const systemPrompt =
-      mode === 'guided-breakdown'
-        ? GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT
-        : INTERVIEWER_SYSTEM_PROMPT_COMPACT;
+      if (type === 'system-design') {
+        const sdProblem = problem as SystemDesignProblem;
+        problemContext = createSystemDesignProblemContext(sdProblem);
+        systemPrompt =
+          mode === 'guided-breakdown'
+            ? SD_GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT
+            : SD_INTERVIEWER_SYSTEM_PROMPT_COMPACT;
+        starterMessage =
+          mode === 'guided-breakdown'
+            ? getRandomSDGuidedBreakdownStarter()
+            : getRandomSDConversationStarter();
+      } else {
+        const algoProblem = problem as AlgorithmProblem;
+        problemContext = createProblemContext({
+          id: algoProblem.id,
+          title: algoProblem.title,
+          difficulty: algoProblem.difficulty,
+          description: algoProblem.description,
+          examples: algoProblem.examples,
+          constraints: algoProblem.constraints,
+          hints: algoProblem.hints,
+          tags: algoProblem.patterns,
+          patterns: algoProblem.patterns as AlgorithmPattern[],
+        });
+        systemPrompt =
+          mode === 'guided-breakdown'
+            ? GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT
+            : INTERVIEWER_SYSTEM_PROMPT_COMPACT;
+        starterMessage =
+          mode === 'guided-breakdown'
+            ? getRandomGuidedBreakdownStarter()
+            : getRandomConversationStarter();
+      }
 
-    systemMessageRef.current = `${systemPrompt}\n\n---\n\n${problemContext}`;
+      systemMessageRef.current = `${systemPrompt}\n\n---\n\n${problemContext}`;
 
-    // Get a mode-appropriate conversation starter
-    const starterMessage =
-      mode === 'guided-breakdown'
-        ? getRandomGuidedBreakdownStarter()
-        : getRandomConversationStarter();
+      // Add the initial assistant message
+      const initialMessage: Message = {
+        id: generateId(),
+        role: 'assistant',
+        content: starterMessage,
+        timestamp: new Date(),
+      };
 
-    // Add the initial assistant message
-    const initialMessage: Message = {
-      id: generateId(),
-      role: 'assistant',
-      content: starterMessage,
-      timestamp: new Date(),
-    };
-
-    setMessages([initialMessage]);
-    setPhase('interviewing');
-  }, []);
+      setMessages([initialMessage]);
+      setPhase('interviewing');
+    },
+    [],
+  );
 
   // Handle starting the interview
   const handleStart = useCallback(
-    async (problem: AlgorithmProblem, mode: InterviewMode) => {
+    async (
+      problem: AlgorithmProblem | SystemDesignProblem,
+      mode: InterviewMode,
+      type: InterviewType,
+    ) => {
       setCurrentProblem(problem);
+      setInterviewType(type);
 
       // Check if model is already loaded
       if (isModelLoaded()) {
-        startInterview(problem, mode);
+        startInterview(problem, mode, type);
         return;
       }
 
@@ -752,7 +935,7 @@ export default function InterviewPage() {
           }
         });
 
-        startInterview(problem, mode);
+        startInterview(problem, mode, type);
       } catch (error) {
         console.error('Failed to load model:', error);
         setPhase('setup');
@@ -841,6 +1024,7 @@ export default function InterviewPage() {
   const handleNewInterview = useCallback(() => {
     setMessages([]);
     setCurrentProblem(null);
+    setInterviewType('algorithm');
     setPhase('setup');
   }, []);
 
@@ -866,6 +1050,7 @@ export default function InterviewPage() {
       {phase === 'interviewing' && currentProblem && (
         <InterviewPhaseComponent
           problem={currentProblem}
+          interviewType={interviewType}
           messages={messages}
           isStreaming={isStreaming}
           streamingContent={streamingContent}
@@ -877,6 +1062,7 @@ export default function InterviewPage() {
       {phase === 'completed' && currentProblem && (
         <CompletedPhase
           problem={currentProblem}
+          interviewType={interviewType}
           messageCount={messages.length}
           onNewInterview={handleNewInterview}
           onBackToHome={handleBackToHome}

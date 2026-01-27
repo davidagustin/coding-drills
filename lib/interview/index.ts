@@ -30,3 +30,20 @@ export {
   PATTERN_RECOGNITION_GUIDE,
   type ProblemExample,
 } from './prompts';
+
+// System Design Interview
+export {
+  getSystemDesignProblemCount,
+  type SystemDesignProblem,
+  systemDesignProblems,
+} from './system-design-problems';
+
+export {
+  createSystemDesignProblemContext,
+  getRandomSDConversationStarter,
+  getRandomSDGuidedBreakdownStarter,
+  SD_CONVERSATION_STARTERS,
+  SD_GUIDED_BREAKDOWN_STARTERS,
+  SD_GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT,
+  SD_INTERVIEWER_SYSTEM_PROMPT_COMPACT,
+} from './system-design-prompts';

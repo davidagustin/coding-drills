@@ -29,7 +29,7 @@ export function GlobalNavbar() {
   const currentLanguage = pathParts[0];
   const isLanguagePage =
     currentLanguage &&
-    !['interview', 'regex', 'api', 'sitemap.xml', 'robots.txt'].includes(currentLanguage);
+    !['interview', 'regex', 'links', 'api', 'sitemap.xml', 'robots.txt'].includes(currentLanguage);
 
   // Don't render GlobalNavbar on language pages - they have their own layout with header
   if (isLanguagePage) {
@@ -78,6 +78,17 @@ export function GlobalNavbar() {
           <path d="M21 21l-4.35-4.35" />
           <path d="M8 9h6" />
           <path d="M8 13h4" />
+        </svg>
+      ),
+    },
+    {
+      href: '/links',
+      label: 'Other Projects',
+      icon: (
+        <svg {...navIconProps}>
+          <title>Other Projects</title>
+          <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" />
+          <path d="M14 4h6m0 0v6m0-6L10 14" />
         </svg>
       ),
     },

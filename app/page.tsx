@@ -314,7 +314,7 @@ const modes = [
       </svg>
     ),
     description:
-      'Practice with an AI interviewer. Get real-time feedback and hints as you solve coding problems.',
+      'Practice algorithms and system design with an AI interviewer. Get real-time feedback and hints.',
     gradient: 'from-cyan-500/20 to-blue-500/10',
     border: 'border-cyan-500/30',
   },
@@ -432,11 +432,11 @@ export default function Home() {
                   AI Mock Interview
                 </h2>
                 <p className="text-gray-400 max-w-lg mb-2">
-                  Practice coding interviews with an AI interviewer. Get real-time feedback, hints,
-                  and improve your problem-solving skills.
+                  Practice coding interviews with an AI interviewer. Choose between algorithm
+                  problems and system design questions.
                 </p>
                 <p className="text-gray-500 text-sm">
-                  Language-agnostic algorithm problems • Focus on problem-solving patterns
+                  72 algorithm problems • 28 system design questions • Two interview modes
                 </p>
               </div>
 
@@ -579,7 +579,7 @@ export default function Home() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
             {
-              stat: '21',
+              stat: '24',
               label: 'Languages',
               icon: (
                 <svg

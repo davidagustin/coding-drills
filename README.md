@@ -17,7 +17,7 @@
 <br />
 
 An interactive learning platform for mastering programming languages through hands-on practice.
-**9,000+ problems** across **24 languages**, with real-time code execution, algorithm visualizations, AI mock interviews, and an AI exercise tutor.
+**8,964 problems** across **24 languages**, with real-time code execution, algorithm visualizations, AI mock interviews, and an AI exercise tutor.
 
 <br />
 
@@ -27,7 +27,7 @@ An interactive learning platform for mastering programming languages through han
 
 |  |  |  |  |  |  |
 |:--:|:--:|:--:|:--:|:--:|:--:|
-| **9,000+** | **520** | **1,182** | **188** | **24** | **24** |
+| **8,964** | **507** | **469** | **274** | **24** | **24** |
 | Problems | Exercises | Methods | Visualizations | Languages | Cheatsheets |
 
 <br />
@@ -56,14 +56,14 @@ Timed card-selection challenges matching inputs to correct methods. Pick the rig
 
 ### Method Training / Query Training
 
-9,000+ browsable coding challenges across 24 languages. Filter by category, difficulty, and completion status. Each problem has a dedicated page with split-view layout (description + code editor), prev/next navigation, and progress tracking. Programming languages show "Method Training"; database languages (PostgreSQL, MySQL, MongoDB) show "Query Training".
+8,964 browsable coding challenges across 24 languages. Filter by category, difficulty, and completion status. Each problem has a dedicated page with split-view layout (description + code editor), prev/next navigation, and progress tracking. Programming languages show "Method Training"; database languages (PostgreSQL, MySQL, MongoDB) show "Query Training".
 
 ### Building Blocks
 
-520 structured algorithm exercises covering traversal patterns (DFS, BFS), recursion, sorting, searching, dynamic programming, and data structures. Each exercise includes:
+507 structured algorithm exercises covering traversal patterns (DFS, BFS), recursion, sorting, searching, dynamic programming, and data structures. Each exercise includes:
 - **Learn mode** with detailed explanations, step-by-step breakdowns, and an AI tutor
 - **Practice mode** with code editor and test validation
-- **188 interactive visualizations** that animate algorithm execution in real-time
+- **274 interactive visualizations** that animate algorithm execution in real-time
 
 ### AI Exercise Tutor
 
@@ -81,25 +81,29 @@ Activates on-demand with a single click. ~3 GB model download on first use, cach
 
 ### AI Mock Interview
 
-Practice coding interviews with an AI interviewer that guides you through 73 algorithm problems. Two modes:
+Practice coding interviews with an AI interviewer. 100 interview problems: 72 algorithm problems and 28 system design questions. Two modes:
 - **Solve Mode**: The AI presents a problem and guides you through solving it with questions and hints, simulating a real technical interview
-- **Guided Breakdown**: The AI teaches a structured 7-step framework for breaking down algorithm problems
+- **Guided Breakdown**: The AI teaches a structured framework for breaking down algorithm and system design problems
 
 Supports both offline (WebLLM via WebGPU) and cloud (OpenAI) inference.
 
+### Regex Trainer
+
+115 regex problems across progressive difficulty levels. Practice writing regular expressions with real-time pattern matching, test case validation, and detailed explanations.
+
 ### Reference
 
-Browse 1,182 methods across 10 languages with full documentation, usage examples, argument descriptions, and time/space complexity analysis.
+Browse 469 methods across 10 languages with full documentation, usage examples, argument descriptions, and time/space complexity analysis.
 
 ### Cheatsheet
 
-24 comprehensive language cheatsheets covering syntax fundamentals, data structures, common patterns, and best practices.
+24 comprehensive language cheatsheets covering syntax fundamentals, data structures, common patterns, and best practices. 1,108 total items across all languages.
 
 ---
 
 ## Interactive Visualizations
 
-188 algorithm exercises include animated, step-through visualizations that show exactly how each algorithm works. Controls include play/pause, step forward/back, speed adjustment, and reset.
+274 algorithm exercises include animated, step-through visualizations that show exactly how each algorithm works. Controls include play/pause, step forward/back, speed adjustment, and reset.
 
 <div align="center">
 
@@ -241,28 +245,32 @@ coding-drills/
 │   │   ├── reference/          # Method reference
 │   │   └── cheatsheet/         # Language cheatsheets
 │   ├── interview/              # Standalone interview landing
+│   ├── regex/                  # Regex trainer
+│   ├── links/                  # Other projects
 │   ├── api/transpile/          # TypeScript transpilation endpoint
 │   ├── layout.tsx
 │   ├── page.tsx
 │   ├── sitemap.ts
 │   └── robots.ts
 ├── components/
-│   ├── visualizations/         # 188 interactive algorithm visualizations
+│   ├── visualizations/         # 274 interactive algorithm visualizations
 │   │   ├── useVizAnimation.ts  # Shared animation state hook
 │   │   ├── VizControls.tsx     # Shared play/pause/step controls
 │   │   ├── index.ts            # Visualization registry
-│   │   └── ...                 # 188 visualization components
+│   │   └── ...                 # 274 visualization components
 │   ├── ExerciseTutor.tsx       # AI tutor chat panel (WebLLM)
 │   ├── CodeEditor.tsx          # Monaco editor wrapper
+│   ├── GlobalNavbar.tsx        # Site-wide navigation
 │   ├── ProgressProvider.tsx
 │   └── ErrorBoundary.tsx
 ├── lib/
-│   ├── problems/               # 9,000+ coding problems (24 languages)
-│   ├── exercises/              # 520 algorithm exercises
+│   ├── problems/               # 8,964 coding problems (24 languages)
+│   ├── exercises/              # 507 algorithm exercises
 │   │   └── tutor-prompt.ts     # AI tutor system prompts
-│   ├── methods/                # 1,182 method references (10 languages)
-│   ├── interview/              # 73 algorithm interview problems
-│   ├── cheatsheets/            # 24 language cheatsheets
+│   ├── methods/                # 469 method references (10 languages)
+│   ├── interview/              # 100 interview problems (72 algorithm + 28 system design)
+│   ├── regexTrainer.ts         # 115 regex problems
+│   ├── cheatsheets/            # 24 language cheatsheets (1,108 items)
 │   ├── webllm.ts               # WebLLM integration (Llama-3.1-8B)
 │   ├── codeValidator.ts        # Anti-hardcoding validation
 │   ├── codeRunner.ts           # Code execution engine
@@ -336,13 +344,14 @@ npm run viz:status                   # Check progress
 - Scoring system with speed/difficulty/streak multipliers
 - JS/TS toggle for bilingual practice
 - 24 languages including 3 databases
-- 9,000+ coding challenges with problem browser
-- AI mock interviews (WebLLM offline + OpenAI cloud)
+- 8,964 coding challenges with problem browser
+- AI mock interviews with 72 algorithm + 28 system design problems
 - AI exercise tutor with visualization narration
-- 24 language cheatsheets
-- 520 algorithm exercises with explanations
-- 188 interactive algorithm visualizations
-- 1,182 method references across 10 languages
+- 24 language cheatsheets (1,108 items)
+- 507 algorithm exercises with explanations
+- 274 interactive algorithm visualizations
+- 469 method references across 10 languages
+- 115 regex training problems
 - E2E test coverage with Playwright
 - SEO optimization with sitemap and robots.txt
 
