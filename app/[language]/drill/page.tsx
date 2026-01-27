@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
-import { getProblemCountsByCategory, problemsByLanguage } from '@/lib/problems/index';
+import { problemsByLanguage } from '@/lib/problems/index';
 import {
   getInterviewRecommendedCount,
   getInterviewRecommendedIds,
@@ -218,24 +218,6 @@ function formatTime(ms: number): string {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-function getCategories(language: LanguageId, includeSibling = false): string[] {
-  const problems = PROBLEMS_BY_LANGUAGE[language] || [];
-  const categories = new Set(problems.map((p) => p.category));
-
-  // Include sibling language categories if requested
-  if (includeSibling) {
-    const siblingLang = SIBLING_LANGUAGES[language];
-    if (siblingLang) {
-      const siblingProblems = PROBLEMS_BY_LANGUAGE[siblingLang] || [];
-      for (const p of siblingProblems) {
-        categories.add(p.category);
-      }
-    }
-  }
-
-  return Array.from(categories).sort();
-}
-
 function selectProblems(language: LanguageId, config: DrillConfig): ProblemWithLanguage[] {
   // Tag problems with their source language
   const baseProblems: ProblemWithLanguage[] = (PROBLEMS_BY_LANGUAGE[language] || []).map((p) => ({
@@ -407,7 +389,6 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const [includeSibling, setIncludeSibling] = useState(false);
 
   // Get categories based on whether sibling is included
-  const categories = getCategories(language, includeSibling);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [questionCount, setQuestionCount] = useState(10);
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
@@ -416,21 +397,38 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Get problem counts per category
-  const categoryCounts = (() => {
-    const baseCounts = getProblemCountsByCategory(language);
+  // Build the pool of problems respecting sibling + interview filters
+  const problemPool = (() => {
+    let problems: Problem[] = PROBLEMS_BY_LANGUAGE[language] || [];
 
-    // Include sibling language counts if toggled
     if (includeSibling && siblingLanguage) {
-      const siblingCounts = getProblemCountsByCategory(siblingLanguage);
-      const combined: Record<string, number> = { ...baseCounts };
-      for (const [category, count] of Object.entries(siblingCounts)) {
-        combined[category] = (combined[category] || 0) + count;
-      }
-      return combined;
+      problems = [...problems, ...(PROBLEMS_BY_LANGUAGE[siblingLanguage] || [])];
     }
 
-    return baseCounts;
+    if (interviewOnly) {
+      const langIds = getInterviewRecommendedIds(language);
+      const siblingIds =
+        includeSibling && siblingLanguage
+          ? getInterviewRecommendedIds(siblingLanguage)
+          : new Set<string>();
+      problems = problems.filter((p) => langIds.has(p.id) || siblingIds.has(p.id));
+    }
+
+    return problems;
+  })();
+
+  // Derive categories and counts from the filtered pool
+  const categories = (() => {
+    const cats = new Set(problemPool.map((p) => p.category));
+    return Array.from(cats).sort();
+  })();
+
+  const categoryCounts = (() => {
+    const counts: Record<string, number> = {};
+    for (const p of problemPool) {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    }
+    return counts;
   })();
 
   const toggleCategory = (category: string) => {
@@ -452,22 +450,9 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   };
 
   // Get all problems for browsing (without the random selection limit)
+  // Starts from problemPool which already has sibling + interview filters applied
   const allFilteredProblems = (() => {
-    let problems = PROBLEMS_BY_LANGUAGE[language] || [];
-
-    // Include sibling language problems if toggled
-    if (includeSibling && siblingLanguage) {
-      const siblingProblems = PROBLEMS_BY_LANGUAGE[siblingLanguage] || [];
-      problems = [...problems, ...siblingProblems];
-    }
-
-    // Filter by interview-recommended
-    if (interviewOnly) {
-      const langIds = getInterviewRecommendedIds(language);
-      const siblingIds =
-        includeSibling && siblingLanguage ? getInterviewRecommendedIds(siblingLanguage) : new Set();
-      problems = problems.filter((p) => langIds.has(p.id) || siblingIds.has(p.id));
-    }
+    let problems = [...problemPool];
 
     // Filter by categories
     if (selectedCategories.length > 0) {
