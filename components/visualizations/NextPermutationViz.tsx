@@ -1,141 +1,150 @@
 'use client';
 
-import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import { useVizAnimation } from './useVizAnimation';
 import VizControls from './VizControls';
 
-const NUMS = [1, 2, 3];
+const INPUT = [1, 2, 3];
 
-interface NextPermStep {
-  nums: number[];
-  i: number;
-  j: number;
-  action: string;
+interface NextPermutationStep {
+  array: number[];
+  pivotIndex: number;
+  swapIndex: number;
+  left: number;
+  right: number;
+  phase: 'find-pivot' | 'find-swap' | 'swap' | 'reverse' | 'complete';
   explanation: string;
 }
 
-function computeSteps(): NextPermStep[] {
-  const steps: NextPermStep[] = [];
-  const nums = [...NUMS];
-  
+function computeSteps(): NextPermutationStep[] {
+  const steps: NextPermutationStep[] = [];
+  const array = [...INPUT];
+  const length = array.length;
+
   steps.push({
-    nums: [...nums],
-    i: -1,
-    j: -1,
-    action: 'start',
-    explanation: `Start: Find next permutation of [${nums.join(', ')}]`,
+    array: [...array],
+    pivotIndex: -1,
+    swapIndex: -1,
+    left: -1,
+    right: -1,
+    phase: 'find-pivot',
+    explanation: `Start: Find next lexicographic permutation of [${array.join(', ')}]`,
   });
-  
-  let i = nums.length - 2;
-  while (i >= 0 && nums[i] >= nums[i + 1]) {
+
+  // Step 1: Find pivot
+  let pivotIndex = length - 2;
+  while (pivotIndex >= 0 && array[pivotIndex] >= array[pivotIndex + 1]) {
     steps.push({
-      nums: [...nums],
-      i,
-      j: -1,
-      action: 'find',
-      explanation: `nums[${i}]=${nums[i]} >= nums[${i + 1}]=${nums[i + 1]} → continue`,
+      array: [...array],
+      pivotIndex,
+      swapIndex: -1,
+      left: -1,
+      right: -1,
+      phase: 'find-pivot',
+      explanation: `Checking index ${pivotIndex}: ${array[pivotIndex]} >= ${array[pivotIndex + 1]}, continue left`,
     });
-    i--;
+    pivotIndex--;
   }
-  
-  if (i >= 0) {
+
+  if (pivotIndex >= 0) {
     steps.push({
-      nums: [...nums],
-      i,
-      j: -1,
-      action: 'found',
-      explanation: `Found pivot at index ${i}: nums[${i}]=${nums[i]}`,
+      array: [...array],
+      pivotIndex,
+      swapIndex: -1,
+      left: -1,
+      right: -1,
+      phase: 'find-pivot',
+      explanation: `Found pivot at index ${pivotIndex}: ${array[pivotIndex]} < ${array[pivotIndex + 1]}`,
     });
-    
-    let j = nums.length - 1;
-    while (nums[j] <= nums[i]) {
+
+    // Step 2: Find swap index
+    let swapIndex = length - 1;
+    while (swapIndex > pivotIndex && array[swapIndex] <= array[pivotIndex]) {
       steps.push({
-        nums: [...nums],
-        i,
-        j,
-        action: 'search',
-        explanation: `nums[${j}]=${nums[j]} <= nums[${i}]=${nums[i]} → continue`,
+        array: [...array],
+        pivotIndex,
+        swapIndex,
+        left: -1,
+        right: -1,
+        phase: 'find-swap',
+        explanation: `Finding swap: index ${swapIndex} has ${array[swapIndex]} <= ${array[pivotIndex]}, continue left`,
       });
-      j--;
+      swapIndex--;
     }
-    
+
     steps.push({
-      nums: [...nums],
-      i,
-      j,
-      action: 'swap',
-      explanation: `Swap nums[${i}]=${nums[i]} and nums[${j}]=${nums[j]}`,
+      array: [...array],
+      pivotIndex,
+      swapIndex,
+      left: -1,
+      right: -1,
+      phase: 'swap',
+      explanation: `Found swap index ${swapIndex}: ${array[swapIndex]} > ${array[pivotIndex]}, swapping`,
     });
-    [nums[i], nums[j]] = [nums[j], nums[i]];
-    
+
+    // Step 3: Swap
+    [array[pivotIndex], array[swapIndex]] = [array[swapIndex], array[pivotIndex]];
     steps.push({
-      nums: [...nums],
-      i,
-      j,
-      action: 'reverse',
-      explanation: `Reverse from index ${i + 1} to end`,
+      array: [...array],
+      pivotIndex,
+      swapIndex,
+      left: -1,
+      right: -1,
+      phase: 'swap',
+      explanation: `Swapped: array[${pivotIndex}] = ${array[pivotIndex]}, array[${swapIndex}] = ${array[swapIndex]}`,
     });
-    
-    let left = i + 1;
-    let right = nums.length - 1;
+
+    // Step 4: Reverse suffix
+    let left = pivotIndex + 1;
+    let right = length - 1;
     while (left < right) {
-      [nums[left], nums[right]] = [nums[right], nums[left]];
       steps.push({
-        nums: [...nums],
-        i: left,
-        j: right,
-        action: 'reverse',
-        explanation: `Swap nums[${left}]=${nums[left]} and nums[${right}]=${nums[right]}`,
+        array: [...array],
+        pivotIndex,
+        swapIndex: -1,
+        left,
+        right,
+        phase: 'reverse',
+        explanation: `Reversing suffix: swapping array[${left}] = ${array[left]} with array[${right}] = ${array[right]}`,
       });
+      [array[left], array[right]] = [array[right], array[left]];
       left++;
       right--;
     }
   } else {
     steps.push({
-      nums: [...nums],
-      i: -1,
-      j: -1,
-      action: 'reverse',
-      explanation: 'No pivot found → reverse entire array',
+      array: [...array],
+      pivotIndex: -1,
+      swapIndex: -1,
+      left: -1,
+      right: -1,
+      phase: 'reverse',
+      explanation: `No pivot found (already largest), reversing entire array`,
     });
-    
     let left = 0;
-    let right = nums.length - 1;
+    let right = length - 1;
     while (left < right) {
-      [nums[left], nums[right]] = [nums[right], nums[left]];
-      steps.push({
-        nums: [...nums],
-        i: left,
-        j: right,
-        action: 'reverse',
-        explanation: `Swap nums[${left}]=${nums[left]} and nums[${right}]=${nums[right]}`,
-      });
+      [array[left], array[right]] = [array[right], array[left]];
       left++;
       right--;
     }
   }
-  
+
   steps.push({
-    nums: [...nums],
-    i: -1,
-    j: -1,
-    action: 'complete',
-    explanation: `Complete: Next permutation [${nums.join(', ')}]`,
+    array: [...array],
+    pivotIndex: -1,
+    swapIndex: -1,
+    left: -1,
+    right: -1,
+    phase: 'complete',
+    explanation: `Complete: Next permutation = [${array.join(', ')}]`,
   });
-  
+
   return steps;
 }
 
 const STEPS = computeSteps();
 const TOTAL_STEPS = STEPS.length;
-
-const COLORS = {
-  current: '#eab308',
-  pivot: '#ef4444',
-  swapping: '#22c55e',
-  default: '#3b82f6',
-} as const;
 
 export default function NextPermutationViz() {
   const controls = useVizAnimation(TOTAL_STEPS);
@@ -145,55 +154,49 @@ export default function NextPermutationViz() {
     return step < STEPS.length ? STEPS[step] : STEPS[STEPS.length - 1];
   }, [step]);
 
-  const { nums, i, j, action, explanation } = currentStep;
+  const { array, pivotIndex, swapIndex, left, right, phase, explanation } = currentStep;
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">
-      <h2 className="text-2xl font-bold text-white mb-4">Next Permutation</h2>
+      <h2 className="text-2xl font-bold text-white mb-4">Next Lexicographic Permutation</h2>
 
       <div className="mb-6 p-4 bg-zinc-800 rounded-lg">
-        <p className="text-zinc-400 text-sm mb-2">
-          Step {step + 1} of {TOTAL_STEPS}
-        </p>
         <p className="text-white text-sm">{explanation}</p>
-        {step === STEPS.length - 1 && (
-          <p className="text-yellow-400 font-bold text-lg mt-2">
-            Result: [{nums.join(', ')}]
-          </p>
-        )}
+        <p className="text-cyan-400 text-sm mt-1">Phase: {phase}</p>
       </div>
 
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-zinc-300 mb-3">Array</h3>
-        <div className="flex gap-2 justify-center">
-          {nums.map((n, idx) => {
-            let bgColor: string = COLORS.default;
-            if (idx === i && action === 'found') {
-              bgColor = COLORS.pivot;
-            } else if (idx === i || idx === j) {
-              bgColor = action === 'swap' ? COLORS.swapping : COLORS.current;
-            }
-
-            return (
-              <motion.div
-                key={idx}
-                className="w-16 h-16 rounded-lg border-2 flex items-center justify-center font-mono font-bold text-white"
-                style={{
-                  backgroundColor: bgColor,
-                  borderColor: (idx === i || idx === j) ? '#fff' : bgColor,
-                }}
-                animate={{
-                  scale: (idx === i || idx === j) ? 1.2 : 1,
-                }}
-              >
-                {n}
-              </motion.div>
-            );
-          })}
+      <div className="space-y-6">
+        {/* Array */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Array</h3>
+          <div className="flex gap-2 flex-wrap">
+            {array.map((val, idx) => {
+              const isPivot = idx === pivotIndex && pivotIndex !== -1;
+              const isSwap = idx === swapIndex && swapIndex !== -1;
+              const isReverse = (idx === left || idx === right) && left !== -1;
+              return (
+                <div
+                  key={idx}
+                  className={`w-16 h-16 rounded-lg flex flex-col items-center justify-center font-mono text-sm font-semibold border-2 ${
+                    isPivot
+                      ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
+                      : isSwap
+                        ? 'bg-blue-500/20 border-blue-500 text-blue-400'
+                        : isReverse
+                          ? 'bg-green-500/20 border-green-500 text-green-400'
+                          : 'bg-zinc-800 border-zinc-700 text-zinc-300'
+                  }`}
+                >
+                  <span className="text-xs text-zinc-500">{idx}</span>
+                  <span className="text-lg">{val}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      <VizControls controls={controls} accentColor="#eab308" />
+      <VizControls controls={controls} />
     </div>
   );
 }

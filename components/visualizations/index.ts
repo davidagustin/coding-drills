@@ -285,6 +285,9 @@ const FastPowerViz = dynamic(() => import('./FastPowerViz'), { ssr: false });
 const FloodFillViz = dynamic(() => import('./FloodFillViz'), { ssr: false });
 const TowerOfHanoiViz = dynamic(() => import('./TowerOfHanoiViz'), { ssr: false });
 const DeepCloneViz = dynamic(() => import('./DeepCloneViz'), { ssr: false });
+const FlattenNestedRecursiveViz = dynamic(() => import('./FlattenNestedRecursiveViz'), {
+  ssr: false,
+});
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -383,6 +386,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'subset-sum-exists': SubsetSumExistsViz,
   'tower-of-hanoi': TowerOfHanoiViz,
   'deep-clone': DeepCloneViz,
+  'flatten-nested-recursive': FlattenNestedRecursiveViz,
   'max-heap-insert': MaxHeapInsertViz,
   'trie-search': TrieSearchViz,
   'union-find': UnionFindViz,
