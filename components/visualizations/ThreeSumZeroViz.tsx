@@ -298,7 +298,7 @@ export default function ThreeSumZeroViz() {
                 key={idx}
                 className="px-3 py-1 rounded-lg font-mono text-sm"
                 style={{
-                  background: FOUND_COLOR + '20',
+                  background: `${FOUND_COLOR}20`,
                   border: `1px solid ${FOUND_COLOR}`,
                   color: FOUND_COLOR,
                 }}

@@ -50,6 +50,81 @@ const GenerateSubsetsViz = dynamic(() => import('./GenerateSubsetsViz'), { ssr: 
 const MergeInPlaceViz = dynamic(() => import('./MergeInPlaceViz'), { ssr: false });
 const RotateMatrixViz = dynamic(() => import('./RotateMatrixViz'), { ssr: false });
 
+// New visualizations
+const MinStackViz = dynamic(() => import('./MinStackViz'), { ssr: false });
+const ClimbingStairsViz = dynamic(() => import('./ClimbingStairsViz'), { ssr: false });
+const ValidateBSTViz = dynamic(() => import('./ValidateBSTViz'), { ssr: false });
+const NumberOfIslandsViz = dynamic(() => import('./NumberOfIslandsViz'), { ssr: false });
+const MinInRotatedViz = dynamic(() => import('./MinInRotatedViz'), { ssr: false });
+const FindPeakViz = dynamic(() => import('./FindPeakViz'), { ssr: false });
+const HouseRobberViz = dynamic(() => import('./HouseRobberViz'), { ssr: false });
+const CoinChangeMinViz = dynamic(() => import('./CoinChangeMinViz'), { ssr: false });
+const UniquePathsGridViz = dynamic(() => import('./UniquePathsGridViz'), { ssr: false });
+
+// Batch 1: Tree & Binary Search
+const KthSmallestBSTViz = dynamic(() => import('./KthSmallestBSTViz'), { ssr: false });
+const LowestCommonAncestorViz = dynamic(() => import('./LowestCommonAncestorViz'), { ssr: false });
+const RightSideViewViz = dynamic(() => import('./RightSideViewViz'), { ssr: false });
+const ZigzagLevelOrderViz = dynamic(() => import('./ZigzagLevelOrderViz'), { ssr: false });
+const BinarySearchInsertViz = dynamic(() => import('./BinarySearchInsertViz'), { ssr: false });
+const Search2DMatrixViz = dynamic(() => import('./Search2DMatrixViz'), { ssr: false });
+const CountOccurrencesViz = dynamic(() => import('./CountOccurrencesViz'), { ssr: false });
+const GraphAdjacencyViz = dynamic(() => import('./GraphAdjacencyViz'), { ssr: false });
+const CourseScheduleViz = dynamic(() => import('./CourseScheduleViz'), { ssr: false });
+const CloneGraphViz = dynamic(() => import('./CloneGraphViz'), { ssr: false });
+
+// Batch 2: DP & Graph
+const LCSLengthViz = dynamic(() => import('./LCSLengthViz'), { ssr: false });
+const LISLengthViz = dynamic(() => import('./LISLengthViz'), { ssr: false });
+const EditDistanceViz = dynamic(() => import('./EditDistanceViz'), { ssr: false });
+const MinPathSumGridViz = dynamic(() => import('./MinPathSumGridViz'), { ssr: false });
+const WordBreakViz = dynamic(() => import('./WordBreakViz'), { ssr: false });
+const DecodeWaysViz = dynamic(() => import('./DecodeWaysViz'), { ssr: false });
+const Knapsack01Viz = dynamic(() => import('./Knapsack01Viz'), { ssr: false });
+const MaxProductSubarrayViz = dynamic(() => import('./MaxProductSubarrayViz'), { ssr: false });
+const LongestPalindromeSubstrViz = dynamic(() => import('./LongestPalindromeSubstrViz'), {
+  ssr: false,
+});
+const TargetSumWaysViz = dynamic(() => import('./TargetSumWaysViz'), { ssr: false });
+
+// Batch 3: Array/String & More DP
+const ProductExceptSelfViz = dynamic(() => import('./ProductExceptSelfViz'), { ssr: false });
+const MergeIntervalsViz = dynamic(() => import('./MergeIntervalsViz'), { ssr: false });
+const JumpGameViz = dynamic(() => import('./JumpGameViz'), { ssr: false });
+const PartitionEqualSubsetViz = dynamic(() => import('./PartitionEqualSubsetViz'), { ssr: false });
+const MonotonicStackViz = dynamic(() => import('./MonotonicStackViz'), { ssr: false });
+const TwoStackQueueViz = dynamic(() => import('./TwoStackQueueViz'), { ssr: false });
+const LongestConsecutiveSeqViz = dynamic(() => import('./LongestConsecutiveSeqViz'), {
+  ssr: false,
+});
+const GroupAnagramsViz = dynamic(() => import('./GroupAnagramsViz'), { ssr: false });
+const InsertIntervalViz = dynamic(() => import('./InsertIntervalViz'), { ssr: false });
+const StringCompressViz = dynamic(() => import('./StringCompressViz'), { ssr: false });
+
+// Batch 4: Backtracking, Heap, Trie, Union-Find
+const GenerateParensViz = dynamic(() => import('./GenerateParensViz'), { ssr: false });
+const WordSearchGridViz = dynamic(() => import('./WordSearchGridViz'), { ssr: false });
+const NQueensCountViz = dynamic(() => import('./NQueensCountViz'), { ssr: false });
+const SubsetSumExistsViz = dynamic(() => import('./SubsetSumExistsViz'), { ssr: false });
+const MaxHeapInsertViz = dynamic(() => import('./MaxHeapInsertViz'), { ssr: false });
+const TrieSearchViz = dynamic(() => import('./TrieSearchViz'), { ssr: false });
+const UnionFindViz = dynamic(() => import('./UnionFindViz'), { ssr: false });
+const GraphValidTreeViz = dynamic(() => import('./GraphValidTreeViz'), { ssr: false });
+const SerializeTreeViz = dynamic(() => import('./SerializeTreeViz'), { ssr: false });
+const TreeDiameterViz = dynamic(() => import('./TreeDiameterViz'), { ssr: false });
+const PriorityQueueCustomViz = dynamic(() => import('./PriorityQueueCustomViz'), { ssr: false });
+const QuickSelectViz = dynamic(() => import('./QuickSelectViz'), { ssr: false });
+
+// Batch 5: Final visualizations
+const TopologicalSortViz = dynamic(() => import('./TopologicalSortViz'), { ssr: false });
+const WordLadderViz = dynamic(() => import('./WordLadderViz'), { ssr: false });
+const RottingOrangesViz = dynamic(() => import('./RottingOrangesViz'), { ssr: false });
+const EncodeDecodeStringsViz = dynamic(() => import('./EncodeDecodeStringsViz'), { ssr: false });
+const MemoizeFibonacciViz = dynamic(() => import('./MemoizeFibonacciViz'), { ssr: false });
+const DebounceViz = dynamic(() => import('./DebounceViz'), { ssr: false });
+const ThrottleViz = dynamic(() => import('./ThrottleViz'), { ssr: false });
+const CountInversionsViz = dynamic(() => import('./CountInversionsViz'), { ssr: false });
+
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
   'binary-search': BinarySearchViz,
@@ -97,6 +172,77 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'basic-memoize': BasicMemoizeViz,
   'merge-in-place': MergeInPlaceViz,
   'rotate-matrix': RotateMatrixViz,
+
+  // New visualizations
+  'min-stack': MinStackViz,
+  'climbing-stairs': ClimbingStairsViz,
+  'validate-bst': ValidateBSTViz,
+  'number-of-islands': NumberOfIslandsViz,
+  'min-in-rotated': MinInRotatedViz,
+  'find-peak': FindPeakViz,
+  'house-robber': HouseRobberViz,
+  'coin-change-min': CoinChangeMinViz,
+  'unique-paths-grid': UniquePathsGridViz,
+
+  // Batch 1
+  'kth-smallest-bst': KthSmallestBSTViz,
+  'lowest-common-ancestor': LowestCommonAncestorViz,
+  'right-side-view': RightSideViewViz,
+  'zigzag-level-order': ZigzagLevelOrderViz,
+  'binary-search-insert': BinarySearchInsertViz,
+  'search-2d-matrix': Search2DMatrixViz,
+  'count-occurrences': CountOccurrencesViz,
+  'graph-adjacency': GraphAdjacencyViz,
+  'course-schedule': CourseScheduleViz,
+  'clone-graph': CloneGraphViz,
+
+  // Batch 2
+  'lcs-length': LCSLengthViz,
+  'lis-length': LISLengthViz,
+  'edit-distance': EditDistanceViz,
+  'min-path-sum-grid': MinPathSumGridViz,
+  'word-break': WordBreakViz,
+  'decode-ways': DecodeWaysViz,
+  'knapsack-01': Knapsack01Viz,
+  'max-product-subarray': MaxProductSubarrayViz,
+  'longest-palindrome-substr': LongestPalindromeSubstrViz,
+  'target-sum-ways': TargetSumWaysViz,
+
+  // Batch 3
+  'product-except-self': ProductExceptSelfViz,
+  'merge-intervals': MergeIntervalsViz,
+  'jump-game': JumpGameViz,
+  'partition-equal-subset': PartitionEqualSubsetViz,
+  'monotonic-stack': MonotonicStackViz,
+  'two-stack-queue': TwoStackQueueViz,
+  'longest-consecutive-seq': LongestConsecutiveSeqViz,
+  'group-anagrams': GroupAnagramsViz,
+  'insert-interval': InsertIntervalViz,
+  'string-compress': StringCompressViz,
+
+  // Batch 4
+  'generate-parens': GenerateParensViz,
+  'word-search-grid': WordSearchGridViz,
+  'n-queens-count': NQueensCountViz,
+  'subset-sum-exists': SubsetSumExistsViz,
+  'max-heap-insert': MaxHeapInsertViz,
+  'trie-search': TrieSearchViz,
+  'union-find': UnionFindViz,
+  'graph-valid-tree': GraphValidTreeViz,
+  'serialize-tree': SerializeTreeViz,
+  'tree-diameter': TreeDiameterViz,
+  'priority-queue-custom': PriorityQueueCustomViz,
+  'quick-select': QuickSelectViz,
+
+  // Batch 5
+  'topological-sort': TopologicalSortViz,
+  'word-ladder': WordLadderViz,
+  'rotting-oranges': RottingOrangesViz,
+  'encode-decode-strings': EncodeDecodeStringsViz,
+  'memoize-fibonacci': MemoizeFibonacciViz,
+  debounce: DebounceViz,
+  throttle: ThrottleViz,
+  'count-inversions': CountInversionsViz,
 };
 
 /**

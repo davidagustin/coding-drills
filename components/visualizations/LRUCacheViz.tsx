@@ -44,7 +44,8 @@ function computeSteps(): LRUStep[] {
 
     if (op === 'get') {
       if (cache.has(key)) {
-        const val = cache.get(key)!;
+        const val = cache.get(key);
+        if (val === undefined) continue;
         cache.delete(key);
         cache.set(key, val);
         result = val;
@@ -78,7 +79,9 @@ function computeSteps(): LRUStep[] {
         });
       }
 
-      cache.set(key, value!);
+      if (value !== null && value !== undefined) {
+        cache.set(key, value);
+      }
 
       if (cache.size > CAPACITY) {
         const oldest = cache.keys().next().value;

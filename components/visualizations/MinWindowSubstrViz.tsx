@@ -87,12 +87,12 @@ function buildSteps(s: string, t: string): MinWindowStep[] {
       }
 
       const removedChar = s[start];
-      windowFreq.set(removedChar, windowFreq.get(removedChar)! - 1);
+      const currentFreq = windowFreq.get(removedChar) ?? 0;
+      windowFreq.set(removedChar, currentFreq - 1);
 
-      if (
-        targetFreq.has(removedChar) &&
-        windowFreq.get(removedChar)! < targetFreq.get(removedChar)!
-      ) {
+      const windowCount = windowFreq.get(removedChar) ?? 0;
+      const targetCount = targetFreq.get(removedChar) ?? 0;
+      if (targetFreq.has(removedChar) && windowCount < targetCount) {
         satisfied--;
       }
 

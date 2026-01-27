@@ -34,7 +34,8 @@ function computeSteps(): MemoStep[] {
 
   for (const arg of CALLS) {
     if (cache.has(arg)) {
-      const cachedResult = cache.get(arg)!;
+      const cachedResult = cache.get(arg);
+      if (cachedResult === undefined) continue;
       steps.push({
         arg,
         cache: new Map(cache),

@@ -63,7 +63,7 @@ Timed card-selection challenges matching inputs to correct methods. Pick the rig
 520 structured algorithm exercises covering traversal patterns (DFS, BFS), recursion, sorting, searching, dynamic programming, and data structures. Each exercise includes:
 - **Learn mode** with detailed explanations and step-by-step breakdowns
 - **Practice mode** with code editor and validation
-- **25 interactive visualizations** that animate algorithm execution in real-time
+- **34 interactive visualizations** that animate algorithm execution in real-time
 
 ### AI Mock Interview
 
@@ -233,7 +233,7 @@ coding-drills/
 │   ├── sitemap.ts
 │   └── robots.ts
 ├── components/
-│   ├── visualizations/         # 25 interactive algorithm visualizations
+│   ├── visualizations/         # 34 interactive algorithm visualizations
 │   │   ├── useVizAnimation.ts  # Shared animation state hook
 │   │   ├── VizControls.tsx     # Shared play/pause/step controls
 │   │   ├── index.ts            # Visualization registry
@@ -291,6 +291,40 @@ Add to `lib/problems/{language}.ts` following the `Problem` interface:
 
 Run `pnpm test:e2e:problems` to validate, then submit a PR.
 
+### Adding Visualizations
+
+The project includes a parallel agent system for coordinating visualization development. Use the following commands:
+
+```bash
+# List progress summary for all agents
+npm run viz:list
+
+# Show next tasks for an agent (default: agent 1, limit 5)
+npm run viz:next [agent-id] [limit]
+npm run viz:next 2 10  # Show next 10 tasks for agent 2
+
+# Generate boilerplate for a visualization
+npm run viz:generate <exercise-id>
+npm run viz:generate min-stack
+
+# Show detailed status for all agents
+npm run viz:status
+```
+
+**Visualization Pattern:**
+1. Use `useVizAnimation` hook for play/pause/step controls
+2. Pre-compute algorithm steps in a `computeSteps()` function
+3. Use `VizControls` component for consistent UI
+4. Follow existing patterns (see `BinarySearchViz.tsx`, `TwoPointerViz.tsx`)
+5. Register in `components/visualizations/index.ts` with dynamic import
+
+**Example Workflow:**
+1. Check available tasks: `npm run viz:next 1 5`
+2. Generate boilerplate: `npm run viz:generate min-stack`
+3. Implement visualization in `components/visualizations/MinStackViz.tsx`
+4. Register in `components/visualizations/index.ts`
+5. Check progress: `npm run viz:status`
+
 ### Contribution Ideas
 
 | What | Difficulty |
@@ -315,7 +349,7 @@ Run `pnpm test:e2e:problems` to validate, then submit a PR.
 - AI mock interviews (cloud + offline)
 - 24 language cheatsheets
 - 520 algorithm exercises with explanations
-- 25 interactive algorithm visualizations
+- 34 interactive algorithm visualizations
 - 1,182 method references across 10 languages
 - 8,800+ lines of E2E test coverage
 - SEO optimization with sitemap and robots.txt

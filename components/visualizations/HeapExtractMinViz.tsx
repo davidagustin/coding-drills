@@ -79,7 +79,8 @@ function computeSteps(): HeapStep[] {
   }
 
   // Move last element to root
-  const last = heap.pop()!;
+  const last = heap.pop();
+  if (last === undefined) return steps;
   heap[0] = last;
   steps.push({
     heap: [...heap],

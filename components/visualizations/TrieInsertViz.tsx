@@ -231,7 +231,7 @@ export default function TrieInsertViz() {
       </div>
 
       {/* Current word */}
-      {current && current.word && (
+      {current?.word && (
         <div className="bg-zinc-800 rounded-lg p-4 text-center">
           <span className="text-zinc-400 text-sm">Inserting: </span>
           <span className="text-zinc-200 font-mono font-bold text-lg">{current.word}</span>

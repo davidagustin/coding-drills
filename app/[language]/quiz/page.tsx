@@ -967,6 +967,7 @@ function ResultsPhase({
   const [savedToLeaderboard, setSavedToLeaderboard] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [leaderboardPosition, setLeaderboardPosition] = useState<number>(0);
+  const [reviewFilter, setReviewFilter] = useState<'all' | 'missed'>('missed');
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- Initial data load */
@@ -1187,55 +1188,148 @@ Try it yourself!`;
 
         {/* Question Review */}
         <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700/50">
-          <h3 className="text-lg font-semibold mb-3">Question Review</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold">Question Review</h3>
+            <div className="flex items-center bg-slate-700/50 rounded-lg p-0.5 text-xs">
+              <button
+                type="button"
+                onClick={() => setReviewFilter('missed')}
+                className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                  reviewFilter === 'missed'
+                    ? 'bg-slate-600 text-white'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                Missed ({answers.filter((a) => !a.isCorrect).length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setReviewFilter('all')}
+                className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                  reviewFilter === 'all'
+                    ? 'bg-slate-600 text-white'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                All ({questions.length})
+              </button>
+            </div>
+          </div>
           <div className="space-y-2">
-            {questions.map((question, index) => {
-              const answer = answers[index];
-              return (
+            {questions
+              .map((question, index) => ({ question, answer: answers[index], index }))
+              .filter(({ answer }) => reviewFilter === 'all' || !answer?.isCorrect)
+              .map(({ question, answer, index }) => (
                 <div
                   key={question.id}
-                  className={`flex items-center justify-between p-3 rounded-lg ${
+                  className={`rounded-lg ${
                     answer?.isCorrect ? 'bg-emerald-500/10' : 'bg-red-500/10'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    {answer?.isCorrect ? (
-                      <svg
-                        className="w-5 h-5 text-emerald-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        className="w-5 h-5 text-red-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    )}
-                    <span className="font-mono text-sm">{question.correctMethod}</span>
+                  {/* Compact row */}
+                  <div className="flex items-center justify-between p-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-slate-500 w-5 text-right">{index + 1}.</span>
+                      {answer?.isCorrect ? (
+                        <svg
+                          className="w-4 h-4 text-emerald-400 flex-shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="w-4 h-4 text-red-400 flex-shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      )}
+                      <span className="font-mono text-sm">{question.correctMethod}</span>
+                    </div>
+                    <div className="text-sm text-slate-400">{answer?.timeSpent.toFixed(1)}s</div>
                   </div>
-                  <div className="text-sm text-slate-400">{answer?.timeSpent.toFixed(1)}s</div>
+
+                  {/* Expanded details for wrong/timed-out answers */}
+                  {!answer?.isCorrect && (
+                    <div className="px-3 pb-3 pt-0 border-t border-red-500/10">
+                      {/* Question context */}
+                      <div className="mt-2 bg-slate-900/50 rounded-lg p-3 font-mono text-xs">
+                        <div className="text-slate-400 mb-1">
+                          <span className="text-slate-500">Input:</span> {question.input}
+                        </div>
+                        <div className="text-slate-400">
+                          <span className="text-slate-500">Output:</span> {question.output}
+                        </div>
+                      </div>
+
+                      {/* What you answered vs correct */}
+                      <div className="mt-2 flex flex-col gap-1 text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-400 text-xs w-20 flex-shrink-0">
+                            Your answer:
+                          </span>
+                          <span className="font-mono text-red-300">
+                            {answer?.selectedOption ?? 'Timed out'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-emerald-400 text-xs w-20 flex-shrink-0">
+                            Correct:
+                          </span>
+                          <span className="font-mono text-emerald-300">
+                            {question.correctMethod}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Explanation */}
+                      {question.explanation && (
+                        <div className="mt-2 text-sm text-slate-300 bg-slate-800/60 rounded-lg p-3 border-l-2 border-blue-500/50">
+                          {question.explanation}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              );
-            })}
+              ))}
+
+            {/* Empty state for missed filter */}
+            {reviewFilter === 'missed' && answers.every((a) => a.isCorrect) && (
+              <div className="text-center py-6 text-slate-400">
+                <svg
+                  className="w-8 h-8 mx-auto mb-2 text-emerald-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p className="text-sm">Perfect score! No missed questions.</p>
+              </div>
+            )}
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import type { VizAnimationControls } from './useVizAnimation';
 
 interface VizControlsProps {
@@ -11,11 +12,130 @@ interface VizControlsProps {
  * Shared play/pause/step/reset controls and speed slider for algorithm visualizations.
  */
 export default function VizControls({ controls, accentColor = '#9775fa' }: VizControlsProps) {
-  const { state, togglePlay, stepForward, stepBackward, reset, setSpeed } = controls;
-  const { step, isPlaying, speed, isComplete } = state;
+  const { state, togglePlay, stepForward, stepBackward, reset, setSpeed, setStep, pause } =
+    controls;
+  const { step, isPlaying, speed, isComplete, totalSteps } = state;
+  const [isDragging, setIsDragging] = useState(false);
+  const [wasDragging, setWasDragging] = useState(false);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+
+  const progress = totalSteps > 0 ? (step / (totalSteps - 1)) * 100 : 0;
+
+  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (wasDragging) {
+      setWasDragging(false);
+      return;
+    }
+    if (!progressBarRef.current) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, x / rect.width));
+    const newStep = Math.round(percentage * (totalSteps - 1));
+    setStep(newStep);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (isPlaying) {
+      pause();
+    }
+    setIsDragging(true);
+    if (!progressBarRef.current) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, x / rect.width));
+    const newStep = Math.round(percentage * (totalSteps - 1));
+    setStep(newStep);
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging || !progressBarRef.current) return;
+      const rect = progressBarRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, x / rect.width));
+      const newStep = Math.round(percentage * (totalSteps - 1));
+      setStep(newStep);
+    };
+
+    const handleMouseUp = () => {
+      if (isDragging) {
+        setWasDragging(true);
+      }
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, totalSteps, setStep]);
 
   return (
     <div className="space-y-3 pt-4">
+      {/* Progress Bar */}
+      <div className="w-full">
+        <div
+          ref={progressBarRef}
+          className="relative h-2 bg-zinc-700 rounded-full cursor-pointer group"
+          onClick={handleProgressBarClick}
+          onMouseDown={handleMouseDown}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              const rect = progressBarRef.current?.getBoundingClientRect();
+              if (rect) {
+                const x = rect.width / 2;
+                const percentage = Math.max(0, Math.min(1, x / rect.width));
+                const newStep = Math.round(percentage * (totalSteps - 1));
+                setStep(newStep);
+              }
+            }
+          }}
+          role="slider"
+          tabIndex={0}
+          aria-label="Animation progress"
+          aria-valuemin={0}
+          aria-valuemax={totalSteps - 1}
+          aria-valuenow={step}
+        >
+          {/* Progress fill */}
+          <div
+            className="absolute top-0 left-0 h-full rounded-full transition-all"
+            style={{
+              width: `${progress}%`,
+              background: `linear-gradient(90deg, ${accentColor}, ${accentColor}dd)`,
+            }}
+          />
+          {/* Progress handle */}
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+            style={{
+              left: `calc(${progress}% - 8px)`,
+              transform: 'translateY(-50%)',
+            }}
+          />
+          {/* Current step indicator */}
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-md"
+            style={{
+              left: `calc(${progress}% - 6px)`,
+              transform: 'translateY(-50%)',
+            }}
+          />
+        </div>
+        {/* Step counter */}
+        <div className="flex justify-between items-center mt-1">
+          <span className="text-zinc-500 text-xs">
+            Step {step + 1} of {totalSteps}
+          </span>
+          <span className="text-zinc-500 text-xs">{Math.round(progress)}%</span>
+        </div>
+      </div>
       <div className="flex justify-center gap-2 flex-wrap">
         <button
           type="button"

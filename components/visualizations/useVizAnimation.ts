@@ -7,6 +7,7 @@ export interface VizAnimationState {
   isPlaying: boolean;
   speed: number;
   isComplete: boolean;
+  totalSteps: number;
 }
 
 export interface VizAnimationControls {
@@ -18,6 +19,7 @@ export interface VizAnimationControls {
   stepBackward: () => void;
   reset: () => void;
   setSpeed: (speed: number) => void;
+  setStep: (step: number) => void;
 }
 
 /**
@@ -31,11 +33,12 @@ export function useVizAnimation(
   totalSteps: number,
   onStep?: (step: number) => void,
 ): VizAnimationControls {
+  const [totalStepsState] = useState(totalSteps);
   const [step, setStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(600);
 
-  const isComplete = step >= totalSteps;
+  const isComplete = step >= totalStepsState;
 
   // The `step` dependency is needed to re-schedule the timeout after each advance,
   // even though we use the functional updater form for setStep.
@@ -47,7 +50,7 @@ export function useVizAnimation(
       setStep((prev) => {
         const next = prev + 1;
         onStep?.(next);
-        if (next >= totalSteps) {
+        if (next >= totalStepsState) {
           setIsPlaying(false);
         }
         return next;
@@ -55,7 +58,7 @@ export function useVizAnimation(
     }, speed);
 
     return () => clearTimeout(timer);
-  }, [isPlaying, step, speed, totalSteps, isComplete, onStep]);
+  }, [isPlaying, step, speed, totalStepsState, isComplete, onStep]);
 
   const play = useCallback(() => {
     if (isComplete) {
@@ -77,12 +80,12 @@ export function useVizAnimation(
   }, [isPlaying, play, pause]);
 
   const stepForward = useCallback(() => {
-    if (step < totalSteps) {
+    if (step < totalStepsState) {
       const nextStep = step + 1;
       setStep(nextStep);
       onStep?.(nextStep);
     }
-  }, [step, totalSteps, onStep]);
+  }, [step, totalStepsState, onStep]);
 
   const stepBackward = useCallback(() => {
     if (step > 0) {
@@ -97,8 +100,20 @@ export function useVizAnimation(
     setIsPlaying(false);
   }, []);
 
+  const setStepDirect = useCallback(
+    (newStep: number) => {
+      const clampedStep = Math.max(0, Math.min(newStep, totalStepsState - 1));
+      setStep(clampedStep);
+      onStep?.(clampedStep);
+      if (isPlaying && clampedStep >= totalStepsState - 1) {
+        setIsPlaying(false);
+      }
+    },
+    [totalStepsState, onStep, isPlaying],
+  );
+
   return {
-    state: { step, isPlaying, speed, isComplete },
+    state: { step, isPlaying, speed, isComplete, totalSteps: totalStepsState },
     play,
     pause,
     togglePlay,
@@ -106,5 +121,6 @@ export function useVizAnimation(
     stepBackward,
     reset,
     setSpeed,
+    setStep: setStepDirect,
   };
 }
