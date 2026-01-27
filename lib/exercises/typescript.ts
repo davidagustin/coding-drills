@@ -22,9 +22,11 @@ export const typescriptExercises: Exercise[] = [
   return result;
 }`,
     solutionCode: `function skipEveryOther(numbers: number[]): number[] {
+  // Step-2 iteration: O(n/2) time, O(n/2) space
   const result: number[] = [];
-  for (let i = 0; i < numbers.length; i += 2) {
-    result.push(numbers[i]);
+  // Increment by 2 so only even indices (0, 2, 4, ...) are visited
+  for (let index = 0; index < numbers.length; index += 2) {
+    result.push(numbers[index]);
   }
   return result;
 }`,
@@ -59,9 +61,11 @@ export const typescriptExercises: Exercise[] = [
   return result;
 }`,
     solutionCode: `function reverseIterate<T>(items: T[]): T[] {
+  // Backward linear scan: O(n) time, O(n) space
   const result: T[] = [];
-  for (let i = items.length - 1; i >= 0; i--) {
-    result.push(items[i]);
+  // Start from the last index and walk backwards to index 0
+  for (let index = items.length - 1; index >= 0; index--) {
+    result.push(items[index]);
   }
   return result;
 }`,
@@ -93,9 +97,11 @@ export const typescriptExercises: Exercise[] = [
   return result;
 }`,
     solutionCode: `function stepIterate<T>(items: T[], step: number): T[] {
+  // Custom-step iteration: O(n/step) time, O(n/step) space
   const result: T[] = [];
-  for (let i = 0; i < items.length; i += step) {
-    result.push(items[i]);
+  // Advance by step each iteration to sample every step-th element
+  for (let index = 0; index < items.length; index += step) {
+    result.push(items[index]);
   }
   return result;
 }`,
@@ -127,10 +133,13 @@ export const typescriptExercises: Exercise[] = [
   return result;
 }`,
     solutionCode: `function flattenMatrix<T>(matrix: T[][]): T[] {
+  // Row-major traversal: O(rows * cols) time, O(rows * cols) space
   const result: T[] = [];
-  for (let row = 0; row < matrix.length; row++) {
-    for (let col = 0; col < matrix[row].length; col++) {
-      result.push(matrix[row][col]);
+  // Outer loop visits each row sequentially
+  for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
+    // Inner loop visits each column within the current row
+    for (let colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+      result.push(matrix[rowIndex][colIndex]);
     }
   }
   return result;
@@ -189,17 +198,19 @@ export const typescriptExercises: Exercise[] = [
   return primes;
 }`,
     solutionCode: `function generatePrimes(): number[] {
+  // Trial division: O(n * sqrt(n)) time, O(n) space where n = 100
   const primes: number[] = [];
-  for (let num = 2; num <= 100; num++) {
+  for (let candidate = 2; candidate <= 100; candidate++) {
     let isPrime: boolean = true;
-    for (let i = 2; i <= Math.sqrt(num); i++) {
-      if (num % i === 0) {
+    // Only test divisors up to sqrt because any factor > sqrt has a co-factor < sqrt
+    for (let divisor = 2; divisor <= Math.sqrt(candidate); divisor++) {
+      if (candidate % divisor === 0) {
         isPrime = false;
         break;
       }
     }
     if (isPrime) {
-      primes.push(num);
+      primes.push(candidate);
     }
   }
   return primes;
@@ -244,12 +255,15 @@ export const typescriptExercises: Exercise[] = [
   return fib;
 }`,
     solutionCode: `function fibonacciIterative(count: number): number[] {
+  // Iterative Fibonacci: O(n) time, O(n) space
+  // Handle degenerate cases before entering the loop
   if (count <= 0) return [];
   if (count === 1) return [0];
 
   const fib: number[] = [0, 1];
-  for (let i = 2; i < count; i++) {
-    fib.push(fib[i - 1] + fib[i - 2]);
+  // Build sequence forward; each value is the sum of its two predecessors
+  for (let position = 2; position < count; position++) {
+    fib.push(fib[position - 1] + fib[position - 2]);
   }
   return fib;
 }`,
@@ -286,8 +300,11 @@ export const typescriptExercises: Exercise[] = [
   // YOUR CODE HERE
 }`,
     solutionCode: `function fibonacciRecursive(n: number): number {
+  // Naive recursion: O(2^n) time, O(n) stack space
+  // Base cases anchor the recursion for the two smallest inputs
   if (n <= 0) return 0;
   if (n === 1) return 1;
+  // Each call branches into two sub-problems (overlapping)
   return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
 }`,
     testCases: [
@@ -321,7 +338,10 @@ export const typescriptExercises: Exercise[] = [
   // YOUR CODE HERE
 }`,
     solutionCode: `function factorial(n: number): number {
+  // Recursive factorial: O(n) time, O(n) stack space
+  // 0! and 1! are both 1 by definition; this terminates recursion
   if (n <= 1) return 1;
+  // Multiply current value by the factorial of the previous integer
   return n * factorial(n - 1);
 }`,
     testCases: [
@@ -352,7 +372,10 @@ export const typescriptExercises: Exercise[] = [
   // YOUR CODE HERE
 }`,
     solutionCode: `function sumArray(numbers: number[]): number {
+  // Recursive decomposition: O(n) time, O(n) stack + slice space
+  // Empty array has a sum of zero; this is the base case
   if (numbers.length === 0) return 0;
+  // Peel off the first element and recurse on the remainder
   return numbers[0] + sumArray(numbers.slice(1));
 }`,
     testCases: [
@@ -405,13 +428,16 @@ function dfsPreOrder<T>(node: TreeNode<T> | null): T[] {
 }
 
 function dfsPreOrder<T>(node: TreeNode<T> | null): T[] {
+  // DFS pre-order traversal: O(n) time, O(h) stack space where h = tree height
   const result: T[] = [];
 
-  function traverse(node: TreeNode<T> | null): void {
-    if (!node) return;
-    result.push(node.value);
-    traverse(node.left);
-    traverse(node.right);
+  function traverse(currentNode: TreeNode<T> | null): void {
+    // Null check acts as the base case for leaf children
+    if (!currentNode) return;
+    // Pre-order: visit root BEFORE its subtrees
+    result.push(currentNode.value);
+    traverse(currentNode.left);
+    traverse(currentNode.right);
   }
 
   traverse(node);
@@ -481,13 +507,16 @@ function dfsInOrder<T>(node: TreeNode<T> | null): T[] {
 }
 
 function dfsInOrder<T>(node: TreeNode<T> | null): T[] {
+  // DFS in-order traversal: O(n) time, O(h) stack space where h = tree height
   const result: T[] = [];
 
-  function traverse(node: TreeNode<T> | null): void {
-    if (!node) return;
-    traverse(node.left);
-    result.push(node.value);
-    traverse(node.right);
+  function traverse(currentNode: TreeNode<T> | null): void {
+    if (!currentNode) return;
+    // In-order: visit left subtree first, then root, then right subtree
+    // For a BST this naturally yields sorted output
+    traverse(currentNode.left);
+    result.push(currentNode.value);
+    traverse(currentNode.right);
   }
 
   traverse(node);
@@ -560,17 +589,20 @@ function bfs<T>(root: TreeNode<T> | null): T[] {
 }
 
 function bfs<T>(root: TreeNode<T> | null): T[] {
+  // BFS level-order traversal: O(n) time, O(w) space where w = max tree width
   if (!root) return [];
 
   const result: T[] = [];
   const queue: TreeNode<T>[] = [root];
 
   while (queue.length > 0) {
-    const node: TreeNode<T> = queue.shift()!;
-    result.push(node.value);
+    // Dequeue the front node (FIFO ensures level-by-level processing)
+    const currentNode: TreeNode<T> = queue.shift()!;
+    result.push(currentNode.value);
 
-    if (node.left) queue.push(node.left);
-    if (node.right) queue.push(node.right);
+    // Enqueue children so they are processed after all nodes at the current level
+    if (currentNode.left) queue.push(currentNode.left);
+    if (currentNode.right) queue.push(currentNode.right);
   }
 
   return result;
@@ -635,21 +667,26 @@ function bfs<T>(root: TreeNode<T> | null): T[] {
   return -1;
 }`,
     solutionCode: `function binarySearch(numbers: number[], target: number): number {
+  // Binary search: O(log n) time, O(1) space
   let left: number = 0;
   let right: number = numbers.length - 1;
 
   while (left <= right) {
-    const mid: number = Math.floor((left + right) / 2);
+    // Use floor to get an integer midpoint; avoids overflow compared to (left + right) / 2 in other languages
+    const midIndex: number = Math.floor((left + right) / 2);
 
-    if (numbers[mid] === target) {
-      return mid;
-    } else if (numbers[mid] < target) {
-      left = mid + 1;
+    if (numbers[midIndex] === target) {
+      return midIndex;
+    } else if (numbers[midIndex] < target) {
+      // Target is in the upper half; discard lower half
+      left = midIndex + 1;
     } else {
-      right = mid - 1;
+      // Target is in the lower half; discard upper half
+      right = midIndex - 1;
     }
   }
 
+  // Exhausted search space without finding target
   return -1;
 }`,
     testCases: [
@@ -696,12 +733,15 @@ function traverseLinkedList<T>(head: ListNode<T> | null): T[] {
 }
 
 function traverseLinkedList<T>(head: ListNode<T> | null): T[] {
+  // Linear traversal: O(n) time, O(n) space for collected values
   const result: T[] = [];
-  let current: ListNode<T> | null = head;
+  let currentNode: ListNode<T> | null = head;
 
-  while (current !== null) {
-    result.push(current.value);
-    current = current.next;
+  // Walk the chain until we hit the null sentinel at the end
+  while (currentNode !== null) {
+    result.push(currentNode.value);
+    // Advance the pointer to the next node in the chain
+    currentNode = currentNode.next;
   }
 
   return result;
@@ -763,12 +803,15 @@ function stackOperations(operations: StackOperation[]): number[] {
 }
 
 function stackOperations(operations: StackOperation[]): number[] {
+  // Stack simulation: O(n) time, O(n) space where n = number of operations
   const stack: number[] = [];
 
-  for (const op of operations) {
-    if (op.type === 'push') {
-      stack.push(op.value!);
-    } else if (op.type === 'pop') {
+  for (const operation of operations) {
+    if (operation.type === 'push') {
+      // LIFO: new elements go on top (end of array)
+      stack.push(operation.value!);
+    } else if (operation.type === 'pop') {
+      // Guard against underflow on an empty stack
       if (stack.length > 0) {
         stack.pop();
       }
@@ -825,8 +868,11 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function range(start: number, end: number): number[] {
+  // Array.from generation: O(n) time, O(n) space where n = end - start + 1
+  // Guard against invalid range
   if (start > end) return [];
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  // Generate sequential integers by mapping each index to start + offset
+  return Array.from({ length: end - start + 1 }, (_, offset) => start + offset);
 }`,
     testCases: [
       { input: [1, 5], expected: [1, 2, 3, 4, 5], description: 'Basic range 1-5' },
@@ -860,9 +906,12 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function powerSet<T>(items: T[]): T[][] {
+  // Iterative doubling: O(n * 2^n) time, O(2^n) space for all subsets
   return items.reduce<T[][]>(
-    (subsets, value) => subsets.concat(subsets.map(set => [...set, value])),
-    [[]]
+    (existingSubsets, currentItem) =>
+      // For each new item, duplicate every existing subset and append the item
+      existingSubsets.concat(existingSubsets.map(subset => [...subset, currentItem])),
+    [[]] // Seed with the empty set so the first iteration creates single-element subsets
   );
 }`,
     testCases: [
@@ -915,16 +964,21 @@ function stackOperations(operations: StackOperation[]): number[] {
   return result;
 }`,
     solutionCode: `function combinations<T>(items: T[], size: number): T[][] {
+  // Backtracking: O(C(n,k) * k) time, O(k) stack space
   const result: T[][] = [];
 
-  function backtrack(start: number, current: T[]): void {
+  function backtrack(startIndex: number, current: T[]): void {
+    // Once we have exactly k elements, snapshot the current combination
     if (current.length === size) {
       result.push([...current]);
       return;
     }
-    for (let i = start; i < items.length; i++) {
-      current.push(items[i]);
-      backtrack(i + 1, current);
+    // Only look forward (startIndex) to avoid duplicate unordered sets
+    for (let pickIndex = startIndex; pickIndex < items.length; pickIndex++) {
+      current.push(items[pickIndex]);
+      // Advance past pickIndex so each element is used at most once
+      backtrack(pickIndex + 1, current);
+      // Undo the choice to explore other branches
       current.pop();
     }
   }
@@ -988,17 +1042,20 @@ function stackOperations(operations: StackOperation[]): number[] {
   return result;
 }`,
     solutionCode: `function permutations<T>(items: T[]): T[][] {
+  // Recursive permutation: O(n! * n) time, O(n!) space for all orderings
   const result: T[][] = [];
 
   function permute(current: T[], remaining: T[]): void {
+    // All elements placed; this ordering is complete
     if (remaining.length === 0) {
       result.push(current);
       return;
     }
-    for (let i = 0; i < remaining.length; i++) {
+    for (let choiceIndex = 0; choiceIndex < remaining.length; choiceIndex++) {
+      // Pick each element in turn and recurse with it removed from the pool
       permute(
-        [...current, remaining[i]],
-        [...remaining.slice(0, i), ...remaining.slice(i + 1)]
+        [...current, remaining[choiceIndex]],
+        [...remaining.slice(0, choiceIndex), ...remaining.slice(choiceIndex + 1)]
       );
     }
   }
@@ -1054,7 +1111,9 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function cartesianProduct<A, B>(first: A[], second: B[]): [A, B][] {
-  return first.flatMap(a => second.map(b => [a, b] as [A, B]));
+  // Cartesian product: O(m * n) time and space where m, n are array lengths
+  // flatMap pairs every element of first with every element of second
+  return first.flatMap(firstItem => second.map(secondItem => [firstItem, secondItem] as [A, B]));
 }`,
     testCases: [
       {
@@ -1107,9 +1166,12 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function cartesianProductN<T>(arrays: T[][]): T[][] {
+  // N-ary Cartesian product via reduce: O(product of all lengths) time and space
   return arrays.reduce<T[][]>(
-    (acc, items) => acc.flatMap(combo => items.map(value => [...combo, value])),
-    [[]]
+    // For each new array, extend every existing combo with every value from that array
+    (existingCombos, currentArray) =>
+      existingCombos.flatMap(combo => currentArray.map(value => [...combo, value])),
+    [[]] // Seed with empty tuple so first iteration creates single-element combos
   );
 }`,
     testCases: [
@@ -1155,11 +1217,16 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function binomial(n: number, k: number): number {
+  // Iterative multiplicative formula: O(k) time, O(1) space
+  // Impossible to choose more items than available
   if (k > n) return 0;
+  // Choosing none or all yields exactly one way
   if (k === 0 || k === n) return 1;
   let result: number = 1;
-  for (let i = 0; i < k; i++) {
-    result = (result * (n - i)) / (i + 1);
+  // Multiply numerator factor (n-i) and divide by denominator factor (i+1) each step
+  // to keep intermediate values as small as possible and avoid factorial overflow
+  for (let step = 0; step < k; step++) {
+    result = (result * (n - step)) / (step + 1);
   }
   return result;
 }`,
@@ -1201,15 +1268,18 @@ function stackOperations(operations: StackOperation[]): number[] {
   };
 }`,
     solutionCode: `function memoize<T, R>(compute: (arg: T) => R): (arg: T) => R {
+  // Closure-based memoization: O(1) amortized lookup, O(n) space for n unique args
   const cache: Map<T, R> = new Map();
 
   return function(arg: T): R {
+    // Return cached result to skip redundant computation
     if (cache.has(arg)) {
       return cache.get(arg)!;
     }
-    const result: R = compute(arg);
-    cache.set(arg, result);
-    return result;
+    // First time seeing this arg; compute, store, and return
+    const computedResult: R = compute(arg);
+    cache.set(arg, computedResult);
+    return computedResult;
   };
 }`,
     testCases: [
@@ -1248,16 +1318,19 @@ function stackOperations(operations: StackOperation[]): number[] {
   };
 }`,
     solutionCode: `function memoizeMulti<T extends unknown[], R>(compute: (...args: T) => R): (...args: T) => R {
+  // Multi-arg memoization via JSON key: O(1) amortized lookup, O(n) space
   const cache: Map<string, R> = new Map();
 
   return function(...args: T): R {
-    const key: string = JSON.stringify(args);
-    if (cache.has(key)) {
-      return cache.get(key)!;
+    // Serialize all arguments into a single string key for Map lookup
+    const cacheKey: string = JSON.stringify(args);
+    if (cache.has(cacheKey)) {
+      return cache.get(cacheKey)!;
     }
-    const result: R = compute(...args);
-    cache.set(key, result);
-    return result;
+    // Cache miss: compute, store the result, then return
+    const computedResult: R = compute(...args);
+    cache.set(cacheKey, computedResult);
+    return computedResult;
   };
 }`,
     testCases: [
@@ -1299,12 +1372,15 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function fibonacci(n: number, memo: Map<number, number> = new Map([[0, 0], [1, 1]])): number {
+  // Top-down DP with memoization: O(n) time, O(n) space
+  // Short-circuit if already computed to avoid exponential re-work
   if (memo.has(n)) {
     return memo.get(n)!;
   }
-  const result: number = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
-  memo.set(n, result);
-  return result;
+  // Recurse on both sub-problems; memo ensures each is solved only once
+  const computedValue: number = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+  memo.set(n, computedValue);
+  return computedValue;
 }`,
     testCases: [
       { input: [10], expected: 55, description: 'fib(10)' },
@@ -1341,10 +1417,13 @@ function stackOperations(operations: StackOperation[]): number[] {
   };
 }`,
     solutionCode: `function debounce<T extends unknown[]>(callback: (...args: T) => void, delay: number): (...args: T) => void {
+  // Debounce: delays execution until calls stop for 'delay' ms
   let timeoutId: ReturnType<typeof setTimeout>;
 
   return function(...args: T): void {
+    // Cancel any pending invocation so only the latest call survives
     clearTimeout(timeoutId);
+    // Schedule a fresh invocation after the quiet period
     timeoutId = setTimeout(() => callback(...args), delay);
   };
 }`,
@@ -1384,11 +1463,14 @@ function stackOperations(operations: StackOperation[]): number[] {
   };
 }`,
     solutionCode: `function throttle<T extends unknown[]>(callback: (...args: T) => void, limit: number): (...args: T) => void {
+  // Throttle: ensures at most one execution per 'limit' ms window
   let inThrottle: boolean = false;
 
   return function(...args: T): void {
+    // Only execute if the cooldown period has elapsed
     if (!inThrottle) {
       callback(...args);
+      // Block subsequent calls until the limit window expires
       inThrottle = true;
       setTimeout(() => inThrottle = false, limit);
     }
@@ -1431,15 +1513,18 @@ function stackOperations(operations: StackOperation[]): number[] {
   };
 }`,
     solutionCode: `function once<T extends unknown[], R>(callback: (...args: T) => R): (...args: T) => R {
+  // Once wrapper: ensures the callback runs at most one time
   let called: boolean = false;
-  let result: R;
+  let cachedResult: R;
 
   return function(...args: T): R {
     if (!called) {
+      // Set flag before invoking to safely handle re-entrant calls
       called = true;
-      result = callback(...args);
+      cachedResult = callback(...args);
     }
-    return result;
+    // All subsequent calls return the original result
+    return cachedResult;
   };
 }`,
     testCases: [
@@ -1476,9 +1561,12 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function chunk<T>(items: T[], size: number): T[][] {
+  // Array.from chunking: O(n) time, O(n) space
   return Array.from(
+    // Ceiling division gives the total number of chunks (last may be partial)
     { length: Math.ceil(items.length / size) },
-    (_, i) => items.slice(i * size, i * size + size)
+    // Each chunk index maps to a slice of 'size' elements starting at chunkIndex * size
+    (_, chunkIndex) => items.slice(chunkIndex * size, chunkIndex * size + size)
   );
 }`,
     testCases: [
@@ -1522,12 +1610,14 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function partition<T>(items: T[], predicate: (value: T) => boolean): [T[], T[]] {
+  // Single-pass partition: O(n) time, O(n) space
   return items.reduce<[T[], T[]]>(
-    (acc, value) => {
-      acc[predicate(value) ? 0 : 1].push(value);
-      return acc;
+    (buckets, value) => {
+      // Index 0 = truthy bucket, index 1 = falsy bucket
+      buckets[predicate(value) ? 0 : 1].push(value);
+      return buckets;
     },
-    [[], []]
+    [[], []] // Initialize both buckets as empty arrays
   );
 }`,
     testCases: [
@@ -1570,8 +1660,11 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function zip<A, B>(first: A[], second: B[]): [A, B][] {
-  const length: number = Math.min(first.length, second.length);
-  return Array.from({ length }, (_, i) => [first[i], second[i]] as [A, B]);
+  // Zip pairing: O(min(m,n)) time and space
+  // Use the shorter length so we never access out-of-bounds indices
+  const pairCount: number = Math.min(first.length, second.length);
+  // Map each index to a tuple of the corresponding elements from both arrays
+  return Array.from({ length: pairCount }, (_, index) => [first[index], second[index]] as [A, B]);
 }`,
     testCases: [
       {
@@ -1622,9 +1715,12 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function unzip<A, B>(pairs: [A, B][]): [A[], B[]] {
+  // Dual-pass unzip: O(n) time, O(n) space
   return [
-    pairs.map(p => p[0]),
-    pairs.map(p => p[1])
+    // Extract all first elements into one array
+    pairs.map(pair => pair[0]),
+    // Extract all second elements into another array
+    pairs.map(pair => pair[1])
   ];
 }`,
     testCases: [
@@ -5443,11 +5539,14 @@ function createQueueFromStacks<T>(): Queue<T> {
   return { parent: [...parent], rank: [...rank] };
 }`,
     solutionCode: `function disjointSetRank(size: number, unions: [number, number][]): { parent: number[]; rank: number[] } {
+  // Union-Find with path compression and union by rank
+  // find: O(alpha(n)) amortized, union: O(alpha(n)) amortized
   const parent: number[] = Array.from({ length: size }, (_, i) => i);
   const rank: number[] = new Array(size).fill(0);
 
   function find(x: number): number {
     if (parent[x] !== x) {
+      // Path compression: point directly to root to flatten the tree
       parent[x] = find(parent[x]);
     }
     return parent[x];
@@ -5457,11 +5556,13 @@ function createQueueFromStacks<T>(): Queue<T> {
     const rootX: number = find(x);
     const rootY: number = find(y);
     if (rootX === rootY) return;
+    // Union by rank: attach the shorter tree under the taller one
     if (rank[rootX] < rank[rootY]) {
       parent[rootX] = rootY;
     } else if (rank[rootX] > rank[rootY]) {
       parent[rootY] = rootX;
     } else {
+      // Equal ranks: arbitrarily pick one as root and increase its rank
       parent[rootY] = rootX;
       rank[rootX]++;
     }
@@ -5471,6 +5572,7 @@ function createQueueFromStacks<T>(): Queue<T> {
     union(x, y);
   }
 
+  // Final pass: compress all paths so every node points directly to its root
   for (let i = 0; i < size; i++) find(i);
   return { parent: [...parent], rank: [...rank] };
 }`,
@@ -5545,11 +5647,14 @@ function buildWeightedGraph(size: number, edges: [number, number, number][]): Re
 }
 
 function buildWeightedGraph(size: number, edges: [number, number, number][]): Record<number, WeightedEdge[]> {
+  // Build undirected weighted adjacency list: O(V + E) time, O(V + E) space
   const graph: Record<number, WeightedEdge[]> = {};
+  // Initialize empty adjacency list for each node
   for (let i = 0; i < size; i++) {
     graph[i] = [];
   }
 
+  // Add each edge in both directions since the graph is undirected
   for (const [u, v, w] of edges) {
     graph[u].push({ node: v, weight: w });
     graph[v].push({ node: u, weight: w });
@@ -5617,8 +5722,11 @@ function buildWeightedGraph(size: number, edges: [number, number, number][]): Re
   return tree;
 }`,
     solutionCode: `function fenwickUpdate(tree: number[], size: number, i: number, delta: number): number[] {
+  // Fenwick tree point update: O(log n) time
+  // Propagates delta to all responsible ancestor nodes
   while (i <= size) {
     tree[i] += delta;
+    // Move to next responsible node by adding the lowest set bit
     i += i & (-i);
   }
   return tree;
@@ -5667,12 +5775,15 @@ function buildWeightedGraph(size: number, edges: [number, number, number][]): Re
   return sum;
 }`,
     solutionCode: `function fenwickQuery(tree: number[], i: number): number {
-  let sum: number = 0;
+  // Fenwick tree prefix sum query: O(log n) time
+  // Accumulates partial sums stored at responsible nodes
+  let prefixSum: number = 0;
   while (i > 0) {
-    sum += tree[i];
+    prefixSum += tree[i];
+    // Move to parent by stripping the lowest set bit
     i -= i & (-i);
   }
-  return sum;
+  return prefixSum;
 }`,
     testCases: [
       {
@@ -5755,30 +5866,35 @@ function hashMapChaining(capacity: number, operations: HashOperation[]): number[
     solutionCode: `type HashOperation = ['put', string, number] | ['get', string] | ['remove', string];
 
 function hashMapChaining(capacity: number, operations: HashOperation[]): number[] {
+  // Hash map with separate chaining: O(1) average, O(n) worst per operation
   const buckets: [string, number][][] = Array.from({ length: capacity }, () => []);
   const results: number[] = [];
 
   function hash(key: string): number {
-    let h: number = 0;
-    for (const c of String(key)) h += c.charCodeAt(0);
-    return h % capacity;
+    // Simple hash: sum of char codes mod capacity
+    let charCodeSum: number = 0;
+    for (const c of String(key)) charCodeSum += c.charCodeAt(0);
+    return charCodeSum % capacity;
   }
 
   function put(key: string, value: number): void {
-    const idx: number = hash(key);
-    const bucket: [string, number][] = buckets[idx];
+    const bucketIndex: number = hash(key);
+    const bucket: [string, number][] = buckets[bucketIndex];
+    // Check if key already exists to update in-place
     for (const pair of bucket) {
       if (pair[0] === key) {
         pair[1] = value;
         return;
       }
     }
+    // Key not found: append new entry to the chain
     bucket.push([key, value]);
   }
 
   function get(key: string): number {
-    const idx: number = hash(key);
-    const bucket: [string, number][] = buckets[idx];
+    const bucketIndex: number = hash(key);
+    const bucket: [string, number][] = buckets[bucketIndex];
+    // Linear scan through the chain for matching key
     for (const pair of bucket) {
       if (pair[0] === key) return pair[1];
     }
@@ -5786,10 +5902,10 @@ function hashMapChaining(capacity: number, operations: HashOperation[]): number[
   }
 
   function remove(key: string): void {
-    const idx: number = hash(key);
-    const bucket: [string, number][] = buckets[idx];
-    const i: number = bucket.findIndex((pair: [string, number]) => pair[0] === key);
-    if (i !== -1) bucket.splice(i, 1);
+    const bucketIndex: number = hash(key);
+    const bucket: [string, number][] = buckets[bucketIndex];
+    const matchIndex: number = bucket.findIndex((pair: [string, number]) => pair[0] === key);
+    if (matchIndex !== -1) bucket.splice(matchIndex, 1);
   }
 
   for (const op of operations) {
@@ -5886,8 +6002,9 @@ function dequeOperations(operations: DequeOperation[]): number[] {
     solutionCode: `type DequeOperation = ['pushFront', number] | ['pushBack', number] | ['popFront'] | ['popBack'];
 
 function dequeOperations(operations: DequeOperation[]): number[] {
+  // Double-ended queue using array: O(n) pushFront/popFront, O(1) pushBack/popBack
   const deque: number[] = [];
-  const results: number[] = [];
+  const popResults: number[] = [];
 
   for (const op of operations) {
     if (op[0] === 'pushFront') {
@@ -5895,13 +6012,14 @@ function dequeOperations(operations: DequeOperation[]): number[] {
     } else if (op[0] === 'pushBack') {
       deque.push(op[1]);
     } else if (op[0] === 'popFront') {
-      results.push(deque.length > 0 ? deque.shift()! : -1);
+      // Return -1 sentinel when deque is empty
+      popResults.push(deque.length > 0 ? deque.shift()! : -1);
     } else if (op[0] === 'popBack') {
-      results.push(deque.length > 0 ? deque.pop()! : -1);
+      popResults.push(deque.length > 0 ? deque.pop()! : -1);
     }
   }
 
-  return results;
+  return popResults;
 }`,
     testCases: [
       {
@@ -5959,11 +6077,15 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   // YOUR CODE HERE
 }`,
     solutionCode: `function fastPower(base: number, exponent: number): number {
+  // Binary exponentiation: O(log n) time, O(log n) stack space
+  // Halves the exponent at each step instead of decrementing by 1
   if (exponent === 0) return 1;
   if (exponent % 2 === 0) {
-    const half: number = fastPower(base, exponent / 2);
-    return half * half;
+    // Even exponent: compute half once and square to avoid redundant recursion
+    const halfPower: number = fastPower(base, exponent / 2);
+    return halfPower * halfPower;
   }
+  // Odd exponent: factor out one base to make exponent even
   return base * fastPower(base, exponent - 1);
 }`,
     testCases: [
@@ -6005,14 +6127,19 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   return grid;
 }`,
     solutionCode: `function floodFill(grid: number[][], row: number, col: number, newColor: number): number[][] {
+  // Flood fill via DFS: O(rows * cols) time, O(rows * cols) stack space
   const origColor: number = grid[row][col];
+  // Early exit: painting same color would cause infinite recursion
   if (origColor === newColor) return grid;
 
   function fill(r: number, c: number): void {
+    // Boundary checks
     if (r < 0 || r >= grid.length) return;
     if (c < 0 || c >= grid[0].length) return;
+    // Only fill cells matching the original color
     if (grid[r][c] !== origColor) return;
 
+    // Paint current cell, then recursively fill all 4 neighbors
     grid[r][c] = newColor;
     fill(r + 1, c);
     fill(r - 1, c);
@@ -6112,23 +6239,27 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   return result;
 }`,
     solutionCode: `function generateParens(count: number): string[] {
-  const result: string[] = [];
+  // Backtracking with constraints: generates only valid combinations
+  // Time: O(4^n / sqrt(n)) (Catalan number), Space: O(n) recursion depth
+  const validCombinations: string[] = [];
 
   function generate(current: string, open: number, close: number): void {
     if (current.length === 2 * count) {
-      result.push(current);
+      validCombinations.push(current);
       return;
     }
+    // Can add '(' only if we haven't used all opening parens
     if (open < count) {
       generate(current + '(', open + 1, close);
     }
+    // Can add ')' only if it won't create an invalid prefix
     if (close < open) {
       generate(current + ')', open, close + 1);
     }
   }
 
   generate('', 0, 0);
-  return result;
+  return validCombinations;
 }`,
     testCases: [
       {
@@ -6179,12 +6310,16 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   return moves;
 }`,
     solutionCode: `function towerOfHanoi(count: number, source: string, target: string, auxiliary: string): [string, string][] {
+  // Tower of Hanoi: O(2^n - 1) moves, O(n) recursion depth
   const moves: [string, string][] = [];
 
   function solve(disks: number, src: string, tgt: string, aux: string): void {
     if (disks === 0) return;
+    // Step 1: move n-1 smaller disks out of the way to auxiliary peg
     solve(disks - 1, src, aux, tgt);
+    // Step 2: move the largest disk directly to target
     moves.push([src, tgt]);
+    // Step 3: move the n-1 disks from auxiliary to target
     solve(disks - 1, aux, tgt, src);
   }
 
@@ -6246,19 +6381,24 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   // YOUR CODE HERE
 }`,
     solutionCode: `function deepClone<T>(value: T): T {
+  // Recursive deep clone: O(n) time where n = total nested elements
+  // Handles primitives, arrays, and plain objects (no circular refs)
   if (value === null || typeof value !== 'object') {
+    // Primitives and null are immutable, safe to return directly
     return value;
   }
   if (Array.isArray(value)) {
+    // Recursively clone each array element to avoid shared references
     return value.map(item => deepClone(item)) as unknown as T;
   }
-  const result: Record<string, unknown> = {};
+  // Plain object: clone each own property recursively
+  const clonedObject: Record<string, unknown> = {};
   for (const key in value) {
     if (Object.prototype.hasOwnProperty.call(value, key)) {
-      result[key] = deepClone((value as Record<string, unknown>)[key]);
+      clonedObject[key] = deepClone((value as Record<string, unknown>)[key]);
     }
   }
-  return result as T;
+  return clonedObject as T;
 }`,
     testCases: [
       {
@@ -6313,10 +6453,13 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   return backtrack(0, 0);
 }`,
     solutionCode: `function subsetSumExists(numbers: number[], target: number): boolean {
+  // Backtracking with pruning: O(2^n) worst case, O(n) stack space
   function backtrack(index: number, currentSum: number): boolean {
     if (currentSum === target) return true;
+    // Prune: stop exploring if we've exceeded the target or exhausted elements
     if (index >= numbers.length || currentSum > target) return false;
 
+    // Include current element OR skip it (binary choice tree)
     return backtrack(index + 1, currentSum + numbers[index])
         || backtrack(index + 1, currentSum);
   }
@@ -6370,30 +6513,34 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   return count;
 }`,
     solutionCode: `function nQueensCount(size: number): number {
-  let count: number = 0;
-  const cols: Set<number> = new Set();
-  const diag1: Set<number> = new Set();
-  const diag2: Set<number> = new Set();
+  // N-Queens backtracking: O(n!) time, O(n) space for tracking sets
+  let solutionCount: number = 0;
+  const occupiedCols: Set<number> = new Set();
+  const occupiedDiag1: Set<number> = new Set();  // row - col identifies one diagonal direction
+  const occupiedDiag2: Set<number> = new Set();  // row + col identifies the other diagonal
 
   function solve(row: number): void {
     if (row === size) {
-      count++;
+      solutionCount++;
       return;
     }
     for (let col = 0; col < size; col++) {
-      if (cols.has(col) || diag1.has(row - col) || diag2.has(row + col)) continue;
-      cols.add(col);
-      diag1.add(row - col);
-      diag2.add(row + col);
+      // Skip if column or either diagonal is already attacked
+      if (occupiedCols.has(col) || occupiedDiag1.has(row - col) || occupiedDiag2.has(row + col)) continue;
+      // Place queen and mark attacked lines
+      occupiedCols.add(col);
+      occupiedDiag1.add(row - col);
+      occupiedDiag2.add(row + col);
       solve(row + 1);
-      cols.delete(col);
-      diag1.delete(row - col);
-      diag2.delete(row + col);
+      // Backtrack: remove queen to try next column
+      occupiedCols.delete(col);
+      occupiedDiag1.delete(row - col);
+      occupiedDiag2.delete(row + col);
     }
   }
 
   solve(0);
-  return count;
+  return solutionCount;
 }`,
     testCases: [
       { input: 4, expected: 2, description: '4-Queens has 2 solutions' },
@@ -6441,24 +6588,29 @@ function dequeOperations(operations: DequeOperation[]): number[] {
   return false;
 }`,
     solutionCode: `function wordSearch(board: string[][], word: string): boolean {
+  // DFS backtracking on 2D grid: O(m*n*4^L) time where L = word length
   const rows: number = board.length;
   const cols: number = board[0].length;
 
-  function dfs(r: number, c: number, idx: number): boolean {
-    if (idx === word.length) return true;
+  function dfs(r: number, c: number, charIndex: number): boolean {
+    if (charIndex === word.length) return true;
     if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
-    if (board[r][c] !== word[idx]) return false;
+    if (board[r][c] !== word[charIndex]) return false;
 
-    const temp: string = board[r][c];
+    // Mark cell as visited using sentinel to prevent revisiting in this path
+    const savedChar: string = board[r][c];
     board[r][c] = '#';
-    const found: boolean = dfs(r + 1, c, idx + 1)
-              || dfs(r - 1, c, idx + 1)
-              || dfs(r, c + 1, idx + 1)
-              || dfs(r, c - 1, idx + 1);
-    board[r][c] = temp;
+    // Try all 4 adjacent cells for the next character
+    const found: boolean = dfs(r + 1, c, charIndex + 1)
+              || dfs(r - 1, c, charIndex + 1)
+              || dfs(r, c + 1, charIndex + 1)
+              || dfs(r, c - 1, charIndex + 1);
+    // Restore original character for other search paths
+    board[r][c] = savedChar;
     return found;
   }
 
+  // Try starting the word from every cell in the grid
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       if (dfs(r, c, 0)) return true;
@@ -6541,20 +6693,23 @@ function flattenDeep(items: NestedArray): number[] {
     solutionCode: `type NestedArray = (number | NestedArray)[];
 
 function flattenDeep(items: NestedArray): number[] {
-  const result: number[] = [];
+  // Recursive flatten: O(n) time where n = total elements across all nesting levels
+  const flatResult: number[] = [];
 
   function flatten(elements: NestedArray): void {
     for (const item of elements) {
       if (Array.isArray(item)) {
+        // Nested array: recurse deeper
         flatten(item);
       } else {
-        result.push(item);
+        // Leaf value: collect into flat result
+        flatResult.push(item);
       }
     }
   }
 
   flatten(items);
-  return result;
+  return flatResult;
 }`,
     testCases: [
       {
@@ -6622,26 +6777,30 @@ function flattenDeep(items: NestedArray): number[] {
   return result;
 }`,
     solutionCode: `function uniquePermutations(str: string): string[] {
-  const result: string[] = [];
-  const chars: string[] = str.split('').sort();
-  const used: boolean[] = new Array(chars.length).fill(false);
+  // Unique permutations via backtracking: O(n! / duplicates) time
+  // Sorting + skip rule eliminates duplicate permutations
+  const permutations: string[] = [];
+  const sortedChars: string[] = str.split('').sort();
+  const used: boolean[] = new Array(sortedChars.length).fill(false);
 
   function backtrack(current: string): void {
-    if (current.length === chars.length) {
-      result.push(current);
+    if (current.length === sortedChars.length) {
+      permutations.push(current);
       return;
     }
-    for (let i = 0; i < chars.length; i++) {
+    for (let i = 0; i < sortedChars.length; i++) {
       if (used[i]) continue;
-      if (i > 0 && chars[i] === chars[i - 1] && !used[i - 1]) continue;
+      // Skip duplicate: same char as previous AND previous not used in this branch
+      // This ensures only the first occurrence is used at each position
+      if (i > 0 && sortedChars[i] === sortedChars[i - 1] && !used[i - 1]) continue;
       used[i] = true;
-      backtrack(current + chars[i]);
+      backtrack(current + sortedChars[i]);
       used[i] = false;
     }
   }
 
   backtrack('');
-  return result;
+  return permutations;
 }`,
     testCases: [
       {
@@ -6697,22 +6856,25 @@ function flattenDeep(items: NestedArray): number[] {
   return result;
 }`,
     solutionCode: `function combinationsWithRep<T>(items: T[], size: number): T[][] {
-  const result: T[][] = [];
+  // Combinations with repetition (multiset): backtracking approach
+  // C(n+k-1, k) total combinations
+  const combinations: T[][] = [];
 
   function backtrack(start: number, current: T[]): void {
     if (current.length === size) {
-      result.push([...current]);
+      combinations.push([...current]);
       return;
     }
     for (let i = start; i < items.length; i++) {
       current.push(items[i]);
+      // Recurse with i (not i+1) to allow picking the same element again
       backtrack(i, current);
       current.pop();
     }
   }
 
   backtrack(0, []);
-  return result;
+  return combinations;
 }`,
     testCases: [
       {
@@ -6774,18 +6936,22 @@ function flattenDeep(items: NestedArray): number[] {
   return numbers;
 }`,
     solutionCode: `function nextPermutation(numbers: number[]): number[] {
+  // Next lexicographic permutation in-place: O(n) time, O(1) space
   const length: number = numbers.length;
-  let i: number = length - 2;
+  let pivotIndex: number = length - 2;
 
-  while (i >= 0 && numbers[i] >= numbers[i + 1]) i--;
+  // Step 1: find rightmost ascending pair (the "pivot")
+  while (pivotIndex >= 0 && numbers[pivotIndex] >= numbers[pivotIndex + 1]) pivotIndex--;
 
-  if (i >= 0) {
-    let j: number = length - 1;
-    while (numbers[j] <= numbers[i]) j--;
-    [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+  if (pivotIndex >= 0) {
+    // Step 2: find rightmost element larger than pivot and swap
+    let swapIndex: number = length - 1;
+    while (numbers[swapIndex] <= numbers[pivotIndex]) swapIndex--;
+    [numbers[pivotIndex], numbers[swapIndex]] = [numbers[swapIndex], numbers[pivotIndex]];
   }
 
-  let left: number = i + 1, right: number = length - 1;
+  // Step 3: reverse the suffix after pivot to get smallest next permutation
+  let left: number = pivotIndex + 1, right: number = length - 1;
   while (left < right) {
     [numbers[left], numbers[right]] = [numbers[right], numbers[left]];
     left++;
@@ -6838,23 +7004,28 @@ function flattenDeep(items: NestedArray): number[] {
   return rank + 1;
 }`,
     solutionCode: `function permutationRank(perm: number[]): number {
+  // Factorial number system approach: O(n^2) time, O(1) extra space
+  // Each position contributes (count of smaller remaining elements) * (remaining positions)!
   const length: number = perm.length;
   let rank: number = 0;
 
   function factorial(value: number): number {
-    let result: number = 1;
-    for (let i = 2; i <= value; i++) result *= i;
-    return result;
+    let product: number = 1;
+    for (let i = 2; i <= value; i++) product *= i;
+    return product;
   }
 
   for (let i = 0; i < length; i++) {
-    let smaller: number = 0;
+    // Count elements to the right that are smaller than perm[i]
+    let smallerCount: number = 0;
     for (let j = i + 1; j < length; j++) {
-      if (perm[j] < perm[i]) smaller++;
+      if (perm[j] < perm[i]) smallerCount++;
     }
-    rank += smaller * factorial(length - 1 - i);
+    // Each smaller element represents factorial(remaining) earlier permutations
+    rank += smallerCount * factorial(length - 1 - i);
   }
 
+  // Convert from 0-based to 1-based ranking
   return rank + 1;
 }`,
     testCases: [
@@ -6895,19 +7066,23 @@ function flattenDeep(items: NestedArray): number[] {
   return prev1;
 }`,
     solutionCode: `function derangements(count: number): number {
+  // Count derangements using recurrence: D(n) = (n-1) * (D(n-1) + D(n-2))
+  // O(n) time, O(1) space (iterative bottom-up)
   if (count === 0) return 1;
   if (count === 1) return 0;
 
-  let prev2: number = 1;
-  let prev1: number = 0;
+  let twoBack: number = 1;   // D(i-2), starts as D(0)
+  let oneBack: number = 0;   // D(i-1), starts as D(1)
 
   for (let i = 2; i <= count; i++) {
-    const current: number = (i - 1) * (prev1 + prev2);
-    prev2 = prev1;
-    prev1 = current;
+    // Element i can swap with any of (i-1) other elements
+    // After swapping, either both are deranged (D(i-2)) or one remains (D(i-1))
+    const currentDerangements: number = (i - 1) * (oneBack + twoBack);
+    twoBack = oneBack;
+    oneBack = currentDerangements;
   }
 
-  return prev1;
+  return oneBack;
 }`,
     testCases: [
       { input: 0, expected: 1, description: 'D(0) = 1 (empty derangement)' },
@@ -6950,18 +7125,22 @@ function flattenDeep(items: NestedArray): number[] {
   return row;
 }`,
     solutionCode: `function pascalRow(rowIndex: number): number[] {
-  let row: number[] = [1];
+  // Pascal's triangle row generation: O(n^2) time, O(n) space
+  // Each element is a binomial coefficient C(n, k)
+  let currentRow: number[] = [1];
 
   for (let i = 1; i <= rowIndex; i++) {
-    const newRow: number[] = [1];
-    for (let j = 1; j < row.length; j++) {
-      newRow.push(row[j - 1] + row[j]);
+    const nextRow: number[] = [1];
+    // Each middle element is the sum of two adjacent elements in the previous row
+    for (let j = 1; j < currentRow.length; j++) {
+      nextRow.push(currentRow[j - 1] + currentRow[j]);
     }
-    newRow.push(1);
-    row = newRow;
+    // Last element is always 1
+    nextRow.push(1);
+    currentRow = nextRow;
   }
 
-  return row;
+  return currentRow;
 }`,
     testCases: [
       { input: 0, expected: [1], description: 'Row 0' },
@@ -7000,16 +7179,19 @@ function flattenDeep(items: NestedArray): number[] {
   return dp[index];
 }`,
     solutionCode: `function catalanNumber(index: number): number {
-  const dp: number[] = new Array(index + 1).fill(0);
-  dp[0] = 1;
+  // Catalan number via DP: O(n^2) time, O(n) space
+  // C(n) = sum of C(j) * C(n-1-j) for all ways to split into left/right
+  const catalanTable: number[] = new Array(index + 1).fill(0);
+  catalanTable[0] = 1;
 
   for (let i = 1; i <= index; i++) {
-    for (let j = 0; j < i; j++) {
-      dp[i] += dp[j] * dp[i - 1 - j];
+    for (let leftSize = 0; leftSize < i; leftSize++) {
+      // Each split: leftSize elements on left, (i-1-leftSize) on right
+      catalanTable[i] += catalanTable[leftSize] * catalanTable[i - 1 - leftSize];
     }
   }
 
-  return dp[index];
+  return catalanTable[index];
 }`,
     testCases: [
       { input: 0, expected: 1, description: 'C(0) = 1' },
@@ -7053,21 +7235,24 @@ function flattenDeep(items: NestedArray): number[] {
   return result;
 }`,
     solutionCode: `function powerSetBitmask<T>(items: T[]): T[][] {
+  // Power set via bitmask enumeration: O(n * 2^n) time, O(2^n) space
+  // Each integer 0..2^n-1 encodes one unique subset
   const length: number = items.length;
-  const total: number = 1 << length;
-  const result: T[][] = [];
+  const totalSubsets: number = 1 << length;
+  const allSubsets: T[][] = [];
 
-  for (let mask = 0; mask < total; mask++) {
+  for (let mask = 0; mask < totalSubsets; mask++) {
     const subset: T[] = [];
-    for (let j = 0; j < length; j++) {
-      if (mask & (1 << j)) {
-        subset.push(items[j]);
+    for (let bitPosition = 0; bitPosition < length; bitPosition++) {
+      // Include items[j] if bit j is set in the current mask
+      if (mask & (1 << bitPosition)) {
+        subset.push(items[bitPosition]);
       }
     }
-    result.push(subset);
+    allSubsets.push(subset);
   }
 
-  return result;
+  return allSubsets;
 }`,
     testCases: [
       {
@@ -7117,14 +7302,17 @@ function flattenDeep(items: NestedArray): number[] {
   return result;
 }`,
     solutionCode: `function grayCode(bits: number): number[] {
-  const result: number[] = [];
-  const total: number = 1 << bits;
+  // Gray code generation: O(2^n) time, O(2^n) space
+  // Adjacent values differ by exactly one bit
+  const graySequence: number[] = [];
+  const totalCodes: number = 1 << bits;
 
-  for (let i = 0; i < total; i++) {
-    result.push(i ^ (i >> 1));
+  for (let i = 0; i < totalCodes; i++) {
+    // XOR with right-shifted self ensures single-bit difference between neighbors
+    graySequence.push(i ^ (i >> 1));
   }
 
-  return result;
+  return graySequence;
 }`,
     testCases: [
       { input: 2, expected: [0, 1, 3, 2], description: '2-bit Gray code' },
@@ -7161,13 +7349,16 @@ function flattenDeep(items: NestedArray): number[] {
   return survivor;
 }`,
     solutionCode: `function josephus(count: number, step: number): number {
-  let survivor: number = 0;
+  // Josephus problem iterative formula: O(n) time, O(1) space
+  // Builds up from base case J(1)=0 to J(n)
+  let survivorPosition: number = 0;
 
-  for (let i = 2; i <= count; i++) {
-    survivor = (survivor + step) % i;
+  for (let circleSize = 2; circleSize <= count; circleSize++) {
+    // When adding one more person, the survivor shifts by step positions
+    survivorPosition = (survivorPosition + step) % circleSize;
   }
 
-  return survivor;
+  return survivorPosition;
 }`,
     testCases: [
       { input: [7, 3], expected: 3, description: '7 people, every 3rd eliminated' },
@@ -7209,6 +7400,7 @@ function flattenDeep(items: NestedArray): number[] {
   return mergeSort(numbers).count;
 }`,
     solutionCode: `function countInversions(numbers: number[]): number {
+  // Modified merge sort to count inversions: O(n log n) time, O(n) space
   function mergeSort(items: number[]): { sorted: number[]; count: number } {
     if (items.length <= 1) return { sorted: items, count: 0 };
 
@@ -7217,22 +7409,24 @@ function flattenDeep(items: NestedArray): number[] {
     const right: { sorted: number[]; count: number } = mergeSort(items.slice(mid));
 
     const merged: number[] = [];
-    let count: number = left.count + right.count;
-    let i: number = 0, j: number = 0;
+    // Start with inversions from both halves
+    let inversionCount: number = left.count + right.count;
+    let leftIdx: number = 0, rightIdx: number = 0;
 
-    while (i < left.sorted.length && j < right.sorted.length) {
-      if (left.sorted[i] <= right.sorted[j]) {
-        merged.push(left.sorted[i++]);
+    while (leftIdx < left.sorted.length && rightIdx < right.sorted.length) {
+      if (left.sorted[leftIdx] <= right.sorted[rightIdx]) {
+        merged.push(left.sorted[leftIdx++]);
       } else {
-        merged.push(right.sorted[j++]);
-        count += left.sorted.length - i;
+        merged.push(right.sorted[rightIdx++]);
+        // All remaining left elements are greater than right[j], forming inversions
+        inversionCount += left.sorted.length - leftIdx;
       }
     }
 
-    while (i < left.sorted.length) merged.push(left.sorted[i++]);
-    while (j < right.sorted.length) merged.push(right.sorted[j++]);
+    while (leftIdx < left.sorted.length) merged.push(left.sorted[leftIdx++]);
+    while (rightIdx < right.sorted.length) merged.push(right.sorted[rightIdx++]);
 
-    return { sorted: merged, count };
+    return { sorted: merged, count: inversionCount };
   }
 
   return mergeSort(numbers).count;
@@ -7294,19 +7488,21 @@ function preorderIterative(root: TreeNode<number> | null): number[] {
 }
 
 function preorderIterative(root: TreeNode<number> | null): number[] {
+  // Iterative preorder (root-left-right): O(n) time, O(h) space
   if (!root) return [];
 
-  const result: number[] = [];
-  const stack: TreeNode<number>[] = [root];
+  const traversalOrder: number[] = [];
+  const nodeStack: TreeNode<number>[] = [root];
 
-  while (stack.length > 0) {
-    const node: TreeNode<number> = stack.pop()!;
-    result.push(node.value);
-    if (node.right) stack.push(node.right);
-    if (node.left) stack.push(node.left);
+  while (nodeStack.length > 0) {
+    const currentNode: TreeNode<number> = nodeStack.pop()!;
+    traversalOrder.push(currentNode.value);
+    // Push right before left so left is processed first (LIFO order)
+    if (currentNode.right) nodeStack.push(currentNode.right);
+    if (currentNode.left) nodeStack.push(currentNode.left);
   }
 
-  return result;
+  return traversalOrder;
 }`,
     testCases: [
       {
@@ -7376,19 +7572,23 @@ function postorderIterative(root: TreeNode<number> | null): number[] {
 }
 
 function postorderIterative(root: TreeNode<number> | null): number[] {
+  // Iterative postorder via reverse trick: O(n) time, O(n) space
+  // Collect in root-right-left order, then reverse to get left-right-root
   if (!root) return [];
 
-  const result: number[] = [];
-  const stack: TreeNode<number>[] = [root];
+  const reversePostorder: number[] = [];
+  const nodeStack: TreeNode<number>[] = [root];
 
-  while (stack.length > 0) {
-    const node: TreeNode<number> = stack.pop()!;
-    result.push(node.value);
-    if (node.left) stack.push(node.left);
-    if (node.right) stack.push(node.right);
+  while (nodeStack.length > 0) {
+    const currentNode: TreeNode<number> = nodeStack.pop()!;
+    reversePostorder.push(currentNode.value);
+    // Push left before right so right is processed first (building reverse postorder)
+    if (currentNode.left) nodeStack.push(currentNode.left);
+    if (currentNode.right) nodeStack.push(currentNode.right);
   }
 
-  return result.reverse();
+  // Reversing root-right-left gives left-right-root (true postorder)
+  return reversePostorder.reverse();
 }`,
     testCases: [
       {
@@ -7471,28 +7671,31 @@ function zigzagLevelOrder(root: TreeNode<number> | null): number[][] {
 }
 
 function zigzagLevelOrder(root: TreeNode<number> | null): number[][] {
+  // Zigzag BFS: O(n) time, O(n) space
+  // Even levels left-to-right, odd levels right-to-left
   if (!root) return [];
 
-  const result: number[][] = [];
-  const queue: TreeNode<number>[] = [root];
+  const levels: number[][] = [];
+  const bfsQueue: TreeNode<number>[] = [root];
   let leftToRight: boolean = true;
 
-  while (queue.length > 0) {
-    const levelSize: number = queue.length;
-    const level: number[] = [];
+  while (bfsQueue.length > 0) {
+    const levelSize: number = bfsQueue.length;
+    const currentLevel: number[] = [];
 
     for (let i = 0; i < levelSize; i++) {
-      const node: TreeNode<number> = queue.shift()!;
-      level.push(node.value);
-      if (node.left) queue.push(node.left);
-      if (node.right) queue.push(node.right);
+      const currentNode: TreeNode<number> = bfsQueue.shift()!;
+      currentLevel.push(currentNode.value);
+      if (currentNode.left) bfsQueue.push(currentNode.left);
+      if (currentNode.right) bfsQueue.push(currentNode.right);
     }
 
-    result.push(leftToRight ? level : level.reverse());
+    // Reverse odd levels to achieve zigzag ordering
+    levels.push(leftToRight ? currentLevel : currentLevel.reverse());
     leftToRight = !leftToRight;
   }
 
-  return result;
+  return levels;
 }`,
     testCases: [
       {
@@ -7565,23 +7768,25 @@ function treeLevelWidths(root: TreeNode<number> | null): number[] {
 }
 
 function treeLevelWidths(root: TreeNode<number> | null): number[] {
+  // BFS level-by-level width calculation: O(n) time, O(w) space where w = max width
   if (!root) return [];
 
-  const widths: number[] = [];
-  const queue: TreeNode<number>[] = [root];
+  const levelWidths: number[] = [];
+  const bfsQueue: TreeNode<number>[] = [root];
 
-  while (queue.length > 0) {
-    const levelSize: number = queue.length;
-    widths.push(levelSize);
+  while (bfsQueue.length > 0) {
+    const nodesAtThisLevel: number = bfsQueue.length;
+    // Queue length before processing gives the width of the current level
+    levelWidths.push(nodesAtThisLevel);
 
-    for (let i = 0; i < levelSize; i++) {
-      const node: TreeNode<number> = queue.shift()!;
-      if (node.left) queue.push(node.left);
-      if (node.right) queue.push(node.right);
+    for (let i = 0; i < nodesAtThisLevel; i++) {
+      const currentNode: TreeNode<number> = bfsQueue.shift()!;
+      if (currentNode.left) bfsQueue.push(currentNode.left);
+      if (currentNode.right) bfsQueue.push(currentNode.right);
     }
   }
 
-  return widths;
+  return levelWidths;
 }`,
     testCases: [
       {
@@ -7655,13 +7860,17 @@ function lowestCommonAncestor(root: TreeNode<number> | null, p: number, q: numbe
 }
 
 function lowestCommonAncestor(root: TreeNode<number> | null, p: number, q: number): TreeNode<number> | null {
+  // Recursive LCA: O(n) time, O(h) space where h = tree height
+  // Returns the node itself if it matches a target, bubbles results upward
   if (!root || root.value === p || root.value === q) return root;
 
-  const left: TreeNode<number> | null = lowestCommonAncestor(root.left, p, q);
-  const right: TreeNode<number> | null = lowestCommonAncestor(root.right, p, q);
+  const leftResult: TreeNode<number> | null = lowestCommonAncestor(root.left, p, q);
+  const rightResult: TreeNode<number> | null = lowestCommonAncestor(root.right, p, q);
 
-  if (left && right) return root;
-  return left || right;
+  // Both sides found a target: current node is the LCA
+  if (leftResult && rightResult) return root;
+  // Only one side found something: propagate that result upward
+  return leftResult || rightResult;
 }`,
     testCases: [
       {
@@ -7757,18 +7966,22 @@ function treeDiameter(root: TreeNode<number> | null): number {
 }
 
 function treeDiameter(root: TreeNode<number> | null): number {
-  let diameter: number = 0;
+  // Tree diameter via DFS: O(n) time, O(h) space
+  // Longest path may not pass through root, so track global max
+  let maxDiameter: number = 0;
 
   function height(node: TreeNode<number> | null): number {
     if (!node) return 0;
-    const leftH: number = height(node.left);
-    const rightH: number = height(node.right);
-    diameter = Math.max(diameter, leftH + rightH);
-    return 1 + Math.max(leftH, rightH);
+    const leftHeight: number = height(node.left);
+    const rightHeight: number = height(node.right);
+    // Path through this node = left height + right height
+    maxDiameter = Math.max(maxDiameter, leftHeight + rightHeight);
+    // Return this subtree's height for parent's calculation
+    return 1 + Math.max(leftHeight, rightHeight);
   }
 
   height(root);
-  return diameter;
+  return maxDiameter;
 }`,
     testCases: [
       {
@@ -7858,33 +8071,38 @@ function deserialize(str: string): TreeNode<number> | null {
 }
 
 function serialize(root: TreeNode<number> | null): string {
-  const parts: string[] = [];
+  // Preorder serialization: O(n) time, O(n) space
+  // Uses "null" sentinel for missing children to preserve structure
+  const serializedParts: string[] = [];
 
   function preorder(node: TreeNode<number> | null): void {
     if (!node) {
-      parts.push('null');
+      serializedParts.push('null');
       return;
     }
-    parts.push(String(node.value));
+    // Record value first (preorder), then recurse left and right
+    serializedParts.push(String(node.value));
     preorder(node.left);
     preorder(node.right);
   }
 
   preorder(root);
-  return parts.join(',');
+  return serializedParts.join(',');
 }
 
 function deserialize(str: string): TreeNode<number> | null {
+  // Reconstruct tree by consuming tokens in the same preorder sequence
   const tokens: string[] = str.split(',');
-  let index: number = 0;
+  let tokenIndex: number = 0;
 
   function build(): TreeNode<number> | null {
-    if (tokens[index] === 'null') {
-      index++;
+    if (tokens[tokenIndex] === 'null') {
+      tokenIndex++;
       return null;
     }
-    const node: TreeNode<number> = { value: Number(tokens[index]), left: null, right: null };
-    index++;
+    // Create node from current token, then build left and right subtrees
+    const node: TreeNode<number> = { value: Number(tokens[tokenIndex]), left: null, right: null };
+    tokenIndex++;
     node.left = build();
     node.right = build();
     return node;
@@ -8865,19 +9083,22 @@ function createEmitter(): EventEmitter {
   });
 }`,
     solutionCode: `function promiseAll<T>(promises: Array<Promise<T> | T>): Promise<T[]> {
-  // Parallel promise aggregation: resolves when ALL settle, rejects on FIRST failure
+  // Parallel promise aggregation: O(n) setup, O(n) space for results
+  // Resolves when ALL promises settle successfully; rejects on FIRST failure
   return new Promise<T[]>((resolve, reject) => {
+    // Edge case: empty input should resolve immediately rather than hang
     if (promises.length === 0) return resolve([]);
-    const results: T[] = new Array(promises.length);
-    let resolvedCount: number = 0;
+    const orderedResults: T[] = new Array(promises.length);
+    let settledCount: number = 0;
     promises.forEach((promiseOrValue, index) => {
-      // Wrap in Promise.resolve to handle non-promise values uniformly
-      Promise.resolve(promiseOrValue).then(value => {
-        // Store by index to preserve original ordering regardless of resolve timing
-        results[index] = value;
-        resolvedCount++;
-        if (resolvedCount === promises.length) resolve(results);
-      }).catch(reject);
+      // Wrap in Promise.resolve so non-promise values are handled uniformly
+      Promise.resolve(promiseOrValue).then(resolvedValue => {
+        // Store by index (not push) to preserve original ordering regardless of resolve timing
+        orderedResults[index] = resolvedValue;
+        settledCount++;
+        // Only resolve the outer promise once every input has settled successfully
+        if (settledCount === promises.length) resolve(orderedResults);
+      }).catch(reject); // First rejection short-circuits; later rejections are no-ops
     });
   });
 }`,
@@ -8925,13 +9146,16 @@ function createEmitter(): EventEmitter {
   });
 }`,
     solutionCode: `function promiseRace<T>(promises: Array<Promise<T> | T>): Promise<T> {
-  // First-settled wins: the earliest promise to resolve or reject determines the outcome
-  // Once a Promise resolves/rejects, subsequent calls to resolve/reject are no-ops
+  // First-settled-wins pattern: O(n) setup, O(1) additional space
+  // The earliest promise to resolve or reject determines the outcome
   return new Promise<T>((resolve, reject) => {
+    // Each entry independently races; the first to settle wins
     promises.forEach(promiseOrValue => {
-      // Wrap each entry so plain values settle immediately
+      // Wrap in Promise.resolve so plain (non-promise) values settle immediately
+      // Once resolve/reject is called once, subsequent calls are harmless no-ops
       Promise.resolve(promiseOrValue).then(resolve).catch(reject);
     });
+    // Note: if promises is empty, this Promise stays pending forever (by spec)
   });
 }`,
     testCases: [
@@ -9283,18 +9507,21 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function debounceLeading(callback: (...args: unknown[]) => void, delay: number): (...args: unknown[]) => void {
-  // Leading-edge debounce: fires immediately on first call, ignores until cooldown expires
-  // Useful for preventing double-clicks while keeping instant response
+  // Leading-edge debounce: O(1) per call, O(1) space (single timer reference)
+  // Fires immediately on the first call, then suppresses until the quiet period ends
+  // Ideal for preventing double-clicks while keeping instant user feedback
   let cooldownTimer: ReturnType<typeof setTimeout> | null = null;
   return function (this: unknown, ...args: unknown[]): void {
     if (!cooldownTimer) {
-      // No active cooldown: this is a fresh call, invoke immediately
+      // No active cooldown means this is a fresh invocation -- fire immediately
+      // Use apply to preserve the caller's "this" context
       callback.apply(this, args);
     }
-    // Reset cooldown on every call so rapid calls keep extending the quiet period
+    // Reset the cooldown on every call so rapid calls keep extending the quiet period
+    // Non-null assertion is safe because clearTimeout tolerates undefined/null
     clearTimeout(cooldownTimer!);
     cooldownTimer = setTimeout(() => {
-      // Cooldown expired: next call will fire immediately again
+      // Cooldown expired: nullify the timer so the next call fires as a leading edge
       cooldownTimer = null;
     }, delay);
   };

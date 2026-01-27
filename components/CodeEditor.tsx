@@ -151,9 +151,15 @@ export default function CodeEditor({
 
       // Create a unique model URI for this editor instance to prevent conflicts
       if (!modelUriRef.current) {
-        // Use substring instead of deprecated substr (ES2023+ best practice)
         const uniqueId = `file:///editor-${Date.now()}-${Math.random().toString(36).substring(2, 11)}${fileExtension}`;
         modelUriRef.current = uniqueId;
+
+        // Dispose the default model created by the Editor component to avoid
+        // duplicate function declarations visible to the TypeScript language service
+        const defaultModel = editor.getModel();
+        if (defaultModel) {
+          defaultModel.dispose();
+        }
 
         // Create a new model with the unique URI
         const model = monaco.editor.createModel(
@@ -248,16 +254,13 @@ export default function CodeEditor({
             8006, // enum declarations
             2451, // Cannot redeclare block-scoped variable
             2300, // Duplicate identifier
+            2393, // Duplicate function implementation (expected across exercise editors)
             2551, // Property does not exist (too strict for incomplete code)
             2554, // Expected X arguments but got Y (too strict while typing)
             2345, // Argument of type X is not assignable (too strict while typing)
             2552, // Cannot find name (too strict while typing)
             2304, // Cannot find name (variable not defined - too strict while typing)
           ];
-
-          if (readOnly) {
-            diagnosticCodesToIgnore.push(2393, 2300);
-          }
 
           monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
@@ -326,7 +329,7 @@ export default function CodeEditor({
         }, 100);
       });
     },
-    [code, fileExtension, language, monacoLanguage, readOnly, autoFocus, setupCode],
+    [code, fileExtension, language, monacoLanguage, autoFocus, setupCode],
   );
 
   const handleEditorChange = useCallback(
