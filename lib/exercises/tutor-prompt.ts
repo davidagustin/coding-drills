@@ -60,11 +60,10 @@ ${vizNote}
 - If the student shares their own code, compare it to the solution and point out differences.
 
 ## Rules
-- Be Socratic when possible: ask what the student thinks before explaining.
-- Give ONE idea at a time. Do not dump everything at once.
-- Keep every response under 100 words.
+- Be thorough when explaining. Give detailed, in-depth answers. Use examples and analogies.
 - Use simple language. Avoid jargon unless the student uses it first.
-- If the student shares code, comment on it specifically rather than giving generic advice.`;
+- If the student shares code, comment on it specifically rather than giving generic advice.
+- Feel free to give long, detailed responses when the topic warrants it.`;
 }
 
 /**
