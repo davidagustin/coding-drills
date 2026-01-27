@@ -247,6 +247,9 @@ const UpperBoundViz = dynamic(() => import('./UpperBoundViz'), { ssr: false });
 const ExponentialSearchViz = dynamic(() => import('./ExponentialSearchViz'), { ssr: false });
 const ComposeFunctionsViz = dynamic(() => import('./ComposeFunctionsViz'), { ssr: false });
 const PipeFunctionsViz = dynamic(() => import('./PipeFunctionsViz'), { ssr: false });
+const UniqueByViz = dynamic(() => import('./UniqueByViz'), { ssr: false });
+const FlattenDeepViz = dynamic(() => import('./FlattenDeepViz'), { ssr: false });
+const OnceFunctionViz = dynamic(() => import('./OnceFunctionViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -488,6 +491,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'exponential-search': ExponentialSearchViz,
   'compose-functions': ComposeFunctionsViz,
   'pipe-functions': PipeFunctionsViz,
+  'unique-by': UniqueByViz,
+  'flatten-deep': FlattenDeepViz,
+  'once-function': OnceFunctionViz,
 };
 
 /**
