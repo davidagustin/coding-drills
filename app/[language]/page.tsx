@@ -235,9 +235,7 @@ function ModeCard({ href, icon, title, description, buttonText, config, badge }:
         <div className="flex items-center gap-2 mb-2">
           <h3 className="text-xl font-semibold text-white">{title}</h3>
           {badge && (
-            <span
-              className={`text-xs px-2 py-0.5 rounded-full ${config.bgColor} ${config.color} border ${config.borderColor}`}
-            >
+            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
               {badge}
             </span>
           )}
