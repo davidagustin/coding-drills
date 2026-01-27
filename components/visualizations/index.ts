@@ -258,6 +258,11 @@ const FastSlowPointersViz = dynamic(() => import('./FastSlowPointersViz'), { ssr
 const PrefixProductViz = dynamic(() => import('./PrefixProductViz'), { ssr: false });
 const DifferenceArrayViz = dynamic(() => import('./DifferenceArrayViz'), { ssr: false });
 const MemoizeMultiArgViz = dynamic(() => import('./MemoizeMultiArgViz'), { ssr: false });
+const BinomialCoefficientViz = dynamic(() => import('./BinomialCoefficientViz'), { ssr: false });
+const CartesianProductViz = dynamic(() => import('./CartesianProductViz'), { ssr: false });
+const CartesianNArraysViz = dynamic(() => import('./CartesianNArraysViz'), { ssr: false });
+const TruthTableViz = dynamic(() => import('./TruthTableViz'), { ssr: false });
+const CircularBufferViz = dynamic(() => import('./CircularBufferViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -510,6 +515,11 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'prefix-product': PrefixProductViz,
   'difference-array': DifferenceArrayViz,
   'memoize-multi-arg': MemoizeMultiArgViz,
+  'binomial-coefficient': BinomialCoefficientViz,
+  'cartesian-product': CartesianProductViz,
+  'cartesian-n-arrays': CartesianNArraysViz,
+  'truth-table': TruthTableViz,
+  'circular-buffer': CircularBufferViz,
 };
 
 /**
