@@ -125,6 +125,22 @@ const DebounceViz = dynamic(() => import('./DebounceViz'), { ssr: false });
 const ThrottleViz = dynamic(() => import('./ThrottleViz'), { ssr: false });
 const CountInversionsViz = dynamic(() => import('./CountInversionsViz'), { ssr: false });
 
+// Batch 6: Additional Tree & String algorithms
+const InvertTreeViz = dynamic(() => import('./InvertTreeViz'), { ssr: false });
+const SameTreeViz = dynamic(() => import('./SameTreeViz'), { ssr: false });
+const MaxDepthTreeViz = dynamic(() => import('./MaxDepthTreeViz'), { ssr: false });
+const PathSumViz = dynamic(() => import('./PathSumViz'), { ssr: false });
+const SymmetricTreeViz = dynamic(() => import('./SymmetricTreeViz'), { ssr: false });
+const BalancedTreeViz = dynamic(() => import('./BalancedTreeViz'), { ssr: false });
+const ValidParenthesesViz = dynamic(() => import('./ValidParenthesesViz'), { ssr: false });
+const LongestCommonPrefixViz = dynamic(() => import('./LongestCommonPrefixViz'), { ssr: false });
+const ValidAnagramViz = dynamic(() => import('./ValidAnagramViz'), { ssr: false });
+const SingleNumberViz = dynamic(() => import('./SingleNumberViz'), { ssr: false });
+const PowerOfTwoViz = dynamic(() => import('./PowerOfTwoViz'), { ssr: false });
+const CountBitsViz = dynamic(() => import('./CountBitsViz'), { ssr: false });
+const MissingNumberViz = dynamic(() => import('./MissingNumberViz'), { ssr: false });
+const MergeSortViz = dynamic(() => import('./MergeSortViz'), { ssr: false });
+
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
   'binary-search': BinarySearchViz,
@@ -243,6 +259,22 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   debounce: DebounceViz,
   throttle: ThrottleViz,
   'count-inversions': CountInversionsViz,
+
+  // Batch 6: Additional Tree & String algorithms
+  'invert-tree': InvertTreeViz,
+  'same-tree': SameTreeViz,
+  'max-depth-tree': MaxDepthTreeViz,
+  'path-sum': PathSumViz,
+  'symmetric-tree': SymmetricTreeViz,
+  'balanced-tree': BalancedTreeViz,
+  'valid-parentheses': ValidParenthesesViz,
+  'longest-common-prefix': LongestCommonPrefixViz,
+  'valid-anagram': ValidAnagramViz,
+  'single-number': SingleNumberViz,
+  'power-of-two': PowerOfTwoViz,
+  'count-bits': CountBitsViz,
+  'missing-number': MissingNumberViz,
+  'merge-sort': MergeSortViz,
 };
 
 /**

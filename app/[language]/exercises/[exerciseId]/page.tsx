@@ -557,50 +557,35 @@ export default function ExerciseDetailPage() {
               className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 overflow-hidden`}
             >
               <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
-                <span className="text-sm font-medium text-zinc-400">
-                  {viewMode === 'learn' ? 'Starter Code' : 'Your Solution'}
-                </span>
-                {viewMode === 'practice' && (
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 text-zinc-400">
-                      <ClockIcon className="w-4 h-4" />
-                      <span className="font-mono text-sm">{formatTime(timer)}</span>
-                    </div>
+                <span className="text-sm font-medium text-zinc-400">Your Solution</span>
+                <div className="flex items-center gap-2 text-zinc-400">
+                  <ClockIcon className="w-4 h-4" />
+                  <span className="font-mono text-sm">{formatTime(timer)}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col">
+                <CodeEditor
+                  code={userCode}
+                  onChange={setUserCode}
+                  language={language as LanguageId}
+                  height={320}
+                  minHeight={280}
+                  lineNumbers
+                  autoFocus={viewMode === 'practice'}
+                  onSubmitShortcut={runCode}
+                />
+                <div className="flex items-center justify-between p-4 border-t border-zinc-800">
+                  <p className="text-xs text-zinc-500">Press Cmd/Ctrl + Enter to run tests</p>
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={resetPractice}
-                      className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white"
+                      className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors cursor-pointer"
                     >
                       <ResetIcon className="w-4 h-4" />
                       Reset
                     </button>
-                  </div>
-                )}
-              </div>
-
-              {viewMode === 'learn' ? (
-                <CodeEditor
-                  code={exercise.starterCode}
-                  onChange={() => {}}
-                  language={language as LanguageId}
-                  readOnly
-                  height={300}
-                  minHeight={200}
-                  lineNumbers
-                />
-              ) : (
-                <div className="flex flex-col">
-                  <CodeEditor
-                    code={userCode}
-                    onChange={setUserCode}
-                    language={language as LanguageId}
-                    height={320}
-                    minHeight={280}
-                    lineNumbers
-                    autoFocus
-                    onSubmitShortcut={runCode}
-                  />
-                  <div className="flex justify-end p-4 gap-3 border-t border-zinc-800">
                     <button
                       type="button"
                       onClick={runCode}
@@ -620,11 +605,8 @@ export default function ExerciseDetailPage() {
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-zinc-500 px-4 pb-3">
-                    Press Cmd/Ctrl + Enter to run tests
-                  </p>
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Test Results */}
