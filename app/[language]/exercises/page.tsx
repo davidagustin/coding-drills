@@ -12,6 +12,7 @@ import {
   getExerciseStats,
   getExercisesByCategory,
   getExercisesForLanguage,
+  isInterviewRecommended,
 } from '@/lib/exercises';
 import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from '../config';
 
@@ -289,6 +290,14 @@ function ExerciseCard({
         >
           {diffConfig.name}
         </span>
+        {isInterviewRecommended(exercise.id) && (
+          <span
+            className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400"
+            title="Recommended for coding interviews"
+          >
+            ★ Interview
+          </span>
+        )}
         {exercise.timeLimit && (
           <span className="text-xs text-zinc-500">
             {Math.floor(exercise.timeLimit / 60)}:{String(exercise.timeLimit % 60).padStart(2, '0')}
@@ -434,6 +443,7 @@ export default function ExercisesPage() {
     'all',
   );
   const [showFilters, setShowFilters] = useState(false);
+  const [recommendedOnly, setRecommendedOnly] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Track mount state for hydration safety
@@ -525,17 +535,22 @@ export default function ExercisesPage() {
         });
       }
 
+      if (recommendedOnly) {
+        exercises = exercises.filter((ex) => isInterviewRecommended(ex.id));
+      }
+
       result[cat] = exercises;
     }
 
     return result;
-  }, [language, searchQuery, difficultyFilter, completionFilter, progress]);
+  }, [language, searchQuery, difficultyFilter, completionFilter, recommendedOnly, progress]);
 
   const clearAllFilters = useCallback(() => {
     setSearchQuery('');
     setDifficultyFilter('all');
     setCompletionFilter('all');
     setSelectedCategory('all');
+    setRecommendedOnly(false);
   }, []);
 
   if (!mounted) {
@@ -561,7 +576,10 @@ export default function ExercisesPage() {
   );
 
   const hasActiveFilters =
-    searchQuery.trim() !== '' || difficultyFilter !== 'all' || completionFilter !== 'all';
+    searchQuery.trim() !== '' ||
+    difficultyFilter !== 'all' ||
+    completionFilter !== 'all' ||
+    recommendedOnly;
 
   const handleExerciseClick = (exercise: Exercise) => {
     router.push(`/${language}/exercises/${exercise.id}`);
@@ -730,10 +748,22 @@ export default function ExercisesPage() {
           </div>
         )}
 
-        {/* Quick concept tags */}
-        {!searchQuery && popularConcepts.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {popularConcepts.map((concept) => (
+        {/* Recommended + Quick concept tags */}
+        <div className="flex flex-wrap gap-1.5 mb-3 items-center">
+          <button
+            type="button"
+            onClick={() => setRecommendedOnly(!recommendedOnly)}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              recommendedOnly
+                ? 'bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/40'
+                : 'bg-zinc-800/60 text-zinc-400 hover:text-amber-300 hover:bg-amber-500/10'
+            }`}
+          >
+            <span>★</span>
+            Interview Prep
+          </button>
+          {!searchQuery &&
+            popularConcepts.map((concept) => (
               <button
                 type="button"
                 key={concept}
@@ -743,8 +773,7 @@ export default function ExercisesPage() {
                 {concept}
               </button>
             ))}
-          </div>
-        )}
+        </div>
 
         {/* Category pills */}
         <div className="flex flex-wrap gap-2">

@@ -102,4 +102,155 @@ export function getExerciseStats(language: string): {
   };
 }
 
+// Exercise IDs recommended for coding interview preparation (base IDs without language prefix).
+// Covers essential patterns from Blind 75 / NeetCode 150 / FAANG interview prep.
+const INTERVIEW_RECOMMENDED_BASE_IDS = new Set([
+  // --- Two Pointers ---
+  'two-pointer-palindrome',
+  'two-pointer-remove-dupes',
+  'three-sum-zero',
+  'container-most-water',
+  'trapping-rain-water',
+  'move-zeroes',
+  'dutch-national-flag',
+
+  // --- Sliding Window ---
+  'sliding-window-max-sum',
+  'sliding-window-min-subarray',
+  'longest-no-repeat',
+  'min-window-substr',
+  'sliding-window-max',
+
+  // --- Binary Search ---
+  'binary-search',
+  'binary-search-iterative',
+  'search-rotated',
+  'min-in-rotated',
+  'find-peak',
+  'binary-search-insert',
+  'search-2d-matrix',
+  'count-occurrences',
+
+  // --- Stack & Queue ---
+  'stack-operations',
+  'queue-operations',
+  'min-stack',
+  'monotonic-stack',
+  'two-stack-queue',
+
+  // --- Linked List ---
+  'linked-list-traverse',
+  'linked-list-reverse',
+
+  // --- Tree Traversal ---
+  'dfs-tree',
+  'bfs-tree',
+  'dfs-inorder',
+  'validate-bst',
+  'kth-smallest-bst',
+  'lowest-common-ancestor',
+  'serialize-tree',
+  'right-side-view',
+  'tree-diameter',
+  'zigzag-level-order',
+
+  // --- Graph ---
+  'graph-adjacency',
+  'bfs-traversal',
+  'dfs-traversal',
+  'number-of-islands',
+  'course-schedule',
+  'clone-graph',
+  'topological-sort',
+  'word-ladder',
+  'rotting-oranges',
+
+  // --- Dynamic Programming ---
+  'climbing-stairs',
+  'house-robber',
+  'coin-change-min',
+  'lcs-length',
+  'lis-length',
+  'edit-distance',
+  'word-break',
+  'decode-ways',
+  'knapsack-01',
+  'unique-paths-grid',
+  'min-path-sum-grid',
+  'max-product-subarray',
+  'longest-palindrome-substr',
+  'target-sum-ways',
+  'partition-equal-subset',
+  'jump-game',
+
+  // --- Backtracking ---
+  'generate-permutations',
+  'generate-combinations',
+  'generate-subsets',
+  'word-search-grid',
+  'generate-parens',
+  'n-queens-count',
+  'subset-sum-exists',
+
+  // --- Heap / Priority Queue ---
+  'min-heap-insert',
+  'heap-extract-min',
+  'max-heap-insert',
+  'priority-queue-custom',
+  'quick-select',
+
+  // --- Trie ---
+  'trie-insert',
+  'trie-search',
+
+  // --- Union-Find ---
+  'union-find',
+  'graph-valid-tree',
+
+  // --- Array / String Essentials ---
+  'product-except-self',
+  'merge-intervals',
+  'group-anagrams',
+  'encode-decode-strings',
+  'longest-consecutive-seq',
+  'insert-interval',
+  'spiral-matrix',
+  'rotate-matrix',
+  'string-compress',
+
+  // --- Memoization ---
+  'basic-memoize',
+  'memoize-fibonacci',
+  'debounce',
+  'throttle',
+
+  // --- Sorting & Merging ---
+  'merge-sorted',
+  'merge-in-place',
+  'count-inversions',
+
+  // --- Bit Manipulation ---
+  'count-bits',
+  'is-power-of-two',
+
+  // --- LRU Cache ---
+  'lru-cache',
+
+  // --- Prefix Sum ---
+  'prefix-sum',
+]);
+
+// Check if an exercise is recommended for coding interviews
+export function isInterviewRecommended(exerciseId: string): boolean {
+  // Strip the language prefix (e.g., "ts-" or "js-") to match the base ID
+  const baseId = exerciseId.replace(/^(ts|js|py|java|cpp|cs|go|rb|c)-/, '');
+  return INTERVIEW_RECOMMENDED_BASE_IDS.has(baseId);
+}
+
+// Get count of interview-recommended exercises for a language
+export function getInterviewRecommendedCount(language: string): number {
+  const exercises = getExercisesForLanguage(language);
+  return exercises.filter((ex) => isInterviewRecommended(ex.id)).length;
+}
+
 export { EXERCISE_CATEGORIES, DIFFICULTY_CONFIG };
