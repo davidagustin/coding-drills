@@ -449,7 +449,7 @@ export default function LanguagePage() {
           description={
             language === 'typescript'
               ? 'Type code for utility types, type guards, generics, mapped types, and more. Build muscle memory for the TypeScript type system.'
-              : 'Type code solutions to method challenges. Build muscle memory and improve your typing speed.'
+              : 'Type code solutions to method challenges. Build muscle memory and improve your coding fluency.'
           }
           buttonText="Start Drilling"
           config={config}

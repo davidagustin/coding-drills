@@ -496,7 +496,7 @@ export default function ProblemDetailPage() {
             {/* Setup Code */}
             <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-800/50">
-                <span className="text-sm font-medium text-zinc-300">Setup Code</span>
+                <span className="text-sm font-medium text-zinc-300">Starter Code</span>
               </div>
               <div className="p-4">
                 <pre className="bg-zinc-950 text-zinc-100 p-4 rounded-lg font-mono text-sm leading-relaxed border border-zinc-800 whitespace-pre-wrap break-words overflow-wrap-anywhere">

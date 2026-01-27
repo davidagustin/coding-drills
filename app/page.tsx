@@ -363,7 +363,7 @@ export default function Home() {
             </p>
 
             <p className="text-gray-500 max-w-xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-              Practice {totalProblems.toLocaleString()}+ problems across 21 languages. Build muscle
+              Practice {totalProblems.toLocaleString()}+ problems across 24 languages. Build muscle
               memory with drills, test yourself with quizzes, study cheatsheets, and rehearse with
               AI mock interviews.
             </p>
@@ -638,7 +638,7 @@ export default function Home() {
             },
             {
               stat: 'Free',
-              label: 'Forever',
+              label: 'Open Source',
               icon: (
                 <svg
                   viewBox="0 0 24 24"
@@ -679,7 +679,7 @@ export default function Home() {
             <div className="flex items-center gap-4 text-gray-500 text-sm">
               <span>Made with</span>
               <span className="text-red-500">♥</span>
-              <span>and Next.js</span>
+              <span>using Next.js</span>
             </div>
           </div>
 
