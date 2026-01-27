@@ -241,6 +241,12 @@ const CountByViz = dynamic(() => import('./CountByViz'), { ssr: false });
 const SumByViz = dynamic(() => import('./SumByViz'), { ssr: false });
 const MaxByViz = dynamic(() => import('./MaxByViz'), { ssr: false });
 const BinarySearchSqrtViz = dynamic(() => import('./BinarySearchSqrtViz'), { ssr: false });
+const KadanesAlgorithmViz = dynamic(() => import('./KadanesAlgorithmViz'), { ssr: false });
+const LowerBoundViz = dynamic(() => import('./LowerBoundViz'), { ssr: false });
+const UpperBoundViz = dynamic(() => import('./UpperBoundViz'), { ssr: false });
+const ExponentialSearchViz = dynamic(() => import('./ExponentialSearchViz'), { ssr: false });
+const ComposeFunctionsViz = dynamic(() => import('./ComposeFunctionsViz'), { ssr: false });
+const PipeFunctionsViz = dynamic(() => import('./PipeFunctionsViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -476,6 +482,12 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'sum-by': SumByViz,
   'max-by': MaxByViz,
   'binary-search-sqrt': BinarySearchSqrtViz,
+  'kadanes-algorithm': KadanesAlgorithmViz,
+  'lower-bound': LowerBoundViz,
+  'upper-bound': UpperBoundViz,
+  'exponential-search': ExponentialSearchViz,
+  'compose-functions': ComposeFunctionsViz,
+  'pipe-functions': PipeFunctionsViz,
 };
 
 /**
