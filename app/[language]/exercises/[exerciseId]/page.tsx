@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { Component, Suspense, useCallback, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
 import { getVisualization } from '@/components/visualizations';
 import {
@@ -194,6 +194,38 @@ interface ExerciseProgress {
 }
 
 type ViewMode = 'learn' | 'practice';
+
+// Error boundary for visualizations
+class VisualizationErrorBoundary extends Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Visualization error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 bg-red-900/20 border border-red-500/50 rounded-lg">
+          <p className="text-red-400 text-sm">
+            Error loading visualization: {this.state.error?.message || 'Unknown error'}
+          </p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function ExerciseDetailPage() {
   const params = useParams();
@@ -591,15 +623,17 @@ export default function ExerciseDetailPage() {
                       <AnimationIcon className={`w-5 h-5 ${config.color}`} />
                       Interactive Visualization
                     </h2>
-                    <Suspense
-                      fallback={
-                        <div className="p-8 text-center text-zinc-400">
-                          Loading visualization...
-                        </div>
-                      }
-                    >
-                      <VizComponent />
-                    </Suspense>
+                    <VisualizationErrorBoundary>
+                      <Suspense
+                        fallback={
+                          <div className="p-8 text-center text-zinc-400">
+                            Loading visualization...
+                          </div>
+                        }
+                      >
+                        <VizComponent />
+                      </Suspense>
+                    </VisualizationErrorBoundary>
                   </div>
                 );
               })()}
