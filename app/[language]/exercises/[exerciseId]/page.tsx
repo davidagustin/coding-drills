@@ -558,6 +558,17 @@ export default function ExerciseDetailPage() {
               </ul>
             </div>
 
+            {/* AI Tutor */}
+            <ExerciseTutor
+              exercise={exercise}
+              hasVisualization={getVisualization(exerciseId) !== null}
+              languageConfig={{
+                color: config.color,
+                bgColor: config.bgColor,
+                borderColor: config.borderColor,
+              }}
+            />
+
             {/* Code Editor / Display */}
             <div
               className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 overflow-hidden`}
@@ -722,17 +733,6 @@ export default function ExerciseDetailPage() {
                 </div>
               )}
             </div>
-
-            {/* AI Tutor */}
-            <ExerciseTutor
-              exercise={exercise}
-              hasVisualization={getVisualization(exerciseId) !== null}
-              languageConfig={{
-                color: config.color,
-                bgColor: config.bgColor,
-                borderColor: config.borderColor,
-              }}
-            />
 
             {/* Concepts */}
             <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
