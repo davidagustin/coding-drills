@@ -1,25 +1,15 @@
 'use client';
 
-import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import { useVizAnimation } from './useVizAnimation';
 import VizControls from './VizControls';
 
-const ARRAY: (number | boolean | string | null | undefined)[] = [
-  0,
-  1,
-  false,
-  2,
-  '',
-  3,
-  null,
-  undefined,
-];
+const INPUT = [0, 1, false, 2, '', 3, null, undefined, NaN];
 
 interface CompactStep {
-  arr: (number | boolean | string | null | undefined)[];
+  input: (number | boolean | string | null | undefined)[];
   result: number[];
-  i: number;
+  currentIndex: number;
   explanation: string;
 }
 
@@ -28,38 +18,46 @@ function computeSteps(): CompactStep[] {
   const result: number[] = [];
 
   steps.push({
-    arr: [...ARRAY],
+    input: [...INPUT],
     result: [],
-    i: -1,
-    explanation: `Start: Remove falsy values from array`,
+    currentIndex: -1,
+    explanation: `Start: Compact array, removing all falsy values`,
   });
 
-  for (let i = 0; i < ARRAY.length; i++) {
-    const val = ARRAY[i];
-    const isTruthy = Boolean(val);
+  for (let i = 0; i < INPUT.length; i++) {
+    const value = INPUT[i];
+    const isTruthy = Boolean(value);
+
+    steps.push({
+      input: [...INPUT],
+      result: [...result],
+      currentIndex: i,
+      explanation: `Check index ${i}: value = ${String(value)}, Boolean(${String(value)}) = ${isTruthy}`,
+    });
+
     if (isTruthy) {
-      result.push(val as number);
+      result.push(value as number);
       steps.push({
-        arr: [...ARRAY],
+        input: [...INPUT],
         result: [...result],
-        i,
-        explanation: `Index ${i}: ${val} is truthy → keep`,
+        currentIndex: i,
+        explanation: `Keep ${value}: result = [${result.join(', ')}]`,
       });
     } else {
       steps.push({
-        arr: [...ARRAY],
+        input: [...INPUT],
         result: [...result],
-        i,
-        explanation: `Index ${i}: ${String(val)} is falsy → remove`,
+        currentIndex: i,
+        explanation: `Remove ${String(value)} (falsy)`,
       });
     }
   }
 
   steps.push({
-    arr: [...ARRAY],
+    input: [...INPUT],
     result: [...result],
-    i: -1,
-    explanation: `Complete: Result = [${result.join(', ')}]`,
+    currentIndex: -1,
+    explanation: `Complete: Compacted array = [${result.join(', ')}]`,
   });
 
   return steps;
@@ -76,7 +74,7 @@ export default function CompactViz() {
     return step < STEPS.length ? STEPS[step] : STEPS[STEPS.length - 1];
   }, [step]);
 
-  const { arr, result, i, explanation } = currentStep;
+  const { input, result, currentIndex, explanation } = currentStep;
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">
@@ -87,56 +85,49 @@ export default function CompactViz() {
       </div>
 
       <div className="space-y-6">
-        {/* Original Array */}
+        {/* Input Array */}
         <div>
-          <h3 className="text-sm font-medium text-zinc-400 mb-2">Original Array</h3>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Input Array</h3>
           <div className="flex gap-2 flex-wrap">
-            {arr.map((val, idx) => {
-              const isCurrent = idx === i;
+            {input.map((val, idx) => {
+              const isCurrent = idx === currentIndex && currentIndex !== -1;
               const isTruthy = Boolean(val);
               return (
-                <motion.div
+                <div
                   key={idx}
-                  initial={false}
-                  animate={{
-                    scale: isCurrent ? 1.1 : 1,
-                  }}
-                  className={`w-20 h-16 rounded-lg flex items-center justify-center font-mono text-sm font-semibold border-2 ${
+                  className={`w-20 h-16 rounded-lg flex flex-col items-center justify-center font-mono text-xs font-semibold border-2 ${
                     isCurrent
-                      ? isTruthy
+                      ? 'bg-blue-500/20 border-blue-500 text-blue-400'
+                      : isTruthy
                         ? 'bg-green-500/20 border-green-500 text-green-400'
                         : 'bg-red-500/20 border-red-500 text-red-400'
-                      : isTruthy
-                        ? 'bg-zinc-800 border-zinc-700 text-zinc-300'
-                        : 'bg-zinc-700/50 border-zinc-600 text-zinc-500'
                   }`}
                 >
-                  {String(val === null ? 'null' : val === undefined ? 'undefined' : val)}
-                </motion.div>
+                  <span className="text-xs text-zinc-500">{idx}</span>
+                  <span className="text-xs">{String(val)}</span>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* Result Array */}
+        {/* Result */}
         <div>
-          <h3 className="text-sm font-medium text-zinc-400 mb-2">Result Array (Truthy Only)</h3>
-          <div className="flex gap-2 flex-wrap">
-            {result.length === 0 ? (
-              <div className="text-zinc-500 text-sm">Empty</div>
-            ) : (
-              result.map((val, idx) => (
-                <motion.div
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Compact Result (truthy only)</h3>
+          {result.length === 0 ? (
+            <div className="p-4 bg-zinc-800 rounded-lg text-center text-zinc-500">(empty)</div>
+          ) : (
+            <div className="flex gap-2 flex-wrap">
+              {result.map((val, idx) => (
+                <div
                   key={idx}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="w-16 h-16 rounded-lg bg-green-500/20 border-2 border-green-500 flex items-center justify-center font-mono text-lg font-semibold text-green-400"
+                  className="px-4 py-2 bg-green-500/20 border-2 border-green-500 rounded-lg font-mono text-sm font-semibold text-green-400"
                 >
                   {val}
-                </motion.div>
-              ))
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

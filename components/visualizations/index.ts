@@ -232,6 +232,7 @@ const GenerateRangeViz = dynamic(() => import('./GenerateRangeViz'), { ssr: fals
 const PartitionViz = dynamic(() => import('./PartitionViz'), { ssr: false });
 const DifferenceViz = dynamic(() => import('./DifferenceViz'), { ssr: false });
 const IntersectionViz = dynamic(() => import('./IntersectionViz'), { ssr: false });
+const CurryFunctionViz = dynamic(() => import('./CurryFunctionViz'), { ssr: false });
 const TakeWhileViz = dynamic(() => import('./TakeWhileViz'), { ssr: false });
 const DropWhileViz = dynamic(() => import('./DropWhileViz'), { ssr: false });
 const FrequencyCounterViz = dynamic(() => import('./FrequencyCounterViz'), { ssr: false });
@@ -553,6 +554,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'string-perms-dedup': StringPermsDedupViz,
   'combinations-with-rep': CombinationsWithRepViz,
   'permutation-rank': PermutationRankViz,
+  'curry-function': CurryFunctionViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
   'prefix-product': PrefixProductViz,

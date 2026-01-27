@@ -1,83 +1,77 @@
 'use client';
 
-import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import { useVizAnimation } from './useVizAnimation';
 import VizControls from './VizControls';
 
-const ARRAY1 = [1, 2, 3, 4, 5];
-const ARRAY2 = [2, 4];
+const ITEMS = [1, 2, 3, 4, 5];
+const EXCLUDE_ITEMS = [2, 4];
 
 interface DifferenceStep {
-  arr1: number[];
-  arr2: number[];
-  set: Set<number>;
+  items: number[];
+  excludeItems: number[];
+  exclusionSet: Set<number>;
   result: number[];
-  i: number;
-  phase: 'build-set' | 'filter' | 'complete';
+  currentIndex: number;
   explanation: string;
 }
 
 function computeSteps(): DifferenceStep[] {
   const steps: DifferenceStep[] = [];
-  const set = new Set(ARRAY2);
+  const exclusionSet = new Set(EXCLUDE_ITEMS);
   const result: number[] = [];
 
   steps.push({
-    arr1: [...ARRAY1],
-    arr2: [...ARRAY2],
-    set: new Set(),
+    items: [...ITEMS],
+    excludeItems: [...EXCLUDE_ITEMS],
+    exclusionSet: new Set(exclusionSet),
     result: [],
-    i: -1,
-    phase: 'build-set',
-    explanation: `Start: Find elements in arr1 not in arr2`,
+    currentIndex: -1,
+    explanation: `Start: Find elements in [${ITEMS.join(', ')}] not in [${EXCLUDE_ITEMS.join(', ')}]`,
   });
 
   steps.push({
-    arr1: [...ARRAY1],
-    arr2: [...ARRAY2],
-    set: new Set(set),
+    items: [...ITEMS],
+    excludeItems: [...EXCLUDE_ITEMS],
+    exclusionSet: new Set(exclusionSet),
     result: [],
-    i: -1,
-    phase: 'build-set',
-    explanation: `Build Set from arr2: {${Array.from(set).join(', ')}}`,
+    currentIndex: -1,
+    explanation: `Create exclusion Set: {${[...exclusionSet].join(', ')}} for O(1) lookup`,
   });
 
-  for (let i = 0; i < ARRAY1.length; i++) {
-    const val = ARRAY1[i];
-    const inSet = set.has(val);
-    if (!inSet) {
-      result.push(val);
+  for (let i = 0; i < ITEMS.length; i++) {
+    const item = ITEMS[i];
+    const inExclusion = exclusionSet.has(item);
+
+    steps.push({
+      items: [...ITEMS],
+      excludeItems: [...EXCLUDE_ITEMS],
+      exclusionSet: new Set(exclusionSet),
+      result: [...result],
+      currentIndex: i,
+      explanation: `Check items[${i}] = ${item}: ${inExclusion ? 'in exclusion set, skip' : 'not in exclusion set, include'}`,
+    });
+
+    if (!inExclusion) {
+      result.push(item);
       steps.push({
-        arr1: [...ARRAY1],
-        arr2: [...ARRAY2],
-        set: new Set(set),
+        items: [...ITEMS],
+        excludeItems: [...EXCLUDE_ITEMS],
+        exclusionSet: new Set(exclusionSet),
         result: [...result],
-        i,
-        phase: 'filter',
-        explanation: `Index ${i}: ${val} not in Set → add to result`,
-      });
-    } else {
-      steps.push({
-        arr1: [...ARRAY1],
-        arr2: [...ARRAY2],
-        set: new Set(set),
-        result: [...result],
-        i,
-        phase: 'filter',
-        explanation: `Index ${i}: ${val} in Set → skip`,
+        currentIndex: i,
+        explanation: `Add ${item} to result: [${result.join(', ')}]`,
       });
     }
   }
 
   steps.push({
-    arr1: [...ARRAY1],
-    arr2: [...ARRAY2],
-    set: new Set(set),
+    items: [...ITEMS],
+    excludeItems: [...EXCLUDE_ITEMS],
+    exclusionSet: new Set(exclusionSet),
     result: [...result],
-    i: -1,
-    phase: 'complete',
-    explanation: `Complete: Result = [${result.join(', ')}]`,
+    currentIndex: -1,
+    explanation: `Complete: Difference = [${result.join(', ')}]`,
   });
 
   return steps;
@@ -94,7 +88,7 @@ export default function DifferenceViz() {
     return step < STEPS.length ? STEPS[step] : STEPS[STEPS.length - 1];
   }, [step]);
 
-  const { arr1, arr2, set, result, i, phase, explanation } = currentStep;
+  const { items, excludeItems, exclusionSet, result, currentIndex, explanation } = currentStep;
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">
@@ -105,69 +99,64 @@ export default function DifferenceViz() {
       </div>
 
       <div className="space-y-6">
-        {/* Arrays */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h3 className="text-sm font-medium text-zinc-400 mb-2">Array 1</h3>
-            <div className="flex gap-2 flex-wrap">
-              {arr1.map((val, idx) => {
-                const isCurrent = idx === i && phase === 'filter';
-                const inSet = set.has(val);
-                return (
-                  <motion.div
-                    key={idx}
-                    initial={false}
-                    animate={{
-                      scale: isCurrent ? 1.1 : 1,
-                    }}
-                    className={`w-16 h-16 rounded-lg flex items-center justify-center font-mono text-lg font-semibold border-2 ${
-                      isCurrent
-                        ? inSet
-                          ? 'bg-red-500/20 border-red-500 text-red-400'
-                          : 'bg-green-500/20 border-green-500 text-green-400'
-                        : 'bg-zinc-800 border-zinc-700 text-zinc-300'
-                    }`}
-                  >
-                    {val}
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-zinc-400 mb-2">Array 2 (Exclusion Set)</h3>
-            <div className="flex gap-2 flex-wrap">
-              {arr2.map((val, idx) => (
+        {/* Items Array */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Items Array</h3>
+          <div className="flex gap-2 flex-wrap">
+            {items.map((val, idx) => {
+              const isCurrent = idx === currentIndex && currentIndex !== -1;
+              const inExclusion = exclusionSet.has(val);
+              return (
                 <div
                   key={idx}
-                  className="w-16 h-16 rounded-lg bg-purple-500/20 border-2 border-purple-500 flex items-center justify-center font-mono text-lg font-semibold text-purple-400"
+                  className={`w-16 h-16 rounded-lg flex flex-col items-center justify-center font-mono text-sm font-semibold border-2 ${
+                    isCurrent
+                      ? 'bg-blue-500/20 border-blue-500 text-blue-400'
+                      : inExclusion
+                        ? 'bg-red-500/20 border-red-500 text-red-400'
+                        : 'bg-zinc-800 border-zinc-700 text-zinc-300'
+                  }`}
+                >
+                  <span className="text-xs text-zinc-500">{idx}</span>
+                  <span className="text-lg">{val}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Exclusion Set */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Exclusion Set</h3>
+          <div className="flex gap-2 flex-wrap">
+            {excludeItems.map((val) => (
+              <div
+                key={val}
+                className="px-4 py-2 bg-red-500/20 border-2 border-red-500 rounded-lg font-mono text-sm font-semibold text-red-400"
+              >
+                {val}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Result */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Difference Result</h3>
+          {result.length === 0 ? (
+            <div className="p-4 bg-zinc-800 rounded-lg text-center text-zinc-500">(empty)</div>
+          ) : (
+            <div className="flex gap-2 flex-wrap">
+              {result.map((val, idx) => (
+                <div
+                  key={idx}
+                  className="px-4 py-2 bg-green-500/20 border-2 border-green-500 rounded-lg font-mono text-sm font-semibold text-green-400"
                 >
                   {val}
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Result Array */}
-        <div>
-          <h3 className="text-sm font-medium text-zinc-400 mb-2">Result Array</h3>
-          <div className="flex gap-2 flex-wrap">
-            {result.length === 0 ? (
-              <div className="text-zinc-500 text-sm">Empty</div>
-            ) : (
-              result.map((val, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="w-16 h-16 rounded-lg bg-green-500/20 border-2 border-green-500 flex items-center justify-center font-mono text-lg font-semibold text-green-400"
-                >
-                  {val}
-                </motion.div>
-              ))
-            )}
-          </div>
+          )}
         </div>
       </div>
 
