@@ -155,7 +155,16 @@ export function LanguageGrid({ languages, problemCounts = {} }: LanguageGridProp
       {filteredLanguages.length === 0 && (
         <div className="text-center py-12">
           <div className="flex justify-center mb-3 text-gray-500">
-            <svg viewBox="0 0 24 24" className="w-10 h-10" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-10 h-10"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <circle cx="11" cy="11" r="8" />
               <path d="M21 21l-4.35-4.35" />
             </svg>
@@ -181,7 +190,7 @@ export function LanguageGrid({ languages, problemCounts = {} }: LanguageGridProp
               className={`
                 group relative overflow-hidden rounded-2xl border ${lang.borderColor}
                 bg-gradient-to-br ${lang.bgGradient} backdrop-blur-sm
-                p-6 md:p-8 card-hover ${lang.hoverGlow}
+                p-6 md:p-8 card-hover ${lang.hoverGlow} cursor-pointer
               `}
             >
               {/* Hover gradient overlay */}
@@ -246,7 +255,7 @@ export function LanguageGrid({ languages, problemCounts = {} }: LanguageGridProp
               className={`
                 group flex items-center gap-4 rounded-xl border ${lang.borderColor}
                 bg-gradient-to-r ${lang.bgGradient} backdrop-blur-sm
-                p-4 card-hover ${lang.hoverGlow}
+                p-4 card-hover ${lang.hoverGlow} cursor-pointer
               `}
             >
               {/* Icon */}

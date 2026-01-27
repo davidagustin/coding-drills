@@ -1071,7 +1071,7 @@ function PracticeBrowser({ onBack }: PracticeBrowserProps) {
                   <Link
                     key={problem.id}
                     href={`/regex/${problem.id}`}
-                    className="group bg-zinc-900 rounded-xl border border-zinc-800 p-4 hover:border-emerald-500/50 hover:bg-zinc-800/50 transition-all duration-200"
+                    className="group bg-zinc-900 rounded-xl border border-zinc-800 p-4 hover:border-emerald-500/50 hover:bg-zinc-800/50 transition-all duration-200 cursor-pointer"
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-sm font-medium text-zinc-100 group-hover:text-emerald-400 transition-colors line-clamp-1">

@@ -446,7 +446,7 @@ export default function Home() {
                   href="/interview"
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500
                              text-white font-semibold text-lg transition-all duration-200
-                             shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105"
+                             shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105 cursor-pointer"
                 >
                   <span>Start Interview</span>
                   <svg
@@ -515,7 +515,7 @@ export default function Home() {
                   href="/regex"
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500
                              text-white font-semibold text-lg transition-all duration-200
-                             shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"
+                             shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 cursor-pointer"
                 >
                   <span>Start Training</span>
                   <svg

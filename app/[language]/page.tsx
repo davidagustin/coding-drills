@@ -236,7 +236,7 @@ function ModeCard({ href, icon, title, description, buttonText, config, badge }:
   return (
     <Link
       href={href}
-      className={`group relative overflow-hidden rounded-2xl border ${config.borderColor} bg-zinc-900/50 p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${config.hoverBg}`}
+      className={`group relative overflow-hidden rounded-2xl border ${config.borderColor} bg-zinc-900/50 p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${config.hoverBg} cursor-pointer`}
     >
       {/* Gradient overlay on hover */}
       <div
