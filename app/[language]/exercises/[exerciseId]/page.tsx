@@ -558,16 +558,18 @@ export default function ExerciseDetailPage() {
               </ul>
             </div>
 
-            {/* AI Tutor */}
-            <ExerciseTutor
-              exercise={exercise}
-              hasVisualization={getVisualization(exerciseId) !== null}
-              languageConfig={{
-                color: config.color,
-                bgColor: config.bgColor,
-                borderColor: config.borderColor,
-              }}
-            />
+            {/* AI Tutor (Learn mode only) */}
+            {viewMode === 'learn' && (
+              <ExerciseTutor
+                exercise={exercise}
+                hasVisualization={getVisualization(exerciseId) !== null}
+                languageConfig={{
+                  color: config.color,
+                  bgColor: config.bgColor,
+                  borderColor: config.borderColor,
+                }}
+              />
+            )}
 
             {/* Code Editor / Display */}
             <div
