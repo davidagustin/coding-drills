@@ -3169,6 +3169,7 @@ function createUnionFind(size: number): UnionFind {
       'Slice from that index to end',
     ],
     concepts: ['dropWhile', 'findIndex', 'slice', 'predicate'],
+    explanation: `This exercise teaches you to skip leading elements that satisfy a condition and return the rest of the array. DropWhile is the complement of takeWhile and is a standard functional programming utility found in libraries like Lodash and languages like Haskell.\n\nThe key insight is using findIndex with a negated predicate to locate the first element that breaks the condition. Once that boundary index is found, a single slice from that position to the end produces the result in O(n) time. The edge case where every element passes the predicate is handled by returning an empty array when findIndex returns -1.\n\nDropWhile is used in parsing (skipping whitespace or comment lines), data processing (ignoring header rows), stream processing (discarding initial buffering data), and any pipeline where you need to trim a prefix that matches some pattern before processing the meaningful tail.`,
   },
   {
     id: 'ts-sample-array',
@@ -3215,6 +3216,7 @@ function createUnionFind(size: number): UnionFind {
       'Swap random element into position i',
     ],
     concepts: ['sample', 'shuffle', 'Fisher-Yates', 'random'],
+    explanation: `This exercise teaches you to select n random elements from an array without replacement using the partial Fisher-Yates shuffle. Unlike naive approaches that might pick duplicates, this algorithm guarantees each element is selected at most once while maintaining uniform randomness.\n\nThe key technique is a partial Fisher-Yates shuffle: instead of shuffling the entire array, you only shuffle the first k positions. For each position, you pick a random index from the unshuffled portion, swap it into place, and advance. This runs in O(k) time rather than O(n), making it efficient when you need a small sample from a large dataset. The copy of the original array ensures the input is not mutated.\n\nRandom sampling without replacement is fundamental to A/B testing (randomly assigning users to groups), statistical sampling, Monte Carlo simulations, shuffling card decks, generating random test data, and any scenario where you need an unbiased random subset from a population.`,
   },
   {
     id: 'ts-compact',
@@ -3251,6 +3253,7 @@ function createUnionFind(size: number): UnionFind {
       'Simple one-liner!',
     ],
     concepts: ['compact', 'filter', 'Boolean', 'truthy'],
+    explanation: `This exercise teaches you to remove all falsy values from an array using JavaScript's Boolean constructor as a filter predicate. Understanding truthiness and falsiness is essential for writing clean, defensive JavaScript and TypeScript code.\n\nThe key insight is that the Boolean constructor, when passed as a callback to filter, coerces each value to true or false. JavaScript defines exactly six falsy values: false, 0, "" (empty string), null, undefined, and NaN. Passing Boolean directly as the predicate is a concise one-liner that runs in O(n) time and produces a clean array with only truthy values.\n\nCompact is a common data-cleaning utility used to sanitize API responses (removing null fields), filter incomplete form inputs, prepare arrays for rendering (excluding missing data), and cleaning up results from operations like regex matching where some entries may be undefined.`,
   },
   {
     id: 'ts-count-by',
@@ -3292,6 +3295,7 @@ function createUnionFind(size: number): UnionFind {
       'Like frequency counter with custom key extractor',
     ],
     concepts: ['countBy', 'reduce', 'aggregation', 'key function'],
+    explanation: `This exercise teaches you to build a frequency map by applying a custom key function to each element and tallying occurrences per derived key. CountBy is the counting variant of groupBy, producing a summary instead of grouped collections.\n\nThe key technique uses reduce to iterate through the array, applying keyFn to each element to derive a grouping key, then incrementing the tally for that key. The expression (tallies[key] || 0) + 1 handles the first occurrence of each key by defaulting to zero. This runs in O(n) time with O(k) space where k is the number of unique keys.\n\nCountBy is widely used for building histograms, analytics dashboards (counting events by category), summarizing survey responses, generating frequency distributions in data science, and any aggregation pipeline where you need to know how many items fall into each bucket.`,
   },
   {
     id: 'ts-sum-by',
@@ -3328,6 +3332,7 @@ function createUnionFind(size: number): UnionFind {
       'Initial value is 0',
     ],
     concepts: ['sumBy', 'reduce', 'aggregation', 'extraction'],
+    explanation: `This exercise teaches you to compute a total by extracting numeric values from complex objects using a value function and reducing them to a sum. SumBy decouples the extraction logic from the aggregation, making it reusable across different data shapes.\n\nThe key technique uses reduce with an initial accumulator of 0, applying valueFn to each item and adding the result to the running total. This single-pass approach runs in O(n) time with O(1) space, and the higher-order function design means the same sumBy utility works for any object shape as long as you provide the right extractor.\n\nSumBy is a staple of data processing: summing order totals from invoice objects, calculating aggregate scores from player records, computing portfolio values from stock holdings, tallying hours from timesheet entries, and any report that needs a scalar total derived from a collection of structured records.`,
   },
   {
     id: 'ts-max-by',
@@ -3368,6 +3373,7 @@ function createUnionFind(size: number): UnionFind {
       'Reduce without initial value starts with first element',
     ],
     concepts: ['maxBy', 'reduce', 'comparison', 'key function'],
+    explanation: `This exercise teaches you to find the element with the highest value according to a custom key function, returning the original element rather than the computed key. MaxBy is essential for selection queries on collections of complex objects.\n\nThe key technique uses reduce without an initial value, so the first element becomes the initial candidate. For each subsequent element, keyFn is applied to both the candidate and the current max, and the element with the greater key replaces the current max. This linear scan runs in O(n) time with O(1) space and returns undefined for empty arrays as a safe edge case.\n\nMaxBy is used to find top performers (highest score), most recent records (latest timestamp), largest files, best-performing stocks, and any scenario where you need the single best element from a collection ranked by a computed metric. It is a core utility in libraries like Lodash and Ramda.`,
   },
   {
     id: 'ts-trie-search',
@@ -3434,6 +3440,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Only return true if node has $ marker',
     ],
     concepts: ['trie', 'search', 'prefix tree', 'word lookup'],
+    explanation: `This exercise teaches you to search for a complete word in a trie (prefix tree) by traversing character by character and checking for a terminal marker. The critical distinction between prefix matching and word matching is what makes trie search useful for dictionary validation.\n\nThe key technique walks down the trie one character at a time, following child node references. If any character is missing from the current node's children, the word does not exist and the function returns false immediately. After traversing all characters, the function checks for the $ terminal marker, which distinguishes complete words from mere prefixes. This runs in O(m) time where m is the word length, with O(1) additional space.\n\nTrie search is the foundation of spell checkers, autocomplete systems, IP routing tables, DNA sequence matching, and dictionary validation. The trie structure enables prefix-based operations that hash maps cannot efficiently provide, such as finding all words that share a common prefix.`,
   },
   {
     id: 'ts-topological-sort',
@@ -3506,6 +3513,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'When processing a node, decrement in-degree of its neighbors',
     ],
     concepts: ['topological sort', 'DAG', 'Kahn algorithm', 'dependency order'],
+    explanation: `This exercise teaches you to linearly order the nodes of a directed acyclic graph (DAG) so that every edge points from an earlier node to a later one. Topological sorting is fundamental to any system that must resolve dependencies before execution.\n\nThe key algorithm is Kahn's BFS-based approach: first compute in-degree counts for every node (how many edges point into it), then seed a queue with all nodes having in-degree zero (no dependencies). Processing a node means adding it to the sorted output and decrementing the in-degree of its neighbors. When a neighbor's in-degree drops to zero, it enters the queue. This runs in O(V + E) time where V is the number of nodes and E is the number of edges.\n\nTopological sort is used in build systems (Make, Webpack) to determine compilation order, package managers (npm, apt) to resolve installation dependencies, course scheduling (prerequisites), task pipelines, and spreadsheet cell evaluation. It is a frequently asked graph algorithm in technical interviews.`,
   },
 
   // ========== ITERATION PATTERNS (Two Pointers, Sliding Window, Prefix, etc.) ==========
@@ -3553,6 +3561,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'If arr[left] !== arr[right], it is not a palindrome',
     ],
     concepts: ['two pointers', 'converging pointers', 'palindrome check'],
+    explanation: `This exercise teaches the converging two-pointer technique, where pointers start at opposite ends of an array and move toward each other. Palindrome checking is the classic application of this pattern and one of the first problems that demonstrates the elegance of two-pointer algorithms.\n\nThe key insight is that a palindrome reads the same forwards and backwards, so you only need to compare mirror positions: index 0 with index n-1, index 1 with index n-2, and so on. The two pointers converge in at most n/2 comparisons, giving O(n) time with O(1) space. The moment any pair mismatches, you can short-circuit and return false immediately.\n\nConverging two-pointer patterns appear in palindrome validation (strings and linked lists), the container-with-most-water problem, two-sum on sorted arrays, reversing arrays in-place, and partitioning problems. Mastering this technique is a prerequisite for many interview questions involving sorted or symmetric data.`,
   },
   {
     id: 'ts-two-pointer-remove-dupes',
@@ -3600,6 +3609,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'The answer is slow + 1',
     ],
     concepts: ['two pointers', 'same-direction pointers', 'in-place modification'],
+    explanation: `This exercise teaches the same-direction two-pointer technique (also called the read-write pointer pattern) for removing duplicates from a sorted array in-place. The slow pointer marks the write position while the fast pointer scans ahead to find new unique values.\n\nThe key insight is that in a sorted array, duplicates are always adjacent. The writePos pointer anchors the last unique value written, and the scanner advances through the array. Whenever scanner finds a value different from the one at writePos, we advance writePos and copy the new value in. This achieves O(n) time with O(1) space, modifying the array in-place without any additional allocation.\n\nThis read-write pointer pattern is used extensively in in-place array manipulation: removing specific values, compacting sparse arrays, deduplication, and implementing the partition step of quicksort. It is one of the most frequently asked LeetCode-style interview problems and forms the basis for understanding more complex in-place algorithms.`,
   },
   {
     id: 'ts-sliding-window-max-sum',
@@ -3648,6 +3658,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Track the maximum sum seen during the slide',
     ],
     concepts: ['sliding window', 'fixed window', 'running sum'],
+    explanation: `This exercise teaches the fixed-size sliding window technique, which maintains a running sum of exactly k consecutive elements and updates it incrementally as the window slides across the array. This avoids recomputing the sum from scratch at each position.\n\nThe key insight is that when the window slides one position right, only two values change: the new element entering on the right is added and the old element leaving on the left is subtracted. This reduces the per-step work from O(k) to O(1), making the overall algorithm O(n) instead of O(n*k). The initial window sum is computed in a single pass over the first k elements.\n\nFixed-size sliding windows are used for moving averages in financial data, signal smoothing, network throughput monitoring, finding maximum or minimum subarrays of fixed length, and any scenario where you need to evaluate a metric over a rolling window of constant size.`,
   },
   {
     id: 'ts-sliding-window-min-subarray',
@@ -3704,6 +3715,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Track the minimum length found',
     ],
     concepts: ['sliding window', 'variable window', 'shrink-expand pattern'],
+    explanation: `This exercise teaches the variable-size sliding window technique, where the window expands by advancing the right pointer and contracts by advancing the left pointer. The goal is to find the shortest subarray whose sum meets or exceeds the target.\n\nThe key insight is the expand-and-shrink strategy: the right pointer extends the window to grow the sum, and once the sum reaches the target, the left pointer contracts the window to find the minimal valid length. Because both pointers only move forward and each element is added and removed at most once, the total work is O(n) despite the nested while loop. The algorithm tracks the shortest valid window seen so far and returns 0 if no valid window exists.\n\nVariable-size sliding windows are used for minimum window substring problems, finding the longest subarray with at most k distinct values, bandwidth allocation, resource budgeting, and any optimization where the window size is not fixed but determined by a constraint on the window's aggregate value.`,
   },
   {
     id: 'ts-prefix-sum',
@@ -3741,6 +3753,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
     ],
     hints: ['Start with prefix[0] = arr[0]', 'Each subsequent element is prefix[i-1] + arr[i]'],
     concepts: ['prefix sum', 'cumulative sum', 'range query preprocessing'],
+    explanation: `This exercise teaches you to build a prefix sum array where each element stores the cumulative sum of all elements from index 0 up to that position. Prefix sums are a preprocessing technique that enables O(1) range sum queries on static arrays.\n\nThe key insight is that each prefix sum builds on the previous one: cumulativeSums[i] = cumulativeSums[i-1] + numbers[i]. This recurrence avoids re-summing from the start for every position, completing in a single O(n) pass. Once built, the sum of any subarray [l, r] can be computed as prefixSum[r] - prefixSum[l-1] in constant time.\n\nPrefix sums are one of the most versatile preprocessing techniques in algorithm design. They are used in range query data structures, image processing (summed-area tables for fast region averaging), database query optimization, competitive programming, and as a building block for more advanced techniques like difference arrays and 2D prefix sums.`,
   },
   {
     id: 'ts-prefix-product',
@@ -3789,6 +3802,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Use a running product variable in each pass',
     ],
     concepts: ['prefix product', 'suffix product', 'two-pass technique'],
+    explanation: `This exercise teaches the two-pass prefix/suffix product technique to compute the product of all elements except the current one without using division. This elegant approach handles zeros gracefully, which division-based solutions cannot.\n\nThe key insight is decomposing result[i] into two parts: the product of all elements to the left of i (prefix product) and the product of all elements to the right of i (suffix product). The first left-to-right pass fills result[i] with the running left product, and the second right-to-left pass multiplies each result[i] by the running right product. Both passes are O(n), and only O(1) extra space is used beyond the output array.\n\nThis technique is one of the most commonly asked array manipulation problems in interviews. It demonstrates the power of multi-pass algorithms and the prefix/suffix decomposition pattern, which generalizes to problems like trapping rain water, stock buy/sell problems, and any scenario requiring knowledge of both left and right context at each position.`,
   },
   {
     id: 'ts-difference-array',
@@ -3865,6 +3879,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Compute prefix sum of the difference array to get the final result',
     ],
     concepts: ['difference array', 'range update', 'prefix sum'],
+    explanation: `This exercise teaches the difference array technique for applying multiple range updates efficiently. Instead of modifying every element in a range (O(range) per update), each update is encoded as two point operations at the boundaries, making each update O(1).\n\nThe key insight is that adding a value to a range [start, end] can be encoded by incrementing differenceArray[start] and decrementing differenceArray[end+1]. When you compute the prefix sum of the difference array, these boundary markers propagate correctly to produce the final values. The total cost is O(u) for u updates plus O(n) for the reconstruction pass, compared to O(u * range) for the naive approach.\n\nDifference arrays are used in competitive programming for range increment queries, flight booking problems, event scheduling (counting overlapping intervals), traffic analysis, and any batch-update scenario where multiple ranges are modified before reading the final state. This technique is the inverse of prefix sums and they are frequently used together.`,
   },
   {
     id: 'ts-kadanes-algorithm',
@@ -3911,6 +3926,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Update maxSum = max(maxSum, currentSum)',
     ],
     concepts: ['Kadane algorithm', 'maximum subarray', 'dynamic programming'],
+    explanation: `This exercise teaches Kadane's algorithm, which finds the contiguous subarray with the largest sum in O(n) time. It is one of the most elegant examples of dynamic programming and a top interview question.\n\nThe key insight is the decision at each position: either extend the current subarray by adding the current element, or start a new subarray beginning at the current element. This is captured by currentSum = Math.max(numbers[idx], currentSum + numbers[idx]). If the running sum would be less than the element alone, it is better to discard the accumulated sum and start fresh. The global maximum is tracked separately to capture the best subarray seen so far.\n\nKadane's algorithm is used in financial analysis (maximum profit over a time period), image processing (maximum brightness region in 1D), bioinformatics (maximum scoring subsequence), and as a subroutine in the 2D maximum subarray problem. It is a fundamental example of how local optimal decisions lead to a global optimum.`,
   },
   {
     id: 'ts-dutch-national-flag',
@@ -3979,6 +3995,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'If arr[mid] > pivot, swap with high and decrement high (do not advance mid)',
     ],
     concepts: ['three-way partition', 'Dutch national flag', 'single-pass partition'],
+    explanation: `This exercise teaches the Dutch National Flag algorithm, which partitions an array into three sections (less than, equal to, greater than a pivot) in a single O(n) pass. Designed by Edsger Dijkstra, this is the optimal three-way partition technique.\n\nThe key insight is maintaining three pointers: lowBoundary (end of the less-than section), scanner (current element), and highBoundary (start of the greater-than section). When scanner finds an element less than the pivot, it swaps with lowBoundary and both advance. When it finds an element greater than the pivot, it swaps with highBoundary (which decrements), but scanner does not advance because the swapped-in element has not been examined yet. Equal elements simply cause scanner to advance.\n\nThis algorithm is used as the partition step in three-way quicksort (which handles many duplicate keys efficiently), the sort-colors problem (LeetCode 75), segregating data into categories, and any classification problem with exactly three groups. It is a staple of algorithm interviews.`,
   },
   {
     id: 'ts-fast-slow-pointers',
@@ -4031,6 +4048,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'If slow === fast, a cycle exists',
     ],
     concepts: ['Floyd cycle detection', 'fast-slow pointers', 'tortoise and hare'],
+    explanation: `This exercise teaches Floyd's tortoise and hare algorithm for detecting cycles in a linked structure using O(1) space. The slow pointer moves one step at a time while the fast pointer moves two steps; if they ever meet, a cycle exists.\n\nThe key insight is that if a cycle exists, the fast pointer will eventually lap the slow pointer inside the cycle, guaranteeing they meet. If no cycle exists, the fast pointer reaches the end (indicated by -1) first. The array-based simulation uses nextIndices[i] as the "next pointer" for node i. This achieves O(n) time with O(1) space, avoiding the need for a visited set.\n\nFloyd's algorithm is used for cycle detection in linked lists, finding duplicate numbers in arrays (the "find the duplicate" problem), detecting infinite loops in state machines, and computing cycle lengths. The fast-slow pointer technique also finds the middle of a linked list (when fast reaches the end, slow is at the midpoint) and is a fundamental pattern in pointer-based interview problems.`,
   },
   {
     id: 'ts-merge-in-place',
@@ -4101,6 +4119,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'After p1 is exhausted, copy remaining arr2 elements',
     ],
     concepts: ['merge sorted', 'in-place merge', 'reverse iteration'],
+    explanation: `This exercise teaches the backward-fill merge technique for combining two sorted arrays when the first array has enough trailing space to hold both. Working from the end avoids overwriting unprocessed elements, eliminating the need for extra allocation.\n\nThe key insight is starting from the rightmost write position (targetLen + sourceLen - 1) and comparing the largest remaining elements from both arrays. The larger value is placed at the write position, and the corresponding pointer decrements. After the main loop, any remaining source elements are copied. Target elements never need copying since they are already in place. The entire merge runs in O(m+n) time with O(1) extra space.\n\nThis in-place merge technique is used in merge sort's merge step when memory is constrained, merging sorted database partitions, combining sorted log files, and is a classic LeetCode problem (Merge Sorted Array, problem 88). The backward-fill strategy is a powerful general technique for in-place array operations where output overlaps with input.`,
   },
   {
     id: 'ts-zigzag-iteration',
@@ -4180,6 +4199,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Odd rows: iterate j from length-1 down to 0',
     ],
     concepts: ['zigzag traversal', 'matrix iteration', 'alternating direction'],
+    explanation: `This exercise teaches zigzag (boustrophedon) matrix traversal, where even-indexed rows are read left-to-right and odd-indexed rows are read right-to-left. This alternating-direction pattern produces a snake-like path through the matrix.\n\nThe key technique is checking the row index parity: even rows iterate columns in ascending order (0 to length-1), while odd rows iterate in descending order (length-1 down to 0). The outer loop processes rows sequentially, and the inner loop direction flips based on rowIndex % 2. This visits every element exactly once in O(m*n) time.\n\nZigzag traversal is used in JPEG image encoding (zigzag scanning of DCT coefficients), matrix serialization for cache-friendly memory access, printing matrices in snake order, and problems that require alternating-direction level-order tree traversal. It is a straightforward but important 2D iteration pattern.`,
   },
   {
     id: 'ts-spiral-matrix',
@@ -4271,6 +4291,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Check boundaries before traversing bottom row and left column to avoid double-counting',
     ],
     concepts: ['spiral traversal', 'boundary shrinking', 'matrix traversal'],
+    explanation: `This exercise teaches spiral matrix traversal, where you read elements in a clockwise spiral from the outer perimeter inward. This problem tests your ability to manage four dynamic boundaries and handle edge cases when rows or columns collapse.\n\nThe key technique maintains four boundary variables: topRow, bottomRow, leftCol, and rightCol. Each iteration traverses one full perimeter layer in four steps: right along the top, down along the right, left along the bottom, and up along the left. After each side is traversed, the corresponding boundary shrinks inward. Guard conditions (topRow <= bottomRow and leftCol <= rightCol) prevent double-counting when the remaining region is a single row or column.\n\nSpiral traversal is a popular interview problem that appears in matrix serialization, generating spiral-order coordinates for image processing, filling matrices in spiral order, and game board traversal. The boundary-shrinking approach is also applicable to problems like rotating matrix layers and peeling onion-style algorithms.`,
   },
   {
     id: 'ts-diagonal-traversal',
@@ -4344,6 +4365,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Walk each diagonal: increment row and decrement col',
     ],
     concepts: ['diagonal traversal', 'matrix iteration', 'anti-diagonal'],
+    explanation: `This exercise teaches anti-diagonal matrix traversal, where elements are grouped and read along diagonals running from top-right to bottom-left. Each diagonal consists of elements where the sum of row and column indices is constant.\n\nThe key insight is that a matrix with m rows and n columns has exactly (m + n - 1) anti-diagonals. For each diagonal index, the algorithm computes a starting cell and walks down-left (incrementing row, decrementing column) until it exits the matrix bounds. The starting position logic handles the transition from diagonals that begin on the top row to those that begin on the rightmost column.\n\nDiagonal traversal is used in JPEG zigzag coefficient ordering, computing diagonal sums for matrix analysis, chess move generation (bishops move diagonally), image processing kernels that operate along diagonal lines, and interview problems requiring non-standard matrix access patterns. Understanding how to map diagonal indices to matrix coordinates is a valuable skill for 2D algorithm design.`,
   },
   {
     id: 'ts-rotate-matrix',
@@ -4435,6 +4457,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'These two steps together produce a 90-degree clockwise rotation',
     ],
     concepts: ['matrix rotation', 'transpose', 'in-place transformation'],
+    explanation: `This exercise teaches in-place 90-degree clockwise matrix rotation using the transpose-then-reverse technique. This two-step approach is more intuitive and less error-prone than the four-way cyclic swap alternative.\n\nThe key insight is that a 90-degree clockwise rotation is equivalent to transposing the matrix (swapping rows and columns across the main diagonal) followed by reversing each row. The transpose step swaps matrix[i][j] with matrix[j][i] for all j > i, and the reversal step mirrors each row. Both steps operate in-place with O(n^2) total time and O(1) extra space for an N x N matrix.\n\nMatrix rotation is used in image processing (rotating photos and sprites), game development (rotating game boards and tetromino pieces), computer graphics transformations, and is one of the most frequently asked matrix manipulation interview problems. The transpose-then-reverse decomposition also teaches you to think about complex transformations as compositions of simpler ones.`,
   },
 
   // ========== SEARCHING ==========
@@ -4483,6 +4506,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Otherwise, search left half: hi = mid',
     ],
     concepts: ['binary search', 'lower bound', 'bisect left'],
+    explanation: `This exercise teaches the lower bound binary search variant (also called bisect-left), which finds the first position where an element is greater than or equal to the target. This is the most fundamental binary search variant and the building block for many other binary search applications.\n\nThe key technique uses a half-open interval [lo, hi) where hi starts at the array length. When the middle element is less than the target, the left boundary moves to mid + 1 (the answer must be to the right). Otherwise, hi moves to mid (mid itself could be the answer). The unsigned right shift (>>> 1) computes the midpoint without integer overflow. The loop terminates when lo equals hi, which is the insertion point.\n\nLower bound is used in C++ STL (std::lower_bound), Python's bisect module (bisect_left), implementing sorted containers, counting elements in ranges (combined with upper bound), finding the first occurrence of a value in a sorted array, and as a subroutine in countless binary search problems.`,
   },
   {
     id: 'ts-upper-bound',
@@ -4529,6 +4553,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Otherwise, search left: hi = mid',
     ],
     concepts: ['binary search', 'upper bound', 'bisect right'],
+    explanation: `This exercise teaches the upper bound binary search variant (also called bisect-right), which finds the first position where an element is strictly greater than the target. Combined with lower bound, it forms a complete toolkit for range queries on sorted data.\n\nThe key difference from lower bound is the comparison operator: upper bound uses <= instead of <. When the middle element is less than or equal to the target, the left boundary moves to mid + 1 (we want to go past all copies of the target). Otherwise, hi moves to mid. This finds the first element strictly greater than the target, or the array length if all elements are less than or equal to target.\n\nUpper bound combined with lower bound enables O(log n) counting of exact occurrences (count = upperBound - lowerBound), defining value ranges in sorted data, implementing multiset operations, and range queries in databases. It is provided as std::upper_bound in C++ and bisect_right in Python's bisect module.`,
   },
   {
     id: 'ts-binary-search-sqrt',
@@ -4581,6 +4606,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'When the loop ends, hi is the answer',
     ],
     concepts: ['binary search on answer', 'integer square root', 'search space reduction'],
+    explanation: `This exercise teaches the "binary search on the answer" paradigm, where instead of searching for a target in an array, you search over a range of possible answers for the one that satisfies a condition. Finding the integer square root is the classic introduction to this technique.\n\nThe key insight is that the answer space [1, n/2] is monotonic: if mid*mid <= n, then all values smaller than mid also satisfy this condition. Binary search exploits this monotonicity to find the largest mid whose square does not exceed n. When mid*mid equals n exactly, the answer is found immediately. Otherwise, when the loop ends, hi holds the largest integer whose square is at most n. This runs in O(log n) time with O(1) space.\n\nBinary search on the answer generalizes to many optimization problems: finding the minimum capacity to ship packages within d days, splitting arrays to minimize the largest sum, allocating minimum pages across students, and any problem where you can binary search over possible answer values and check feasibility. It is one of the most powerful algorithmic paradigms in competitive programming.`,
   },
   {
     id: 'ts-search-rotated',
@@ -4637,6 +4663,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Otherwise the right half must be sorted; check that range',
     ],
     concepts: ['binary search', 'rotated array', 'sorted subarray detection'],
+    explanation: `This exercise teaches modified binary search on a rotated sorted array, where the array was originally sorted but then rotated at an unknown pivot point. The challenge is determining which half of the array is sorted and whether the target lies within that sorted half.\n\nThe key insight is that at any midpoint in a rotated sorted array, at least one half (left or right) must be properly sorted. By comparing numbers[lo] with numbers[mid], you determine which half is sorted. If the left half is sorted and the target falls within its range, you search there; otherwise, you search the right half. This decision logic maintains O(log n) time by eliminating half the search space at each step.\n\nSearching in rotated sorted arrays is one of the most popular binary search interview problems. It tests your ability to adapt binary search to non-trivially ordered data. Variations include finding the minimum in a rotated array, handling duplicates, and searching rotated arrays with different rotation points. The pattern of identifying the sorted portion applies broadly to any binary search on partially ordered data.`,
   },
   {
     id: 'ts-quick-select',
@@ -4695,6 +4722,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'If pivotIndex < k-1, search the right side; otherwise search the left',
     ],
     concepts: ['quickselect', 'partition', 'order statistics', 'selection algorithm'],
+    explanation: `This exercise teaches QuickSelect, a partition-based selection algorithm that finds the kth smallest element in O(n) average time without fully sorting the array. It is derived from quicksort but only recurses into the partition containing the target index.\n\nThe key technique is the Lomuto partition: choose the last element as pivot, scan through the array placing elements <= pivot before a store index, and finally swap the pivot into its sorted position. After partitioning, if the pivot lands at the target index (k-1), the answer is found. If the pivot index is less than the target, the kth element must be in the right partition; otherwise it is in the left. By only processing one side, average time drops from O(n log n) to O(n).\n\nQuickSelect is used for finding medians, percentile calculations in statistics, implementing the nth_element function in C++ STL, top-k element problems, and any scenario where you need a specific order statistic without the overhead of a full sort. It is the basis of the O(n) median-of-medians algorithm.`,
   },
   {
     id: 'ts-exponential-search',
@@ -4747,6 +4775,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Handle the edge case where arr[0] is the target',
     ],
     concepts: ['exponential search', 'range finding', 'binary search'],
+    explanation: `This exercise teaches exponential search, a two-phase algorithm that first finds a range containing the target by doubling a boundary, then performs binary search within that range. It is optimal when the target is near the beginning of a large or unbounded sorted dataset.\n\nThe key technique starts with a bound of 1 and doubles it (1, 2, 4, 8, ...) until the element at the bound exceeds the target or the bound passes the array end. The target must lie between bound/2 and min(bound, length-1), so binary search is applied within this narrowed range. The range-finding phase takes O(log i) where i is the target's position, and the subsequent binary search also takes O(log i), giving O(log i) total time.\n\nExponential search is ideal for unbounded or infinite sorted lists (like searching in a stream), very large arrays where the target is expected near the front, and situations where you do not know the array size upfront. It outperforms standard binary search when the target position is small relative to the total size and is used in some implementations of Java's Arrays.binarySearch for large arrays.`,
   },
   {
     id: 'ts-find-peak',
@@ -4794,6 +4823,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'This converges to a peak because we always move toward a higher neighbor',
     ],
     concepts: ['binary search', 'peak finding', 'search by comparison'],
+    explanation: `This exercise teaches peak finding using binary search, demonstrating that binary search applies beyond sorted arrays to any structure with a monotonic decision criterion. A peak element is strictly greater than its neighbors, and binary search can find one in O(log n) time.\n\nThe key insight is that by comparing numbers[mid] with numbers[mid + 1], you determine which direction leads to a peak. If the right neighbor is larger, a peak must exist to the right (the values are increasing). Otherwise, mid itself could be a peak or there is one to its left. By always moving toward the higher neighbor, the algorithm converges to a peak, because the boundary conditions treat elements outside the array as negative infinity.\n\nPeak finding is used in signal processing (detecting peaks in waveforms), optimization (finding local maxima), terrain analysis, and as an interview problem that tests whether candidates understand binary search as a general divide-and-conquer tool rather than just a sorted-array technique.`,
   },
   {
     id: 'ts-search-2d-matrix',
@@ -4879,6 +4909,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'If current value < target, move down (row++)',
     ],
     concepts: ['2D search', 'staircase search', 'sorted matrix'],
+    explanation: `This exercise teaches the staircase search algorithm for a row-sorted and column-sorted matrix, starting from the top-right corner. Each comparison eliminates either an entire row or an entire column, achieving O(m+n) time.\n\nThe key insight is that the top-right corner has a unique property: everything to its left is smaller and everything below is larger. If the current value exceeds the target, the target cannot be in the current column, so you move left. If the current value is less than the target, the target cannot be in the current row, so you move down. This staircase path visits at most m + n cells before finding the target or exhausting the matrix, with O(1) space.\n\nThis algorithm is used for searching in Young tableaux, database range queries on doubly-sorted indices, and is a classic interview problem (LeetCode 240). It demonstrates how structural properties of 2D data can be exploited for efficient search. The bottom-left corner works equally well as a starting point with the opposite movement rules.`,
   },
   {
     id: 'ts-count-occurrences',
@@ -4935,6 +4966,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Count = upper - lower',
     ],
     concepts: ['binary search', 'lower bound', 'upper bound', 'counting'],
+    explanation: `This exercise teaches how to count the number of occurrences of a target in a sorted array using two binary searches: lower bound (first index >= target) and upper bound (first index > target). The count is simply the difference between these two positions.\n\nThe key technique runs two O(log n) binary searches to bracket the target's range. Lower bound uses strict < to find the first occurrence (it converges to the leftmost position where the target could be). Upper bound uses <= to find the position just past the last occurrence. Both use the half-open interval [lo, hi) pattern. The difference upperBound - lowerBound gives the exact count, and if the target does not exist, both return the same value, yielding a count of zero.\n\nThis technique is used for range counting in sorted databases, frequency analysis in log files, counting elements in a given range (by running lower bound on the range start and upper bound on the range end), and competitive programming problems that require efficient counting in sorted sequences. It avoids the O(n) cost of linear scanning.`,
   },
   {
     id: 'ts-min-in-rotated',
@@ -4981,6 +5013,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'This converges lo and hi to the minimum element',
     ],
     concepts: ['binary search', 'rotated array', 'minimum finding'],
+    explanation: `This exercise teaches how to find the minimum element in a rotated sorted array using binary search in O(log n) time. The minimum is located at the rotation point where the array wraps from its largest value back to its smallest.\n\nThe key insight is comparing numbers[mid] with numbers[hi] to determine which half contains the rotation point. If numbers[mid] > numbers[hi], the rotation point (and minimum) must be in the right half, so lo = mid + 1. Otherwise, the minimum is at mid or in the left half, so hi = mid. This converges lo and hi to the minimum element. The comparison against hi (rather than lo) correctly handles the non-rotated case where the array is already sorted.\n\nFinding the minimum in a rotated sorted array is a foundational problem for all rotated-array interview questions, including searching and counting in rotated arrays. It appears in system design (finding the oldest entry in a circular buffer), database index recovery, and as a building block for more complex rotated-array algorithms. Variations include handling duplicate elements, which requires worst-case O(n) time.`,
   },
 
   // ========== DATA STRUCTURES ==========
@@ -5035,6 +5068,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Swap with parent if current is larger, and move up',
     ],
     concepts: ['max heap', 'bubble up', 'heap insert', 'priority queue'],
+    explanation: `This exercise teaches insertion into a max heap stored as an array, followed by the bubble-up (sift-up) operation to restore the heap property. Understanding heap insertion is essential for implementing priority queues and heap-based algorithms.\n\nThe key technique pushes the new value to the end of the array, then repeatedly compares it with its parent at Math.floor((currentIndex - 1) / 2). If the new value exceeds its parent, they swap and the index moves up. This process continues until the value finds a parent that is larger or it reaches the root. The bubble-up traverses at most O(log n) levels of the tree, making insertion O(log n) with O(1) extra space.\n\nMax heap insertion is the foundation of priority queue operations, heap sort (which inserts all elements then repeatedly extracts the max), scheduling algorithms (highest-priority job first), Huffman encoding (though that uses a min heap), and any system that needs efficient access to the maximum element in a dynamic collection.`,
   },
   {
     id: 'ts-heap-extract-min',
@@ -5104,6 +5138,7 @@ function trieSearch(root: TrieNode, word: string): boolean {
       'Swap with the smaller child if it is smaller than the current node',
     ],
     concepts: ['min heap', 'sift down', 'extract min', 'heapify'],
+    explanation: `This exercise teaches extracting the minimum element from a min heap and restoring the heap property using the sift-down (bubble-down) operation. Extract-min is the complementary operation to insertion and together they make heaps useful as priority queues.\n\nThe key technique saves the root (minimum) value, replaces the root with the last element in the array, then sift-down: compare the current node with its left child (2i+1) and right child (2i+2), swap with the smaller child if it is less than the current node, and repeat until the heap property is restored or a leaf is reached. This traverses at most O(log n) levels, maintaining the heap invariant efficiently.\n\nExtract-min is the core operation powering Dijkstra's shortest path algorithm, A* search, Prim's minimum spanning tree, the merge-k-sorted-lists problem, job scheduling with priorities, and event-driven simulations. Understanding sift-down is also essential for the heapify operation that builds a heap from an unsorted array in O(n) time.`,
   },
   {
     id: 'ts-lru-cache',
@@ -5208,6 +5243,7 @@ function createLRUCache(capacity: number): LRUCache {
       'On put: if over capacity, delete the first key via cache.keys().next().value',
     ],
     concepts: ['LRU cache', 'Map ordering', 'cache eviction'],
+    explanation: `This exercise teaches LRU (Least Recently Used) cache implementation using JavaScript's Map, which preserves insertion order. The trick is that deleting and re-inserting a key moves it to the end, making the first key always the least recently used.\n\nThe key technique for get() is: if the key exists, delete it and re-insert it (moving it to the most-recent position) before returning the value. For put(), if the key already exists it is deleted first, then the key-value pair is inserted at the end. If the cache exceeds capacity, the first key (least recently used) is evicted via cache.keys().next().value. Both get and put are O(1) amortized because Map provides O(1) insertion, deletion, and lookup.\n\nLRU cache is one of the most frequently asked system design and data structure interview problems (LeetCode 146). It is used in operating system page replacement, CDN content caching, database query caches, browser caches, DNS resolution caches, and any system that needs bounded memory with intelligent eviction. The traditional implementation uses a doubly-linked list with a hash map, but JavaScript's Map provides the same guarantees more concisely.`,
   },
   {
     id: 'ts-linked-list-reverse',
@@ -5281,6 +5317,7 @@ function reverseLinkedList(head: ListNode | null): ListNode | null {
       'Move prev to current, current to next',
     ],
     concepts: ['linked list', 'reversal', 'pointer manipulation'],
+    explanation: `This exercise teaches the fundamental technique of reversing a singly linked list in-place using three pointers: previous, current, and next. The algorithm iteratively walks through the list, saving the next node before redirecting each node's pointer backward, achieving O(n) time with O(1) space.\n\nThe key insight is the three-pointer dance: at each step you must save currentNode.next before overwriting it, because once you redirect the pointer to previousNode, the forward link is lost. After the loop, previousNode holds the new head because currentNode has moved past the last node to null. This pattern of "save, reverse, advance" is the building block for many linked list manipulations.\n\nLinked list reversal is one of the most frequently asked interview questions (LeetCode 206) and appears as a subroutine in problems like palindrome checking, adding numbers stored as lists, reversing sublists (k-group reversal), and reorder-list problems. It is also used in functional programming to implement efficient list operations and in undo systems that need to reverse a sequence of operations.`,
   },
   {
     id: 'ts-circular-buffer',
@@ -5379,6 +5416,7 @@ function createCircularBuffer<T>(capacity: number): CircularBuffer<T> {
       'head points to the front, tail points to the next write position',
     ],
     concepts: ['circular buffer', 'ring buffer', 'modular arithmetic', 'fixed-size queue'],
+    explanation: `This exercise teaches circular buffer (ring buffer) implementation using a fixed-size array with head and tail pointers that wrap around via modular arithmetic. All operations (enqueue, dequeue, peek, size) run in O(1) time with O(capacity) space, making this one of the most efficient queue implementations.\n\nThe key insight is using modulo to wrap indices: tailIndex = (tailIndex + 1) % capacity causes the tail to jump back to index 0 after reaching the end of the array, reusing slots freed by dequeue. A separate elementCount variable distinguishes between "full" and "empty" states, which would otherwise be ambiguous since both have head === tail. This avoids the alternative approach of wasting one slot to detect fullness.\n\nCircular buffers are used extensively in systems programming: audio processing pipelines use them to buffer samples between producer and consumer threads, network stacks use them for packet buffering, embedded systems rely on them for UART communication buffers, and operating systems use them for keyboard input queues. They are also the basis for bounded producer-consumer queues in concurrent programming.`,
   },
   {
     id: 'ts-monotonic-stack',
@@ -5434,6 +5472,7 @@ function createCircularBuffer<T>(capacity: number): CircularBuffer<T> {
       'For each popped index, arr[i] is the next greater element',
     ],
     concepts: ['monotonic stack', 'next greater element', 'stack-based iteration'],
+    explanation: `This exercise teaches the monotonic stack pattern for solving "next greater element" problems in O(n) time. The stack maintains indices in decreasing order of their values, and each element is pushed and popped at most once, giving linear overall complexity despite the nested while loop.\n\nThe key insight is that the stack holds indices of elements still "waiting" for their next greater element. When a new element arrives that is larger than the top of the stack, it resolves all waiting elements whose values are smaller. By popping and assigning in a while loop, each index gets resolved exactly once. Elements remaining on the stack after processing have no greater element to their right, which is why the result array is pre-filled with -1.\n\nThe monotonic stack pattern is one of the most versatile algorithmic techniques in interviews and competitive programming. It directly solves the daily temperatures problem (LeetCode 739), stock span problem, largest rectangle in histogram (LeetCode 84), and trapping rain water. Variations include monotonic increasing stacks for "next smaller element" and circular arrays where you iterate twice. The pattern also appears in computational geometry for convex hull algorithms.`,
   },
   {
     id: 'ts-sliding-window-max',
@@ -5504,6 +5543,7 @@ function createCircularBuffer<T>(capacity: number): CircularBuffer<T> {
       'Remove from the back while the value at back index <= new value',
     ],
     concepts: ['monotonic deque', 'sliding window maximum', 'double-ended queue'],
+    explanation: `This exercise teaches the monotonic deque technique for finding the maximum value in every sliding window of size k in O(n) time. The deque stores indices in decreasing order of their values, so the front always holds the index of the current window's maximum, enabling O(1) max queries per window position.\n\nThe key insight involves two maintenance operations on the deque: (1) remove indices from the front that have slid out of the current window (index < currentIndex - k + 1), and (2) remove indices from the back whose values are less than or equal to the incoming element, since they can never be the maximum while the new element exists in the window. Each element enters and exits the deque at most once, yielding O(n) amortized time despite the while loops. Results are recorded once the first full window is formed (currentIndex >= k - 1).\n\nSliding window maximum (LeetCode 239) is a classic hard problem that appears in streaming data analysis, real-time signal processing, and financial time-series max/min tracking. The same deque technique applies to sliding window minimum, and combines with other techniques for problems like shortest subarray with sum at least k. It is also fundamental in competitive programming for optimizing DP transitions over sliding ranges.`,
   },
   {
     id: 'ts-min-stack',
@@ -5590,6 +5630,7 @@ function createMinStack(): MinStack {
       'Pop from minStack when the popped value equals the current minimum',
     ],
     concepts: ['min stack', 'auxiliary stack', 'O(1) minimum'],
+    explanation: `This exercise teaches how to design a stack that supports O(1) push, pop, top, and getMin operations by maintaining an auxiliary stack that tracks the running minimum. The minTracker stack mirrors push/pop operations but only records values that establish a new minimum, so its top always reflects the current minimum.\n\nThe key insight is the conditional push strategy: a value is pushed to minTracker only when it is less than or equal to the current minimum (or when minTracker is empty). This means minTracker may be shorter than dataStack, but its top always correctly reflects the minimum of all elements currently in dataStack. On pop, if the removed value equals the minTracker top, that minimum entry is also popped, revealing the previous minimum underneath. The "less than or equal" check (not just "less than") is critical for handling duplicate minimums correctly.\n\nMin stack (LeetCode 155) is one of the most popular data structure design interview questions. It demonstrates the principle of trading space for time, a recurring theme in algorithm design. The pattern extends to max stacks, min queues (using two min stacks to build a queue), and online median tracking. In production systems, similar auxiliary tracking is used in monitoring dashboards to maintain running statistics over streaming data.`,
   },
   {
     id: 'ts-two-stack-queue',
@@ -5675,6 +5716,7 @@ function createQueueFromStacks<T>(): Queue<T> {
       'Lazy transfer gives amortized O(1) per operation',
     ],
     concepts: ['queue', 'two stacks', 'amortized complexity', 'lazy transfer'],
+    explanation: `This exercise teaches how to implement a FIFO queue using two LIFO stacks, demonstrating that combining simple data structures can simulate more complex ones. The inputStack receives all enqueue operations, while the outputStack serves dequeue and peek operations, with a lazy transfer that reverses element order.\n\nThe key insight is the lazy transfer strategy: elements are only moved from inputStack to outputStack when outputStack is empty and a dequeue or peek is requested. Popping all elements from inputStack and pushing them onto outputStack reverses their order, producing FIFO ordering. Because each element is transferred at most once, every operation runs in O(1) amortized time even though individual transfers may be O(n). This amortized analysis is a powerful concept that appears throughout algorithm design.\n\nQueue from two stacks is a classic interview question (LeetCode 232) that tests understanding of both stack/queue semantics and amortized complexity analysis. The reverse problem (stack from two queues) is its complement. In practice, this pattern appears in message broker implementations, task scheduling systems, and functional programming languages like Haskell where persistent queues are built from two lists. It also forms the basis for more complex structures like min-queues.`,
   },
 
   // ========== DATA STRUCTURES (continued) ==========
@@ -5789,6 +5831,7 @@ function createQueueFromStacks<T>(): Queue<T> {
       'When ranks are equal, pick one as root and increment its rank',
     ],
     concepts: ['union-find', 'path compression', 'union by rank', 'disjoint sets'],
+    explanation: `This exercise teaches Union-Find (Disjoint Set Union) with both path compression and union by rank, achieving near-constant O(alpha(n)) amortized time per operation where alpha is the inverse Ackermann function. Path compression flattens the tree during find by making every traversed node point directly to the root, while union by rank attaches the shorter tree under the taller one to keep trees balanced.\n\nThe key insight is how the two optimizations complement each other: path compression alone gives O(log n) amortized time, and union by rank alone gives O(log n) worst case, but together they achieve the theoretically optimal O(alpha(n)) which is effectively constant for all practical input sizes (alpha(n) <= 4 for n up to 10^80). When ranks are equal during union, one root is chosen arbitrarily and its rank is incremented, reflecting that the tree height has grown by one. The final pass compresses all paths so the returned parent array shows direct root pointers.\n\nUnion-Find is one of the most important data structures in computer science. It is essential for Kruskal's minimum spanning tree algorithm, detecting cycles in undirected graphs, network connectivity queries, image segmentation (connected components), and equivalence class partitioning. In competitive programming, it appears in problems involving dynamic connectivity, offline queries, and graph component tracking. Understanding the rank optimization is also a gateway to understanding balanced tree principles.`,
   },
   {
     id: 'ts-weighted-graph',
@@ -5878,6 +5921,7 @@ function buildWeightedGraph(size: number, edges: [number, number, number][]): Re
       'For undirected, also push { node: u, weight: w } to graph[v]',
     ],
     concepts: ['adjacency list', 'weighted graph', 'graph representation'],
+    explanation: `This exercise teaches how to build a weighted adjacency list from an edge list, the standard graph representation for weighted graph algorithms. Each node maps to an array of {node, weight} objects, and since the graph is undirected, each edge is added in both directions, resulting in O(V + E) time and space.\n\nThe key insight is the representation choice: adjacency lists are preferred over adjacency matrices for sparse graphs (E << V^2) because they use O(V + E) space versus O(V^2). The {node, weight} object pairs store both the neighbor and the edge weight, which is necessary for algorithms that consider edge costs. Initializing empty arrays for all nodes before processing edges ensures that isolated nodes (with no edges) are still represented in the graph structure.\n\nWeighted adjacency lists are the required input format for nearly all practical graph algorithms: Dijkstra's shortest path, Bellman-Ford for negative weights, Prim's and Kruskal's MST algorithms, A* search, and network flow algorithms like Ford-Fulkerson. In production, this representation is used in routing systems, social network analysis, dependency resolution, and geographic information systems. Understanding how to build this representation from raw edge data is the first step toward implementing any graph algorithm.`,
   },
   {
     id: 'ts-fenwick-tree-update',
@@ -5931,6 +5975,7 @@ function buildWeightedGraph(size: number, edges: [number, number, number][]): Re
       'Keep adding delta and moving up: i += i & (-i)',
     ],
     concepts: ['Fenwick tree', 'binary indexed tree', 'point update', 'bit manipulation'],
+    explanation: `This exercise teaches the point update operation for a Fenwick Tree (Binary Indexed Tree), which propagates a delta value to all responsible ancestor nodes in O(log n) time. The Fenwick tree is 1-indexed, and each node at index i is responsible for a range of elements determined by the lowest set bit of i.\n\nThe key insight is the bit manipulation trick i += i & (-i), which adds the lowest set bit of i to itself, effectively moving to the next "responsible ancestor" in the implicit tree structure. For example, updating index 3 (binary 011) adds the lowest set bit (1) to get 4 (100), then adds 4 to get 8 (1000), and so on. This traversal visits exactly O(log n) nodes, each of which stores a partial sum covering a power-of-2 range. The expression i & (-i) works because -i is the two's complement of i, which flips all bits and adds 1, isolating the rightmost 1-bit.\n\nFenwick trees are a favorite in competitive programming because they provide O(log n) point updates and prefix sum queries with minimal code and memory overhead compared to segment trees. They are used for counting inversions, range frequency queries, dynamic cumulative frequency tables, and as building blocks for 2D range queries. In production systems, they appear in real-time analytics dashboards and leaderboard ranking systems.`,
   },
   {
     id: 'ts-fenwick-tree-query',
@@ -5985,6 +6030,7 @@ function buildWeightedGraph(size: number, edges: [number, number, number][]): Re
       'Remove lowest set bit: i -= i & (-i)',
     ],
     concepts: ['Fenwick tree', 'prefix sum', 'binary indexed tree', 'bit manipulation'],
+    explanation: `This exercise teaches the prefix sum query operation for a Fenwick Tree, complementing the point update to create a complete data structure for dynamic range queries. The query accumulates partial sums by traversing from index i down to 0, stripping the lowest set bit at each step, achieving O(log n) time.\n\nThe key insight is the bit manipulation trick i -= i & (-i), which removes the lowest set bit from i, effectively moving to the "previous sibling" in the implicit tree. Each node tree[i] stores the sum of a specific range of elements, and by accumulating these partial sums while descending, you reconstruct the prefix sum from index 1 to i. For example, querying index 7 (111) visits nodes 7 (range of 1), 6 (range of 2), and 4 (range of 4), covering all 7 elements. The number of steps equals the number of set bits in i, which is at most O(log n).\n\nFenwick tree queries pair with point updates to support dynamic prefix sums where the underlying array changes frequently. Range sum queries [l, r] are computed as query(r) - query(l-1). This combination is used in online judge systems for ranking, in databases for histogram maintenance, in computational geometry for counting points in ranges, and in competitive programming for problems involving dynamic order statistics and inversions counting.`,
   },
   {
     id: 'ts-hash-map-chaining',
@@ -6139,6 +6185,11 @@ function hashMapChaining(capacity: number, operations: HashOperation[]): number[
       'For remove: find index with findIndex, splice if found',
     ],
     concepts: ['hash map', 'separate chaining', 'collision resolution', 'hash function'],
+    explanation: `This exercise teaches you how hash maps work internally by implementing separate chaining, the most common collision resolution strategy. You build a fixed-size bucket array where each bucket holds a chain (array) of key-value pairs, and you implement the three core operations: put, get, and remove.
+
+The key insight is how collisions are handled. A hash function maps keys to bucket indices, but multiple keys can hash to the same index. Separate chaining resolves this by storing all colliding pairs in the same bucket as a linked list (or array). Put scans the chain for an existing key to update, or appends a new pair. Get scans the chain linearly. Remove finds and splices out the matching pair. Average-case operations are O(1) when load factor is low, but degrade to O(n) if all keys collide into one bucket.
+
+Understanding hash map internals is crucial for interviews where you need to explain why Map and Set offer O(1) lookups, and for choosing appropriate hash table sizes. This knowledge also applies to database indexing, caching layers, and any system where fast key-value access is needed.`,
   },
   {
     id: 'ts-deque',
@@ -6230,6 +6281,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Check deque.length > 0 before removing',
     ],
     concepts: ['deque', 'double-ended queue', 'unshift', 'shift'],
+    explanation: `This exercise teaches you to implement a double-ended queue (deque) that supports push and pop from both the front and back. A deque generalizes both stacks (LIFO) and queues (FIFO) into a single data structure, giving you flexibility in how elements are added and removed.
+
+The key technique is using JavaScript array methods: unshift and shift for front operations, push and pop for back operations. The sentinel value -1 is returned when attempting to pop from an empty deque, a common pattern for signaling underflow. While this array-based implementation has O(n) front operations due to shifting, it demonstrates the deque interface clearly.
+
+Deques are used in sliding window maximum algorithms (maintaining a monotonic deque), BFS optimizations like 0-1 BFS, implementing work-stealing schedulers in parallel computing, and supporting undo/redo systems where operations can be added or removed from either end of a history buffer.`,
   },
 
   // ========== RECURSION ==========
@@ -6278,6 +6334,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Odd case: reduce to even by multiplying out one base',
     ],
     concepts: ['binary exponentiation', 'divide and conquer', 'recursion', 'logarithmic time'],
+    explanation: `This exercise teaches binary exponentiation, a technique that computes base^exp in O(log n) multiplications instead of the naive O(n) approach. By halving the exponent at each step, you dramatically reduce the number of operations needed for large exponents.
+
+The key insight is the mathematical identity: if exp is even, base^exp = (base^(exp/2))^2, so you compute the half-power once and square it. If exp is odd, you factor out one base to make it even: base^exp = base * base^(exp-1). The base case is exp = 0, returning 1. Computing half once and squaring avoids the exponential blowup that would occur if you recursed on both halves separately.
+
+Binary exponentiation is a fundamental building block in cryptography (modular exponentiation in RSA), matrix exponentiation for solving linear recurrences, competitive programming problems involving large powers with modular arithmetic, and any computation where you need to raise a number to a very large power efficiently.`,
   },
   {
     id: 'ts-flood-fill',
@@ -6386,6 +6447,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Recurse in all 4 directions after setting current cell',
     ],
     concepts: ['flood fill', 'DFS', '2D grid', 'recursion', 'connected components'],
+    explanation: `This exercise teaches the flood fill algorithm, which colors all connected cells of the same color starting from a given position, exactly like the paint bucket tool in image editors. It demonstrates recursive DFS on a 2D grid with implicit visited tracking through color mutation.
+
+The key technique is 4-directional DFS from the starting cell. Before recursing, you check boundary conditions and whether the current cell matches the original color. Painting the cell with the new color before recursing serves double duty: it applies the fill and marks the cell as visited, preventing infinite loops. The early exit when origColor equals newColor is critical to avoid infinite recursion on an already-correct grid.
+
+Flood fill is used extensively in image processing (magic wand selection, bucket fill), game development (map exploration, fog-of-war clearing), and as the basis for connected component labeling in computer vision. The same DFS grid pattern powers island-counting problems, maze solving, and region detection algorithms.`,
   },
   {
     id: 'ts-generate-parens',
@@ -6461,6 +6527,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Can add ")" only if close count < open count (ensures validity)',
     ],
     concepts: ['backtracking', 'parentheses generation', 'constraint recursion', 'string building'],
+    explanation: `This exercise teaches you to generate all valid combinations of n pairs of parentheses using constraint-based backtracking. Rather than generating all possible strings and filtering, you build only valid strings by enforcing two rules at each step: you can add an opening parenthesis only if you have not used all n, and a closing parenthesis only if it would not create an invalid prefix.
+
+The key algorithmic insight is the pruning strategy. By tracking the count of open and close parentheses placed so far, you prune entire subtrees of invalid combinations. The constraint close < open ensures every prefix has at least as many opening as closing parentheses, which is the definition of a valid parenthesization. This produces exactly the Catalan number C(n) results, avoiding the exponential waste of generate-then-filter.
+
+This problem appears frequently in interviews and connects to several important concepts: Catalan numbers (the count of valid parenthesizations), expression generation in compilers, Dyck paths in combinatorics, and the general backtracking template with constraint propagation that applies to problems like N-Queens and Sudoku solving.`,
   },
   {
     id: 'ts-tower-of-hanoi',
@@ -6538,6 +6609,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Total moves = 2^n - 1',
     ],
     concepts: ['Tower of Hanoi', 'recursion', 'divide and conquer', 'classic problem'],
+    explanation: `This exercise teaches the Tower of Hanoi, one of the most famous recursion problems in computer science. You move n disks from a source peg to a target peg using an auxiliary peg, with the constraint that no larger disk may be placed on top of a smaller one.
+
+The key insight is the three-step divide-and-conquer decomposition: move the top n-1 disks to the auxiliary peg (clearing the way), move the largest disk directly to the target, then move the n-1 disks from auxiliary to target. This recursive structure produces exactly 2^n - 1 moves, which is provably optimal. The elegance lies in how the roles of the three pegs rotate at each recursive level.
+
+Tower of Hanoi teaches fundamental recursive thinking and demonstrates exponential time complexity in an intuitive way. It appears in algorithm courses to illustrate recursion depth, in backup rotation schemes (grandfather-father-son), and as a benchmark for understanding how recursive decomposition breaks a seemingly complex problem into identical smaller subproblems.`,
   },
   {
     id: 'ts-deep-clone',
@@ -6605,6 +6681,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Recursively clone each property or element',
     ],
     concepts: ['deep clone', 'recursion', 'type checking', 'object traversal'],
+    explanation: `This exercise teaches you to recursively deep clone a nested structure of objects and arrays, producing a fully independent copy with no shared references. This is a fundamental utility that prevents mutation bugs when working with complex nested data.
+
+The key technique is structural recursion with type dispatch. You check three cases: primitives and null (returned directly since they are immutable), arrays (map each element through deepClone recursively), and plain objects (iterate own properties and clone each value recursively). The recursion naturally handles arbitrary nesting depth, visiting every leaf value in O(n) time where n is the total number of nested elements.
+
+Deep cloning is essential in React and Redux for immutable state management, where mutating state objects directly causes subtle rendering bugs. It is also used in undo/redo systems (snapshot state), configuration management (isolating default configs from runtime modifications), and testing (creating independent copies of test fixtures). Understanding when and how to deep clone versus shallow clone is a critical JavaScript skill.`,
   },
   {
     id: 'ts-subset-sum-exists',
@@ -6656,6 +6737,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Prune: if currentSum > target, return false early',
     ],
     concepts: ['backtracking', 'subset sum', 'include/exclude pattern', 'pruning'],
+    explanation: `This exercise teaches the subset sum problem using backtracking with pruning, a classic NP-complete problem that asks whether any subset of numbers adds up to a target value. You explore a binary decision tree where each element is either included or excluded.
+
+The key algorithmic insight is the include/exclude pattern combined with early termination. At each index, you branch into two paths: one that adds the current element to the running sum and one that skips it. The pruning condition currentSum > target cuts off branches that have already exceeded the target, which can dramatically reduce the search space for arrays of positive integers. The worst-case time remains O(2^n) but practical performance is much better with pruning.
+
+Subset sum is foundational to many optimization and decision problems: the 0/1 knapsack problem, partition problems (can you split an array into two equal-sum halves), job scheduling with deadlines, and resource allocation. The backtracking template used here, with include/exclude branching and pruning, is reusable across a wide range of constraint-satisfaction problems.`,
   },
   {
     id: 'ts-n-queens-count',
@@ -6731,6 +6817,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Backtrack: add to sets before recursing, remove after returning',
     ],
     concepts: ['N-Queens', 'backtracking', 'constraint propagation', 'diagonal tracking'],
+    explanation: `This exercise teaches the N-Queens problem, the quintessential backtracking problem that asks you to count all ways to place N queens on an NxN chessboard such that no two queens attack each other. Queens attack along rows, columns, and both diagonals.
+
+The key technique is row-by-row placement with constraint tracking using three Sets. Since you place exactly one queen per row, rows are automatically safe. You track occupied columns with one Set, and the two diagonal directions with two more Sets using the identities row-col (for one diagonal) and row+col (for the other). Before placing a queen, you check all three Sets in O(1) time. After recursing, you remove the queen from all Sets to backtrack and try the next column.
+
+N-Queens is a cornerstone of constraint satisfaction and systematic search. It demonstrates how clever constraint propagation (Sets for columns and diagonals) avoids the need to scan the entire board for conflicts. The same techniques apply to Sudoku solvers, graph coloring, job scheduling, and any problem where you need to explore arrangements subject to mutual exclusion constraints.`,
   },
   {
     id: 'ts-word-search-grid',
@@ -6839,6 +6930,11 @@ function dequeOperations(operations: DequeOperation[]): number[] {
       'Restore the cell value after recursion (backtrack)',
     ],
     concepts: ['word search', 'DFS', 'backtracking', '2D grid', 'visited marking'],
+    explanation: `This exercise teaches the word search problem, where you determine whether a word exists in a 2D character grid by following adjacent cells (up, down, left, right) without reusing any cell. It combines grid traversal with path-based backtracking.
+
+The key technique is DFS with in-place visited marking. For each cell that matches the current character of the word, you temporarily replace it with a sentinel character to prevent revisiting, then recurse in all four directions for the next character. After recursion returns, you restore the original character so other search paths can use that cell. This backtracking approach explores O(4^L) paths per starting cell, where L is the word length, but early termination on character mismatches keeps it fast in practice.
+
+Word search is a classic medium-difficulty interview problem that tests your ability to combine DFS, backtracking, and 2D grid manipulation. The pattern of marking visited cells, recursing, and then unmarking applies to any path-finding problem on a grid, including maze solving, finding connected paths with specific properties, and Boggle-style word games.`,
   },
   {
     id: 'ts-flatten-nested-recursive',
@@ -6921,6 +7017,11 @@ function flattenDeep(items: NestedArray): number[] {
       'If not, push the value to the result',
     ],
     concepts: ['flatten', 'recursion', 'Array.isArray', 'nested structures'],
+    explanation: `This exercise teaches you to flatten arbitrarily nested arrays into a single flat array using recursion. This is the same operation as Array.prototype.flat(Infinity) and demonstrates how recursive decomposition naturally handles structures of unknown depth.
+
+The key technique is a recursive helper that iterates over each element: if the element is an array (checked with Array.isArray), it recurses into that sub-array; if it is a primitive value, it pushes it directly to the result. The recursion depth equals the maximum nesting level, and every element is visited exactly once for O(n) total time.
+
+Flattening nested structures is a common task in data processing: normalizing hierarchical API responses, processing ASTs (abstract syntax trees) in compilers, traversing file system directory structures, and implementing utility libraries like Lodash's _.flattenDeep. Understanding this recursive pattern also prepares you for tree traversals, since a nested array is essentially a tree structure.`,
   },
   {
     id: 'ts-string-perms-dedup',
@@ -7002,6 +7103,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Skip if chars[i] === chars[i-1] and !used[i-1] (dedup trick)',
     ],
     concepts: ['permutations', 'deduplication', 'backtracking', 'sorting trick'],
+    explanation: `This exercise teaches you to generate all unique permutations of a string that may contain duplicate characters. The naive approach of generating all permutations and deduplicating with a Set is wasteful; instead, you use a sorting-based skip rule to avoid generating duplicates in the first place.
+
+The key insight is the deduplication trick: sort the characters first so duplicates are adjacent, then during backtracking, skip a character if it equals the previous character and the previous was not used in the current branch. This ensures that among identical characters, only the first unused one is placed at each position, preventing duplicate permutations. The used[] boolean array tracks which characters are currently part of the permutation being built.
+
+This dedup-while-generating pattern is essential for combinatorial problems with duplicate elements. It applies to generating unique combinations, unique subsets, and any enumeration where input elements may repeat. In practice, it is used for anagram generation, scheduling with identical tasks, and any problem where you need all distinct arrangements of a multiset.`,
   },
 
   // ========== COMBINATORICS ==========
@@ -7088,6 +7194,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Still start from current index to maintain non-decreasing order',
     ],
     concepts: ['combinations with repetition', 'multiset', 'backtracking'],
+    explanation: `This exercise teaches you to generate combinations with repetition (multiset combinations), where each element can be selected multiple times. Unlike standard combinations where each element is used at most once, this variant models scenarios like choosing coins from denominations or distributing identical resources.
+
+The key difference from standard combination generation is a single line change: you recurse with the same start index i instead of i+1, allowing the same element to be picked again. This produces combinations in non-decreasing order, which naturally avoids duplicates. The total number of combinations is C(n+k-1, k) where n is the number of distinct elements and k is the selection size, following the stars and bars formula from combinatorics.
+
+Combinations with repetition appear in coin denomination problems, distributing identical objects into distinct bins, polynomial coefficient enumeration, and resource allocation where items are reusable. The backtracking template, with the start-index trick controlling whether repetition is allowed, is one of the most versatile patterns in combinatorial algorithm design.`,
   },
   {
     id: 'ts-next-permutation',
@@ -7149,6 +7260,11 @@ function flattenDeep(items: NestedArray): number[] {
       'After swapping, reverse the suffix to get the smallest next permutation',
     ],
     concepts: ['next permutation', 'lexicographic order', 'in-place algorithm'],
+    explanation: `This exercise teaches the next lexicographic permutation algorithm, which transforms an array into its immediately next permutation in sorted order, or wraps to the smallest permutation if already at the largest. This is the same algorithm used by C++ STL's next_permutation.
+
+The key insight is a three-step process: first, scan from right to find the rightmost position where arr[i] < arr[i+1] (the pivot), which identifies where the current permutation can be incremented. Second, find the rightmost element larger than the pivot and swap them. Third, reverse the suffix after the pivot position to get the smallest possible suffix, completing the minimal increment. If no pivot exists, the array is in descending order (largest permutation), so reversing the entire array wraps to the smallest.
+
+This O(n) time, O(1) space algorithm is essential for iterating through all permutations without storing them all in memory. It is used in systematic enumeration, generating test cases in lexicographic order, and competitive programming where you need to find the next arrangement. Understanding this algorithm also deepens your grasp of lexicographic ordering and in-place array manipulation.`,
   },
   {
     id: 'ts-permutation-rank',
@@ -7217,6 +7333,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Add 1 at the end for 1-based ranking',
     ],
     concepts: ['permutation rank', 'factorial number system', 'lexicographic ordering'],
+    explanation: `This exercise teaches you to compute the 1-based lexicographic rank of a permutation among all permutations of its elements. The rank tells you exactly where a given arrangement falls in the sorted list of all permutations, without needing to enumerate them all.
+
+The key technique is the factorial number system (factoradic). For each position i from left to right, you count how many of the remaining unused elements are smaller than the current element. Each such element represents factorial(remaining positions) permutations that would come before the current one. Summing these contributions gives a 0-based rank, and adding 1 converts to 1-based. The algorithm runs in O(n^2) time due to the nested counting loop.
+
+Permutation ranking is used for encoding permutations as compact integers (useful in hashing and compression), generating the kth permutation directly (the inverse operation), and in combinatorial mathematics. It connects to Lehmer codes and the factoradic number system, which provide a bijection between permutations and integers that is foundational to combinatorial algorithms.`,
   },
   {
     id: 'ts-derangements-count',
@@ -7274,6 +7395,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Update them in a loop from 2 to n',
     ],
     concepts: ['derangements', 'recurrence relation', 'dynamic programming', 'combinatorics'],
+    explanation: `This exercise teaches you to count derangements, which are permutations where no element remains in its original position. The classic example is the secret Santa problem: how many ways can n people exchange gifts so that nobody draws their own name?
+
+The key insight is the recurrence relation D(n) = (n-1) * (D(n-1) + D(n-2)). The reasoning is: element 1 can go to any of n-1 positions. If element 1 goes to position k and element k goes to position 1 (a direct swap), the remaining n-2 elements form a derangement, giving D(n-2). If element k does not go to position 1, element k has n-2 forbidden positions (its own plus position 1), which is equivalent to a derangement of n-1 elements, giving D(n-1). The iterative bottom-up computation uses O(n) time and O(1) space with two rolling variables.
+
+Derangements appear in probability theory (the probability of no fixed point approaches 1/e), hat-check problems, secret Santa assignments, and as a component in inclusion-exclusion counting. Understanding this recurrence also reinforces how combinatorial identities translate into efficient iterative algorithms.`,
   },
   {
     id: 'ts-pascals-triangle-row',
@@ -7331,6 +7457,11 @@ function flattenDeep(items: NestedArray): number[] {
       'First and last elements of every row are 1',
     ],
     concepts: ["Pascal's triangle", 'binomial coefficients', 'iterative construction'],
+    explanation: `This exercise teaches you to generate a specific row of Pascal's triangle using iterative construction. Each element in row n is a binomial coefficient C(n, k), and the triangle encodes the coefficients used in polynomial expansion, probability distributions, and combinatorial identities.
+
+The key technique is building each row from the previous one: the first and last elements are always 1, and each middle element equals the sum of the two elements directly above it in the previous row. Starting from row [1], you iteratively compute each subsequent row until reaching the target. This runs in O(n^2) time overall and uses O(n) space for the current row.
+
+Pascal's triangle is fundamental to combinatorics and probability. The binomial coefficients it encodes appear in the binomial theorem, calculating probabilities in binomial distributions, computing combinations C(n,k) without factorials, and deriving combinatorial identities like the hockey stick theorem. This iterative construction avoids the numerical overflow issues that arise from computing large factorials directly.`,
   },
   {
     id: 'ts-catalan-number',
@@ -7383,6 +7514,11 @@ function flattenDeep(items: NestedArray): number[] {
       'dp[j] * dp[i-1-j] counts structures with j elements on the left',
     ],
     concepts: ['Catalan numbers', 'dynamic programming', 'combinatorial counting'],
+    explanation: `This exercise teaches you to compute the nth Catalan number using dynamic programming. Catalan numbers are one of the most important sequences in combinatorics, counting a remarkable variety of structures including balanced parenthesizations, distinct binary search trees, polygon triangulations, and Dyck paths.
+
+The key technique is the DP recurrence C(n) = sum of C(i) * C(n-1-i) for i from 0 to n-1. This recurrence captures the idea of splitting a structure into a left part of size i and a right part of size n-1-i, with the split point being the root or first element. Each split contributes C(i) * C(n-1-i) structures, and summing over all possible splits gives C(n). The bottom-up computation fills the table in O(n^2) time with O(n) space.
+
+Catalan numbers appear frequently in interviews: counting valid parenthesizations (the generate-parens problem), counting structurally distinct BSTs with n nodes, counting ways to triangulate a polygon, counting monotonic lattice paths, and counting full binary trees. Recognizing when a problem reduces to Catalan numbers is a powerful interview skill.`,
   },
   {
     id: 'ts-power-set-bitmask',
@@ -7454,6 +7590,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Each mask from 0 to 2^n-1 uniquely represents one subset',
     ],
     concepts: ['power set', 'bitmask', 'bit manipulation', 'subset enumeration'],
+    explanation: `This exercise teaches you to generate the power set (all subsets) of an array using bitmask enumeration, an elegant alternative to recursive subset generation. Each integer from 0 to 2^n-1 uniquely encodes one subset, where bit j being set means element j is included.
+
+The key technique is iterating through all integers from 0 to 2^n-1 and using bitwise AND to decode each mask into a subset. The expression mask & (1 << j) checks whether bit j is set, and if so, the jth element is included in the current subset. The shift operator 1 << n computes 2^n efficiently. This produces all 2^n subsets in O(n * 2^n) total time with no recursion needed.
+
+Bitmask enumeration is widely used in competitive programming for its simplicity and efficiency. It applies to subset-based DP (traveling salesman problem, set cover), constraint satisfaction where states are subsets of elements, feature selection in machine learning, and any brute-force approach that needs to iterate over all possible subsets. The technique extends naturally to bitmask DP where dp[mask] stores the optimal solution for the subset encoded by mask.`,
   },
   {
     id: 'ts-gray-code',
@@ -7503,6 +7644,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Total values = 2^n = 1 << n',
     ],
     concepts: ['Gray code', 'bit manipulation', 'XOR', 'binary sequences'],
+    explanation: `This exercise teaches you to generate the n-bit Gray code sequence, where each consecutive pair of values differs by exactly one bit. The formula gray(i) = i XOR (i >> 1) converts standard binary counting into Gray code in a single operation per value.
+
+The key insight is the XOR-with-right-shift formula. When you XOR a number with itself shifted right by one, the result is a reflected binary code where adjacent values differ by exactly one bit. This works because right-shifting by 1 and XORing effectively cancels out the cascading bit changes that occur in standard binary counting, leaving only single-bit transitions between consecutive values.
+
+Gray codes have practical applications in rotary encoders (where only one sensor changes state per step, preventing ambiguous readings), Karnaugh maps for logic minimization, error correction in digital communications, and generating Hamiltonian paths on hypercube graphs. They also appear in the Towers of Hanoi solution and in ordering binary representations for analog-to-digital conversion.`,
   },
   {
     id: 'ts-josephus',
@@ -7549,6 +7695,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Formula: (previous + k) % current_count',
     ],
     concepts: ['Josephus problem', 'modular arithmetic', 'iterative formula', 'circle elimination'],
+    explanation: `This exercise teaches the Josephus problem, a classic mathematical puzzle about circular elimination. N people stand in a circle and every kth person is eliminated until one survivor remains. The iterative formula J(n,k) = (J(n-1,k) + k) % n builds the answer in O(n) time and O(1) space.
+
+The key insight is the recurrence relation. When one person is eliminated from a circle of n, the problem reduces to a circle of n-1 with a shifted starting position. The formula (previous + k) % circleSize accounts for this shift: adding k adjusts for the elimination step, and the modulo wraps around the circle. Building up from the base case J(1) = 0 (one person always survives) to J(n) avoids the need for simulation.
+
+The Josephus problem appears in combinatorics courses, competitive programming, and as a historical puzzle. Its mathematical structure demonstrates how a seemingly complex simulation (circular linked list with repeated deletions) reduces to a simple O(n) formula. Variants with different step sizes, multiple eliminations per round, or weighted positions extend the core idea to scheduling and resource allocation problems.`,
   },
   {
     id: 'ts-count-inversions',
@@ -7624,6 +7775,11 @@ function flattenDeep(items: NestedArray): number[] {
       'Recursively count inversions in both halves plus cross-inversions in merge',
     ],
     concepts: ['inversions', 'merge sort', 'divide and conquer', 'counting'],
+    explanation: `This exercise teaches you to count inversions in an array using a modified merge sort. An inversion is a pair (i, j) where i < j but arr[i] > arr[j], and the inversion count measures how far an array is from being sorted. The naive O(n^2) approach checks all pairs; merge sort achieves O(n log n).
+
+The key insight is that during the merge step, when you pick an element from the right half because it is smaller than the current left element, that right element forms inversions with all remaining elements in the left half. Since the left half is already sorted, all elements from the current left pointer onward are greater, so you add left.length - leftIndex inversions in one step. This piggybacks counting onto the merge sort structure at no additional asymptotic cost.
+
+Inversion counting is used to measure the similarity between two rankings (Kendall tau distance), analyze sorting algorithm performance (insertion sort does exactly one swap per inversion), detect how shuffled a dataset is, and in collaborative filtering for recommendation systems. The technique of augmenting divide-and-conquer algorithms with counting is a powerful pattern that also applies to counting smaller elements to the right and range queries.`,
   },
 
   // ========== TRAVERSAL ==========
@@ -7712,6 +7868,11 @@ function preorderIterative(root: TreeNode<number> | null): number[] {
       'Process (visit) the node immediately after popping',
     ],
     concepts: ['preorder traversal', 'iterative DFS', 'explicit stack'],
+    explanation: `This exercise teaches you to perform preorder traversal of a binary tree iteratively using an explicit stack, rather than relying on recursion. Preorder visits nodes in root-left-right order and is one of the three fundamental depth-first traversal orders.
+
+The key technique is simulating the recursive call stack with an array. You push the root onto the stack, then in a loop: pop a node, visit it (record its value), then push its right child before its left child. Because the stack is LIFO, pushing right before left ensures the left subtree is processed first, matching preorder semantics. This produces identical output to the recursive version but avoids stack overflow on deeply nested trees.
+
+Iterative tree traversals are important because they give you explicit control over the traversal state, which is necessary for implementing iterators, handling trees too deep for the call stack, and integrating with frameworks that require non-recursive processing. The explicit stack pattern applies to converting any recursive DFS into an iterative one, a skill frequently tested in interviews.`,
   },
   {
     id: 'ts-postorder-iterative',
@@ -7798,6 +7959,11 @@ function postorderIterative(root: TreeNode<number> | null): number[] {
       'This is much simpler than tracking visited state',
     ],
     concepts: ['postorder traversal', 'iterative DFS', 'reverse trick', 'two-stack method'],
+    explanation: `This exercise teaches iterative postorder traversal of a binary tree, which visits nodes in left-right-root order. Postorder is the most challenging traversal to implement iteratively because the root must be visited after both children, unlike preorder where the root comes first.
+
+The key technique is the reverse trick: instead of directly producing left-right-root order, you build root-right-left order (a modified preorder) and then reverse the result. By pushing the left child before the right child onto the stack, the right child is popped first, producing root-right-left. Reversing this gives left-right-root, which is postorder. This elegant approach avoids the complexity of tracking whether children have been visited.
+
+Postorder traversal is used for deleting trees (children must be freed before parents), evaluating expression trees (operands before operators), computing directory sizes (subdirectories before parent), and in dependency resolution where dependencies must be processed before dependents. Mastering all three iterative traversals, especially postorder, demonstrates strong command of stack-based algorithms.`,
   },
   {
     id: 'ts-zigzag-level-order',
@@ -7905,6 +8071,11 @@ function zigzagLevelOrder(root: TreeNode<number> | null): number[][] {
       'Reverse the level array when going right-to-left',
     ],
     concepts: ['zigzag traversal', 'BFS', 'level order', 'alternating direction'],
+    explanation: `This exercise teaches zigzag (spiral) level-order traversal of a binary tree, where you alternate the direction of traversal at each level: left-to-right, then right-to-left, and so on. It combines standard BFS with a direction toggle.
+
+The key technique is processing the tree level by level using BFS with a queue, where you snapshot the queue size at the start of each level to process exactly that many nodes. After collecting all values for a level, you reverse the array for right-to-left levels. A boolean flag tracks the current direction and is toggled after each level. This runs in O(n) time since each node is visited once and at most reversed once.
+
+Zigzag traversal is a popular interview variation of level-order traversal that tests your understanding of BFS mechanics and your ability to add a simple twist to a standard algorithm. The level-by-level processing pattern (capturing queue size before the inner loop) is reusable for many tree problems: level averages, right-side view, maximum width, and detecting complete binary trees.`,
   },
   {
     id: 'ts-tree-level-widths',
@@ -8000,6 +8171,11 @@ function treeLevelWidths(root: TreeNode<number> | null): number[] {
       'Process exactly levelSize nodes in the inner loop',
     ],
     concepts: ['tree width', 'BFS', 'level order', 'queue'],
+    explanation: `This exercise teaches you to calculate the width (number of nodes) at each level of a binary tree using BFS. The width profile of a tree reveals its shape and is the basis for finding the maximum width, a common interview question.
+
+The key technique is the standard BFS level-processing pattern: before processing each level, you capture the current queue length, which equals the number of nodes at that depth. You push this count to the widths array, then process exactly that many nodes from the queue while enqueuing their children for the next level. This cleanly separates levels without needing depth markers.
+
+Level width analysis is used for finding the maximum width of a tree (the widest level), detecting whether a tree is complete, visualizing tree structure, and load balancing in hierarchical systems. The BFS level-processing template demonstrated here is one of the most reusable patterns in tree algorithms, applicable to any problem that requires per-level information.`,
   },
   {
     id: 'ts-lowest-common-ancestor',
@@ -8103,6 +8279,11 @@ function lowestCommonAncestor(root: TreeNode<number> | null, p: number, q: numbe
       'If both left and right return non-null, current node is LCA',
     ],
     concepts: ['lowest common ancestor', 'recursion', 'tree traversal', 'divide and conquer'],
+    explanation: `This exercise teaches you to find the lowest common ancestor (LCA) of two nodes in a binary tree using recursive post-order traversal. The LCA is the deepest node that is an ancestor of both target nodes, and it is a fundamental building block for tree-based algorithms.
+
+The key insight is the recursive bubble-up strategy. If the current node is null or matches either target, return it immediately. Otherwise, recurse on both subtrees. If both sides return non-null results, the current node is the LCA because the targets are split across its subtrees. If only one side returns non-null, propagate that result upward. This elegant O(n) algorithm visits each node at most once.
+
+LCA is essential for computing distances between nodes in a tree (distance = depth(p) + depth(q) - 2*depth(LCA)), answering path queries, and building more advanced data structures like heavy-light decomposition. It appears frequently in interviews and is used in version control systems (finding the common base commit), phylogenetic analysis, and organizational hierarchy queries.`,
   },
   {
     id: 'ts-tree-diameter',
@@ -8191,6 +8372,11 @@ function treeDiameter(root: TreeNode<number> | null): number {
       'Track global maximum diameter across all nodes',
     ],
     concepts: ['tree diameter', 'height calculation', 'recursion', 'global variable tracking'],
+    explanation: `This exercise teaches you to find the diameter of a binary tree, which is the length of the longest path between any two nodes measured in edges. The path may or may not pass through the root, making this a subtle problem that requires tracking a global maximum.
+
+The key insight is computing height and diameter simultaneously in a single DFS pass. For each node, the path through it equals leftHeight + rightHeight. You update a global maximum diameter with this value, but return 1 + max(leftHeight, rightHeight) as the height for the parent's calculation. This dual-purpose recursion ensures every node is considered as a potential diameter midpoint while maintaining O(n) time complexity.
+
+Tree diameter is used in network design (finding the longest communication path), analyzing tree balance, computing eccentricity of nodes, and as a component in tree center and centroid decomposition algorithms. The pattern of computing one value to return and tracking another as a side effect is common in tree problems like maximum path sum and balanced tree checking.`,
   },
   {
     id: 'ts-serialize-tree',
@@ -8313,6 +8499,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'Deserialize consumes tokens in the same preorder sequence',
     ],
     concepts: ['tree serialization', 'preorder traversal', 'string encoding', 'recursive parsing'],
+    explanation: `This exercise teaches you to serialize a binary tree into a string representation and deserialize it back into the original tree structure. This round-trip encoding uses preorder traversal with null markers to preserve the exact tree topology.
+
+The key technique is using preorder traversal for both operations. During serialization, you visit each node and record its value, using the string "null" as a sentinel for missing children. During deserialization, you split the string by commas and consume tokens in the same preorder sequence: each token either creates a node (and recursively builds its left and right subtrees) or returns null for a sentinel. The shared index variable ensures tokens are consumed in order across recursive calls.
+
+Tree serialization is critical in distributed systems for transmitting tree structures over networks, caching computed trees, persisting tree data to files or databases, and implementing undo/redo for tree editors. It is also a popular interview problem that tests understanding of tree traversal, string processing, and the relationship between a tree's structure and its serialized representation.`,
   },
 
   // ========== MEMOIZATION / DYNAMIC PROGRAMMING ==========
@@ -8372,6 +8563,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'The answer is in the bottom-right cell dp[m][n]',
     ],
     concepts: ['dynamic programming', 'DP table', 'subsequence', 'string comparison'],
+    explanation: `This exercise teaches you to compute the length of the longest common subsequence (LCS) of two strings using bottom-up dynamic programming. A subsequence maintains relative order but does not require contiguity, making LCS more general than longest common substring.
+
+The key technique is building a 2D DP table where dp[i][j] represents the LCS length of the first i characters of string a and the first j characters of string b. When characters match (a[i-1] === b[j-1]), you extend the diagonal value by 1. When they do not match, you take the maximum of excluding one character from either string. This optimal substructure means each cell depends only on three neighbors: left, above, and diagonal.
+
+LCS is the foundation of diff algorithms (git diff, file comparison tools), bioinformatics sequence alignment (DNA/protein matching), plagiarism detection, and edit distance computation. The 2D DP table pattern used here is one of the most common interview patterns, appearing in edit distance, regular expression matching, and interleaving string problems.`,
   },
   {
     id: 'ts-edit-distance',
@@ -8439,6 +8635,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'If characters match, no operation needed: carry dp[i-1][j-1]',
     ],
     concepts: ['edit distance', 'Levenshtein', 'dynamic programming', 'string transformation'],
+    explanation: `This exercise teaches you to compute the minimum edit distance (Levenshtein distance) between two strings, which is the minimum number of single-character insertions, deletions, and substitutions needed to transform one string into the other.
+
+The key technique is a 2D DP table where dp[i][j] represents the minimum edits to transform the first i characters of string a into the first j characters of string b. Base cases handle transforming to or from the empty string (cost equals the string length). For each cell, if characters match, no edit is needed and you carry the diagonal value. Otherwise, you take 1 plus the minimum of three operations: delete (dp[i-1][j]), insert (dp[i][j-1]), or replace (dp[i-1][j-1]).
+
+Edit distance powers spell checkers, auto-correct systems, fuzzy search engines, DNA sequence alignment in bioinformatics, and natural language processing. It is one of the most practical algorithms in computer science, and the DP table pattern is nearly identical to LCS, making it easy to learn both together. Optimized variants use O(n) space with a rolling array.`,
   },
   {
     id: 'ts-coin-change-min',
@@ -8490,6 +8691,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'Start dp[0] = 0, everything else Infinity',
     ],
     concepts: ['coin change', 'dynamic programming', 'unbounded knapsack', 'optimization'],
+    explanation: `This exercise teaches the coin change problem: finding the minimum number of coins needed to make a given amount using unlimited coins of each denomination. This is a classic unbounded knapsack problem that demonstrates optimal substructure in dynamic programming.
+
+The key technique is a 1D DP array where dp[i] represents the minimum number of coins needed to make amount i. Starting from dp[0] = 0 (zero coins for zero amount) and Infinity for all other amounts, you iterate through each amount and try every coin denomination. If using a coin of value c reduces the count (dp[i-c] + 1 < dp[i]), you update dp[i]. The final answer is dp[amount], or -1 if it remains Infinity.
+
+The coin change problem appears frequently in interviews and models real-world scenarios like making change in vending machines, minimizing transaction costs, resource allocation with reusable resources, and any optimization where you can repeatedly use the same type of unit. The 1D DP approach with inner loop over denominations is the standard template for unbounded knapsack variants.`,
   },
   {
     id: 'ts-knapsack-01',
@@ -8553,6 +8759,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'For each cell, choose max of including or excluding current item',
     ],
     concepts: ['0/1 knapsack', 'dynamic programming', 'optimization', 'include/exclude'],
+    explanation: `This exercise teaches the 0/1 knapsack problem, the most canonical dynamic programming optimization problem. Given items with weights and values, you maximize the total value that fits within a weight capacity, where each item can be used at most once.
+
+The key technique is a 2D DP table where dp[i][w] represents the maximum value achievable using the first i items with remaining capacity w. For each item, you make a binary choice: exclude it (carry the value from the row above) or include it (add its value to the best solution that leaves room for its weight). You take the maximum of both options. This builds the solution bottom-up in O(n * capacity) time.
+
+The 0/1 knapsack models countless real-world optimization problems: budget allocation (choosing projects within a budget), cargo loading (maximizing value within weight limits), portfolio optimization (selecting investments), and resource scheduling. The include/exclude decision pattern at each step is the same template used in subset sum, partition problems, and many other combinatorial optimization problems.`,
   },
   {
     id: 'ts-lis-length',
@@ -8608,6 +8819,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'The answer is the maximum across all dp values',
     ],
     concepts: ['LIS', 'dynamic programming', 'subsequence', 'O(n^2) DP'],
+    explanation: `This exercise teaches you to find the length of the longest strictly increasing subsequence (LIS) using O(n^2) dynamic programming. A subsequence maintains relative order but need not be contiguous, and LIS measures how much of the array is already in sorted order.
+
+The key technique is a DP array where dp[i] stores the length of the longest increasing subsequence that ends at index i. Every element starts as a subsequence of length 1. For each element, you check all previous elements: if nums[j] < nums[i], the subsequence ending at j can be extended to include nums[i], so dp[i] = max(dp[i], dp[j] + 1). The answer is the global maximum across all dp values, since the LIS could end at any position.
+
+LIS appears in patience sorting (the game of Patience), envelope nesting problems (Russian doll envelopes), scheduling jobs by deadline, and measuring sortedness of sequences. An O(n log n) optimization using binary search on a tails array exists for production use, but the O(n^2) DP version is essential for understanding the problem structure and is frequently asked in interviews.`,
   },
   {
     id: 'ts-rod-cutting',
@@ -8665,6 +8881,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'prices[j] gives price for piece of length j+1',
     ],
     concepts: ['rod cutting', 'dynamic programming', 'unbounded', 'optimization'],
+    explanation: `This exercise teaches the rod cutting problem, an unbounded knapsack variant where you maximize revenue by cutting a rod into pieces of various lengths, each with a given price. You can cut any number of pieces of any length.
+
+The key technique is a 1D DP array where dp[i] represents the maximum revenue obtainable from a rod of length i. For each rod length, you try every possible first cut of length j+1 (using prices[j]), then add the optimal revenue for the remaining length dp[i-j-1]. Taking the maximum over all possible first cuts gives the optimal solution. The base case dp[0] = 0 means a rod of length zero produces no revenue.
+
+Rod cutting is a textbook DP problem that demonstrates optimal substructure and overlapping subproblems. It models real-world scenarios like cutting raw materials (lumber, steel, fabric) to maximize profit, bandwidth allocation in networks, and any resource division problem where pieces of different sizes have different values. The structure is identical to unbounded knapsack, making it excellent practice for recognizing DP patterns across different problem formulations.`,
   },
   {
     id: 'ts-climbing-stairs',
@@ -8714,6 +8935,11 @@ function deserialize(str: string): TreeNode<number> | null {
       'Add the number of ways to reach each of those',
     ],
     concepts: ['climbing stairs', 'dynamic programming', 'Fibonacci', 'counting paths'],
+    explanation: `This exercise teaches the climbing stairs problem, a gentle introduction to dynamic programming that asks how many distinct ways you can climb n stairs by taking 1 or 2 steps at a time. The answer follows the Fibonacci sequence, making it an ideal bridge between recursion and DP.
+
+The key insight is the state transition dp[i] = dp[i-1] + dp[i-2]. To reach step i, you either took one step from step i-1 or two steps from step i-2, so the total ways equal the sum of ways to reach those two preceding steps. With base cases dp[0] = 1 (one way to stay at ground) and dp[1] = 1 (one way to reach step 1), the bottom-up loop fills the array in O(n) time.
+
+Climbing stairs is the canonical beginner DP problem because it clearly illustrates the core DP concepts: defining states, identifying transitions, and computing solutions bottom-up from base cases. It generalizes to taking 1 through k steps (each step adds dp[i-k] through dp[i-1]) and connects to tiling problems, path counting, and the theory of linear recurrences. Mastering this problem provides the foundation for tackling all other DP problems.`,
   },
   {
     id: 'ts-unique-paths-grid',
@@ -8761,6 +8987,7 @@ function deserialize(str: string): TreeNode<number> | null {
       'Each cell = paths from above + paths from left',
     ],
     concepts: ['grid paths', 'dynamic programming', '2D DP', 'combinatorics'],
+    explanation: `This exercise teaches 2D dynamic programming through the classic grid path counting problem. The DP table dp[row][col] represents the number of unique paths from the top-left corner to position (row, col), with the recurrence dp[row][col] = dp[row-1][col] + dp[row][col-1] reflecting that you can only arrive from above or from the left.\n\nThe key insight is that the first row and first column are all 1s because there is exactly one way to reach any cell in the first row (all right moves) or first column (all down moves). From there, each interior cell simply sums the paths from its two possible predecessors. This produces a Pascal's triangle-like pattern, and the answer is mathematically equivalent to C(m+n-2, m-1), the binomial coefficient for choosing which m-1 of the m+n-2 total moves are downward.\n\nUnique paths (LeetCode 62) is a fundamental 2D DP problem that introduces the concept of state spaces with two dimensions. It generalizes to grids with obstacles (LeetCode 63), minimum path sum, and triangle path problems. The space can be optimized from O(m*n) to O(n) using a single row. This problem appears in robotics (path planning), combinatorics, and lattice-based probability problems.`,
   },
   {
     id: 'ts-word-break',
@@ -8822,6 +9049,7 @@ function deserialize(str: string): TreeNode<number> | null {
       'For each end position, try all possible last-word starting positions',
     ],
     concepts: ['word break', 'dynamic programming', 'string segmentation', 'Set lookup'],
+    explanation: `This exercise teaches string segmentation dynamic programming where dp[i] represents whether the first i characters of the string can be split into valid dictionary words. The solution uses a Set for O(1) word lookups and checks all possible last-word boundaries, achieving O(n^2) time with O(n) space.\n\nThe key insight is the two-pointer DP transition: for each end position, try every possible start position j where dp[j] is true (meaning the prefix up to j is already segmentable), and check if the substring from j to the end position exists in the dictionary. If any such split is valid, dp[endPos] becomes true and we can break early. The base case dp[0] = true represents the empty string being trivially segmentable. Using a Set instead of an array for the dictionary converts O(m) lookups into O(1) per check.\n\nWord break (LeetCode 139) is a classic DP problem that models real-world text segmentation used in NLP tokenization, search engine query parsing, Chinese/Japanese text processing (where spaces are absent), and spell-checker word suggestion. The follow-up problem Word Break II asks for all valid segmentations, requiring backtracking with memoization. Understanding this pattern also helps with problems like palindrome partitioning and regular expression matching.`,
   },
   {
     id: 'ts-max-product-subarray',
@@ -8875,6 +9103,7 @@ function deserialize(str: string): TreeNode<number> | null {
       'Consider three candidates at each step: start fresh, extend max, extend min',
     ],
     concepts: ['maximum product', 'dynamic programming', 'tracking min/max', 'subarray'],
+    explanation: `This exercise teaches a variant of Kadane's algorithm adapted for products, where you must track both the running maximum and minimum product because multiplying by a negative number swaps their roles. The solution processes each element in O(1) time, considering three candidates: starting fresh, extending the current max, or extending the current min.\n\nThe key insight is that negative numbers create a "flip" effect: a large negative minimum can become the largest positive maximum when multiplied by another negative. Therefore, at each step you compute both currentMax and currentMin from all three candidates (the element alone, element * previousMax, element * previousMin). This dual-tracking is what distinguishes the product variant from the standard sum-based Kadane's algorithm, which only needs to track the running maximum.\n\nMaximum product subarray (LeetCode 152) is a popular interview problem that tests understanding of how sign changes affect optimization. It generalizes to maximum product of any subsequence and connects to problems involving sign tracking in sequences. In practice, product-based analysis appears in financial return calculations (compounding), signal processing (gain chains), and machine learning (log-likelihood computation where products become sums in log space).`,
   },
 
   // ========== UTILITIES ==========
@@ -8956,6 +9185,7 @@ function deserialize(str: string): TreeNode<number> | null {
       'Object.keys gets all own enumerable keys for comparison',
     ],
     concepts: ['deep equality', 'recursion', 'type checking', 'object comparison'],
+    explanation: `This exercise teaches recursive structural comparison of JavaScript values, handling primitives, null, arrays, and nested objects. The algorithm first uses === for primitive and reference equality, then guards against null (since typeof null === 'object'), checks array/object type consistency, compares key counts, and finally recursively compares all values by key.\n\nThe key insight is the layered type discrimination: the function must handle JavaScript's type system quirks where typeof null is 'object' and arrays are objects. By checking a === b first (handles primitives, same-reference objects, and both-null), then null guards, then typeof checks, then Array.isArray consistency, the function correctly distinguishes all cases. Using Object.keys and the every method for recursive comparison ensures that both key presence and value equality are verified, and different key counts cause early rejection.\n\nDeep equality is the foundation of testing frameworks like Jest (expect(a).toEqual(b)), Mocha/Chai, and assertion libraries. It is used in React for shouldComponentUpdate decisions, Redux for state change detection, memoization cache checks, and configuration validation. Production implementations like Lodash's isEqual also handle edge cases like Date objects, RegExp, Maps, Sets, and circular references.`,
   },
   {
     id: 'ts-merge-intervals',
@@ -9052,6 +9282,7 @@ function deserialize(str: string): TreeNode<number> | null {
       'When merging, take the maximum of both end values',
     ],
     concepts: ['intervals', 'merge', 'sorting', 'greedy'],
+    explanation: `This exercise teaches the sort-then-merge greedy approach for consolidating overlapping intervals. By sorting intervals by start time first, overlapping intervals become adjacent, allowing a single linear pass to merge them by extending the end time of the last merged interval when overlap is detected.\n\nThe key insight is the overlap detection condition: intervals[idx][0] <= lastMerged[1], meaning the current interval's start is at or before the last merged interval's end. When overlap is detected, the merged interval's end is extended to Math.max(lastMerged[1], intervals[idx][1]) to cover both intervals. When there is no overlap, the current interval starts a new group. The sorting step is critical because it guarantees that all intervals overlapping with the current group are consecutive, enabling the single-pass greedy strategy.\n\nMerge intervals (LeetCode 56) is one of the most commonly asked interview problems and forms the basis of a family of interval problems. It is used in calendar systems for merging overlapping meetings, in genomics for consolidating overlapping DNA regions, in database query optimization for merging index ranges, in network configuration for consolidating IP ranges, and in operating systems for managing memory allocation regions.`,
   },
   {
     id: 'ts-insert-interval',
@@ -9155,6 +9386,7 @@ function deserialize(str: string): TreeNode<number> | null {
       'Check overlap: current start <= newInterval end',
     ],
     concepts: ['insert interval', 'merge', 'sorted intervals', 'three-pass'],
+    explanation: `This exercise teaches the three-phase linear scan approach for inserting a new interval into a sorted, non-overlapping interval list. The algorithm partitions the existing intervals into three groups: those entirely before the new interval, those overlapping with it (which get merged), and those entirely after it, all in a single O(n) pass.\n\nThe key insight is the clean separation into three phases using two simple conditions: Phase 1 collects intervals where end < newInterval.start (no overlap possible), Phase 2 absorbs intervals where start <= newInterval.end (overlap exists) by expanding newInterval's bounds using Math.min and Math.max, and Phase 3 appends the remaining intervals unchanged. The newInterval is mutated during Phase 2 to accumulate the merged range, then pushed to the result. This three-phase structure is more elegant and efficient than sorting and re-merging from scratch.\n\nInsert interval (LeetCode 57) builds on the merge intervals concept and tests a more nuanced understanding of interval relationships. It is used in calendar systems for adding new events, in database systems for maintaining sorted index ranges, in compiler optimization for register allocation intervals, and in scheduling systems where new tasks must be integrated into existing timelines. The three-phase pattern also generalizes to other sorted-list insertion problems.`,
   },
   {
     id: 'ts-event-emitter',
@@ -9235,6 +9467,7 @@ function createEmitter(): EventEmitter {
       'Use forEach and spread args when emitting',
     ],
     concepts: ['event emitter', 'pub-sub', 'observer pattern', 'callbacks'],
+    explanation: `This exercise teaches the observer pattern (publish-subscribe) by building a simple event emitter with on, off, and emit methods. The implementation uses a dictionary mapping event names to arrays of callback functions, with lazy initialization of listener arrays and reference-based removal for unsubscription.\n\nThe key insight is the design of the listener registry: each event name maps to an array of functions, and new events are lazily initialized (the array is created on first subscription). The off method uses filter with reference equality (registeredFn !== callback) to remove only the exact function reference, preserving other listeners. The emit method spreads arguments to all registered callbacks using forEach. This reference-based identity for unsubscription means the caller must retain a reference to the original function, which is why anonymous inline functions cannot be individually removed.\n\nThe event emitter is the backbone of event-driven programming in JavaScript. Node.js's EventEmitter class powers the entire I/O system (streams, HTTP, process events). In the browser, the DOM event system (addEventListener/removeEventListener/dispatchEvent) follows the same pattern. React's synthetic events, Redux middleware, and WebSocket message handling all build on this pattern. Understanding event emitters is essential for building reactive systems, decoupled architectures, and plugin systems.`,
   },
   {
     id: 'ts-promise-all',
@@ -9302,6 +9535,7 @@ function createEmitter(): EventEmitter {
       'Increment counter on each resolve, check if all done',
     ],
     concepts: ['Promise.all', 'promise composition', 'async patterns', 'error propagation'],
+    explanation: `This exercise teaches how to implement Promise.all from scratch, aggregating multiple promises into a single promise that resolves with an ordered array of results or rejects on the first failure. The implementation uses a counter and index-based storage to preserve result ordering regardless of resolution timing.\n\nThe key insight is storing results by index rather than pushing them as they resolve: orderedResults[index] = resolvedValue ensures the output array matches the input order even when promises resolve out of sequence. A settledCount counter tracks completions, and only when it equals the total promise count is the outer promise resolved. The .catch(reject) on each promise short-circuits on the first rejection, and subsequent rejections are harmless no-ops since a promise can only be settled once. Wrapping each input with Promise.resolve handles non-promise values uniformly.\n\nPromise.all is one of the most fundamental async patterns in JavaScript and a common interview question. It is used for parallel API requests (fetching multiple resources simultaneously), batch database operations, parallel file processing, and any scenario where multiple independent async operations must all complete before proceeding. Understanding its internals clarifies why result ordering is preserved, why one rejection fails everything, and leads to understanding Promise.allSettled (which never short-circuits).`,
   },
   {
     id: 'ts-promise-race',
@@ -9353,6 +9587,7 @@ function createEmitter(): EventEmitter {
       'Wrap with Promise.resolve() to handle non-promise values',
     ],
     concepts: ['Promise.race', 'promise composition', 'first-settled', 'async patterns'],
+    explanation: `This exercise teaches how to implement Promise.race from scratch, where the first promise to settle (resolve or reject) determines the outcome of the race. The implementation is remarkably simple: each input promise independently calls the same resolve/reject pair, and the first invocation wins while subsequent calls are harmless no-ops.\n\nThe key insight is that a Promise can only be settled once. By attaching .then(resolve).catch(reject) to every input promise, whichever settles first triggers the outer promise's resolution or rejection, and all later settle attempts are silently ignored. Promise.resolve wraps non-promise values so they settle immediately. Note the edge case: an empty array means no promise ever calls resolve or reject, so the returned promise stays pending forever, which matches the ECMAScript specification.\n\nPromise.race is essential for timeout patterns: race a fetch request against a setTimeout rejection to implement request timeouts. It is used for fastest-response caching (race multiple CDN endpoints), competitive fetching (query multiple servers and use the first response), and resource acquisition with deadlines. Understanding race complements Promise.all and leads to Promise.any (which resolves on the first success, ignoring rejections until all fail).`,
   },
   {
     id: 'ts-deep-freeze',
@@ -9407,6 +9642,7 @@ function createEmitter(): EventEmitter {
       'Use Object.isFrozen to avoid re-freezing',
     ],
     concepts: ['deep freeze', 'immutability', 'recursion', 'Object.freeze'],
+    explanation: `This exercise teaches recursive object freezing to achieve true deep immutability, since Object.freeze alone only freezes the top level. The solution recursively traverses all property values, freezing each nested object it encounters, with a guard against already-frozen objects to handle circular references safely.\n\nThe key insight is that Object.freeze is shallow: it prevents adding, removing, or modifying properties on the target object, but nested objects remain mutable. The recursive approach freezes the current level first, then iterates over Object.values to find nested objects (checking typeof === 'object' && !== null). The Object.isFrozen check prevents infinite recursion on circular references and avoids redundant work on already-frozen objects. The function modifies objects in-place (freeze is mutating) and returns the same reference for chaining convenience.\n\nDeep freeze is used to enforce immutability in configuration objects, Redux state (where accidental mutation is a common bug), test fixtures, and constant data structures. In TypeScript, the Readonly<T> utility type provides compile-time immutability, but deep freeze adds runtime enforcement. Libraries like Immer and Immutable.js provide more sophisticated immutability solutions, but understanding deep freeze teaches the fundamental challenge of achieving true immutability in a mutable language.`,
   },
   {
     id: 'ts-object-pick',
@@ -9457,6 +9693,7 @@ function createEmitter(): EventEmitter {
       'Build a new result object',
     ],
     concepts: ['pick', 'object manipulation', 'key filtering', 'non-mutating'],
+    explanation: `This exercise teaches the pick utility function that creates a new object containing only specified keys from a source object. The implementation iterates over the desired keys array (not the object), checks each key's existence with the "in" operator, and copies matching properties to a new result object in O(k) time where k is the number of keys.\n\nThe key insight is iterating over the keys array rather than the object: this is more efficient when picking a small subset from a large object, since you only examine the keys you want. The "in" operator correctly checks for key existence on the entire prototype chain, though for own-property-only behavior you could use hasOwnProperty. The function creates a new object (non-mutating), which is essential for immutable data patterns. TypeScript's Partial<T> return type accurately models that not all keys may be present in the result.\n\nPick mirrors TypeScript's built-in Pick<T, K> utility type at the value level and is a staple of utility libraries like Lodash (_.pick). It is used for API response shaping (selecting only the fields a client needs), form data extraction (picking specific fields from a form state), database projection (selecting columns), and data transformation pipelines. The complementary operation is omit, and together they provide complete control over object shape.`,
   },
   {
     id: 'ts-object-omit',
@@ -9503,6 +9740,7 @@ function createEmitter(): EventEmitter {
       'Include key only if it is NOT in the omit set',
     ],
     concepts: ['omit', 'object manipulation', 'Set', 'key exclusion'],
+    explanation: `This exercise teaches the omit utility function that creates a new object excluding specified keys from the source. The implementation converts the exclusion keys to a Set for O(1) lookups, then iterates over all object keys and includes only those not in the exclusion set, achieving O(n) time where n is the number of source object keys.\n\nThe key insight is using a Set for the exclusion list: converting the keys array to a Set gives O(1) membership testing, making the overall algorithm O(n + k) where n is the number of object keys and k is the number of excluded keys. Without the Set, checking each key against the exclusion array would be O(n * k). The function iterates over Object.keys(obj) (all own enumerable properties) and builds a new result object, preserving immutability of the source.\n\nOmit is the complement of pick and mirrors TypeScript's built-in Omit<T, K> utility type at the value level. It is a core function in Lodash (_.omit) and is used for removing sensitive fields before API responses (stripping passwords, tokens), sanitizing user input, creating derived state objects without internal metadata, and implementing data redaction policies. Together with pick, omit provides complete control over object shape transformation in data pipelines.`,
   },
   {
     id: 'ts-flat-map',
@@ -9560,6 +9798,7 @@ function createEmitter(): EventEmitter {
       'Non-array results are pushed directly',
     ],
     concepts: ['flatMap', 'map', 'flatten', 'array transformation'],
+    explanation: `This exercise teaches the flatMap operation that combines mapping and one-level flattening into a single pass. The implementation applies a transform function to each element and either spreads the result (if it returns an array) or pushes it directly (if it returns a single value), producing a flat output array.\n\nThe key insight is the conditional handling of the transform's return value: Array.isArray(mappedValue) distinguishes between one-to-many transforms (which return arrays that should be flattened) and one-to-one transforms (which return single values). The spread operator (...) flattens exactly one level, so nested arrays within the mapped result are preserved. This is equivalent to items.map(transform).flat(1) but more efficient because it avoids creating the intermediate nested array.\n\nFlatMap (Array.prototype.flatMap in ES2019) is fundamental in functional programming as the monadic bind operation. It is used for one-to-many transformations like splitting sentences into words, expanding query terms into search tokens, generating permutations, and unnesting hierarchical data. In reactive programming (RxJS), flatMap (mergeMap) is one of the most important operators for handling inner observables. Understanding flatMap is key to grasping monadic composition in both synchronous and asynchronous contexts.`,
   },
   {
     id: 'ts-run-length-encode',
@@ -9614,6 +9853,7 @@ function createEmitter(): EventEmitter {
       "Don't forget to handle the last group",
     ],
     concepts: ['run-length encoding', 'string processing', 'compression', 'counting'],
+    explanation: `This exercise teaches run-length encoding (RLE), a simple lossless compression that replaces consecutive identical characters with a count-character pair. The single-pass algorithm tracks a consecutive count, flushing the count and character to the output whenever the character changes or the string ends.\n\nThe key insight is the loop structure: iterating from index 1 to str.length (inclusive) allows uniform handling of both mid-string character changes and the final group. When charIdx equals str.length, the condition str[charIdx] === str[charIdx - 1] is false (comparing against undefined), triggering the flush of the last group. This eliminates the need for special post-loop handling. Each character is visited exactly once, giving O(n) time. The encoded output may be longer than the input if all characters are unique (e.g., "abcd" becomes "1a1b1c1d").\n\nRun-length encoding is one of the simplest compression algorithms and is used in bitmap image formats (BMP, TIFF), fax transmission (ITU T.4), PCX image files, and as a step in more complex codecs like JPEG (which RLE-encodes quantized coefficients). It is effective for data with long runs of repeated values, such as pixel data in simple graphics, binary sequences, and sparse data representations.`,
   },
   {
     id: 'ts-run-length-decode',
@@ -9667,6 +9907,7 @@ function createEmitter(): EventEmitter {
       'Use String.prototype.repeat() to expand the character',
     ],
     concepts: ['run-length decoding', 'string parsing', 'decompression', 'character repeat'],
+    explanation: `This exercise teaches run-length decoding, the inverse of RLE encoding, which parses count-character pairs and expands them back to the original string. The two-pointer approach reads consecutive digit characters to build a multi-digit count, then uses String.prototype.repeat to expand the following character.\n\nThe key insight is handling multi-digit counts: the inner while loop accumulates all consecutive digit characters (checking >= '0' && <= '9') into a digit sequence string before parsing it with parseInt. This correctly handles counts like "10" or "100" that span multiple characters. After parsing the count, the character at the current position is repeated that many times and appended to the result. The position pointer advances past both the digits and the character, maintaining O(n) time where n is the decoded output length.\n\nRun-length decoding is the decompression complement to RLE encoding and tests string parsing skills with numeric prefixes. This pattern of "parse a number then consume a token" appears throughout data format parsing: reading binary file headers, parsing protocol buffers, decoding URL-encoded strings, and processing formatted data files. The technique of accumulating digits before parsing is also fundamental to building lexers and tokenizers for programming languages.`,
   },
   {
     id: 'ts-debounce-leading',
@@ -9730,6 +9971,7 @@ function createEmitter(): EventEmitter {
       'Set timer to null in the setTimeout callback',
     ],
     concepts: ['debounce', 'leading edge', 'setTimeout', 'closure'],
+    explanation: `This exercise teaches leading-edge debounce, which fires the callback immediately on the first invocation and then suppresses subsequent calls until a quiet period has elapsed. The implementation uses a closure to maintain a cooldown timer, firing the callback only when no timer is active and resetting the timer on every call.\n\nThe key insight is the timer-as-gate pattern: when cooldownTimer is null, the function is in a "ready" state and fires immediately. Every call (whether it fires or not) resets the cooldown timer using clearTimeout followed by setTimeout. This means rapid successive calls keep extending the quiet period. When the timer finally expires, it sets cooldownTimer to null, re-enabling the leading edge for the next burst. The callback.apply(this, args) pattern preserves the caller's this context, which is important when the debounced function is used as a method.\n\nLeading-edge debounce is ideal for UI interactions where immediate feedback is critical but repeated actions should be suppressed: button click handlers (preventing double submissions), search-on-type with instant first search, toggle switches, and keyboard shortcuts. It contrasts with trailing-edge debounce (which delays until quiet) and is often combined with trailing behavior for the most responsive UX. This pattern is a staple of Lodash (_.debounce with leading option) and is essential for frontend performance optimization.`,
   },
   {
     id: 'ts-decimal-to-binary',
@@ -9777,6 +10019,7 @@ function createEmitter(): EventEmitter {
       'Prepend each bit to build the string in correct order',
     ],
     concepts: ['binary conversion', 'modulo', 'integer division', 'number bases'],
+    explanation: `This exercise teaches decimal-to-binary conversion using the repeated-division algorithm, which extracts bits from least significant to most significant by repeatedly dividing by 2 and collecting remainders. Each remainder (0 or 1) represents one binary digit, prepended to build the binary string in the correct MSB-first order.\n\nThe key insight is the relationship between division and positional notation: quotient % 2 gives the least significant bit of the current value, and Math.floor(quotient / 2) effectively right-shifts the value by one bit position. By prepending each remainder to the result string (rather than appending), the final string reads correctly from most significant bit to least significant bit. The algorithm runs in O(log n) time since the number of bits in n is floor(log2(n)) + 1, and each iteration halves the quotient.\n\nUnderstanding base conversion is fundamental to computer science: binary representation underpins all digital computation, memory addressing, network protocols (IP addresses), file formats, and bitwise operations. The repeated-division technique generalizes to any base (octal via divide-by-8, hex via divide-by-16). In practice, JavaScript provides Number.toString(2) for this conversion, but implementing it manually builds intuition for how computers represent and manipulate numbers internally.`,
   },
   {
     id: 'ts-binary-to-decimal',
@@ -9819,6 +10062,7 @@ function createEmitter(): EventEmitter {
       'Convert character to number with Number(bit)',
     ],
     concepts: ['binary conversion', 'positional notation', 'number bases', 'accumulator'],
+    explanation: `This exercise teaches binary-to-decimal conversion using Horner's method, which processes bits left-to-right by repeatedly doubling the accumulator and adding the current bit. This elegant O(n) approach avoids explicit power-of-2 calculations by leveraging the positional value built up through successive doubling.\n\nThe key insight is Horner's method applied to base 2: instead of computing each bit's contribution as bit * 2^position (which requires exponentiation), you process left-to-right with accumulator = accumulator * 2 + currentBit. The multiplication by 2 effectively shifts all previously accumulated bits one position left, making room for the new bit. For example, processing "1010": 0*2+1=1, 1*2+0=2, 2*2+1=5, 5*2+0=10. This is O(n) time with O(1) space, requiring only a single pass through the string.\n\nHorner's method is a general-purpose technique for evaluating polynomials and positional number systems in any base. It generalizes directly to hex-to-decimal (multiply by 16), octal-to-decimal (multiply by 8), and arbitrary base conversions. In practice, parseInt(binary, 2) handles this in JavaScript, but understanding the manual algorithm is essential for parsing custom binary formats, implementing arbitrary-precision arithmetic, and working with non-standard number representations in embedded systems and protocols.`,
   },
   {
     id: 'ts-count-bits',
@@ -9865,6 +10109,7 @@ function createEmitter(): EventEmitter {
       'This is more efficient than checking each bit individually',
     ],
     concepts: ['bit manipulation', 'Brian Kernighan', 'set bits', 'bitwise AND'],
+    explanation: `This exercise teaches Brian Kernighan's algorithm for counting set bits (population count / Hamming weight), which runs in O(k) time where k is the number of set bits rather than O(32) for a naive bit-by-bit scan. The trick n & (n-1) clears exactly one set bit per iteration, so the loop count equals the number of 1-bits.\n\nThe key insight is understanding why n & (n-1) clears the lowest set bit: subtracting 1 from n flips the lowest set bit to 0 and all lower bits to 1 (e.g., 1010 - 1 = 1001). ANDing with the original value preserves all higher bits but zeros out the lowest set bit and below (1010 & 1001 = 1000). Each iteration removes exactly one set bit, so the loop executes exactly k times. For sparse bit patterns (few 1s), this is significantly faster than checking all 32 bit positions.\n\nCounting set bits is used in Hamming distance computation (error detection/correction), bitmap index operations in databases, population count instructions in CPU architectures (POPCNT), chess engine bitboard evaluation, and network subnet calculations. Brian Kernighan's algorithm is a favorite interview question because it elegantly combines bit manipulation insight with efficiency analysis. Modern CPUs provide hardware POPCNT instructions, but understanding the software algorithm builds deep bitwise reasoning skills.`,
   },
   {
     id: 'ts-is-power-of-two',
@@ -9903,6 +10148,7 @@ function createEmitter(): EventEmitter {
       'If only one bit is set, result is 0',
     ],
     concepts: ['power of two', 'bit manipulation', 'bitwise AND', 'single bit check'],
+    explanation: `This exercise teaches the elegant O(1) bit trick for checking if a number is a power of 2: n > 0 && (n & (n - 1)) === 0. Powers of 2 have exactly one set bit in binary (e.g., 8 = 1000), so clearing that single bit with n & (n-1) produces 0.\n\nThe key insight is that powers of 2 are the only positive integers with exactly one set bit. Since n & (n-1) clears the lowest set bit (as used in Brian Kernighan's algorithm), applying it to a power of 2 clears its only set bit, yielding 0. For non-powers of 2 (which have multiple set bits), clearing the lowest one still leaves other bits, producing a non-zero result. The n > 0 guard is necessary because 0 satisfies (0 & -1) === 0 but is not a power of 2, and negative numbers are also excluded.\n\nPower-of-two checking is used in hash table implementation (ensuring capacity is a power of 2 for fast modulo via bitwise AND), memory alignment verification (addresses must be aligned to power-of-2 boundaries), binary tree level calculations, GPU texture sizing (must be power-of-2 in some APIs), and buffer pool sizing. This one-line bit trick replaces iterative or logarithmic approaches and is one of the most practical bit manipulation patterns in everyday programming.`,
   },
   {
     id: 'ts-toggle-bit',
@@ -9939,6 +10185,7 @@ function createEmitter(): EventEmitter {
       'num ^ mask toggles only the bit at position n',
     ],
     concepts: ['bit toggle', 'XOR', 'bit shift', 'bit mask'],
+    explanation: `This exercise teaches bit toggling using XOR with a shifted mask, one of the fundamental bitwise operations. The expression value ^ (1 << position) creates a mask with a single 1 at the target position and XORs it with the value, flipping only that specific bit while leaving all others unchanged.\n\nThe key insight is how XOR interacts with individual bits: XOR with 1 flips a bit (0 becomes 1, 1 becomes 0), while XOR with 0 leaves a bit unchanged. By shifting 1 left by the desired position (1 << position), you create a mask that is 1 at exactly one position and 0 everywhere else. XORing the value with this mask therefore toggles only the targeted bit. This is O(1) time and requires no branching or conditionals, making it one of the most efficient single-bit operations.\n\nBit toggling is used in feature flag systems (toggling features on/off in a bitmask), game state representation (flipping piece positions on bitboards), cryptographic algorithms (XOR-based encryption), graphics programming (pixel manipulation), and network protocol flags. The three related single-bit operations are: set with OR (n | mask), clear with AND NOT (n & ~mask), and toggle with XOR (n ^ mask). Together, these form the complete toolkit for bit-level state management.`,
   },
   {
     id: 'ts-matrix-multiply',
@@ -10043,6 +10290,7 @@ function createEmitter(): EventEmitter {
       'result[i][j] += a[i][k] * b[k][j]',
     ],
     concepts: ['matrix multiplication', 'nested loops', 'dot product', 'linear algebra'],
+    explanation: `This exercise teaches standard matrix multiplication using three nested loops, where each element of the result matrix C[i][j] is the dot product of row i from matrix A and column j from matrix B. The algorithm runs in O(m * n * p) time for an m x n matrix multiplied by an n x p matrix, producing an m x p result.\n\nThe key insight is the structure of the three loops: the outer two loops iterate over every position (row, col) in the result matrix, while the innermost loop computes the dot product by accumulating a[row][dotIdx] * b[dotIdx][col] across the shared dimension. The result matrix is pre-initialized with zeros using Array.from, and each cell accumulates its value through the inner loop. The shared dimension (columns of A = rows of B) must match for multiplication to be valid, a constraint known as matrix conformability.\n\nMatrix multiplication is one of the most fundamental operations in mathematics and computer science. It is the core operation in 3D graphics (transformation matrices), neural networks (layer computation), physics simulations (state transitions), computer vision (convolutions), and PageRank computation. Optimized implementations like Strassen's algorithm achieve O(n^2.807), and GPU-accelerated BLAS libraries (cuBLAS) exploit massive parallelism. Understanding the naive triple-loop version is essential before appreciating these optimizations.`,
   },
   {
     id: 'ts-transpose-matrix',
@@ -10124,6 +10372,7 @@ function createEmitter(): EventEmitter {
       'Use Array.from to create the new matrix with correct dimensions',
     ],
     concepts: ['transpose', 'matrix', 'row-column swap', '2D arrays'],
+    explanation: `This exercise teaches matrix transposition, which swaps rows and columns so that element [i][j] moves to position [j][i]. The output matrix has swapped dimensions (colCount rows by rowCount columns), and the algorithm fills it with a simple double loop in O(rows * cols) time.\n\nThe key insight is the dimension swap: the transposed matrix is created with Array.from({ length: colCount }, () => Array(rowCount).fill(0)), where the original column count becomes the new row count and vice versa. The assignment transposed[col][row] = matrix[row][col] performs the index swap. This creates a new matrix rather than modifying in-place, which is necessary because the dimensions may differ (a 2x3 matrix transposes to 3x2). For square matrices, in-place transposition is possible by swapping elements across the diagonal.\n\nMatrix transpose is used throughout linear algebra and computing: in data science for switching between row-major and column-major layouts, in image processing for 90-degree rotation (transpose + row reversal), in database operations for pivoting tables, in graphics for normal transformation matrices, and as a step in matrix algorithms like LU decomposition. Understanding transpose also connects to the mathematical concept of adjoint operators and is essential for working with symmetric and orthogonal matrices.`,
   },
   {
     id: 'ts-object-deep-merge',
@@ -10190,6 +10439,7 @@ function createEmitter(): EventEmitter {
       'Spread target first, then override with merged/source values',
     ],
     concepts: ['deep merge', 'recursion', 'object manipulation', 'type checking'],
+    explanation: `This exercise teaches recursive deep merging of two objects where nested objects are merged property-by-property rather than being overwritten. The algorithm spreads the target first, then iterates over source keys, recursing when both sides are plain objects and replacing otherwise.\n\nThe key insight is the type discrimination logic: both the target and source values at a given key must be non-null, non-array objects for recursive merging to apply. The checks !!value && typeof value === 'object' && !Array.isArray(value) distinguish plain objects from null, arrays, and primitives. When both values are plain objects, the function recurses to merge their nested properties. Otherwise, the source value wins outright. This means arrays are replaced (not element-wise merged), which is the standard behavior in most deep merge implementations and avoids the ambiguity of array merging strategies.\n\nDeep merge is essential in configuration management (merging default config with user overrides), state management libraries like Redux and Zustand (deeply updating nested state), API response merging, and theme systems (merging base themes with customizations). Libraries like Lodash (_.merge), deepmerge, and immer provide production-grade implementations. Understanding the recursive approach is key to appreciating why shallow spreading ({...a, ...b}) is insufficient for nested data and why immutable update patterns in React/Redux require careful nested handling.`,
   },
   {
     id: 'ts-retry-async',
@@ -10248,6 +10498,7 @@ function createEmitter(): EventEmitter {
       'Use await new Promise(r => setTimeout(r, delay)) for delay',
     ],
     concepts: ['retry', 'async/await', 'error handling', 'delay', 'resilience'],
+    explanation: `This exercise teaches how to implement a retry wrapper for async functions that attempts execution up to n+1 times (initial + retries) with a configurable delay between failures. The solution uses a for loop with try/catch, re-throwing on the final attempt and awaiting a delay promise between retries.\n\nThe key insight is the loop structure: for (let attempt = 0; attempt <= retries; attempt++) gives exactly retries + 1 total attempts. Inside the try block, a successful return exits immediately. In the catch block, if attempt equals retries (the last allowed attempt), the error is re-thrown to propagate to the caller. Otherwise, a delay is inserted using await new Promise(resolve => setTimeout(resolve, delay)). The unreachable throw at the end satisfies TypeScript's exhaustive return type checking.\n\nRetry logic is critical for building resilient distributed systems: API clients retry on 503/429 responses, database connections retry on transient failures, message queue consumers retry failed processing, and cloud SDK clients implement exponential backoff. Production implementations often add exponential backoff (delay *= 2), jitter (randomized delay), circuit breakers (stop retrying after threshold), and retry-specific error filtering (only retry on transient errors). This exercise provides the foundation for all these advanced resilience patterns.`,
   },
   {
     id: 'ts-throttle-leading-trailing',
@@ -10322,5 +10573,6 @@ function createEmitter(): EventEmitter {
       'After interval, check if trailing args exist to invoke',
     ],
     concepts: ['throttle', 'leading edge', 'trailing edge', 'rate limiting', 'closure'],
+    explanation: `This exercise teaches throttle with both leading and trailing edge firing, ensuring the first call executes immediately and the last call during rapid invocations is never lost. The implementation uses a closure with a timer and pending arguments, employing a self-rescheduling trailing handler that fires saved arguments after the interval expires.\n\nThe key insight is the dual-edge design: when no timer is active, the function fires immediately (leading edge) and starts a cooldown timer. During cooldown, subsequent calls only save their most recent arguments without invoking the callback. When the timer expires, handleTrailingInvocation checks for pending arguments: if present, it fires the callback with those arguments (trailing edge) and restarts the timer; if absent, it clears the timer, allowing the next call to fire as a leading edge again. This self-rescheduling pattern ensures continuous rate-limiting during sustained rapid calls while guaranteeing both the first and last calls are captured.\n\nLeading+trailing throttle is the most complete throttle variant and is used in Lodash (_.throttle with default leading: true, trailing: true). It is essential for scroll event handlers (immediate response + final position capture), resize observers (instant feedback + final dimension calculation), mouse move tracking (real-time updates at bounded rate), and analytics event batching. Understanding this implementation reveals why throttle differs from debounce: throttle guarantees periodic execution during sustained activity, while debounce waits for inactivity.`,
   },
 ];

@@ -1015,6 +1015,1632 @@ export const javascriptMethods: Method[] = [
     ],
     relatedMethods: ['toPrecision', 'toExponential'],
   },
+  // ==================== NEW ARRAY METHODS ====================
+  {
+    name: 'at',
+    category: 'arrays',
+    syntax: 'array.at(index)',
+    description:
+      'Returns the element at the given index, allowing positive and negative integers. Negative integers count back from the last element.',
+    arguments: [
+      { name: 'index', type: 'number', description: 'The index of the element to return' },
+    ],
+    returns: { type: 'any', description: 'The element at the given index, or undefined' },
+    examples: [
+      {
+        code: '[10, 20, 30, 40, 50].at(-1)',
+        output: '50',
+        explanation: 'Returns the last element using negative index',
+      },
+      {
+        code: '[10, 20, 30, 40, 50].at(2)',
+        output: '30',
+        explanation: 'Returns element at index 2',
+      },
+    ],
+    relatedMethods: ['indexOf', 'find', 'slice'],
+    sinceVersion: 'ES2022',
+  },
+  {
+    name: 'findLast',
+    category: 'arrays',
+    syntax: 'array.findLast(callback(element, index, array), thisArg)',
+    description:
+      'Returns the value of the last element that satisfies the provided testing function, searching from the end',
+    arguments: [
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Test function to execute on each element',
+      },
+      { name: 'thisArg', type: 'any', description: 'Value to use as this', optional: true },
+    ],
+    returns: {
+      type: 'any',
+      description: 'The last element that passes the test, or undefined',
+    },
+    examples: [
+      {
+        code: '[5, 12, 8, 130, 44].findLast(x => x > 10)',
+        output: '44',
+        explanation: 'Finds last element greater than 10',
+      },
+      {
+        code: '[1, 2, 3, 4, 5, 6].findLast(x => x % 2 === 0)',
+        output: '6',
+        explanation: 'Finds last even number',
+      },
+    ],
+    relatedMethods: ['find', 'findLastIndex', 'filter'],
+    sinceVersion: 'ES2023',
+  },
+  {
+    name: 'findLastIndex',
+    category: 'arrays',
+    syntax: 'array.findLastIndex(callback(element, index, array), thisArg)',
+    description:
+      'Returns the index of the last element that satisfies the provided testing function, searching from the end',
+    arguments: [
+      {
+        name: 'callback',
+        type: 'Function',
+        description: 'Test function to execute on each element',
+      },
+      { name: 'thisArg', type: 'any', description: 'Value to use as this', optional: true },
+    ],
+    returns: {
+      type: 'number',
+      description: 'The index of the last matching element, or -1',
+    },
+    examples: [
+      {
+        code: '[5, 12, 8, 130, 44].findLastIndex(x => x > 10)',
+        output: '4',
+        explanation: 'Returns index 4 (element 44 is last > 10)',
+      },
+      {
+        code: '[1, 2, 3, 4, 5, 6].findLastIndex(x => x % 2 === 0)',
+        output: '5',
+        explanation: 'Returns index 5 (element 6 is last even)',
+      },
+    ],
+    relatedMethods: ['findIndex', 'findLast', 'lastIndexOf'],
+    sinceVersion: 'ES2023',
+  },
+  {
+    name: 'Array.from',
+    category: 'arrays',
+    syntax: 'Array.from(arrayLike, mapFn, thisArg)',
+    description:
+      'Creates a new Array instance from an array-like or iterable object, optionally mapping each element',
+    arguments: [
+      {
+        name: 'arrayLike',
+        type: 'Iterable | ArrayLike',
+        description: 'An iterable or array-like object to convert',
+      },
+      {
+        name: 'mapFn',
+        type: 'Function',
+        description: 'Map function to call on every element',
+        optional: true,
+      },
+      {
+        name: 'thisArg',
+        type: 'any',
+        description: 'Value to use as this for mapFn',
+        optional: true,
+      },
+    ],
+    returns: { type: 'Array', description: 'A new Array instance' },
+    examples: [
+      {
+        code: 'Array.from("hello")',
+        output: '["h", "e", "l", "l", "o"]',
+        explanation: 'Creates an array from a string',
+      },
+      {
+        code: 'Array.from({length: 3}, (_, i) => i * 2)',
+        output: '[0, 2, 4]',
+        explanation: 'Creates array with mapped values',
+      },
+    ],
+    relatedMethods: ['Array.of', 'Array.isArray', 'spread operator'],
+  },
+  {
+    name: 'Array.isArray',
+    category: 'arrays',
+    syntax: 'Array.isArray(value)',
+    description: 'Determines whether the passed value is an Array',
+    arguments: [{ name: 'value', type: 'any', description: 'The value to check' }],
+    returns: { type: 'boolean', description: 'true if the value is an Array, false otherwise' },
+    examples: [
+      {
+        code: 'Array.isArray([1, 2, 3])',
+        output: 'true',
+        explanation: 'An array literal is an array',
+      },
+      {
+        code: 'Array.isArray("hello")',
+        output: 'false',
+        explanation: 'A string is not an array',
+      },
+    ],
+    relatedMethods: ['Array.from', 'typeof', 'instanceof'],
+  },
+  {
+    name: 'forEach',
+    category: 'arrays',
+    syntax: 'array.forEach(callback(element, index, array), thisArg)',
+    description:
+      'Executes a provided function once for each array element. Returns undefined and cannot be chained.',
+    arguments: [
+      { name: 'callback', type: 'Function', description: 'Function to execute on each element' },
+      { name: 'thisArg', type: 'any', description: 'Value to use as this', optional: true },
+    ],
+    returns: { type: 'undefined', description: 'Always returns undefined' },
+    examples: [
+      {
+        code: '[1, 2, 3].forEach(x => x)',
+        output: 'undefined',
+        explanation: 'forEach always returns undefined, not a new array',
+      },
+      {
+        code: 'typeof [1, 2, 3].forEach(x => x * 2)',
+        output: '"undefined"',
+        explanation: 'The return type is undefined regardless of callback',
+      },
+    ],
+    relatedMethods: ['map', 'for...of', 'filter'],
+  },
+  {
+    name: 'push',
+    category: 'arrays',
+    syntax: 'array.push(element1, element2, ...)',
+    description:
+      'Adds one or more elements to the end of an array and returns the new length of the array',
+    arguments: [
+      { name: 'elements', type: 'any', description: 'Elements to add to the end of the array' },
+    ],
+    returns: { type: 'number', description: 'The new length of the array' },
+    examples: [
+      {
+        code: '[1, 2, 3].push(4)',
+        output: '4',
+        explanation: 'Returns new length after adding element 4',
+      },
+      {
+        code: '["a", "b"].push("c", "d")',
+        output: '4',
+        explanation: 'Returns new length after adding two elements',
+      },
+    ],
+    relatedMethods: ['pop', 'unshift', 'concat'],
+  },
+  {
+    name: 'pop',
+    category: 'arrays',
+    syntax: 'array.pop()',
+    description: 'Removes the last element from an array and returns that element',
+    arguments: [],
+    returns: { type: 'any', description: 'The removed element, or undefined if array is empty' },
+    examples: [
+      {
+        code: '[10, 20, 30].pop()',
+        output: '30',
+        explanation: 'Removes and returns the last element',
+      },
+      {
+        code: '["x", "y", "z"].pop()',
+        output: '"z"',
+        explanation: 'Removes and returns "z"',
+      },
+    ],
+    relatedMethods: ['push', 'shift', 'splice'],
+  },
+  {
+    name: 'shift',
+    category: 'arrays',
+    syntax: 'array.shift()',
+    description: 'Removes the first element from an array and returns that element',
+    arguments: [],
+    returns: { type: 'any', description: 'The removed element, or undefined if array is empty' },
+    examples: [
+      {
+        code: '[10, 20, 30].shift()',
+        output: '10',
+        explanation: 'Removes and returns the first element',
+      },
+      {
+        code: '["first", "second", "third"].shift()',
+        output: '"first"',
+        explanation: 'Removes and returns "first"',
+      },
+    ],
+    relatedMethods: ['unshift', 'pop', 'splice'],
+  },
+  {
+    name: 'unshift',
+    category: 'arrays',
+    syntax: 'array.unshift(element1, element2, ...)',
+    description:
+      'Adds one or more elements to the beginning of an array and returns the new length',
+    arguments: [
+      { name: 'elements', type: 'any', description: 'Elements to add to the front of the array' },
+    ],
+    returns: { type: 'number', description: 'The new length of the array' },
+    examples: [
+      {
+        code: '[3, 4, 5].unshift(1, 2)',
+        output: '5',
+        explanation: 'Returns new length after adding 1 and 2 to front',
+      },
+      {
+        code: '["b", "c"].unshift("a")',
+        output: '3',
+        explanation: 'Returns new length after adding "a" to front',
+      },
+    ],
+    relatedMethods: ['shift', 'push', 'splice'],
+  },
+  // ==================== NEW STRING METHODS ====================
+  {
+    name: 'String.at',
+    category: 'strings',
+    syntax: 'string.at(index)',
+    description:
+      'Returns the character at the given index, allowing positive and negative integers. Negative integers count back from the last character.',
+    arguments: [
+      { name: 'index', type: 'number', description: 'The index of the character to return' },
+    ],
+    returns: {
+      type: 'string | undefined',
+      description: 'The character at the given index, or undefined',
+    },
+    examples: [
+      {
+        code: '"hello".at(-1)',
+        output: '"o"',
+        explanation: 'Returns the last character using negative index',
+      },
+      {
+        code: '"abcdef".at(3)',
+        output: '"d"',
+        explanation: 'Returns character at index 3',
+      },
+    ],
+    relatedMethods: ['charAt', 'charCodeAt', 'indexOf'],
+    sinceVersion: 'ES2022',
+  },
+  {
+    name: 'String.includes',
+    category: 'strings',
+    syntax: 'string.includes(searchString, position)',
+    description:
+      'Determines whether one string may be found within another string, returning true or false',
+    arguments: [
+      { name: 'searchString', type: 'string', description: 'The string to search for' },
+      {
+        name: 'position',
+        type: 'number',
+        description: 'Position to start searching from',
+        optional: true,
+      },
+    ],
+    returns: { type: 'boolean', description: 'true if the search string is found' },
+    examples: [
+      {
+        code: '"hello world".includes("world")',
+        output: 'true',
+        explanation: 'String contains "world"',
+      },
+      {
+        code: '"hello world".includes("xyz")',
+        output: 'false',
+        explanation: 'String does not contain "xyz"',
+      },
+    ],
+    relatedMethods: ['indexOf', 'startsWith', 'endsWith'],
+  },
+  {
+    name: 'String.indexOf',
+    category: 'strings',
+    syntax: 'string.indexOf(searchValue, fromIndex)',
+    description:
+      'Returns the index of the first occurrence of a specified value in a string, or -1 if not found',
+    arguments: [
+      { name: 'searchValue', type: 'string', description: 'The value to search for' },
+      {
+        name: 'fromIndex',
+        type: 'number',
+        description: 'Index to start searching from',
+        optional: true,
+      },
+    ],
+    returns: { type: 'number', description: 'The first index of the search value, or -1' },
+    examples: [
+      {
+        code: '"hello world".indexOf("world")',
+        output: '6',
+        explanation: '"world" starts at index 6',
+      },
+      {
+        code: '"banana".indexOf("na")',
+        output: '2',
+        explanation: 'First "na" is at index 2',
+      },
+    ],
+    relatedMethods: ['lastIndexOf', 'includes', 'search'],
+  },
+  {
+    name: 'String.slice',
+    category: 'strings',
+    syntax: 'string.slice(beginIndex, endIndex)',
+    description:
+      'Extracts a section of a string and returns it as a new string, without modifying the original',
+    arguments: [
+      { name: 'beginIndex', type: 'number', description: 'Index at which to begin extraction' },
+      {
+        name: 'endIndex',
+        type: 'number',
+        description: 'Index before which to end extraction',
+        optional: true,
+      },
+    ],
+    returns: { type: 'string', description: 'A new string containing the extracted section' },
+    examples: [
+      {
+        code: '"hello world".slice(0, 5)',
+        output: '"hello"',
+        explanation: 'Extracts first 5 characters',
+      },
+      {
+        code: '"hello world".slice(-5)',
+        output: '"world"',
+        explanation: 'Extracts last 5 characters using negative index',
+      },
+    ],
+    relatedMethods: ['substring', 'split', 'trim'],
+  },
+  {
+    name: 'search',
+    category: 'strings',
+    syntax: 'string.search(regexp)',
+    description:
+      'Executes a search for a match between a regular expression and the string, returning the index of the first match',
+    arguments: [{ name: 'regexp', type: 'RegExp', description: 'A regular expression object' }],
+    returns: {
+      type: 'number',
+      description: 'The index of the first match, or -1 if not found',
+    },
+    examples: [
+      {
+        code: '"hello 123 world".search(/\\d+/)',
+        output: '6',
+        explanation: 'First digit sequence starts at index 6',
+      },
+      {
+        code: '"abcdef".search(/[d-f]/)',
+        output: '3',
+        explanation: 'First character in range d-f is at index 3',
+      },
+    ],
+    relatedMethods: ['match', 'indexOf', 'replace'],
+  },
+  {
+    name: 'match',
+    category: 'strings',
+    syntax: 'string.match(regexp)',
+    description: 'Retrieves the result of matching a string against a regular expression',
+    arguments: [{ name: 'regexp', type: 'RegExp', description: 'A regular expression object' }],
+    returns: {
+      type: 'Array | null',
+      description: 'An array of matches, or null if no match',
+    },
+    examples: [
+      {
+        code: '"test 123 foo 456".match(/\\d+/g)',
+        output: '["123", "456"]',
+        explanation: 'Returns all digit sequences found globally',
+      },
+      {
+        code: '"hello".match(/[aeiou]/g)',
+        output: '["e", "o"]',
+        explanation: 'Returns all vowels found in the string',
+      },
+    ],
+    relatedMethods: ['search', 'replace', 'matchAll'],
+  },
+  {
+    name: 'trimStart',
+    category: 'strings',
+    syntax: 'string.trimStart()',
+    description: 'Removes whitespace from the beginning of a string',
+    arguments: [],
+    returns: {
+      type: 'string',
+      description: 'A new string with leading whitespace removed',
+    },
+    examples: [
+      {
+        code: '"   hello   ".trimStart()',
+        output: '"hello   "',
+        explanation: 'Removes only leading whitespace',
+      },
+      {
+        code: '"  abc".trimStart()',
+        output: '"abc"',
+        explanation: 'Removes leading spaces',
+      },
+    ],
+    relatedMethods: ['trimEnd', 'trim'],
+  },
+  {
+    name: 'trimEnd',
+    category: 'strings',
+    syntax: 'string.trimEnd()',
+    description: 'Removes whitespace from the end of a string',
+    arguments: [],
+    returns: {
+      type: 'string',
+      description: 'A new string with trailing whitespace removed',
+    },
+    examples: [
+      {
+        code: '"   hello   ".trimEnd()',
+        output: '"   hello"',
+        explanation: 'Removes only trailing whitespace',
+      },
+      {
+        code: '"abc  ".trimEnd()',
+        output: '"abc"',
+        explanation: 'Removes trailing spaces',
+      },
+    ],
+    relatedMethods: ['trimStart', 'trim'],
+  },
+  {
+    name: 'String.concat',
+    category: 'strings',
+    syntax: 'string.concat(str1, str2, ...strN)',
+    description: 'Concatenates the string arguments to the calling string and returns a new string',
+    arguments: [
+      { name: 'strings', type: 'string', description: 'Strings to concatenate to this string' },
+    ],
+    returns: { type: 'string', description: 'A new combined string' },
+    examples: [
+      {
+        code: '"hello".concat(" ", "world")',
+        output: '"hello world"',
+        explanation: 'Concatenates strings together',
+      },
+      {
+        code: '"abc".concat("def", "ghi")',
+        output: '"abcdefghi"',
+        explanation: 'Concatenates multiple strings',
+      },
+    ],
+    relatedMethods: ['+ operator', 'template literals', 'join'],
+  },
+  {
+    name: 'charCodeAt',
+    category: 'strings',
+    syntax: 'string.charCodeAt(index)',
+    description: 'Returns the UTF-16 code unit value at the given index',
+    arguments: [{ name: 'index', type: 'number', description: 'Index of the character' }],
+    returns: {
+      type: 'number',
+      description: 'A number representing the UTF-16 code unit, or NaN if index is out of range',
+    },
+    examples: [
+      {
+        code: '"A".charCodeAt(0)',
+        output: '65',
+        explanation: 'The character code of "A" is 65',
+      },
+      {
+        code: '"abc".charCodeAt(2)',
+        output: '99',
+        explanation: 'The character code of "c" is 99',
+      },
+    ],
+    relatedMethods: ['charAt', 'String.fromCharCode', 'codePointAt'],
+  },
+  // ==================== NEW OBJECT METHODS ====================
+  {
+    name: 'Object.freeze',
+    category: 'objects',
+    syntax: 'Object.freeze(obj)',
+    description:
+      'Freezes an object so that it can no longer be changed: new properties cannot be added, existing properties cannot be removed or modified',
+    arguments: [{ name: 'obj', type: 'object', description: 'The object to freeze' }],
+    returns: { type: 'object', description: 'The same object that was passed in, now frozen' },
+    examples: [
+      {
+        code: 'Object.isFrozen(Object.freeze({a: 1}))',
+        output: 'true',
+        explanation: 'Freezing an object makes it frozen',
+      },
+      {
+        code: 'Object.freeze([1, 2, 3]).length',
+        output: '3',
+        explanation: 'Freezing preserves the array and its properties',
+      },
+    ],
+    relatedMethods: ['Object.isFrozen', 'Object.seal', 'Object.preventExtensions'],
+  },
+  {
+    name: 'Object.isFrozen',
+    category: 'objects',
+    syntax: 'Object.isFrozen(obj)',
+    description: 'Determines if an object is frozen (cannot be modified)',
+    arguments: [{ name: 'obj', type: 'object', description: 'The object to check' }],
+    returns: { type: 'boolean', description: 'true if the object is frozen' },
+    examples: [
+      {
+        code: 'Object.isFrozen({})',
+        output: 'false',
+        explanation: 'A regular empty object is not frozen',
+      },
+      {
+        code: 'Object.isFrozen(Object.freeze({x: 10}))',
+        output: 'true',
+        explanation: 'A frozen object returns true',
+      },
+    ],
+    relatedMethods: ['Object.freeze', 'Object.isSealed', 'Object.isExtensible'],
+  },
+  {
+    name: 'Object.getOwnPropertyNames',
+    category: 'objects',
+    syntax: 'Object.getOwnPropertyNames(obj)',
+    description:
+      'Returns an array of all properties (including non-enumerable) found directly in a given object',
+    arguments: [{ name: 'obj', type: 'object', description: 'The object to inspect' }],
+    returns: {
+      type: 'Array<string>',
+      description: 'An array of strings corresponding to the properties',
+    },
+    examples: [
+      {
+        code: 'Object.getOwnPropertyNames({a: 1, b: 2, c: 3})',
+        output: '["a", "b", "c"]',
+        explanation: 'Returns all own property names',
+      },
+      {
+        code: 'Object.getOwnPropertyNames([10, 20, 30])',
+        output: '["0", "1", "2", "length"]',
+        explanation: 'Arrays include indices and "length" property',
+      },
+    ],
+    relatedMethods: ['Object.keys', 'Object.entries', 'Object.getOwnPropertyDescriptor'],
+  },
+  {
+    name: 'Object.hasOwn',
+    category: 'objects',
+    syntax: 'Object.hasOwn(obj, prop)',
+    description:
+      'Returns true if the specified object has the indicated property as its own property',
+    arguments: [
+      { name: 'obj', type: 'object', description: 'The object to check' },
+      { name: 'prop', type: 'string', description: 'The property name to test' },
+    ],
+    returns: { type: 'boolean', description: 'true if the object has the specified own property' },
+    examples: [
+      {
+        code: 'Object.hasOwn({name: "Alice", age: 30}, "name")',
+        output: 'true',
+        explanation: 'The object has own property "name"',
+      },
+      {
+        code: 'Object.hasOwn({x: 1, y: 2}, "z")',
+        output: 'false',
+        explanation: 'The object does not have property "z"',
+      },
+    ],
+    relatedMethods: ['Object.keys', 'Object.getOwnPropertyNames', 'in operator'],
+    sinceVersion: 'ES2022',
+  },
+  {
+    name: 'Object.create',
+    category: 'objects',
+    syntax: 'Object.create(proto, propertiesObject)',
+    description:
+      'Creates a new object using the specified prototype object and optional property descriptors',
+    arguments: [
+      { name: 'proto', type: 'object | null', description: 'The prototype for the new object' },
+      {
+        name: 'propertiesObject',
+        type: 'object',
+        description: 'Property descriptors to add',
+        optional: true,
+      },
+    ],
+    returns: { type: 'object', description: 'A new object with the specified prototype' },
+    examples: [
+      {
+        code: 'Object.getPrototypeOf(Object.create(null))',
+        output: 'null',
+        explanation: 'Creates an object with no prototype',
+      },
+      {
+        code: 'Object.keys(Object.create({}, {a: {value: 1, enumerable: true}}))',
+        output: '["a"]',
+        explanation: 'Creates an object with a defined property',
+      },
+    ],
+    relatedMethods: ['Object.assign', 'Object.getPrototypeOf', 'Object.setPrototypeOf'],
+  },
+  {
+    name: 'Object.is',
+    category: 'objects',
+    syntax: 'Object.is(value1, value2)',
+    description:
+      'Determines whether two values are the same value, using the SameValue algorithm (stricter than ===)',
+    arguments: [
+      { name: 'value1', type: 'any', description: 'The first value to compare' },
+      { name: 'value2', type: 'any', description: 'The second value to compare' },
+    ],
+    returns: { type: 'boolean', description: 'true if the values are the same value' },
+    examples: [
+      {
+        code: 'Object.is(NaN, NaN)',
+        output: 'true',
+        explanation: 'Unlike ===, NaN is considered equal to NaN',
+      },
+      {
+        code: 'Object.is(0, -0)',
+        output: 'false',
+        explanation: 'Unlike ===, +0 and -0 are not considered equal',
+      },
+    ],
+    relatedMethods: ['=== operator', 'Object.hasOwn'],
+  },
+  // ==================== NEW NUMBER METHODS ====================
+  {
+    name: 'parseInt',
+    category: 'numbers',
+    syntax: 'parseInt(string, radix)',
+    description: 'Parses a string argument and returns an integer of the specified radix (base)',
+    arguments: [
+      { name: 'string', type: 'string', description: 'The value to parse' },
+      {
+        name: 'radix',
+        type: 'number',
+        description: 'An integer between 2 and 36 representing the base',
+        optional: true,
+      },
+    ],
+    returns: { type: 'number', description: 'An integer parsed from the string, or NaN' },
+    examples: [
+      {
+        code: 'parseInt("3.14")',
+        output: '3',
+        explanation: 'Parses only the integer portion',
+      },
+      {
+        code: 'parseInt("ff", 16)',
+        output: '255',
+        explanation: 'Parses hexadecimal "ff" as 255',
+      },
+    ],
+    relatedMethods: ['parseFloat', 'Number.parseInt', 'Number.isInteger'],
+  },
+  {
+    name: 'parseFloat',
+    category: 'numbers',
+    syntax: 'parseFloat(string)',
+    description: 'Parses a string argument and returns a floating point number',
+    arguments: [{ name: 'string', type: 'string', description: 'The value to parse' }],
+    returns: { type: 'number', description: 'A floating point number, or NaN' },
+    examples: [
+      {
+        code: 'parseFloat("3.14")',
+        output: '3.14',
+        explanation: 'Parses the full floating point value',
+      },
+      {
+        code: 'parseFloat("10.5abc")',
+        output: '10.5',
+        explanation: 'Parses up to the first non-numeric character',
+      },
+    ],
+    relatedMethods: ['parseInt', 'Number.parseFloat', 'Number.isFinite'],
+  },
+  {
+    name: 'Number.isInteger',
+    category: 'numbers',
+    syntax: 'Number.isInteger(value)',
+    description: 'Determines whether the passed value is an integer',
+    arguments: [{ name: 'value', type: 'any', description: 'The value to test' }],
+    returns: { type: 'boolean', description: 'true if the value is an integer' },
+    examples: [
+      {
+        code: 'Number.isInteger(5)',
+        output: 'true',
+        explanation: '5 is an integer',
+      },
+      {
+        code: 'Number.isInteger(5.5)',
+        output: 'false',
+        explanation: '5.5 is not an integer',
+      },
+    ],
+    relatedMethods: ['Number.isFinite', 'Number.isNaN', 'Number.parseInt'],
+  },
+  {
+    name: 'Number.isFinite',
+    category: 'numbers',
+    syntax: 'Number.isFinite(value)',
+    description:
+      'Determines whether the passed value is a finite number (not Infinity, -Infinity, or NaN)',
+    arguments: [{ name: 'value', type: 'any', description: 'The value to test' }],
+    returns: { type: 'boolean', description: 'true if the value is a finite number' },
+    examples: [
+      {
+        code: 'Number.isFinite(42)',
+        output: 'true',
+        explanation: '42 is a finite number',
+      },
+      {
+        code: 'Number.isFinite(Infinity)',
+        output: 'false',
+        explanation: 'Infinity is not finite',
+      },
+    ],
+    relatedMethods: ['Number.isNaN', 'Number.isInteger', 'isFinite'],
+  },
+  // ==================== SET METHODS ====================
+  {
+    name: 'Set.add',
+    category: 'sets',
+    syntax: 'set.add(value)',
+    description:
+      'Appends a new element with the specified value to the end of a Set object. Returns the Set object.',
+    arguments: [{ name: 'value', type: 'any', description: 'The value to add to the Set' }],
+    returns: { type: 'Set', description: 'The Set object itself (for chaining)' },
+    examples: [
+      {
+        code: 'new Set([1, 2]).add(3).size',
+        output: '3',
+        explanation: 'Adding a new value increases the size to 3',
+      },
+      {
+        code: 'new Set(["a", "b"]).add("b").size',
+        output: '2',
+        explanation: 'Adding a duplicate value does not increase the size',
+      },
+    ],
+    relatedMethods: ['Set.has', 'Set.delete', 'Set.size'],
+  },
+  {
+    name: 'Set.has',
+    category: 'sets',
+    syntax: 'set.has(value)',
+    description:
+      'Returns a boolean indicating whether an element with the specified value exists in a Set',
+    arguments: [{ name: 'value', type: 'any', description: 'The value to test for presence' }],
+    returns: { type: 'boolean', description: 'true if the value exists in the Set' },
+    examples: [
+      {
+        code: 'new Set([1, 2, 3]).has(2)',
+        output: 'true',
+        explanation: 'The set contains the value 2',
+      },
+      {
+        code: 'new Set(["x", "y"]).has("z")',
+        output: 'false',
+        explanation: 'The set does not contain "z"',
+      },
+    ],
+    relatedMethods: ['Set.add', 'Set.delete', 'Set.size'],
+  },
+  {
+    name: 'Set.delete',
+    category: 'sets',
+    syntax: 'set.delete(value)',
+    description:
+      'Removes the specified element from a Set. Returns true if the element was found and removed.',
+    arguments: [{ name: 'value', type: 'any', description: 'The value to remove' }],
+    returns: {
+      type: 'boolean',
+      description: 'true if the element was in the Set, false otherwise',
+    },
+    examples: [
+      {
+        code: 'new Set([1, 2, 3]).delete(2)',
+        output: 'true',
+        explanation: 'Value 2 was found and removed',
+      },
+      {
+        code: 'new Set([1, 2, 3]).delete(5)',
+        output: 'false',
+        explanation: 'Value 5 was not in the set',
+      },
+    ],
+    relatedMethods: ['Set.has', 'Set.clear', 'Set.add'],
+  },
+  {
+    name: 'Set.clear',
+    category: 'sets',
+    syntax: 'set.clear()',
+    description: 'Removes all elements from a Set',
+    arguments: [],
+    returns: { type: 'undefined', description: 'Returns undefined' },
+    examples: [
+      {
+        code: 'typeof new Set([1, 2, 3]).clear()',
+        output: '"undefined"',
+        explanation: 'clear() returns undefined',
+      },
+      {
+        code: '(() => { const s = new Set([1, 2]); s.clear(); return s.size; })()',
+        output: '0',
+        explanation: 'After clearing, the set size is 0',
+      },
+    ],
+    relatedMethods: ['Set.delete', 'Set.add', 'Set.size'],
+  },
+  {
+    name: 'Set.size',
+    category: 'sets',
+    syntax: 'set.size',
+    description: 'Returns the number of values in the Set object (a getter property, not a method)',
+    arguments: [],
+    returns: { type: 'number', description: 'The number of elements in the Set' },
+    examples: [
+      {
+        code: 'new Set([1, 2, 3, 3, 2]).size',
+        output: '3',
+        explanation: 'Duplicate values are ignored, so size is 3',
+      },
+      {
+        code: 'new Set("hello").size',
+        output: '4',
+        explanation: 'Unique characters: h, e, l, o (duplicate l ignored)',
+      },
+    ],
+    relatedMethods: ['Set.has', 'Set.add', 'Set.delete'],
+    notes: ['This is a property, not a method - do not call with parentheses'],
+  },
+  {
+    name: 'Set.forEach',
+    category: 'sets',
+    syntax: 'set.forEach(callback(value, value2, set), thisArg)',
+    description:
+      'Executes a provided function once for each value in the Set object, in insertion order',
+    arguments: [
+      {
+        name: 'callback',
+        type: 'Function',
+        description:
+          'Function to execute for each element. Receives value, value (again), and the Set',
+      },
+      { name: 'thisArg', type: 'any', description: 'Value to use as this', optional: true },
+    ],
+    returns: { type: 'undefined', description: 'Always returns undefined' },
+    examples: [
+      {
+        code: 'typeof new Set([1, 2]).forEach(v => v)',
+        output: '"undefined"',
+        explanation: 'forEach always returns undefined',
+      },
+      {
+        code: '(() => { const r = []; new Set([3, 1, 2]).forEach(v => r.push(v)); return r; })()',
+        output: '[3, 1, 2]',
+        explanation: 'Iterates in insertion order',
+      },
+    ],
+    relatedMethods: ['Set.values', 'Set.entries', 'for...of'],
+  },
+  {
+    name: 'Set.values',
+    category: 'sets',
+    syntax: 'set.values()',
+    description:
+      'Returns a new iterator object that yields the values for each element in the Set, in insertion order',
+    arguments: [],
+    returns: { type: 'Iterator', description: 'A new Set iterator object' },
+    examples: [
+      {
+        code: '[...new Set([3, 1, 4, 1, 5]).values()]',
+        output: '[3, 1, 4, 5]',
+        explanation: 'Yields unique values in insertion order',
+      },
+      {
+        code: 'Array.from(new Set(["b", "a", "c"]).values())',
+        output: '["b", "a", "c"]',
+        explanation: 'Converts Set values iterator to array',
+      },
+    ],
+    relatedMethods: ['Set.keys', 'Set.entries', 'Set.forEach'],
+  },
+  {
+    name: 'Set.entries',
+    category: 'sets',
+    syntax: 'set.entries()',
+    description:
+      'Returns a new iterator object that contains an array of [value, value] for each element in the Set, in insertion order',
+    arguments: [],
+    returns: { type: 'Iterator', description: 'A new iterator yielding [value, value] pairs' },
+    examples: [
+      {
+        code: '[...new Set([10, 20]).entries()]',
+        output: '[[10, 10], [20, 20]]',
+        explanation: 'Each entry is a [value, value] pair for Set compatibility with Map',
+      },
+      {
+        code: '[...new Set(["a"]).entries()]',
+        output: '[["a", "a"]]',
+        explanation: 'Single entry set produces one [value, value] pair',
+      },
+    ],
+    relatedMethods: ['Set.values', 'Set.keys', 'Set.forEach'],
+  },
+  // ==================== MAP METHODS ====================
+  {
+    name: 'Map.set',
+    category: 'maps',
+    syntax: 'map.set(key, value)',
+    description:
+      'Adds or updates an entry in a Map object with a specified key and value. Returns the Map object.',
+    arguments: [
+      { name: 'key', type: 'any', description: 'The key of the element to add' },
+      { name: 'value', type: 'any', description: 'The value of the element to add' },
+    ],
+    returns: { type: 'Map', description: 'The Map object itself (for chaining)' },
+    examples: [
+      {
+        code: 'new Map().set("a", 1).set("b", 2).size',
+        output: '2',
+        explanation: 'Chaining set calls creates a map with 2 entries',
+      },
+      {
+        code: 'new Map([["x", 1]]).set("x", 99).get("x")',
+        output: '99',
+        explanation: 'Setting an existing key updates its value',
+      },
+    ],
+    relatedMethods: ['Map.get', 'Map.has', 'Map.delete'],
+  },
+  {
+    name: 'Map.get',
+    category: 'maps',
+    syntax: 'map.get(key)',
+    description:
+      'Returns the value associated with the specified key, or undefined if the key is not found',
+    arguments: [{ name: 'key', type: 'any', description: 'The key of the element to return' }],
+    returns: {
+      type: 'any',
+      description: 'The element associated with the key, or undefined',
+    },
+    examples: [
+      {
+        code: 'new Map([["a", 1], ["b", 2]]).get("a")',
+        output: '1',
+        explanation: 'Returns the value associated with key "a"',
+      },
+      {
+        code: 'new Map([["name", "Alice"]]).get("age")',
+        output: 'undefined',
+        explanation: 'Returns undefined for a non-existent key',
+      },
+    ],
+    relatedMethods: ['Map.set', 'Map.has', 'Map.delete'],
+  },
+  {
+    name: 'Map.has',
+    category: 'maps',
+    syntax: 'map.has(key)',
+    description:
+      'Returns a boolean indicating whether an element with the specified key exists in the Map',
+    arguments: [{ name: 'key', type: 'any', description: 'The key to test for presence' }],
+    returns: { type: 'boolean', description: 'true if the key exists in the Map' },
+    examples: [
+      {
+        code: 'new Map([["a", 1], ["b", 2]]).has("b")',
+        output: 'true',
+        explanation: 'The map contains key "b"',
+      },
+      {
+        code: 'new Map([["x", 10]]).has("y")',
+        output: 'false',
+        explanation: 'The map does not contain key "y"',
+      },
+    ],
+    relatedMethods: ['Map.get', 'Map.set', 'Map.delete'],
+  },
+  {
+    name: 'Map.delete',
+    category: 'maps',
+    syntax: 'map.delete(key)',
+    description:
+      'Removes the specified element from a Map by key. Returns true if the element existed and was removed.',
+    arguments: [{ name: 'key', type: 'any', description: 'The key of the element to remove' }],
+    returns: {
+      type: 'boolean',
+      description: 'true if the element was in the Map, false otherwise',
+    },
+    examples: [
+      {
+        code: 'new Map([["a", 1], ["b", 2]]).delete("a")',
+        output: 'true',
+        explanation: 'Key "a" was found and removed',
+      },
+      {
+        code: 'new Map([["a", 1]]).delete("z")',
+        output: 'false',
+        explanation: 'Key "z" was not found in the map',
+      },
+    ],
+    relatedMethods: ['Map.has', 'Map.clear', 'Map.set'],
+  },
+  {
+    name: 'Map.clear',
+    category: 'maps',
+    syntax: 'map.clear()',
+    description: 'Removes all key-value pairs from a Map',
+    arguments: [],
+    returns: { type: 'undefined', description: 'Returns undefined' },
+    examples: [
+      {
+        code: '(() => { const m = new Map([["a", 1]]); m.clear(); return m.size; })()',
+        output: '0',
+        explanation: 'After clearing, the map size is 0',
+      },
+      {
+        code: 'typeof new Map([["a", 1]]).clear()',
+        output: '"undefined"',
+        explanation: 'clear() returns undefined',
+      },
+    ],
+    relatedMethods: ['Map.delete', 'Map.set', 'Map.size'],
+  },
+  {
+    name: 'Map.size',
+    category: 'maps',
+    syntax: 'map.size',
+    description:
+      'Returns the number of key-value pairs in the Map object (a getter property, not a method)',
+    arguments: [],
+    returns: { type: 'number', description: 'The number of entries in the Map' },
+    examples: [
+      {
+        code: 'new Map([["a", 1], ["b", 2], ["c", 3]]).size',
+        output: '3',
+        explanation: 'The map contains 3 key-value pairs',
+      },
+      {
+        code: 'new Map().size',
+        output: '0',
+        explanation: 'An empty map has size 0',
+      },
+    ],
+    relatedMethods: ['Map.has', 'Map.set', 'Map.delete'],
+    notes: ['This is a property, not a method - do not call with parentheses'],
+  },
+  {
+    name: 'Map.keys',
+    category: 'maps',
+    syntax: 'map.keys()',
+    description:
+      'Returns a new iterator object that contains the keys for each element in the Map, in insertion order',
+    arguments: [],
+    returns: { type: 'Iterator', description: 'A new Map iterator object containing keys' },
+    examples: [
+      {
+        code: '[...new Map([["a", 1], ["b", 2], ["c", 3]]).keys()]',
+        output: '["a", "b", "c"]',
+        explanation: 'Returns all keys in insertion order',
+      },
+      {
+        code: 'Array.from(new Map([[1, "one"], [2, "two"]]).keys())',
+        output: '[1, 2]',
+        explanation: 'Converts key iterator to array',
+      },
+    ],
+    relatedMethods: ['Map.values', 'Map.entries', 'Map.forEach'],
+  },
+  {
+    name: 'Map.values',
+    category: 'maps',
+    syntax: 'map.values()',
+    description:
+      'Returns a new iterator object that contains the values for each element in the Map, in insertion order',
+    arguments: [],
+    returns: { type: 'Iterator', description: 'A new Map iterator object containing values' },
+    examples: [
+      {
+        code: '[...new Map([["a", 10], ["b", 20], ["c", 30]]).values()]',
+        output: '[10, 20, 30]',
+        explanation: 'Returns all values in insertion order',
+      },
+      {
+        code: 'Array.from(new Map([["x", "hello"], ["y", "world"]]).values())',
+        output: '["hello", "world"]',
+        explanation: 'Converts value iterator to array',
+      },
+    ],
+    relatedMethods: ['Map.keys', 'Map.entries', 'Map.forEach'],
+  },
+  // ==================== JSON METHODS ====================
+  {
+    name: 'JSON.parse',
+    category: 'json',
+    syntax: 'JSON.parse(text, reviver)',
+    description:
+      'Parses a JSON string, constructing the JavaScript value or object described by the string',
+    arguments: [
+      { name: 'text', type: 'string', description: 'The string to parse as JSON' },
+      {
+        name: 'reviver',
+        type: 'Function',
+        description: 'Function to transform the results',
+        optional: true,
+      },
+    ],
+    returns: { type: 'any', description: 'The JavaScript value corresponding to the JSON text' },
+    examples: [
+      {
+        code: 'JSON.parse(\'{"a":1,"b":2}\')',
+        output: '{a: 1, b: 2}',
+        explanation: 'Parses a JSON string into an object',
+      },
+      {
+        code: 'JSON.parse("[1,2,3]")',
+        output: '[1, 2, 3]',
+        explanation: 'Parses a JSON array string',
+      },
+    ],
+    relatedMethods: ['JSON.stringify'],
+  },
+  {
+    name: 'JSON.stringify',
+    category: 'json',
+    syntax: 'JSON.stringify(value, replacer, space)',
+    description:
+      'Converts a JavaScript value to a JSON string, optionally replacing values or including only specified properties',
+    arguments: [
+      { name: 'value', type: 'any', description: 'The value to convert to a JSON string' },
+      {
+        name: 'replacer',
+        type: 'Function | Array',
+        description: 'Alters the stringification process',
+        optional: true,
+      },
+      {
+        name: 'space',
+        type: 'string | number',
+        description: 'Adds indentation for readability',
+        optional: true,
+      },
+    ],
+    returns: { type: 'string', description: 'A JSON string representing the value' },
+    examples: [
+      {
+        code: 'JSON.stringify({a: 1, b: "hello"})',
+        output: '\'{"a":1,"b":"hello"}\'',
+        explanation: 'Converts an object to a JSON string',
+      },
+      {
+        code: 'JSON.stringify([1, "two", true])',
+        output: '\'[1,"two",true]\'',
+        explanation: 'Converts an array to a JSON string',
+      },
+    ],
+    relatedMethods: ['JSON.parse'],
+  },
+  {
+    name: 'JSON.parse with reviver',
+    category: 'json',
+    syntax: 'JSON.parse(text, reviver)',
+    description:
+      'Parses a JSON string with a reviver function that transforms each key-value pair during parsing',
+    arguments: [
+      { name: 'text', type: 'string', description: 'The string to parse as JSON' },
+      {
+        name: 'reviver',
+        type: 'Function',
+        description: 'Function called for each key-value pair, receives key and value',
+      },
+    ],
+    returns: {
+      type: 'any',
+      description: 'The transformed JavaScript value',
+    },
+    examples: [
+      {
+        code: 'JSON.parse(\'{"a":1,"b":2}\', (k, v) => typeof v === "number" ? v * 10 : v)',
+        output: '{a: 10, b: 20}',
+        explanation: 'The reviver multiplies all number values by 10',
+      },
+      {
+        code: 'JSON.parse(\'{"x":"hello","y":"world"}\', (k, v) => typeof v === "string" && k !== "" ? v.toUpperCase() : v)',
+        output: '{x: "HELLO", y: "WORLD"}',
+        explanation: 'The reviver uppercases all string values',
+      },
+    ],
+    relatedMethods: ['JSON.parse', 'JSON.stringify'],
+  },
+  {
+    name: 'JSON.stringify with replacer',
+    category: 'json',
+    syntax: 'JSON.stringify(value, replacer)',
+    description:
+      'Converts a JavaScript value to a JSON string using a replacer function or array to filter or transform values',
+    arguments: [
+      { name: 'value', type: 'any', description: 'The value to convert' },
+      {
+        name: 'replacer',
+        type: 'Function | Array',
+        description: 'Array of properties to include, or a transform function',
+      },
+    ],
+    returns: { type: 'string', description: 'A filtered or transformed JSON string' },
+    examples: [
+      {
+        code: 'JSON.stringify({a: 1, b: 2, c: 3}, ["a", "c"])',
+        output: '\'{"a":1,"c":3}\'',
+        explanation: 'Only includes properties "a" and "c"',
+      },
+      {
+        code: 'JSON.stringify({x: 5, y: 10}, (k, v) => typeof v === "number" ? v + 1 : v)',
+        output: '\'{"x":6,"y":11}\'',
+        explanation: 'The replacer increments all number values by 1',
+      },
+    ],
+    relatedMethods: ['JSON.stringify', 'JSON.parse'],
+  },
+  // ==================== DATE METHODS ====================
+  {
+    name: 'Date.now',
+    category: 'dates',
+    syntax: 'Date.now()',
+    description: 'Returns the number of milliseconds elapsed since January 1, 1970 00:00:00 UTC',
+    arguments: [],
+    returns: {
+      type: 'number',
+      description: 'The current timestamp in milliseconds since the Unix epoch',
+    },
+    examples: [
+      {
+        code: 'typeof Date.now()',
+        output: '"number"',
+        explanation: 'Date.now() returns a number (milliseconds since epoch)',
+      },
+      {
+        code: 'Date.now() > 0',
+        output: 'true',
+        explanation: 'The timestamp is always a positive number',
+      },
+    ],
+    relatedMethods: ['new Date', 'Date.parse', 'getTime'],
+  },
+  {
+    name: 'getFullYear',
+    category: 'dates',
+    syntax: 'date.getFullYear()',
+    description: 'Returns the year of the specified date according to local time',
+    arguments: [],
+    returns: { type: 'number', description: 'The year (4 digits for dates between 1000 and 9999)' },
+    examples: [
+      {
+        code: 'new Date("2024-06-15T12:00:00").getFullYear()',
+        output: '2024',
+        explanation: 'Returns the year 2024',
+      },
+      {
+        code: 'new Date("1999-12-31T00:00:00").getFullYear()',
+        output: '1999',
+        explanation: 'Returns the year 1999',
+      },
+    ],
+    relatedMethods: ['getMonth', 'getDate', 'setFullYear'],
+  },
+  {
+    name: 'getMonth',
+    category: 'dates',
+    syntax: 'date.getMonth()',
+    description:
+      'Returns the month in the specified date according to local time, as a zero-based value (0 = January, 11 = December)',
+    arguments: [],
+    returns: { type: 'number', description: 'An integer from 0 to 11 representing the month' },
+    examples: [
+      {
+        code: 'new Date("2024-03-15T12:00:00").getMonth()',
+        output: '2',
+        explanation: 'March is month index 2 (zero-based)',
+      },
+      {
+        code: 'new Date("2024-01-01T00:00:00").getMonth()',
+        output: '0',
+        explanation: 'January is month index 0',
+      },
+    ],
+    relatedMethods: ['getFullYear', 'getDate', 'setMonth'],
+    notes: ['Months are zero-based: January=0, February=1, ..., December=11'],
+  },
+  {
+    name: 'getDate',
+    category: 'dates',
+    syntax: 'date.getDate()',
+    description: 'Returns the day of the month for the specified date according to local time',
+    arguments: [],
+    returns: {
+      type: 'number',
+      description: 'An integer from 1 to 31 representing the day of the month',
+    },
+    examples: [
+      {
+        code: 'new Date("2024-06-15T12:00:00").getDate()',
+        output: '15',
+        explanation: 'Returns the 15th day of the month',
+      },
+      {
+        code: 'new Date("2024-12-25T00:00:00").getDate()',
+        output: '25',
+        explanation: 'Returns the 25th day of the month',
+      },
+    ],
+    relatedMethods: ['getFullYear', 'getMonth', 'getDay'],
+  },
+  {
+    name: 'toISOString',
+    category: 'dates',
+    syntax: 'date.toISOString()',
+    description:
+      'Returns a string in simplified extended ISO format (ISO 8601), which is always in UTC',
+    arguments: [],
+    returns: {
+      type: 'string',
+      description: 'A string in the format YYYY-MM-DDTHH:mm:ss.sssZ',
+    },
+    examples: [
+      {
+        code: 'new Date("2024-06-15T12:30:00Z").toISOString()',
+        output: '"2024-06-15T12:30:00.000Z"',
+        explanation: 'Returns the ISO 8601 formatted string in UTC',
+      },
+      {
+        code: 'new Date("2000-01-01T00:00:00Z").toISOString()',
+        output: '"2000-01-01T00:00:00.000Z"',
+        explanation: 'Formats the date as an ISO string',
+      },
+    ],
+    relatedMethods: ['toLocaleDateString', 'toJSON', 'Date.parse'],
+  },
+  {
+    name: 'getTime',
+    category: 'dates',
+    syntax: 'date.getTime()',
+    description:
+      'Returns the number of milliseconds since January 1, 1970 00:00:00 UTC for the given date',
+    arguments: [],
+    returns: { type: 'number', description: 'Milliseconds since the Unix epoch' },
+    examples: [
+      {
+        code: 'new Date("1970-01-01T00:00:00Z").getTime()',
+        output: '0',
+        explanation: 'The Unix epoch returns 0 milliseconds',
+      },
+      {
+        code: 'new Date("1970-01-02T00:00:00Z").getTime()',
+        output: '86400000',
+        explanation: 'One day after epoch is 86400000 ms (24*60*60*1000)',
+      },
+    ],
+    relatedMethods: ['Date.now', 'setTime', 'valueOf'],
+  },
+  // ==================== PROMISE METHODS ====================
+  {
+    name: 'Promise.resolve',
+    category: 'promises',
+    syntax: 'Promise.resolve(value)',
+    description:
+      'Returns a Promise object that is resolved with the given value. If the value is a thenable, the returned promise will follow that thenable.',
+    arguments: [
+      { name: 'value', type: 'any', description: 'The value to resolve the promise with' },
+    ],
+    returns: { type: 'Promise', description: 'A Promise that is resolved with the given value' },
+    examples: [
+      {
+        code: 'Promise.resolve(42) instanceof Promise',
+        output: 'true',
+        explanation: 'Promise.resolve returns a Promise instance',
+      },
+      {
+        code: 'typeof Promise.resolve("hello").then',
+        output: '"function"',
+        explanation: 'The returned promise has a then method',
+      },
+    ],
+    relatedMethods: ['Promise.reject', 'Promise.all', 'Promise.race'],
+  },
+  {
+    name: 'Promise.reject',
+    category: 'promises',
+    syntax: 'Promise.reject(reason)',
+    description: 'Returns a Promise object that is rejected with the given reason',
+    arguments: [{ name: 'reason', type: 'any', description: 'The reason the promise is rejected' }],
+    returns: { type: 'Promise', description: 'A Promise that is rejected with the given reason' },
+    examples: [
+      {
+        code: 'Promise.reject("error") instanceof Promise',
+        output: 'true',
+        explanation: 'Promise.reject returns a Promise instance',
+      },
+      {
+        code: 'typeof Promise.reject("fail").catch',
+        output: '"function"',
+        explanation: 'The returned promise has a catch method',
+      },
+    ],
+    relatedMethods: ['Promise.resolve', 'Promise.all', 'Promise.allSettled'],
+  },
+  {
+    name: 'Promise.all',
+    category: 'promises',
+    syntax: 'Promise.all(iterable)',
+    description:
+      'Takes an iterable of promises and returns a single promise that resolves when all input promises resolve, or rejects when any input promise rejects',
+    arguments: [
+      {
+        name: 'iterable',
+        type: 'Iterable<Promise>',
+        description: 'An iterable of promises',
+      },
+    ],
+    returns: {
+      type: 'Promise<Array>',
+      description: 'A promise that resolves to an array of results',
+    },
+    examples: [
+      {
+        code: 'Promise.all([Promise.resolve(1), Promise.resolve(2)]) instanceof Promise',
+        output: 'true',
+        explanation: 'Promise.all returns a Promise',
+      },
+      {
+        code: 'typeof Promise.all([]).then',
+        output: '"function"',
+        explanation: 'Even with an empty array, it returns a thenable Promise',
+      },
+    ],
+    relatedMethods: ['Promise.allSettled', 'Promise.race', 'Promise.any'],
+  },
+  {
+    name: 'Promise.race',
+    category: 'promises',
+    syntax: 'Promise.race(iterable)',
+    description:
+      'Takes an iterable of promises and returns a promise that fulfills or rejects as soon as one of the input promises fulfills or rejects',
+    arguments: [
+      {
+        name: 'iterable',
+        type: 'Iterable<Promise>',
+        description: 'An iterable of promises',
+      },
+    ],
+    returns: {
+      type: 'Promise',
+      description: 'A promise that settles with the state of the first settled promise',
+    },
+    examples: [
+      {
+        code: 'Promise.race([Promise.resolve("first")]) instanceof Promise',
+        output: 'true',
+        explanation: 'Promise.race returns a Promise instance',
+      },
+      {
+        code: 'typeof Promise.race([Promise.resolve(1)]).then',
+        output: '"function"',
+        explanation: 'The returned promise is thenable',
+      },
+    ],
+    relatedMethods: ['Promise.all', 'Promise.any', 'Promise.allSettled'],
+  },
+  // ==================== REGEX METHODS ====================
+  {
+    name: 'RegExp.test',
+    category: 'regex',
+    syntax: 'regexp.test(str)',
+    description:
+      'Executes a search for a match between a regular expression and a specified string, returning true or false',
+    arguments: [{ name: 'str', type: 'string', description: 'The string to test against' }],
+    returns: { type: 'boolean', description: 'true if a match is found, false otherwise' },
+    examples: [
+      {
+        code: '/^hello/.test("hello world")',
+        output: 'true',
+        explanation: 'The string starts with "hello"',
+      },
+      {
+        code: '/\\d{3}/.test("abc")',
+        output: 'false',
+        explanation: 'The string does not contain three consecutive digits',
+      },
+    ],
+    relatedMethods: ['RegExp.exec', 'String.match', 'String.search'],
+  },
+  {
+    name: 'RegExp.exec',
+    category: 'regex',
+    syntax: 'regexp.exec(str)',
+    description:
+      'Executes a search for a match in a specified string and returns a result array with match details, or null',
+    arguments: [{ name: 'str', type: 'string', description: 'The string to test against' }],
+    returns: {
+      type: 'Array | null',
+      description: 'An array with match info (index, input, groups), or null',
+    },
+    examples: [
+      {
+        code: '/(\\d+)/.exec("age: 25")[1]',
+        output: '"25"',
+        explanation: 'Captures the first group match - the digits "25"',
+      },
+      {
+        code: '/([a-z]+)@([a-z]+)/.exec("user@host")[2]',
+        output: '"host"',
+        explanation: 'Returns the second captured group',
+      },
+    ],
+    relatedMethods: ['RegExp.test', 'String.match', 'String.matchAll'],
+  },
+  {
+    name: 'String.match (regex)',
+    category: 'regex',
+    syntax: 'string.match(regexp)',
+    description:
+      'Retrieves the result of matching a string against a regular expression, returning all matches when using the global flag',
+    arguments: [{ name: 'regexp', type: 'RegExp', description: 'A regular expression object' }],
+    returns: {
+      type: 'Array | null',
+      description: 'An array of matches, or null if no match found',
+    },
+    examples: [
+      {
+        code: '"2024-06-15".match(/\\d{4}/)',
+        output: '["2024"]',
+        explanation: 'Matches the first 4-digit sequence without global flag',
+      },
+      {
+        code: '"abc123def456".match(/[a-z]+/g)',
+        output: '["abc", "def"]',
+        explanation: 'Returns all alphabetic sequences with global flag',
+      },
+    ],
+    relatedMethods: ['RegExp.exec', 'search', 'matchAll'],
+  },
+  {
+    name: 'String.replace (regex)',
+    category: 'regex',
+    syntax: 'string.replace(regexp, replacement)',
+    description:
+      'Returns a new string with matches of a regex pattern replaced by a replacement string or function result',
+    arguments: [
+      { name: 'regexp', type: 'RegExp', description: 'A regular expression to match' },
+      {
+        name: 'replacement',
+        type: 'string | Function',
+        description: 'The string or function to replace with',
+      },
+    ],
+    returns: { type: 'string', description: 'A new string with replacements made' },
+    examples: [
+      {
+        code: '"hello world".replace(/o/g, "0")',
+        output: '"hell0 w0rld"',
+        explanation: 'Replaces all "o" characters with "0" using regex global flag',
+      },
+      {
+        code: '"abc123".replace(/[a-z]/g, "")',
+        output: '"123"',
+        explanation: 'Removes all lowercase letters using regex',
+      },
+    ],
+    relatedMethods: ['replaceAll', 'match', 'search'],
+  },
 ];
 
 export const pythonMethods: Method[] = [
