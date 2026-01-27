@@ -262,8 +262,9 @@ export default function ExerciseTutor({
           AI Tutor
         </h2>
         <p className="text-sm text-zinc-400 mb-4">
-          Get Socratic guidance from a local AI tutor. It will ask questions and give hints without
-          revealing the solution.
+          Ask questions about the exercise and get in-depth explanations. The tutor can break down
+          the explanation, clarify each instruction step, walk through hints, explain the solution
+          code line by line, review your code for bugs, and narrate the visualization step by step.
         </p>
 
         {isWebGPUSupported === false ? (
