@@ -42,6 +42,10 @@ const MinHeapInsertViz = dynamic(() => import('./MinHeapInsertViz'), { ssr: fals
 const PrefixSumViz = dynamic(() => import('./PrefixSumViz'), { ssr: false });
 const TrieInsertViz = dynamic(() => import('./TrieInsertViz'), { ssr: false });
 const GeneratePermutationsViz = dynamic(() => import('./GeneratePermutationsViz'), { ssr: false });
+const GenerateCombinationsViz = dynamic(() => import('./GenerateCombinationsViz'), { ssr: false });
+const HeapExtractMinViz = dynamic(() => import('./HeapExtractMinViz'), { ssr: false });
+const LRUCacheViz = dynamic(() => import('./LRUCacheViz'), { ssr: false });
+const BasicMemoizeViz = dynamic(() => import('./BasicMemoizeViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -83,6 +87,10 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'prefix-sum': PrefixSumViz,
   'trie-insert': TrieInsertViz,
   'generate-permutations': GeneratePermutationsViz,
+  'generate-combinations': GenerateCombinationsViz,
+  'heap-extract-min': HeapExtractMinViz,
+  'lru-cache': LRUCacheViz,
+  'basic-memoize': BasicMemoizeViz,
 };
 
 /**
