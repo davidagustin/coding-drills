@@ -201,6 +201,7 @@ const PrimMSTViz = dynamic(() => import('./PrimMSTViz'), { ssr: false });
 const ReverseLinkedListViz = dynamic(() => import('./ReverseLinkedListViz'), { ssr: false });
 const MergeTwoListsViz = dynamic(() => import('./MergeTwoListsViz'), { ssr: false });
 const HasCycleViz = dynamic(() => import('./HasCycleViz'), { ssr: false });
+const DetectCycleViz = dynamic(() => import('./DetectCycleViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -395,6 +396,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'reverse-linked-list': ReverseLinkedListViz,
   'merge-two-lists': MergeTwoListsViz,
   'has-cycle': HasCycleViz,
+  'detect-cycle': DetectCycleViz,
 };
 
 /**
