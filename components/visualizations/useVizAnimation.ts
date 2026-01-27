@@ -38,7 +38,7 @@ export function useVizAnimation(
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(600);
 
-  const isComplete = step >= totalStepsState;
+  const isComplete = step >= totalStepsState - 1;
 
   // The `step` dependency is needed to re-schedule the timeout after each advance,
   // even though we use the functional updater form for setStep.
@@ -48,9 +48,9 @@ export function useVizAnimation(
 
     const timer = setTimeout(() => {
       setStep((prev) => {
-        const next = prev + 1;
+        const next = Math.min(prev + 1, totalStepsState - 1);
         onStep?.(next);
-        if (next >= totalStepsState) {
+        if (next >= totalStepsState - 1) {
           setIsPlaying(false);
         }
         return next;
@@ -80,7 +80,7 @@ export function useVizAnimation(
   }, [isPlaying, play, pause]);
 
   const stepForward = useCallback(() => {
-    if (step < totalStepsState) {
+    if (step < totalStepsState - 1) {
       const nextStep = step + 1;
       setStep(nextStep);
       onStep?.(nextStep);
