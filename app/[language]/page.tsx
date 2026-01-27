@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getExerciseCount } from '@/lib/exercises/index';
+import { algorithmProblems } from '@/lib/interview/problems';
 import { getMethodCountByLanguage } from '@/lib/methods/index';
 import { problemsByLanguage } from '@/lib/problems/index';
 import type { LanguageId } from '@/lib/types';
@@ -356,6 +357,7 @@ export default function LanguagePage() {
   const methodCounts = getMethodCountByLanguage();
   const methodCount = methodCounts[language] || 0;
   const exerciseCount = !isDatabaseLanguage ? getExerciseCount(language) : 0;
+  const interviewProblemCount = algorithmProblems.length;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -498,6 +500,7 @@ export default function LanguagePage() {
             description="Talk through coding problems with an AI interviewer. Practice explaining your approach and reasoning out loud."
             buttonText="Start Mock Interview"
             config={config}
+            badge={interviewProblemCount > 0 ? `${interviewProblemCount} problems` : undefined}
           />
         )}
       </div>
