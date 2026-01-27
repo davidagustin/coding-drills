@@ -1,18 +1,18 @@
 'use client';
 
-import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import { useVizAnimation } from './useVizAnimation';
 import VizControls from './VizControls';
 
-const ARRAY = [1, 2, 3, 4, 5, 6];
+const INPUT = [1, 2, 3, 4, 5, 6];
 const PREDICATE = (n: number) => n % 2 === 0; // Even numbers
 
 interface PartitionStep {
-  arr: number[];
+  items: number[];
   truthy: number[];
   falsy: number[];
-  i: number;
+  currentIndex: number;
+  currentValue: number;
   explanation: string;
 }
 
@@ -22,43 +22,57 @@ function computeSteps(): PartitionStep[] {
   const falsy: number[] = [];
 
   steps.push({
-    arr: [...ARRAY],
+    items: [...INPUT],
     truthy: [],
     falsy: [],
-    i: -1,
-    explanation: `Start: Partition array by predicate (even numbers)`,
+    currentIndex: -1,
+    currentValue: 0,
+    explanation: `Start: Partition array [${INPUT.join(', ')}] using predicate (even numbers)`,
   });
 
-  for (let i = 0; i < ARRAY.length; i++) {
-    const val = ARRAY[i];
-    const passes = PREDICATE(val);
+  for (let i = 0; i < INPUT.length; i++) {
+    const value = INPUT[i];
+    const passes = PREDICATE(value);
+
+    steps.push({
+      items: [...INPUT],
+      truthy: [...truthy],
+      falsy: [...falsy],
+      currentIndex: i,
+      currentValue: value,
+      explanation: `Processing index ${i}: value = ${value}, predicate(${value}) = ${passes}`,
+    });
+
     if (passes) {
-      truthy.push(val);
+      truthy.push(value);
       steps.push({
-        arr: [...ARRAY],
+        items: [...INPUT],
         truthy: [...truthy],
         falsy: [...falsy],
-        i,
-        explanation: `Index ${i}: ${val} is even → add to truthy group`,
+        currentIndex: i,
+        currentValue: value,
+        explanation: `Add ${value} to truthy array: [${truthy.join(', ')}]`,
       });
     } else {
-      falsy.push(val);
+      falsy.push(value);
       steps.push({
-        arr: [...ARRAY],
+        items: [...INPUT],
         truthy: [...truthy],
         falsy: [...falsy],
-        i,
-        explanation: `Index ${i}: ${val} is odd → add to falsy group`,
+        currentIndex: i,
+        currentValue: value,
+        explanation: `Add ${value} to falsy array: [${falsy.join(', ')}]`,
       });
     }
   }
 
   steps.push({
-    arr: [...ARRAY],
+    items: [...INPUT],
     truthy: [...truthy],
     falsy: [...falsy],
-    i: -1,
-    explanation: `Complete: Truthy = [${truthy.join(', ')}], Falsy = [${falsy.join(', ')}]`,
+    currentIndex: -1,
+    currentValue: 0,
+    explanation: `Complete: truthy = [${truthy.join(', ')}], falsy = [${falsy.join(', ')}]`,
   });
 
   return steps;
@@ -75,7 +89,7 @@ export default function PartitionViz() {
     return step < STEPS.length ? STEPS[step] : STEPS[STEPS.length - 1];
   }, [step]);
 
-  const { arr, truthy, falsy, i, explanation } = currentStep;
+  const { items, truthy, falsy, currentIndex, explanation } = currentStep;
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">
@@ -86,75 +100,68 @@ export default function PartitionViz() {
       </div>
 
       <div className="space-y-6">
-        {/* Original Array */}
+        {/* Input Array */}
         <div>
-          <h3 className="text-sm font-medium text-zinc-400 mb-2">Original Array</h3>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Input Array</h3>
           <div className="flex gap-2 flex-wrap">
-            {arr.map((val, idx) => {
-              const isCurrent = idx === i;
+            {items.map((val, idx) => {
+              const isCurrent = idx === currentIndex && currentIndex !== -1;
               const passes = PREDICATE(val);
               return (
-                <motion.div
+                <div
                   key={idx}
-                  initial={false}
-                  animate={{
-                    scale: isCurrent ? 1.1 : 1,
-                  }}
-                  className={`w-16 h-16 rounded-lg flex items-center justify-center font-mono text-lg font-semibold border-2 ${
+                  className={`w-16 h-16 rounded-lg flex flex-col items-center justify-center font-mono text-sm font-semibold border-2 ${
                     isCurrent
-                      ? passes
+                      ? 'bg-blue-500/20 border-blue-500 text-blue-400'
+                      : passes
                         ? 'bg-green-500/20 border-green-500 text-green-400'
                         : 'bg-red-500/20 border-red-500 text-red-400'
-                      : 'bg-zinc-800 border-zinc-700 text-zinc-300'
                   }`}
                 >
-                  {val}
-                </motion.div>
+                  <span className="text-xs text-zinc-500">{idx}</span>
+                  <span className="text-lg">{val}</span>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* Partitioned Arrays */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h3 className="text-sm font-medium text-zinc-400 mb-2">Truthy Group (Even)</h3>
+        {/* Truthy Array */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Truthy Array (even numbers)</h3>
+          {truthy.length === 0 ? (
+            <div className="p-4 bg-zinc-800 rounded-lg text-center text-zinc-500">(empty)</div>
+          ) : (
             <div className="flex gap-2 flex-wrap">
-              {truthy.length === 0 ? (
-                <div className="text-zinc-500 text-sm">Empty</div>
-              ) : (
-                truthy.map((val, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="w-16 h-16 rounded-lg bg-green-500/20 border-2 border-green-500 flex items-center justify-center font-mono text-lg font-semibold text-green-400"
-                  >
-                    {val}
-                  </motion.div>
-                ))
-              )}
+              {truthy.map((val, idx) => (
+                <div
+                  key={idx}
+                  className="px-4 py-2 bg-green-500/20 border-2 border-green-500 rounded-lg font-mono text-sm font-semibold text-green-400"
+                >
+                  {val}
+                </div>
+              ))}
             </div>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-zinc-400 mb-2">Falsy Group (Odd)</h3>
+          )}
+        </div>
+
+        {/* Falsy Array */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Falsy Array (odd numbers)</h3>
+          {falsy.length === 0 ? (
+            <div className="p-4 bg-zinc-800 rounded-lg text-center text-zinc-500">(empty)</div>
+          ) : (
             <div className="flex gap-2 flex-wrap">
-              {falsy.length === 0 ? (
-                <div className="text-zinc-500 text-sm">Empty</div>
-              ) : (
-                falsy.map((val, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="w-16 h-16 rounded-lg bg-red-500/20 border-2 border-red-500 flex items-center justify-center font-mono text-lg font-semibold text-red-400"
-                  >
-                    {val}
-                  </motion.div>
-                ))
-              )}
+              {falsy.map((val, idx) => (
+                <div
+                  key={idx}
+                  className="px-4 py-2 bg-red-500/20 border-2 border-red-500 rounded-lg font-mono text-sm font-semibold text-red-400"
+                >
+                  {val}
+                </div>
+              ))}
             </div>
-          </div>
+          )}
         </div>
       </div>
 
