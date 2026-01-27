@@ -97,6 +97,13 @@ const DEFAULT_PROGRESS: LanguageProgress = {
     totalQuestions: 0,
     totalCorrect: 0,
   },
+  regexStats: {
+    totalAttempted: 0,
+    totalCorrect: 0,
+    bestStreak: 0,
+    highScore: 0,
+    totalPlayed: 0,
+  },
   lastPlayed: new Date().toISOString(),
 };
 

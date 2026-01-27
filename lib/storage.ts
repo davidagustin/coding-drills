@@ -43,9 +43,18 @@ export interface QuizStats {
   totalCorrect: number;
 }
 
+export interface RegexStats {
+  totalAttempted: number;
+  totalCorrect: number;
+  bestStreak: number;
+  highScore: number;
+  totalPlayed: number;
+}
+
 export interface LanguageProgress {
   drillStats: DrillStats;
   quizStats: QuizStats;
+  regexStats: RegexStats;
   lastPlayed: string;
 }
 
@@ -77,6 +86,13 @@ export interface QuizResult {
   accuracy: number;
   streak: number;
   timeSpent: number;
+}
+
+export interface RegexResult {
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  bestStreak: number;
 }
 
 export interface ExportData {
@@ -125,6 +141,14 @@ const DEFAULT_QUIZ_STATS: QuizStats = {
   bestStreak: 0,
   totalQuestions: 0,
   totalCorrect: 0,
+};
+
+const DEFAULT_REGEX_STATS: RegexStats = {
+  totalAttempted: 0,
+  totalCorrect: 0,
+  bestStreak: 0,
+  highScore: 0,
+  totalPlayed: 0,
 };
 
 // ============================================================================
@@ -205,6 +229,7 @@ function createDefaultLanguageProgress(): LanguageProgress {
   return {
     drillStats: { ...DEFAULT_DRILL_STATS, categoryStats: {}, recentSessions: [] },
     quizStats: { ...DEFAULT_QUIZ_STATS },
+    regexStats: { ...DEFAULT_REGEX_STATS },
     lastPlayed: getCurrentDate(),
   };
 }
@@ -328,6 +353,26 @@ export function saveQuizProgress(language: string, result: QuizResult): boolean 
   // Recalculate average accuracy
   quizStats.avgAccuracy =
     quizStats.totalQuestions > 0 ? quizStats.totalCorrect / quizStats.totalQuestions : 0;
+
+  progress.lastPlayed = getCurrentDate();
+  return saveLanguageProgress(language, progress);
+}
+
+/**
+ * Save regex trainer result for a language
+ */
+export function saveRegexProgress(language: string, result: RegexResult): boolean {
+  const progress = getProgress(language);
+  if (!progress.regexStats) {
+    progress.regexStats = { ...DEFAULT_REGEX_STATS };
+  }
+  const { regexStats } = progress;
+
+  regexStats.highScore = Math.max(regexStats.highScore, result.score);
+  regexStats.bestStreak = Math.max(regexStats.bestStreak, result.bestStreak);
+  regexStats.totalPlayed += 1;
+  regexStats.totalAttempted += result.totalQuestions;
+  regexStats.totalCorrect += result.correctAnswers;
 
   progress.lastPlayed = getCurrentDate();
   return saveLanguageProgress(language, progress);
@@ -666,6 +711,7 @@ export const storage = {
   saveProgress,
   saveDrillProgress,
   saveQuizProgress,
+  saveRegexProgress,
   saveDrillSession,
   clearProgress,
   resetStreak,

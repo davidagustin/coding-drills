@@ -8,6 +8,7 @@ import { getExerciseCount } from '@/lib/exercises/index';
 import { algorithmProblems } from '@/lib/interview/problems';
 import { getMethodCountByLanguage } from '@/lib/methods/index';
 import { problemsByLanguage } from '@/lib/problems/index';
+import { getRegexProblemCount } from '@/lib/regexTrainer';
 import type { LanguageId } from '@/lib/types';
 import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from './config';
 import { LanguageIcon } from './LanguageIcon';
@@ -149,6 +150,24 @@ function ChatBubbleIcon({ className = 'w-8 h-8' }: { className?: string }) {
         strokeLinejoin="round"
         d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 21.192a5.974 5.974 0 01-2.217.348 6.01 6.01 0 01-.672-.038 6.052 6.052 0 01.206-4.248A8.224 8.224 0 013 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
       />
+    </svg>
+  );
+}
+
+function RegexIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" strokeLinecap="round" strokeLinejoin="round" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 9h6" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 13h4" />
     </svg>
   );
 }
@@ -359,6 +378,7 @@ export default function LanguagePage() {
   const interviewProblemCount = algorithmProblems.length;
   const complexityCount = complexityQuestions.length;
   const quizTotalCount = methodCount + complexityCount;
+  const regexProblemCount = getRegexProblemCount();
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -479,6 +499,16 @@ export default function LanguagePage() {
             />
           </>
         )}
+
+        <ModeCard
+          href={`/${language}/regex`}
+          icon={<RegexIcon className="w-8 h-8" />}
+          title="Regex Trainer"
+          description="Master regular expressions with live pattern matching. Drill timed challenges, study at your pace, or experiment in the playground."
+          buttonText="Start Training"
+          config={config}
+          badge={`${regexProblemCount} patterns`}
+        />
 
         <ModeCard
           href={`/${language}/cheatsheet`}

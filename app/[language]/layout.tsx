@@ -73,6 +73,19 @@ const BASE_MODES: { slug: string; label: string; icon: ReactNode }[] = [
     ),
   },
   {
+    slug: 'regex',
+    label: 'Regex',
+    // Magnifying glass with pattern marks icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <circle cx="11" cy="11" r="7" {...s} />
+        <path d="M21 21l-4.35-4.35" {...s} />
+        <path d="M8 9h6" {...s} />
+        <path d="M8 13h4" {...s} />
+      </svg>
+    ),
+  },
+  {
     slug: 'reference',
     label: 'Reference',
     // Book icon
