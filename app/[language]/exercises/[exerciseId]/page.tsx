@@ -576,7 +576,13 @@ export default function ExerciseDetailPage() {
             {viewMode === 'learn' &&
               (() => {
                 const VizComponent = getVisualization(exerciseId);
-                if (!VizComponent) return null;
+                if (!VizComponent) {
+                  // Debug: log when visualization is not found
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log('No visualization found for:', exerciseId);
+                  }
+                  return null;
+                }
                 return (
                   <div
                     className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6 overflow-hidden`}
