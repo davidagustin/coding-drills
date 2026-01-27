@@ -72,14 +72,18 @@ ${vizNote}
  * Content-aware: mentions the visualization when one exists.
  */
 function buildTutorStarters(hasVisualization: boolean): string[] {
-  const vizOffer = hasVisualization
-    ? ' I can also walk you through the visualization step by step — just ask!'
-    : '';
+  if (hasVisualization) {
+    return [
+      "Hey! I'm your AI tutor for this exercise. I can help you with:\n\n- The explanation and instructions\n- Breaking down hints and the solution code\n- Any concept on this page\n- The interactive visualization above — I've studied it and can walk you through each step\n\nWhat would you like to start with?",
+      'Hi there! I can help you understand everything on this page — the explanation, instructions, hints, solution code, and concepts.\n\nI also know the interactive visualization above and can explain each step of the animation. Just ask!\n\nWhat are you curious about?',
+      "Welcome! I'm here to help you learn. Ask me about anything — the explanation, instructions, hints, how the solution works, or any concept.\n\nI've also reviewed the visualization above and can narrate what happens at each step. What would you like to explore?",
+    ];
+  }
 
   return [
-    `Hey! I'm your AI tutor for this exercise. I can explain the explanation, walk through each instruction, break down the hints, go over the solution code line by line, and clarify any concept on this page.${vizOffer} What would you like to start with?`,
-    `Hi there! I can help you understand everything on this page — the explanation, instructions, hints, solution code, and concepts.${vizOffer} What are you curious about?`,
-    `Welcome! I'm here to help you learn. Ask me about anything you see — the explanation, any instruction step, what a hint means, how the solution works, or any concept listed.${vizOffer} Where would you like to begin?`,
+    "Hey! I'm your AI tutor for this exercise. I can help you with:\n\n- The explanation and instructions\n- Breaking down hints and the solution code\n- Any concept on this page\n\nWhat would you like to start with?",
+    'Hi there! I can help you understand everything on this page — the explanation, instructions, hints, solution code, and concepts. What are you curious about?',
+    "Welcome! I'm here to help you learn. Ask me about anything you see — the explanation, any instruction step, what a hint means, how the solution works, or any concept listed. Where would you like to begin?",
   ];
 }
 
