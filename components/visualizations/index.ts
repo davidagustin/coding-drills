@@ -253,6 +253,8 @@ const OnceFunctionViz = dynamic(() => import('./OnceFunctionViz'), { ssr: false 
 const ZigzagIterationViz = dynamic(() => import('./ZigzagIterationViz'), { ssr: false });
 const TransposeMatrixViz = dynamic(() => import('./TransposeMatrixViz'), { ssr: false });
 const SumRecursiveViz = dynamic(() => import('./SumRecursiveViz'), { ssr: false });
+const PrimeGenerationViz = dynamic(() => import('./PrimeGenerationViz'), { ssr: false });
+const FastSlowPointersViz = dynamic(() => import('./FastSlowPointersViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -500,6 +502,8 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'zigzag-iteration': ZigzagIterationViz,
   'transpose-matrix': TransposeMatrixViz,
   'sum-recursive': SumRecursiveViz,
+  'prime-generation': PrimeGenerationViz,
+  'fast-slow-pointers': FastSlowPointersViz,
 };
 
 /**
