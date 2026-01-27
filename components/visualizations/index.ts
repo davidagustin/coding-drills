@@ -283,6 +283,8 @@ const FenwickTreeQueryViz = dynamic(() => import('./FenwickTreeQueryViz'), { ssr
 const HashMapChainingViz = dynamic(() => import('./HashMapChainingViz'), { ssr: false });
 const FastPowerViz = dynamic(() => import('./FastPowerViz'), { ssr: false });
 const FloodFillViz = dynamic(() => import('./FloodFillViz'), { ssr: false });
+const TowerOfHanoiViz = dynamic(() => import('./TowerOfHanoiViz'), { ssr: false });
+const DeepCloneViz = dynamic(() => import('./DeepCloneViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -379,6 +381,8 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'word-search-grid': WordSearchGridViz,
   'n-queens-count': NQueensCountViz,
   'subset-sum-exists': SubsetSumExistsViz,
+  'tower-of-hanoi': TowerOfHanoiViz,
+  'deep-clone': DeepCloneViz,
   'max-heap-insert': MaxHeapInsertViz,
   'trie-search': TrieSearchViz,
   'union-find': UnionFindViz,
