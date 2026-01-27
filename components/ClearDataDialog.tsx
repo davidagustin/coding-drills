@@ -3,104 +3,176 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-// All storage keys used by the app
-const STORAGE_CATEGORIES = [
+// Display names for languages
+const LANGUAGE_LABELS: Record<string, string> = {
+  javascript: 'JavaScript',
+  typescript: 'TypeScript',
+  python: 'Python',
+  java: 'Java',
+  go: 'Go',
+  rust: 'Rust',
+  ruby: 'Ruby',
+  php: 'PHP',
+  swift: 'Swift',
+  kotlin: 'Kotlin',
+  csharp: 'C#',
+  cpp: 'C++',
+  c: 'C',
+  scala: 'Scala',
+  haskell: 'Haskell',
+  elixir: 'Elixir',
+  clojure: 'Clojure',
+  r: 'R',
+  dart: 'Dart',
+  perl: 'Perl',
+  lua: 'Lua',
+  mongodb: 'MongoDB',
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+};
+
+// Category definitions keyed by their localStorage prefix pattern
+interface CategoryDef {
+  id: string;
+  label: string;
+  description: string;
+  // 'prefix' means we match keys starting with this + language suffix
+  // 'exact' means we match the key literally
+  mode: 'prefix' | 'exact';
+  keyPattern: string; // e.g. "coding-drills-problems-" for prefix, "coding-drills-progress" for exact
+}
+
+const CATEGORY_DEFS: CategoryDef[] = [
+  {
+    id: 'problems',
+    label: 'Method Training Progress',
+    description: 'Problem-solving progress per language (drills, streaks)',
+    mode: 'prefix',
+    keyPattern: 'coding-drills-problems-',
+  },
+  {
+    id: 'exercises',
+    label: 'Building Blocks Progress',
+    description: 'Exercise completion progress per language',
+    mode: 'prefix',
+    keyPattern: 'coding-drills-exercises-',
+  },
+  {
+    id: 'stats',
+    label: 'Language Statistics',
+    description: 'Performance stats and metrics per language',
+    mode: 'prefix',
+    keyPattern: 'coding-drills-stats-',
+  },
   {
     id: 'progress',
     label: 'General Progress',
-    description: 'Drill and quiz progress data',
-    keys: ['coding-drills-progress'],
+    description: 'Global drill and quiz progress across all languages',
+    mode: 'exact',
+    keyPattern: 'coding-drills-progress',
   },
   {
     id: 'leaderboard',
     label: 'Quiz Leaderboard',
     description: 'High scores and quiz history',
-    keys: ['coding-drills-leaderboard'],
-  },
-  {
-    id: 'exercises',
-    label: 'Exercise Progress',
-    description: 'Progress on coding exercises for all languages',
-    keys: [
-      'coding-drills-exercises-javascript',
-      'coding-drills-exercises-typescript',
-      'coding-drills-exercises-python',
-      'coding-drills-exercises-java',
-      'coding-drills-exercises-cpp',
-      'coding-drills-exercises-csharp',
-      'coding-drills-exercises-go',
-      'coding-drills-exercises-ruby',
-      'coding-drills-exercises-c',
-      'coding-drills-exercises-php',
-      'coding-drills-exercises-kotlin',
-      // New languages
-      'coding-drills-exercises-rust',
-      'coding-drills-exercises-swift',
-      'coding-drills-exercises-scala',
-      'coding-drills-exercises-r',
-      'coding-drills-exercises-perl',
-      'coding-drills-exercises-lua',
-      'coding-drills-exercises-haskell',
-      'coding-drills-exercises-elixir',
-      'coding-drills-exercises-dart',
-      'coding-drills-exercises-clojure',
-    ],
-  },
-  {
-    id: 'stats',
-    label: 'Language Stats',
-    description: 'Statistics and performance data per language',
-    keys: [
-      'coding-drills-stats-javascript',
-      'coding-drills-stats-typescript',
-      'coding-drills-stats-python',
-      'coding-drills-stats-java',
-      'coding-drills-stats-cpp',
-      'coding-drills-stats-csharp',
-      'coding-drills-stats-go',
-      'coding-drills-stats-ruby',
-      'coding-drills-stats-c',
-      'coding-drills-stats-php',
-      'coding-drills-stats-kotlin',
-      // New languages
-      'coding-drills-stats-rust',
-      'coding-drills-stats-swift',
-      'coding-drills-stats-scala',
-      'coding-drills-stats-r',
-      'coding-drills-stats-perl',
-      'coding-drills-stats-lua',
-      'coding-drills-stats-haskell',
-      'coding-drills-stats-elixir',
-      'coding-drills-stats-dart',
-      'coding-drills-stats-clojure',
-    ],
+    mode: 'exact',
+    keyPattern: 'coding-drills-leaderboard',
   },
   {
     id: 'settings',
-    label: 'Settings',
-    description: 'App preferences and configuration',
-    keys: ['coding-drills-settings'],
+    label: 'Settings & Preferences',
+    description: 'App preferences, theme, and configuration',
+    mode: 'exact',
+    keyPattern: 'coding-drills-settings',
   },
   {
     id: 'theme',
-    label: 'Theme Preference',
+    label: 'Theme',
     description: 'Dark/light mode preference',
-    keys: ['coding-drills-theme'],
+    mode: 'exact',
+    keyPattern: 'coding-drills-theme',
   },
-  {
-    id: 'logs',
-    label: 'Debug Logs',
-    description: 'Application logs and error reports',
-    keys: [
-      'coding-drills-logs',
-      'coding-drills-metrics',
-      'coding-drills-alerts',
-      'coding-drills-error-log',
-    ],
-  },
-] as const;
+];
 
-type StorageCategoryId = (typeof STORAGE_CATEGORIES)[number]['id'];
+// Represents a single localStorage entry detected
+interface StorageEntry {
+  key: string;
+  size: number; // bytes (approximated as UTF-16)
+  categoryId: string;
+  language?: string; // for per-language entries
+}
+
+// Groups entries by category
+interface CategoryGroup {
+  def: CategoryDef;
+  entries: StorageEntry[];
+  totalSize: number;
+}
+
+// Uncategorized catch-all for keys not matching any known pattern
+interface UncategorizedGroup {
+  entries: StorageEntry[];
+  totalSize: number;
+}
+
+/**
+ * Scans localStorage for all coding-drills-* keys and classifies them.
+ */
+function scanStorage(): { categories: CategoryGroup[]; uncategorized: UncategorizedGroup } {
+  const categories: CategoryGroup[] = CATEGORY_DEFS.map((def) => ({
+    def,
+    entries: [],
+    totalSize: 0,
+  }));
+  const uncategorized: UncategorizedGroup = { entries: [], totalSize: 0 };
+
+  if (typeof window === 'undefined') return { categories, uncategorized };
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith('coding-drills-')) continue;
+
+    const value = localStorage.getItem(key);
+    const size = value ? value.length * 2 : 0; // approximate bytes (UTF-16)
+
+    let matched = false;
+    for (const group of categories) {
+      if (group.def.mode === 'exact' && key === group.def.keyPattern) {
+        group.entries.push({ key, size, categoryId: group.def.id });
+        group.totalSize += size;
+        matched = true;
+        break;
+      }
+      if (group.def.mode === 'prefix' && key.startsWith(group.def.keyPattern)) {
+        const language = key.slice(group.def.keyPattern.length);
+        group.entries.push({ key, size, categoryId: group.def.id, language });
+        group.totalSize += size;
+        matched = true;
+        break;
+      }
+    }
+
+    if (!matched) {
+      uncategorized.entries.push({ key, size, categoryId: '_uncategorized' });
+      uncategorized.totalSize += size;
+    }
+  }
+
+  return { categories, uncategorized };
+}
+
+function formatSize(bytes: number): string {
+  if (bytes === 0) return 'Empty';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getLanguageLabel(lang: string): string {
+  return LANGUAGE_LABELS[lang] || lang.charAt(0).toUpperCase() + lang.slice(1);
+}
+
+// ─── Component ───────────────────────────────────────────────
 
 interface ClearDataDialogProps {
   isOpen: boolean;
@@ -108,115 +180,280 @@ interface ClearDataDialogProps {
 }
 
 export function ClearDataDialog({ isOpen, onClose }: ClearDataDialogProps) {
-  const [selectedCategories, setSelectedCategories] = useState<Set<StorageCategoryId>>(new Set());
+  // Selected keys to delete
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [confirmText, setConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  // Track which categories are expanded to show per-language breakdown
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
-  // Calculate storage sizes using useMemo (only recalculates when isOpen changes)
-  const storageSizes = useMemo(() => {
-    if (!isOpen || typeof window === 'undefined') return {};
-
-    const sizes: Record<string, number> = {};
-    for (const category of STORAGE_CATEGORIES) {
-      let totalSize = 0;
-      for (const key of category.keys) {
-        const value = localStorage.getItem(key);
-        if (value) {
-          totalSize += value.length * 2; // Approximate bytes (UTF-16)
-        }
-      }
-      sizes[category.id] = totalSize;
-    }
-    return sizes;
+  // Scan storage on open
+  const { categories, uncategorized } = useMemo(() => {
+    if (!isOpen) return { categories: [], uncategorized: { entries: [], totalSize: 0 } };
+    return scanStorage();
   }, [isOpen]);
 
-  // Wrap onClose to reset state
+  // Only show categories that have data
+  const nonEmptyCategories = useMemo(
+    () => categories.filter((g) => g.entries.length > 0),
+    [categories],
+  );
+  const hasUncategorized = uncategorized.entries.length > 0;
+  const hasData = nonEmptyCategories.length > 0 || hasUncategorized;
+
   const handleClose = useCallback(() => {
-    setSelectedCategories(new Set());
+    setSelectedKeys(new Set());
     setConfirmText('');
     setIsDeleting(false);
+    setExpandedCategories(new Set());
     onClose();
   }, [onClose]);
 
-  const toggleCategory = useCallback((id: StorageCategoryId) => {
-    setSelectedCategories((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
+  // Toggle a single key
+  const toggleKey = useCallback((key: string) => {
+    setSelectedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
     });
   }, []);
 
-  const selectAll = useCallback(() => {
-    setSelectedCategories(new Set(STORAGE_CATEGORIES.map((c) => c.id)));
+  // Toggle all keys in a category
+  const toggleCategory = useCallback((group: CategoryGroup | UncategorizedGroup) => {
+    setSelectedKeys((prev) => {
+      const next = new Set(prev);
+      const allSelected = group.entries.every((e) => prev.has(e.key));
+      if (allSelected) {
+        for (const e of group.entries) next.delete(e.key);
+      } else {
+        for (const e of group.entries) next.add(e.key);
+      }
+      return next;
+    });
   }, []);
+
+  // Expand/collapse category to show per-language detail
+  const toggleExpand = useCallback((categoryId: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(categoryId)) next.delete(categoryId);
+      else next.add(categoryId);
+      return next;
+    });
+  }, []);
+
+  // Select all / clear all
+  const selectAll = useCallback(() => {
+    const allKeys = new Set<string>();
+    for (const g of nonEmptyCategories) {
+      for (const e of g.entries) allKeys.add(e.key);
+    }
+    for (const e of uncategorized.entries) allKeys.add(e.key);
+    setSelectedKeys(allKeys);
+  }, [nonEmptyCategories, uncategorized]);
 
   const clearSelection = useCallback(() => {
-    setSelectedCategories(new Set());
+    setSelectedKeys(new Set());
   }, []);
 
+  // Delete
   const handleDelete = useCallback(() => {
-    if (confirmText.toLowerCase() !== 'delete' || selectedCategories.size === 0) {
-      return;
-    }
+    if (confirmText.toLowerCase() !== 'delete' || selectedKeys.size === 0) return;
 
     setIsDeleting(true);
-
-    // Delete all selected storage keys
-    for (const category of STORAGE_CATEGORIES) {
-      if (selectedCategories.has(category.id)) {
-        for (const key of category.keys) {
-          try {
-            localStorage.removeItem(key);
-          } catch (error) {
-            console.error(`Failed to remove ${key}:`, error);
-          }
-        }
+    for (const key of selectedKeys) {
+      try {
+        localStorage.removeItem(key);
+      } catch (error) {
+        console.error(`Failed to remove ${key}:`, error);
       }
     }
 
-    // Close dialog after a brief delay to show success
     setTimeout(() => {
       setIsDeleting(false);
       handleClose();
-      // Reload the page to reset app state
       window.location.reload();
     }, 500);
-  }, [confirmText, selectedCategories, handleClose]);
+  }, [confirmText, selectedKeys, handleClose]);
 
-  const formatSize = (bytes: number): string => {
-    if (bytes === 0) return 'Empty';
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
+  const totalSelectedSize = useMemo(() => {
+    let total = 0;
+    for (const g of categories) {
+      for (const e of g.entries) {
+        if (selectedKeys.has(e.key)) total += e.size;
+      }
+    }
+    for (const e of uncategorized.entries) {
+      if (selectedKeys.has(e.key)) total += e.size;
+    }
+    return total;
+  }, [selectedKeys, categories, uncategorized]);
 
-  const totalSelectedSize = STORAGE_CATEGORIES.filter((c) => selectedCategories.has(c.id)).reduce(
-    (sum, c) => sum + (storageSizes[c.id] || 0),
-    0,
-  );
+  const canDelete = confirmText.toLowerCase() === 'delete' && selectedKeys.size > 0;
 
-  const hasData = Object.values(storageSizes).some((size) => size > 0);
-  const canDelete = confirmText.toLowerCase() === 'delete' && selectedCategories.size > 0;
-
-  // Handle escape key
+  // Escape key
   useEffect(() => {
     if (!isOpen) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleClose();
-      }
+      if (e.key === 'Escape') handleClose();
     };
-
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
+
+  const renderCategoryRow = (group: CategoryGroup) => {
+    const allSelected = group.entries.every((e) => selectedKeys.has(e.key));
+    const someSelected = group.entries.some((e) => selectedKeys.has(e.key));
+    const isExpanded = expandedCategories.has(group.def.id);
+    const isPerLanguage = group.def.mode === 'prefix';
+
+    return (
+      <div key={group.def.id} className="rounded-lg border border-zinc-800 overflow-hidden">
+        {/* Category header row */}
+        <div
+          className={`flex items-center gap-3 p-3 transition-colors ${
+            allSelected
+              ? 'bg-red-500/10 border-red-500/30'
+              : someSelected
+                ? 'bg-amber-500/5'
+                : 'bg-zinc-800/50'
+          }`}
+        >
+          {/* Checkbox */}
+          <button
+            type="button"
+            onClick={() => toggleCategory(group)}
+            className="flex-shrink-0 cursor-pointer"
+            aria-label={`Select all ${group.def.label}`}
+          >
+            <div
+              className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                allSelected
+                  ? 'bg-red-500 border-red-500'
+                  : someSelected
+                    ? 'bg-amber-500/50 border-amber-500'
+                    : 'border-zinc-600'
+              }`}
+            >
+              {allSelected && (
+                <svg
+                  className="w-3 h-3 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={3}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              )}
+              {someSelected && !allSelected && <div className="w-2 h-0.5 bg-white rounded" />}
+            </div>
+          </button>
+
+          {/* Label + description */}
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-medium text-zinc-100">{group.def.label}</div>
+            <div className="text-xs text-zinc-500">{group.def.description}</div>
+          </div>
+
+          {/* Size badge */}
+          <span className="text-xs px-2 py-1 rounded bg-zinc-700 text-zinc-300 flex-shrink-0">
+            {formatSize(group.totalSize)}
+          </span>
+
+          {/* Expand button for per-language categories */}
+          {isPerLanguage && group.entries.length > 1 && (
+            <button
+              type="button"
+              onClick={() => toggleExpand(group.def.id)}
+              className="p-1 text-zinc-500 hover:text-zinc-300 rounded transition-colors cursor-pointer"
+              aria-label={isExpanded ? 'Collapse' : 'Expand'}
+            >
+              <svg
+                className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* Per-language breakdown (expanded) */}
+        {isPerLanguage && isExpanded && (
+          <div className="border-t border-zinc-800/50">
+            {group.entries
+              .sort((a, b) => b.size - a.size) // Sort by size descending
+              .map((entry) => {
+                const isSelected = selectedKeys.has(entry.key);
+                return (
+                  <button
+                    key={entry.key}
+                    type="button"
+                    onClick={() => toggleKey(entry.key)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 pl-10 text-left transition-colors cursor-pointer ${
+                      isSelected ? 'bg-red-500/10' : 'hover:bg-zinc-800/80'
+                    }`}
+                  >
+                    <div
+                      className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                        isSelected ? 'bg-red-500 border-red-500' : 'border-zinc-600'
+                      }`}
+                    >
+                      {isSelected && (
+                        <svg
+                          className="w-2.5 h-2.5 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-sm text-zinc-300 flex-1">
+                      {getLanguageLabel(entry.language || '')}
+                    </span>
+                    <span className="text-xs text-zinc-500">{formatSize(entry.size)}</span>
+                  </button>
+                );
+              })}
+          </div>
+        )}
+
+        {/* Single language — show inline label */}
+        {isPerLanguage && group.entries.length === 1 && (
+          <div className="border-t border-zinc-800/50 px-3 py-1.5 pl-10">
+            <span className="text-xs text-zinc-500">
+              {getLanguageLabel(group.entries[0].language || '')}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const modalContent = (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -275,7 +512,8 @@ export function ClearDataDialog({ isOpen, onClose }: ClearDataDialogProps) {
           ) : (
             <>
               <p className="text-zinc-400 text-sm mb-4">
-                Select the data you want to delete. This action cannot be undone.
+                Select the data you want to delete. Expand categories to manage per-language data.
+                This action cannot be undone.
               </p>
 
               {/* Quick actions */}
@@ -287,7 +525,7 @@ export function ClearDataDialog({ isOpen, onClose }: ClearDataDialogProps) {
                 >
                   Select All
                 </button>
-                {selectedCategories.size > 0 && (
+                {selectedKeys.size > 0 && (
                   <button
                     type="button"
                     onClick={clearSelection}
@@ -300,80 +538,72 @@ export function ClearDataDialog({ isOpen, onClose }: ClearDataDialogProps) {
 
               {/* Category list */}
               <div className="space-y-2">
-                {STORAGE_CATEGORIES.map((category) => {
-                  const size = storageSizes[category.id] || 0;
-                  const isEmpty = size === 0;
+                {nonEmptyCategories.map(renderCategoryRow)}
 
-                  return (
-                    <button
-                      key={category.id}
-                      type="button"
-                      onClick={() => !isEmpty && toggleCategory(category.id)}
-                      disabled={isEmpty}
-                      className={`w-full p-3 rounded-lg border text-left transition-colors cursor-pointer ${
-                        isEmpty
-                          ? 'border-zinc-800 bg-zinc-900/50 opacity-50 cursor-not-allowed'
-                          : selectedCategories.has(category.id)
-                            ? 'border-red-500/50 bg-red-500/10'
-                            : 'border-zinc-800 bg-zinc-800/50 hover:border-zinc-700'
+                {/* Uncategorized catch-all */}
+                {hasUncategorized && (
+                  <div className="rounded-lg border border-zinc-800 overflow-hidden">
+                    <div
+                      className={`flex items-center gap-3 p-3 transition-colors ${
+                        uncategorized.entries.every((e) => selectedKeys.has(e.key))
+                          ? 'bg-red-500/10'
+                          : 'bg-zinc-800/50'
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          {/* Checkbox */}
-                          <div
-                            className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
-                              isEmpty
-                                ? 'border-zinc-700'
-                                : selectedCategories.has(category.id)
-                                  ? 'bg-red-500 border-red-500'
-                                  : 'border-zinc-600'
-                            }`}
-                          >
-                            {selectedCategories.has(category.id) && (
-                              <svg
-                                className="w-3 h-3 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={3}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                          <div>
-                            <div className="text-sm font-medium text-zinc-100">
-                              {category.label}
-                            </div>
-                            <div className="text-xs text-zinc-500">{category.description}</div>
-                          </div>
-                        </div>
-                        <span
-                          className={`text-xs px-2 py-1 rounded ${
-                            isEmpty ? 'bg-zinc-800 text-zinc-600' : 'bg-zinc-700 text-zinc-300'
+                      <button
+                        type="button"
+                        onClick={() => toggleCategory(uncategorized)}
+                        className="flex-shrink-0 cursor-pointer"
+                        aria-label="Select all other data"
+                      >
+                        <div
+                          className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                            uncategorized.entries.every((e) => selectedKeys.has(e.key))
+                              ? 'bg-red-500 border-red-500'
+                              : uncategorized.entries.some((e) => selectedKeys.has(e.key))
+                                ? 'bg-amber-500/50 border-amber-500'
+                                : 'border-zinc-600'
                           }`}
                         >
-                          {formatSize(size)}
-                        </span>
+                          {uncategorized.entries.every((e) => selectedKeys.has(e.key)) && (
+                            <svg
+                              className="w-3 h-3 text-white"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={3}
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </button>
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-zinc-100">Other Data</div>
+                        <div className="text-xs text-zinc-500">
+                          {uncategorized.entries.length} miscellaneous item
+                          {uncategorized.entries.length !== 1 ? 's' : ''} (logs, metrics, etc.)
+                        </div>
                       </div>
-                    </button>
-                  );
-                })}
+                      <span className="text-xs px-2 py-1 rounded bg-zinc-700 text-zinc-300">
+                        {formatSize(uncategorized.totalSize)}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Selected summary */}
-              {selectedCategories.size > 0 && (
+              {selectedKeys.size > 0 && (
                 <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-red-400">
-                      {selectedCategories.size} item{selectedCategories.size !== 1 ? 's' : ''}{' '}
-                      selected
+                      {selectedKeys.size} item{selectedKeys.size !== 1 ? 's' : ''} selected
                     </span>
                     <span className="text-red-400 font-medium">
                       {formatSize(totalSelectedSize)}
@@ -388,7 +618,7 @@ export function ClearDataDialog({ isOpen, onClose }: ClearDataDialogProps) {
         {/* Footer */}
         {hasData && (
           <div className="px-6 py-4 border-t border-zinc-800 bg-zinc-900/50">
-            {selectedCategories.size > 0 ? (
+            {selectedKeys.size > 0 ? (
               <div className="space-y-4">
                 <div>
                   <label htmlFor="confirm-delete" className="block text-sm text-zinc-400 mb-2">
