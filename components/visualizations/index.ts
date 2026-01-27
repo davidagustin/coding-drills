@@ -263,6 +263,7 @@ const CartesianProductViz = dynamic(() => import('./CartesianProductViz'), { ssr
 const CartesianNArraysViz = dynamic(() => import('./CartesianNArraysViz'), { ssr: false });
 const TruthTableViz = dynamic(() => import('./TruthTableViz'), { ssr: false });
 const CircularBufferViz = dynamic(() => import('./CircularBufferViz'), { ssr: false });
+const SampleArrayViz = dynamic(() => import('./SampleArrayViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -520,6 +521,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'cartesian-n-arrays': CartesianNArraysViz,
   'truth-table': TruthTableViz,
   'circular-buffer': CircularBufferViz,
+  'sample-array': SampleArrayViz,
 };
 
 /**
