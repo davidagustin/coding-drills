@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { complexityQuestions } from '@/lib/complexityProblems';
 import { getExerciseCount } from '@/lib/exercises/index';
 import { algorithmProblems } from '@/lib/interview/problems';
 import { getMethodCountByLanguage } from '@/lib/methods/index';
@@ -356,6 +357,8 @@ export default function LanguagePage() {
   const methodCount = methodCounts[language] || 0;
   const exerciseCount = !isDatabaseLanguage ? getExerciseCount(language) : 0;
   const interviewProblemCount = algorithmProblems.length;
+  const complexityCount = complexityQuestions.length;
+  const quizTotalCount = methodCount + complexityCount;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -432,10 +435,10 @@ export default function LanguagePage() {
             href={`/${language}/quiz`}
             icon={<LightbulbIcon className="w-8 h-8" />}
             title="Quiz Mode"
-            description="Match inputs and outputs to methods. Test your knowledge and learn new patterns."
+            description="Match inputs and outputs to methods, plus time & space complexity challenges. Test your knowledge and learn new patterns."
             buttonText="Start Quiz"
             config={config}
-            badge={methodCount > 0 ? `${methodCount} methods` : undefined}
+            badge={quizTotalCount > 0 ? `${quizTotalCount} questions` : undefined}
           />
         )}
 

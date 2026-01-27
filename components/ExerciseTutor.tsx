@@ -24,6 +24,7 @@ interface Message {
 interface ExerciseTutorProps {
   exercise: Exercise;
   hasVisualization: boolean;
+  userCode?: string;
   languageConfig: {
     color: string;
     bgColor: string;
@@ -79,6 +80,7 @@ const MAX_CONVERSATION_MESSAGES = 20;
 export default function ExerciseTutor({
   exercise,
   hasVisualization,
+  userCode,
   languageConfig,
 }: ExerciseTutorProps) {
   const [phase, setPhase] = useState<TutorPhase>('idle');
@@ -187,6 +189,13 @@ export default function ExerciseTutor({
     setStreamingContent('');
 
     try {
+      // Rebuild system prompt with latest user code so the LLM always sees current editor state
+      systemPromptRef.current = buildExerciseTutorSystemPrompt(
+        exercise,
+        hasVisualization,
+        userCode,
+      );
+
       // Build history, trimmed to last N messages
       const allMessages = [...messages, userMessage];
       const trimmed = allMessages.slice(-MAX_CONVERSATION_MESSAGES);
@@ -231,7 +240,7 @@ export default function ExerciseTutor({
       setStreamingContent('');
       setIsStreaming(false);
     }
-  }, [input, isStreaming, messages]);
+  }, [input, isStreaming, messages, exercise, hasVisualization, userCode]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

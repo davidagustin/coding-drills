@@ -11,6 +11,7 @@ import {
   EXERCISE_CATEGORIES,
   type Exercise,
   getExerciseById,
+  getExercisesForLanguage,
 } from '@/lib/exercises';
 import type { LanguageId } from '@/lib/types';
 import { isValidLanguage, LANGUAGE_CONFIG } from '../../config';
@@ -442,14 +443,65 @@ export default function ExerciseDetailPage() {
   return (
     <div className="min-h-screen bg-zinc-950">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Back link */}
-        <Link
-          href={`/${language}/exercises`}
-          className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-6 group"
-        >
-          <ArrowLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Exercises
-        </Link>
+        {/* Navigation */}
+        {(() => {
+          const exercises = getExercisesForLanguage(language);
+          const currentIndex = exercises.findIndex((ex) => ex.id === exerciseId);
+          const prevExercise = currentIndex > 0 ? exercises[currentIndex - 1] : null;
+          const nextExercise =
+            currentIndex < exercises.length - 1 ? exercises[currentIndex + 1] : null;
+
+          return (
+            <div className="flex items-center justify-between mb-6">
+              <Link
+                href={`/${language}/exercises`}
+                className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors group"
+              >
+                <ArrowLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                Back to Exercises
+              </Link>
+
+              <div className="flex items-center gap-3">
+                {prevExercise && (
+                  <Link
+                    href={`/${language}/exercises/${prevExercise.id}`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${config.bgColor} ${config.color} hover:opacity-80`}
+                  >
+                    <ArrowLeftIcon className="w-3.5 h-3.5" />
+                    Prev
+                  </Link>
+                )}
+                {currentIndex >= 0 && (
+                  <span className="text-xs text-zinc-500">
+                    {currentIndex + 1} / {exercises.length}
+                  </span>
+                )}
+                {nextExercise && (
+                  <Link
+                    href={`/${language}/exercises/${nextExercise.id}`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${config.bgColor} ${config.color} hover:opacity-80`}
+                  >
+                    Next
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="w-3.5 h-3.5"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                      />
+                    </svg>
+                  </Link>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Header */}
         <div className="mb-8">
@@ -543,6 +595,7 @@ export default function ExerciseDetailPage() {
               <ExerciseTutor
                 exercise={exercise}
                 hasVisualization={getVisualization(exerciseId) !== null}
+                userCode={userCode}
                 languageConfig={{
                   color: config.color,
                   bgColor: config.bgColor,

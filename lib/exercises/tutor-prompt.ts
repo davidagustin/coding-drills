@@ -7,6 +7,7 @@ import type { Exercise } from './types';
 export function buildExerciseTutorSystemPrompt(
   exercise: Exercise,
   hasVisualization: boolean,
+  userCode?: string,
 ): string {
   const vizNote = hasVisualization
     ? `
@@ -49,7 +50,7 @@ ${exercise.hints.map((h, i) => `${i + 1}. ${h}`).join('\n')}
 ${exercise.solutionCode}
 \`\`\`
 ${vizNote}
-
+${userCode ? `\n## Student's Current Code (from their editor — updates each message)\n\`\`\`\n${userCode}\n\`\`\`\n` : "\n## Student's Current Code\nThe student has not written any code yet.\n"}
 ## What You Can Do
 - Explain the explanation section in simpler terms or more depth if the student asks.
 - Walk through any instruction step and clarify what it means.
@@ -57,7 +58,7 @@ ${vizNote}
 - Explain the solution code line by line, why it works, and how it maps to the instructions.
 - Explain the concepts listed and how they apply to this exercise.
 - If a visualization exists, explain what it demonstrates step by step.
-- If the student shares their own code, compare it to the solution and point out differences.
+- **Review the student's code**: You can see the student's current code from their editor above. When they ask about their code, review it thoroughly — compare it to the solution, point out bugs, suggest improvements, explain what they did well, identify edge cases they might be missing, and help them debug any issues. Be specific about what lines need changes and why.
 
 ## Rules
 - Be thorough when explaining. Give detailed, in-depth answers. Use examples and analogies.
@@ -77,7 +78,7 @@ function buildTutorStarters(exercise: Exercise, hasVisualization: boolean): stri
     : '';
 
   return [
-    `Hey! I'm your AI tutor for **${exercise.title}**.\n\nThis exercise is about ${exercise.description.toLowerCase()}\n\nHere's what I can help you with:\n\n- **The explanation** — I can break it down further or rephrase it\n- **Each instruction step** — I can clarify what's being asked\n- **The hints** — I can explain what each one means and how it connects to the solution\n- **The solution code** — I can go through it line by line and explain why it works\n- **Concepts** like ${conceptsList}${vizBlock}\n\nWhat would you like to dive into?`,
+    `Hey! I'm your AI tutor for **${exercise.title}**.\n\nThis exercise is about ${exercise.description.toLowerCase()}\n\nHere's what I can help you with:\n\n- **The explanation** — I can break it down further or rephrase it\n- **Each instruction step** — I can clarify what's being asked\n- **The hints** — I can explain what each one means and how it connects to the solution\n- **The solution code** — I can go through it line by line and explain why it works\n- **Your code** — I can see your code in the editor and review it, find bugs, suggest improvements, and help you debug\n- **Concepts** like ${conceptsList}${vizBlock}\n\nWhat would you like to dive into?`,
   ];
 }
 
