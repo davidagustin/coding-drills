@@ -291,6 +291,9 @@ const FlattenNestedRecursiveViz = dynamic(() => import('./FlattenNestedRecursive
 const FibonacciIterativeViz = dynamic(() => import('./FibonacciIterativeViz'), { ssr: false });
 const FibonacciRecursiveViz = dynamic(() => import('./FibonacciRecursiveViz'), { ssr: false });
 const FactorialRecursiveViz = dynamic(() => import('./FactorialRecursiveViz'), { ssr: false });
+const StringPermsDedupViz = dynamic(() => import('./StringPermsDedupViz'), { ssr: false });
+const CombinationsWithRepViz = dynamic(() => import('./CombinationsWithRepViz'), { ssr: false });
+const PermutationRankViz = dynamic(() => import('./PermutationRankViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -547,6 +550,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'fibonacci-iterative': FibonacciIterativeViz,
   'fibonacci-recursive': FibonacciRecursiveViz,
   'factorial-recursive': FactorialRecursiveViz,
+  'string-perms-dedup': StringPermsDedupViz,
+  'combinations-with-rep': CombinationsWithRepViz,
+  'permutation-rank': PermutationRankViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
   'prefix-product': PrefixProductViz,
