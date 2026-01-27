@@ -140,6 +140,64 @@ const PowerOfTwoViz = dynamic(() => import('./PowerOfTwoViz'), { ssr: false });
 const CountBitsViz = dynamic(() => import('./CountBitsViz'), { ssr: false });
 const MissingNumberViz = dynamic(() => import('./MissingNumberViz'), { ssr: false });
 const MergeSortViz = dynamic(() => import('./MergeSortViz'), { ssr: false });
+const QuickSortViz = dynamic(() => import('./QuickSortViz'), { ssr: false });
+const HeapSortViz = dynamic(() => import('./HeapSortViz'), { ssr: false });
+const BubbleSortViz = dynamic(() => import('./BubbleSortViz'), { ssr: false });
+const InsertionSortViz = dynamic(() => import('./InsertionSortViz'), { ssr: false });
+const SelectionSortViz = dynamic(() => import('./SelectionSortViz'), { ssr: false });
+const IsomorphicStringsViz = dynamic(() => import('./IsomorphicStringsViz'), { ssr: false });
+const ReverseWordsViz = dynamic(() => import('./ReverseWordsViz'), { ssr: false });
+const AddStringsViz = dynamic(() => import('./AddStringsViz'), { ssr: false });
+const MultiplyStringsViz = dynamic(() => import('./MultiplyStringsViz'), { ssr: false });
+const LevelOrderViz = dynamic(() => import('./LevelOrderViz'), { ssr: false });
+const PreorderTraversalViz = dynamic(() => import('./PreorderTraversalViz'), { ssr: false });
+const PostorderTraversalViz = dynamic(() => import('./PostorderTraversalViz'), { ssr: false });
+const FlattenTreeViz = dynamic(() => import('./FlattenTreeViz'), { ssr: false });
+const PathSum2Viz = dynamic(() => import('./PathSum2Viz'), { ssr: false });
+const CombinationSumViz = dynamic(() => import('./CombinationSumViz'), { ssr: false });
+const CombinationSum2Viz = dynamic(() => import('./CombinationSum2Viz'), { ssr: false });
+const Permutations2Viz = dynamic(() => import('./Permutations2Viz'), { ssr: false });
+const Subsets2Viz = dynamic(() => import('./Subsets2Viz'), { ssr: false });
+const SudokuSolverViz = dynamic(() => import('./SudokuSolverViz'), { ssr: false });
+const NextPermutationViz = dynamic(() => import('./NextPermutationViz'), { ssr: false });
+const RotateArrayViz = dynamic(() => import('./RotateArrayViz'), { ssr: false });
+const FindDuplicatesViz = dynamic(() => import('./FindDuplicatesViz'), { ssr: false });
+const FirstMissingPositiveViz = dynamic(() => import('./FirstMissingPositiveViz'), { ssr: false });
+const PowViz = dynamic(() => import('./PowViz'), { ssr: false });
+const SqrtViz = dynamic(() => import('./SqrtViz'), { ssr: false });
+const SetMatrixZeroesViz = dynamic(() => import('./SetMatrixZeroesViz'), { ssr: false });
+const RotateImageViz = dynamic(() => import('./RotateImageViz'), { ssr: false });
+const GameOfLifeViz = dynamic(() => import('./GameOfLifeViz'), { ssr: false });
+const ValidSudokuViz = dynamic(() => import('./ValidSudokuViz'), { ssr: false });
+const GCDViz = dynamic(() => import('./GCDViz'), { ssr: false });
+const FactorialViz = dynamic(() => import('./FactorialViz'), { ssr: false });
+const FibonacciViz = dynamic(() => import('./FibonacciViz'), { ssr: false });
+const PascalTriangleViz = dynamic(() => import('./PascalTriangleViz'), { ssr: false });
+const PascalTriangle2Viz = dynamic(() => import('./PascalTriangle2Viz'), { ssr: false });
+const SearchRangeViz = dynamic(() => import('./SearchRangeViz'), { ssr: false });
+const FindFirstLastViz = dynamic(() => import('./FindFirstLastViz'), { ssr: false });
+const SearchInsertViz = dynamic(() => import('./SearchInsertViz'), { ssr: false });
+const FindMinRotatedViz = dynamic(() => import('./FindMinRotatedViz'), { ssr: false });
+const SearchRotated2Viz = dynamic(() => import('./SearchRotated2Viz'), { ssr: false });
+const MedianSortedArraysViz = dynamic(() => import('./MedianSortedArraysViz'), { ssr: false });
+const RemoveDuplicatesViz = dynamic(() => import('./RemoveDuplicatesViz'), { ssr: false });
+const RemoveElementViz = dynamic(() => import('./RemoveElementViz'), { ssr: false });
+const PlusOneViz = dynamic(() => import('./PlusOneViz'), { ssr: false });
+const AddBinaryViz = dynamic(() => import('./AddBinaryViz'), { ssr: false });
+const LengthOfLastWordViz = dynamic(() => import('./LengthOfLastWordViz'), { ssr: false });
+const SimplifyPathViz = dynamic(() => import('./SimplifyPathViz'), { ssr: false });
+const BasicCalculatorViz = dynamic(() => import('./BasicCalculatorViz'), { ssr: false });
+const EvaluateReversePolishViz = dynamic(() => import('./EvaluateReversePolishViz'), {
+  ssr: false,
+});
+const DailyTemperaturesViz = dynamic(() => import('./DailyTemperaturesViz'), { ssr: false });
+const LargestRectangleViz = dynamic(() => import('./LargestRectangleViz'), { ssr: false });
+const MaximalRectangleViz = dynamic(() => import('./MaximalRectangleViz'), { ssr: false });
+const TrapRainWaterViz = dynamic(() => import('./TrapRainWaterViz'), { ssr: false });
+const DijkstraViz = dynamic(() => import('./DijkstraViz'), { ssr: false });
+const BellmanFordViz = dynamic(() => import('./BellmanFordViz'), { ssr: false });
+const KruskalMSTViz = dynamic(() => import('./KruskalMSTViz'), { ssr: false });
+const PrimMSTViz = dynamic(() => import('./PrimMSTViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -275,6 +333,62 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'count-bits': CountBitsViz,
   'missing-number': MissingNumberViz,
   'merge-sort': MergeSortViz,
+  'quick-sort': QuickSortViz,
+  'heap-sort': HeapSortViz,
+  'bubble-sort': BubbleSortViz,
+  'insertion-sort': InsertionSortViz,
+  'selection-sort': SelectionSortViz,
+  'isomorphic-strings': IsomorphicStringsViz,
+  'reverse-words': ReverseWordsViz,
+  'add-strings': AddStringsViz,
+  'multiply-strings': MultiplyStringsViz,
+  'level-order': LevelOrderViz,
+  'preorder-traversal': PreorderTraversalViz,
+  'postorder-traversal': PostorderTraversalViz,
+  'flatten-tree': FlattenTreeViz,
+  'path-sum-ii': PathSum2Viz,
+  'combination-sum': CombinationSumViz,
+  'combination-sum-ii': CombinationSum2Viz,
+  'permutations-ii': Permutations2Viz,
+  'subsets-ii': Subsets2Viz,
+  'sudoku-solver': SudokuSolverViz,
+  'next-permutation': NextPermutationViz,
+  'rotate-array': RotateArrayViz,
+  'find-duplicates': FindDuplicatesViz,
+  'first-missing-positive': FirstMissingPositiveViz,
+  pow: PowViz,
+  sqrt: SqrtViz,
+  'set-matrix-zeroes': SetMatrixZeroesViz,
+  'rotate-image': RotateImageViz,
+  'game-of-life': GameOfLifeViz,
+  'valid-sudoku': ValidSudokuViz,
+  gcd: GCDViz,
+  factorial: FactorialViz,
+  fibonacci: FibonacciViz,
+  'pascal-triangle': PascalTriangleViz,
+  'pascal-triangle-ii': PascalTriangle2Viz,
+  'search-range': SearchRangeViz,
+  'find-first-last': FindFirstLastViz,
+  'search-insert': SearchInsertViz,
+  'find-min-rotated': FindMinRotatedViz,
+  'search-rotated-ii': SearchRotated2Viz,
+  'median-sorted-arrays': MedianSortedArraysViz,
+  'remove-duplicates': RemoveDuplicatesViz,
+  'remove-element': RemoveElementViz,
+  'plus-one': PlusOneViz,
+  'add-binary': AddBinaryViz,
+  'length-of-last-word': LengthOfLastWordViz,
+  'simplify-path': SimplifyPathViz,
+  'basic-calculator': BasicCalculatorViz,
+  'evaluate-reverse-polish': EvaluateReversePolishViz,
+  'daily-temperatures': DailyTemperaturesViz,
+  'largest-rectangle': LargestRectangleViz,
+  'maximal-rectangle': MaximalRectangleViz,
+  'trap-rain-water': TrapRainWaterViz,
+  dijkstra: DijkstraViz,
+  'bellman-ford': BellmanFordViz,
+  'kruskal-mst': KruskalMSTViz,
+  'prim-mst': PrimMSTViz,
 };
 
 /**

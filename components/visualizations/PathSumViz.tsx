@@ -65,7 +65,6 @@ function computeSteps(): PathSumStep[] {
 
     if (!node.left && !node.right) {
       const isMatch = newSum === TARGET_SUM;
-      if (isMatch) found = true;
       steps.push({
         node: node.value,
         currentSum: newSum,
@@ -126,7 +125,7 @@ function renderTree(
   if (!node) return null;
 
   const isCurrent = currentStep.node === node.value;
-    const inPath = currentStep.hasPath && path.has(node.value);
+  const inPath = currentStep.hasPath && path.has(node.value);
 
   let nodeColor: string = COLORS.default;
   if (isCurrent) nodeColor = COLORS.current;

@@ -28,15 +28,15 @@ interface SudokuStep {
 
 function computeSteps(): SudokuStep[] {
   const steps: SudokuStep[] = [];
-  const board = BOARD.map(row => [...row]);
-  
+  const board = BOARD.map((row) => [...row]);
+
   function isValid(board: string[][], row: number, col: number, num: string): boolean {
     for (let i = 0; i < 9; i++) {
       if (board[row][i] === num || board[i][col] === num) {
         return false;
       }
     }
-    
+
     const boxRow = Math.floor(row / 3) * 3;
     const boxCol = Math.floor(col / 3) * 3;
     for (let i = boxRow; i < boxRow + 3; i++) {
@@ -46,10 +46,10 @@ function computeSteps(): SudokuStep[] {
         }
       }
     }
-    
+
     return true;
   }
-  
+
   function solve(board: string[][]): boolean {
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
@@ -57,9 +57,9 @@ function computeSteps(): SudokuStep[] {
           for (let num = 1; num <= 9; num++) {
             const numStr = num.toString();
             const valid = isValid(board, row, col, numStr);
-            
+
             steps.push({
-              board: board.map(r => [...r]),
+              board: board.map((r) => [...r]),
               row,
               col,
               num: numStr,
@@ -68,25 +68,25 @@ function computeSteps(): SudokuStep[] {
                 ? `Try ${numStr} at (${row}, ${col}) → valid`
                 : `Try ${numStr} at (${row}, ${col}) → invalid`,
             });
-            
+
             if (valid) {
               board[row][col] = numStr;
               steps.push({
-                board: board.map(r => [...r]),
+                board: board.map((r) => [...r]),
                 row,
                 col,
                 num: numStr,
                 valid: true,
                 explanation: `Place ${numStr} at (${row}, ${col})`,
               });
-              
+
               if (solve(board)) {
                 return true;
               }
-              
+
               board[row][col] = '.';
               steps.push({
-                board: board.map(r => [...r]),
+                board: board.map((r) => [...r]),
                 row,
                 col,
                 num: '',
@@ -101,27 +101,27 @@ function computeSteps(): SudokuStep[] {
     }
     return true;
   }
-  
+
   steps.push({
-    board: board.map(r => [...r]),
+    board: board.map((r) => [...r]),
     row: -1,
     col: -1,
     num: '',
     valid: true,
     explanation: 'Start: Solve Sudoku',
   });
-  
+
   solve(board);
-  
+
   steps.push({
-    board: board.map(r => [...r]),
+    board: board.map((r) => [...r]),
     row: -1,
     col: -1,
     num: '',
     valid: true,
     explanation: 'Complete: Sudoku solved',
   });
-  
+
   return steps;
 }
 
@@ -144,7 +144,7 @@ export default function SudokuSolverViz() {
     return step < STEPS.length ? STEPS[step] : STEPS[STEPS.length - 1];
   }, [step]);
 
-  const { board, row, col, num, valid, explanation } = currentStep;
+  const { board, row, col, valid, explanation } = currentStep;
   const originalBoard = BOARD;
 
   return (
@@ -166,7 +166,7 @@ export default function SudokuSolverViz() {
               const isCurrent = row === r && col === c;
               const isOriginal = originalBoard[r][c] !== '.';
               const isEmpty = cell === '.';
-              
+
               let bgColor: string = COLORS.empty;
               if (isCurrent) {
                 bgColor = valid ? COLORS.current : COLORS.invalid;
@@ -189,7 +189,7 @@ export default function SudokuSolverViz() {
                   {cell !== '.' ? cell : ''}
                 </motion.div>
               );
-            })
+            }),
           )}
         </div>
       </div>

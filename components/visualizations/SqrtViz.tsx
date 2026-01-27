@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import { useVizAnimation } from './useVizAnimation';
 import VizControls from './VizControls';
@@ -19,7 +18,7 @@ interface SqrtStep {
 
 function computeSteps(): SqrtStep[] {
   const steps: SqrtStep[] = [];
-  
+
   if (X < 2) {
     steps.push({
       x: X,
@@ -32,11 +31,11 @@ function computeSteps(): SqrtStep[] {
     });
     return steps;
   }
-  
+
   let left = 0;
   let right = X;
   let result = 0;
-  
+
   steps.push({
     x: X,
     left,
@@ -46,11 +45,11 @@ function computeSteps(): SqrtStep[] {
     result: 0,
     explanation: `Start: Binary search for sqrt(${X})`,
   });
-  
+
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
     const midSquared = mid * mid;
-    
+
     steps.push({
       x: X,
       left,
@@ -60,7 +59,7 @@ function computeSteps(): SqrtStep[] {
       result,
       explanation: `Check mid = ${mid}, ${mid}² = ${midSquared}`,
     });
-    
+
     if (midSquared === X) {
       result = mid;
       steps.push({
@@ -98,7 +97,7 @@ function computeSteps(): SqrtStep[] {
       });
     }
   }
-  
+
   steps.push({
     x: X,
     left,
@@ -108,18 +107,12 @@ function computeSteps(): SqrtStep[] {
     result,
     explanation: `Complete: sqrt(${X}) = ${result}`,
   });
-  
+
   return steps;
 }
 
 const STEPS = computeSteps();
 const TOTAL_STEPS = STEPS.length;
-
-const COLORS = {
-  current: '#eab308',
-  found: '#22c55e',
-  default: '#3b82f6',
-} as const;
 
 export default function SqrtViz() {
   const controls = useVizAnimation(TOTAL_STEPS);
@@ -141,9 +134,7 @@ export default function SqrtViz() {
         </p>
         <p className="text-white text-sm">{explanation}</p>
         {step === STEPS.length - 1 && (
-          <p className="text-yellow-400 font-bold text-lg mt-2">
-            Result: {result}
-          </p>
+          <p className="text-yellow-400 font-bold text-lg mt-2">Result: {result}</p>
         )}
       </div>
 
