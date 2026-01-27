@@ -18,20 +18,12 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: 'System Design Practice',
-    description:
-      'Interactive learning platform for mastering system design interviews. Covers 50 study topics, 40 core concepts, and 60 quiz questions spanning load balancing, database replication, caching strategies, microservices, event-driven architecture, and more.',
-    tags: ['System Design', 'Next.js', 'TypeScript', 'Interviews'],
-    githubUrl: 'https://github.com/davidagustin/system-design-practice',
-    liveUrl: 'https://system-design-practice.vercel.app/',
-    stats: '50 topics, 40 concepts, 60 quiz questions',
-  },
-  {
     title: 'Coding Tricks Practice',
     description:
       'A LeetCode-style coding platform focused on JavaScript and TypeScript mastery. Features 155+ challenges across 19 categories with a Monaco Editor integration, sandboxed test runner, progress tracking, and real-time code validation.',
     tags: ['JavaScript', 'TypeScript', 'LeetCode-style', 'Monaco Editor'],
     githubUrl: 'https://github.com/davidagustin/coding-tricks-practice',
+    liveUrl: 'https://coding-tricks-practice.vercel.app',
     stats: '155+ problems, 19 categories, 40+ test suites',
   },
   {
@@ -44,11 +36,21 @@ const projects: Project[] = [
     stats: '90+ components, 5 pattern categories',
   },
   {
+    title: 'System Design Practice',
+    description:
+      'Interactive learning platform for mastering system design interviews. Covers 50 study topics, 40 core concepts, and 60 quiz questions spanning load balancing, database replication, caching strategies, microservices, event-driven architecture, and more.',
+    tags: ['System Design', 'Next.js', 'TypeScript', 'Interviews'],
+    githubUrl: 'https://github.com/davidagustin/system-design-practice',
+    liveUrl: 'https://system-design-practice.vercel.app/',
+    stats: '50 topics, 40 concepts, 60 quiz questions',
+  },
+  {
     title: 'React 30',
     description:
       "Modern React reimagining of Wes Bos's JavaScript30 course. All 30 vanilla JS projects rebuilt as type-safe React components using Next.js, TypeScript, and Tailwind CSS — covering DOM manipulation, Canvas API, WebRTC, Speech Recognition, Geolocation, and more.",
     tags: ['React', 'JavaScript30', 'Web APIs', 'Next.js'],
     githubUrl: 'https://github.com/davidagustin/react-30',
+    liveUrl: 'https://react-30-nu.vercel.app',
     stats: '30 interactive projects',
   },
   {
@@ -66,6 +68,7 @@ const projects: Project[] = [
       "Interactive memorization app for Google's 43 Rules of Machine Learning Engineering. Features browse, study, and flashcard modes with category filtering, search, progress tracking, and sequential or randomized learning sessions.",
     tags: ['Machine Learning', 'Flashcards', 'Google ML Rules'],
     githubUrl: 'https://github.com/davidagustin/rules-of-machine-learning',
+    liveUrl: 'https://rules-of-machine-learning.vercel.app',
     stats: '43 rules, 3 study modes, 12 categories',
   },
 ];
@@ -171,7 +174,7 @@ export default function LinksPage() {
                         className="inline-flex items-center gap-1.5 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
                       >
                         <ExternalLinkIcon />
-                        <span>Live Demo</span>
+                        <span>Visit</span>
                       </a>
                     )}
                   </div>
