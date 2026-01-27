@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { ReactNode } from 'react';
 import {
   getTrainingLabel,
   isDatabaseLanguage,
@@ -12,17 +13,103 @@ import {
 import { LanguageIcon } from './LanguageIcon';
 import { SettingsMenu } from './SettingsMenu';
 
+// Shared icon props for nav SVGs
+const iconClass = 'w-4 h-4';
+const s = {
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.8,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+};
+
 // Mode definitions for navigation
 // Note: 'problems' label is dynamic (set in getModes) based on language type
-const BASE_MODES = [
-  { slug: 'drill', label: 'Drill', icon: '🎯' },
-  { slug: 'quiz', label: 'Quiz', icon: '🧠' },
-  { slug: 'problems', label: 'Method Training', icon: '💪' },
-  { slug: 'exercises', label: 'Building Blocks', icon: '🧱' },
-  { slug: 'reference', label: 'Reference', icon: '📚' },
-  { slug: 'cheatsheet', label: 'Cheatsheet', icon: '📋' },
-  { slug: 'interview', label: 'AI Mock Interview', icon: '🎙️' },
-] as const;
+const BASE_MODES: { slug: string; label: string; icon: ReactNode }[] = [
+  {
+    slug: 'drill',
+    label: 'Drill',
+    // Terminal/code prompt icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <rect x="2" y="3" width="20" height="18" rx="2" {...s} />
+        <path d="M7 8l4 4-4 4" {...s} />
+        <path d="M13 16h4" {...s} />
+      </svg>
+    ),
+  },
+  {
+    slug: 'quiz',
+    label: 'Quiz',
+    // Lightning bolt icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" {...s} />
+      </svg>
+    ),
+  },
+  {
+    slug: 'problems',
+    label: 'Method Training',
+    // Code brackets icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h3" {...s} />
+        <path d="M16 3h3a2 2 0 012 2v14a2 2 0 01-2 2h-3" {...s} />
+        <path d="M14 8l-4 8" {...s} />
+      </svg>
+    ),
+  },
+  {
+    slug: 'exercises',
+    label: 'Building Blocks',
+    // Stacked layers icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <path d="M12 2l10 5-10 5L2 7l10-5z" {...s} />
+        <path d="M2 12l10 5 10-5" {...s} />
+        <path d="M2 17l10 5 10-5" {...s} />
+      </svg>
+    ),
+  },
+  {
+    slug: 'reference',
+    label: 'Reference',
+    // Book icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20" {...s} />
+        <path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15z" {...s} />
+      </svg>
+    ),
+  },
+  {
+    slug: 'cheatsheet',
+    label: 'Cheatsheet',
+    // Document/list icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" {...s} />
+        <path d="M14 2v6h6" {...s} />
+        <path d="M8 13h8" {...s} />
+        <path d="M8 17h8" {...s} />
+      </svg>
+    ),
+  },
+  {
+    slug: 'interview',
+    label: 'AI Mock Interview',
+    // Chat bubble icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <path
+          d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
+          {...s}
+        />
+      </svg>
+    ),
+  },
+];
 
 function getModes(language: string) {
   const trainingLabel = getTrainingLabel(language);
