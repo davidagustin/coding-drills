@@ -1668,10 +1668,13 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function groupBy<T>(items: T[], keyFn: (item: T) => string): Record<string, T[]> {
-  return items.reduce<Record<string, T[]>>((groups, item) => {
-    const key: string = keyFn(item);
-    (groups[key] ??= []).push(item);
-    return groups;
+  // Reduce approach: O(n) time, O(n) space
+  // Accumulate items into buckets keyed by the result of keyFn
+  return items.reduce<Record<string, T[]>>((groupedResult, item) => {
+    const groupKey: string = keyFn(item);
+    // Initialize the bucket as empty array if this is the first item for this key
+    (groupedResult[groupKey] ??= []).push(item);
+    return groupedResult;
   }, {});
 }`,
     testCases: [
@@ -1719,10 +1722,13 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function frequencyCount(items: (string | number)[]): Record<string, number> {
-  return items.reduce<Record<string, number>>((counts, value) => {
-    const key: string = String(value);
-    counts[key] = (counts[key] || 0) + 1;
-    return counts;
+  // Hash map counting: O(n) time, O(k) space where k = unique elements
+  // Convert each value to string key and tally occurrences
+  return items.reduce<Record<string, number>>((frequencyMap, value) => {
+    const itemKey: string = String(value);
+    // Default to 0 for first occurrence, then increment
+    frequencyMap[itemKey] = (frequencyMap[itemKey] || 0) + 1;
+    return frequencyMap;
   }, {});
 }`,
     testCases: [
@@ -1762,10 +1768,14 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function slidingWindows<T>(items: T[], windowSize: number): T[][] {
+  // Array.from approach: O(n * k) time, O(n * k) space
+  // Generate all contiguous subarrays of length windowSize
   if (windowSize > items.length) return [];
+  const totalWindows: number = items.length - windowSize + 1;
   return Array.from(
-    { length: items.length - windowSize + 1 },
-    (_, i) => items.slice(i, i + windowSize)
+    { length: totalWindows },
+    // Each window starts at startIndex and captures windowSize consecutive elements
+    (_, startIndex) => items.slice(startIndex, startIndex + windowSize)
   );
 }`,
     testCases: [
@@ -1812,12 +1822,16 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function flattenDepth(items: unknown[], depth: number = 1): unknown[] {
+  // Recursive reduce: O(n * d) time, O(n) space where d = depth
+  // Base case: no more flattening allowed at this depth
   if (depth < 1) return items;
-  return items.reduce<unknown[]>((acc, value) => {
-    if (Array.isArray(value)) {
-      return acc.concat(flattenDepth(value, depth - 1));
+  return items.reduce<unknown[]>((flattened, element) => {
+    if (Array.isArray(element)) {
+      // Recurse one level deeper, decrementing remaining depth
+      return flattened.concat(flattenDepth(element, depth - 1));
     }
-    return acc.concat(value);
+    // Non-array elements are appended directly
+    return flattened.concat(element);
   }, []);
 }`,
     testCases: [
@@ -1857,9 +1871,12 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function rotateLeft<T>(items: T[], count: number): T[] {
+  // Slice and recombine: O(n) time, O(n) space
   if (items.length === 0) return [];
-  const shift: number = count % items.length;
-  return [...items.slice(shift), ...items.slice(0, shift)];
+  // Modulo handles cases where count exceeds array length
+  const effectiveShift: number = count % items.length;
+  // Split at shift point: elements after shift come first, then elements before
+  return [...items.slice(effectiveShift), ...items.slice(0, effectiveShift)];
 }`,
     testCases: [
       { input: [[1, 2, 3, 4, 5], 2], expected: [3, 4, 5, 1, 2], description: 'Rotate left by 2' },
@@ -1890,13 +1907,17 @@ function stackOperations(operations: StackOperation[]): number[] {
 
 }`,
     solutionCode: `function interleave<A, B>(first: A[], second: B[]): (A | B)[] {
-  const maxLen: number = Math.max(first.length, second.length);
-  const result: (A | B)[] = [];
-  for (let i = 0; i < maxLen; i++) {
-    if (i < first.length) result.push(first[i]);
-    if (i < second.length) result.push(second[i]);
+  // Zipper merge: O(n + m) time, O(n + m) space
+  // Iterate up to the longer array's length to capture all elements
+  const longerLength: number = Math.max(first.length, second.length);
+  const interleavedResult: (A | B)[] = [];
+  for (let pairIndex = 0; pairIndex < longerLength; pairIndex++) {
+    // Take from first array at this position if available
+    if (pairIndex < first.length) interleavedResult.push(first[pairIndex]);
+    // Then take from second array at same position if available
+    if (pairIndex < second.length) interleavedResult.push(second[pairIndex]);
   }
-  return result;
+  return interleavedResult;
 }`,
     testCases: [
       {
@@ -1951,14 +1972,17 @@ function stackOperations(operations: StackOperation[]): number[] {
   return -1;
 }`,
     solutionCode: `function binarySearch(numbers: number[], target: number): number {
+  // Iterative binary search: O(log n) time, O(1) space
+  // Maintain a search window that halves each iteration
   let left: number = 0;
   let right: number = numbers.length - 1;
 
   while (left <= right) {
-    const mid: number = Math.floor((left + right) / 2);
-    if (numbers[mid] === target) return mid;
-    if (numbers[mid] < target) left = mid + 1;
-    else right = mid - 1;
+    const midIndex: number = Math.floor((left + right) / 2);
+    if (numbers[midIndex] === target) return midIndex;
+    // Discard the half that cannot contain the target
+    if (numbers[midIndex] < target) left = midIndex + 1;
+    else right = midIndex - 1;
   }
 
   return -1;
@@ -2001,13 +2025,17 @@ function stackOperations(operations: StackOperation[]): number[] {
   return left;
 }`,
     solutionCode: `function searchInsert(numbers: number[], target: number): number {
+  // Lower-bound binary search: O(log n) time, O(1) space
+  // Finds leftmost position where target can be inserted to keep order
   let left: number = 0;
   let right: number = numbers.length;
 
   while (left < right) {
-    const mid: number = Math.floor((left + right) / 2);
-    if (numbers[mid] < target) left = mid + 1;
-    else right = mid;
+    const midIndex: number = Math.floor((left + right) / 2);
+    // Move left past elements strictly less than target
+    if (numbers[midIndex] < target) left = midIndex + 1;
+    // Keep right at mid when element >= target (potential insertion point)
+    else right = midIndex;
   }
 
   return left;
@@ -2050,18 +2078,22 @@ function stackOperations(operations: StackOperation[]): number[] {
   return [...result, ...numbers1.slice(i), ...numbers2.slice(j)];
 }`,
     solutionCode: `function mergeSorted(numbers1: number[], numbers2: number[]): number[] {
-  const result: number[] = [];
-  let i: number = 0, j: number = 0;
+  // Two-pointer merge: O(n + m) time, O(n + m) space
+  // Compare front elements of both arrays, always taking the smaller
+  const mergedResult: number[] = [];
+  let indexFirst: number = 0, indexSecond: number = 0;
 
-  while (i < numbers1.length && j < numbers2.length) {
-    if (numbers1[i] <= numbers2[j]) {
-      result.push(numbers1[i++]);
+  while (indexFirst < numbers1.length && indexSecond < numbers2.length) {
+    // Use <= to maintain stable ordering when elements are equal
+    if (numbers1[indexFirst] <= numbers2[indexSecond]) {
+      mergedResult.push(numbers1[indexFirst++]);
     } else {
-      result.push(numbers2[j++]);
+      mergedResult.push(numbers2[indexSecond++]);
     }
   }
 
-  return [...result, ...numbers1.slice(i), ...numbers2.slice(j)];
+  // Append any remaining elements from whichever array is not exhausted
+  return [...mergedResult, ...numbers1.slice(indexFirst), ...numbers2.slice(indexSecond)];
 }`,
     testCases: [
       {
@@ -2129,18 +2161,22 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
 }
 
 function processQueue(operations: QueueOperation[]): (number | null)[] {
-  const queue: number[] = [];
-  const results: (number | null)[] = [];
+  // FIFO queue simulation: O(n) time for n operations, O(n) space
+  // Process a sequence of enqueue/dequeue commands and collect dequeue results
+  const queueBuffer: number[] = [];
+  const dequeueResults: (number | null)[] = [];
 
-  for (const op of operations) {
-    if (op.type === 'enqueue') {
-      queue.push(op.value!);
-    } else if (op.type === 'dequeue') {
-      results.push(queue.length > 0 ? queue.shift()! : null);
+  for (const operation of operations) {
+    if (operation.type === 'enqueue') {
+      // Add to back of queue
+      queueBuffer.push(operation.value!);
+    } else if (operation.type === 'dequeue') {
+      // Remove from front; return null if queue is empty
+      dequeueResults.push(queueBuffer.length > 0 ? queueBuffer.shift()! : null);
     }
   }
 
-  return results;
+  return dequeueResults;
 }`,
     testCases: [
       {
@@ -2194,14 +2230,18 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
   return heap;
 }`,
     solutionCode: `function heapInsert(heap: number[], value: number): number[] {
+  // Bubble-up insertion: O(log n) time, O(1) space
+  // Add to end then float upward until heap property is restored
   heap.push(value);
-  let i: number = heap.length - 1;
+  let currentIndex: number = heap.length - 1;
 
-  while (i > 0) {
-    const parent: number = Math.floor((i - 1) / 2);
-    if (heap[parent] <= heap[i]) break;
-    [heap[parent], heap[i]] = [heap[i], heap[parent]];
-    i = parent;
+  while (currentIndex > 0) {
+    const parentIndex: number = Math.floor((currentIndex - 1) / 2);
+    // Stop bubbling when parent is already smaller (heap property satisfied)
+    if (heap[parentIndex] <= heap[currentIndex]) break;
+    // Swap child with parent to move smaller value upward
+    [heap[parentIndex], heap[currentIndex]] = [heap[currentIndex], heap[parentIndex]];
+    currentIndex = parentIndex;
   }
 
   return heap;
@@ -2246,16 +2286,20 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
   return graph;
 }`,
     solutionCode: `function buildAdjacencyList(edges: [number, number][], directed: boolean = false): Record<number, number[]> {
-  const graph: Record<number, number[]> = {};
+  // Edge list to adjacency list conversion: O(E) time, O(V + E) space
+  // Build a lookup from each node to its list of neighbors
+  const adjacencyMap: Record<number, number[]> = {};
 
   for (const [from, to] of edges) {
-    (graph[from] ??= []).push(to);
+    // Ensure the neighbor list exists, then append the destination
+    (adjacencyMap[from] ??= []).push(to);
     if (!directed) {
-      (graph[to] ??= []).push(from);
+      // For undirected graphs, add the reverse edge as well
+      (adjacencyMap[to] ??= []).push(from);
     }
   }
 
-  return graph;
+  return adjacencyMap;
 }`,
     testCases: [
       {
@@ -2316,22 +2360,25 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
   return result;
 }`,
     solutionCode: `function bfs(graph: Record<number, number[]>, start: number): number[] {
-  const visited: Set<number> = new Set([start]);
-  const queue: number[] = [start];
-  const result: number[] = [];
+  // Breadth-first search: O(V + E) time, O(V) space
+  // Explore nodes level by level using a FIFO queue
+  const visitedNodes: Set<number> = new Set([start]);
+  const processingQueue: number[] = [start];
+  const traversalOrder: number[] = [];
 
-  while (queue.length > 0) {
-    const node: number = queue.shift()!;
-    result.push(node);
-    for (const neighbor of graph[node] || []) {
-      if (!visited.has(neighbor)) {
-        visited.add(neighbor);
-        queue.push(neighbor);
+  while (processingQueue.length > 0) {
+    const currentNode: number = processingQueue.shift()!;
+    traversalOrder.push(currentNode);
+    for (const neighbor of graph[currentNode] || []) {
+      if (!visitedNodes.has(neighbor)) {
+        // Mark visited before enqueuing to prevent duplicate enqueues
+        visitedNodes.add(neighbor);
+        processingQueue.push(neighbor);
       }
     }
   }
 
-  return result;
+  return traversalOrder;
 }`,
     testCases: [
       {
@@ -2374,20 +2421,24 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
   return result;
 }`,
     solutionCode: `function dfs(graph: Record<number, number[]>, start: number): number[] {
-  const visited: Set<number> = new Set();
-  const result: number[] = [];
+  // Recursive depth-first search: O(V + E) time, O(V) space
+  // Explore each branch to its deepest node before backtracking
+  const visitedNodes: Set<number> = new Set();
+  const traversalOrder: number[] = [];
 
-  function explore(node: number): void {
-    if (visited.has(node)) return;
-    visited.add(node);
-    result.push(node);
-    for (const neighbor of graph[node] || []) {
+  function explore(currentNode: number): void {
+    // Skip already-visited nodes to avoid infinite cycles
+    if (visitedNodes.has(currentNode)) return;
+    visitedNodes.add(currentNode);
+    traversalOrder.push(currentNode);
+    for (const neighbor of graph[currentNode] || []) {
+      // Recurse into each unvisited neighbor (depth-first)
       explore(neighbor);
     }
   }
 
   explore(start);
-  return result;
+  return traversalOrder;
 }`,
     testCases: [
       {
@@ -2438,14 +2489,18 @@ function trieInsert(root: TrieNode, word: string): TrieNode {
 }
 
 function trieInsert(root: TrieNode, word: string): TrieNode {
-  let node: TrieNode = root;
+  // Trie insertion: O(m) time, O(m) space where m = word length
+  // Walk down the trie, creating nodes for missing characters
+  let currentNode: TrieNode = root;
 
   for (const char of word) {
-    node[char] ??= {};
-    node = node[char] as TrieNode;
+    // Lazily create child node if this character path does not exist
+    currentNode[char] ??= {};
+    currentNode = currentNode[char] as TrieNode;
   }
 
-  node.$ = true;
+  // Mark this node as a complete word endpoint
+  currentNode.$ = true;
   return root;
 }`,
     testCases: [
@@ -2503,16 +2558,20 @@ function createUnionFind(size: number): UnionFind {
 }
 
 function createUnionFind(size: number): UnionFind {
+  // Union-Find with path compression: O(alpha(n)) amortized per op, O(n) space
+  // Each element starts as its own set root (self-parenting)
   const parent: number[] = Array.from({ length: size }, (_, i) => i);
 
   function find(x: number): number {
     if (parent[x] !== x) {
-      parent[x] = find(parent[x]); // Path compression
+      // Path compression: flatten tree by pointing directly to root
+      parent[x] = find(parent[x]);
     }
     return parent[x];
   }
 
   function union(x: number, y: number): void {
+    // Merge two disjoint sets by linking root of x to root of y
     parent[find(x)] = find(y);
   }
 
@@ -2552,7 +2611,9 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function compose<T>(...transforms: Array<(value: T) => T>): (value: T) => T {
-  return (value: T): T => transforms.reduceRight((acc, transform) => transform(acc), value);
+  // Right-to-left function composition: O(n) per call, O(1) space
+  // reduceRight applies the last function first, matching mathematical notation
+  return (value: T): T => transforms.reduceRight((accumulated, transform) => transform(accumulated), value);
 }`,
     testCases: [
       {
@@ -2586,7 +2647,9 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function pipe<T>(...transforms: Array<(value: T) => T>): (value: T) => T {
-  return (value: T): T => transforms.reduce((acc, transform) => transform(acc), value);
+  // Left-to-right function pipeline: O(n) per call, O(1) space
+  // Data flows through transforms in the order they are written
+  return (value: T): T => transforms.reduce((accumulated, transform) => transform(accumulated), value);
 }`,
     testCases: [
       {
@@ -2620,11 +2683,15 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function curry(callback: (...args: any[]) => any): (...args: any[]) => any {
-  return function curried(...args: any[]): any {
-    if (args.length >= callback.length) {
-      return callback(...args);
+  // Recursive currying: O(1) per partial call, O(n) total for n args
+  // Collect arguments until we have enough to invoke the original function
+  return function curried(...collectedArgs: any[]): any {
+    // When we have enough args, invoke the original callback
+    if (collectedArgs.length >= callback.length) {
+      return callback(...collectedArgs);
     }
-    return (...more: any[]) => curried(...args, ...more);
+    // Otherwise return a new function that accumulates more arguments
+    return (...additionalArgs: any[]) => curried(...collectedArgs, ...additionalArgs);
   };
 }`,
     testCases: [
@@ -2659,11 +2726,14 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function uniqueBy<T>(items: T[], keyFn: (item: T) => string | number): T[] {
-  const seen: Set<string | number> = new Set();
+  // Set-based deduplication: O(n) time, O(k) space where k = unique keys
+  // Track which keys have been encountered; keep only the first occurrence
+  const encounteredKeys: Set<string | number> = new Set();
   return items.filter((item: T) => {
-    const key: string | number = keyFn(item);
-    if (seen.has(key)) return false;
-    seen.add(key);
+    const derivedKey: string | number = keyFn(item);
+    // Skip duplicates that share the same derived key
+    if (encounteredKeys.has(derivedKey)) return false;
+    encounteredKeys.add(derivedKey);
     return true;
   });
 }`,
@@ -2708,8 +2778,11 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function difference<T>(items: T[], excludeItems: T[]): T[] {
-  const excludeSet: Set<T> = new Set(excludeItems);
-  return items.filter((value: T) => !excludeSet.has(value));
+  // Set difference: O(n + m) time, O(m) space
+  // Convert exclusion list to Set for O(1) membership checks
+  const exclusionLookup: Set<T> = new Set(excludeItems);
+  // Keep only elements not found in the exclusion set
+  return items.filter((element: T) => !exclusionLookup.has(element));
 }`,
     testCases: [
       {
@@ -2745,8 +2818,11 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function intersection<T>(items: T[], otherItems: T[]): T[] {
-  const otherSet: Set<T> = new Set(otherItems);
-  return items.filter((value: T) => otherSet.has(value));
+  // Set intersection: O(n + m) time, O(m) space
+  // Convert second array to Set for O(1) membership checks
+  const membershipLookup: Set<T> = new Set(otherItems);
+  // Keep only elements present in both collections
+  return items.filter((element: T) => membershipLookup.has(element));
 }`,
     testCases: [
       {
@@ -2782,8 +2858,11 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function takeWhile<T>(items: T[], predicate: (value: T) => boolean): T[] {
-  const idx: number = items.findIndex((value: T) => !predicate(value));
-  return idx === -1 ? items : items.slice(0, idx);
+  // findIndex approach: O(n) time, O(k) space where k = taken elements
+  // Locate the first element that fails the predicate
+  const firstFailIndex: number = items.findIndex((value: T) => !predicate(value));
+  // If no element fails, take everything; otherwise slice up to the failure point
+  return firstFailIndex === -1 ? items : items.slice(0, firstFailIndex);
 }`,
     testCases: [
       {
@@ -2816,8 +2895,11 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function dropWhile<T>(items: T[], predicate: (value: T) => boolean): T[] {
-  const idx: number = items.findIndex((value: T) => !predicate(value));
-  return idx === -1 ? [] : items.slice(idx);
+  // findIndex approach: O(n) time, O(k) space where k = remaining elements
+  // Locate the first element that fails the predicate
+  const firstKeepIndex: number = items.findIndex((value: T) => !predicate(value));
+  // If all elements pass, nothing remains; otherwise keep from first failure onward
+  return firstKeepIndex === -1 ? [] : items.slice(firstKeepIndex);
 }`,
     testCases: [
       {
@@ -2850,14 +2932,19 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function sample<T>(items: T[], count: number): T[] {
-  const copy: T[] = [...items];
-  const result: T[] = [];
-  for (let i = 0; i < Math.min(count, copy.length); i++) {
-    const idx: number = Math.floor(Math.random() * (copy.length - i)) + i;
-    [copy[i], copy[idx]] = [copy[idx], copy[i]];
-    result.push(copy[i]);
+  // Partial Fisher-Yates shuffle: O(k) time, O(n) space where k = count
+  // Only shuffle the first k positions instead of the entire array
+  const shuffleCopy: T[] = [...items];
+  const sampled: T[] = [];
+  const sampleSize: number = Math.min(count, shuffleCopy.length);
+  for (let position = 0; position < sampleSize; position++) {
+    // Pick a random index from the unshuffled portion
+    const randomIndex: number = Math.floor(Math.random() * (shuffleCopy.length - position)) + position;
+    // Swap chosen element into the current position
+    [shuffleCopy[position], shuffleCopy[randomIndex]] = [shuffleCopy[randomIndex], shuffleCopy[position]];
+    sampled.push(shuffleCopy[position]);
   }
-  return result;
+  return sampled;
 }`,
     testCases: [
       {
@@ -2890,6 +2977,8 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function compact<T>(items: (T | false | 0 | '' | null | undefined)[]): T[] {
+  // Boolean filter: O(n) time, O(k) space where k = truthy elements
+  // Boolean constructor coerces each value; falsy values become false and are excluded
   return items.filter(Boolean) as T[];
 }`,
     testCases: [
@@ -2923,10 +3012,13 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function countBy<T>(items: T[], keyFn: (item: T) => string | number): Record<string, number> {
-  return items.reduce((counts: Record<string, number>, item: T) => {
-    const key: string = String(keyFn(item));
-    counts[key] = (counts[key] || 0) + 1;
-    return counts;
+  // Key-based frequency counting: O(n) time, O(k) space where k = unique keys
+  // Apply keyFn to derive a grouping key, then tally occurrences per key
+  return items.reduce((tallies: Record<string, number>, item: T) => {
+    const groupKey: string = String(keyFn(item));
+    // Default to 0 for first occurrence, then increment
+    tallies[groupKey] = (tallies[groupKey] || 0) + 1;
+    return tallies;
   }, {});
 }`,
     testCases: [
@@ -2960,7 +3052,9 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function sumBy<T>(items: T[], valueFn: (item: T) => number): number {
-  return items.reduce((sum: number, item: T) => sum + valueFn(item), 0);
+  // Reduce-based summation: O(n) time, O(1) space
+  // Extract a numeric value from each element and accumulate the total
+  return items.reduce((runningTotal: number, item: T) => runningTotal + valueFn(item), 0);
 }`,
     testCases: [
       {
@@ -2993,9 +3087,12 @@ function createUnionFind(size: number): UnionFind {
 
 }`,
     solutionCode: `function maxBy<T>(items: T[], keyFn: (item: T) => number): T | undefined {
+  // Linear scan for maximum: O(n) time, O(1) space
   if (items.length === 0) return undefined;
-  return items.reduce((max: T, item: T) =>
-    keyFn(item) > keyFn(max) ? item : max
+  // Reduce without initial value starts with first element as the candidate
+  return items.reduce((currentMax: T, candidate: T) =>
+    // Replace current max only when candidate has a strictly greater key
+    keyFn(candidate) > keyFn(currentMax) ? candidate : currentMax
   );
 }`,
     testCases: [
@@ -3045,14 +3142,18 @@ function trieSearch(root: TrieNode, word: string): boolean {
 }
 
 function trieSearch(root: TrieNode, word: string): boolean {
-  let node: TrieNode = root;
+  // Trie lookup: O(m) time, O(1) space where m = word length
+  // Walk down the trie following each character in the word
+  let currentNode: TrieNode = root;
 
   for (const char of word) {
-    if (!node[char]) return false;
-    node = node[char] as TrieNode;
+    // If the character path does not exist, the word is not in the trie
+    if (!currentNode[char]) return false;
+    currentNode = currentNode[char] as TrieNode;
   }
 
-  return !!node.$;
+  // A prefix match is not enough; the node must be marked as a word endpoint
+  return !!currentNode.$;
 }`,
     testCases: [
       {
@@ -3102,28 +3203,34 @@ function trieSearch(root: TrieNode, word: string): boolean {
   return result;
 }`,
     solutionCode: `function topologicalSort(graph: Record<string, string[]>): string[] {
-  const inDegree: Record<string, number> = {};
-  const result: string[] = [];
+  // Kahn's algorithm (BFS-based): O(V + E) time, O(V) space
+  // Process nodes with no incoming edges first, peeling layers of the DAG
+  const inDegreeCount: Record<string, number> = {};
+  const sortedOrder: string[] = [];
 
+  // Count how many edges point into each node
   for (const node in graph) {
-    inDegree[node] ??= 0;
+    inDegreeCount[node] ??= 0;
     for (const neighbor of graph[node]) {
-      inDegree[neighbor] = (inDegree[neighbor] || 0) + 1;
+      inDegreeCount[neighbor] = (inDegreeCount[neighbor] || 0) + 1;
     }
   }
 
-  const queue: string[] = Object.keys(inDegree).filter((node: string) => inDegree[node] === 0);
+  // Seed the queue with nodes that have no dependencies (in-degree 0)
+  const processingQueue: string[] = Object.keys(inDegreeCount).filter((node: string) => inDegreeCount[node] === 0);
 
-  while (queue.length) {
-    const node: string = queue.shift()!;
-    result.push(node);
-    for (const neighbor of graph[node] || []) {
-      inDegree[neighbor]--;
-      if (inDegree[neighbor] === 0) queue.push(neighbor);
+  while (processingQueue.length) {
+    const currentNode: string = processingQueue.shift()!;
+    sortedOrder.push(currentNode);
+    for (const neighbor of graph[currentNode] || []) {
+      // Removing this node effectively removes its outgoing edges
+      inDegreeCount[neighbor]--;
+      // When a neighbor has no more incoming edges, it is ready to process
+      if (inDegreeCount[neighbor] === 0) processingQueue.push(neighbor);
     }
   }
 
-  return result;
+  return sortedOrder;
 }`,
     testCases: [
       {
@@ -3159,13 +3266,17 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function isPalindrome<T>(items: T[]): boolean {
-  let left: number = 0;
-  let right: number = items.length - 1;
-  while (left < right) {
-    if (items[left] !== items[right]) return false;
-    left++;
-    right--;
+  // Converging two-pointer approach: O(n) time, O(1) space
+  // Compare mirror positions from both ends moving inward
+  let leftIndex: number = 0;
+  let rightIndex: number = items.length - 1;
+  while (leftIndex < rightIndex) {
+    // Any mismatch means the array is not symmetric
+    if (items[leftIndex] !== items[rightIndex]) return false;
+    leftIndex++;
+    rightIndex--;
   }
+  // All mirror pairs matched; the array is a palindrome
   return true;
 }`,
     testCases: [
@@ -3201,15 +3312,19 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function removeDuplicates(numbers: number[]): number {
+  // Two same-direction pointers: O(n) time, O(1) space
+  // writePos anchors the last unique value; scanner finds the next distinct element
   if (numbers.length === 0) return 0;
-  let slow: number = 0;
-  for (let fast: number = 1; fast < numbers.length; fast++) {
-    if (numbers[fast] !== numbers[slow]) {
-      slow++;
-      numbers[slow] = numbers[fast];
+  let writePos: number = 0;
+  for (let scanner: number = 1; scanner < numbers.length; scanner++) {
+    // Only advance write position when a new unique value is found
+    if (numbers[scanner] !== numbers[writePos]) {
+      writePos++;
+      numbers[writePos] = numbers[scanner];
     }
   }
-  return slow + 1;
+  // writePos is zero-indexed, so unique count is writePos + 1
+  return writePos + 1;
 }`,
     testCases: [
       { input: [[1, 1, 2]], expected: 2, description: 'Simple duplicates' },
@@ -3243,14 +3358,18 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function maxSumOfK(numbers: number[], windowSize: number): number | null {
+  // Fixed-size sliding window: O(n) time, O(1) space
+  // Compute first window, then slide by adding/removing one element at a time
   if (numbers.length < windowSize) return null;
   let windowSum: number = 0;
-  for (let i = 0; i < windowSize; i++) {
-    windowSum += numbers[i];
+  // Build the initial window of size k
+  for (let idx = 0; idx < windowSize; idx++) {
+    windowSum += numbers[idx];
   }
   let maxSum: number = windowSum;
-  for (let i = windowSize; i < numbers.length; i++) {
-    windowSum += numbers[i] - numbers[i - windowSize];
+  for (let idx = windowSize; idx < numbers.length; idx++) {
+    // Slide: add the entering element, subtract the leaving element
+    windowSum += numbers[idx] - numbers[idx - windowSize];
     maxSum = Math.max(maxSum, windowSum);
   }
   return maxSum;
@@ -3286,18 +3405,22 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function minSubarrayLen(target: number, numbers: number[]): number {
-  let minLen: number = Infinity;
-  let sum: number = 0;
+  // Variable-size sliding window: O(n) time, O(1) space
+  // Expand right to grow sum, shrink left to find minimal valid window
+  let shortestLength: number = Infinity;
+  let runningSum: number = 0;
   let left: number = 0;
   for (let right = 0; right < numbers.length; right++) {
-    sum += numbers[right];
-    while (sum >= target) {
-      minLen = Math.min(minLen, right - left + 1);
-      sum -= numbers[left];
+    runningSum += numbers[right];
+    // Shrink from the left while the window sum meets the target
+    while (runningSum >= target) {
+      shortestLength = Math.min(shortestLength, right - left + 1);
+      runningSum -= numbers[left];
       left++;
     }
   }
-  return minLen === Infinity ? 0 : minLen;
+  // Infinity means no valid subarray was found
+  return shortestLength === Infinity ? 0 : shortestLength;
 }`,
     testCases: [
       { input: [7, [2, 3, 1, 2, 4, 3]], expected: 2, description: 'Subarray [4,3] has sum 7' },
@@ -3338,12 +3461,15 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function prefixSum(numbers: number[]): number[] {
+  // Cumulative sum array: O(n) time, O(n) space
+  // Each element stores the sum of all values from index 0 up to that index
   if (numbers.length === 0) return [];
-  const prefix: number[] = [numbers[0]];
-  for (let i = 1; i < numbers.length; i++) {
-    prefix.push(prefix[i - 1] + numbers[i]);
+  const cumulativeSums: number[] = [numbers[0]];
+  for (let idx = 1; idx < numbers.length; idx++) {
+    // Build on the previous cumulative sum to avoid re-summing
+    cumulativeSums.push(cumulativeSums[idx - 1] + numbers[idx]);
   }
-  return prefix;
+  return cumulativeSums;
 }`,
     testCases: [
       { input: [[1, 2, 3, 4]], expected: [1, 3, 6, 10], description: 'Basic prefix sum' },
@@ -3372,17 +3498,21 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function productExceptSelf(numbers: number[]): number[] {
-  const length: number = numbers.length;
-  const result: number[] = new Array(length).fill(1);
-  let leftProduct: number = 1;
-  for (let i = 0; i < length; i++) {
-    result[i] = leftProduct;
-    leftProduct *= numbers[i];
+  // Two-pass prefix/suffix product: O(n) time, O(1) extra space (output not counted)
+  // Avoids division by building left products then multiplying by right products
+  const totalElements: number = numbers.length;
+  const result: number[] = new Array(totalElements).fill(1);
+  // First pass: result[i] = product of all elements to the left of i
+  let runningLeftProduct: number = 1;
+  for (let idx = 0; idx < totalElements; idx++) {
+    result[idx] = runningLeftProduct;
+    runningLeftProduct *= numbers[idx];
   }
-  let rightProduct: number = 1;
-  for (let i = length - 1; i >= 0; i--) {
-    result[i] *= rightProduct;
-    rightProduct *= numbers[i];
+  // Second pass: multiply each result[i] by the product of all elements to the right
+  let runningRightProduct: number = 1;
+  for (let idx = totalElements - 1; idx >= 0; idx--) {
+    result[idx] *= runningRightProduct;
+    runningRightProduct *= numbers[idx];
   }
   return result;
 }`,
@@ -3416,15 +3546,20 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function applyRangeUpdates(size: number, updates: [number, number, number][]): number[] {
-  const diff: number[] = new Array(size + 1).fill(0);
+  // Difference array technique: O(n + u) time, O(n) space (u = number of updates)
+  // Encodes range additions as two point operations, then reconstructs via prefix sum
+  const differenceArray: number[] = new Array(size + 1).fill(0);
   for (const [start, end, value] of updates) {
-    diff[start] += value;
-    if (end + 1 <= size) diff[end + 1] -= value;
+    // Mark the start of the range increment
+    differenceArray[start] += value;
+    // Mark the position after the end to cancel the increment
+    if (end + 1 <= size) differenceArray[end + 1] -= value;
   }
+  // Reconstruct the final array by computing prefix sum of the difference array
   const result: number[] = new Array(size);
-  result[0] = diff[0];
-  for (let i = 1; i < size; i++) {
-    result[i] = result[i - 1] + diff[i];
+  result[0] = differenceArray[0];
+  for (let idx = 1; idx < size; idx++) {
+    result[idx] = result[idx - 1] + differenceArray[idx];
   }
   return result;
 }`,
@@ -3486,13 +3621,16 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function maxSubarraySum(numbers: number[]): number {
-  let maxSum: number = numbers[0];
+  // Kadane's algorithm: O(n) time, O(1) space
+  // At each position, decide whether to extend the current subarray or start fresh
+  let bestSum: number = numbers[0];
   let currentSum: number = numbers[0];
-  for (let i = 1; i < numbers.length; i++) {
-    currentSum = Math.max(numbers[i], currentSum + numbers[i]);
-    maxSum = Math.max(maxSum, currentSum);
+  for (let idx = 1; idx < numbers.length; idx++) {
+    // Start a new subarray at idx if extending would produce a smaller sum
+    currentSum = Math.max(numbers[idx], currentSum + numbers[idx]);
+    bestSum = Math.max(bestSum, currentSum);
   }
-  return maxSum;
+  return bestSum;
 }`,
     testCases: [
       {
@@ -3530,18 +3668,23 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function dutchFlag(numbers: number[], pivot: number): number[] {
+  // Dutch National Flag three-way partition: O(n) time, O(n) space for copy
+  // Partitions into [< pivot | == pivot | > pivot] in a single pass
   const result: number[] = [...numbers];
-  let low: number = 0, mid: number = 0, high: number = result.length - 1;
-  while (mid <= high) {
-    if (result[mid] < pivot) {
-      [result[low], result[mid]] = [result[mid], result[low]];
-      low++;
-      mid++;
-    } else if (result[mid] > pivot) {
-      [result[mid], result[high]] = [result[high], result[mid]];
-      high--;
+  let lowBoundary: number = 0, scanner: number = 0, highBoundary: number = result.length - 1;
+  while (scanner <= highBoundary) {
+    if (result[scanner] < pivot) {
+      // Element belongs in the "less than" section
+      [result[lowBoundary], result[scanner]] = [result[scanner], result[lowBoundary]];
+      lowBoundary++;
+      scanner++;
+    } else if (result[scanner] > pivot) {
+      // Element belongs in the "greater than" section; don't advance scanner since swapped element is unexamined
+      [result[scanner], result[highBoundary]] = [result[highBoundary], result[scanner]];
+      highBoundary--;
     } else {
-      mid++;
+      // Element equals pivot; already in the correct middle section
+      scanner++;
     }
   }
   return result;
@@ -3594,17 +3737,22 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function hasCycle(nextIndices: number[]): boolean {
+  // Floyd's tortoise and hare: O(n) time, O(1) space
+  // Slow pointer moves 1 step, fast moves 2; if they meet, a cycle exists
   if (nextIndices.length === 0) return false;
-  let slow: number = 0;
-  let fast: number = 0;
+  let tortoise: number = 0;
+  let hare: number = 0;
   while (true) {
-    slow = nextIndices[slow];
-    if (slow === -1) return false;
-    fast = nextIndices[fast];
-    if (fast === -1) return false;
-    fast = nextIndices[fast];
-    if (fast === -1) return false;
-    if (slow === fast) return true;
+    // Move tortoise one step
+    tortoise = nextIndices[tortoise];
+    if (tortoise === -1) return false;
+    // Move hare two steps
+    hare = nextIndices[hare];
+    if (hare === -1) return false;
+    hare = nextIndices[hare];
+    if (hare === -1) return false;
+    // If they meet, there is a cycle
+    if (tortoise === hare) return true;
   }
 }`,
     testCases: [
@@ -3639,23 +3787,27 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function mergeInPlace(target: number[], targetLen: number, source: number[], sourceLen: number): number[] {
-  let p1: number = targetLen - 1;
-  let p2: number = sourceLen - 1;
-  let write: number = targetLen + sourceLen - 1;
-  while (p1 >= 0 && p2 >= 0) {
-    if (target[p1] > source[p2]) {
-      target[write] = target[p1];
-      p1--;
+  // Reverse-direction merge: O(m+n) time, O(1) space
+  // Fill from the end to avoid overwriting unprocessed target elements
+  let targetPointer: number = targetLen - 1;
+  let sourcePointer: number = sourceLen - 1;
+  let writePosition: number = targetLen + sourceLen - 1;
+  while (targetPointer >= 0 && sourcePointer >= 0) {
+    // Place the larger of the two current elements at the write position
+    if (target[targetPointer] > source[sourcePointer]) {
+      target[writePosition] = target[targetPointer];
+      targetPointer--;
     } else {
-      target[write] = source[p2];
-      p2--;
+      target[writePosition] = source[sourcePointer];
+      sourcePointer--;
     }
-    write--;
+    writePosition--;
   }
-  while (p2 >= 0) {
-    target[write] = source[p2];
-    p2--;
-    write--;
+  // Copy any remaining source elements (target elements are already in place)
+  while (sourcePointer >= 0) {
+    target[writePosition] = source[sourcePointer];
+    sourcePointer--;
+    writePosition--;
   }
   return target;
 }`,
@@ -3706,15 +3858,19 @@ function trieSearch(root: TrieNode, word: string): boolean {
   return result;
 }`,
     solutionCode: `function zigzagTraversal(matrix: number[][]): number[] {
+  // Zigzag traversal: O(m*n) time, O(m*n) space
+  // Even-indexed rows go left-to-right, odd-indexed rows go right-to-left
   const result: number[] = [];
-  for (let i = 0; i < matrix.length; i++) {
-    if (i % 2 === 0) {
-      for (let j = 0; j < matrix[i].length; j++) {
-        result.push(matrix[i][j]);
+  for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
+    if (rowIndex % 2 === 0) {
+      // Even row: traverse forward
+      for (let colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+        result.push(matrix[rowIndex][colIndex]);
       }
     } else {
-      for (let j = matrix[i].length - 1; j >= 0; j--) {
-        result.push(matrix[i][j]);
+      // Odd row: traverse backward to create the zigzag pattern
+      for (let colIndex = matrix[rowIndex].length - 1; colIndex >= 0; colIndex--) {
+        result.push(matrix[rowIndex][colIndex]);
       }
     }
   }
@@ -3780,22 +3936,28 @@ function trieSearch(root: TrieNode, word: string): boolean {
   return result;
 }`,
     solutionCode: `function spiralOrder(matrix: number[][]): number[] {
+  // Spiral traversal with boundary shrinking: O(m*n) time, O(m*n) space
+  // Walk the perimeter of the current layer, then shrink inward
   const result: number[] = [];
   if (matrix.length === 0) return result;
-  let top: number = 0, bottom: number = matrix.length - 1;
-  let left: number = 0, right: number = matrix[0].length - 1;
-  while (top <= bottom && left <= right) {
-    for (let j = left; j <= right; j++) result.push(matrix[top][j]);
-    top++;
-    for (let i = top; i <= bottom; i++) result.push(matrix[i][right]);
-    right--;
-    if (top <= bottom) {
-      for (let j = right; j >= left; j--) result.push(matrix[bottom][j]);
-      bottom--;
+  let topRow: number = 0, bottomRow: number = matrix.length - 1;
+  let leftCol: number = 0, rightCol: number = matrix[0].length - 1;
+  while (topRow <= bottomRow && leftCol <= rightCol) {
+    // Traverse top row left-to-right
+    for (let col = leftCol; col <= rightCol; col++) result.push(matrix[topRow][col]);
+    topRow++;
+    // Traverse right column top-to-bottom
+    for (let row = topRow; row <= bottomRow; row++) result.push(matrix[row][rightCol]);
+    rightCol--;
+    // Traverse bottom row right-to-left (only if rows remain)
+    if (topRow <= bottomRow) {
+      for (let col = rightCol; col >= leftCol; col--) result.push(matrix[bottomRow][col]);
+      bottomRow--;
     }
-    if (left <= right) {
-      for (let i = bottom; i >= top; i--) result.push(matrix[i][left]);
-      left++;
+    // Traverse left column bottom-to-top (only if columns remain)
+    if (leftCol <= rightCol) {
+      for (let row = bottomRow; row >= topRow; row--) result.push(matrix[row][leftCol]);
+      leftCol++;
     }
   }
   return result;
@@ -3862,18 +4024,22 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function diagonalTraversal(matrix: number[][]): number[] {
+  // Anti-diagonal traversal: O(m*n) time, O(m*n) space
+  // There are (rows + cols - 1) diagonals; each diagonal has constant (row + col) sum
   if (matrix.length === 0) return [];
-  const rows: number = matrix.length;
-  const cols: number = matrix[0].length;
+  const rowCount: number = matrix.length;
+  const colCount: number = matrix[0].length;
   const result: number[] = [];
-  for (let d = 0; d < rows + cols - 1; d++) {
-    const startRow: number = d < cols ? 0 : d - cols + 1;
-    const startCol: number = d < cols ? d : cols - 1;
-    let r: number = startRow, c: number = startCol;
-    while (r < rows && c >= 0) {
-      result.push(matrix[r][c]);
-      r++;
-      c--;
+  for (let diagonalIndex = 0; diagonalIndex < rowCount + colCount - 1; diagonalIndex++) {
+    // Determine the starting cell for this diagonal
+    const startRow: number = diagonalIndex < colCount ? 0 : diagonalIndex - colCount + 1;
+    const startCol: number = diagonalIndex < colCount ? diagonalIndex : colCount - 1;
+    let currentRow: number = startRow, currentCol: number = startCol;
+    // Walk down-left along the diagonal
+    while (currentRow < rowCount && currentCol >= 0) {
+      result.push(matrix[currentRow][currentCol]);
+      currentRow++;
+      currentCol--;
     }
   }
   return result;
@@ -3931,16 +4097,17 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function rotateMatrix(matrix: number[][]): number[][] {
-  const size: number = matrix.length;
-  // Transpose
-  for (let i = 0; i < size; i++) {
-    for (let j = i + 1; j < size; j++) {
-      [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]];
+  // Transpose + reverse rows = 90-degree clockwise rotation: O(n^2) time, O(1) space
+  const matrixSize: number = matrix.length;
+  // Step 1: Transpose - swap elements across the main diagonal
+  for (let row = 0; row < matrixSize; row++) {
+    for (let col = row + 1; col < matrixSize; col++) {
+      [matrix[row][col], matrix[col][row]] = [matrix[col][row], matrix[row][col]];
     }
   }
-  // Reverse each row
-  for (let i = 0; i < size; i++) {
-    matrix[i].reverse();
+  // Step 2: Reverse each row to complete the clockwise rotation
+  for (let row = 0; row < matrixSize; row++) {
+    matrix[row].reverse();
   }
   return matrix;
 }`,
@@ -4021,12 +4188,16 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function lowerBound(numbers: number[], target: number): number {
+  // Binary search (lower bound / bisect-left): O(log n) time, O(1) space
+  // Finds the first position where an element >= target could be inserted
   let lo: number = 0, hi: number = numbers.length;
   while (lo < hi) {
     const mid: number = (lo + hi) >>> 1;
     if (numbers[mid] < target) {
+      // Target must be in the right half
       lo = mid + 1;
     } else {
+      // mid could be the answer; narrow from the right
       hi = mid;
     }
   }
@@ -4062,12 +4233,16 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function upperBound(numbers: number[], target: number): number {
+  // Binary search (upper bound / bisect-right): O(log n) time, O(1) space
+  // Finds the first position where an element > target could be inserted
   let lo: number = 0, hi: number = numbers.length;
   while (lo < hi) {
     const mid: number = (lo + hi) >>> 1;
     if (numbers[mid] <= target) {
+      // All elements up to mid are <= target, search right
       lo = mid + 1;
     } else {
+      // mid could be the answer; narrow from the right
       hi = mid;
     }
   }
@@ -4103,17 +4278,23 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function intSqrt(value: number): number {
+  // Binary search on the answer space: O(log n) time, O(1) space
+  // Searches for the largest integer whose square does not exceed value
   if (value < 2) return value;
   let lo: number = 1, hi: number = Math.floor(value / 2);
   while (lo <= hi) {
     const mid: number = (lo + hi) >>> 1;
-    if (mid * mid === value) return mid;
-    if (mid * mid < value) {
+    const square: number = mid * mid;
+    if (square === value) return mid;
+    if (square < value) {
+      // mid might be too small; search higher
       lo = mid + 1;
     } else {
+      // mid is too large; search lower
       hi = mid - 1;
     }
   }
+  // hi is the largest integer with hi*hi <= value
   return hi;
 }`,
     testCases: [
@@ -4149,17 +4330,21 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function searchRotated(numbers: number[], target: number): number {
+  // Modified binary search on rotated array: O(log n) time, O(1) space
+  // At each step, determine which half is sorted and whether target lies within it
   let lo: number = 0, hi: number = numbers.length - 1;
   while (lo <= hi) {
     const mid: number = (lo + hi) >>> 1;
     if (numbers[mid] === target) return mid;
     if (numbers[lo] <= numbers[mid]) {
+      // Left half [lo..mid] is sorted
       if (target >= numbers[lo] && target < numbers[mid]) {
         hi = mid - 1;
       } else {
         lo = mid + 1;
       }
     } else {
+      // Right half [mid..hi] is sorted
       if (target > numbers[mid] && target <= numbers[hi]) {
         lo = mid + 1;
       } else {
@@ -4201,25 +4386,29 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function quickSelect(numbers: number[], count: number): number {
-  const a: number[] = [...numbers];
+  // QuickSelect (Lomuto partition): O(n) average time, O(n) space for copy
+  // Repeatedly partition until pivot lands at the target index
+  const elements: number[] = [...numbers];
   function partition(lo: number, hi: number): number {
-    const pivot: number = a[hi];
-    let i: number = lo;
-    for (let j: number = lo; j < hi; j++) {
-      if (a[j] <= pivot) {
-        [a[i], a[j]] = [a[j], a[i]];
-        i++;
+    const pivotValue: number = elements[hi];
+    let storeIndex: number = lo;
+    for (let scanIndex: number = lo; scanIndex < hi; scanIndex++) {
+      if (elements[scanIndex] <= pivotValue) {
+        [elements[storeIndex], elements[scanIndex]] = [elements[scanIndex], elements[storeIndex]];
+        storeIndex++;
       }
     }
-    [a[i], a[hi]] = [a[hi], a[i]];
-    return i;
+    // Place pivot in its final sorted position
+    [elements[storeIndex], elements[hi]] = [elements[hi], elements[storeIndex]];
+    return storeIndex;
   }
-  let lo: number = 0, hi: number = a.length - 1;
-  const target: number = count - 1;
+  let lo: number = 0, hi: number = elements.length - 1;
+  const targetIndex: number = count - 1;
   while (lo <= hi) {
     const pivotIndex: number = partition(lo, hi);
-    if (pivotIndex === target) return a[pivotIndex];
-    if (pivotIndex < target) lo = pivotIndex + 1;
+    if (pivotIndex === targetIndex) return elements[pivotIndex];
+    // Narrow search to the half containing the target index
+    if (pivotIndex < targetIndex) lo = pivotIndex + 1;
     else hi = pivotIndex - 1;
   }
   return -1;
@@ -4256,14 +4445,18 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function exponentialSearch(numbers: number[], target: number): number {
+  // Exponential search: O(log n) time, O(1) space
+  // Double the search bound to find a range, then binary search within it
   if (numbers.length === 0) return -1;
   if (numbers[0] === target) return 0;
-  let bound: number = 1;
-  while (bound < numbers.length && numbers[bound] < target) {
-    bound *= 2;
+  let searchBound: number = 1;
+  // Exponentially grow the bound until we overshoot or find a value >= target
+  while (searchBound < numbers.length && numbers[searchBound] < target) {
+    searchBound *= 2;
   }
-  let lo: number = Math.floor(bound / 2);
-  let hi: number = Math.min(bound, numbers.length - 1);
+  // Binary search within the narrowed range [bound/2, min(bound, length-1)]
+  let lo: number = Math.floor(searchBound / 2);
+  let hi: number = Math.min(searchBound, numbers.length - 1);
   while (lo <= hi) {
     const mid: number = (lo + hi) >>> 1;
     if (numbers[mid] === target) return mid;
@@ -4304,12 +4497,16 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function findPeak(numbers: number[]): number {
+  // Binary search for peak element: O(log n) time, O(1) space
+  // Always move toward the higher neighbor, guaranteeing convergence to a peak
   let lo: number = 0, hi: number = numbers.length - 1;
   while (lo < hi) {
     const mid: number = (lo + hi) >>> 1;
     if (numbers[mid] < numbers[mid + 1]) {
+      // Right neighbor is higher, so a peak must exist to the right
       lo = mid + 1;
     } else {
+      // mid is >= its right neighbor; peak is at mid or to the left
       hi = mid;
     }
   }
@@ -4346,13 +4543,20 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function searchMatrix(matrix: number[][], target: number): [number, number] {
+  // Staircase search from top-right corner: O(m+n) time, O(1) space
+  // Each comparison eliminates either a row or a column
   if (matrix.length === 0 || matrix[0].length === 0) return [-1, -1];
   let row: number = 0;
   let col: number = matrix[0].length - 1;
   while (row < matrix.length && col >= 0) {
     if (matrix[row][col] === target) return [row, col];
-    if (matrix[row][col] > target) col--;
-    else row++;
+    if (matrix[row][col] > target) {
+      // Current value too large; eliminate this column
+      col--;
+    } else {
+      // Current value too small; eliminate this row
+      row++;
+    }
   }
   return [-1, -1];
 }`,
@@ -4424,10 +4628,13 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function countOccurrences(numbers: number[], target: number): number {
+  // Two binary searches (lower + upper bound): O(log n) time, O(1) space
+  // The count of target is the gap between its upper and lower bound positions
   function lowerBound(a: number[], t: number): number {
     let lo: number = 0, hi: number = a.length;
     while (lo < hi) {
       const mid: number = (lo + hi) >>> 1;
+      // Strict < drives us to the first occurrence of t
       if (a[mid] < t) lo = mid + 1;
       else hi = mid;
     }
@@ -4437,11 +4644,13 @@ function trieSearch(root: TrieNode, word: string): boolean {
     let lo: number = 0, hi: number = a.length;
     while (lo < hi) {
       const mid: number = (lo + hi) >>> 1;
+      // <= drives us past the last occurrence of t
       if (a[mid] <= t) lo = mid + 1;
       else hi = mid;
     }
     return lo;
   }
+  // Difference gives the exact count of target in the sorted array
   return upperBound(numbers, target) - lowerBound(numbers, target);
 }`,
     testCases: [
@@ -4474,12 +4683,16 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function findMin(numbers: number[]): number {
+  // Binary search for minimum in rotated sorted array: O(log n) time, O(1) space
+  // Compare mid with hi to determine which half contains the rotation point
   let lo: number = 0, hi: number = numbers.length - 1;
   while (lo < hi) {
     const mid: number = (lo + hi) >>> 1;
     if (numbers[mid] > numbers[hi]) {
+      // Rotation point (minimum) must be in the right half
       lo = mid + 1;
     } else {
+      // Minimum is at mid or in the left half
       hi = mid;
     }
   }
@@ -4519,14 +4732,18 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function heapInsert(heap: number[], value: number): number[] {
+  // Max heap insertion with bubble-up: O(log n) time, O(1) space
+  // Add at the end then restore heap property by swapping upward
   heap.push(value);
-  let i: number = heap.length - 1;
-  while (i > 0) {
-    const parent: number = Math.floor((i - 1) / 2);
-    if (heap[i] > heap[parent]) {
-      [heap[i], heap[parent]] = [heap[parent], heap[i]];
-      i = parent;
+  let currentIndex: number = heap.length - 1;
+  while (currentIndex > 0) {
+    const parentIndex: number = Math.floor((currentIndex - 1) / 2);
+    if (heap[currentIndex] > heap[parentIndex]) {
+      // Child is larger than parent; swap to maintain max-heap invariant
+      [heap[currentIndex], heap[parentIndex]] = [heap[parentIndex], heap[currentIndex]];
+      currentIndex = parentIndex;
     } else {
+      // Heap property is satisfied
       break;
     }
   }
@@ -4566,21 +4783,25 @@ function trieSearch(root: TrieNode, word: string): boolean {
   // YOUR CODE HERE
 }`,
     solutionCode: `function heapExtractMin(heap: number[]): { min: number | null; heap: number[] } {
+  // Min heap extract-min with sift-down: O(log n) time, O(1) space
+  // Replace root with last element, then sift down to restore heap order
   if (heap.length === 0) return { min: null, heap: [] };
   const min: number = heap[0];
-  const last: number | undefined = heap.pop();
+  const lastElement: number | undefined = heap.pop();
   if (heap.length > 0) {
-    heap[0] = last as number;
-    let i: number = 0;
+    heap[0] = lastElement as number;
+    let currentIndex: number = 0;
     while (true) {
-      let smallest: number = i;
-      const left: number = 2 * i + 1;
-      const right: number = 2 * i + 2;
-      if (left < heap.length && heap[left] < heap[smallest]) smallest = left;
-      if (right < heap.length && heap[right] < heap[smallest]) smallest = right;
-      if (smallest === i) break;
-      [heap[i], heap[smallest]] = [heap[smallest], heap[i]];
-      i = smallest;
+      let smallestIndex: number = currentIndex;
+      const leftChild: number = 2 * currentIndex + 1;
+      const rightChild: number = 2 * currentIndex + 2;
+      // Find the smallest among current node and its children
+      if (leftChild < heap.length && heap[leftChild] < heap[smallestIndex]) smallestIndex = leftChild;
+      if (rightChild < heap.length && heap[rightChild] < heap[smallestIndex]) smallestIndex = rightChild;
+      if (smallestIndex === currentIndex) break;
+      // Swap with the smaller child to push the value down
+      [heap[currentIndex], heap[smallestIndex]] = [heap[smallestIndex], heap[currentIndex]];
+      currentIndex = smallestIndex;
     }
   }
   return { min, heap };
@@ -4643,21 +4864,26 @@ function createLRUCache(capacity: number): LRUCache {
 }
 
 function createLRUCache(capacity: number): LRUCache {
+  // LRU cache using Map insertion order: O(1) get/put, O(capacity) space
+  // Map preserves insertion order so the first key is the least recently used
   const cache: Map<number, number> = new Map();
   return {
     get(key: number): number {
       if (!cache.has(key)) return -1;
       const value: number = cache.get(key)!;
+      // Delete and re-insert to move this key to the most-recent position
       cache.delete(key);
       cache.set(key, value);
       return value;
     },
     put(key: number, value: number): void {
+      // Remove first so re-insert places it at the end (most recent)
       if (cache.has(key)) cache.delete(key);
       cache.set(key, value);
       if (cache.size > capacity) {
-        const oldest: number = cache.keys().next().value!;
-        cache.delete(oldest);
+        // Evict the least recently used entry (first key in Map)
+        const oldestKey: number = cache.keys().next().value!;
+        cache.delete(oldestKey);
       }
     }
   };
@@ -4740,15 +4966,21 @@ function reverseLinkedList(head: ListNode | null): ListNode | null {
 }
 
 function reverseLinkedList(head: ListNode | null): ListNode | null {
-  let prev: ListNode | null = null;
-  let current: ListNode | null = head;
-  while (current !== null) {
-    const next: ListNode | null = current.next;
-    current.next = prev;
-    prev = current;
-    current = next;
+  // Iterative linked list reversal: O(n) time, O(1) space
+  // Reverse each pointer to point backward instead of forward
+  let previousNode: ListNode | null = null;
+  let currentNode: ListNode | null = head;
+  while (currentNode !== null) {
+    // Save the next node before we overwrite the link
+    const nextNode: ListNode | null = currentNode.next;
+    // Reverse the pointer direction
+    currentNode.next = previousNode;
+    // Advance both pointers one step forward
+    previousNode = currentNode;
+    currentNode = nextNode;
   }
-  return prev;
+  // previousNode is now the new head of the reversed list
+  return previousNode;
 }`,
     testCases: [
       {
@@ -4812,29 +5044,33 @@ function createCircularBuffer<T>(capacity: number): CircularBuffer<T> {
 }
 
 function createCircularBuffer<T>(capacity: number): CircularBuffer<T> {
+  // Ring buffer with modular arithmetic: O(1) per operation, O(capacity) space
+  // head/tail wrap around using modulo to reuse array slots
   const buffer: (T | undefined)[] = new Array(capacity);
-  let head: number = 0, tail: number = 0, count: number = 0;
+  let headIndex: number = 0, tailIndex: number = 0, elementCount: number = 0;
   return {
     enqueue(value: T): boolean {
-      if (count === capacity) return false;
-      buffer[tail] = value;
-      tail = (tail + 1) % capacity;
-      count++;
+      if (elementCount === capacity) return false;
+      buffer[tailIndex] = value;
+      // Wrap tail to the beginning when it reaches the end
+      tailIndex = (tailIndex + 1) % capacity;
+      elementCount++;
       return true;
     },
     dequeue(): T | null {
-      if (count === 0) return null;
-      const value: T = buffer[head] as T;
-      head = (head + 1) % capacity;
-      count--;
+      if (elementCount === 0) return null;
+      const value: T = buffer[headIndex] as T;
+      // Advance head, wrapping around if needed
+      headIndex = (headIndex + 1) % capacity;
+      elementCount--;
       return value;
     },
     peek(): T | null {
-      if (count === 0) return null;
-      return buffer[head] as T;
+      if (elementCount === 0) return null;
+      return buffer[headIndex] as T;
     },
     size(): number {
-      return count;
+      return elementCount;
     }
   };
 }`,
@@ -4891,14 +5127,18 @@ function createCircularBuffer<T>(capacity: number): CircularBuffer<T> {
   // YOUR CODE HERE
 }`,
     solutionCode: `function nextGreaterElement(numbers: number[]): number[] {
+  // Monotonic decreasing stack: O(n) time, O(n) space
+  // Stack holds indices of elements still waiting for their next greater element
   const result: number[] = new Array(numbers.length).fill(-1);
-  const stack: number[] = [];
-  for (let i: number = 0; i < numbers.length; i++) {
-    while (stack.length > 0 && numbers[stack[stack.length - 1]] < numbers[i]) {
-      const idx: number = stack.pop()!;
-      result[idx] = numbers[i];
+  const pendingIndices: number[] = [];
+  for (let currentIndex: number = 0; currentIndex < numbers.length; currentIndex++) {
+    // Pop all indices whose value is smaller than the current element
+    while (pendingIndices.length > 0 && numbers[pendingIndices[pendingIndices.length - 1]] < numbers[currentIndex]) {
+      const resolvedIndex: number = pendingIndices.pop()!;
+      // Current element is the first greater element to the right of resolvedIndex
+      result[resolvedIndex] = numbers[currentIndex];
     }
-    stack.push(i);
+    pendingIndices.push(currentIndex);
   }
   return result;
 }`,
@@ -4941,18 +5181,24 @@ function createCircularBuffer<T>(capacity: number): CircularBuffer<T> {
   // YOUR CODE HERE
 }`,
     solutionCode: `function slidingWindowMax(numbers: number[], windowSize: number): number[] {
+  // Monotonic deque for sliding window maximum: O(n) time, O(k) space
+  // Deque front always holds the index of the current window's maximum
   const result: number[] = [];
-  const deque: number[] = [];
-  for (let i: number = 0; i < numbers.length; i++) {
-    while (deque.length > 0 && deque[0] < i - windowSize + 1) {
-      deque.shift();
+  const indexDeque: number[] = [];
+  for (let currentIndex: number = 0; currentIndex < numbers.length; currentIndex++) {
+    // Remove indices that have slid out of the current window
+    while (indexDeque.length > 0 && indexDeque[0] < currentIndex - windowSize + 1) {
+      indexDeque.shift();
     }
-    while (deque.length > 0 && numbers[deque[deque.length - 1]] <= numbers[i]) {
-      deque.pop();
+    // Remove indices from the back whose values are smaller than the incoming element
+    // because they can never be the maximum while the current element is in the window
+    while (indexDeque.length > 0 && numbers[indexDeque[indexDeque.length - 1]] <= numbers[currentIndex]) {
+      indexDeque.pop();
     }
-    deque.push(i);
-    if (i >= windowSize - 1) {
-      result.push(numbers[deque[0]]);
+    indexDeque.push(currentIndex);
+    // Start recording results once the first full window is formed
+    if (currentIndex >= windowSize - 1) {
+      result.push(numbers[indexDeque[0]]);
     }
   }
   return result;
@@ -5019,27 +5265,31 @@ function createMinStack(): MinStack {
 }
 
 function createMinStack(): MinStack {
-  const stack: number[] = [];
-  const minStack: number[] = [];
+  // Stack with O(1) getMin using an auxiliary minimum-tracking stack
+  // minTracker mirrors the main stack but only records new minimums
+  const dataStack: number[] = [];
+  const minTracker: number[] = [];
   return {
     push(value: number): void {
-      stack.push(value);
-      if (minStack.length === 0 || value <= minStack[minStack.length - 1]) {
-        minStack.push(value);
+      dataStack.push(value);
+      // Only push to minTracker when value is a new minimum (or equal)
+      if (minTracker.length === 0 || value <= minTracker[minTracker.length - 1]) {
+        minTracker.push(value);
       }
     },
     pop(): number {
-      const value: number = stack.pop()!;
-      if (value === minStack[minStack.length - 1]) {
-        minStack.pop();
+      const poppedValue: number = dataStack.pop()!;
+      // If popped value was the current minimum, remove it from the tracker too
+      if (poppedValue === minTracker[minTracker.length - 1]) {
+        minTracker.pop();
       }
-      return value;
+      return poppedValue;
     },
     top(): number {
-      return stack[stack.length - 1];
+      return dataStack[dataStack.length - 1];
     },
     getMin(): number {
-      return minStack[minStack.length - 1];
+      return minTracker[minTracker.length - 1];
     }
   };
 }`,
@@ -5099,26 +5349,29 @@ function createQueueFromStacks<T>(): Queue<T> {
 }
 
 function createQueueFromStacks<T>(): Queue<T> {
-  const inStack: T[] = [];
-  const outStack: T[] = [];
-  function transfer(): void {
-    if (outStack.length === 0) {
-      while (inStack.length > 0) {
-        outStack.push(inStack.pop()!);
+  // FIFO queue from two LIFO stacks: amortized O(1) per operation
+  // Lazy transfer: only move elements when outStack is empty
+  const inputStack: T[] = [];
+  const outputStack: T[] = [];
+  function transferIfNeeded(): void {
+    // Only transfer when output is empty, reversing input order to get FIFO
+    if (outputStack.length === 0) {
+      while (inputStack.length > 0) {
+        outputStack.push(inputStack.pop()!);
       }
     }
   }
   return {
     enqueue(value: T): void {
-      inStack.push(value);
+      inputStack.push(value);
     },
     dequeue(): T | null {
-      transfer();
-      return outStack.length > 0 ? outStack.pop()! : null;
+      transferIfNeeded();
+      return outputStack.length > 0 ? outputStack.pop()! : null;
     },
     peek(): T | null {
-      transfer();
-      return outStack.length > 0 ? outStack[outStack.length - 1] : null;
+      transferIfNeeded();
+      return outputStack.length > 0 ? outputStack[outputStack.length - 1] : null;
     }
   };
 }`,
@@ -7690,14 +7943,18 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[m][n];
 }`,
     solutionCode: `function lcsLength(a: string, b: string): number {
+  // Bottom-up DP approach: O(m*n) time, O(m*n) space
+  // Build table where dp[row][col] = LCS length of a[0..row-1] and b[0..col-1]
   const m: number = a.length, n: number = b.length;
   const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (a[i - 1] === b[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
+  for (let row = 1; row <= m; row++) {
+    for (let col = 1; col <= n; col++) {
+      if (a[row - 1] === b[col - 1]) {
+        // Characters match: extend the LCS found without these characters
+        dp[row][col] = dp[row - 1][col - 1] + 1;
       } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        // No match: take the best LCS excluding one character from either string
+        dp[row][col] = Math.max(dp[row - 1][col], dp[row][col - 1]);
       }
     }
   }
@@ -7748,18 +8005,23 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[m][n];
 }`,
     solutionCode: `function editDistance(a: string, b: string): number {
+  // Levenshtein distance: O(m*n) time, O(m*n) space
+  // dp[row][col] = min edits to transform a[0..row-1] into b[0..col-1]
   const m: number = a.length, n: number = b.length;
   const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
 
-  for (let i = 0; i <= m; i++) dp[i][0] = i;
-  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  // Base cases: transforming to/from empty string costs the string's length
+  for (let row = 0; row <= m; row++) dp[row][0] = row;
+  for (let col = 0; col <= n; col++) dp[0][col] = col;
 
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (a[i - 1] === b[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1];
+  for (let row = 1; row <= m; row++) {
+    for (let col = 1; col <= n; col++) {
+      if (a[row - 1] === b[col - 1]) {
+        // Characters match: no edit needed, carry diagonal value
+        dp[row][col] = dp[row - 1][col - 1];
       } else {
-        dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+        // Take cheapest of delete, insert, or replace (each costs 1)
+        dp[row][col] = 1 + Math.min(dp[row - 1][col], dp[row][col - 1], dp[row - 1][col - 1]);
       }
     }
   }
@@ -7805,15 +8067,19 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[amount] === Infinity ? -1 : dp[amount];
 }`,
     solutionCode: `function coinChangeMin(coins: number[], amount: number): number {
+  // Unbounded knapsack DP: O(amount * coins.length) time, O(amount) space
+  // dp[target] = minimum coins needed to reach that target amount
   const dp: number[] = Array(amount + 1).fill(Infinity);
   dp[0] = 0;
-  for (let i = 1; i <= amount; i++) {
+  for (let targetAmount = 1; targetAmount <= amount; targetAmount++) {
     for (const coin of coins) {
-      if (coin <= i && dp[i - coin] + 1 < dp[i]) {
-        dp[i] = dp[i - coin] + 1;
+      // Only consider this coin if it fits and yields a better count
+      if (coin <= targetAmount && dp[targetAmount - coin] + 1 < dp[targetAmount]) {
+        dp[targetAmount] = dp[targetAmount - coin] + 1;
       }
     }
   }
+  // Infinity means no combination of coins can reach the amount
   return dp[amount] === Infinity ? -1 : dp[amount];
 }`,
     testCases: [
@@ -7852,13 +8118,17 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[n][capacity];
 }`,
     solutionCode: `function knapsack01(weights: number[], values: number[], capacity: number): number {
+  // 0/1 Knapsack DP: O(n * capacity) time, O(n * capacity) space
+  // dp[itemIdx][cap] = max value using first itemIdx items within cap weight
   const n: number = weights.length;
   const dp: number[][] = Array.from({ length: n + 1 }, () => Array(capacity + 1).fill(0));
-  for (let i = 1; i <= n; i++) {
-    for (let w = 0; w <= capacity; w++) {
-      dp[i][w] = dp[i - 1][w];
-      if (weights[i - 1] <= w) {
-        dp[i][w] = Math.max(dp[i][w], values[i - 1] + dp[i - 1][w - weights[i - 1]]);
+  for (let itemIdx = 1; itemIdx <= n; itemIdx++) {
+    for (let remainingCap = 0; remainingCap <= capacity; remainingCap++) {
+      // Default: exclude current item
+      dp[itemIdx][remainingCap] = dp[itemIdx - 1][remainingCap];
+      if (weights[itemIdx - 1] <= remainingCap) {
+        // Include item only if it yields more value than excluding it
+        dp[itemIdx][remainingCap] = Math.max(dp[itemIdx][remainingCap], values[itemIdx - 1] + dp[itemIdx - 1][remainingCap - weights[itemIdx - 1]]);
       }
     }
   }
@@ -7911,15 +8181,19 @@ function deserialize(str: string): TreeNode<number> | null {
   return Math.max(...dp);
 }`,
     solutionCode: `function lisLength(numbers: number[]): number {
+  // O(n^2) DP approach: dp[idx] = length of LIS ending at index idx
+  // Compare each element against all prior elements to find extendable subsequences
   if (numbers.length === 0) return 0;
   const dp: number[] = Array(numbers.length).fill(1);
-  for (let i = 1; i < numbers.length; i++) {
-    for (let j = 0; j < i; j++) {
-      if (numbers[j] < numbers[i]) {
-        dp[i] = Math.max(dp[i], dp[j] + 1);
+  for (let currentIdx = 1; currentIdx < numbers.length; currentIdx++) {
+    for (let prevIdx = 0; prevIdx < currentIdx; prevIdx++) {
+      if (numbers[prevIdx] < numbers[currentIdx]) {
+        // Extend the subsequence ending at prevIdx since it is strictly smaller
+        dp[currentIdx] = Math.max(dp[currentIdx], dp[prevIdx] + 1);
       }
     }
   }
+  // The LIS could end at any index, so take the global maximum
   return Math.max(...dp);
 }`,
     testCases: [
@@ -7961,10 +8235,13 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[length];
 }`,
     solutionCode: `function rodCutting(prices: number[], length: number): number {
+  // Unbounded cutting DP: O(length^2) time, O(length) space
+  // dp[rodLen] = maximum revenue obtainable from a rod of length rodLen
   const dp: number[] = Array(length + 1).fill(0);
-  for (let i = 1; i <= length; i++) {
-    for (let j = 0; j < i; j++) {
-      dp[i] = Math.max(dp[i], prices[j] + dp[i - j - 1]);
+  for (let rodLen = 1; rodLen <= length; rodLen++) {
+    for (let cutSize = 0; cutSize < rodLen; cutSize++) {
+      // Try cutting a piece of length (cutSize+1) and optimally cutting the remainder
+      dp[rodLen] = Math.max(dp[rodLen], prices[cutSize] + dp[rodLen - cutSize - 1]);
     }
   }
   return dp[length];
@@ -8017,12 +8294,15 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[count];
 }`,
     solutionCode: `function climbStairs(count: number): number {
+  // Fibonacci-style DP: O(n) time, O(n) space
+  // dp[step] = number of distinct ways to reach that step
   if (count <= 1) return 1;
   const dp: number[] = Array(count + 1).fill(0);
   dp[0] = 1;
   dp[1] = 1;
-  for (let i = 2; i <= count; i++) {
-    dp[i] = dp[i - 1] + dp[i - 2];
+  for (let step = 2; step <= count; step++) {
+    // Each step is reachable from one step below or two steps below
+    dp[step] = dp[step - 1] + dp[step - 2];
   }
   return dp[count];
 }`,
@@ -8061,10 +8341,14 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[rows - 1][cols - 1];
 }`,
     solutionCode: `function uniquePaths(rows: number, cols: number): number {
+  // Grid path counting DP: O(rows*cols) time, O(rows*cols) space
+  // dp[row][col] = number of unique paths from (0,0) to (row,col)
+  // First row and column are pre-filled with 1 (only one direction possible)
   const dp: number[][] = Array.from({ length: rows }, () => Array(cols).fill(1));
-  for (let i = 1; i < rows; i++) {
-    for (let j = 1; j < cols; j++) {
-      dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+  for (let row = 1; row < rows; row++) {
+    for (let col = 1; col < cols; col++) {
+      // Each cell is reachable from above or from the left
+      dp[row][col] = dp[row - 1][col] + dp[row][col - 1];
     }
   }
   return dp[rows - 1][cols - 1];
@@ -8106,13 +8390,16 @@ function deserialize(str: string): TreeNode<number> | null {
   return dp[s.length];
 }`,
     solutionCode: `function wordBreak(s: string, wordDict: string[]): boolean {
+  // Word segmentation DP: O(n^2) time, O(n) space (with O(1) Set lookups)
+  // dp[endPos] = true if s[0..endPos-1] can be segmented into dictionary words
   const wordSet: Set<string> = new Set(wordDict);
   const dp: boolean[] = Array(s.length + 1).fill(false);
   dp[0] = true;
-  for (let i = 1; i <= s.length; i++) {
-    for (let j = 0; j < i; j++) {
-      if (dp[j] && wordSet.has(s.substring(j, i))) {
-        dp[i] = true;
+  for (let endPos = 1; endPos <= s.length; endPos++) {
+    for (let startPos = 0; startPos < endPos; startPos++) {
+      // Check if prefix up to startPos is valid AND the remaining substring is a word
+      if (dp[startPos] && wordSet.has(s.substring(startPos, endPos))) {
+        dp[endPos] = true;
         break;
       }
     }
@@ -8164,17 +8451,21 @@ function deserialize(str: string): TreeNode<number> | null {
   return maxProduct;
 }`,
     solutionCode: `function maxProductSubarray(numbers: number[]): number {
+  // Kadane-variant for products: O(n) time, O(1) space
+  // Track both max and min because a negative * negative can become the new max
   if (numbers.length === 0) return 0;
-  let maxProduct: number = numbers[0];
+  let globalMaxProduct: number = numbers[0];
   let currentMax: number = numbers[0];
   let currentMin: number = numbers[0];
-  for (let i = 1; i < numbers.length; i++) {
-    const candidates: number[] = [numbers[i], numbers[i] * currentMax, numbers[i] * currentMin];
-    currentMax = Math.max(...candidates);
-    currentMin = Math.min(...candidates);
-    maxProduct = Math.max(maxProduct, currentMax);
+  for (let idx = 1; idx < numbers.length; idx++) {
+    // Three choices: start fresh at current element, extend the running max, or extend the running min
+    const productCandidates: number[] = [numbers[idx], numbers[idx] * currentMax, numbers[idx] * currentMin];
+    currentMax = Math.max(...productCandidates);
+    currentMin = Math.min(...productCandidates);
+    // Update global best after considering this element
+    globalMaxProduct = Math.max(globalMaxProduct, currentMax);
   }
-  return maxProduct;
+  return globalMaxProduct;
 }`,
     testCases: [
       { input: [[2, 3, -2, 4]], expected: 6, description: 'Subarray [2,3] has product 6' },
@@ -8216,17 +8507,23 @@ function deserialize(str: string): TreeNode<number> | null {
   // YOUR CODE HERE
 }`,
     solutionCode: `function deepEquals(a: unknown, b: unknown): boolean {
+  // Recursive structural comparison: handles primitives, null, arrays, and objects
+  // O(n) time where n is total number of nested values
   if (a === b) return true;
+  // typeof null is 'object', so guard against null before object checks
   if (a === null || b === null) return false;
   if (typeof a !== 'object' || typeof b !== 'object') return false;
 
+  // Prevent comparing an array to a plain object
   if (Array.isArray(a) !== Array.isArray(b)) return false;
 
-  const keysA: string[] = Object.keys(a as Record<string, unknown>);
-  const keysB: string[] = Object.keys(b as Record<string, unknown>);
-  if (keysA.length !== keysB.length) return false;
+  const keysOfA: string[] = Object.keys(a as Record<string, unknown>);
+  const keysOfB: string[] = Object.keys(b as Record<string, unknown>);
+  // Different key counts means structurally different
+  if (keysOfA.length !== keysOfB.length) return false;
 
-  return keysA.every(key => deepEquals((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key]));
+  // Recursively compare every value by key
+  return keysOfA.every(key => deepEquals((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key]));
 }`,
     testCases: [
       {
@@ -8288,15 +8585,19 @@ function deserialize(str: string): TreeNode<number> | null {
   return merged;
 }`,
     solutionCode: `function mergeIntervals(intervals: number[][]): number[][] {
+  // Sort-then-merge greedy approach: O(n log n) time, O(n) space
+  // Sorting guarantees overlapping intervals are adjacent
   if (intervals.length <= 1) return intervals;
   intervals.sort((a, b) => a[0] - b[0]);
   const merged: number[][] = [intervals[0]];
-  for (let i = 1; i < intervals.length; i++) {
-    const last: number[] = merged[merged.length - 1];
-    if (intervals[i][0] <= last[1]) {
-      last[1] = Math.max(last[1], intervals[i][1]);
+  for (let idx = 1; idx < intervals.length; idx++) {
+    const lastMerged: number[] = merged[merged.length - 1];
+    if (intervals[idx][0] <= lastMerged[1]) {
+      // Overlap detected: extend the end to cover both intervals
+      lastMerged[1] = Math.max(lastMerged[1], intervals[idx][1]);
     } else {
-      merged.push(intervals[i]);
+      // No overlap: start a new group
+      merged.push(intervals[idx]);
     }
   }
   return merged;
@@ -8384,24 +8685,31 @@ function deserialize(str: string): TreeNode<number> | null {
   return result;
 }`,
     solutionCode: `function insertInterval(intervals: number[][], newInterval: number[]): number[][] {
+  // Three-pass linear scan: O(n) time, O(n) space
+  // Phase 1: collect non-overlapping intervals before newInterval
+  // Phase 2: merge all overlapping intervals into newInterval
+  // Phase 3: collect remaining non-overlapping intervals after
   const result: number[][] = [];
-  let i: number = 0;
+  let idx: number = 0;
 
-  while (i < intervals.length && intervals[i][1] < newInterval[0]) {
-    result.push(intervals[i]);
-    i++;
+  // Phase 1: intervals that end before newInterval starts (no overlap possible)
+  while (idx < intervals.length && intervals[idx][1] < newInterval[0]) {
+    result.push(intervals[idx]);
+    idx++;
   }
 
-  while (i < intervals.length && intervals[i][0] <= newInterval[1]) {
-    newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
-    newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
-    i++;
+  // Phase 2: expand newInterval to absorb all overlapping intervals
+  while (idx < intervals.length && intervals[idx][0] <= newInterval[1]) {
+    newInterval[0] = Math.min(newInterval[0], intervals[idx][0]);
+    newInterval[1] = Math.max(newInterval[1], intervals[idx][1]);
+    idx++;
   }
   result.push(newInterval);
 
-  while (i < intervals.length) {
-    result.push(intervals[i]);
-    i++;
+  // Phase 3: remaining intervals start after newInterval ends
+  while (idx < intervals.length) {
+    result.push(intervals[idx]);
+    idx++;
   }
 
   return result;
@@ -8486,21 +8794,25 @@ function createEmitter(): EventEmitter {
 }
 
 function createEmitter(): EventEmitter {
+  // Observer pattern: map event names to arrays of listener functions
   const listeners: Record<string, Array<(...args: unknown[]) => void>> = {};
 
   function on(event: string, callback: (...args: unknown[]) => void): void {
+    // Lazily initialize the listener array for new events
     if (!listeners[event]) listeners[event] = [];
     listeners[event].push(callback);
   }
 
   function off(event: string, callback: (...args: unknown[]) => void): void {
     if (!listeners[event]) return;
-    listeners[event] = listeners[event].filter(f => f !== callback);
+    // Remove by reference identity so only the exact function is unsubscribed
+    listeners[event] = listeners[event].filter(registeredFn => registeredFn !== callback);
   }
 
   function emit(event: string, ...args: unknown[]): void {
     if (!listeners[event]) return;
-    listeners[event].forEach(callback => callback(...args));
+    // Invoke all registered listeners with the provided arguments
+    listeners[event].forEach(registeredCallback => registeredCallback(...args));
   }
 
   return { on, off, emit };
@@ -8553,15 +8865,18 @@ function createEmitter(): EventEmitter {
   });
 }`,
     solutionCode: `function promiseAll<T>(promises: Array<Promise<T> | T>): Promise<T[]> {
+  // Parallel promise aggregation: resolves when ALL settle, rejects on FIRST failure
   return new Promise<T[]>((resolve, reject) => {
     if (promises.length === 0) return resolve([]);
     const results: T[] = new Array(promises.length);
-    let resolved: number = 0;
-    promises.forEach((p, i) => {
-      Promise.resolve(p).then(value => {
-        results[i] = value;
-        resolved++;
-        if (resolved === promises.length) resolve(results);
+    let resolvedCount: number = 0;
+    promises.forEach((promiseOrValue, index) => {
+      // Wrap in Promise.resolve to handle non-promise values uniformly
+      Promise.resolve(promiseOrValue).then(value => {
+        // Store by index to preserve original ordering regardless of resolve timing
+        results[index] = value;
+        resolvedCount++;
+        if (resolvedCount === promises.length) resolve(results);
       }).catch(reject);
     });
   });
@@ -8610,9 +8925,12 @@ function createEmitter(): EventEmitter {
   });
 }`,
     solutionCode: `function promiseRace<T>(promises: Array<Promise<T> | T>): Promise<T> {
+  // First-settled wins: the earliest promise to resolve or reject determines the outcome
+  // Once a Promise resolves/rejects, subsequent calls to resolve/reject are no-ops
   return new Promise<T>((resolve, reject) => {
-    promises.forEach(p => {
-      Promise.resolve(p).then(resolve).catch(reject);
+    promises.forEach(promiseOrValue => {
+      // Wrap each entry so plain values settle immediately
+      Promise.resolve(promiseOrValue).then(resolve).catch(reject);
     });
   });
 }`,
@@ -8653,10 +8971,13 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function deepFreeze<T extends Record<string, unknown>>(obj: T): Readonly<T> {
+  // Recursive immutability: O(n) time where n is total nested properties
+  // Object.freeze alone only locks the top level, so we must recurse
   Object.freeze(obj);
-  Object.values(obj).forEach((value: unknown) => {
-    if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
-      deepFreeze(value as Record<string, unknown>);
+  Object.values(obj).forEach((propertyValue: unknown) => {
+    // Only recurse into non-null objects that are not already frozen (avoids cycles)
+    if (propertyValue !== null && typeof propertyValue === 'object' && !Object.isFrozen(propertyValue)) {
+      deepFreeze(propertyValue as Record<string, unknown>);
     }
   });
   return obj;
@@ -8702,8 +9023,11 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function pick<T extends Record<string, unknown>>(obj: T, keys: string[]): Partial<T> {
+  // Non-mutating key selection: O(k) time where k = keys.length
+  // Iterate over desired keys rather than object keys for efficiency
   const result: Partial<T> = {};
   for (const key of keys) {
+    // Only include keys that actually exist on the source object
     if (key in obj) {
       (result as Record<string, unknown>)[key] = obj[key];
     }
@@ -8748,10 +9072,12 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function omit<T extends Record<string, unknown>>(obj: T, keys: string[]): Partial<T> {
-  const omitSet: Set<string> = new Set(keys);
+  // Non-mutating key exclusion: O(n) time with O(k) Set for fast lookups
+  const excludedKeys: Set<string> = new Set(keys);
   const result: Partial<T> = {};
   for (const key of Object.keys(obj)) {
-    if (!omitSet.has(key)) {
+    // Include only keys NOT in the exclusion set
+    if (!excludedKeys.has(key)) {
       (result as Record<string, unknown>)[key] = obj[key];
     }
   }
@@ -8792,13 +9118,16 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function flatMap<T, R>(items: T[], transform: (item: T) => R | R[]): R[] {
+  // Map + flatten-one-level: O(n * m) time where m is average mapped output size
   const result: R[] = [];
   for (const item of items) {
-    const mapped: R | R[] = transform(item);
-    if (Array.isArray(mapped)) {
-      result.push(...mapped);
+    const mappedValue: R | R[] = transform(item);
+    if (Array.isArray(mappedValue)) {
+      // Flatten one level: spread array elements into the result
+      result.push(...mappedValue);
     } else {
-      result.push(mapped);
+      // Single value: push directly without wrapping
+      result.push(mappedValue);
     }
   }
   return result;
@@ -8851,18 +9180,22 @@ function createEmitter(): EventEmitter {
   return result;
 }`,
     solutionCode: `function runLengthEncode(str: string): string {
+  // Single-pass compression: O(n) time, O(n) space
+  // Groups consecutive identical characters as count+character pairs
   if (str.length === 0) return '';
-  let result: string = '';
-  let count: number = 1;
-  for (let i = 1; i <= str.length; i++) {
-    if (i < str.length && str[i] === str[i - 1]) {
-      count++;
+  let encoded: string = '';
+  let consecutiveCount: number = 1;
+  for (let charIdx = 1; charIdx <= str.length; charIdx++) {
+    if (charIdx < str.length && str[charIdx] === str[charIdx - 1]) {
+      // Same character as previous: extend the current run
+      consecutiveCount++;
     } else {
-      result += count + str[i - 1];
-      count = 1;
+      // Character changed or end of string: flush the current run
+      encoded += consecutiveCount + str[charIdx - 1];
+      consecutiveCount = 1;
     }
   }
-  return result;
+  return encoded;
 }`,
     testCases: [
       { input: ['aaabbc'], expected: '3a2b1c', description: 'Basic encoding' },
@@ -8898,19 +9231,23 @@ function createEmitter(): EventEmitter {
   return result;
 }`,
     solutionCode: `function runLengthDecode(encoded: string): string {
-  let result: string = '';
-  let i: number = 0;
-  while (i < encoded.length) {
-    let numStr: string = '';
-    while (i < encoded.length && encoded[i] >= '0' && encoded[i] <= '9') {
-      numStr += encoded[i];
-      i++;
+  // Two-pointer decompression: O(n) time where n is decoded length
+  // Parses digit sequences followed by the character to repeat
+  let decoded: string = '';
+  let position: number = 0;
+  while (position < encoded.length) {
+    // Accumulate all consecutive digits to handle multi-digit counts
+    let digitSequence: string = '';
+    while (position < encoded.length && encoded[position] >= '0' && encoded[position] <= '9') {
+      digitSequence += encoded[position];
+      position++;
     }
-    const count: number = parseInt(numStr, 10);
-    result += encoded[i].repeat(count);
-    i++;
+    const repeatCount: number = parseInt(digitSequence, 10);
+    // The character immediately after the digits is what gets repeated
+    decoded += encoded[position].repeat(repeatCount);
+    position++;
   }
-  return result;
+  return decoded;
 }`,
     testCases: [
       { input: ['3a2b1c'], expected: 'aaabbc', description: 'Basic decoding' },
@@ -8946,14 +9283,19 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function debounceLeading(callback: (...args: unknown[]) => void, delay: number): (...args: unknown[]) => void {
-  let timer: ReturnType<typeof setTimeout> | null = null;
+  // Leading-edge debounce: fires immediately on first call, ignores until cooldown expires
+  // Useful for preventing double-clicks while keeping instant response
+  let cooldownTimer: ReturnType<typeof setTimeout> | null = null;
   return function (this: unknown, ...args: unknown[]): void {
-    if (!timer) {
+    if (!cooldownTimer) {
+      // No active cooldown: this is a fresh call, invoke immediately
       callback.apply(this, args);
     }
-    clearTimeout(timer!);
-    timer = setTimeout(() => {
-      timer = null;
+    // Reset cooldown on every call so rapid calls keep extending the quiet period
+    clearTimeout(cooldownTimer!);
+    cooldownTimer = setTimeout(() => {
+      // Cooldown expired: next call will fire immediately again
+      cooldownTimer = null;
     }, delay);
   };
 }`,
@@ -9002,14 +9344,17 @@ function createEmitter(): EventEmitter {
   return binary;
 }`,
     solutionCode: `function decimalToBinary(value: number): string {
+  // Repeated division by 2: O(log n) time, O(log n) space
+  // Each remainder gives one bit, built from least to most significant
   if (value === 0) return '0';
-  let binary: string = '';
-  let remaining: number = value;
-  while (remaining > 0) {
-    binary = (remaining % 2) + binary;
-    remaining = Math.floor(remaining / 2);
+  let binaryDigits: string = '';
+  let quotient: number = value;
+  while (quotient > 0) {
+    // Remainder is the current least-significant bit; prepend to build MSB-first
+    binaryDigits = (quotient % 2) + binaryDigits;
+    quotient = Math.floor(quotient / 2);
   }
-  return binary;
+  return binaryDigits;
 }`,
     testCases: [
       { input: [10], expected: '1010', description: '10 in binary is 1010' },
@@ -9045,11 +9390,13 @@ function createEmitter(): EventEmitter {
   return decimal;
 }`,
     solutionCode: `function binaryToDecimal(binary: string): number {
-  let decimal: number = 0;
+  // Horner's method for positional notation: O(n) time, O(1) space
+  // Process left-to-right: shift accumulator left (multiply by 2) then add current bit
+  let decimalAccumulator: number = 0;
   for (const bit of binary) {
-    decimal = decimal * 2 + Number(bit);
+    decimalAccumulator = decimalAccumulator * 2 + Number(bit);
   }
-  return decimal;
+  return decimalAccumulator;
 }`,
     testCases: [
       { input: ['1010'], expected: 10, description: '1010 is 10' },
@@ -9086,13 +9433,16 @@ function createEmitter(): EventEmitter {
   return count;
 }`,
     solutionCode: `function countBits(value: number): number {
-  let count: number = 0;
+  // Brian Kernighan's algorithm: O(k) time where k is the number of set bits
+  // Each iteration clears exactly one set bit, so we only loop k times (not 32)
+  let setBitCount: number = 0;
   let remaining: number = value;
   while (remaining !== 0) {
+    // n & (n-1) clears the lowest set bit in one step
     remaining = remaining & (remaining - 1);
-    count++;
+    setBitCount++;
   }
-  return count;
+  return setBitCount;
 }`,
     testCases: [
       { input: [7], expected: 3, description: '7 = 111 has 3 set bits' },
@@ -9127,6 +9477,8 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function isPowerOfTwo(value: number): boolean {
+  // Bit trick: O(1) time. Powers of 2 have exactly one set bit (e.g., 100...0)
+  // n & (n-1) clears that single bit, leaving 0. Also guard against n <= 0.
   return value > 0 && (value & (value - 1)) === 0;
 }`,
     testCases: [
@@ -9162,6 +9514,8 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function toggleBit(value: number, position: number): number {
+  // XOR bit toggle: O(1) time. XOR with a mask flips only the targeted bit.
+  // 1 << position creates a mask with a single 1 at the desired position
   return value ^ (1 << position);
 }`,
     testCases: [
@@ -9200,14 +9554,17 @@ function createEmitter(): EventEmitter {
   return result;
 }`,
     solutionCode: `function matrixMultiply(a: number[][], b: number[][]): number[][] {
-  const rows: number = a.length;
+  // Standard matrix multiplication: O(m * n * p) time, O(m * p) space
+  // Each result cell is the dot product of a row from A and a column from B
+  const rowCount: number = a.length;
   const shared: number = b.length;
-  const cols: number = b[0].length;
-  const result: number[][] = Array.from({ length: rows }, () => Array(cols).fill(0));
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      for (let k = 0; k < shared; k++) {
-        result[i][j] += a[i][k] * b[k][j];
+  const colCount: number = b[0].length;
+  const result: number[][] = Array.from({ length: rowCount }, () => Array(colCount).fill(0));
+  for (let row = 0; row < rowCount; row++) {
+    for (let col = 0; col < colCount; col++) {
+      for (let dotIdx = 0; dotIdx < shared; dotIdx++) {
+        // Accumulate the dot product of row from A and column from B
+        result[row][col] += a[row][dotIdx] * b[dotIdx][col];
       }
     }
   }
@@ -9299,16 +9656,19 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function transpose(matrix: number[][]): number[][] {
+  // Matrix transpose: O(rows * cols) time, O(rows * cols) space
+  // Swap row and column indices: element at [r][c] moves to [c][r]
   if (matrix.length === 0) return [];
-  const rows: number = matrix.length;
-  const cols: number = matrix[0].length;
-  const result: number[][] = Array.from({ length: cols }, () => Array(rows).fill(0));
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      result[j][i] = matrix[i][j];
+  const rowCount: number = matrix.length;
+  const colCount: number = matrix[0].length;
+  // Output dimensions are swapped: colCount rows by rowCount columns
+  const transposed: number[][] = Array.from({ length: colCount }, () => Array(rowCount).fill(0));
+  for (let row = 0; row < rowCount; row++) {
+    for (let col = 0; col < colCount; col++) {
+      transposed[col][row] = matrix[row][col];
     }
   }
-  return result;
+  return transposed;
 }`,
     testCases: [
       {
@@ -9377,18 +9737,21 @@ function createEmitter(): EventEmitter {
   return result;
 }`,
     solutionCode: `function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
-  const result: Record<string, unknown> = { ...target };
+  // Recursive merge: O(n) time where n is total nested keys across both objects
+  // Plain objects merge recursively; arrays and primitives are replaced by source
+  const merged: Record<string, unknown> = { ...target };
   for (const key of Object.keys(source)) {
-    if (
-      result[key] && typeof result[key] === 'object' && !Array.isArray(result[key]) &&
-      source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])
-    ) {
-      result[key] = deepMerge(result[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
+    const targetIsPlainObject: boolean = !!merged[key] && typeof merged[key] === 'object' && !Array.isArray(merged[key]);
+    const sourceIsPlainObject: boolean = !!source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]);
+    if (targetIsPlainObject && sourceIsPlainObject) {
+      // Both sides are plain objects: recurse to merge nested properties
+      merged[key] = deepMerge(merged[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
     } else {
-      result[key] = source[key];
+      // Source value wins for primitives, arrays, or mismatched types
+      merged[key] = source[key];
     }
   }
-  return result;
+  return merged;
 }`,
     testCases: [
       {
@@ -9438,14 +9801,19 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `async function retry<T>(compute: () => Promise<T>, retries: number, delay: number): Promise<T> {
-  for (let i = 0; i <= retries; i++) {
+  // Retry with delay: O(retries) attempts, each separated by delay ms
+  // Total attempts = retries + 1 (initial attempt + retries)
+  for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       return await compute();
     } catch (err) {
-      if (i === retries) throw err;
+      // On last attempt, propagate the error instead of retrying
+      if (attempt === retries) throw err;
+      // Wait before the next attempt to avoid hammering the resource
       await new Promise<void>(resolve => setTimeout(resolve, delay));
     }
   }
+  // Unreachable, but satisfies TypeScript's return type requirement
   throw new Error('Retries exhausted');
 }`,
     testCases: [
@@ -9493,25 +9861,32 @@ function createEmitter(): EventEmitter {
 
 }`,
     solutionCode: `function throttle(callback: (...args: unknown[]) => void, interval: number): (...args: unknown[]) => void {
-  let lastArgs: unknown[] | null = null;
-  let timer: ReturnType<typeof setTimeout> | null = null;
+  // Leading + trailing throttle: fires immediately on first call,
+  // then fires once more after interval with the most recent arguments
+  let pendingArgs: unknown[] | null = null;
+  let activeTimer: ReturnType<typeof setTimeout> | null = null;
 
-  function invoke(): void {
-    if (lastArgs) {
-      callback.apply(null, lastArgs);
-      lastArgs = null;
-      timer = setTimeout(invoke, interval);
+  function handleTrailingInvocation(): void {
+    if (pendingArgs) {
+      // Trailing edge: invoke with the most recently captured arguments
+      callback.apply(null, pendingArgs);
+      pendingArgs = null;
+      // Restart the cooldown to rate-limit subsequent trailing calls
+      activeTimer = setTimeout(handleTrailingInvocation, interval);
     } else {
-      timer = null;
+      // No pending call: clear timer so next call fires as leading
+      activeTimer = null;
     }
   }
 
   return function (this: unknown, ...args: unknown[]): void {
-    if (!timer) {
+    if (!activeTimer) {
+      // Leading edge: no active cooldown, invoke immediately
       callback.apply(this, args);
-      timer = setTimeout(invoke, interval);
+      activeTimer = setTimeout(handleTrailingInvocation, interval);
     } else {
-      lastArgs = args;
+      // During cooldown: save args for trailing invocation
+      pendingArgs = args;
     }
   };
 }`,

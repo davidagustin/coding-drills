@@ -1,6 +1,7 @@
 // Exercise data index - exports all language exercises
 
 import { javascriptExercises } from './javascript';
+import { javascriptExtraExercises } from './javascript-extra';
 import { pythonExercises } from './python';
 import {
   DIFFICULTY_CONFIG,
@@ -9,14 +10,15 @@ import {
   type ExerciseCategory,
 } from './types';
 import { typescriptExercises } from './typescript';
+import { typescriptExtraExercises } from './typescript-extra';
 
 // Re-export types
 export * from './types';
 
 // Combined exercises by language
 export const exercisesByLanguage: Record<string, Exercise[]> = {
-  javascript: javascriptExercises,
-  typescript: typescriptExercises,
+  javascript: [...javascriptExercises, ...javascriptExtraExercises],
+  typescript: [...typescriptExercises, ...typescriptExtraExercises],
   python: pythonExercises,
   // Other languages will use pattern-matching based exercises
   java: [], // TODO: Add Java-specific exercises

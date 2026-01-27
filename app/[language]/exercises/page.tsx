@@ -259,7 +259,7 @@ function ExerciseCard({
       type="button"
       onClick={onClick}
       className={`
-        group relative w-full text-left p-4 rounded-xl border transition-all duration-300
+        group relative w-full text-left p-4 rounded-xl border transition-all duration-300 cursor-pointer
         ${languageConfig.borderColor} bg-zinc-900/50
         hover:scale-[1.02] hover:shadow-lg ${languageConfig.hoverBg}
       `}
