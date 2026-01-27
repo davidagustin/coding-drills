@@ -214,6 +214,8 @@ const MajorityElementViz = dynamic(() => import('./MajorityElementViz'), { ssr: 
 const ClimbingStairs2Viz = dynamic(() => import('./ClimbingStairs2Viz'), { ssr: false });
 const HouseRobber2Viz = dynamic(() => import('./HouseRobber2Viz'), { ssr: false });
 const CoinChange2Viz = dynamic(() => import('./CoinChange2Viz'), { ssr: false });
+const JosephusViz = dynamic(() => import('./JosephusViz'), { ssr: false });
+const DiagonalTraversalViz = dynamic(() => import('./DiagonalTraversalViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -419,6 +421,8 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'climbing-stairs-ii': ClimbingStairs2Viz,
   'house-robber-ii': HouseRobber2Viz,
   'coin-change-ii': CoinChange2Viz,
+  josephus: JosephusViz,
+  'diagonal-traversal': DiagonalTraversalViz,
 };
 
 /**
