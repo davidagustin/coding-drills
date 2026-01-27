@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   DIFFICULTY_CONFIG,
   EXERCISE_CATEGORIES,
@@ -177,6 +177,25 @@ function UtilityIcon({ className = 'w-6 h-6' }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437"
+      />
+    </svg>
+  );
+}
+
+function FilterIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
       />
     </svg>
   );
@@ -411,6 +430,11 @@ export default function ExercisesPage() {
   const [selectedCategory, setSelectedCategory] = useState<ExerciseCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<ExerciseDifficulty | 'all'>('all');
+  const [completionFilter, setCompletionFilter] = useState<'all' | 'completed' | 'incomplete'>(
+    'all',
+  );
+  const [showFilters, setShowFilters] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Track mount state for hydration safety
   useEffect(() => {
@@ -433,7 +457,45 @@ export default function ExercisesPage() {
     }
   }, [language, mounted]);
 
-  // Filter exercises based on search query and difficulty
+  // Keyboard shortcut: / or Cmd+K to focus search
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (
+        e.key === '/' &&
+        !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement).tagName)
+      ) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
+        searchInputRef.current?.blur();
+        if (searchQuery) setSearchQuery('');
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [searchQuery]);
+
+  // Collect all unique concepts for quick-filter tags
+  const popularConcepts = useMemo(() => {
+    const allExs = getExercisesForLanguage(language);
+    const conceptCount: Record<string, number> = {};
+    for (const ex of allExs) {
+      for (const c of ex.concepts) {
+        conceptCount[c] = (conceptCount[c] || 0) + 1;
+      }
+    }
+    return Object.entries(conceptCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12)
+      .map(([name]) => name);
+  }, [language]);
+
+  // Filter exercises based on search query, difficulty, and completion
   // Must be called before early returns to satisfy React hooks rules
   const filteredExercisesByCategory = useMemo(() => {
     const byCategory = getExercisesByCategory(language);
@@ -456,11 +518,25 @@ export default function ExercisesPage() {
         exercises = exercises.filter((ex) => ex.difficulty === difficultyFilter);
       }
 
+      if (completionFilter !== 'all') {
+        exercises = exercises.filter((ex) => {
+          const isCompleted = progress[ex.id]?.completed === true;
+          return completionFilter === 'completed' ? isCompleted : !isCompleted;
+        });
+      }
+
       result[cat] = exercises;
     }
 
     return result;
-  }, [language, searchQuery, difficultyFilter]);
+  }, [language, searchQuery, difficultyFilter, completionFilter, progress]);
+
+  const clearAllFilters = useCallback(() => {
+    setSearchQuery('');
+    setDifficultyFilter('all');
+    setCompletionFilter('all');
+    setSelectedCategory('all');
+  }, []);
 
   if (!mounted) {
     return (
@@ -484,7 +560,8 @@ export default function ExercisesPage() {
     0,
   );
 
-  const hasActiveFilters = searchQuery.trim() !== '' || difficultyFilter !== 'all';
+  const hasActiveFilters =
+    searchQuery.trim() !== '' || difficultyFilter !== 'all' || completionFilter !== 'all';
 
   const handleExerciseClick = (exercise: Exercise) => {
     router.push(`/${language}/exercises/${exercise.id}`);
@@ -548,86 +625,163 @@ export default function ExercisesPage() {
       {/* Stats Overview */}
       <StatsOverview language={language} languageConfig={config} progress={progress} />
 
-      {/* Search & Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="flex-1 relative">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <input
-            type="text"
-            placeholder="Search by name, concept, or keyword..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-10 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 transition-colors"
-          />
-          {searchQuery && (
+      {/* Search & Filters - Sticky */}
+      <div className="sticky top-0 z-20 bg-zinc-950/95 backdrop-blur-sm -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 pt-3 pb-4 border-b border-transparent [&.is-stuck]:border-zinc-800/50">
+        {/* Search bar */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-3">
+          <div className="flex-1 relative group">
+            <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-zinc-300 transition-colors" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search exercises..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-10 pr-20 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 focus:bg-zinc-900 transition-all"
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+              {searchQuery ? (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="text-zinc-500 hover:text-zinc-300 cursor-pointer text-lg leading-none"
+                >
+                  ×
+                </button>
+              ) : (
+                <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono text-zinc-600 bg-zinc-800/80 border border-zinc-700/50 rounded">
+                  /
+                </kbd>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowFilters(!showFilters)}
+            className={`inline-flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all cursor-pointer ${
+              showFilters || difficultyFilter !== 'all' || completionFilter !== 'all'
+                ? `${config.bgColor} ${config.color} border-transparent`
+                : 'bg-zinc-900/70 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
+            }`}
+          >
+            <FilterIcon className="w-4 h-4" />
+            Filters
+            {(difficultyFilter !== 'all' || completionFilter !== 'all') && (
+              <span className="w-1.5 h-1.5 rounded-full bg-current" />
+            )}
+          </button>
+
+          {hasActiveFilters && (
             <button
               type="button"
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 cursor-pointer"
+              onClick={clearAllFilters}
+              className="text-sm text-zinc-500 hover:text-white px-3 py-3 transition-colors whitespace-nowrap cursor-pointer"
             >
-              ×
+              Clear all
             </button>
           )}
         </div>
 
-        <select
-          value={difficultyFilter}
-          onChange={(e) => setDifficultyFilter(e.target.value as ExerciseDifficulty | 'all')}
-          className="bg-zinc-900/50 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-600 cursor-pointer"
-        >
-          <option value="all">All Levels</option>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
-        </select>
+        {/* Expandable filter panel */}
+        {showFilters && (
+          <div className="flex flex-wrap items-center gap-3 mb-3 pb-3 border-b border-zinc-800/50">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500 uppercase tracking-wider">Difficulty</span>
+              <div className="flex gap-1">
+                {(['all', 'beginner', 'intermediate', 'advanced'] as const).map((level) => (
+                  <button
+                    type="button"
+                    key={level}
+                    onClick={() => setDifficultyFilter(level)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                      difficultyFilter === level
+                        ? `${config.bgColor} ${config.color}`
+                        : 'bg-zinc-800/50 text-zinc-500 hover:text-zinc-300'
+                    }`}
+                  >
+                    {level === 'all' ? 'All' : DIFFICULTY_CONFIG[level].name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        {hasActiveFilters && (
+            <div className="w-px h-6 bg-zinc-800 hidden sm:block" />
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500 uppercase tracking-wider">Status</span>
+              <div className="flex gap-1">
+                {(['all', 'incomplete', 'completed'] as const).map((status) => (
+                  <button
+                    type="button"
+                    key={status}
+                    onClick={() => setCompletionFilter(status)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                      completionFilter === status
+                        ? `${config.bgColor} ${config.color}`
+                        : 'bg-zinc-800/50 text-zinc-500 hover:text-zinc-300'
+                    }`}
+                  >
+                    {status === 'all' ? 'All' : status === 'completed' ? 'Done' : 'To Do'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Quick concept tags */}
+        {!searchQuery && popularConcepts.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {popularConcepts.map((concept) => (
+              <button
+                type="button"
+                key={concept}
+                onClick={() => setSearchQuery(concept)}
+                className="px-2.5 py-1 rounded-full text-xs bg-zinc-800/60 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-700/60 transition-all cursor-pointer"
+              >
+                {concept}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Category pills */}
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => {
-              setSearchQuery('');
-              setDifficultyFilter('all');
-              setSelectedCategory('all');
-            }}
-            className="text-sm text-zinc-500 hover:text-white px-3 py-2.5 transition-colors whitespace-nowrap"
+            onClick={() => setSelectedCategory('all')}
+            className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+              selectedCategory === 'all'
+                ? `${config.bgColor} ${config.color}`
+                : 'bg-zinc-800 text-zinc-400 hover:text-white'
+            }`}
           >
-            Clear filters
+            All ({totalFilteredCount})
           </button>
-        )}
+          {categories.map((category) => {
+            const count = filteredExercisesByCategory[category].length;
+            if (exercisesByCategory[category].length === 0) return null;
+            return (
+              <button
+                type="button"
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                  selectedCategory === category
+                    ? `${config.bgColor} ${config.color}`
+                    : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                }`}
+              >
+                {EXERCISE_CATEGORIES[category].name} ({count})
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        <button
-          type="button"
-          onClick={() => setSelectedCategory('all')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-            selectedCategory === 'all'
-              ? `${config.bgColor} ${config.color}`
-              : 'bg-zinc-800 text-zinc-400 hover:text-white'
-          }`}
-        >
-          All ({totalFilteredCount})
-        </button>
-        {categories.map((category) => {
-          const count = filteredExercisesByCategory[category].length;
-          if (exercisesByCategory[category].length === 0) return null;
-          return (
-            <button
-              type="button"
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                selectedCategory === category
-                  ? `${config.bgColor} ${config.color}`
-                  : 'bg-zinc-800 text-zinc-400 hover:text-white'
-              }`}
-            >
-              {EXERCISE_CATEGORIES[category].name} ({count})
-            </button>
-          );
-        })}
-      </div>
+      {/* Spacer for sticky header */}
+      <div className="h-4" />
 
       {/* Exercise Categories */}
       {totalFilteredCount === 0 ? (
@@ -637,11 +791,7 @@ export default function ExercisesPage() {
           <p className="text-sm text-zinc-500 mb-4">Try adjusting your search or filters</p>
           <button
             type="button"
-            onClick={() => {
-              setSearchQuery('');
-              setDifficultyFilter('all');
-              setSelectedCategory('all');
-            }}
+            onClick={clearAllFilters}
             className={`text-sm ${config.color} hover:underline cursor-pointer`}
           >
             Clear all filters
