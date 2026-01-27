@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import { useVizAnimation } from './useVizAnimation';
 import VizControls from './VizControls';
@@ -13,57 +12,70 @@ interface TreeNode {
 
 const TREE: TreeNode = {
   value: 1,
-  left: null,
-  right: {
+  left: {
     value: 2,
     left: { value: 3, left: null, right: null },
-    right: null,
+    right: { value: 4, left: null, right: null },
+  },
+  right: {
+    value: 5,
+    left: null,
+    right: { value: 6, left: null, right: null },
   },
 };
 
-interface PostorderStep {
+interface FlattenStep {
   node: number | null;
+  action: string;
   result: number[];
-  explanation: string;
 }
 
-function computeSteps(): PostorderStep[] {
-  const steps: PostorderStep[] = [];
+function computeSteps(): FlattenStep[] {
+  const steps: FlattenStep[] = [];
   const result: number[] = [];
   
-  function postorder(node: TreeNode | null): void {
-    if (!node) {
-      steps.push({
-        node: null,
-        result: [...result],
-        explanation: 'Null node',
-      });
-      return;
-    }
+  function flatten(node: TreeNode | null, prev: TreeNode | null): TreeNode | null {
+    if (!node) return prev;
     
-    postorder(node.left);
-    postorder(node.right);
-    
-    result.push(node.value);
     steps.push({
       node: node.value,
+      action: `Process node ${node.value}`,
       result: [...result],
-      explanation: `Visit ${node.value} (after children)`,
     });
+    
+    const right = node.right;
+    const left = node.left;
+    
+    if (prev) {
+      prev.right = node;
+      prev.left = null;
+      steps.push({
+        node: node.value,
+        action: `Link previous node to ${node.value}`,
+        result: [...result],
+      });
+    }
+    
+    result.push(node.value);
+    
+    const leftTail = flatten(left, node);
+    const rightTail = flatten(right, leftTail || node);
+    
+    return rightTail || leftTail || node;
   }
   
   steps.push({
     node: null,
+    action: 'Start: Flatten binary tree to linked list',
     result: [],
-    explanation: 'Start: Postorder traversal (left → right → root)',
   });
   
-  postorder(TREE);
+  flatten(TREE, null);
   
   steps.push({
     node: null,
+    action: 'Complete: Tree flattened',
     result: [...result],
-    explanation: `Complete: [${result.join(', ')}]`,
   });
   
   return steps;
@@ -74,7 +86,7 @@ const TOTAL_STEPS = STEPS.length;
 
 const COLORS = {
   current: '#eab308',
-  visited: '#22c55e',
+  processed: '#22c55e',
   default: '#3b82f6',
 } as const;
 
@@ -83,7 +95,7 @@ function renderTree(
   x: number,
   y: number,
   level: number,
-  currentStep: PostorderStep,
+  currentStep: FlattenStep,
   visited: Set<number>,
 ): React.ReactElement | null {
   if (!node) return null;
@@ -93,7 +105,7 @@ function renderTree(
 
   let nodeColor: string = COLORS.default;
   if (isCurrent) nodeColor = COLORS.current;
-  else if (isVisited) nodeColor = COLORS.visited;
+  else if (isVisited) nodeColor = COLORS.processed;
 
   const spacing = 120 / 2 ** level;
   const leftX = x - spacing;
@@ -136,7 +148,7 @@ function renderTree(
   );
 }
 
-export default function PostorderTraversalViz() {
+export default function FlattenTreeViz() {
   const controls = useVizAnimation(TOTAL_STEPS);
   const { step } = controls.state;
 
@@ -156,16 +168,16 @@ export default function PostorderTraversalViz() {
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">
-      <h2 className="text-2xl font-bold text-white mb-4">Postorder Traversal</h2>
+      <h2 className="text-2xl font-bold text-white mb-4">Flatten Binary Tree to Linked List</h2>
 
       <div className="mb-6 p-4 bg-zinc-800 rounded-lg">
         <p className="text-zinc-400 text-sm mb-2">
           Step {step + 1} of {TOTAL_STEPS}
         </p>
-        <p className="text-white text-sm">{currentStep.explanation}</p>
+        <p className="text-white text-sm">{currentStep.action}</p>
         {step === STEPS.length - 1 && (
           <p className="text-yellow-400 font-bold text-lg mt-2">
-            Result: [{currentStep.result.join(', ')}]
+            Result: [{currentStep.result.join(' → ')}]
           </p>
         )}
       </div>
@@ -179,21 +191,24 @@ export default function PostorderTraversalViz() {
 
       {currentStep.result.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-zinc-300 mb-3">Traversal Order</h3>
+          <h3 className="text-lg font-semibold text-zinc-300 mb-3">Flattened List</h3>
           <div className="flex gap-2 justify-center flex-wrap">
             {currentStep.result.map((n, i) => (
-              <motion.div
-                key={i}
-                className="w-12 h-12 rounded-lg border-2 flex items-center justify-center font-mono font-bold text-white"
-                style={{
-                  backgroundColor: COLORS.visited,
-                  borderColor: COLORS.visited,
-                }}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
-                {n}
-              </motion.div>
+              <>
+                <div
+                  key={i}
+                  className="w-12 h-12 rounded-lg border-2 flex items-center justify-center font-mono font-bold text-white animate-scale-in"
+                  style={{
+                    backgroundColor: COLORS.processed,
+                    borderColor: COLORS.processed,
+                  }}
+                >
+                  {n}
+                </div>
+                {i < currentStep.result.length - 1 && (
+                  <span className="text-zinc-500 text-2xl">→</span>
+                )}
+              </>
             ))}
           </div>
         </div>

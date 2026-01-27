@@ -213,18 +213,16 @@ export default function LevelOrderViz() {
           <h3 className="text-lg font-semibold text-zinc-300 mb-3">Traversal Order</h3>
           <div className="flex gap-2 justify-center flex-wrap">
             {currentStep.nodes.map((n, i) => (
-              <motion.div
+              <div
                 key={i}
-                className="w-12 h-12 rounded-lg border-2 flex items-center justify-center font-mono font-bold text-white"
+                className="w-12 h-12 rounded-lg border-2 flex items-center justify-center font-mono font-bold text-white animate-scale-in"
                 style={{
                   backgroundColor: COLORS.visited,
                   borderColor: COLORS.visited,
                 }}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
               >
                 {n}
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
