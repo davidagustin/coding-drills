@@ -255,6 +255,9 @@ const TransposeMatrixViz = dynamic(() => import('./TransposeMatrixViz'), { ssr: 
 const SumRecursiveViz = dynamic(() => import('./SumRecursiveViz'), { ssr: false });
 const PrimeGenerationViz = dynamic(() => import('./PrimeGenerationViz'), { ssr: false });
 const FastSlowPointersViz = dynamic(() => import('./FastSlowPointersViz'), { ssr: false });
+const PrefixProductViz = dynamic(() => import('./PrefixProductViz'), { ssr: false });
+const DifferenceArrayViz = dynamic(() => import('./DifferenceArrayViz'), { ssr: false });
+const MemoizeMultiArgViz = dynamic(() => import('./MemoizeMultiArgViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -504,6 +507,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'sum-recursive': SumRecursiveViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
+  'prefix-product': PrefixProductViz,
+  'difference-array': DifferenceArrayViz,
+  'memoize-multi-arg': MemoizeMultiArgViz,
 };
 
 /**
