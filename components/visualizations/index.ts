@@ -233,6 +233,11 @@ const PartitionViz = dynamic(() => import('./PartitionViz'), { ssr: false });
 const DifferenceViz = dynamic(() => import('./DifferenceViz'), { ssr: false });
 const IntersectionViz = dynamic(() => import('./IntersectionViz'), { ssr: false });
 const CurryFunctionViz = dynamic(() => import('./CurryFunctionViz'), { ssr: false });
+const DerangementsCountViz = dynamic(() => import('./DerangementsCountViz'), { ssr: false });
+const PascalsTriangleRowViz = dynamic(() => import('./PascalsTriangleRowViz'), { ssr: false });
+const CatalanNumberViz = dynamic(() => import('./CatalanNumberViz'), { ssr: false });
+const PowerSetBitmaskViz = dynamic(() => import('./PowerSetBitmaskViz'), { ssr: false });
+const GrayCodeViz = dynamic(() => import('./GrayCodeViz'), { ssr: false });
 const TakeWhileViz = dynamic(() => import('./TakeWhileViz'), { ssr: false });
 const DropWhileViz = dynamic(() => import('./DropWhileViz'), { ssr: false });
 const FrequencyCounterViz = dynamic(() => import('./FrequencyCounterViz'), { ssr: false });
@@ -555,6 +560,11 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'combinations-with-rep': CombinationsWithRepViz,
   'permutation-rank': PermutationRankViz,
   'curry-function': CurryFunctionViz,
+  'derangements-count': DerangementsCountViz,
+  'pascals-triangle-row': PascalsTriangleRowViz,
+  'catalan-number': CatalanNumberViz,
+  'power-set-bitmask': PowerSetBitmaskViz,
+  'gray-code': GrayCodeViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
   'prefix-product': PrefixProductViz,
