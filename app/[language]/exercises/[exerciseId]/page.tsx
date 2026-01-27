@@ -538,6 +538,19 @@ export default function ExerciseDetailPage() {
                 );
               })()}
 
+            {/* AI Tutor (Learn mode only) */}
+            {viewMode === 'learn' && (
+              <ExerciseTutor
+                exercise={exercise}
+                hasVisualization={getVisualization(exerciseId) !== null}
+                languageConfig={{
+                  color: config.color,
+                  bgColor: config.bgColor,
+                  borderColor: config.borderColor,
+                }}
+              />
+            )}
+
             {/* Instructions */}
             <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
               <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
@@ -557,19 +570,6 @@ export default function ExerciseDetailPage() {
                 ))}
               </ul>
             </div>
-
-            {/* AI Tutor (Learn mode only) */}
-            {viewMode === 'learn' && (
-              <ExerciseTutor
-                exercise={exercise}
-                hasVisualization={getVisualization(exerciseId) !== null}
-                languageConfig={{
-                  color: config.color,
-                  bgColor: config.bgColor,
-                  borderColor: config.borderColor,
-                }}
-              />
-            )}
 
             {/* Code Editor / Display */}
             <div
