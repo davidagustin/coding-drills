@@ -275,6 +275,9 @@ const ThrottleLeadingTrailingViz = dynamic(() => import('./ThrottleLeadingTraili
   ssr: false,
 });
 const RetryAsyncViz = dynamic(() => import('./RetryAsyncViz'), { ssr: false });
+const DisjointSetRankViz = dynamic(() => import('./DisjointSetRankViz'), { ssr: false });
+const WeightedGraphViz = dynamic(() => import('./WeightedGraphViz'), { ssr: false });
+const DequeViz = dynamic(() => import('./DequeViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -305,6 +308,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
 
   // Building blocks
   'queue-operations': QueueViz,
+  deque: DequeViz,
   'merge-sorted': MergeSortedViz,
   'min-heap-insert': MinHeapInsertViz,
   'trie-insert': TrieInsertViz,
@@ -337,6 +341,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'search-2d-matrix': Search2DMatrixViz,
   'count-occurrences': CountOccurrencesViz,
   'graph-adjacency': GraphAdjacencyViz,
+  'weighted-graph': WeightedGraphViz,
   'course-schedule': CourseScheduleViz,
   'clone-graph': CloneGraphViz,
 
@@ -370,6 +375,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'max-heap-insert': MaxHeapInsertViz,
   'trie-search': TrieSearchViz,
   'union-find': UnionFindViz,
+  'disjoint-set-rank': DisjointSetRankViz,
   'graph-valid-tree': GraphValidTreeViz,
   'serialize-tree': SerializeTreeViz,
   'tree-diameter': TreeDiameterViz,
