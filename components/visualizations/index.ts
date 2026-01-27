@@ -217,6 +217,15 @@ const CoinChange2Viz = dynamic(() => import('./CoinChange2Viz'), { ssr: false })
 const LongestSubstringViz = dynamic(() => import('./LongestSubstringViz'), { ssr: false });
 const MinWindowSubstringViz = dynamic(() => import('./MinWindowSubstringViz'), { ssr: false });
 const GroupAnagrams2Viz = dynamic(() => import('./GroupAnagrams2Viz'), { ssr: false });
+const PalindromeNumberViz = dynamic(() => import('./PalindromeNumberViz'), { ssr: false });
+const ReverseIntegerViz = dynamic(() => import('./ReverseIntegerViz'), { ssr: false });
+const StringToIntegerViz = dynamic(() => import('./StringToIntegerViz'), { ssr: false });
+const RomanToIntegerViz = dynamic(() => import('./RomanToIntegerViz'), { ssr: false });
+const IntegerToRomanViz = dynamic(() => import('./IntegerToRomanViz'), { ssr: false });
+const ValidPalindromeViz = dynamic(() => import('./ValidPalindromeViz'), { ssr: false });
+const LongestPalindromeViz = dynamic(() => import('./LongestPalindromeViz'), { ssr: false });
+const CountAndSayViz = dynamic(() => import('./CountAndSayViz'), { ssr: false });
+const ZigZagConversionViz = dynamic(() => import('./ZigZagConversionViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -425,6 +434,15 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'longest-substring': LongestSubstringViz,
   'min-window-substring-ii': MinWindowSubstringViz,
   'group-anagrams-ii': GroupAnagrams2Viz,
+  'palindrome-number': PalindromeNumberViz,
+  'reverse-integer': ReverseIntegerViz,
+  'string-to-integer': StringToIntegerViz,
+  'roman-to-integer': RomanToIntegerViz,
+  'integer-to-roman': IntegerToRomanViz,
+  'valid-palindrome': ValidPalindromeViz,
+  'longest-palindrome': LongestPalindromeViz,
+  'count-and-say': CountAndSayViz,
+  'zigzag-conversion': ZigZagConversionViz,
 };
 
 /**
