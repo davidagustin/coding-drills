@@ -270,6 +270,10 @@ const DecimalToBinaryViz = dynamic(() => import('./DecimalToBinaryViz'), { ssr: 
 const CountBitsViz = dynamic(() => import('./CountBitsViz'), { ssr: false });
 const ToggleBitViz = dynamic(() => import('./ToggleBitViz'), { ssr: false });
 const MatrixMultiplyViz = dynamic(() => import('./MatrixMultiplyViz'), { ssr: false });
+const DebounceLeadingViz = dynamic(() => import('./DebounceLeadingViz'), { ssr: false });
+const ThrottleLeadingTrailingViz = dynamic(() => import('./ThrottleLeadingTrailingViz'), {
+  ssr: false,
+});
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -378,7 +382,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'encode-decode-strings': EncodeDecodeStringsViz,
   'memoize-fibonacci': MemoizeFibonacciViz,
   debounce: DebounceViz,
+  'debounce-leading': DebounceLeadingViz,
   throttle: ThrottleViz,
+  'throttle-leading-trailing': ThrottleLeadingTrailingViz,
   'count-inversions': CountInversionsViz,
 
   // Batch 6: Additional Tree & String algorithms
