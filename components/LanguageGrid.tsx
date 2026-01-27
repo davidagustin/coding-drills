@@ -7,8 +7,7 @@ interface Language {
   name: string;
   subtitle?: string;
   slug: string;
-  icon: string | null;
-  emoji: string | null;
+  icon: string;
   bgGradient: string;
   borderColor: string;
   hoverGlow: string;
@@ -155,7 +154,12 @@ export function LanguageGrid({ languages, problemCounts = {} }: LanguageGridProp
       {/* No Results */}
       {filteredLanguages.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-4xl mb-3">🔍</div>
+          <div className="flex justify-center mb-3 text-gray-500">
+            <svg viewBox="0 0 24 24" className="w-10 h-10" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </div>
           <p className="text-gray-400">No languages found matching &quot;{searchQuery}&quot;</p>
           <button
             type="button"
@@ -192,11 +196,7 @@ export function LanguageGrid({ languages, problemCounts = {} }: LanguageGridProp
                   transform group-hover:scale-110 transition-transform duration-300
                 `}
                 >
-                  {lang.emoji ? (
-                    <span className="text-3xl md:text-4xl">{lang.emoji}</span>
-                  ) : (
-                    <span className={`text-lg md:text-xl ${lang.iconText}`}>{lang.icon}</span>
-                  )}
+                  <span className={`text-lg md:text-xl ${lang.iconText}`}>{lang.icon}</span>
                 </div>
 
                 {/* Language Name */}
@@ -257,11 +257,7 @@ export function LanguageGrid({ languages, problemCounts = {} }: LanguageGridProp
                 transform group-hover:scale-110 transition-transform duration-300
               `}
               >
-                {lang.emoji ? (
-                  <span className="text-xl">{lang.emoji}</span>
-                ) : (
-                  <span className={`text-sm ${lang.iconText}`}>{lang.icon}</span>
-                )}
+                <span className={`text-sm ${lang.iconText}`}>{lang.icon}</span>
               </div>
 
               {/* Language Info */}

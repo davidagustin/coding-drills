@@ -922,7 +922,12 @@ function DrillPhaseComponent({
                       : 'text-red-400'
                 }`}
               >
-                {currentAnswer.skipped ? '⏭️' : currentAnswer.isCorrect ? '✓' : '✗'}
+                {currentAnswer.skipped ? (
+                  <svg viewBox="0 0 24 24" className="w-7 h-7 inline-block" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5,4 15,12 5,20" fill="currentColor" stroke="none" />
+                    <line x1="19" y1="5" x2="19" y2="19" />
+                  </svg>
+                ) : currentAnswer.isCorrect ? '✓' : '✗'}
               </div>
               <div className="flex-1">
                 <div
