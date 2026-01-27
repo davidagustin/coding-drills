@@ -73,7 +73,7 @@ const BASE_MODES: { slug: string; label: string; icon: ReactNode }[] = [
     ),
   },
   {
-    slug: 'regex',
+    slug: '__regex__',
     label: 'Regex',
     // Magnifying glass with pattern marks icon
     icon: (
@@ -179,7 +179,7 @@ function ModeNav({
           {modes.map((mode) => (
             <Link
               key={mode.slug}
-              href={`/${language}/${mode.slug}`}
+              href={mode.slug === '__regex__' ? '/regex' : `/${language}/${mode.slug}`}
               className={`
                 flex items-center gap-2 px-4 py-2 rounded-lg
                 text-sm font-medium whitespace-nowrap

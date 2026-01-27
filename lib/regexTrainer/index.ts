@@ -50,6 +50,26 @@ function shuffleArray<T>(arr: T[]): T[] {
   return shuffled;
 }
 
+export function getRegexProblemById(id: string): RegexProblem | undefined {
+  return regexProblems.find((p) => p.id === id);
+}
+
+export function getRegexProblemsByCategory(category: RegexCategory): RegexProblem[] {
+  return regexProblems.filter((p) => p.category === category);
+}
+
+export function getAdjacentProblems(id: string): {
+  prev: RegexProblem | null;
+  next: RegexProblem | null;
+} {
+  const index = regexProblems.findIndex((p) => p.id === id);
+  if (index === -1) return { prev: null, next: null };
+  return {
+    prev: index > 0 ? regexProblems[index - 1] : null,
+    next: index < regexProblems.length - 1 ? regexProblems[index + 1] : null,
+  };
+}
+
 export function selectRegexProblems(config: RegexTrainerConfig): RegexProblem[] {
   let pool = regexProblems;
 

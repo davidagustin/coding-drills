@@ -247,6 +247,12 @@ const EventEmitterViz = dynamic(() => import('./EventEmitterViz'), { ssr: false 
 const PromiseAllViz = dynamic(() => import('./PromiseAllViz'), { ssr: false });
 const PromiseRaceViz = dynamic(() => import('./PromiseRaceViz'), { ssr: false });
 const DeepFreezeViz = dynamic(() => import('./DeepFreezeViz'), { ssr: false });
+const ObjectPickViz = dynamic(() => import('./ObjectPickViz'), { ssr: false });
+const ObjectOmitViz = dynamic(() => import('./ObjectOmitViz'), { ssr: false });
+const FlatMapViz = dynamic(() => import('./FlatMapViz'), { ssr: false });
+const RunLengthEncodeViz = dynamic(() => import('./RunLengthEncodeViz'), { ssr: false });
+const RunLengthDecodeViz = dynamic(() => import('./RunLengthDecodeViz'), { ssr: false });
+const ObjectDeepMergeViz = dynamic(() => import('./ObjectDeepMergeViz'), { ssr: false });
 const TakeWhileViz = dynamic(() => import('./TakeWhileViz'), { ssr: false });
 const DropWhileViz = dynamic(() => import('./DropWhileViz'), { ssr: false });
 const FrequencyCounterViz = dynamic(() => import('./FrequencyCounterViz'), { ssr: false });
@@ -583,6 +589,12 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'promise-all': PromiseAllViz,
   'promise-race': PromiseRaceViz,
   'deep-freeze': DeepFreezeViz,
+  'object-pick': ObjectPickViz,
+  'object-omit': ObjectOmitViz,
+  'flat-map': FlatMapViz,
+  'run-length-encode': RunLengthEncodeViz,
+  'run-length-decode': RunLengthDecodeViz,
+  'object-deep-merge': ObjectDeepMergeViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
   'prefix-product': PrefixProductViz,

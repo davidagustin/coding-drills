@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { LanguageGrid } from '@/components/LanguageGrid';
 import { getProblemCountByLanguage } from '@/lib/problems/index';
+import { getRegexProblemCount } from '@/lib/regexTrainer';
 
 const languages = [
   {
@@ -250,13 +251,23 @@ const languages = [
 ];
 
 // Shared SVG props for mode icons
-const modeIconProps = { viewBox: '0 0 24 24', className: 'w-8 h-8', 'aria-hidden': true as const, fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+const modeIconProps = {
+  viewBox: '0 0 24 24',
+  className: 'w-8 h-8',
+  'aria-hidden': true as const,
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.8,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+};
 
 const modes = [
   {
     name: 'Drill Mode',
     icon: (
       <svg {...modeIconProps}>
+        <title>Drill Mode</title>
         <rect x="2" y="3" width="20" height="18" rx="2" />
         <path d="M7 8l4 4-4 4" />
         <path d="M13 16h4" />
@@ -271,6 +282,7 @@ const modes = [
     name: 'Quiz Mode',
     icon: (
       <svg {...modeIconProps}>
+        <title>Quiz Mode</title>
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
       </svg>
     ),
@@ -283,6 +295,7 @@ const modes = [
     name: 'Reference Mode',
     icon: (
       <svg {...modeIconProps}>
+        <title>Reference Mode</title>
         <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
         <path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15z" />
       </svg>
@@ -296,6 +309,7 @@ const modes = [
     name: 'Interview Mode',
     icon: (
       <svg {...modeIconProps}>
+        <title>Interview Mode</title>
         <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
       </svg>
     ),
@@ -303,6 +317,22 @@ const modes = [
       'Practice with an AI interviewer. Get real-time feedback and hints as you solve coding problems.',
     gradient: 'from-cyan-500/20 to-blue-500/10',
     border: 'border-cyan-500/30',
+  },
+  {
+    name: 'Regex Trainer',
+    icon: (
+      <svg {...modeIconProps}>
+        <title>Regex Trainer</title>
+        <circle cx="11" cy="11" r="7" />
+        <path d="M21 21l-4.35-4.35" />
+        <path d="M8 9h6" />
+        <path d="M8 13h4" />
+      </svg>
+    ),
+    description:
+      'Master regular expressions with live pattern matching. Drill, practice, or experiment in the playground.',
+    gradient: 'from-emerald-500/20 to-green-500/10',
+    border: 'border-emerald-500/30',
   },
 ];
 
@@ -385,7 +415,16 @@ export default function Home() {
               {/* Left: Icon and Title */}
               <div className="text-center md:text-left flex-1">
                 <div className="text-cyan-400 mb-4">
-                  <svg viewBox="0 0 24 24" className="w-16 h-16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-16 h-16"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
                   </svg>
                 </div>
@@ -410,6 +449,75 @@ export default function Home() {
                              shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105"
                 >
                   <span>Start Interview</span>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Regex Trainer Quick Access */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-green-500/5 to-teal-500/10 p-8 md:p-12">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-500/10 rounded-full blur-3xl" />
+
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Left: Icon and Title */}
+              <div className="text-center md:text-left flex-1">
+                <div className="text-emerald-400 mb-4">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-16 h-16"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="M21 21l-4.35-4.35" />
+                    <path d="M8 9h6" />
+                    <path d="M8 13h4" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">Regex Trainer</h2>
+                <p className="text-gray-400 max-w-lg mb-2">
+                  Master regular expressions with interactive challenges. Practice live pattern
+                  matching, drill under time pressure, or experiment freely in the playground.
+                </p>
+                <p className="text-gray-500 text-sm">
+                  {getRegexProblemCount()} patterns &middot; Drill &middot; Practice &middot;
+                  Playground
+                </p>
+              </div>
+
+              {/* Right: Start Button */}
+              <div className="flex-shrink-0">
+                <Link
+                  href="/regex"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500
+                             text-white font-semibold text-lg transition-all duration-200
+                             shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"
+                >
+                  <span>Start Training</span>
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -470,30 +578,82 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
-            { stat: '21', label: 'Languages', icon: (
-              <svg viewBox="0 0 24 24" className="w-7 h-7" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M2 12h20" />
-                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
-              </svg>
-            )},
-            { stat: `${totalProblems.toLocaleString()}+`, label: 'Problems', icon: (
-              <svg viewBox="0 0 24 24" className="w-7 h-7" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-              </svg>
-            )},
-            { stat: '∞', label: 'Practice', icon: (
-              <svg viewBox="0 0 24 24" className="w-7 h-7" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M23 4v6h-6" />
-                <path d="M1 20v-6h6" />
-                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
-              </svg>
-            )},
-            { stat: 'Free', label: 'Forever', icon: (
-              <svg viewBox="0 0 24 24" className="w-7 h-7" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-              </svg>
-            )},
+            {
+              stat: '21',
+              label: 'Languages',
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-7 h-7"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20" />
+                  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                </svg>
+              ),
+            },
+            {
+              stat: `${totalProblems.toLocaleString()}+`,
+              label: 'Problems',
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-7 h-7"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+              ),
+            },
+            {
+              stat: '∞',
+              label: 'Practice',
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-7 h-7"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M23 4v6h-6" />
+                  <path d="M1 20v-6h6" />
+                  <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                </svg>
+              ),
+            },
+            {
+              stat: 'Free',
+              label: 'Forever',
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-7 h-7"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                </svg>
+              ),
+            },
           ].map((item) => (
             <div key={item.label} className="p-6">
               <div className="text-gray-400 mb-2 flex justify-center">{item.icon}</div>

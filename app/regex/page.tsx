@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   evaluateRegex,
@@ -14,17 +13,17 @@ import {
   type RegexCheatsheetEntry,
   type RegexProblem,
   type RegexTrainerState,
+  regexProblems,
   selectRegexProblems,
 } from '@/lib/regexTrainer';
 import { saveRegexProgress } from '@/lib/storage';
 import type { Difficulty } from '@/lib/types';
-import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from '../config';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type Phase = 'setup' | 'drill' | 'practice' | 'playground' | 'results';
+type Phase = 'setup' | 'drill' | 'practice-browser' | 'playground' | 'results';
 
 // ============================================================================
 // Hooks
@@ -124,7 +123,6 @@ function HighlightedText({ text, userMatches, expectedMatches, showMissed }: Hig
     return map;
   }, [text, userMatches, expectedMatches]);
 
-  // Merge consecutive characters with the same highlight into single spans
   const spans = useMemo(() => {
     if (text.length === 0) return [];
 
@@ -241,7 +239,6 @@ function HintsDrawer({
 }: HintsDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Group cheatsheet entries by category
   const grouped = useMemo(() => {
     const map = new Map<string, RegexCheatsheetEntry[]>();
     for (const entry of cheatsheet) {
@@ -254,7 +251,6 @@ function HintsDrawer({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40">
-      {/* Toggle button */}
       <div className="flex justify-center">
         <button
           type="button"
@@ -274,14 +270,12 @@ function HintsDrawer({
         </button>
       </div>
 
-      {/* Panel */}
       <div
         className={`bg-zinc-900 border-t border-zinc-700 transition-all duration-300 overflow-hidden ${
           isOpen ? 'max-h-[50vh]' : 'max-h-0'
         }`}
       >
         <div className="p-6 overflow-y-auto max-h-[48vh] space-y-6">
-          {/* Problem Hints (drill/practice only) */}
           {(mode === 'drill' || mode === 'practice') && hints.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-zinc-200 mb-3 uppercase tracking-wider">
@@ -310,7 +304,6 @@ function HintsDrawer({
             </div>
           )}
 
-          {/* Regex Cheatsheet */}
           <div>
             <h3 className="text-sm font-semibold text-zinc-200 mb-3 uppercase tracking-wider">
               Regex Cheatsheet
@@ -373,14 +366,14 @@ function Chip({ label, selected, onClick, count }: ChipProps) {
       type="button"
       onClick={onClick}
       className={`px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer flex items-center gap-2 ${
-        selected ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+        selected ? 'bg-emerald-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
       }`}
     >
       {label}
       {count !== undefined && (
         <span
           className={`text-xs px-1.5 py-0.5 rounded-full ${
-            selected ? 'bg-blue-400/30 text-blue-100' : 'bg-zinc-700 text-zinc-400'
+            selected ? 'bg-emerald-400/30 text-emerald-100' : 'bg-zinc-700 text-zinc-400'
           }`}
         >
           {count}
@@ -414,7 +407,7 @@ function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
           onClick={() => onChange(option.value)}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${
             value === option.value
-              ? 'bg-blue-600 text-white'
+              ? 'bg-emerald-600 text-white'
               : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
           }`}
         >
@@ -426,7 +419,7 @@ function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
   );
 }
 
-// --- QuestionCountSlider (inline, simple) ---
+// --- CountSlider ---
 
 interface SliderProps {
   value: number;
@@ -451,7 +444,7 @@ function CountSlider({ value, onChange, min, max, label }: SliderProps) {
         max={max}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+        className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
       />
       <div className="flex justify-between text-xs text-zinc-500 mt-1">
         <span>{min}</span>
@@ -468,13 +461,12 @@ function CountSlider({ value, onChange, min, max, label }: SliderProps) {
 // --- SetupPhase ---
 
 interface SetupPhaseProps {
-  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
   onStartDrill: (cats: RegexCategory[], diff: Difficulty | 'mixed', count: number) => void;
-  onStartPractice: (cats: RegexCategory[], diff: Difficulty | 'mixed', count: number) => void;
+  onStartPractice: () => void;
   onStartPlayground: () => void;
 }
 
-function SetupPhase({ config, onStartDrill, onStartPractice, onStartPlayground }: SetupPhaseProps) {
+function SetupPhase({ onStartDrill, onStartPractice, onStartPlayground }: SetupPhaseProps) {
   const allCategories = useMemo(() => getRegexCategories(), []);
   const categoryCounts = useMemo(() => getRegexCategoryCounts(), []);
 
@@ -500,13 +492,13 @@ function SetupPhase({ config, onStartDrill, onStartPractice, onStartPlayground }
         {/* Drill Mode Card */}
         <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-6 space-y-4 flex flex-col">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${config.bgColor}`}>
+            <div className="p-2 rounded-lg bg-emerald-500/10">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
-                className={`w-6 h-6 ${config.color}`}
+                className="w-6 h-6 text-emerald-400"
                 aria-hidden="true"
               >
                 <path
@@ -527,7 +519,7 @@ function SetupPhase({ config, onStartDrill, onStartPractice, onStartPlayground }
           <button
             type="button"
             onClick={() => onStartDrill(selectedCategories, difficulty, questionCount)}
-            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer text-sm"
+            className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors cursor-pointer text-sm"
           >
             Start Drill
           </button>
@@ -536,13 +528,13 @@ function SetupPhase({ config, onStartDrill, onStartPractice, onStartPlayground }
         {/* Practice Mode Card */}
         <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-6 space-y-4 flex flex-col">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${config.bgColor}`}>
+            <div className="p-2 rounded-lg bg-emerald-500/10">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
-                className={`w-6 h-6 ${config.color}`}
+                className="w-6 h-6 text-emerald-400"
                 aria-hidden="true"
               >
                 <path
@@ -554,31 +546,31 @@ function SetupPhase({ config, onStartDrill, onStartPractice, onStartPlayground }
             </div>
             <div>
               <h2 className="text-lg font-semibold text-zinc-100">Practice Mode</h2>
-              <p className="text-xs text-zinc-400">Untimed</p>
+              <p className="text-xs text-zinc-400">Browse & solve</p>
             </div>
           </div>
           <p className="text-sm text-zinc-400 flex-1">
-            Study at your own pace with hints and explanations.
+            Browse all problems by category. Study at your own pace with hints.
           </p>
           <button
             type="button"
-            onClick={() => onStartPractice(selectedCategories, difficulty, questionCount)}
-            className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors cursor-pointer text-sm"
+            onClick={onStartPractice}
+            className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors cursor-pointer text-sm"
           >
-            Start Practice
+            Browse Problems
           </button>
         </div>
 
         {/* Playground Card */}
         <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-6 space-y-4 flex flex-col">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${config.bgColor}`}>
+            <div className="p-2 rounded-lg bg-emerald-500/10">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
-                className={`w-6 h-6 ${config.color}`}
+                className="w-6 h-6 text-emerald-400"
                 aria-hidden="true"
               >
                 <path
@@ -608,7 +600,7 @@ function SetupPhase({ config, onStartDrill, onStartPractice, onStartPlayground }
 
       {/* Configuration Panel */}
       <div className="bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-800 space-y-6">
-        <h3 className="text-lg font-semibold text-zinc-100">Drill & Practice Settings</h3>
+        <h3 className="text-lg font-semibold text-zinc-100">Drill Settings</h3>
 
         {/* Categories */}
         <div>
@@ -656,8 +648,6 @@ function SetupPhase({ config, onStartDrill, onStartPractice, onStartPlayground }
 
 interface DrillPhaseProps {
   problems: RegexProblem[];
-  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
-  language: string;
   onComplete: (state: RegexTrainerState) => void;
 }
 
@@ -680,7 +670,6 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
 
   const currentProblem = problems[trainerState.currentIndex];
 
-  // Refs for stable access in auto-advance effect (avoids infinite loops)
   const currentProblemRef = useRef(currentProblem);
   const patternRef = useRef(pattern);
   const userMatchesRef = useRef<MatchRange[]>([]);
@@ -689,7 +678,6 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
   const problemsLengthRef = useRef(problems.length);
   const onCompleteRef = useRef(onComplete);
 
-  // Sync refs after render (refs must not be set during render per React compiler rules)
   useEffect(() => {
     currentProblemRef.current = currentProblem;
     patternRef.current = pattern;
@@ -726,7 +714,6 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
   const isCorrect = evalData?.isCorrect ?? false;
   const regexError = evalResult?.parsed?.error ?? null;
 
-  // Keep userMatches ref in sync
   useEffect(() => {
     userMatchesRef.current = userMatches;
   });
@@ -835,7 +822,7 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
             <div className="text-xs text-zinc-500">Timer</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-500">
+            <div className="text-2xl font-bold text-emerald-500">
               {trainerState.totalScore.toLocaleString()}
             </div>
             <div className="text-xs text-zinc-500">Score</div>
@@ -856,18 +843,13 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
           isCorrect ? 'border-green-500 ring-2 ring-green-500/30' : 'border-zinc-800'
         }`}
       >
-        {/* Problem Header */}
         <div className="border-b border-zinc-800 p-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-lg font-semibold text-zinc-100">{currentProblem.prompt}</h2>
             <DifficultyBadge difficulty={currentProblem.difficulty} />
           </div>
-          {currentProblem.prompt && (
-            <p className="text-sm text-zinc-400">{currentProblem.prompt}</p>
-          )}
         </div>
 
-        {/* Sample Text + Highlighting */}
         <div className="p-4 border-b border-zinc-800">
           <span className="block text-sm font-medium text-zinc-300 mb-2">Sample Text</span>
           <HighlightedText
@@ -878,7 +860,6 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
           />
         </div>
 
-        {/* Match Count */}
         <div className="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
           <span className="text-sm text-zinc-400">
             <span className="font-mono text-zinc-200">{userMatches.length}</span>
@@ -891,7 +872,6 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
           )}
         </div>
 
-        {/* Regex Input */}
         <div className="p-4">
           <RegexInput
             value={pattern}
@@ -901,7 +881,6 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
           />
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3 p-4 bg-zinc-800/50 border-t border-zinc-800">
           <button
             type="button"
@@ -913,7 +892,6 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
         </div>
       </div>
 
-      {/* Hints Drawer */}
       <HintsDrawer
         hints={currentProblem.hints || []}
         cheatsheet={REGEX_CHEATSHEET}
@@ -925,186 +903,200 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
   );
 }
 
-// --- PracticePhase ---
+// --- PracticeBrowser ---
 
-interface PracticePhaseProps {
-  problems: RegexProblem[];
-  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
-  language: string;
-  onComplete: (state: RegexTrainerState) => void;
+interface PracticeBrowserProps {
+  onBack: () => void;
 }
 
-function PracticePhase({ problems, onComplete }: PracticePhaseProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [pattern, setPattern] = useState('');
-  const [answers, setAnswers] = useState<RegexAnswerRecord[]>([]);
+function PracticeBrowser({ onBack }: PracticeBrowserProps) {
+  const allCategories = useMemo(() => getRegexCategories(), []);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<RegexCategory | null>(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
-  const debouncedPattern = useDebounce(pattern, 150);
+  const filteredProblems = useMemo(() => {
+    let pool = regexProblems;
 
-  const currentProblem = problems[currentIndex];
+    if (selectedCategory) {
+      pool = pool.filter((p) => p.category === selectedCategory);
+    }
 
-  // Live evaluation
-  const evalResult = useMemo(() => {
-    if (!debouncedPattern || !currentProblem) return null;
-    try {
-      return evaluateRegex(
-        debouncedPattern,
-        currentProblem.sampleText,
-        currentProblem.expectedMatches,
+    if (selectedDifficulty) {
+      pool = pool.filter((p) => p.difficulty === selectedDifficulty);
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      pool = pool.filter(
+        (p) =>
+          p.title.toLowerCase().includes(q) ||
+          p.prompt.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q),
       );
-    } catch {
-      return null;
     }
-  }, [debouncedPattern, currentProblem]);
 
-  const userMatches: MatchRange[] = evalResult?.userMatches ?? [];
-  const isCorrect = evalResult?.evaluation?.isCorrect ?? false;
-  const regexError = evalResult?.parsed?.error ?? null;
+    return pool;
+  }, [selectedCategory, selectedDifficulty, searchQuery]);
 
-  const handleShowSolution = () => {
-    if (currentProblem.sampleSolutions && currentProblem.sampleSolutions.length > 0) {
-      setPattern(currentProblem.sampleSolutions[0]);
+  // Group filtered problems by category
+  const grouped = useMemo(() => {
+    const map = new Map<RegexCategory, RegexProblem[]>();
+    for (const p of filteredProblems) {
+      if (!map.has(p.category)) map.set(p.category, []);
+      map.get(p.category)?.push(p);
     }
+    return map;
+  }, [filteredProblems]);
+
+  const difficultyColors: Record<Difficulty, string> = {
+    easy: 'bg-green-500/20 text-green-400 border-green-500/30',
+    medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    hard: 'bg-red-500/20 text-red-400 border-red-500/30',
   };
-
-  const handleNext = () => {
-    const record: RegexAnswerRecord = {
-      problem: currentProblem,
-      userPattern: pattern,
-      isCorrect,
-      actualMatches: userMatches,
-      skipped: false,
-      timeTaken: 0,
-      pointsEarned: 0,
-    };
-    const newAnswers = [...answers, record];
-    setAnswers(newAnswers);
-
-    if (currentIndex + 1 >= problems.length) {
-      const finalState: RegexTrainerState = {
-        currentIndex: problems.length,
-        answers: newAnswers,
-        totalScore: 0,
-        streak: 0,
-        maxStreak: 0,
-        startTime: 0,
-        endTime: Date.now(),
-      };
-      onComplete(finalState);
-    } else {
-      setCurrentIndex(currentIndex + 1);
-      setPattern('');
-    }
-  };
-
-  const handleFinish = () => {
-    const finalState: RegexTrainerState = {
-      currentIndex: currentIndex + 1,
-      answers,
-      totalScore: 0,
-      streak: 0,
-      maxStreak: 0,
-      startTime: 0,
-      endTime: Date.now(),
-    };
-    onComplete(finalState);
-  };
-
-  if (!currentProblem) return null;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-32">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-800">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-zinc-100">
-            {currentIndex + 1} / {problems.length}
-          </div>
-          <div className="text-xs text-zinc-500">Progress</div>
+    <div className="max-w-5xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-100">Practice Problems</h1>
+          <p className="text-sm text-zinc-400">
+            {filteredProblems.length} of {regexProblems.length} problems
+          </p>
         </div>
         <button
           type="button"
-          onClick={handleFinish}
-          className="py-2 px-4 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 font-medium rounded-lg transition-colors cursor-pointer text-sm"
+          onClick={onBack}
+          className="py-2 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium rounded-lg transition-colors cursor-pointer text-sm border border-zinc-700"
         >
-          Finish
+          Back to Setup
         </button>
       </div>
 
-      {/* Problem Card */}
-      <div className="bg-zinc-900 rounded-xl shadow-sm border border-zinc-800 overflow-hidden">
-        {/* Problem Header */}
-        <div className="border-b border-zinc-800 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-semibold text-zinc-100">{currentProblem.prompt}</h2>
-            <DifficultyBadge difficulty={currentProblem.difficulty} />
-          </div>
-          {currentProblem.prompt && (
-            <p className="text-sm text-zinc-400">{currentProblem.prompt}</p>
-          )}
-        </div>
-
-        {/* Sample Text + Highlighting */}
-        <div className="p-4 border-b border-zinc-800">
-          <span className="block text-sm font-medium text-zinc-300 mb-2">Sample Text</span>
-          <HighlightedText
-            text={currentProblem.sampleText}
-            userMatches={userMatches}
-            expectedMatches={currentProblem.expectedMatches}
-            showMissed={true}
+      {/* Filters */}
+      <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800 space-y-4">
+        {/* Search */}
+        <div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search problems..."
+            className="w-full bg-zinc-800 text-zinc-100 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-zinc-700 placeholder-zinc-500"
           />
         </div>
 
-        {/* Match Count */}
-        <div className="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
-          <span className="text-sm text-zinc-400">
-            <span className="font-mono text-zinc-200">{userMatches.length}</span>
-            {' / '}
-            <span className="font-mono text-zinc-200">{currentProblem.expectedMatches.length}</span>
-            {' matches found'}
-          </span>
-          {isCorrect && (
-            <span className="text-sm text-green-400 font-medium">All matches correct!</span>
-          )}
-        </div>
-
-        {/* Regex Input */}
-        <div className="p-4">
-          <RegexInput
-            value={pattern}
-            onChange={setPattern}
-            error={regexError}
-            isCorrect={isCorrect}
-          />
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-3 p-4 bg-zinc-800/50 border-t border-zinc-800">
+        {/* Category filter */}
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={handleShowSolution}
-            className="py-2.5 px-6 bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/30 font-medium rounded-lg transition-colors cursor-pointer text-sm"
+            onClick={() => setSelectedCategory(null)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
+              selectedCategory === null
+                ? 'bg-emerald-600 text-white'
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+            }`}
           >
-            Show Solution
+            All Categories
           </button>
+          {allCategories.map((cat) => (
+            <button
+              type="button"
+              key={cat}
+              onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                selectedCategory === cat
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Difficulty filter */}
+        <div className="flex gap-2">
           <button
             type="button"
-            onClick={handleNext}
-            className="flex-1 py-2.5 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer text-sm"
+            onClick={() => setSelectedDifficulty(null)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              selectedDifficulty === null
+                ? 'bg-emerald-600 text-white'
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+            }`}
           >
-            {currentIndex + 1 >= problems.length ? 'Finish' : 'Next'}
+            All Difficulties
           </button>
+          {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => (
+            <button
+              type="button"
+              key={d}
+              onClick={() => setSelectedDifficulty(selectedDifficulty === d ? null : d)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                selectedDifficulty === d
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  d === 'easy' ? 'bg-green-500' : d === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
+                }`}
+              />
+              {d.charAt(0).toUpperCase() + d.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Hints Drawer */}
-      <HintsDrawer
-        hints={currentProblem.hints || []}
-        cheatsheet={REGEX_CHEATSHEET}
-        mode="practice"
-        revealedHintCount={currentProblem.hints?.length ?? 0}
-        onRevealHint={() => {}}
-      />
+      {/* Problem Grid grouped by category */}
+      {filteredProblems.length === 0 ? (
+        <div className="text-center py-16">
+          <p className="text-zinc-400">No problems match your filters.</p>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {Array.from(grouped.entries()).map(([category, problems]) => (
+            <div key={category}>
+              <h2 className="text-lg font-semibold text-zinc-200 mb-4 flex items-center gap-2">
+                {category}
+                <span className="text-xs font-normal text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">
+                  {problems.length}
+                </span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {problems.map((problem) => (
+                  <Link
+                    key={problem.id}
+                    href={`/regex/${problem.id}`}
+                    className="group bg-zinc-900 rounded-xl border border-zinc-800 p-4 hover:border-emerald-500/50 hover:bg-zinc-800/50 transition-all duration-200"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-sm font-medium text-zinc-100 group-hover:text-emerald-400 transition-colors line-clamp-1">
+                        {problem.title}
+                      </h3>
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded border ml-2 flex-shrink-0 ${difficultyColors[problem.difficulty]}`}
+                      >
+                        {problem.difficulty}
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-500 line-clamp-2">{problem.prompt}</p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-[10px] text-zinc-600">
+                        {problem.expectedMatches.length} match
+                        {problem.expectedMatches.length !== 1 ? 'es' : ''}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -1112,7 +1104,6 @@ function PracticePhase({ problems, onComplete }: PracticePhaseProps) {
 // --- PlaygroundPhase ---
 
 interface PlaygroundPhaseProps {
-  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
   onBack: () => void;
 }
 
@@ -1179,7 +1170,6 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-16">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-100">Regex Playground</h1>
@@ -1195,9 +1185,7 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Area */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Sample Text */}
           <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
             <div className="px-4 py-3 border-b border-zinc-800">
               <span className="text-sm font-medium text-zinc-300">Sample Text</span>
@@ -1211,7 +1199,6 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
             />
           </div>
 
-          {/* Regex Input + Flags */}
           <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4 space-y-3">
             <div className="flex items-center gap-3">
               <div className="flex-1">
@@ -1241,7 +1228,6 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
               </div>
             </div>
 
-            {/* Flag Toggles */}
             <div className="flex items-center gap-2">
               <span className="text-xs text-zinc-500 mr-1">Flags:</span>
               <button
@@ -1268,7 +1254,6 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
             </div>
           </div>
 
-          {/* Highlighted Text */}
           <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
             <div className="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
               <span className="text-sm font-medium text-zinc-300">Matches</span>
@@ -1287,7 +1272,6 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
             </div>
           </div>
 
-          {/* Matched Strings List */}
           {matchedStrings.length > 0 && (
             <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
               <div className="px-4 py-3 border-b border-zinc-800">
@@ -1310,7 +1294,6 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
           )}
         </div>
 
-        {/* Cheatsheet Sidebar */}
         <div className="space-y-4">
           <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
             <div className="px-4 py-3 border-b border-zinc-800">
@@ -1355,21 +1338,12 @@ function PlaygroundPhase({ onBack }: PlaygroundPhaseProps) {
 
 interface ResultsPhaseProps {
   state: RegexTrainerState;
-  config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
   onTryAgain: () => void;
   onChangeSettings: () => void;
   onBack: () => void;
-  languageName: string;
 }
 
-function ResultsPhase({
-  state,
-  config,
-  onTryAgain,
-  onChangeSettings,
-  onBack,
-  languageName,
-}: ResultsPhaseProps) {
+function ResultsPhase({ state, onTryAgain, onChangeSettings, onBack }: ResultsPhaseProps) {
   const [showMissed, setShowMissed] = useState(false);
 
   const totalQuestions = state.answers.length;
@@ -1384,23 +1358,18 @@ function ResultsPhase({
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      {/* Header */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-zinc-100 mb-2">Drill Complete!</h1>
         <p className="text-zinc-400">Here is how you did</p>
       </div>
 
-      {/* Score Highlight */}
-      <div className={`rounded-xl p-8 text-center border ${config.borderColor} ${config.bgColor}`}>
-        <div
-          className={`text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400`}
-        >
+      <div className="rounded-xl p-8 text-center border border-emerald-500/30 bg-emerald-500/5">
+        <div className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-400">
           {state.totalScore.toLocaleString()}
         </div>
         <div className="text-sm text-zinc-400 mt-1 uppercase tracking-wider">Total Points</div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
           <div className="text-3xl font-bold text-green-500">
@@ -1409,7 +1378,7 @@ function ResultsPhase({
           <div className="text-sm text-zinc-500 mt-1">Correct</div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
-          <div className="text-3xl font-bold text-blue-500">{accuracy}%</div>
+          <div className="text-3xl font-bold text-emerald-500">{accuracy}%</div>
           <div className="text-sm text-zinc-500 mt-1">Accuracy</div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
@@ -1422,7 +1391,6 @@ function ResultsPhase({
         </div>
       </div>
 
-      {/* Missed Questions Review */}
       {missedQuestions.length > 0 && (
         <div className="bg-zinc-900 rounded-xl shadow-sm border border-zinc-800 overflow-hidden">
           <button
@@ -1451,7 +1419,6 @@ function ResultsPhase({
                       {record.skipped ? 'Skipped' : 'Incorrect'}
                     </span>
                   </div>
-                  <p className="text-sm text-zinc-400 mb-3">{record.problem.prompt}</p>
                   <div className="space-y-2 text-sm">
                     <div>
                       <span className="text-zinc-500">Your pattern: </span>
@@ -1482,12 +1449,11 @@ function ResultsPhase({
         </div>
       )}
 
-      {/* Actions */}
       <div className="flex gap-4">
         <button
           type="button"
           onClick={onTryAgain}
-          className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
+          className="flex-1 py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
         >
           Try Again
         </button>
@@ -1504,7 +1470,7 @@ function ResultsPhase({
         onClick={onBack}
         className="w-full py-3 px-6 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-medium rounded-xl transition-colors border border-zinc-800 cursor-pointer text-sm"
       >
-        Back to {languageName}
+        Back to Home
       </button>
     </div>
   );
@@ -1515,11 +1481,6 @@ function ResultsPhase({
 // ============================================================================
 
 export default function RegexPage() {
-  const params = useParams();
-  const router = useRouter();
-  const languageParam = params.language as string;
-
-  // ALL hooks must be called before any early returns (React rules of hooks)
   const [phase, setPhase] = useState<Phase>('setup');
   const [selectedProblems, setSelectedProblems] = useState<RegexProblem[]>([]);
   const [trainerResult, setTrainerResult] = useState<RegexTrainerState | null>(null);
@@ -1528,12 +1489,6 @@ export default function RegexPage() {
     difficulty: Difficulty | 'mixed';
     count: number;
   } | null>(null);
-
-  const validLanguage = isValidLanguage(languageParam);
-  const language: SupportedLanguage = validLanguage
-    ? languageParam
-    : ('javascript' as SupportedLanguage);
-  const config = LANGUAGE_CONFIG[language];
 
   const handleStartDrill = useCallback(
     (cats: RegexCategory[], diff: Difficulty | 'mixed', count: number) => {
@@ -1556,51 +1511,25 @@ export default function RegexPage() {
     [],
   );
 
-  const handleStartPractice = useCallback(
-    (cats: RegexCategory[], diff: Difficulty | 'mixed', count: number) => {
-      const problems = selectRegexProblems({
-        categories: cats,
-        difficulty: diff,
-        questionCount: count,
-        mode: 'drill',
-      });
-      if (problems.length === 0) {
-        alert(
-          'No regex problems available with the selected filters. Please adjust your selection.',
-        );
-        return;
-      }
-      setSelectedProblems(problems);
-      setDrillConfig({ categories: cats, difficulty: diff, count });
-      setPhase('practice');
-    },
-    [],
-  );
+  const handleStartPractice = useCallback(() => {
+    setPhase('practice-browser');
+  }, []);
 
   const handleStartPlayground = useCallback(() => {
     setPhase('playground');
   }, []);
 
-  const handleDrillComplete = useCallback(
-    (state: RegexTrainerState) => {
-      setTrainerResult(state);
-      setPhase('results');
+  const handleDrillComplete = useCallback((state: RegexTrainerState) => {
+    setTrainerResult(state);
+    setPhase('results');
 
-      // Save progress
-      const correctAnswers = state.answers.filter((a) => a.isCorrect && !a.skipped).length;
-      saveRegexProgress(language, {
-        score: state.totalScore,
-        totalQuestions: state.answers.length,
-        correctAnswers,
-        bestStreak: state.maxStreak,
-      });
-    },
-    [language],
-  );
-
-  const handlePracticeComplete = useCallback((_state: RegexTrainerState) => {
-    // Return to setup after practice
-    setPhase('setup');
+    const correctAnswers = state.answers.filter((a) => a.isCorrect && !a.skipped).length;
+    saveRegexProgress('regex', {
+      score: state.totalScore,
+      totalQuestions: state.answers.length,
+      correctAnswers,
+      bestStreak: state.maxStreak,
+    });
   }, []);
 
   const handleTryAgain = useCallback(() => {
@@ -1620,57 +1549,30 @@ export default function RegexPage() {
     setPhase('setup');
   }, []);
 
-  const handleBackToLanguage = useCallback(() => {
-    router.push(`/${language}`);
-  }, [router, language]);
+  const handleBackToHome = useCallback(() => {
+    window.location.href = '/';
+  }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: phase triggers scroll-to-top on navigation
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [phase]);
 
-  // Validate language parameter (after all hooks)
-  if (!validLanguage) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-zinc-100 mb-4">Invalid Language</h1>
-          <p className="text-zinc-400 mb-6">The specified language is not supported.</p>
-          <Link
-            href="/"
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
-            Go Home
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-zinc-950 py-8 px-4">
       {/* Breadcrumbs */}
-      <div className="max-w-3xl mx-auto mb-6">
+      <div className="max-w-5xl mx-auto mb-6">
         <nav className="flex items-center gap-2 text-sm" aria-label="Breadcrumb">
           <Link href="/" className="text-zinc-500 hover:text-zinc-300 transition-colors">
             Home
-          </Link>
-          <span className="text-zinc-600">/</span>
-          <Link
-            href={`/${language}`}
-            className="text-zinc-500 hover:text-zinc-300 transition-colors"
-          >
-            {config.name}
           </Link>
           <span className="text-zinc-600">/</span>
           <span className="text-zinc-300">Regex Trainer</span>
         </nav>
       </div>
 
-      {/* Phase Rendering */}
       {phase === 'setup' && (
         <SetupPhase
-          config={config}
           onStartDrill={handleStartDrill}
           onStartPractice={handleStartPractice}
           onStartPlayground={handleStartPlayground}
@@ -1678,33 +1580,19 @@ export default function RegexPage() {
       )}
 
       {phase === 'drill' && selectedProblems.length > 0 && (
-        <DrillPhase
-          problems={selectedProblems}
-          config={config}
-          language={language}
-          onComplete={handleDrillComplete}
-        />
+        <DrillPhase problems={selectedProblems} onComplete={handleDrillComplete} />
       )}
 
-      {phase === 'practice' && selectedProblems.length > 0 && (
-        <PracticePhase
-          problems={selectedProblems}
-          config={config}
-          language={language}
-          onComplete={handlePracticeComplete}
-        />
-      )}
+      {phase === 'practice-browser' && <PracticeBrowser onBack={handleChangeSettings} />}
 
-      {phase === 'playground' && <PlaygroundPhase config={config} onBack={handleChangeSettings} />}
+      {phase === 'playground' && <PlaygroundPhase onBack={handleChangeSettings} />}
 
       {phase === 'results' && trainerResult && (
         <ResultsPhase
           state={trainerResult}
-          config={config}
           onTryAgain={handleTryAgain}
           onChangeSettings={handleChangeSettings}
-          onBack={handleBackToLanguage}
-          languageName={config.name}
+          onBack={handleBackToHome}
         />
       )}
     </div>
