@@ -278,6 +278,9 @@ const RetryAsyncViz = dynamic(() => import('./RetryAsyncViz'), { ssr: false });
 const DisjointSetRankViz = dynamic(() => import('./DisjointSetRankViz'), { ssr: false });
 const WeightedGraphViz = dynamic(() => import('./WeightedGraphViz'), { ssr: false });
 const DequeViz = dynamic(() => import('./DequeViz'), { ssr: false });
+const FenwickTreeUpdateViz = dynamic(() => import('./FenwickTreeUpdateViz'), { ssr: false });
+const FenwickTreeQueryViz = dynamic(() => import('./FenwickTreeQueryViz'), { ssr: false });
+const HashMapChainingViz = dynamic(() => import('./HashMapChainingViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -536,6 +539,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'cartesian-n-arrays': CartesianNArraysViz,
   'truth-table': TruthTableViz,
   'circular-buffer': CircularBufferViz,
+  'fenwick-tree-update': FenwickTreeUpdateViz,
+  'fenwick-tree-query': FenwickTreeQueryViz,
+  'hash-map-chaining': HashMapChainingViz,
   'sample-array': SampleArrayViz,
   'prefix-sum': PrefixSumViz,
   'sliding-window-max-sum': SlidingWindowMaxSumViz,
