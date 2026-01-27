@@ -22,7 +22,6 @@ const LinkedListViz = dynamic(() => import('./LinkedListViz'), { ssr: false });
 
 // Agent 1: Two Pointers & Sliding Window & Binary Search & Stack/Queue
 const MoveZeroesViz = dynamic(() => import('./MoveZeroesViz'), { ssr: false });
-const ThreeSumZeroViz = dynamic(() => import('./ThreeSumZeroViz'), { ssr: false });
 const ThreeSumViz = dynamic(() => import('./ThreeSumViz'), { ssr: false });
 const ContainerMostWaterViz = dynamic(() => import('./ContainerMostWaterViz'), { ssr: false });
 const TrappingRainWaterViz = dynamic(() => import('./TrappingRainWaterViz'), { ssr: false });
@@ -31,8 +30,6 @@ const SlidingWindowMinSubarrayViz = dynamic(() => import('./SlidingWindowMinSuba
   ssr: false,
 });
 const SlidingWindowMaxViz = dynamic(() => import('./SlidingWindowMaxViz'), { ssr: false });
-const LongestNoRepeatViz = dynamic(() => import('./LongestNoRepeatViz'), { ssr: false });
-const MinWindowSubstrViz = dynamic(() => import('./MinWindowSubstrViz'), { ssr: false });
 const SearchRotatedViz = dynamic(() => import('./SearchRotatedViz'), { ssr: false });
 
 // Building blocks
@@ -82,9 +79,6 @@ const WordBreakViz = dynamic(() => import('./WordBreakViz'), { ssr: false });
 const DecodeWaysViz = dynamic(() => import('./DecodeWaysViz'), { ssr: false });
 const Knapsack01Viz = dynamic(() => import('./Knapsack01Viz'), { ssr: false });
 const MaxProductSubarrayViz = dynamic(() => import('./MaxProductSubarrayViz'), { ssr: false });
-const LongestPalindromeSubstrViz = dynamic(() => import('./LongestPalindromeSubstrViz'), {
-  ssr: false,
-});
 const TargetSumWaysViz = dynamic(() => import('./TargetSumWaysViz'), { ssr: false });
 
 // Batch 3: Array/String & More DP
@@ -97,7 +91,6 @@ const TwoStackQueueViz = dynamic(() => import('./TwoStackQueueViz'), { ssr: fals
 const LongestConsecutiveSeqViz = dynamic(() => import('./LongestConsecutiveSeqViz'), {
   ssr: false,
 });
-const GroupAnagramsViz = dynamic(() => import('./GroupAnagramsViz'), { ssr: false });
 const InsertIntervalViz = dynamic(() => import('./InsertIntervalViz'), { ssr: false });
 const StringCompressViz = dynamic(() => import('./StringCompressViz'), { ssr: false });
 
@@ -211,9 +204,7 @@ const ThreeSumViz2 = dynamic(() => import('./ThreeSumViz2'), { ssr: false });
 const MaxSubarrayViz = dynamic(() => import('./MaxSubarrayViz'), { ssr: false });
 const BestTimeToBuySellViz = dynamic(() => import('./BestTimeToBuySellViz'), { ssr: false });
 const MajorityElementViz = dynamic(() => import('./MajorityElementViz'), { ssr: false });
-const ClimbingStairs2Viz = dynamic(() => import('./ClimbingStairs2Viz'), { ssr: false });
 const HouseRobber2Viz = dynamic(() => import('./HouseRobber2Viz'), { ssr: false });
-const CoinChange2Viz = dynamic(() => import('./CoinChange2Viz'), { ssr: false });
 const LongestSubstringViz = dynamic(() => import('./LongestSubstringViz'), { ssr: false });
 const MinWindowSubstringViz = dynamic(() => import('./MinWindowSubstringViz'), { ssr: false });
 const GroupAnagrams2Viz = dynamic(() => import('./GroupAnagrams2Viz'), { ssr: false });
@@ -249,7 +240,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
 
   // Agent 1: Two Pointers
   'move-zeroes': MoveZeroesViz,
-  'three-sum-zero': ThreeSumZeroViz,
   'three-sum': ThreeSumViz,
   'container-most-water': ContainerMostWaterViz,
   'trapping-rain-water': TrappingRainWaterViz,
@@ -257,8 +247,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   // Agent 1: Sliding Window
   'sliding-window-min-subarray': SlidingWindowMinSubarrayViz,
   'sliding-window-max': SlidingWindowMaxViz,
-  'longest-no-repeat': LongestNoRepeatViz,
-  'min-window-substr': MinWindowSubstrViz,
   // Agent 1: Binary Search
   'search-rotated': SearchRotatedViz,
 
@@ -309,7 +297,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'decode-ways': DecodeWaysViz,
   'knapsack-01': Knapsack01Viz,
   'max-product-subarray': MaxProductSubarrayViz,
-  'longest-palindrome-substr': LongestPalindromeSubstrViz,
   'target-sum-ways': TargetSumWaysViz,
 
   // Batch 3
@@ -320,7 +307,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'monotonic-stack': MonotonicStackViz,
   'two-stack-queue': TwoStackQueueViz,
   'longest-consecutive-seq': LongestConsecutiveSeqViz,
-  'group-anagrams': GroupAnagramsViz,
   'insert-interval': InsertIntervalViz,
   'string-compress': StringCompressViz,
 
@@ -426,26 +412,24 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'intersection-two-arrays': IntersectionTwoArraysViz,
   'contains-duplicate': ContainsDuplicateViz,
   'two-sum': TwoSumViz,
-  'three-sum-all': ThreeSumViz2,
+  'three-sum-zero': ThreeSumViz2,
   'max-subarray': MaxSubarrayViz,
   'best-time-buy-sell': BestTimeToBuySellViz,
   'majority-element': MajorityElementViz,
-  'climbing-stairs-ii': ClimbingStairs2Viz,
   'house-robber-circular': HouseRobber2Viz,
   'house-robber-ii': HouseRobber2Viz,
-  'coin-change-ii': CoinChange2Viz,
-  'longest-substring': LongestSubstringViz,
-  'min-window-substring-ii': MinWindowSubstringViz,
-  'group-anagrams-ii': GroupAnagrams2Viz,
+  'longest-no-repeat': LongestSubstringViz,
+  'min-window-substr': MinWindowSubstringViz,
+  'group-anagrams': GroupAnagrams2Viz,
   'palindrome-number': PalindromeNumberViz,
   'reverse-integer': ReverseIntegerViz,
-  'string-to-integer': StringToIntegerViz,
-  'roman-to-integer': RomanToIntegerViz,
-  'integer-to-roman': IntegerToRomanViz,
-  'valid-palindrome': ValidPalindromeViz,
-  'longest-palindrome': LongestPalindromeViz,
+  'string-to-int': StringToIntegerViz,
+  'roman-to-int': RomanToIntegerViz,
+  'int-to-roman': IntegerToRomanViz,
+  'valid-palindrome-alnum': ValidPalindromeViz,
+  'longest-palindrome-substr': LongestPalindromeViz,
   'count-and-say': CountAndSayViz,
-  'zigzag-conversion': ZigZagConversionViz,
+  'zigzag-string': ZigZagConversionViz,
   josephus: JosephusViz,
   'diagonal-traversal': DiagonalTraversalViz,
 };
