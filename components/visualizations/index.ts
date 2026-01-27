@@ -235,6 +235,11 @@ const DifferenceViz = dynamic(() => import('./DifferenceViz'), { ssr: false });
 const IntersectionViz = dynamic(() => import('./IntersectionViz'), { ssr: false });
 const TakeWhileViz = dynamic(() => import('./TakeWhileViz'), { ssr: false });
 const DropWhileViz = dynamic(() => import('./DropWhileViz'), { ssr: false });
+const FrequencyCounterViz = dynamic(() => import('./FrequencyCounterViz'), { ssr: false });
+const GroupByViz = dynamic(() => import('./GroupByViz'), { ssr: false });
+const CountByViz = dynamic(() => import('./CountByViz'), { ssr: false });
+const SumByViz = dynamic(() => import('./SumByViz'), { ssr: false });
+const MaxByViz = dynamic(() => import('./MaxByViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -464,6 +469,11 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   intersection: IntersectionViz,
   'take-while': TakeWhileViz,
   'drop-while': DropWhileViz,
+  'frequency-counter': FrequencyCounterViz,
+  'group-by': GroupByViz,
+  'count-by': CountByViz,
+  'sum-by': SumByViz,
+  'max-by': MaxByViz,
 };
 
 /**
