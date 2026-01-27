@@ -9,6 +9,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Learn to iterate through an array while skipping every other element using index manipulation. Stepping by 2 is a foundational loop pattern used in pair processing, interleaving, and sampling algorithms common in data-processing pipelines.',
+    explanation: `Skipping every other element teaches you to control loop increments beyond the default step of 1. This is one of the first patterns you should master because it builds the mental model for variable-step iteration, which appears in many algorithms.\n\nThe key insight is using i += 2 instead of i++ in your for loop. By changing the step size, you control which indices are visited, collecting only elements at even positions (0, 2, 4, ...). This runs in O(n/2) time, which simplifies to O(n).\n\nThis pattern shows up in pair processing (comparing adjacent elements), downsampling data, building interleaved sequences, and any algorithm where you need to process every nth element of a collection.`,
     instructions: [
       'Given an array of numbers, return a new array containing only elements at even indices (0, 2, 4, ...)',
       'Use a for loop with a step of 2',
@@ -49,6 +50,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Iterate through an array in reverse order, from the last element to the first. This is a fundamental pattern used in many algorithms like palindrome checking, stack unwinding, and processing items in LIFO order.',
+    explanation: `Reverse iteration teaches you to traverse arrays from the last index to the first using a decrementing loop counter. This foundational pattern is essential for problems that require processing elements in LIFO order or building reversed output without using built-in methods.\n\nThe key insight is initializing your loop variable to items.length - 1 and decrementing until you reach 0. This visits every index exactly once in reverse, achieving O(n) time and O(n) space for the output array.\n\nReverse iteration appears in palindrome checking, stack-based algorithms, processing undo histories, and any situation where you need to process the most recent items first. It is also the basis for in-place array reversal using two converging pointers.`,
     instructions: [
       'Given an array, return a new array with elements in reverse order',
       'Use a for loop iterating backwards',
@@ -86,6 +88,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Iterate through an array with a configurable step size, visiting every nth element. Custom-step iteration is used in downsampling signals, building strided views over buffers, and implementing algorithms that skip elements systematically.',
+    explanation: `Custom step iteration generalizes the skip-every-other pattern by letting you visit every nth element with a configurable step size. This teaches you how to parameterize loop increments, an important skill for writing reusable iteration utilities.\n\nThe key technique is using i += step instead of a fixed increment. When step is 1, you visit every element; when step is 3, you visit indices 0, 3, 6, and so on. The time complexity is O(n/step) since you skip elements between visits.\n\nThis pattern is used in signal downsampling, strided memory access in systems programming, building sparse views over large datasets, and implementing algorithms that sample every kth element from a collection.`,
     instructions: [
       'Given an array and a step size, return elements at indices that are multiples of the step',
       'For step=3: return elements at indices 0, 3, 6, 9...',
@@ -123,6 +126,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Traverse a 2D array (matrix) row by row using nested loops and collect all elements into a flat list. Nested iteration is the basis for image processing, grid-based games, and any algorithm that operates on tabular or matrix data.',
+    explanation: `Matrix traversal with nested loops teaches you to systematically visit every cell in a two-dimensional grid. This is the fundamental pattern for any algorithm that operates on tabular data, images, or game boards.\n\nThe key structure is an outer loop over rows and an inner loop over columns within each row. This row-major traversal visits all elements in O(rows * cols) time. Understanding how the inner and outer loop indices map to matrix coordinates is critical for more advanced matrix algorithms.\n\nNested iteration over 2D arrays appears everywhere: image pixel processing, spreadsheet calculations, game-of-life simulations, pathfinding on grids, and matrix multiplication. Mastering this pattern is a prerequisite for dynamic programming on grids.`,
     instructions: [
       'Given a 2D array (matrix), return a flat array of all elements',
       'Traverse row by row, from left to right',
@@ -188,6 +192,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Generate all prime numbers between 1 and 100 using trial division or the Sieve of Eratosthenes. Prime generation is essential in cryptography, hashing, and number theory problems frequently asked in interviews.',
+    explanation: `Generating prime numbers teaches you to use nested loops for trial division, where the inner loop tests whether a candidate is divisible by any smaller number. This exercise connects iteration patterns to number theory, a frequent topic in interviews.\n\nThe critical optimization is only checking divisors up to the square root of the candidate. If a number n has a factor greater than sqrt(n), it must also have a corresponding factor less than sqrt(n). This reduces the inner loop from O(n) to O(sqrt(n)) iterations per candidate.\n\nPrime generation is fundamental in cryptography (RSA key generation), hash table sizing (prime-sized tables reduce collisions), and competitive programming. The Sieve of Eratosthenes offers an even faster approach for generating all primes up to a limit.`,
     instructions: [
       'Return an array of all prime numbers from 2 to 100',
       'A prime number is only divisible by 1 and itself',
@@ -243,6 +248,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Generate the first N Fibonacci numbers using an iterative loop that builds the sequence forward. Iterative Fibonacci runs in O(n) time and O(n) space, making it the practical choice over naive recursion for generating large sequences.',
+    explanation: `Iterative Fibonacci teaches you to build a sequence forward by maintaining a running window of previously computed values. This is the practical way to generate Fibonacci numbers, running in O(n) time and O(n) space.\n\nThe key insight is that each Fibonacci number depends only on the two preceding values: fib[i] = fib[i-1] + fib[i-2]. By seeding the array with [0, 1] and iterating forward, you avoid the exponential blowup of naive recursion. This is essentially bottom-up dynamic programming.\n\nThe Fibonacci sequence appears in algorithm analysis (growth rates), nature (phyllotaxis), financial modeling, and as a building block in dynamic programming problems. Understanding iterative sequence generation prepares you for more complex DP patterns.`,
     instructions: [
       'Return an array of the first n Fibonacci numbers',
       'Fibonacci: each number is the sum of the two preceding ones',
@@ -292,6 +298,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Calculate the nth Fibonacci number using recursion, where fib(n) = fib(n-1) + fib(n-2). This classic problem illustrates overlapping subproblems and exponential time complexity, motivating memoization and dynamic programming optimizations.',
+    explanation: `Recursive Fibonacci is the classic example of a problem with overlapping subproblems. The naive recursive solution has O(2^n) time complexity because it recomputes the same subproblems exponentially many times.\n\nThe key lesson is understanding why naive recursion is slow: fib(n) calls fib(n-1) and fib(n-2), each of which makes two more calls, creating an exponentially growing call tree. This motivates memoization and dynamic programming, which are the standard optimizations.\n\nThis exercise is foundational for understanding recursion mechanics, call stacks, and the transition from brute-force recursion to memoized or iterative solutions. Nearly every dynamic programming problem starts with a recursive formulation like this one.`,
     instructions: [
       'Return the nth Fibonacci number (0-indexed)',
       'fib(0) = 0, fib(1) = 1',
@@ -331,6 +338,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Calculate n! (factorial) using recursion, where each call multiplies n by factorial(n-1). Factorial is a building block for permutation counting, combinatorics, and probability calculations in interview problems.',
+    explanation: `Recursive factorial teaches the simplest form of linear recursion: each call reduces the problem by one until hitting the base case. This builds your understanding of how recursion unwinds through the call stack.\n\nThe pattern is straightforward: n! = n * (n-1)!, with base cases 0! = 1! = 1. Each recursive call pushes a frame onto the stack, and the multiplications happen as the stack unwinds. The time and stack space are both O(n).\n\nFactorial appears in permutation counting (n! permutations of n items), probability calculations, binomial coefficients, and combinatorics. Understanding this recursive decomposition prepares you for more complex recursive patterns like tree traversals and backtracking.`,
     instructions: [
       'Return n! (n factorial)',
       'factorial(5) = 5 * 4 * 3 * 2 * 1 = 120',
@@ -366,6 +374,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Sum all elements in an array using recursion by decomposing into first element plus sum of the rest. This exercise teaches the head-tail recursive decomposition pattern used extensively in functional programming and divide-and-conquer algorithms.',
+    explanation: `Summing an array recursively teaches the head-tail decomposition pattern: process the first element, then recurse on the rest. This is the fundamental recursive strategy used in functional programming languages like Haskell and Lisp.\n\nThe key insight is that sum([a, b, c, ...]) = a + sum([b, c, ...]). The base case is an empty array with sum 0. Each recursive call peels off the first element and passes the remainder via slice(1), building up the total as the stack unwinds.\n\nThis decomposition pattern appears throughout functional programming: recursive map, filter, and reduce all follow the same structure. It also teaches you to think about problems in terms of smaller subproblems, which is the essence of divide-and-conquer and dynamic programming.`,
     instructions: [
       'Return the sum of all numbers in the array',
       'Use recursion, not loops',
@@ -406,6 +415,7 @@ export const typescriptExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Implement depth-first search (DFS) to traverse a binary tree in pre-order (root, left, right). DFS is one of the two fundamental tree traversal strategies and forms the basis for solving most tree-based interview questions.',
+    explanation: `Depth-first search in pre-order is one of the three fundamental binary tree traversal orders (pre-order, in-order, post-order). Pre-order visits the root before its subtrees, making it useful for serializing trees and creating copies.\n\nThe key pattern is: visit the current node, then recursively traverse the left subtree, then the right subtree. The null check serves as the base case, stopping recursion at leaf boundaries. DFS uses O(h) stack space where h is the tree height.\n\nPre-order DFS is used for tree serialization (JSON-like output), expression tree evaluation (prefix notation), directory listing, and as the foundation for many tree-based interview problems. Understanding DFS is a prerequisite for problems like path sum, tree diameter, and lowest common ancestor.`,
     instructions: [
       'Given a binary tree node, return an array of all values in pre-order (root, left, right)',
       'Use recursion to implement DFS',
@@ -486,6 +496,7 @@ function dfsPreOrder<T>(node: TreeNode<T> | null): T[] {
     difficulty: 'intermediate',
     description:
       'Implement DFS in-order traversal (left, root, right) for a binary tree. In-order traversal of a BST yields elements in sorted order, making it essential for BST validation, kth-smallest queries, and range searches.',
+    explanation: `In-order traversal visits the left subtree, then the root, then the right subtree. The most important property of in-order traversal is that it visits nodes of a binary search tree in sorted ascending order.\n\nThe key insight is the ordering: recurse left, process current, recurse right. This ensures that for a BST, all smaller values (left subtree) are visited before the current node, and all larger values (right subtree) come after. This property is the basis for BST validation.\n\nIn-order traversal is essential for BST operations: finding the kth smallest element, validating BST properties, converting a BST to a sorted array, and implementing range queries. It is one of the most frequently tested tree traversal patterns in interviews.`,
     instructions: [
       'Return values in in-order: left subtree, then root, then right subtree',
       'For a BST, this gives values in sorted order',
@@ -568,6 +579,7 @@ function dfsInOrder<T>(node: TreeNode<T> | null): T[] {
     difficulty: 'intermediate',
     description:
       'Implement breadth-first search (BFS) to traverse a binary tree level by level using a queue. BFS is critical for shortest-path problems, level-order processing, and finding the minimum depth of a tree.',
+    explanation: `Breadth-first search traverses a tree level by level using a queue, visiting all nodes at the current depth before moving to the next level. This produces level-order output and is fundamentally different from DFS.\n\nThe key data structure is a FIFO queue. You start by enqueuing the root, then repeatedly dequeue a node, process it, and enqueue its children. This ensures nodes are processed in the order they were discovered, which corresponds to increasing depth.\n\nBFS is critical for finding shortest paths in unweighted graphs, level-order tree processing (e.g., zigzag traversal, right-side view), minimum depth problems, and serializing trees by level. The queue-based pattern is reused in graph BFS, multi-source BFS, and Dijkstra's algorithm.`,
     instructions: [
       'Return an array of values in level-order (top to bottom, left to right)',
       'Use a queue (array with push/shift) to track nodes to visit',
@@ -661,6 +673,7 @@ function bfs<T>(root: TreeNode<T> | null): T[] {
     difficulty: 'intermediate',
     description:
       'Implement binary search to find an element in a sorted array in O(log n) time. Binary search is the most important search algorithm in computer science, used in databases, system libraries, and as a subroutine in countless interview problems.',
+    explanation: `Binary search is the most important search algorithm, achieving O(log n) time by halving the search space with each comparison. It requires a sorted array and is one of the most frequently tested algorithms in interviews.\n\nThe key technique is maintaining left and right pointers that define the current search window. At each step, you compute the midpoint, compare the middle element to the target, and discard the half that cannot contain the target. The search ends when the target is found or the window is empty.\n\nBinary search appears everywhere: database index lookups, standard library search functions, bisecting for numerical solutions, and as a subroutine in problems like finding peak elements, rotated array search, and median of two sorted arrays.`,
     instructions: [
       'Given a sorted array and target, return the index of target or -1 if not found',
       'Binary search divides the search space in half each iteration',
@@ -722,6 +735,7 @@ function bfs<T>(root: TreeNode<T> | null): T[] {
     difficulty: 'intermediate',
     description:
       'Traverse a singly linked list from head to tail, collecting all node values. Linked list traversal is the foundation for all linked list operations and teaches pointer-based iteration, a pattern critical in systems programming and interviews.',
+    explanation: `Traversing a linked list teaches pointer-based iteration, where you follow references from one node to the next rather than using index-based access. This is fundamentally different from array traversal and is essential for understanding pointer manipulation.\n\nThe key pattern is a while loop with a current pointer: start at the head, process the current node, then advance to current.next. The loop terminates when current becomes null, indicating the end of the list. This runs in O(n) time with O(1) extra space.\n\nLinked list traversal is the foundation for all linked list operations: reversal, cycle detection (Floyd's algorithm), finding the middle node (fast/slow pointers), merging sorted lists, and removing nth-from-end nodes. These are among the most common interview questions.`,
     instructions: [
       'Given the head of a linked list, return an array of all values',
       'Each node has value and next properties',
@@ -785,6 +799,7 @@ function traverseLinkedList<T>(head: ListNode<T> | null): T[] {
     difficulty: 'beginner',
     description:
       'Implement basic stack operations (push, pop) using an array to simulate LIFO behavior. Stacks are used for function call management, expression parsing, undo systems, and are fundamental to DFS and backtracking algorithms.',
+    explanation: `Implementing stack operations teaches you the Last-In-First-Out (LIFO) principle using an array as the underlying storage. Understanding stacks is essential because they appear in function call management, expression evaluation, and many interview algorithms.\n\nThe key operations are push (add to top) and pop (remove from top), which map directly to array push() and pop() methods. Both operations are O(1). Checking for empty before popping prevents underflow errors.\n\nStacks are used for matching parentheses, evaluating postfix expressions, implementing DFS iteratively, managing undo/redo operations, parsing nested structures (HTML, JSON), and backtracking algorithms. The stack data structure is one of the most frequently tested topics in interviews.`,
     instructions: [
       'Implement push, pop, and peek operations',
       'Stack follows LIFO (Last In, First Out)',
@@ -870,6 +885,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Create a reusable function that generates an array of integers from start to end, a fundamental building block in many algorithms. Range generation underpins loop abstractions, test data creation, and functional-style iteration patterns.',
+    explanation: `Generating a range of numbers is a fundamental utility that creates an array of sequential integers from start to end. This building block is used throughout algorithm implementations for creating test data, iterating over index ranges, and functional-style programming.\n\nThe key technique uses Array.from with a length object and a mapping function. The length is calculated as end - start + 1 (inclusive range), and each index is mapped to start + index. This creates the array in a single expression with O(n) time and space.\n\nRange generation is ubiquitous in programming: Python has built-in range(), Lodash provides _.range(), and many algorithms need to iterate over a specific set of integers. Mastering this utility prepares you for more complex array generation patterns.`,
     instructions: [
       'Given a start and end number, return an array of all integers from start to end (inclusive)',
       'Use Array.from() with a length calculation',
@@ -907,6 +923,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Generate all possible subsets (power set) of an array using iterative doubling. The power set has 2^n elements and is a core building block for problems involving subset selection, combinations, knapsack variants, and backtracking.',
+    explanation: `Generating the power set (all subsets) of an array is a core combinatorial operation. An array of n elements has exactly 2^n subsets, including the empty set and the full set. Understanding subset generation is essential for brute-force optimization and backtracking.\n\nThe key insight is iterative doubling: start with [[]], and for each new element, duplicate all existing subsets and append the element to the copies. Using reduce, this builds up all subsets incrementally. The time complexity is O(n * 2^n) since you process each of the 2^n subsets.\n\nPower set generation appears in combinatorial optimization (knapsack problem), feature selection in machine learning, testing all configurations, and as the foundation for backtracking algorithms that explore all possible choices.`,
     instructions: [
       'Given an array, return all possible subsets (including empty set)',
       'Use reduce to iteratively build subsets',
@@ -955,6 +972,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Generate all combinations of size k from an array using backtracking (n choose k). Combinations are fundamental in scheduling, team formation, feature selection, and optimization problems frequently tested in interviews.',
+    explanation: `Generating combinations (n choose k) produces all unordered selections of k elements from an array. Unlike permutations, combinations treat [1,2] and [2,1] as identical, so you only generate each unique set once.\n\nThe key technique is backtracking with a forward-only start index. By iterating from startIndex forward, you avoid generating duplicate sets. When the current combination reaches size k, you snapshot it. After each recursive call, you pop the last element (backtrack) to explore other branches.\n\nCombinations appear in team formation, feature subset selection, card hand generation, test case enumeration, and optimization problems where you evaluate all possible k-element selections. The backtracking template used here is reusable for many constraint-satisfaction problems.`,
     instructions: [
       'Given an array and a size k, return all combinations of exactly k elements',
       'Use backtracking: build combinations by choosing to include or skip each element',
@@ -1033,6 +1051,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Generate all permutations of an array where order matters using recursive backtracking. Permutations are essential for scheduling, anagram detection, brute-force search, and understanding n! growth in algorithm complexity analysis.',
+    explanation: `Generating permutations produces all possible orderings of array elements, where order matters. An array of n elements has n! permutations. This exercise teaches recursive enumeration with the pick-and-recurse strategy.\n\nThe key approach is: for each element in the remaining pool, pick it, add to the current permutation, and recurse with the element removed from the pool. When the pool is empty, the current permutation is complete. This explores all n! orderings.\n\nPermutations are used in brute-force search (trying all arrangements), anagram generation, scheduling optimization, puzzle solving, and understanding factorial growth. The recursive enumeration pattern here generalizes to constraint-satisfaction problems and combinatorial search.`,
     instructions: [
       'Given an array, return all possible orderings (permutations)',
       'Build permutations by picking each element and permuting the rest',
@@ -1113,6 +1132,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Generate all pairs from two arrays (Cartesian product) using nested iteration. Cartesian products are used for generating test cases, grid coordinates, combining configuration options, and multi-dimensional search spaces.',
+    explanation: `The Cartesian product of two arrays generates all possible pairs by combining every element from the first array with every element from the second. This produces m * n pairs where m and n are the array lengths.\n\nThe key technique uses flatMap on the first array and map on the second, creating all [a, b] pairs in a single expression. flatMap flattens the nested arrays produced by mapping each element of the first array to its pairings with all elements of the second.\n\nCartesian products are used for generating test case combinations, creating grid coordinates, combining configuration options, building join operations in databases, and enumerating multi-dimensional search spaces.`,
     instructions: [
       'Given two arrays, return all possible pairs [a, b] where a is from array1 and b is from array2',
       'Use flatMap for the outer array and map for the inner',
@@ -1167,6 +1187,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'advanced',
     description:
       'Generate the Cartesian product of any number of arrays, generalizing pair generation to N dimensions. This pattern is used in combinatorial testing, configuration enumeration, and building multi-dimensional search spaces programmatically.',
+    explanation: `The N-ary Cartesian product generalizes pair generation to any number of arrays, producing all possible tuples that take one element from each input array. This is significantly more powerful than the two-array version.\n\nThe key technique uses reduce with flatMap. Starting from [[]] (containing the empty tuple), each new array extends every existing combination with every value from that array. This iterative approach handles any number of input arrays elegantly.\n\nN-ary Cartesian products are used in combinatorial testing (testing all parameter combinations), configuration enumeration, constraint satisfaction, building multi-dimensional grids, and generating all possible states in a multi-variable system.`,
     instructions: [
       'Given an array of arrays, return all possible combinations taking one element from each',
       'Use reduce to iteratively combine arrays',
@@ -1217,6 +1238,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     category: 'combinatorics',
     difficulty: 'beginner',
     description: `Calculate "n choose k" (the binomial coefficient) using dynamic programming or multiplicative formula. Binomial coefficients count combinations without generating them, essential for probability, Pascal's triangle, and combinatorial analysis.`,
+    explanation: `The binomial coefficient C(n, k) counts the number of ways to choose k items from n without regard to order. It is fundamental to probability, combinatorics, and algorithm analysis.\n\nThe key technique is the iterative multiplicative formula: multiply by (n - i) and divide by (i + 1) at each step. This avoids computing large factorials and keeps intermediate values manageable. The time complexity is O(k) with O(1) space.\n\nBinomial coefficients appear in Pascal's triangle, probability distributions (binomial distribution), counting paths in grids, polynomial expansion, and analyzing the number of subsets of a given size. They are a fundamental tool in discrete mathematics.`,
     instructions: [
       'Calculate C(n, k) = n! / (k! * (n-k)!)',
       'Use iterative multiplication to avoid overflow',
@@ -1256,6 +1278,90 @@ function stackOperations(operations: StackOperation[]): number[] {
     ],
     concepts: ['binomial coefficient', 'combinatorics', 'counting'],
   },
+  {
+    id: 'ts-truth-table',
+    title: 'Generate Truth Table',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Generate all possible true/false combinations for n boolean variables, producing a 2^n row truth table. Truth tables are fundamental to logic, digital circuit design, exhaustive testing, and constraint enumeration.',
+    explanation: `This exercise teaches you to generate all 2^n combinations of true and false for n variables, which is equivalent to counting in binary from 0 to 2^n - 1.\n\nThere are multiple approaches:\n1. **Iterative with bit manipulation**: Loop from 0 to 2^n - 1. For each number, extract each bit to determine true/false. Bit j of number i is (i >> j) & 1.\n2. **Recursive backtracking**: At each position, branch into true and false, building combinations depth-first.\n3. **Reduce/Cartesian product**: Start with [[]] and for each variable, extend every existing row with both true and false.\n\nThe bit manipulation approach is the most elegant: the binary representation of integers 0 through 2^n-1 naturally encodes every possible combination of n booleans. This is why truth tables have exactly 2^n rows — each variable doubles the number of combinations.\n\nTruth tables are used in propositional logic, digital circuit design (AND/OR/XOR gates), exhaustive test case generation, SAT solvers, and combinatorial optimization.`,
+    instructions: [
+      'Given n, generate all 2^n rows of boolean combinations',
+      'Each row is an array of n booleans',
+      'Return rows in order from [false, false, ...] to [true, true, ...]',
+      'Use bit manipulation: loop 0 to 2^n - 1, extract bits',
+    ],
+    starterCode: `function truthTable(n: number): boolean[][] {
+  // Generate all 2^n combinations of true/false
+  // Hint: each integer from 0 to 2^n - 1 encodes one row in binary
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function truthTable(n: number): boolean[][] {
+  // Bit-enumeration approach: O(n * 2^n) time, O(n * 2^n) space for all rows
+  const rows: boolean[][] = [];
+  const total: number = 1 << n; // 2^n using bit shift
+  for (let i = 0; i < total; i++) {
+    const row: boolean[] = [];
+    for (let j = 0; j < n; j++) {
+      // Extract bit j from i: 0 = false, 1 = true
+      row.push(((i >> j) & 1) === 1);
+    }
+    rows.push(row);
+  }
+  return rows;
+}`,
+    testCases: [
+      {
+        input: [1],
+        expected: [[false], [true]],
+        description: 'n=1: two rows',
+      },
+      {
+        input: [2],
+        expected: [
+          [false, false],
+          [true, false],
+          [false, true],
+          [true, true],
+        ],
+        description: 'n=2: four rows',
+      },
+      {
+        input: [3],
+        expected: [
+          [false, false, false],
+          [true, false, false],
+          [false, true, false],
+          [true, true, false],
+          [false, false, true],
+          [true, false, true],
+          [false, true, true],
+          [true, true, true],
+        ],
+        description: 'n=3: eight rows',
+      },
+      {
+        input: [0],
+        expected: [[]],
+        description: 'n=0: one empty row',
+      },
+    ],
+    hints: [
+      'There are 2^n total combinations — use 1 << n for the count',
+      'Each integer from 0 to 2^n - 1 encodes a unique row in its binary bits',
+      'Use (i >> j) & 1 to read bit j of integer i',
+      'Bit 0 = rightmost column, bit n-1 = leftmost column',
+    ],
+    concepts: [
+      'truth table',
+      'bit manipulation',
+      'binary enumeration',
+      'boolean combinations',
+      '2^n',
+    ],
+  },
 
   // ========== MEMOIZATION & CACHING ==========
   {
@@ -1265,6 +1371,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Create a memoization wrapper for single-argument functions that caches results to avoid redundant computation. Memoization is a key optimization technique that transforms exponential algorithms into polynomial ones, widely used in DP and API caching.',
+    explanation: `Memoization wraps a function with a cache that stores previously computed results, returning cached values for repeated arguments. This is the simplest form of caching and is one of the most important optimization techniques in programming.\n\nThe key structure is a closure containing a Map. The wrapper function checks if the argument exists in the cache before computing. If found, it returns the cached result in O(1) time; otherwise, it computes, stores, and returns the result.\n\nMemoization transforms exponential recursive algorithms into polynomial ones (e.g., Fibonacci from O(2^n) to O(n)). It is used in dynamic programming, API response caching, expensive computation optimization, and React's useMemo hook. This pattern is the foundation of top-down DP.`,
     instructions: [
       'Create a function that wraps another function with caching',
       'Use a Map to store computed results',
@@ -1315,6 +1422,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Memoize functions with multiple arguments by serializing them into a composite cache key. Multi-argument memoization is critical for caching API responses, database queries, and expensive computations with compound inputs in production systems.',
+    explanation: `Multi-argument memoization extends basic memoization to functions that take multiple parameters. The challenge is creating a cache key that uniquely identifies each combination of arguments.\n\nThe key technique is using JSON.stringify(args) to serialize the argument array into a string key. While this has some overhead, it works for any JSON-serializable arguments. The rest of the pattern is identical to single-argument memoization: check cache, compute if missing, store, and return.\n\nMulti-argument memoization is essential for caching database queries with multiple parameters, expensive API calls with compound keys, mathematical functions of several variables, and any computation where the result depends on multiple inputs.`,
     instructions: [
       'Create a memoization wrapper that handles multiple arguments',
       'Use JSON.stringify to create a cache key from arguments',
@@ -1373,6 +1481,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Implement Fibonacci with memoization to achieve O(n) time instead of O(2^n) naive recursion. This exercise demonstrates how memoization eliminates overlapping subproblems, the core insight behind top-down dynamic programming.',
+    explanation: `Memoized Fibonacci demonstrates the dramatic impact of caching on recursive algorithms. By storing previously computed values in a Map, each Fibonacci number is computed only once, reducing time complexity from O(2^n) to O(n).\n\nThe key insight is passing the memo Map through recursive calls so both branches of fib(n-1) + fib(n-2) share the same cache. When a value is already in the memo, the function returns immediately without redundant recursion. This is top-down dynamic programming.\n\nThis pattern generalizes to any recursive algorithm with overlapping subproblems: grid pathfinding, string edit distance, coin change, and longest common subsequence. Recognizing when memoization applies and implementing it correctly is one of the most important interview skills.`,
     instructions: [
       'Create a fibonacci function with built-in memoization',
       'Use a Map or object to store computed values',
@@ -1414,6 +1523,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Create a debounce function that delays execution until after a pause in rapid calls. Debouncing is essential for optimizing search inputs, window resize handlers, and auto-save features to prevent excessive function invocations.',
+    explanation: `Debounce creates a wrapper that delays function execution until a specified quiet period has elapsed since the last call. Rapid successive calls reset the timer, so only the final call in a burst actually executes.\n\nThe key mechanism is clearTimeout followed by setTimeout. Each new call cancels the previous pending invocation and schedules a fresh one. This ensures the callback only fires after the caller stops calling for the specified delay period.\n\nDebounce is essential in frontend development for search-as-you-type (waiting until the user stops typing), window resize handlers, auto-save features, and any scenario where you want to batch rapid events into a single action. It reduces unnecessary API calls and computation.`,
     instructions: [
       'Create a wrapper that delays function execution',
       'Clear the previous timeout on each call',
@@ -1460,6 +1570,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Create a throttle function that limits how often a function can fire during rapid calls. Unlike debounce, throttle ensures regular execution at fixed intervals, making it ideal for scroll handlers, rate limiting, and game loops.',
+    explanation: `Throttle limits function execution to at most once per specified time window. Unlike debounce, throttle executes immediately on the first call and then blocks subsequent calls until the cooldown period expires.\n\nThe key mechanism is a boolean flag that gates execution. When the function fires, the flag blocks further calls, and a setTimeout resets the flag after the specified limit. This guarantees regular, evenly-spaced executions during sustained rapid calls.\n\nThrottle is used for scroll event handlers (fire at most every 100ms), rate-limiting API requests, game loop updates, progress bar updates, and any scenario where you need consistent periodic execution rather than waiting for a quiet period.`,
     instructions: [
       'Create a wrapper that allows at most one call per time period',
       'Track whether we are in a throttle period',
@@ -1509,6 +1620,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Create a wrapper that allows a function to be called only once, returning the cached result on subsequent calls. The once pattern is used for one-time initialization, singleton creation, and ensuring idempotent setup in libraries and frameworks.',
+    explanation: `The once wrapper ensures a function executes at most one time, caching and returning the first call's result for all subsequent invocations. This is a simple but powerful pattern for one-time initialization.\n\nThe key mechanism is a boolean flag and a cached result variable in a closure. On the first call, the flag is set and the result is stored. All subsequent calls skip execution and return the cached result. Setting the flag before calling handles edge cases with re-entrant functions.\n\nThe once pattern is used for singleton initialization, one-time event handler registration, lazy configuration loading, and ensuring idempotent setup in libraries. It appears in frameworks like Lodash (_.once), database connection pooling, and module initialization code.`,
     instructions: [
       'Track whether the function has been called',
       'Store the result from the first call',
@@ -1562,6 +1674,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Split an array into chunks of a specified size, returning an array of arrays. Chunking is used for pagination, batch API calls, parallel processing, and breaking large datasets into manageable pieces for streaming or display.',
+    explanation: `Chunking splits an array into groups of a specified size, producing an array of arrays. The last chunk may be smaller than the specified size if the array length is not evenly divisible. This is a fundamental data partitioning utility.\n\nThe key technique uses Array.from with Math.ceil(length / size) to calculate the number of chunks, then maps each chunk index to a slice of the original array. Each slice starts at chunkIndex * size and captures size elements.\n\nChunking is used for pagination (displaying results in pages), batch API calls (sending requests in groups), parallel processing (distributing work across workers), database batch inserts, and breaking large files into manageable pieces for streaming.`,
     instructions: [
       'Given an array and chunk size, return an array of chunks',
       'Last chunk may be smaller than size',
@@ -1611,6 +1724,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Split an array into two groups based on a predicate function, returning [truthy, falsy] arrays. Partition is a versatile utility for data classification, filtering with remainder, and separating valid from invalid items in data pipelines.',
+    explanation: `Partition splits an array into two groups based on a predicate function: elements that pass the test go into the first array, and elements that fail go into the second. This is more informative than filter alone because you keep both groups.\n\nThe key technique uses reduce with a two-element array accumulator [[], []]. For each element, the predicate determines which bucket (index 0 for true, index 1 for false) receives it. This processes the array in a single O(n) pass.\n\nPartition is used for separating valid from invalid data, splitting even and odd numbers, classifying items by criteria, A/B test group assignment, and any scenario where you need both the matching and non-matching elements from a filter operation.`,
     instructions: [
       'Given an array and predicate, return two arrays',
       'First array contains elements where predicate is true',
@@ -1661,6 +1775,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Combine two arrays into an array of pairs, pairing elements at corresponding indices like a zipper. Zip is a functional programming staple used for combining parallel data streams, creating key-value pairs, and coordinate generation.',
+    explanation: `Zip combines two arrays into an array of pairs by matching elements at corresponding indices, similar to how a zipper interlocks teeth from two sides. The result length equals the shorter input array.\n\nThe key technique uses Math.min to determine the pair count, then Array.from maps each index to a tuple [first[i], second[i]]. This prevents out-of-bounds access when arrays have different lengths.\n\nZip is a staple of functional programming (present in Python, Haskell, Rust, and more). It is used for combining parallel data streams, creating key-value pairs from separate key and value arrays, generating coordinates, and correlating data from different sources.`,
     instructions: [
       'Given two arrays, return array of [a, b] pairs',
       'Use map with index to pair corresponding elements',
@@ -1717,6 +1832,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Convert an array of pairs back into two separate arrays, the inverse of the zip operation. Unzip is used when deconstructing paired data, splitting coordinate lists, and transforming columnar data back into row-based format.',
+    explanation: `Unzip is the inverse of zip: it takes an array of pairs and separates it into two arrays, one containing all first elements and the other containing all second elements. This decomposes paired data back into parallel arrays.\n\nThe key technique is two map operations over the pairs array, extracting index 0 and index 1 respectively. This produces two arrays in O(n) time. The result is a tuple of the two separated arrays.\n\nUnzip is used for decomposing coordinate lists into separate x and y arrays, splitting key-value pair arrays back into keys and values, converting columnar data to row-based format, and reversing any zip operation in data transformation pipelines.`,
     instructions: [
       'Given array of pairs, return two arrays',
       'First array has first elements, second has second elements',
@@ -1766,6 +1882,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Group array elements into a Record/Map by a key function, collecting elements that share the same key. GroupBy is essential for data aggregation, report generation, and is one of the most frequently used utility functions in data processing.',
+    explanation: `GroupBy organizes array elements into buckets based on a key function, producing an object where each key maps to an array of matching elements. This is one of the most commonly used data transformation utilities.\n\nThe key technique uses reduce to accumulate elements into keyed buckets. The nullish coalescing assignment (??=) initializes each bucket as an empty array on first encounter. Each element is pushed to the bucket corresponding to its derived key.\n\nGroupBy is essential for data aggregation: grouping transactions by category, organizing users by role, building indexes, creating reports, and implementing SQL-like GROUP BY operations in application code. It appears in every major utility library (Lodash, Ramda, Python itertools).`,
     instructions: [
       'Given an array and key function, group elements by their key',
       'Return an object where keys map to arrays of matching elements',
@@ -1820,6 +1937,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Count occurrences of each element in an array using a hash map. The frequency counter pattern is fundamental to anagram detection, majority element, top-k problems, and is one of the most common patterns in coding interviews.',
+    explanation: `The frequency counter pattern counts how many times each unique element appears in an array, producing a hash map of element-to-count pairs. This is one of the most common patterns in coding interviews.\n\nThe key technique uses reduce with a hash map accumulator. For each element, the current count is retrieved (defaulting to 0), incremented, and stored back. This builds the complete frequency map in a single O(n) pass.\n\nFrequency counting is the foundation for anagram detection (compare frequency maps), finding majority elements, top-k frequent elements, checking if two strings are permutations, histogram generation, and character counting problems. Master this pattern early as it recurs constantly.`,
     instructions: [
       'Given an array, return an object with counts of each element',
       'Use reduce to build the frequency map',
@@ -1866,6 +1984,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Generate all contiguous windows of size k from an array as sub-arrays. Sliding windows are used for moving averages, substring problems, and maximum/minimum subarray queries, forming one of the key patterns in interview algorithms.',
+    explanation: `The sliding window generator creates all contiguous subarrays of a fixed size k from an array. This is the foundation for the sliding window technique, one of the most important algorithmic patterns for interview problems.\n\nThe key calculation is that an array of length n has exactly n - k + 1 windows of size k. Each window is extracted using slice(i, i + k). Array.from generates all windows by mapping each starting index to its corresponding slice.\n\nSliding windows are used for moving averages, maximum/minimum subarray of size k, substring problems (longest substring without repeats), network packet analysis, and signal processing. The technique often converts O(n*k) brute force into O(n) by maintaining a running aggregate.`,
     instructions: [
       'Given array and window size k, return all windows',
       'Each window is a subarray of k consecutive elements',
@@ -1921,6 +2040,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Flatten nested arrays to a specified depth, controlling how many levels of nesting to remove. Depth-limited flattening is used in data normalization, tree-to-list conversion, and processing hierarchical API responses.',
+    explanation: `Flattening nested arrays to a specified depth removes levels of nesting while preserving structure beyond the depth limit. This gives you precise control over how deeply nested data is unwound.\n\nThe key technique is recursive reduce: for each element, check if it is an array and if depth > 0. Arrays are recursively flattened with depth - 1; non-arrays are appended directly. When depth reaches 0, the array is returned as-is, preserving remaining nesting.\n\nDepth-controlled flattening is used for normalizing API responses with nested structures, processing hierarchical data (file systems, org charts), converting tree structures to flat lists at a controlled level, and implementing JavaScript's Array.prototype.flat() method.`,
     instructions: [
       'Given nested array and depth, flatten to that depth',
       'Depth 1 flattens one level, Infinity flattens completely',
@@ -1970,6 +2090,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Rotate an array k positions to the left so elements that fall off reappear on the right side. Array rotation is used in circular buffer logic, cipher algorithms, and is a classic interview problem that tests modular arithmetic skills.',
+    explanation: `Left rotation shifts all elements k positions to the left, with elements that fall off the beginning wrapping around to the end. This is a classic array manipulation that tests modular arithmetic skills.\n\nThe key insight is using modulo (k % length) to handle rotation counts larger than the array length. Then slice the array at the effective shift point and recombine: elements after the cut come first, followed by elements before the cut. This achieves O(n) time.\n\nArray rotation appears in circular buffer implementations, Caesar cipher encryption, rotating shift schedules, image rotation algorithms, and as a building block in problems like finding the rotation point of a sorted array.`,
     instructions: [
       'Given array and k, rotate elements k positions left',
       'Handle k larger than array length with modulo',
@@ -2007,6 +2128,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Interleave elements from two arrays like shuffling cards: a1, b1, a2, b2, and so on. Interleaving is used in merge operations, audio signal processing, round-robin scheduling, and building alternating sequences.',
+    explanation: `Interleaving alternates elements from two arrays like shuffling cards: take one from the first array, one from the second, and repeat. When arrays differ in length, remaining elements from the longer array are appended at the end.\n\nThe key technique iterates up to the length of the longer array, conditionally pushing from each array if the current index is within bounds. This handles unequal lengths naturally without special cases for the remainder.\n\nInterleaving is used in merge operations, audio signal mixing (alternating samples from stereo channels), round-robin scheduling, building alternating color patterns, and creating balanced distributions from two sorted sequences.`,
     instructions: [
       'Given two arrays, interleave their elements',
       'Use flatMap to pair and flatten',
@@ -2064,6 +2186,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Implement iterative binary search to find a target in a sorted array, returning its index or -1. This O(log n) algorithm is the gold standard for searching and is used internally by databases, libraries, and system-level search routines.',
+    explanation: `This iterative binary search implementation achieves O(log n) lookup in a sorted array by maintaining explicit left and right pointers that converge toward the target. It is functionally identical to recursive binary search but avoids call stack overhead.\n\nThe key mechanism is the while loop with left <= right. At each iteration, the midpoint divides the search space in half. Comparing the middle element to the target determines which half to discard, narrowing the window until the target is found or the space is exhausted.\n\nIterative binary search is the preferred implementation in production code because it uses O(1) space (no recursion stack). It powers database index lookups, standard library search functions (like C's bsearch), and is the basis for more complex binary search variants.`,
     instructions: [
       'Search for target in sorted array using binary search',
       'Maintain left and right pointers',
@@ -2117,6 +2240,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Find the index where a target should be inserted to maintain sorted order using binary search. This "search insert position" pattern is the foundation for bisect operations, sorted set insertions, and efficient range queries.',
+    explanation: `Finding the insertion position uses a modified binary search that returns where a target should be placed to maintain sorted order. This is also known as the lower-bound search and is the basis for bisect operations.\n\nThe key differences from standard binary search are: right starts at arr.length (not arr.length - 1), the loop condition is left < right (not <=), and when arr[mid] >= target, right is set to mid (not mid - 1). This converges left to the first position where the target could be inserted.\n\nThis pattern is used in Python's bisect module, C++'s lower_bound, sorted set insertions, finding the rank of an element, and efficiently determining where to insert into a sorted collection without scanning linearly.`,
     instructions: [
       'Find leftmost position where target could be inserted',
       'Modify binary search to find insertion point',
@@ -2171,6 +2295,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'intermediate',
     description:
       'Merge two sorted arrays into a single sorted array using the two-pointer technique. This is the core merge operation in merge sort and is also used for combining sorted database results and merging event streams.',
+    explanation: `Merging two sorted arrays into a single sorted array is the core operation of merge sort and a fundamental two-pointer technique. It achieves O(n + m) time by always taking the smaller of the two front elements.\n\nThe key technique uses two pointers, one for each array, both starting at index 0. At each step, compare the elements at both pointers and push the smaller one, advancing that pointer. When one array is exhausted, append the remainder of the other.\n\nThis merge operation is the heart of merge sort (O(n log n) sorting), and also appears in merging sorted database results, combining sorted event streams, implementing external sort for large files, and the merge step in k-way merge algorithms.`,
     instructions: [
       'Given two sorted arrays, merge into one sorted array',
       'Use two pointers, one for each array',
@@ -2241,6 +2366,7 @@ function stackOperations(operations: StackOperation[]): number[] {
     difficulty: 'beginner',
     description:
       'Implement basic queue operations (enqueue and dequeue) to simulate FIFO ordering. Queues are foundational to BFS traversal, task scheduling, message passing systems, and buffered I/O operations in operating systems.',
+    explanation: `Queue operations implement First-In-First-Out (FIFO) ordering, where elements are added to the back and removed from the front. This is the opposite of a stack's LIFO behavior and is fundamental to BFS algorithms and task scheduling.\n\nThe key operations are enqueue (push to back) and dequeue (shift from front). Using an array, push() adds to the end and shift() removes from the beginning. Checking for empty before dequeuing prevents errors and returns null to signal an empty queue.\n\nQueues are essential for BFS traversal, print job scheduling, message passing systems, request buffering in web servers, event loop task queues in JavaScript, and any producer-consumer pattern. Understanding FIFO ordering is critical for level-order tree processing.`,
     instructions: [
       'Process a list of queue operations',
       'enqueue adds to the back (push)',
@@ -2323,6 +2449,7 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
     difficulty: 'advanced',
     description:
       "Implement the insert operation for a min heap, bubbling up to maintain the heap property (parent <= children). Min heaps power priority queues used in Dijkstra's algorithm, job scheduling, and finding top-k elements efficiently.",
+    explanation: `Min heap insertion adds a value to the bottom of the heap and bubbles it up until the heap property is restored (every parent is smaller than its children). This O(log n) operation is the foundation of priority queue implementations.\n\nThe key mechanism is the bubble-up loop: after appending the new value at the end, compare it with its parent at index Math.floor((i-1)/2). If the child is smaller, swap them and continue upward. Stop when the parent is smaller or you reach the root.\n\nMin heaps power priority queues used in Dijkstra's shortest path algorithm, A* search, job scheduling by priority, finding the kth largest element, median maintenance with two heaps, and event-driven simulations. Understanding heap operations is essential for advanced algorithm design.`,
     instructions: [
       'Insert value into min heap (array representation)',
       'Add to end, then "bubble up" to maintain heap property',
@@ -2380,6 +2507,7 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
     difficulty: 'intermediate',
     description:
       'Convert an edge list to an adjacency list representation, the foundation for all graph algorithms. Adjacency lists are the standard way to represent sparse graphs and enable efficient BFS, DFS, and shortest-path computations.',
+    explanation: `Building an adjacency list from an edge list converts a graph from its most compact representation (pairs of connected nodes) to its most useful one for traversal algorithms. This is the standard first step in any graph problem.\n\nThe key technique iterates over edges and populates a dictionary where each node maps to its list of neighbors. For undirected graphs, each edge [a, b] adds b to a's list and a to b's list. The nullish coalescing assignment (??=) initializes empty arrays as needed.\n\nAdjacency lists are the standard representation for sparse graphs (most real-world graphs). They enable efficient BFS, DFS, shortest path algorithms, topological sort, and cycle detection. Building them correctly is the foundation for solving any graph-based interview problem.`,
     instructions: [
       'Given edges as [from, to] pairs, build adjacency list',
       'Handle undirected graphs by adding both directions',
@@ -2452,6 +2580,7 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
     difficulty: 'intermediate',
     description:
       'Traverse a graph level by level using breadth-first search with a queue and visited set. Graph BFS finds shortest paths in unweighted graphs and is used in social network analysis, web crawling, and puzzle solving.',
+    explanation: `Graph BFS traversal explores nodes level by level using a queue and a visited set, ensuring each node is processed exactly once. Unlike tree BFS, graph BFS must track visited nodes to handle cycles and multiple paths.\n\nThe key pattern is: enqueue the start node, mark it visited, then repeatedly dequeue a node, process it, and enqueue its unvisited neighbors (marking them visited before enqueuing). This prevents duplicate processing and infinite loops in cyclic graphs.\n\nGraph BFS finds shortest paths in unweighted graphs, detects connected components, solves maze problems, implements social network friend-distance queries, and powers web crawlers. The visited set is what distinguishes graph BFS from tree BFS and is essential for correctness.`,
     instructions: [
       'Given adjacency list and start node, return BFS traversal order',
       'Use a queue and visited set',
@@ -2513,6 +2642,7 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
     difficulty: 'intermediate',
     description:
       'Traverse a graph depth-first using recursion, exploring as deep as possible before backtracking. Graph DFS is used for cycle detection, topological sorting, connected components, and solving maze and puzzle problems.',
+    explanation: `Graph DFS uses recursion to explore as deeply as possible along each branch before backtracking. Combined with a visited set, it correctly handles cycles and multiple paths in arbitrary graphs.\n\nThe key pattern is: check if the current node is visited, mark it visited, process it, then recursively explore each unvisited neighbor. The recursion naturally backtracks when all neighbors of a node have been visited, exploring the next branch.\n\nGraph DFS is used for cycle detection, topological sorting of DAGs, finding connected components, solving puzzles (sudoku, n-queens), and computing strongly connected components. The recursive structure makes it natural for problems that require exploring all reachable states.`,
     instructions: [
       'Given adjacency list and start node, return DFS traversal order',
       'Use recursion with a visited set',
@@ -2573,6 +2703,7 @@ function processQueue(operations: QueueOperation[]): (number | null)[] {
     difficulty: 'advanced',
     description:
       'Implement the insert operation for a Trie (prefix tree), building character-by-character paths. Tries enable O(L) word lookup and are used in autocomplete, spell checking, IP routing tables, and prefix-based search engines.',
+    explanation: `Trie insertion builds a prefix tree by creating one node per character along the word's path. Each node is an object whose keys are characters, and a special marker ($) indicates word endings. Insertion runs in O(L) time where L is the word length.\n\nThe key technique walks down the trie character by character, creating new child nodes (empty objects) for any missing characters using nullish coalescing assignment. After processing all characters, the final node is marked as a word endpoint.\n\nTries enable O(L) word lookup and prefix matching, powering autocomplete systems, spell checkers, IP routing tables (longest prefix match), and dictionary-based word games. They are more efficient than hash sets for prefix-based queries.`,
     instructions: [
       'Insert a word into a trie structure',
       'Each node is an object with character keys',
@@ -2636,6 +2767,7 @@ function trieInsert(root: TrieNode, word: string): TrieNode {
     difficulty: 'advanced',
     description:
       "Implement Union-Find (Disjoint Set) with path compression for efficient connected component tracking. Union-Find is used in Kruskal's MST algorithm, network connectivity, image segmentation, and cycle detection in undirected graphs.",
+    explanation: `Union-Find (Disjoint Set) maintains a collection of non-overlapping sets with near-constant-time union and find operations. Path compression flattens the tree structure during find, achieving amortized O(alpha(n)) per operation.\n\nThe key optimization is path compression in the find function: when finding the root of an element, make every node on the path point directly to the root. This keeps the trees extremely flat, ensuring future operations are nearly O(1). Union simply links one root to another.\n\nUnion-Find is used in Kruskal's minimum spanning tree algorithm, detecting cycles in undirected graphs, tracking connected components dynamically, image segmentation (connected pixel regions), and network connectivity queries. It is one of the most elegant data structures in computer science.`,
     instructions: [
       'Implement find (with path compression) and union operations',
       'parent[i] = i means i is a root',
@@ -2712,6 +2844,7 @@ function createUnionFind(size: number): UnionFind {
     difficulty: 'intermediate',
     description:
       'Create a function composer that chains functions right-to-left: compose(f, g, h)(x) = f(g(h(x))). Function composition is a cornerstone of functional programming, enabling pipeline construction, middleware chaining, and modular code design.',
+    explanation: `Function composition chains multiple functions right-to-left so that compose(f, g, h)(x) equals f(g(h(x))). This mathematical notation is a cornerstone of functional programming, enabling complex transformations from simple building blocks.\n\nThe key technique uses reduceRight to apply functions from the last to the first. Each function receives the output of the previous one as its input, creating a pipeline that processes data through each transformation in reverse order.\n\nComposition is used in Redux middleware chains, Express.js middleware, mathematical function analysis, building complex validators from simple predicates, and creating reusable transformation pipelines. It enables point-free style programming where you build new functions without explicitly mentioning their arguments.`,
     instructions: [
       'Create a compose function that takes multiple functions',
       'Return a function that applies them right-to-left',
@@ -2748,6 +2881,7 @@ function createUnionFind(size: number): UnionFind {
     difficulty: 'intermediate',
     description:
       'Create a pipe function that chains functions left-to-right: pipe(f, g, h)(x) = h(g(f(x))). Pipe is the readable counterpart to compose, widely used in data transformation pipelines, Redux middleware, and RxJS operators.',
+    explanation: `Pipe chains functions left-to-right so that pipe(f, g, h)(x) equals h(g(f(x))). Unlike compose, pipe applies functions in the order they are written, which many developers find more readable for data transformation pipelines.\n\nThe key technique uses reduce (not reduceRight) to apply functions from first to last. Data flows through the pipeline in reading order: the output of each function becomes the input of the next.\n\nPipe is used in Unix-style command chaining, RxJS observable operators, data transformation pipelines, functional programming libraries (Ramda's pipe), and anywhere you want to express a sequence of transformations clearly. It is the practical counterpart to mathematical composition.`,
     instructions: [
       'Create a pipe function that takes multiple functions',
       'Return a function that applies them left-to-right',
@@ -2784,6 +2918,7 @@ function createUnionFind(size: number): UnionFind {
     difficulty: 'advanced',
     description:
       'Convert a multi-argument function into a chain of single-argument functions (currying). Currying enables partial application, function factory patterns, and point-free style programming common in functional JavaScript and library design.',
+    explanation: `Currying transforms a function that takes multiple arguments into a chain of single-argument functions: f(a, b, c) becomes f(a)(b)(c). This enables partial application, where you fix some arguments and get a specialized function back.\n\nThe key mechanism checks if enough arguments have been collected by comparing the accumulated count to fn.length (the function's declared arity). If sufficient, call the original function; otherwise, return a new function that collects additional arguments and recurses.\n\nCurrying enables partial application patterns (e.g., creating specialized loggers or validators), point-free composition, function factories, and configuration-driven function generation. It is fundamental in functional programming and appears in libraries like Lodash (_.curry) and Ramda.`,
     instructions: [
       'Curry transforms f(a, b, c) into f(a)(b)(c)',
       'Check if enough arguments have been collected',
@@ -2827,6 +2962,7 @@ function createUnionFind(size: number): UnionFind {
     difficulty: 'intermediate',
     description:
       'Remove duplicates from an array based on a key function, keeping the first occurrence of each key. UniqueBy is essential for deduplicating API results, database records, and normalizing datasets where identity is determined by a computed key.',
+    explanation: `UniqueBy deduplicates an array based on a computed key function, keeping only the first occurrence of each unique key. This is more flexible than simple unique (which only handles primitive equality) because it works with complex objects.\n\nThe key technique uses a Set to track which keys have been seen, combined with filter to keep only elements whose key has not been encountered before. The first time a key appears, the element passes the filter and the key is added to the Set.\n\nUniqueBy is used for deduplicating API responses by ID, removing duplicate records from database queries, normalizing user input, filtering search results that share the same canonical form, and any scenario where identity is determined by a derived property rather than strict equality.`,
     instructions: [
       'Given array and key function, return unique elements by key',
       'Keep the first element for each unique key',
@@ -2880,6 +3016,7 @@ function createUnionFind(size: number): UnionFind {
     difficulty: 'beginner',
     description:
       'Find elements in the first array that are not present in the second array (set difference). Array difference is used for computing changeset diffs, filtering exclusion lists, and synchronizing datasets between client and server.',
+    explanation: `Array difference returns elements from the first array that are not present in the second array, implementing the mathematical set difference A \\ B. This is a fundamental set operation for computing what is unique to one collection.\n\nThe key optimization converts the exclusion array to a Set for O(1) membership checks, then filters the first array keeping only elements not in the Set. This achieves O(n + m) time instead of O(n * m) with nested loops.\n\nSet difference is used for computing changesets (what was added/removed), filtering blocklists, synchronizing local and remote datasets, finding items that need updating, and implementing access control (permitted minus denied).`,
     instructions: [
       'Return elements from arr1 not present in arr2',
       'Use Set for O(1) lookup',
@@ -2921,6 +3058,7 @@ function createUnionFind(size: number): UnionFind {
     difficulty: 'beginner',
     description:
       'Find elements that exist in both arrays (set intersection). Intersection is used in permission checking, feature flag evaluation, common-friend queries, and any scenario requiring shared-element detection between two collections.',
+    explanation: `Array intersection returns elements that exist in both arrays, implementing the mathematical set intersection A intersect B. This finds the common ground between two collections.\n\nThe key optimization converts the second array to a Set for O(1) lookups, then filters the first array keeping only elements found in the Set. This achieves O(n + m) total time, a significant improvement over the naive O(n * m) approach.\n\nSet intersection is used for finding mutual friends in social networks, computing shared permissions, determining common features between products, implementing tag-based search (items matching all selected tags), and any scenario requiring shared-element detection between collections.`,
     instructions: [
       'Return elements present in both arr1 and arr2',
       'Use Set for efficient lookup',
@@ -2962,6 +3100,7 @@ function createUnionFind(size: number): UnionFind {
     difficulty: 'beginner',
     description:
       'Take elements from the start of an array while a predicate holds true, stopping at the first false. TakeWhile is a lazy evaluation pattern used in stream processing, parsing tokens, and extracting leading runs of matching elements.',
+    explanation: `TakeWhile extracts elements from the beginning of an array as long as a predicate holds true, stopping at the first element that fails the test. This is a lazy evaluation pattern that processes only the leading run of matching elements.\n\nThe key technique uses findIndex to locate the first element that fails the predicate. If no element fails (findIndex returns -1), the entire array is returned. Otherwise, slice(0, failIndex) extracts the leading matching segment.\n\nTakeWhile is used in parsing (consuming tokens while they match a pattern), extracting sorted prefixes, processing log entries until a condition changes, reading stream data until a delimiter, and implementing lazy evaluation semantics in eager languages.`,
     instructions: [
       'Return elements from start while predicate returns true',
       'Stop as soon as predicate returns false',

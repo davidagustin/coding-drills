@@ -8,6 +8,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Compute how much rainwater can be trapped between bars of varying heights in an elevation map. This classic interview problem teaches the two-pointer technique where maintaining left-max and right-max boundaries lets you calculate trapped water in O(n) time and O(1) space, avoiding the need for auxiliary arrays.',
+    explanation: `Trapping rain water is one of the quintessential two-pointer problems and a favorite in technical interviews at top companies. Given an elevation map represented as an array of non-negative integers, you need to compute how many units of water would be trapped after raining.\n\nThe key insight is that the water level at any position is determined by the minimum of the tallest bars on its left and right sides. A brute-force approach would scan left and right for every position, costing O(n^2). The prefix-max approach precomputes left-max and right-max arrays in O(n) time but uses O(n) space.\n\nThe optimal two-pointer technique starts pointers at both ends and moves the one with the smaller max inward. At each step, you can confidently calculate trapped water because the smaller side is the bottleneck. This yields O(n) time and O(1) space. The pattern appears in problems involving bounded regions, histogram analysis, and any scenario where a position's value depends on surrounding extremes.`,
     instructions: [
       'Use a two-pointer approach with left and right pointers',
       'Track the maximum height seen from left and right',
@@ -88,6 +89,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find two vertical lines that together with the x-axis form the container holding the most water. This foundational two-pointer problem demonstrates how greedy narrowing from both ends guarantees the optimal area in O(n) time, since moving the shorter line is the only way to potentially increase height.',
+    explanation: `This problem asks you to find two lines from an array of heights that, together with the x-axis, form a container holding the most water. It is a foundational greedy problem that teaches the two-pointer narrowing technique.\n\nThe brute-force approach checks all O(n^2) pairs. The key insight for the O(n) solution is that starting with the widest container (pointers at both ends), you should always move the shorter pointer inward. Moving the taller pointer can only decrease width without any possibility of increasing the limiting height, so it can never improve the result.\n\nThis greedy argument guarantees you never skip the optimal pair. The solution runs in O(n) time and O(1) space. This same narrowing strategy appears in problems like two-sum on sorted arrays and in optimization tasks where you need to search a 2D space of pairs efficiently. It is one of the most frequently tested medium-difficulty problems in coding interviews.`,
     instructions: [
       'Use two pointers at the beginning and end of the array',
       'Calculate area = min(height[left], height[right]) * (right - left)',
@@ -154,6 +156,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Build an array where each element is the product of all other elements, without using division. This teaches the prefix-suffix decomposition pattern: two linear passes build left and right running products that combine for O(n) time and O(1) extra space, a technique also used in range query problems.',
+    explanation: `This problem challenges you to build an output array where each element equals the product of every other element in the input, and you must do it without division. It teaches the powerful prefix-suffix decomposition pattern.\n\nThe approach uses two passes over the array. The first pass computes running prefix products from left to right, storing each position's left-side product. The second pass computes suffix products from right to left, multiplying them into the result. Each element ends up as the product of all elements to its left times all elements to its right.\n\nBy using the output array for prefix storage and a single variable for the suffix running product, you achieve O(n) time with O(1) extra space (excluding the output). This decomposition technique generalizes to many range-based problems: range sums, range XORs, and even some string matching algorithms rely on splitting computation into prefix and suffix components.`,
     instructions: [
       'Create an output array initialized with 1s',
       'First pass: calculate prefix products (product of all elements to the left)',
@@ -220,6 +223,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'For each element, find the nearest larger value to its right, returning -1 if none exists. This introduces the monotonic stack pattern, which processes elements in reverse and maintains a decreasing stack to answer nearest-greater queries in amortized O(n) time, widely used in stock span and histogram problems.',
+    explanation: `The next greater element problem asks you to find, for each position in an array, the nearest element to its right that is strictly larger. This is the canonical introduction to monotonic stacks.\n\nProcessing the array from right to left, you maintain a stack of elements in decreasing order. For each new element, you pop everything smaller or equal from the stack since those can never be the "next greater" for any element further left. The top of the remaining stack is your answer. Then push the current element.\n\nEach element is pushed and popped at most once, giving amortized O(n) time and O(n) space. Monotonic stacks are remarkably versatile: they solve next greater/smaller element queries, daily temperature problems, largest rectangle in histogram, stock span calculations, and many more. Mastering this pattern unlocks an entire family of stack-based interview questions.`,
     instructions: [
       'Use a stack to track indices of elements',
       'Iterate through the array from right to left',
@@ -285,6 +289,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Find the maximum profit from a single buy-sell transaction on a stock price array. This beginner-friendly greedy problem teaches tracking the running minimum while computing potential profit at each step, achieving O(n) time with a single pass. It is one of the most frequently asked interview questions.',
+    explanation: `This is often the first dynamic programming or greedy problem new programmers encounter. You are given daily stock prices and must find the maximum profit from a single buy-sell transaction (buy before you sell).\n\nThe elegant single-pass solution tracks the minimum price seen so far. At each day, compute the profit you would make by selling today (current price minus the running minimum) and update the best profit. This greedy observation avoids examining all O(n^2) pairs.\n\nThe algorithm runs in O(n) time and O(1) space. You can also frame it as a DP problem where dp[i] is the max profit considering the first i days, but the greedy view is simpler. This problem builds intuition for the entire "Best Time to Buy and Sell Stock" series, which progressively adds constraints like multiple transactions, cooldown periods, and transaction fees.`,
     instructions: [
       'Track the minimum price seen so far',
       'For each price, calculate profit if selling at current price',
@@ -350,6 +355,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Maximize profit from unlimited buy-sell transactions on a stock price array, with the constraint of selling before buying again. The greedy insight is that capturing every consecutive price increase equals the optimal total profit, reducing the problem to summing positive day-over-day differences in O(n) time.',
+    explanation: `This variant allows unlimited buy-sell transactions (though you must sell before buying again). The goal is to maximize total profit across all transactions.\n\nThe surprising greedy insight is that you should capture every consecutive price increase. If tomorrow's price is higher than today's, pretend you bought today and sold tomorrow. Summing all positive day-over-day differences equals the maximum achievable profit. This works because any multi-day profit can be decomposed into a sum of daily gains.\n\nThe proof is straightforward: selling at a peak and buying at the next valley is equivalent to capturing each intermediate daily gain between the valley and peak. This runs in O(n) time with O(1) space. Understanding this greedy decomposition is essential before tackling harder variants with cooldowns (Stock III) or transaction fees, where simple greedy fails and you need state-machine DP.`,
     instructions: [
       'Identify all profitable consecutive day pairs',
       'Add profit whenever next day price is higher',
@@ -406,6 +412,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Determine if you can reach the last index by jumping from index 0, where each value is the maximum jump length. This greedy reachability problem tracks the farthest reachable index in a single pass. It teaches that local decisions about maximum reach compose into a global reachability answer in O(n) time.',
+    explanation: `The jump game asks whether you can reach the last index starting from index 0, where each element tells you the maximum jump length from that position. It is a classic greedy reachability problem.\n\nThe key insight is to maintain a single variable tracking the farthest index reachable so far. As you iterate left to right, if your current index exceeds the farthest reachable, you are stuck and return false. Otherwise, update the farthest reachable as max(farthest, i + nums[i]).\n\nThis O(n) time, O(1) space solution works because reachability is monotonic: if you can reach index i, you can reach everything before it. There is no need for BFS, DFS, or dynamic programming. The problem teaches that greedy solutions exist when local optimality implies global optimality. It is a prerequisite for Jump Game II, which asks for the minimum number of jumps rather than just reachability.`,
     instructions: [
       'Track the farthest position reachable',
       'Iterate through the array',
@@ -472,6 +479,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find the minimum number of jumps to reach the last index in an array of jump lengths. This extends the jump game using a BFS-like greedy approach that tracks jump boundaries. Each boundary crossing counts as one jump, yielding an O(n) solution that mirrors level-order traversal in an implicit graph.',
+    explanation: `Jump Game II asks for the minimum number of jumps to reach the last index, upgrading the reachability question to an optimization problem. The solution uses a BFS-inspired greedy technique.\n\nImagine each "level" of BFS as the range of indices reachable with a fixed number of jumps. You maintain the current level boundary and the farthest reachable index. When you pass the current boundary, you must take another jump, and the boundary advances to the farthest point.\n\nThis mirrors BFS level-order traversal on an implicit graph where each index connects to all positions within its jump range. The algorithm completes in O(n) time and O(1) space. The BFS-level mental model is crucial: it reappears in problems like shortest word transformation, minimum operations to reach a target, and any problem where you explore states in waves of increasing cost.`,
     instructions: [
       'Use BFS-like approach with levels representing number of jumps',
       'Track current jump range and next jump range',
@@ -545,6 +553,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the starting gas station index that allows completing a circular route, or return -1 if impossible. This greedy problem leverages two key insights: if total gas >= total cost a solution exists, and if the tank goes negative at station i, the valid start must be after i. One pass suffices for O(n) time.',
+    explanation: `The gas station problem asks you to find a starting station on a circular route where you can complete the full circuit, given gas amounts and travel costs. It combines greedy reasoning with circular array thinking.\n\nTwo key insights drive the O(n) solution. First, if total gas is at least total cost, a valid starting point must exist. Second, if starting from station s causes you to run out of gas at station f, then no station between s and f can be a valid start either. This lets you find the answer in a single pass.\n\nAs you iterate, track the current tank balance. Whenever it drops below zero, reset the candidate start to the next station and reset the tank. After the pass, verify the total gas covers total cost. This runs in O(n) time and O(1) space. The problem appears in logistics and route optimization, and the "reset and continue" greedy pattern recurs in many circular arrangement problems.`,
     instructions: [
       'Check if total gas >= total cost (otherwise impossible)',
       'Track current tank balance',
@@ -622,6 +631,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find all unique triplets in an integer array that sum to zero. This classic interview problem combines sorting with the two-pointer technique: fix one element, then sweep inward from both ends to find complementary pairs. Careful duplicate skipping ensures uniqueness in O(n^2) time.',
+    explanation: `Three-sum asks you to find all unique triplets in an array that sum to zero. It is one of the most classic interview problems and teaches sorting plus two-pointer elimination.\n\nSort the array first, then iterate through each element as the potential first value of a triplet. For each fixed first element, use two pointers (one at the next element, one at the end) to find pairs that sum to the negative of the first element. Skip duplicates at all three levels to avoid redundant triplets.\n\nSorting costs O(n log n) and the two-pointer scan is O(n) per element, giving O(n^2) overall with O(1) extra space (ignoring output). The duplicate-skipping logic is the trickiest part. This problem is a gateway to k-sum variants, and the sort-then-narrow strategy applies to many array problems where you need to enumerate combinations efficiently.`,
     instructions: [
       'Sort the array first',
       'For each element, use two pointers to find pairs that sum to negative of that element',
@@ -704,6 +714,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Remove duplicates from a sorted array in-place so each element appears at most twice, returning the new length. This teaches the read-write pointer pattern: compare the current element against the element two positions back in the write sequence. It generalizes to allowing at most k duplicates.',
+    explanation: `This problem asks you to modify a sorted array in-place so that each element appears at most twice, returning the new length. It teaches the slow-fast pointer technique for in-place array modification with a counting constraint.\n\nMaintain a write pointer and a count. As the fast pointer scans forward, increment the count when seeing the same value. If the count exceeds 2, skip writing. When a new value appears, reset the count. Write valid elements at the slow pointer position.\n\nThe algorithm runs in O(n) time and O(1) space. This generalizes: changing "at most 2" to "at most k" requires only changing one constant. The in-place overwrite pattern with a slow writer pointer is fundamental to array manipulation problems. It appears in removing specific values, deduplication, partition problems, and any scenario where you filter an array without extra storage.`,
     instructions: [
       'Use a write pointer to track where to place next valid element',
       'Allow first two occurrences of each element',
@@ -764,6 +775,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the length of the longest consecutive integer sequence in an unsorted array in O(n) time. Using a HashSet for O(1) lookups, you only start counting from sequence beginnings (where num-1 is absent). This avoids sorting and is a key example of set-based sequence detection.',
+    explanation: `Given an unsorted array, find the length of the longest consecutive element sequence. The challenge is doing it in O(n) time, which rules out sorting.\n\nThe key insight uses a HashSet. After inserting all elements, iterate and identify sequence starts: an element is a sequence start only if (element - 1) is not in the set. From each start, count consecutive elements forward. This ensures each element is visited at most twice total (once in the outer loop, once during counting).\n\nThe result is O(n) time and O(n) space. The "only start counting from sequence beginnings" trick prevents the nested loop from becoming quadratic. This pattern of using hash-based lookups to avoid sorting is powerful in problems requiring order-agnostic sequence detection. It appears in union-find variants, graph component analysis, and interval scheduling.`,
     instructions: [
       'Add all numbers to a Set for O(1) lookup',
       'For each number, check if it is the start of a sequence (no num-1 in set)',
@@ -838,6 +850,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Move all zeros to the end of an array while preserving the relative order of non-zero elements, modifying in-place. This beginner exercise teaches the read-write two-pointer pattern: the write pointer tracks where the next non-zero should go, achieving O(n) time with O(1) space via swaps.',
+    explanation: `Move zeroes asks you to shift all zeros in an array to the end while preserving the relative order of non-zero elements, all in-place. It is a beginner-friendly exercise in the two-pointer partitioning technique.\n\nUse a slow pointer (write position) and a fast pointer (scan position). The fast pointer examines every element. When it finds a non-zero value, swap it with the position at the slow pointer and advance both. When it finds a zero, only advance the fast pointer.\n\nThis runs in O(n) time and O(1) space. The swap-based partition is cleaner than alternatives like counting zeros and backfilling. This exact pattern appears in the Dutch National Flag problem, quicksort's partition step, and any problem that asks you to rearrange elements in-place according to some predicate. It is a building block you will use repeatedly.`,
     instructions: [
       'Use a write pointer to track where to place next non-zero',
       'Iterate through array with read pointer',
@@ -894,6 +907,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Rearrange an array so all even numbers come before all odd numbers, preserving relative order within each group. This stable partitioning exercise teaches filtering and grouping patterns. A two-pass approach collects evens then odds in O(n) time, illustrating how stable partitioning differs from in-place swaps.',
+    explanation: `Sort by parity asks you to rearrange an array so all even numbers come before odd numbers, preserving no particular order within each group. This is a partition problem solvable with two pointers.\n\nUse a left pointer starting at 0 and a right pointer at the end. If the left element is odd and the right is even, swap them. Advance left when it points to an even number, retreat right when it points to an odd number. Continue until the pointers cross.\n\nThis partitions the array in O(n) time and O(1) space. The technique is a direct application of Lomuto or Hoare partitioning from quicksort. You can also solve it with a single-pass write pointer approach. Partition-based problems are everywhere: separating negative and positive numbers, grouping by category, and the three-way partition used in the Dutch National Flag problem all use this fundamental technique.`,
     instructions: [
       'Create result array or use two-pointer in-place approach',
       'Collect all even numbers first in order',
@@ -963,6 +977,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Distribute minimum total candies to children in a line so each gets at least one and higher-rated children get more than their neighbors. This advanced greedy problem uses two passes: left-to-right enforces the left-neighbor constraint, right-to-left enforces the right. Taking the max merges both.',
+    explanation: `Candy distribution gives each child a rating, and you must give candies such that every child gets at least one and children with higher ratings than their neighbors get more candy. Minimize total candies.\n\nThe two-pass greedy approach is elegant. First pass left to right: if a child has a higher rating than the left neighbor, give one more candy than the neighbor. Second pass right to left: if a child has a higher rating than the right neighbor and does not already have enough, increase to one more than the right neighbor. Each child gets the maximum of both passes.\n\nThis runs in O(n) time and O(n) space. The two-pass technique works because left and right constraints are independent and can be satisfied separately, then merged. This problem frequently appears in interview rounds and teaches that complex constraint satisfaction can sometimes be decomposed into simpler directional passes.`,
     instructions: [
       'Initialize all children with 1 candy',
       'Left to right pass: if rating[i] > rating[i-1], give more candy',
@@ -1036,6 +1051,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Count the number of islands in a 2D grid of land and water cells, where an island is a connected component of adjacent land. This fundamental graph traversal problem teaches DFS flood-fill: marking visited cells prevents double-counting. It is a gateway to grid-based BFS/DFS problems.',
+    explanation: `Number of islands asks you to count connected components of '1's in a 2D binary grid, where connections are horizontal and vertical. It is the most common graph traversal interview problem.\n\nFor each unvisited '1', launch a DFS or BFS to mark all connected '1's as visited (by changing them to '0' or using a visited set), and increment the island count. The traversal fans out to all four-directionally adjacent '1' cells.\n\nThe time complexity is O(m * n) where m and n are grid dimensions, since each cell is visited at most once. Space is O(m * n) in the worst case for the recursion stack or BFS queue. This is the canonical flood-fill algorithm, used in image processing, game map analysis, and as a building block for problems like surrounded regions, max area of island, and Pacific Atlantic water flow.`,
     instructions: [
       'Iterate through each cell in the grid',
       'When land ("1") is found, increment island count',
@@ -1132,6 +1148,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Create a deep copy of a connected undirected graph where each node has a value and neighbor list. This teaches graph traversal with a visited map that doubles as an original-to-clone mapping. DFS or BFS both work, and handling circular references via the map prevents infinite loops.',
+    explanation: `Cloning a graph requires creating a deep copy of every node and edge in an undirected connected graph. It tests your understanding of graph traversal combined with hash-map-based identity tracking.\n\nThe approach uses BFS or DFS with a map from original nodes to their clones. When visiting a node, create its clone if it does not exist, then iterate through its neighbors. For each neighbor, create a clone if needed and add it to the current clone's neighbor list. The map prevents infinite loops and duplicate nodes.\n\nTime and space are both O(V + E) where V is vertices and E is edges. This problem is fundamental to understanding deep copy in graph structures, serialization/deserialization, and any scenario where you need to replicate a complex reference structure. It also teaches the visitor pattern, which prevents revisiting nodes in cyclic graphs.`,
     instructions: [
       'Use a Map to track original node -> cloned node mapping',
       'Perform DFS starting from the given node',
@@ -1195,6 +1212,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Determine if all courses can be finished given prerequisite pairs, which is equivalent to detecting cycles in a directed graph. This teaches topological sort via DFS with three node states (unvisited, visiting, visited). A visiting node encountered again signals a cycle, making completion impossible.',
+    explanation: `Course schedule asks whether you can finish all courses given prerequisite pairs, which is fundamentally a cycle detection problem in a directed graph. If the prerequisite graph has a cycle, completion is impossible.\n\nThe standard approach uses topological sort via Kahn's algorithm (BFS-based). Build an adjacency list and compute in-degrees. Start BFS from all nodes with zero in-degree. Each time you process a node, decrement in-degrees of its neighbors and enqueue any that reach zero. If you process all nodes, there is no cycle.\n\nAlternatively, DFS with three-coloring (unvisited, in-progress, completed) detects back edges indicating cycles. Both approaches run in O(V + E) time and space. Topological sort is essential in build systems, task scheduling, dependency resolution, and any DAG-based workflow. This problem is a prerequisite for Course Schedule II, which asks for an actual valid ordering.`,
     instructions: [
       'Build adjacency list from prerequisites',
       'Use DFS with three states: unvisited, visiting, visited',
@@ -1296,6 +1314,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Capture all regions of O cells surrounded by X cells by flipping them to X, while preserving O cells connected to the boundary. This teaches reverse thinking in grid DFS: instead of finding surrounded regions directly, mark boundary-connected cells as safe, then flip everything else.',
+    explanation: `Surrounded regions asks you to capture all 'O' regions that are completely surrounded by 'X' on a board, flipping them to 'X'. Regions connected to the border should not be captured.\n\nThe key insight is to work backwards: instead of finding surrounded regions directly, find all 'O' cells connected to the border (which are NOT surrounded) and mark them as safe. Start BFS/DFS from every border 'O' cell. After marking safe cells, everything that is still 'O' is surrounded and should be flipped.\n\nThis boundary-first approach runs in O(m * n) time and avoids the complexity of checking each region individually. The technique of "mark what to keep, then flip everything else" is a powerful pattern that appears in flood-fill problems, game-of-life variants, and image segmentation. It also teaches that sometimes solving the complement of a problem is easier than solving it directly.`,
     instructions: [
       'Mark all "O"s connected to boundaries as safe (use DFS from border)',
       'Change safe "O"s to a temporary marker (e.g., "S")',
@@ -1398,6 +1417,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the minimum minutes until all fresh oranges rot, given that rotten oranges spread to adjacent fresh ones each minute. This is a classic multi-source BFS problem: initialize the queue with all rotten oranges and process level by level, where each level represents one minute of elapsed time.',
+    explanation: `Rotting oranges simulates a grid where rotten oranges spread to adjacent fresh ones each minute. You need to find the minimum time until all oranges rot, or determine if it is impossible.\n\nThis is a multi-source BFS problem. Initialize the queue with ALL rotten oranges simultaneously (not just one source), then process level by level. Each level represents one elapsed minute. At each step, spread rot to all adjacent fresh oranges and count the conversions.\n\nAfter BFS completes, check if any fresh oranges remain unreached. The time complexity is O(m * n) since each cell is processed at most once, with O(m * n) space for the queue. Multi-source BFS is a critical pattern for problems involving simultaneous spreading from multiple origins, like fire spread simulation, network signal propagation, and any shortest-distance-from-nearest-source problem.`,
     instructions: [
       'Use BFS with queue initialized with all rotten oranges',
       'Count total fresh oranges initially',
@@ -1510,6 +1530,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced',
     description:
       'Find the shortest transformation sequence from a begin word to an end word, changing one letter at a time using a dictionary. This models the problem as an unweighted graph where words are nodes connected by single-letter differences. BFS guarantees the shortest path in this implicit graph.',
+    explanation: `Word ladder asks for the shortest transformation sequence from a start word to a target word, changing exactly one letter at a time, with each intermediate word in a given dictionary. This models an implicit graph where words are nodes connected by single-character edits.\n\nUse BFS to find the shortest path in this unweighted graph. From each word, generate all possible one-letter transformations (26 options per position) and check if they exist in the word set. Add valid unseen transformations to the queue. BFS guarantees the first time you reach the target is the shortest path.\n\nTime complexity is O(M^2 * N) where M is word length and N is dictionary size, since you generate M * 26 candidates per word and string operations cost O(M). For very large dictionaries, bidirectional BFS from both ends dramatically reduces the search space. This problem teaches implicit graph modeling, a technique that appears in puzzle solving, state-space search, and combinatorial optimization.`,
     instructions: [
       'Return the number of words in the shortest transformation sequence',
       'Each transformed word must exist in the word list',
@@ -1584,6 +1605,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Find the shortest clear path from top-left to bottom-right in a binary grid, moving in 8 directions. This BFS shortest-path problem demonstrates how level-by-level exploration on a grid with diagonal movement guarantees minimum distance. It is foundational for grid pathfinding in games and robotics.',
+    explanation: `This problem asks for the shortest path from the top-left to bottom-right corner of a binary grid, allowing 8-directional movement (including diagonals). Cells with value 1 are blocked.\n\nBFS is the natural choice for shortest path in an unweighted grid. Enqueue the start cell with distance 1, then explore all 8 neighbors. Mark cells as visited immediately when enqueuing (not when dequeuing) to prevent duplicate processing. The first time you reach the bottom-right corner gives the minimum path length.\n\nTime and space are O(n^2) for an n x n grid. The 8-directional movement simply means iterating over 8 direction vectors instead of 4. This problem is foundational for grid pathfinding in games, robotics, and navigation systems. It is also a stepping stone toward more advanced algorithms like A* and Dijkstra for weighted grids.`,
     instructions: [
       'Return the length of the shortest path, or -1 if no path exists',
       '0 represents a passable cell, 1 represents a blocked cell',
@@ -1690,6 +1712,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Determine if n nodes and a list of edges form a valid tree, which requires exactly n-1 edges, connectivity, and no cycles. This combines edge counting with DFS cycle detection: track parent to avoid false positives on undirected edges, then verify all nodes are visited for connectivity.',
+    explanation: `A graph is a valid tree if it is connected and has no cycles. Given n nodes and a list of undirected edges, determine if the graph forms a valid tree.\n\nA tree with n nodes has exactly n-1 edges. Start by checking this necessary condition. Then verify connectivity using BFS, DFS, or Union-Find. With Union-Find, process each edge: if the two nodes are already in the same component, adding this edge creates a cycle. If you process all edges without a cycle and end with one component, it is a tree.\n\nAll approaches run in O(V + E) time. Union-Find with path compression and union by rank gives near O(alpha(n)) per operation. This problem encapsulates fundamental graph theory: the equivalence between "connected acyclic graph," "connected graph with n-1 edges," and "graph where any two nodes have exactly one path between them." It is essential prep for problems involving spanning trees, network connectivity, and graph structure validation.`,
     instructions: [
       'A valid tree must be connected (all nodes reachable from any node)',
       'A valid tree must not contain any cycles',
@@ -1791,6 +1814,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Return the values visible when looking at a binary tree from the right side, ordered top to bottom. This BFS level-order traversal captures the last node at each level. It demonstrates how tracking level boundaries in a queue enables per-level processing for tree visualization problems.',
+    explanation: `Binary tree right side view asks you to return the values visible when looking at the tree from the right side, which is the last node at each depth level.\n\nThe clearest approach is BFS level-order traversal. Process each level left to right, and the last node in each level is the rightmost visible node. Alternatively, use DFS visiting right children first, and for each depth, the first node encountered is the rightside view node.\n\nBoth approaches run in O(n) time where n is the number of nodes. BFS uses O(w) space where w is the maximum width, while DFS uses O(h) stack space where h is the height. This problem teaches that tree views (left-side, right-side, top-view, bottom-view) are all variations of level-order traversal with different selection criteria. It commonly appears in interviews as a follow-up to basic BFS and tests whether you can adapt traversal patterns to new requirements.`,
     instructions: [
       'Imagine standing on the right side of the tree',
       'Return the rightmost node value at each level',
@@ -1867,6 +1891,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Determine if a binary tree satisfies the binary search tree property where left descendants are less and right descendants are greater. This teaches recursive bounds checking: pass valid (min, max) ranges down the tree. It is a common interview question that tests understanding of BST invariants.',
+    explanation: `Validating a BST requires checking that every node satisfies the BST property: all values in the left subtree are strictly less, and all values in the right subtree are strictly greater. A common mistake is only comparing with the immediate parent.\n\nThe correct approach passes valid (min, max) bounds down the recursion. The root has bounds (-Infinity, Infinity). When going left, update the upper bound to the current node's value. When going right, update the lower bound. If any node violates its bounds, the tree is invalid.\n\nThis runs in O(n) time and O(h) space for the recursion stack, where h is the tree height. An alternative is in-order traversal, which should produce a strictly increasing sequence for a valid BST. This problem is a gateway to understanding BST invariants, which underpin efficient search, insertion, and deletion operations in balanced BSTs, databases, and file systems.`,
     instructions: [
       'Left subtree nodes must all be less than the parent node',
       'Right subtree nodes must all be greater than the parent node',
@@ -1952,6 +1977,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Find the kth smallest element in a binary search tree using the property that inorder traversal visits nodes in ascending order. By counting visited nodes during traversal and stopping at k, you achieve O(H + k) time. This is fundamental to understanding BST ordering guarantees.',
+    explanation: `Finding the kth smallest element in a BST leverages the BST property that in-order traversal visits nodes in ascending order. The problem tests your understanding of this fundamental BST characteristic.\n\nPerform in-order traversal (left, root, right) and count nodes visited. When the count reaches k, return the current node's value. You can implement this recursively or iteratively with a stack. The iterative version is slightly preferred because you can return early without unwinding the full recursion.\n\nTime complexity is O(H + k) where H is the tree height: you descend to the leftmost node in O(H), then visit k nodes. Space is O(H) for the stack. For repeated queries, you can augment each node with a left-subtree count, enabling O(H) queries without traversal. This augmentation technique appears in order-statistic trees, which are fundamental data structures in competitive programming and database indexing.`,
     instructions: [
       'Use inorder traversal (left-root-right) which visits nodes in sorted order',
       'k is 1-indexed (1 means the smallest element)',
@@ -2045,6 +2071,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced',
     description:
       "Derive the character ordering of an alien language from a sorted list of words. This advanced problem combines string comparison with topological sort: comparing adjacent words reveals character precedence edges, and Kahn's BFS algorithm produces a valid ordering or detects cycles indicating invalid input.",
+    explanation: `Given a sorted list of words in an alien language, determine the character ordering. This is a topological sort problem where characters are nodes and ordering constraints are edges.\n\nCompare adjacent words to extract ordering rules: find the first differing character between each pair, which gives you an edge (first char must come before second). Build a directed graph from these edges, then perform topological sort. If there is a cycle, the ordering is invalid.\n\nWatch for edge cases: if a longer word appears before its prefix (e.g., "abc" before "ab"), the input is invalid. Time complexity is O(C) where C is the total number of characters across all words, since each comparison is bounded by word length. This problem elegantly combines string processing with graph algorithms and appears in natural language processing, compiler design, and any domain where you infer ordering from partial observations.`,
     instructions: [
       'Words are sorted lexicographically by the alien language rules',
       'Derive the character order by comparing adjacent words',
@@ -2149,6 +2176,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced',
     description:
       'Find the maximum path sum in a binary tree where a path can start and end at any node. This teaches post-order traversal with global state: each node computes its max single-branch gain while updating the global max with the through-node path. Negative gains are clamped to zero.',
+    explanation: `The maximum path sum in a binary tree asks for the highest sum along any path between two nodes, where the path does not need to pass through the root. This is one of the hardest tree problems commonly asked in interviews.\n\nUse a post-order DFS where each call returns the maximum sum of a path starting at that node going downward (either left or right branch, not both). At each node, compute the "through" path: left branch + node + right branch. Update a global maximum with this value. But return only the best single-branch path (node + max(left, right)) clamped at zero, since negative paths should be abandoned.\n\nThe O(n) time, O(h) space solution requires careful handling of negative values. The insight that each node serves dual roles (as a potential path apex and as part of a longer path) is a pattern that recurs in diameter-of-tree, longest-path, and profit-maximization-on-tree problems.`,
     instructions: [
       'A path is a sequence of nodes where each pair of adjacent nodes has a parent-child relationship',
       'The path does not need to go through the root',
@@ -2230,6 +2258,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Generate all possible letter combinations from a phone number digit string using the keypad mapping (2=abc, 3=def, etc.). This classic backtracking problem builds combinations character by character, branching at each digit. It teaches the generate-all-combinations pattern used in search and permutation problems.',
+    explanation: `Letter combinations of a phone number asks you to generate all possible letter strings from a digit string, where each digit maps to 3-4 letters (like a phone keypad). It is a classic backtracking exercise.\n\nBuild combinations digit by digit. For each digit, iterate through its mapped letters and recurse on the remaining digits. When the current combination reaches the length of the input, add it to results. This is essentially a Cartesian product of the letter sets.\n\nThe time complexity is O(4^n * n) where n is the number of digits, since some digits map to 4 letters and you copy strings of length n. Space is O(n) for the recursion stack plus output storage. This problem introduces the fundamental backtracking template: choose a candidate, recurse, then unchoose (implicit here since we pass a new string). The pattern generalizes to any problem requiring exhaustive enumeration of combinations.`,
     instructions: [
       'Use phone keypad mapping: 2=abc, 3=def, 4=ghi, 5=jkl, 6=mno, 7=pqrs, 8=tuv, 9=wxyz',
       'Return all combinations in any order',
@@ -2319,6 +2348,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Find all unique combinations of candidates that sum to a target, where each number can be reused unlimited times. This backtracking problem uses sorted input and a start index to avoid duplicates while allowing repetition. Pruning branches when the sum exceeds the target keeps it efficient.',
+    explanation: `Combination sum asks you to find all unique combinations of candidates that sum to a target, where each number can be used unlimited times. It is a foundational backtracking problem with the twist of allowing repeated elements.\n\nSort the candidates (optional but helps with pruning). At each recursive step, try adding the current candidate and recurse with the reduced target. Crucially, allow the same element to be chosen again by not advancing the start index. Only advance past an element when you decide not to use it anymore.\n\nPruning occurs when the remaining target drops below zero or below the smallest available candidate. Time complexity is exponential in the worst case but pruning significantly reduces the search space in practice. This unbounded knapsack-style enumeration appears in change-making problems, resource allocation, and anywhere you need to compose a target from reusable building blocks.`,
     instructions: [
       'All numbers (including target) are positive integers',
       'Each number can be used multiple times in a combination',
@@ -2392,6 +2422,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Find all unique combinations that sum to a target where each candidate can be used at most once. This extends Combination Sum I by incrementing the start index at each recursion level and skipping duplicate values at the same level. It teaches the standard duplicate-handling pattern in backtracking.',
+    explanation: `Combination sum II is the variant where each candidate can only be used once, and the input may contain duplicates. You must return unique combinations. This adds duplicate-skipping logic to the basic backtracking template.\n\nSort the array first. At each recursion level, iterate through candidates from the current start index. The critical rule: if a candidate equals the previous one at the same level, skip it to avoid generating duplicate combinations. Then recurse with start index incremented (since each element is used at most once).\n\nThe sorting plus skip-duplicates technique is one of the most important patterns in combinatorial enumeration. It ensures unique results without needing a set to deduplicate afterward. Time complexity depends on the number of valid combinations. This pattern transfers directly to problems like subsets with duplicates, permutations with duplicates, and any exhaustive search over a multiset.`,
     instructions: [
       'Each number in candidates can be used at most once',
       'The solution set must not contain duplicate combinations',
@@ -2468,6 +2499,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Partition a string so every substring is a palindrome, returning all valid partitionings. This backtracking problem tries every possible cut point, checking if the left portion is a palindrome before recursing on the remainder. It combines palindrome checking with exhaustive partitioning for interview readiness.',
+    explanation: `Palindrome partitioning asks you to find all ways to split a string so that every part is a palindrome. It combines backtracking with palindrome checking.\n\nAt each position, try every possible prefix that forms a palindrome. If a prefix is palindromic, add it to the current partition and recurse on the remaining substring. When you reach the end, record the current partition as a valid result.\n\nOptimize palindrome checking with a DP table: precompute whether s[i..j] is a palindrome for all i, j in O(n^2) time. This avoids redundant character comparisons during backtracking. The total time is O(n * 2^n) in the worst case since there can be exponentially many valid partitions. This problem teaches how preprocessing (DP table) can accelerate a backtracking search, a strategy that applies broadly to constraint satisfaction problems.`,
     instructions: [
       'Return all possible ways to partition the string into palindromes',
       'A palindrome reads the same forwards and backwards',
@@ -2548,6 +2580,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Generate all valid IPv4 addresses from a string of digits by inserting exactly three dots. This backtracking problem explores segment lengths of 1-3 digits, validating each segment is 0-255 with no leading zeros. It teaches constrained partitioning where the number of parts and value ranges are fixed.',
+    explanation: `Restore IP addresses asks you to find all valid IPv4 addresses that can be formed by inserting dots into a digit string. Each segment must be 0-255 with no leading zeros (except "0" itself).\n\nUse backtracking with exactly 4 segments. At each step, try taking 1, 2, or 3 digits for the current segment. Validate that the segment is in range and has no leading zeros. When you have placed all 4 dots and consumed the entire string, record the result.\n\nThe search space is tightly bounded since each segment is at most 3 digits and there are exactly 4 segments, limiting total combinations to about 3^4 = 81. Validation constraints prune most branches early. This O(1) time problem (bounded input length) is excellent practice for constrained backtracking where the search tree is small but the validation logic is intricate. Similar patterns appear in parsing, tokenization, and format validation tasks.`,
     instructions: [
       'A valid IPv4 has exactly 4 segments separated by dots',
       'Each segment is a number from 0 to 255',
@@ -2630,6 +2663,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced',
     description:
       'Fill a 9x9 Sudoku board where empty cells are 0, ensuring each row, column, and 3x3 box contains digits 1-9 without repetition. This is a canonical constraint satisfaction problem solved via backtracking: try each valid digit, recurse, and undo on failure. It teaches systematic exhaustive search.',
+    explanation: `The Sudoku solver fills a 9x9 grid following the rules: each row, column, and 3x3 box must contain digits 1-9 exactly once. This is a constraint satisfaction problem solved with backtracking.\n\nFind the next empty cell, try digits 1-9, and check validity against row, column, and box constraints. If a digit is valid, place it and recurse. If recursion fails (no valid digit for some future cell), backtrack by removing the digit and trying the next one.\n\nOptimize by precomputing which digits are used in each row, column, and box using boolean arrays or bitsets. Choose the most constrained cell first (fewest valid options) to prune the search tree dramatically. While the worst case is exponential, Sudoku's tight constraints make backtracking very fast in practice. This problem is a gateway to understanding constraint propagation, arc consistency, and SAT solvers used in scheduling and verification.`,
     instructions: [
       'Each row must contain digits 1-9 without repetition',
       'Each column must contain digits 1-9 without repetition',
@@ -2758,6 +2792,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Generate all unique subsets (power set) of an array that may contain duplicates. This backtracking problem sorts the input first, then skips duplicate elements at the same recursion level to prevent duplicate subsets. It teaches the fundamental pattern for handling duplicates in combinatorial generation.',
+    explanation: `Generating subsets from an array with duplicates requires careful handling to avoid producing duplicate subsets. This extends the basic power-set generation with a sorting and skipping technique.\n\nSort the array first. Use backtracking where at each level you choose whether to include each remaining element. The crucial rule: at the same recursion level, skip an element if it equals the previous one. This prevents generating the same subset through different orderings of identical elements.\n\nThe total number of subsets can be up to 2^n, so time complexity is O(n * 2^n) including copying subsets. The sort-and-skip pattern is identical to combination sum II and permutations with duplicates. Understanding this single technique lets you handle duplicates in any combinatorial enumeration. Applications include generating unique feature combinations in ML, database query planning, and configuration space exploration.`,
     instructions: [
       'The array may contain duplicate elements',
       'Return all unique subsets (power set)',
@@ -2830,6 +2865,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Generate all unique permutations of an array that may contain duplicate elements. This teaches the sorted-array-plus-used-array backtracking pattern: skip an element if its identical predecessor was not used, ensuring duplicates are consumed in order. This avoids generating and deduplicating afterward.',
+    explanation: `Generating permutations of an array that may contain duplicates requires avoiding duplicate orderings. Without care, swapping identical elements produces the same permutation multiple times.\n\nSort the array first. Use backtracking with a "used" boolean array. At each position, try each unused element, but skip an element if it equals the previous element and the previous element has not been used at this level. This ensures that among identical values, you always use them in their sorted order.\n\nThe time complexity is O(n!) in the worst case for all-unique elements, reduced when duplicates exist. The "sort + skip if previous duplicate unused" rule is the standard technique for duplicate elimination in permutation generation. This pattern appears in scheduling tasks with identical jobs, anagram generation, and state-space search where symmetry breaking is essential for efficiency.`,
     instructions: [
       'The array may contain duplicate elements',
       'Return all unique permutations',
@@ -2914,6 +2950,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Flatten a binary tree into a right-skewed linked list following preorder traversal order, modifying the tree in-place. This uses reverse postorder traversal (right, left, root) with a previous-node pointer, elegantly relinking nodes without extra space. It demonstrates in-place tree transformation techniques.',
+    explanation: `Flattening a binary tree to a linked list rearranges nodes in-place so the tree becomes a right-skewed chain following pre-order traversal. No new nodes are created; you rewire existing pointers.\n\nThe elegant iterative approach processes each node: if it has a left child, find the rightmost node of the left subtree (the predecessor in pre-order), attach the current right subtree to this predecessor's right, then move the left subtree to the right and clear the left pointer. Advance to the next right node.\n\nThis Morris-traversal-inspired technique runs in O(n) time and O(1) space since it avoids recursion and stacks. The predecessor-finding step is amortized O(1) across all nodes. This problem teaches in-place tree restructuring, which appears in self-balancing BSTs (rotations), threaded binary trees, and converting between different tree representations for serialization.`,
     instructions: [
       'Modify the tree in-place to create a right-skewed tree',
       'The flattened tree should follow preorder traversal order',
@@ -3001,6 +3038,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate',
     description:
       'Find all root-to-leaf paths in a binary tree where node values sum to a target. This DFS backtracking problem maintains a running path and sum, recording complete paths at leaf nodes. It teaches path tracking with backtracking cleanup, a pattern reusable across many tree traversal problems.',
+    explanation: `Root-to-leaf path sum enumeration asks you to find all paths from root to leaf that sum to a target value. It is a complete backtracking traversal of the tree.\n\nPerform DFS from the root, maintaining the current path and remaining sum. At each node, subtract the node's value from the remaining sum and add the node to the path. When you reach a leaf with remaining sum equal to zero, record the current path as a solution. After processing a node, remove it from the path (backtrack).\n\nTime complexity is O(n^2) in the worst case: O(n) nodes visited and O(n) to copy each valid path. Space is O(n) for the recursion stack and current path. This problem reinforces the backtracking pattern on trees and introduces path tracking, which extends to problems like path sum III (any-to-any paths), longest root-to-leaf path, and collecting paths with specific properties in decision trees.`,
     instructions: [
       'A leaf is a node with no children',
       'Return all paths as arrays of node values',
@@ -3103,6 +3141,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Find the maximum depth (number of nodes on the longest root-to-leaf path) of a binary tree. This beginner recursion exercise demonstrates the divide-and-conquer pattern: the depth is 1 plus the max of left and right subtree depths. It is often the first tree problem encountered in interviews.',
+    explanation: `Finding the maximum depth of a binary tree is one of the most fundamental recursive problems. It introduces the divide-and-conquer approach to tree problems.\n\nThe depth of a tree is 1 plus the maximum depth of its two subtrees. The base case is a null node, which has depth 0. This simple recurrence naturally maps to post-order traversal: compute left depth, compute right depth, return 1 + max of both.\n\nTime complexity is O(n) since every node is visited once. Space is O(h) for the recursion stack, where h is the tree height (O(log n) for balanced, O(n) for skewed). You can also solve it iteratively with BFS, counting levels. Despite its simplicity, this problem establishes the recursive tree decomposition pattern used in virtually every tree problem: diameter, balanced check, subtree sums, and tree serialization all follow the same structure.`,
     instructions: [
       'Return the maximum depth of the tree',
       'A null tree has depth 0',
@@ -3168,6 +3207,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner',
     description:
       'Invert a binary tree by swapping the left and right children of every node recursively. This famous beginner problem teaches tree mutation via preorder traversal: swap children at each node, then recurse. Despite its simplicity, it tests understanding of recursion and tree structure manipulation.',
+    explanation: `Inverting a binary tree swaps every left and right child throughout the tree, creating a mirror image. This problem famously went viral when the creator of Homebrew mentioned failing it in a Google interview.\n\nThe recursive solution is beautifully simple: swap the left and right children of the current node, then recursively invert both subtrees. Any traversal order works (pre-order, post-order, or even level-order with a queue).\n\nTime is O(n) and space is O(h) for recursion. The iterative BFS version uses a queue and processes nodes level by level, swapping children of each dequeued node. This problem teaches that tree transformations often have elegant recursive solutions where you combine a local operation (swap children) with recursive application to subtrees. The pattern extends to mirroring, rotating, and restructuring trees in graphics, compiler ASTs, and data transformation pipelines.`,
     instructions: [
       'Swap left and right children for every node',
       'Do this recursively for all nodes',
@@ -3263,6 +3303,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the minimum eating speed for Koko to finish all banana piles within h hours. This teaches binary search on the answer space: the search range is 1 to max pile size, and for each candidate speed, a greedy check determines feasibility. It is a template for many binary-search-on-answer problems.',
+    explanation: `Koko must eat all banana piles within h hours, eating at most k bananas per hour from one pile. Find the minimum k. This is a classic "binary search on the answer" problem.\n\nBinary search over possible eating speeds from 1 to max(piles). For each candidate speed k, calculate total hours needed: sum of ceil(pile/k) for each pile. If total hours <= h, k might work and you search lower. Otherwise, search higher.\n\nThe feasibility check runs in O(n) and binary search over the range is O(log(max)), giving O(n * log(max)) total time. This "binary search on answer" paradigm is immensely powerful: whenever the answer space is monotonic (higher speed always means fewer hours), you can binary search for the optimal threshold. The same technique solves ship capacity, split array, and hundreds of optimization problems where direct computation is hard but verification is easy.`,
     instructions: [
       'Koko can eat at most k bananas per hour',
       "If a pile has fewer than k bananas, she eats all and won't eat more that hour",
@@ -3321,6 +3362,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the minimum ship capacity to transport all packages within a given number of days, preserving order. This binary-search-on-answer problem searches between max weight and total weight, using a greedy simulation to count days needed per candidate capacity. It directly parallels the Koko bananas pattern.',
+    explanation: `Given packages with weights that must be shipped in order within a number of days, find the minimum ship capacity. This is another canonical "binary search on the answer" problem.\n\nBinary search over capacities from max(weight) to sum(weights). For each candidate capacity, simulate shipping greedily: load packages sequentially until adding the next would exceed capacity, then start a new day. Count total days needed. If days <= target, the capacity might work.\n\nThe lower bound is max(weight) because any single package must fit. The upper bound is the total weight (ship everything in one day). The O(n * log(sum - max)) solution demonstrates that binary search on answer reduces optimization to decision problems. This pattern is identical to Koko's bananas, split array largest sum, and minimum speed problems. Recognizing this template is one of the highest-leverage skills in competitive programming.`,
     instructions: [
       'Ship packages in the order given',
       'Ship capacity is the maximum weight it can carry per day',
@@ -3383,6 +3425,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Split an array into m contiguous subarrays to minimize the largest subarray sum. This advanced binary-search-on-answer problem searches between the max element and total sum. The greedy feasibility check counts how many subarrays are needed for a given max-sum limit. It has applications in load balancing.',
+    explanation: `Split a non-negative integer array into m contiguous subarrays to minimize the largest subarray sum. This optimization problem is elegantly solved with binary search on the answer.\n\nBinary search over possible largest sums from max(nums) to sum(nums). For each candidate limit, greedily assign elements to subarrays: add elements until the sum would exceed the limit, then start a new subarray. Count subarrays needed. If count <= m, the limit is feasible.\n\nThe greedy validation works because given a maximum sum constraint, using as few splits as possible is optimal for feasibility checking. Time complexity is O(n * log(sum - max)). This problem connects binary search to partitioning optimization, which appears in load balancing, parallel task scheduling, and memory page allocation. It also has a DP solution with O(mn^2) complexity, but binary search is far more elegant.`,
     instructions: [
       'Split nums into m non-empty continuous subarrays',
       'Minimize the largest sum among the m subarrays',
@@ -3449,6 +3492,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the starting and ending positions of a target value in a sorted array in O(log n) time. This teaches running two binary searches: one biased left to find the first occurrence, one biased right for the last. It is the standard technique for finding ranges in sorted data.',
+    explanation: `Finding the first and last positions of a target in a sorted array requires two binary searches: one biased left, one biased right. This problem tests your mastery of binary search boundary conditions.\n\nFor the leftmost occurrence, when you find the target, continue searching left (set right = mid - 1). For the rightmost, continue searching right (set left = mid + 1). Record the position each time you find the target.\n\nBoth searches run in O(log n) time. The tricky part is getting boundary conditions exactly right: off-by-one errors are the most common source of bugs in binary search. This problem drills the two fundamental binary search templates (lower bound and upper bound) that form the basis of C++'s lower_bound/upper_bound and Python's bisect_left/bisect_right. Mastering these templates is essential for range queries, sorted data lookups, and database indexing.`,
     instructions: [
       'Given sorted array in ascending order',
       'Find starting and ending position of target',
@@ -3527,6 +3571,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the single non-duplicate element in a sorted array where every other element appears exactly twice, in O(log n) time. This uses binary search on pair index parity: before the single element pairs align at even-odd indices, and after they shift. Adjusting mid to even indices simplifies the check.',
+    explanation: `In a sorted array where every element appears exactly twice except one, find the single element. The O(log n) solution uses binary search with a parity-based observation.\n\nBefore the single element, pairs align at (even, odd) indices. After it, pairs shift to (odd, even) indices. Binary search on this property: check if the middle element's pair is where you expect. If mid is even and nums[mid] === nums[mid+1], the single element is to the right. Adjust accordingly.\n\nThe key insight is that the single element disrupts the pairing pattern, and you can detect which side of mid the disruption lies. This O(log n) time, O(1) space solution is much faster than XOR (O(n)) or counting. It teaches that binary search applies not just to sorted values but to any monotonic property over indices. This "binary search on property transition" technique solves problems like finding rotation points, peak elements, and boundary transitions.`,
     instructions: [
       'Array is sorted in ascending order',
       'Every element appears twice except one',
@@ -3581,6 +3626,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Search for a target in a rotated sorted array that may contain duplicates. This extends the rotated array search by handling the ambiguous case where left, mid, and right values are equal by shrinking both ends. It demonstrates how duplicates can degrade binary search to O(n) in the worst case.',
+    explanation: `Searching in a rotated sorted array with duplicates extends the classic rotated search by handling the case where duplicates make it impossible to determine which half is sorted.\n\nIn the basic rotated search (no duplicates), you check if the left or right half is sorted and decide accordingly. With duplicates, when nums[left] === nums[mid] === nums[right], you cannot determine the sorted side. In this case, shrink both ends by one (left++, right--) and retry.\n\nThis worst case degrades to O(n) (e.g., [1,1,1,1,1,0,1]), but the average case remains O(log n). The algorithm teaches that duplicates fundamentally change binary search guarantees. In practice, you should consider whether your data might contain duplicates and how that affects your search invariants. This problem is a common follow-up in interviews after the no-duplicates version.`,
     instructions: [
       'Array is sorted but rotated at an unknown pivot',
       'Array may contain duplicates',
@@ -3658,6 +3704,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find the median of two sorted arrays in O(log(min(m,n))) time using binary search partition. This hard-level problem partitions the smaller array so that left halves of both arrays contain exactly half the total elements. Correct partition is found when cross-boundary elements satisfy the ordering constraint.',
+    explanation: `Finding the median of two sorted arrays in O(log(min(m,n))) time is one of the hardest binary search problems. It requires partitioning both arrays such that the left halves form a valid lower partition.\n\nBinary search on the smaller array. For a partition at index i in the first array, the corresponding partition in the second array is at (m+n+1)/2 - i. Check if the partition is valid: max of left sides <= min of right sides. Adjust the search based on which condition fails.\n\nThe partition-based approach avoids merging arrays. Getting the edge cases right (empty partitions, even vs odd total length) is the hardest part. This O(log(min(m,n))) solution demonstrates that binary search can operate on abstract partitions rather than concrete values. It is consistently rated as one of the most difficult LeetCode problems and tests deep understanding of binary search invariants, boundary handling, and mathematical reasoning about medians.`,
     instructions: [
       'Two sorted arrays of size m and n',
       'Find the median of the two sorted arrays',
@@ -3740,6 +3787,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the kth smallest element in an n x n matrix where each row and column is sorted. This binary-search-on-value problem searches between the min and max matrix values, counting elements <= mid using the sorted structure. The staircase counting technique achieves O(n) per check.',
+    explanation: `Finding the kth smallest element in a row-sorted and column-sorted matrix uses binary search on the value range combined with a counting function.\n\nBinary search between the minimum (top-left) and maximum (bottom-right) values. For each candidate value, count how many elements are less than or equal to it by traversing from the bottom-left corner: move right if the current element is <= candidate, up if it is greater. This counting traversal takes O(n) time for an n x n matrix.\n\nThe total time complexity is O(n * log(max - min)). An alternative approach uses a min-heap of size n (one element per row), extracting k times. The binary search approach is often cleaner for sorted matrix problems. This problem teaches that when data has partial ordering (rows sorted, columns sorted), you can exploit the structure for efficient counting without full sorting.`,
     instructions: [
       'Matrix has rows and columns sorted in ascending order',
       'Find the kth smallest element (1-indexed)',
@@ -3847,6 +3895,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the k closest integers to a target in a sorted array, returned in ascending order. This uses binary search to locate the optimal starting position of a k-element window. Comparing distances at both ends of the candidate window lets you slide it efficiently in O(log(n-k) + k) time.',
+    explanation: `Finding k closest elements to a target in a sorted array uses binary search to locate the optimal window start, followed by expansion or direct calculation.\n\nBinary search for the starting index of the k-element window. The search condition compares distances from the left and right boundaries of a candidate window to the target. If x - arr[mid] > arr[mid + k] - x, the window should move right. Otherwise, move left.\n\nThis O(log(n - k) + k) solution is more elegant than the O(n) two-pointer approach. The result is always a contiguous subarray because the array is sorted and closeness is monotonic from the nearest element. This problem combines binary search precision with sliding window concepts and appears in nearest-neighbor queries, recommendation systems, and any application requiring proximity-based retrieval from sorted data.`,
     instructions: [
       'Given sorted array in ascending order',
       'Find k closest elements to target',
@@ -3904,6 +3953,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the minimum integer travel speed to cover all distances within a time limit, where each leg except the last requires rounding up to the next integer hour. This binary-search-on-answer problem uses Math.ceil for intermediate legs and exact division for the last. It teaches real-number constraint modeling.',
+    explanation: `Given train distances and a time limit, find the minimum integer speed to arrive on time. All trains except the last must be boarded at integer hours (you wait for the next whole hour after arriving).\n\nBinary search over speeds from 1 to 10^7. For each candidate speed, compute total time: sum of ceil(dist/speed) for all trains except the last, plus dist_last/speed for the final train. If total time <= limit, the speed is feasible.\n\nThe ceiling behavior for intermediate trains is the key constraint: you waste time waiting for whole hours. This makes faster speeds disproportionately beneficial since they reduce wasted waiting time. Time complexity is O(n * log(maxSpeed)). This is another instance of "binary search on the answer" with a domain-specific feasibility check, reinforcing that the paradigm applies whenever the answer space is monotonic and verification is cheaper than direct optimization.`,
     instructions: [
       'Given array of distances and time limit (hour)',
       'Must travel distances in order',
@@ -3973,6 +4023,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Process point updates and range sum queries on an array using a segment tree. This fundamental data structure divides the array into a balanced binary tree of ranges, enabling both operations in O(log n) time. Segment trees are essential for competitive programming and real-time analytics systems.',
+    explanation: `A segment tree for range sum queries supports both point updates and range sum queries in O(log n) time. It is a fundamental data structure for dynamic range operations.\n\nThe tree is built from an array, where each node stores the sum of its range. Internal nodes cover the union of their children's ranges. To query a range [l, r], recursively combine results from nodes whose ranges overlap the query. To update a point, modify the leaf and propagate changes up.\n\nBuild takes O(n) time, and each query or update is O(log n). The tree uses O(4n) space with array-based representation. Segment trees solve problems that prefix sums cannot handle when updates are involved: dynamic range sums, range minimums, range GCDs, and lazy propagation variants that support range updates. They are essential in competitive programming and appear in database engines, computational geometry, and real-time analytics systems.`,
     instructions: [
       'Given initial array and operations',
       'Operation ["update", i, val] sets nums[i] = val',
@@ -4132,6 +4183,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Process point updates and range minimum queries on an array using a segment tree. This variant stores the minimum instead of the sum at each node, returning Infinity for non-overlapping ranges. It teaches how segment trees generalize to any associative operation like min, max, GCD, or XOR.',
+    explanation: `A range minimum segment tree supports point updates and range minimum queries in O(log n) time. It extends the segment tree concept from sums to minimums.\n\nEach node stores the minimum of its range. During construction, each internal node takes the minimum of its children. Range queries recursively check if the query range overlaps the node's range: if fully contained, return the stored minimum; if partially overlapping, recurse into children and return the minimum of results.\n\nUpdate propagation replaces the leaf value and walks up the tree, recomputing minimums. The O(n) build, O(log n) query/update complexity matches the sum variant. This structure supports the sliding window minimum problem, range queries in databases, and is the basis for more advanced structures like persistent segment trees and merge sort trees. Swapping the merge operation (min, max, gcd, sum) demonstrates the segment tree's flexibility as a generic range query framework.`,
     instructions: [
       'Given initial array and operations',
       'Operation ["update", i, val] sets nums[i] = val',
@@ -4291,6 +4343,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Implement a Least Frequently Used cache that evicts the least-frequently accessed item when at capacity, breaking ties by least recently used. This advanced data structure problem requires tracking frequency counts, per-frequency lists, and the minimum frequency. It appears in system design interviews.',
+    explanation: `The LFU (Least Frequently Used) cache evicts the entry with the lowest access frequency, breaking ties by least recently used. It requires O(1) time for both get and put operations.\n\nMaintain a hash map for key-to-node lookup, frequency-to-doubly-linked-list mapping, and track the minimum frequency. On access, move the node from its current frequency list to the next higher one. If the min-frequency list becomes empty and the node was at min frequency, increment min frequency.\n\nOn eviction, remove the tail of the min-frequency list (the least recently used among least frequently used). This is significantly more complex than LRU cache and requires careful bookkeeping of frequency lists. The O(1) amortized time for all operations makes LFU practical for caching layers in databases, CDNs, and operating systems. It is one of the hardest data structure design problems in interviews.`,
     instructions: [
       'Given capacity and operations',
       'Operation ["put", key, value] adds/updates key',
@@ -4493,6 +4546,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Calculate the running median after each number is added from a data stream. This teaches maintaining sorted order with binary search insertion, enabling O(log n) insert and O(1) median access. The optimal approach uses two heaps (max-heap for lower half, min-heap for upper half) for balanced performance.',
+    explanation: `Finding the running median from a data stream requires maintaining a sorted partition of all seen elements such that the median can be retrieved in O(1) time.\n\nUse two heaps: a max-heap for the lower half and a min-heap for the upper half. When a new number arrives, add it to the appropriate heap. Rebalance so the heaps differ in size by at most one. The median is the top of the larger heap, or the average of both tops if equal size.\n\nInsertion takes O(log n) per element and median retrieval is O(1). The two-heap technique maintains the invariant that all elements in the max-heap are less than or equal to all elements in the min-heap. This approach is used in streaming analytics, real-time monitoring systems, and financial data processing. It generalizes to finding any running percentile by adjusting the relative sizes of the two heaps.`,
     instructions: [
       'Numbers are added one by one from the input array',
       'After each addition, calculate the median',
@@ -4580,6 +4634,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Implement a HashSet from scratch without built-in hash table libraries, supporting add, remove, and contains operations. This teaches hashing fundamentals: a hash function maps keys to buckets, and collision resolution (chaining) handles multiple keys in the same bucket. It builds intuition for hash-based data structures.',
+    explanation: `Designing a hash set from scratch teaches the fundamentals of hash table implementation: hash functions, collision resolution, and dynamic resizing.\n\nUse an array of buckets where the bucket index is key % capacity. Handle collisions with chaining (linked lists) or open addressing. Implement add (insert if absent), remove (delete if present), and contains (search). For good performance, resize and rehash when the load factor exceeds a threshold.\n\nWith a good hash function and reasonable load factor, average-case operations are O(1). Worst case is O(n) with all collisions. Understanding hash set internals explains why JavaScript's Set and Map are so fast, how database hash indexes work, and why hash function quality matters. This knowledge is essential for choosing between hash-based and tree-based data structures in system design.`,
     instructions: [
       'Operation ["add", val] adds value to set',
       'Operation ["remove", val] removes value from set',
@@ -4695,6 +4750,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Build a Binary Search Tree by inserting values then search for given values, returning boolean results. This teaches the core BST operations: insert by comparing and recursing left or right, search by the same comparison. Understanding BST insert/search is foundational for tree-based data structure interviews.',
+    explanation: `Implementing BST insertion and search from scratch reinforces the binary search tree invariant: left subtree values are smaller, right subtree values are larger.\n\nFor search, compare the target with the current node: go left if smaller, right if larger, return if equal. For insertion, follow the same path and attach the new node where you fall off the tree (reach null). Both operations follow a single root-to-leaf path.\n\nTime complexity is O(h) where h is the tree height: O(log n) for balanced trees, O(n) for degenerate (linear) ones. This is why balanced BST variants (AVL, Red-Black) exist. Understanding basic BST operations is prerequisite to deletion (harder), range queries, and self-balancing trees. BSTs underpin ordered maps, database indexes, and priority queues in systems where ordering and efficient lookup are both needed.`,
     instructions: [
       'Insert all values from insertVals into BST',
       'Search for all values from searchVals',
@@ -4810,6 +4866,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Build a BST, delete a specific node, then return the inorder traversal of the resulting tree. BST deletion has three cases: leaf removal, single-child promotion, and two-child replacement with the inorder successor. This exercise teaches all three and reinforces understanding of BST structural invariants.',
+    explanation: `BST deletion is the trickiest of the three fundamental BST operations because removing a node with two children requires finding a replacement that maintains the BST invariant.\n\nThree cases: (1) Leaf node: simply remove it. (2) One child: replace the node with its child. (3) Two children: find the in-order successor (smallest node in right subtree), copy its value to the current node, then recursively delete the successor from the right subtree.\n\nThe in-order successor always has at most one child (no left child), so its deletion falls into case 1 or 2. Time complexity is O(h). The choice between in-order successor and predecessor is arbitrary; both maintain the BST property. This operation is fundamental to understanding how databases maintain sorted indexes and how self-balancing trees handle removal while preserving balance constraints.`,
     instructions: [
       'Insert all values from insertVals into BST',
       'Delete the node with value deleteVal',
@@ -4942,6 +4999,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Implement a doubly linked list supporting addFront, addBack, removeFront, removeBack, and toArray operations. This teaches bidirectional pointer manipulation: each node links to both its predecessor and successor. Doubly linked lists enable O(1) removal from both ends, making them ideal for deque and LRU cache implementations.',
+    explanation: `Implementing a doubly linked list teaches pointer manipulation with both forward and backward links. It supports O(1) insertion and deletion at any known position.\n\nEach node stores a value, a next pointer, and a prev pointer. Use sentinel head and tail nodes to simplify edge cases (no null checks for empty list). Insert between two nodes by rewiring four pointers. Delete a node by connecting its prev and next directly.\n\nAll operations on known positions are O(1). Search is O(n). Doubly linked lists are the backbone of LRU caches (combined with hash maps for O(1) lookup), undo/redo stacks, and browser history navigation. They appear inside many higher-level data structures: the free list in memory allocators, adjacency lists in graphs, and the bucket chains in hash tables all benefit from bidirectional traversal.`,
     instructions: [
       'Operation ["addFront", val] adds to front',
       'Operation ["addBack", val] adds to back',
@@ -5116,6 +5174,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Evaluate mathematical expressions with +, -, *, / and parentheses using two stacks (values and operators). This teaches the shunting-yard approach: operator precedence determines when to evaluate, and parentheses create scope boundaries. Expression evaluation is fundamental to compilers, calculators, and query parsers.',
+    explanation: `Evaluating mathematical expressions with operators and parentheses requires parsing with respect to operator precedence. This is a fundamental problem in compilers and calculators.\n\nThe classic approach uses two stacks: one for numbers and one for operators. Scan left to right. Push numbers onto the number stack. For operators, pop and evaluate higher-or-equal precedence operators from the stack before pushing. Opening parentheses push to the operator stack; closing parentheses pop and evaluate until the matching opener.\n\nAlternatively, use recursive descent parsing with separate functions for each precedence level. Both approaches handle precedence correctly and run in O(n) time. This problem is the practical foundation of expression parsing in programming language compilers, spreadsheet formula evaluation, and scientific calculator applications. It also introduces the shunting-yard algorithm concept.`,
     instructions: [
       'Expression contains integers, +, -, *, /, and parentheses',
       'Follow standard operator precedence',
@@ -5210,6 +5269,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Flatten a nested array structure depth-first into a single-level array. This recursion exercise processes each element: if it is an array, recurse into it; if it is a value, collect it. It simulates flattening a multilevel linked list and teaches depth-first traversal over recursive data structures.',
+    explanation: `Flattening a multilevel doubly linked list where some nodes have child pointers means integrating child chains into the main list. This is a pointer manipulation problem with depth-first semantics.\n\nIterate through the list. When you encounter a node with a child, insert the entire child chain between the current node and its next node. Find the tail of the child chain, wire it to the saved next node, and clear the child pointer. Continue iteration from the current node's new next.\n\nAlternatively, use a stack: push the next node and process the child first (DFS order). Time complexity is O(n) visiting each node once. This flattening operation mirrors how operating systems flatten nested directory structures, how browsers flatten nested DOM elements, and how compilers inline nested scopes. It tests careful pointer surgery and is a common medium-difficulty interview problem.`,
     instructions: [
       'Input is a nested array where elements can be numbers or arrays',
       'Flatten it depth-first (process nested arrays immediately)',
@@ -5277,6 +5337,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       "Implement a map that maintains insertion order with set, get, delete, and keys operations. This teaches how JavaScript's built-in Map preserves insertion order, and how deletion followed by re-insertion moves a key to the end. Ordered maps are used in LRU caches and configuration management.",
+    explanation: `An ordered map maintains key-value pairs in sorted key order, supporting insertion, deletion, lookup, and range queries. It combines the associative nature of a map with ordering guarantees.\n\nImplement using a balanced BST (or simplified BST for learning). Each node stores a key-value pair. In-order traversal yields keys in sorted order. Support operations: put (insert or update), get (search by key), delete (BST removal), range query (in-order traversal between bounds), and min/max (leftmost/rightmost node).\n\nBalanced BSTs give O(log n) for all operations. The ordered map is more powerful than a hash map when you need sorted iteration, range queries, floor/ceiling operations, or predecessor/successor lookups. It is the data structure behind Java's TreeMap, C++'s std::map, and database B-tree indexes. Understanding when to choose ordered vs unordered maps is a critical system design skill.`,
     instructions: [
       'Implement an ordered map data structure',
       'Process operations: set(key, value), get(key), delete(key), keys()',
@@ -5365,6 +5426,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Multiply two sparse matrices efficiently by skipping zero elements. Standard matrix multiplication is O(m*n*k), but pre-indexing non-zero entries in the second matrix and skipping zeros in the first dramatically reduces work for sparse inputs. This optimization is critical in machine learning and graph algorithms.',
+    explanation: `Sparse matrix multiplication skips zero entries to achieve performance proportional to non-zero elements rather than the full matrix dimensions.\n\nThe standard approach converts matrices to sparse representations (lists of non-zero entries per row or column). For each non-zero entry A[i][k], multiply it with every non-zero entry B[k][j] and accumulate into result[i][j]. By iterating only over non-zero elements, you avoid the O(n^3) cost of dense multiplication.\n\nTime complexity is O(nnz_A * avg_nnz_per_row_B) where nnz is the number of non-zero entries. This is dramatically faster for sparse data. Sparse matrix operations are fundamental to machine learning (sparse features, embeddings), scientific computing (finite element methods), and graph algorithms (adjacency matrix operations). Compressed sparse row (CSR) and column (CSC) formats are industry-standard representations.`,
     instructions: [
       'Multiply two matrices represented as 2D arrays',
       'Optimize for sparse matrices (many zeros)',
@@ -5482,6 +5544,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Implement a circular double-ended queue with fixed capacity supporting front/rear insert, delete, and peek operations. This teaches capacity-constrained data structure design where each operation must check fullness or emptiness. Circular deques are used in sliding window algorithms and task scheduling systems.',
+    explanation: `A circular deque (double-ended queue) supports insertion and removal from both front and back in O(1) time using a circular buffer.\n\nUse a fixed-size array with front and rear pointers that wrap around using modular arithmetic. Insert at front: decrement front pointer (wrapping). Insert at rear: place at rear and increment (wrapping). Delete from front: increment front pointer. Delete from rear: decrement rear pointer. Track the current size to distinguish full from empty.\n\nAll operations are O(1). The circular buffer avoids the shifting cost of linear arrays for front operations. Circular deques are used in BFS implementations, sliding window algorithms, task scheduling (work-stealing deques), and operating system process queues. Understanding the modular arithmetic for pointer wrapping is essential for implementing any circular data structure.`,
     instructions: [
       'Implement a circular deque with given capacity',
       'Process operations: insertFront, insertLast, deleteFront, deleteLast, getFront, getRear',
@@ -5608,6 +5671,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Implement a trie (prefix tree) that tracks both complete word counts and prefix counts for inserted strings. Each node maintains a prefixCount incremented during insertion traversal and a wordCount incremented at terminal nodes. Tries enable O(L) prefix queries and are used in autocomplete and spell-checking.',
+    explanation: `A trie with word counting capabilities stores strings and tracks how many times each word has been inserted. It supports efficient prefix queries alongside exact match counting.\n\nEach node has a map of children (one per character) and a count field. Insert traverses or creates nodes for each character, incrementing the count at the terminal node. Search follows the path and returns the terminal count. Prefix search checks if the path exists without requiring a terminal.\n\nInsert and search are O(m) where m is the word length, independent of the total number of words. Tries enable autocomplete (enumerate all words with a given prefix), spell checking (suggest corrections), and IP routing (longest prefix match). Adding counts extends the structure to frequency analysis, which is useful in search engines, natural language processing, and data compression algorithms like LZW.`,
     instructions: [
       'Build a trie from insert operations',
       'Track how many times each word is inserted',
@@ -5731,6 +5795,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       "Implement a priority queue that sorts items by numeric priority (lower number = higher priority) and maintains insertion order for ties. This teaches stable priority sorting: items are ordered by priority first, then by insertion index. Priority queues are essential in Dijkstra's algorithm and task schedulers.",
+    explanation: `A priority queue with custom comparison supports arbitrary ordering beyond simple min or max. It is implemented as a binary heap with a user-provided comparator function.\n\nThe binary heap stores elements in an array where parent at index i has children at 2i+1 and 2i+2. Insert adds to the end and bubbles up. Extract removes the root, moves the last element to the root, and bubbles down. The comparator determines which direction to bubble.\n\nInsert and extract are O(log n), peek is O(1). Accepting a custom comparator makes the priority queue usable for scheduling (by priority), graph algorithms (by distance), and merge operations (by value). This is the JavaScript equivalent of Java's PriorityQueue with a Comparator or Python's heapq with key functions. Building one from scratch deepens understanding of heap properties and how comparison functions define ordering.`,
     instructions: [
       'Insert all [value, priority] pairs into a priority queue',
       'Extract all elements in priority order',
@@ -5822,6 +5887,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Count the number of ways to write n as a sum of positive integers where order does not matter (e.g., 4 = 3+1 = 2+2 = 2+1+1 = 1+1+1+1). This combinatorics problem uses 2D DP where dp[i][j] counts partitions of i using parts up to j. Integer partitions appear in number theory and combinatorial optimization.',
+    explanation: `Integer partitioning counts the ways to write a positive integer n as a sum of positive integers, where order does not matter. For example, 4 = 3+1 = 2+2 = 2+1+1 = 1+1+1+1, giving 5 partitions.\n\nThe DP approach uses a table where p(n, k) counts partitions of n using parts of size at most k. The recurrence is p(n, k) = p(n, k-1) + p(n-k, k): either exclude k-sized parts entirely, or include at least one part of size k.\n\nBuild the table bottom-up for O(n^2) time and O(n) space using a 1D array. Integer partitions appear in combinatorics, number theory (partition function), statistical mechanics (distributing energy quanta), and symmetric polynomial theory. The problem also connects to Young diagrams and the representation theory of symmetric groups, making it a deep topic despite its simple statement.`,
     instructions: [
       'Count distinct ways to partition n into positive integers',
       'Order does not matter: 3+1 and 1+3 are the same partition',
@@ -5897,6 +5963,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Compute the Stirling number S(n,k) which counts ways to partition n elements into exactly k non-empty subsets. The recurrence S(n,k) = k*S(n-1,k) + S(n-1,k-1) captures two choices: add the new element to an existing subset (k ways) or create a new singleton. Stirling numbers arise in combinatorics and probability.',
+    explanation: `Stirling numbers of the second kind S(n, k) count the ways to partition a set of n elements into exactly k non-empty subsets. They are fundamental objects in combinatorics.\n\nThe recurrence is S(n, k) = k * S(n-1, k) + S(n-1, k-1). The first term places element n into one of the k existing subsets. The second term places element n alone in a new subset, requiring the remaining n-1 elements to form k-1 subsets.\n\nBase cases: S(0, 0) = 1, S(n, 0) = 0 for n > 0, S(n, n) = 1. Build a 2D DP table in O(nk) time. Stirling numbers appear in polynomial interpolation, Bell numbers (sum of a row), and the conversion between ordinary and falling factorial powers. They model problems like distributing tasks to workers, hash function analysis, and occupancy problems in probability.`,
     instructions: [
       'Calculate S(n,k) using the recurrence relation',
       'S(n,k) = k*S(n-1,k) + S(n-1,k-1)',
@@ -5965,6 +6032,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Compute the Bell number B(n), the total number of ways to partition a set of n elements into non-empty subsets. The Bell triangle method builds values row by row, where each row starts with the last value of the previous row. Bell numbers grow rapidly and connect to Stirling numbers via B(n) = sum of S(n,k).',
+    explanation: `Bell numbers B(n) count the total number of ways to partition a set of n elements into non-empty subsets. B(n) is the sum of Stirling numbers of the second kind across all k.\n\nThe Bell triangle provides an efficient computation. Start with B(0) = 1. Each row starts with the last element of the previous row, and subsequent elements are the sum of the current element and the element directly above. The first element of each row gives the Bell number.\n\nAlternatively, B(n) = sum of S(n, k) for k = 1 to n. The triangle runs in O(n^2) time and O(n) space. Bell numbers grow rapidly (B(10) = 115975) and appear in set theory, data clustering (number of possible clusterings), equivalence relation counting, and the analysis of algorithms that partition data. They connect to exponential generating functions in analytic combinatorics.`,
     instructions: [
       'Calculate B(n) = sum of S(n,k) for k=0 to n',
       'Use Stirling numbers of the second kind',
@@ -6037,6 +6105,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Compute the multinomial coefficient n!/(k1!*k2!*...*km!) which counts ways to distribute n items into groups of specified sizes. This generalizes the binomial coefficient and is computed as successive binomial products to avoid overflow. Multinomial coefficients appear in probability distributions and combinatorial counting.',
+    explanation: `Multinomial coefficients extend binomial coefficients to multiple groups. The multinomial coefficient (n; k1, k2, ..., km) counts the ways to divide n items into groups of sizes k1 through km.\n\nCompute as n! / (k1! * k2! * ... * km!). To avoid overflow with large factorials, use iterative multiplication with running division or work in logarithmic space. An efficient approach computes the result incrementally: start with 1, multiply by n, n-1, etc., dividing by each group factorial as you go.\n\nTime complexity is O(n) for the iterative approach. Multinomial coefficients generalize the "n choose k" pattern and appear in polynomial expansion (multinomial theorem), probability (multinomial distribution), statistical testing (chi-squared), and counting arrangements of objects with repetition. Understanding them unifies many counting formulas under a single framework.`,
     instructions: [
       'Given n and array of group sizes, compute multinomial coefficient',
       'Formula: n! / (k1! * k2! * ... * km!)',
@@ -6109,6 +6178,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Count valid permutations of n elements where certain element-position pairs are forbidden. This backtracking problem tries placing each unused element at each position, skipping forbidden assignments. It generalizes derangements and teaches constraint-based enumeration, useful in scheduling and assignment problems.',
+    explanation: `Restricted permutations count arrangements where certain elements are forbidden from certain positions. This combines permutation counting with inclusion-exclusion or DP with bitmasks.\n\nThe bitmask DP approach uses dp[mask] = number of ways to assign elements to the positions indicated by the bitmask, checking each assignment against a restriction table. For each new position, try all unrestricted elements not yet used.\n\nTime complexity is O(n * 2^n), feasible for n up to about 20. The restriction matrix generalizes many problems: derangements (no element in its original position), non-attacking rooks on forbidden squares, and job assignment with compatibility constraints. This DP-on-subsets technique is also called the "assignment problem" approach and connects to permanent computation in linear algebra, which counts perfect matchings in bipartite graphs.`,
     instructions: [
       'Given n positions and forbidden pairs [element, position]',
       'Count permutations where element i is not at position j for each forbidden pair',
@@ -6200,6 +6270,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Count paths from top-left to bottom-right in a grid with obstacles, moving only right or down. This DP problem sets dp[i][j] = dp[i-1][j] + dp[i][j-1] for free cells and 0 for obstacles. It is a foundational grid DP exercise that extends the classic lattice path counting problem from combinatorics.',
+    explanation: `Counting lattice paths with obstacles asks how many ways to travel from the top-left to bottom-right of a grid, moving only right or down, while avoiding blocked cells.\n\nUse DP where dp[i][j] = number of paths to cell (i, j). If a cell is blocked, dp[i][j] = 0. Otherwise, dp[i][j] = dp[i-1][j] + dp[i][j-1]. Initialize the first row and column, stopping at the first obstacle (all cells after an obstacle in row 0 or column 0 are unreachable).\n\nTime and space are O(m * n). Space can be optimized to O(n) using a single row. Without obstacles, the answer is the binomial coefficient C(m+n-2, m-1). With obstacles, DP is necessary. This problem models real-world pathfinding with blocked zones, robot navigation on grids, and probability calculations in random walks. It is also a building block for more complex grid DP problems involving costs or multiple agents.`,
     instructions: [
       'Grid is m x n where 0 is free and 1 is obstacle',
       'Start at (0,0) and reach (m-1, n-1)',
@@ -6291,6 +6362,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Count the number of subsets of an array that sum to a target value. This DP problem tracks how many ways each possible sum can be formed, starting from the empty subset with sum 0. Using a map handles negative numbers and large ranges. It is a building block for knapsack and partition problems.',
+    explanation: `Counting the number of subsets that sum to a target is a classic knapsack-family DP problem. Unlike the boolean version (does a subset exist), you must count all valid subsets.\n\nDefine dp[j] = number of subsets summing to j. Initialize dp[0] = 1 (the empty subset). For each number num, iterate j from target down to num: dp[j] += dp[j - num]. The reverse iteration ensures each element is used at most once (0/1 knapsack pattern).\n\nTime is O(n * target) and space is O(target). The backward iteration trick is essential: forward iteration would allow reusing elements (unbounded knapsack). This problem appears in cryptographic analysis (subset sum is NP-complete in general), financial portfolio selection, and partition-based DP problems. Understanding the directional iteration difference between 0/1 and unbounded variants is a key DP skill.`,
     instructions: [
       'Given an array of integers and a target sum',
       'Count how many subsets sum to exactly the target',
@@ -6361,6 +6433,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Generate all 2^n combinations of n boolean variables as a truth table using bit manipulation. Each row number in binary maps directly to a combination of true/false values. This exercise teaches the connection between binary counting and exhaustive enumeration, foundational for logic circuits and SAT solvers.',
+    explanation: `Generating a truth table evaluates a boolean expression for all possible input combinations. This combines combinatorial enumeration with expression evaluation.\n\nGenerate all 2^n combinations of boolean values for n variables. For each combination, evaluate the expression by substituting values and computing the result. Support operators: AND, OR, NOT, XOR, IMPLIES, and parentheses for grouping.\n\nThe total work is O(2^n * m) where m is the expression length. Truth tables are the foundation of digital circuit design, propositional logic verification, and boolean satisfiability (SAT) analysis. While exhaustive enumeration is exponential, it is practical for small n and provides ground truth for testing more sophisticated methods. This exercise teaches expression parsing combined with systematic enumeration, two skills that frequently appear together in real-world tooling.`,
     instructions: [
       'Given n boolean variables',
       'Generate all 2^n combinations',
@@ -6436,6 +6509,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the maximum amount you can rob from a line of houses without robbing two adjacent ones. This classic DP problem uses the recurrence max(rob current + skip-one, skip current) with two rolling variables for O(1) space. It is one of the most popular introductory dynamic programming interview questions.',
+    explanation: `The house robber problem is a gateway dynamic programming exercise. You have a row of houses with known values, and you cannot rob two adjacent houses. The goal is to maximize your total haul.\n\nThe recurrence is: dp[i] = max(dp[i-1], dp[i-2] + nums[i]). At each house you either skip it (take the best up to i-1) or rob it (add its value to the best up to i-2). Since each state depends only on the previous two, you can reduce space from O(n) to O(1) using two rolling variables.\n\nThis O(n) time, O(1) space solution is a textbook introduction to DP optimization. The pattern generalizes to circular variants (House Robber II), tree-shaped neighborhoods, and other "choose or skip" problems. It is often the first DP problem interviewers use because the recurrence is simple yet illustrates the core DP concept of optimal substructure.`,
     instructions: [
       'Given array of house values',
       'Cannot rob adjacent houses',
@@ -6503,6 +6577,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Maximize robbery from houses arranged in a circle where the first and last are adjacent. This extends House Robber I by running the linear algorithm twice: once excluding the first house and once excluding the last. Taking the maximum of both handles the circular adjacency constraint elegantly.',
+    explanation: `House Robber II places houses in a circle, meaning the first and last houses are adjacent. This constraint means you cannot rob both, adding a twist to the linear version.\n\nThe elegant solution runs the linear house robber twice: once excluding the last house (indices 0 to n-2), once excluding the first (indices 1 to n-1). The answer is the maximum of these two runs. This works because at least one of the first or last house must be excluded.\n\nTime is O(n) and space is O(1), same as the linear version but with two passes. This reduction technique (circular problem to two linear problems) is a common DP trick that appears in circular buffer optimization, necklace problems, and ring scheduling. The key insight is that circular constraints often decompose into a small number of linear subproblems by case-splitting on how the circular boundary is handled.`,
     instructions: [
       'Houses arranged in a circle',
       'First and last houses are adjacent',
@@ -6579,6 +6654,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Count the number of ways to decode a digit string where A=1, B=2, ..., Z=26. This DP problem is similar to climbing stairs: at each position, check if the single digit (1-9) and two-digit number (10-26) are valid decodings. Leading zeros make the problem trickier and test careful edge case handling.',
+    explanation: `Decode ways counts how many ways a digit string can be decoded into letters, where A=1, B=2, ..., Z=26. Each position can be decoded as a single digit or paired with the next digit.\n\nDefine dp[i] = number of decodings of the first i characters. If the i-th digit is non-zero, dp[i] += dp[i-1] (single-digit decode). If the two-digit number formed by digits i-1 and i is between 10 and 26, dp[i] += dp[i-2] (two-digit decode). Handle the zero case carefully since '0' alone is not a valid letter.\n\nThis O(n) time, O(1) space solution resembles climbing stairs with variable step sizes. The zero-handling is the main difficulty: '06' is invalid while '16' can decode as 'P' or 'AF'. This problem tests careful conditional logic within a DP framework and appears in encoding/decoding systems, format parsing, and string interpretation tasks.`,
     instructions: [
       'Given a string of digits',
       'Decode where 1=A, 2=B, ..., 26=Z',
@@ -6654,6 +6730,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the length of the longest palindromic subsequence in a string, where characters need not be consecutive. This 2D DP problem uses dp[i][j] for the substring s[i..j]: matching endpoints add 2 to the inner result, otherwise take the max of excluding either end. It is a classic interval DP exercise.',
+    explanation: `The longest palindromic subsequence finds the longest subsequence of a string that reads the same forwards and backwards. Unlike substrings, subsequences do not need to be contiguous.\n\nDefine dp[i][j] = length of the longest palindromic subsequence in s[i..j]. If s[i] === s[j], then dp[i][j] = dp[i+1][j-1] + 2 (both endpoints contribute). Otherwise, dp[i][j] = max(dp[i+1][j], dp[i][j-1]) (drop one endpoint). Base case: dp[i][i] = 1.\n\nFill the table diagonally or by increasing interval length. Time and space are O(n^2). An equivalent formulation: the LPS length equals the LCS length of the string and its reverse. This DP structure (two pointers narrowing an interval) appears in palindrome counting, optimal matrix parenthesization, and any problem involving string intervals. It is a core pattern in string DP.`,
     instructions: [
       'Given a string, find longest palindromic subsequence',
       'Subsequence: can skip characters but maintain order',
@@ -6729,6 +6806,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Find the minimum cost to climb past the top of a staircase where each step has a cost and you can climb 1 or 2 steps. This beginner DP problem uses the recurrence cost[i] + min(dp[i-1], dp[i-2]) with two rolling variables. It teaches optimal substructure and is a gentle introduction to dynamic programming.',
+    explanation: `Minimum cost climbing stairs asks for the cheapest way to reach the top, where you can start at step 0 or 1 and climb 1 or 2 steps at a time, paying the cost of each step you stand on.\n\nDefine dp[i] = minimum cost to reach step i. The recurrence is dp[i] = cost[i] + min(dp[i-1], dp[i-2]). The answer is min(dp[n-1], dp[n-2]) since you can reach the top from either of the last two steps. Space optimizes to O(1) with two variables.\n\nThis O(n) time problem is an ideal introduction to DP cost minimization. It is simpler than house robber because there is no choice to skip steps; you always pay the cost. The pattern extends to problems with variable step sizes, weighted graph shortest paths, and any optimization over a sequence of decisions. It is often the very first DP problem taught in algorithms courses.`,
     instructions: [
       'Given array of costs for each step',
       'Can start from step 0 or step 1',
@@ -6792,6 +6870,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Determine if an array can be split into two subsets with equal sum. This reduces to a subset-sum problem with target = totalSum/2 after checking the sum is even. The boolean DP array marks achievable sums, iterating backwards to prevent reuse. It connects subset sum theory to practical partitioning.',
+    explanation: `Partition equal subset sum asks whether an array can be split into two subsets with equal sums. This reduces to a 0/1 knapsack problem: can you find a subset summing to total/2?\n\nIf the total sum is odd, return false immediately. Otherwise, use boolean DP: dp[j] = true if some subset sums to j. Initialize dp[0] = true. For each number, iterate j from target down to num, setting dp[j] |= dp[j - num].\n\nTime is O(n * sum/2) and space is O(sum/2). The backward iteration ensures each element is used at most once. This pseudo-polynomial algorithm is efficient when the sum is not too large. The problem teaches the fundamental connection between partition problems and subset sum, which appears in load balancing, fair division algorithms, and resource allocation. It is one of the most important medium-difficulty DP problems.`,
     instructions: [
       'Given an array of positive integers',
       'Check if it can be split into two subsets with equal sum',
@@ -6861,6 +6940,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Assign + or - signs to each array element and count how many assignments reach a target sum. This DP/memoization problem explores a binary decision tree, caching results by (index, currentSum). It teaches how exhaustive sign-assignment problems map to subset sum variants with O(n * sumRange) complexity.',
+    explanation: `Target sum ways asks you to assign + or - to each number in an array to reach a target sum. Count all valid assignments. This transforms into a subset sum counting problem.\n\nLet P be the subset with + signs and N be the subset with - signs. Then sum(P) - sum(N) = target and sum(P) + sum(N) = total. So sum(P) = (target + total) / 2. The problem reduces to counting subsets summing to (target + total) / 2.\n\nUse the same DP as subset sum count: dp[j] += dp[j - num] iterating backward. Time is O(n * target). The algebraic transformation from target sum to subset sum is the key insight; the actual DP is standard. This transformation technique, converting a problem into an equivalent well-known form, is one of the most powerful strategies in algorithm design and appears frequently in dynamic programming competitions.`,
     instructions: [
       'Given array of non-negative integers and a target',
       'Assign + or - sign to each element',
@@ -6936,6 +7016,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the path from top-left to bottom-right in a grid of non-negative numbers that minimizes the total sum, moving only right or down. This DP problem fills dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]). It is a foundational grid DP exercise commonly tested in coding interviews.',
+    explanation: `Minimum path sum asks for the cheapest path from top-left to bottom-right of a grid, moving only right or down. Each cell has a non-negative cost.\n\nDefine dp[i][j] = minimum cost to reach cell (i, j). For the first row, accumulate left to right. For the first column, accumulate top to bottom. For other cells, dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]).\n\nSpace optimizes to O(n) using a single row updated left to right. Time is O(m * n). This is one of the cleanest 2D DP problems and serves as an introduction to grid-based optimization. The pattern extends to problems with diagonal movement, multiple path constraints, and 3D grids. Real-world applications include route cost optimization, image seam carving, and computing edit distances (which use a similar grid DP structure).`,
     instructions: [
       'Implement a function that finds the minimum path sum in a grid',
       'You can only move right or down at each step',
@@ -7020,6 +7101,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find the minimum number of cuts to partition a string so every piece is a palindrome. This advanced DP problem first precomputes a 2D palindrome lookup table, then uses 1D DP where cuts[i] = min(cuts[j] + 1) for all j where s[j+1..i] is a palindrome. It combines two DP techniques.',
+    explanation: `Palindrome partitioning II asks for the minimum number of cuts to split a string so every piece is a palindrome. This combines palindrome detection DP with partitioning DP.\n\nFirst, precompute a boolean table isPalin[i][j] for all substrings. Then define dp[i] = minimum cuts for s[0..i]. For each position i, check all j <= i: if s[j..i] is a palindrome, then dp[i] = min(dp[i], dp[j-1] + 1). Initialize dp[i] = i (worst case: cut after every character).\n\nThe palindrome precomputation is O(n^2) and the cut DP is O(n^2), totaling O(n^2) time and space. Manacher's algorithm can optimize the palindrome detection. This two-layer DP approach (precompute a property, then optimize over it) is a powerful pattern that appears in word break, sentence segmentation, and any problem where optimal partitioning depends on substring properties.`,
     instructions: [
       'Implement a function that finds minimum cuts for palindrome partitioning',
       'Each partition must be a palindrome',
@@ -7118,6 +7200,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find the minimum worst-case trials to determine the critical floor with k eggs and n floors. This classic DP problem uses dp[eggs][floors] where dropping from floor x creates two branches: egg breaks (fewer eggs, lower floors) or survives (same eggs, higher floors). It teaches minimax optimization over decision trees.',
+    explanation: `The egg drop problem asks for the minimum number of trials to find the critical floor, given k eggs and n floors. You need to guarantee finding the answer in the worst case.\n\nThe classic DP defines dp[k][n] = minimum trials with k eggs and n floors. If an egg breaks at floor x, search below with k-1 eggs. If it survives, search above with k eggs. dp[k][n] = 1 + min over x of max(dp[k-1][x-1], dp[k][n-x]).\n\nThe O(kn^2) naive approach can be optimized to O(kn log n) using binary search on the crossover point, or O(kn) using the observation that the optimal floor x increases monotonically. An alternative O(k * log n) formulation asks: with k eggs and t trials, how many floors can you check? This inverted formulation uses dp[t][k] = dp[t-1][k-1] + dp[t-1][k] + 1. The egg drop problem teaches worst-case optimization and appears in software testing strategy, binary search with fallible probes, and decision theory.`,
     instructions: [
       'Implement a function that solves the egg drop problem',
       'Return minimum number of trials in worst case',
@@ -7197,6 +7280,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Burst balloons to maximize coins, where bursting balloon i earns nums[left]*nums[i]*nums[right]. The key insight is thinking about which balloon to burst LAST in each interval, enabling interval DP. Adding virtual boundary balloons with value 1 simplifies edge cases. This is a classic interval DP interview problem.',
+    explanation: `Burst balloons asks you to maximize coins from bursting all balloons, where bursting balloon i earns nums[left] * nums[i] * nums[right] (neighbors at burst time). The order of bursting matters.\n\nThe key insight is to think in reverse: instead of which balloon to burst first, consider which to burst last in each interval. Define dp[i][j] = max coins from bursting all balloons between i and j (exclusive). For each k in (i, j), if k is the last balloon burst, dp[i][j] = max(dp[i][k] + dp[k][j] + nums[i]*nums[k]*nums[j]).\n\nPad the array with 1s at both ends. Fill the table by interval length. Time is O(n^3) and space is O(n^2). The "think about what happens last" reversal technique is a powerful DP trick that also appears in matrix chain multiplication and optimal BST construction. It transforms a problem with changing neighbors into one with fixed boundaries.`,
     instructions: [
       'Implement a function to maximize coins from bursting balloons',
       'When bursting balloon i, coins = nums[left] * nums[i] * nums[right]',
@@ -7269,6 +7353,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find the minimum number of scalar multiplications to compute a chain of matrix products by choosing optimal parenthesization. This interval DP problem tries every split point for each subchain, computing cost as left + right + merge. It is the canonical example of interval dynamic programming in computer science.',
+    explanation: `Matrix chain multiplication finds the optimal parenthesization to minimize scalar multiplications when multiplying a chain of matrices. It is a classic interval DP problem.\n\nDefine dp[i][j] = minimum cost to multiply matrices i through j. Try every split point k: dp[i][j] = min over k of dp[i][k] + dp[k+1][j] + dims[i] * dims[k+1] * dims[j+1]. The split point k determines where to place parentheses.\n\nFill the table by increasing chain length. Time is O(n^3) and space is O(n^2). This problem introduced the "interval DP" paradigm where subproblems are contiguous ranges. It appears in compiler optimization (expression evaluation order), computational biology (RNA folding), and database query planning (join ordering). The pattern of trying all split points within an interval applies to many optimization problems over sequences.`,
     instructions: [
       'Implement a function to find minimum scalar multiplications',
       'dims array represents matrix dimensions: matrix i is dims[i-1] × dims[i]',
@@ -7341,6 +7426,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the length of the longest contiguous substring common to two strings. Unlike longest common subsequence, the characters must be consecutive. The 2D DP resets to 0 on mismatch, tracking the maximum value seen. This distinction between substring and subsequence is a common interview discussion point.',
+    explanation: `Longest common substring finds the longest contiguous sequence shared by two strings. Unlike longest common subsequence, the match must be consecutive characters.\n\nDefine dp[i][j] = length of the longest common substring ending at s1[i-1] and s2[j-1]. If characters match, dp[i][j] = dp[i-1][j-1] + 1. If they differ, dp[i][j] = 0 (the contiguity constraint resets). Track the maximum value seen.\n\nTime is O(m * n) and space can be optimized to O(min(m, n)) since each row depends only on the previous. For very long strings, suffix arrays or suffix trees can solve this in O(m + n) time. Common substrings are fundamental to plagiarism detection, DNA sequence alignment, file diffing algorithms (like git diff), and data deduplication in storage systems.`,
     instructions: [
       'Implement a function that finds the longest common substring length',
       'The substring must be contiguous in both strings',
@@ -7415,6 +7501,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Check if string s3 is formed by interleaving s1 and s2 while preserving character order from each source. This 2D DP problem uses dp[i][j] to track if the first i+j characters of s3 can be formed from s1[0..i-1] and s2[0..j-1]. It teaches multi-source string matching with order preservation.',
+    explanation: `Interleaving string asks whether a target string can be formed by interleaving two source strings while preserving the relative order within each source.\n\nDefine dp[i][j] = whether the first i characters of s1 and first j characters of s2 can interleave to form the first i+j characters of the target. dp[i][j] is true if either dp[i-1][j] is true and s1[i-1] matches target[i+j-1], or dp[i][j-1] is true and s2[j-1] matches target[i+j-1].\n\nTime and space are O(m * n), reducible to O(min(m, n)) space. The 2D boolean DP table represents a grid where you move right (use s2's next character) or down (use s1's next character), and valid paths reach the bottom-right corner. This problem tests understanding of multi-source string DP and appears in version control merge algorithms, network packet interleaving, and parallel stream synchronization.`,
     instructions: [
       'Implement a function to check if s3 is an interleaving of s1 and s2',
       'Character order from s1 and s2 must be preserved',
@@ -7498,6 +7585,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the maximum sum of non-adjacent elements in an array, a generalization of the house robber problem. The DP recurrence at each position chooses between including the current element plus dp[i-2] or skipping it with dp[i-1]. This O(n) time, O(1) space pattern is fundamental to decision-based DP.',
+    explanation: `Maximum sum of non-adjacent elements is equivalent to the house robber problem. Given an array, find the maximum sum of elements such that no two selected elements are adjacent.\n\nThe recurrence dp[i] = max(dp[i-1], dp[i-2] + nums[i]) captures the choice at each position: skip it (carry forward dp[i-1]) or take it (add to dp[i-2]). Since only the last two states matter, use two rolling variables for O(1) space.\n\nThis O(n) solution is one of the most elegant DP formulations. Handle edge cases: empty array returns 0, single element returns that element. The non-adjacency constraint creates a clean two-state recurrence that serves as a template for many "select or skip" optimization problems. It appears in scheduling (non-overlapping jobs), resource allocation with cooldowns, and signal processing (selecting non-interfering frequencies).`,
     instructions: [
       'Implement a function to find maximum sum with no adjacent elements',
       'Cannot select two adjacent elements',
@@ -7566,6 +7654,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Check if a string is a palindrome considering only alphanumeric characters and ignoring case. This beginner string problem teaches two key techniques: filtering input with regex and then using two pointers from both ends to verify symmetry. It is a common first-round screening interview question.',
+    explanation: `Valid palindrome with alphanumeric filtering asks whether a string reads the same forwards and backwards after removing non-alphanumeric characters and ignoring case. It is a practical string cleaning problem.\n\nUse two pointers from both ends. Skip non-alphanumeric characters by advancing the respective pointer. Compare lowercase versions of the characters at both pointers. If they differ, it is not a palindrome. If pointers cross without a mismatch, it is.\n\nThis O(n) time, O(1) space solution avoids creating a cleaned copy of the string. The two-pointer technique on strings is a fundamental pattern for in-place comparisons. This problem teaches input normalization, which is essential in real-world applications: user input validation, URL canonicalization, search query processing, and any system that must be resilient to formatting variations in input data.`,
     instructions: [
       'Implement a function to check if string is a valid palindrome',
       'Consider only alphanumeric characters',
@@ -7634,6 +7723,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the length of the longest substring without repeating characters using a sliding window. This teaches the expanding-contracting window pattern: expand the right boundary, and when a duplicate is found, jump the left boundary past its previous occurrence. A Map tracks last-seen positions for O(n) time.',
+    explanation: `Longest substring without repeating characters asks for the length of the longest contiguous window containing all unique characters. It is the most classic sliding window problem.\n\nMaintain a window [left, right] and a set (or map) of characters in the current window. Expand right, adding characters. When a duplicate is found, shrink from the left until the duplicate is removed. Track the maximum window size.\n\nUsing a map that stores each character's last index allows jumping the left pointer directly, giving a cleaner O(n) solution. Space is O(min(n, alphabet)) for the character set. This sliding window pattern is foundational: it applies to longest substring with at most k distinct characters, minimum window substring, and any problem seeking an optimal contiguous range satisfying a constraint. It is asked in nearly every coding interview.`,
     instructions: [
       'Implement a function to find longest substring without repeats',
       'Use sliding window technique',
@@ -7704,6 +7794,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find the minimum window in string s containing all characters of string t. This advanced sliding window problem expands right until all required characters are included, then contracts left to minimize. Two frequency maps track required vs. current counts. It is one of the hardest sliding window interview problems.',
+    explanation: `Minimum window substring asks for the smallest substring of s that contains all characters of t (including duplicates). It is one of the hardest sliding window problems.\n\nUse a frequency map for t's characters and a sliding window on s. Expand right to include characters, tracking how many of t's character requirements are met. When all characters are covered, shrink from the left to find the minimum window, then continue expanding.\n\nTime is O(|s| + |t|) since each character is added and removed at most once. The "expand until valid, then shrink" pattern is the key technique. Getting the bookkeeping right (counting matched characters, updating the minimum) is the main challenge. This problem appears in bioinformatics (finding minimal gene sequences containing required markers), text search, and log analysis. It is a common hard-difficulty interview question at top companies.`,
     instructions: [
       'Implement a function to find minimum window containing all chars from t',
       'Use sliding window technique',
@@ -7801,6 +7892,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Group strings that are anagrams of each other by using sorted characters as a hash key. This teaches the canonical-form hashing pattern: sorting each word produces an identical key for all anagrams, enabling O(n * k log k) grouping. It is a common interview question testing hash map and string skills.',
+    explanation: `Group anagrams collects strings that are anagrams of each other into groups. Two strings are anagrams if they contain the same characters with the same frequencies.\n\nThe most common approach sorts each string and uses the sorted version as a hash map key. All anagrams produce the same sorted key. Alternatively, create a character frequency count as the key (e.g., "a2b1c1") to avoid the O(k log k) sorting per string.\n\nWith sorted keys, time is O(n * k log k) where n is the number of strings and k is the maximum length. With frequency keys, it is O(n * k). The problem teaches the fundamental technique of canonical forms: transforming objects into a standard representation so that equivalent objects map to the same key. This pattern appears in duplicate detection, database normalization, and equivalence class computation.`,
     instructions: [
       'Implement a function to group anagrams together',
       'Anagrams are words with same characters in different order',
@@ -7874,6 +7966,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Compress a string by replacing consecutive character runs with the character and count (e.g., "aabcccccaaa" becomes "a2b1c5a3"). If the compressed version is not shorter, return the original. This teaches run-length encoding, a basic compression algorithm used in image formats and data transmission.',
+    explanation: `String compression encodes consecutive repeated characters as the character followed by its count (e.g., "aabccc" becomes "a2b1c3"). Return the compressed string only if it is shorter than the original.\n\nIterate through the string tracking the current character and its consecutive count. When the character changes (or the string ends), append the character and count to the result. Compare final length with the original.\n\nThis O(n) time, O(n) space solution is straightforward but teaches careful boundary handling: do not forget to flush the last run. The compression is a simplified run-length encoding (RLE), one of the simplest lossless compression schemes. RLE is used in fax machines, bitmap graphics (BMP files), and as a component of more sophisticated compression algorithms. The problem also appears in Cracking the Coding Interview as a basic string manipulation exercise.`,
     instructions: [
       'Implement basic string compression using character counts',
       'Format: "aabcccccaaa" becomes "a2b1c5a3"',
@@ -7942,6 +8035,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Design an algorithm to encode an array of strings into a single string and decode it back. Using length-prefixed format (length + delimiter + content) handles strings containing any characters, including the delimiter itself. This serialization technique is used in network protocols and file formats.',
+    explanation: `Encode and decode strings designs a codec that serializes a list of strings into a single string and deserializes it back. The challenge is handling strings that contain any character including your delimiter.\n\nA robust approach uses length-prefixing: encode each string as its length followed by a delimiter (like '#') followed by the actual string. For example, ["abc", "de"] becomes "3#abc2#de". Decoding reads the length, skips the delimiter, and extracts that many characters.\n\nThis O(n) scheme handles any character in the strings since you never search for delimiters in the content. This is exactly how many network protocols work: HTTP chunked encoding, Protocol Buffers, and binary serialization formats all use length-prefixing. The problem teaches the fundamental concept of self-describing data formats, which is essential for building robust serialization layers in distributed systems.`,
     instructions: [
       'Implement encode and decode functions for array of strings',
       'Use length-prefixed format: length + delimiter + string',
@@ -8033,6 +8127,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Convert a Roman numeral string to its integer value, handling subtractive notation like IV=4, IX=9, XL=40. The key insight is scanning left to right: if the current symbol is less than the next one, subtract it; otherwise add it. This elegantly handles all subtractive cases in a single O(n) pass.',
+    explanation: `Roman to integer conversion parses a Roman numeral string into its decimal value. The key rule is that smaller values before larger ones are subtracted (IV = 4, not 6).\n\nMap each Roman character to its value. Iterate through the string: if the current value is less than the next value, subtract it (subtractive case like IV, XL, CD). Otherwise, add it. Process left to right in a single pass.\n\nThis O(n) time, O(1) space solution handles all standard Roman numeral rules. The subtraction rule creates a simple conditional that makes the problem elegant despite the irregular number system. Roman numeral parsing appears in document processing, date formatting, and legacy system interfaces. The problem teaches lookup-table-driven parsing, a technique that extends to more complex grammars and custom numeral systems.`,
     instructions: [
       'Implement a function to convert roman numerals to integer',
       'Handle I, V, X, L, C, D, M',
@@ -8111,6 +8206,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Convert an integer (1-3999) to a Roman numeral string using standard symbols and subtractive notation. The greedy approach processes a value-symbol table from largest to smallest, repeatedly subtracting and appending. Including subtractive pairs (900, 400, 90, 40, 9, 4) in the table handles all special cases.',
+    explanation: `Integer to Roman numeral conversion builds a Roman numeral string from a decimal integer. The approach uses a greedy algorithm with a value table.\n\nCreate a table of value-symbol pairs in descending order, including subtractive forms (900='CM', 400='CD', etc.). Iterate through the table: while the number is >= the current value, append the symbol and subtract the value. This greedy approach works because Roman numerals have a specific set of denominations that guarantee optimal representation.\n\nTime is O(1) since the number is bounded (typically 1-3999) and the table has fixed size. The greedy decomposition mirrors how change-making works with standard currency denominations. The problem teaches that greedy algorithms work when the denomination system has the "greedy property" (each larger denomination is at least twice the next). It pairs naturally with Roman-to-integer as a bidirectional conversion exercise.`,
     instructions: [
       'Implement a function to convert integer to roman numerals',
       'Handle values 1-3999',
@@ -8177,6 +8273,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find all occurrences of a pattern in text using the Knuth-Morris-Pratt algorithm, which avoids redundant comparisons by precomputing a failure function (LPS array). KMP achieves O(n+m) time by using prefix-suffix information to skip ahead on mismatches. It is a fundamental string matching algorithm taught in CS curricula.',
+    explanation: `The KMP (Knuth-Morris-Pratt) algorithm finds all occurrences of a pattern in a text in O(n + m) time, avoiding the O(nm) worst case of naive string matching.\n\nThe key is the failure function (also called the prefix table), which precomputes for each position in the pattern the length of the longest proper prefix that is also a suffix. When a mismatch occurs during matching, the failure function tells you exactly where to resume in the pattern, avoiding redundant comparisons.\n\nBuilding the failure function takes O(m) time using a self-matching process. The main search then runs in O(n) since neither the text pointer nor the effective pattern pointer ever moves backward. KMP is fundamental to text editors (find/replace), network intrusion detection (packet inspection), bioinformatics (DNA pattern searching), and compiler lexers. Understanding it deeply also opens the door to Aho-Corasick for multi-pattern matching.`,
     instructions: [
       'Implement KMP algorithm for pattern matching',
       'Build failure function (LPS array) for pattern',
@@ -8280,6 +8377,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the longest palindromic substring using the expand-around-center approach. For each position, expand outward for both odd-length and even-length palindromes while characters match. This achieves O(n^2) time with O(1) space and is more intuitive than the Manacher algorithm for interview settings.',
+    explanation: `Finding the longest palindromic substring requires checking all possible centers and expanding outward. The "expand around center" approach is the most intuitive O(n^2) solution.\n\nFor each index (and each pair of adjacent indices), expand outward as long as characters match. Track the longest palindrome found. There are 2n - 1 possible centers (n single-character centers and n-1 between-character centers).\n\nEach expansion takes O(n) worst case, giving O(n^2) total. Manacher's algorithm achieves O(n) by reusing information from previous palindrome expansions, though it is rarely required in interviews. The expand-around-center technique is clean and practical for most use cases. Palindrome substring detection appears in bioinformatics (finding palindromic sequences in DNA), natural language processing, and data compression. It is one of the most frequently asked string problems in technical interviews.`,
     instructions: [
       'Implement a function to find longest palindromic substring',
       'Use expand-around-center technique',
@@ -8364,6 +8462,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       "Convert a string to a 32-bit signed integer, replicating C's atoi function. This state-machine problem handles whitespace skipping, optional sign detection, digit parsing, and integer overflow clamping. It teaches defensive parsing and boundary checking, testing attention to edge cases in interview settings.",
+    explanation: `String to integer (atoi) parses a string into a 32-bit signed integer, handling whitespace, optional sign, digit parsing, and overflow clamping. It tests careful state-machine implementation.\n\nProcess the string in stages: (1) skip leading whitespace, (2) read optional '+' or '-' sign, (3) read consecutive digits, converting character by character. Clamp the result to [-2^31, 2^31 - 1] if it overflows. Stop at the first non-digit character after the optional sign.\n\nThe algorithm runs in O(n) time and O(1) space. The main challenge is handling edge cases: empty strings, strings with only whitespace, overflow detection before it happens (check before multiplying by 10), and strings with no valid digits. This problem mirrors the actual implementation of parseInt/atoi in standard libraries. It teaches defensive parsing, input validation, and overflow-safe arithmetic, all critical skills for production code dealing with user input.`,
     instructions: [
       'Implement string to integer conversion',
       'Skip leading whitespace',
@@ -8453,6 +8552,7 @@ export const javascriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Arrange a string in a zigzag pattern across a given number of rows, then read line by line to produce the output. This simulation problem uses a direction toggle at row boundaries (top and bottom) to distribute characters across row buffers. It teaches index-pattern recognition and modular traversal logic.',
+    explanation: `Zigzag string conversion writes a string in a zigzag pattern across rows and then reads it row by row. Given the number of rows, produce the concatenated result.\n\nThe direct simulation approach assigns each character to its row. Characters move down row by row, then bounce back up at the bottom. Track the current row and direction, appending each character to the appropriate row's buffer. Finally, concatenate all row buffers.\n\nTime and space are O(n) where n is the string length. An alternative mathematical approach calculates the index pattern: characters in each row follow a regular cycle of length 2*(numRows-1). The first and last rows have one character per cycle; middle rows have two. This direct indexing avoids simulation. The problem teaches both simulation-based and formula-based approaches to pattern problems, a choice that frequently arises in rendering, signal processing, and matrix traversal tasks.`,
     instructions: [
       'Implement zigzag string conversion',
       'Write string in zigzag pattern with numRows rows',

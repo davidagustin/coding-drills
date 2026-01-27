@@ -18,6 +18,7 @@ export interface Exercise {
   category: ExerciseCategory;
   difficulty: ExerciseDifficulty;
   description: string;
+  explanation?: string; // Long-form educational content shown in Learn tab
   instructions: string[];
   starterCode: string;
   solutionCode: string;

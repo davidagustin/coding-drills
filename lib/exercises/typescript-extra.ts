@@ -8,6 +8,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Compute how much rainwater is trapped between bars of an elevation map. This classic hard interview problem teaches the two-pointer technique for computing bounded areas, widely used in problems requiring simultaneous left-right boundary tracking with O(n) time and O(1) space.',
+    explanation: `The trapping rain water problem asks you to compute how much water can be held between bars of an elevation map after rainfall. It is one of the most frequently asked interview problems at top tech companies.\n\nThe key insight is that the water above any bar depends on the minimum of the tallest bar to its left and the tallest bar to its right, minus the bar's own height. The two-pointer approach achieves O(n) time and O(1) space by maintaining running maximums from both ends.\n\nStart with pointers at both ends. Move the pointer with the smaller max inward, accumulating water as you go. This works because the smaller side is always the bottleneck — you don't need to know the other side's exact max, just that it's at least as tall. This pattern of converging pointers with running aggregates shows up in container problems, histogram questions, and any scenario where a value depends on context from both directions.`,
     instructions: [
       'Use a two-pointer approach with left and right pointers',
       'Track the maximum height seen from left and right',
@@ -92,6 +93,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find two vertical lines that form a container holding the most water. This problem demonstrates why the greedy two-pointer convergence strategy works for optimization on pairs: always move the shorter side inward because widening cannot compensate for a shorter boundary.',
+    explanation: `You are given an array of heights representing vertical lines on a number line, and you need to find the pair that forms a container holding the most water. This is a staple two-pointer problem that appears in virtually every interview prep resource.\n\nThe core insight is that area equals the minimum of the two heights multiplied by the distance between them. Starting with the widest possible container (pointers at both ends), you greedily move the shorter pointer inward because a shorter boundary can never produce a larger area regardless of width.\n\nThis greedy argument works because the only way to increase the constraining height is to try a taller line. Moving the taller line inward would only decrease the width without any guarantee of increasing the height. The algorithm runs in O(n) time with O(1) space, making it vastly more efficient than the brute-force O(n^2) approach of checking every pair.`,
     instructions: [
       'Use two pointers at the beginning and end of the array',
       'Calculate area = min(height[left], height[right]) * (right - left)',
@@ -162,6 +164,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Build an array where each element is the product of all other elements, without using division. This teaches the prefix-suffix decomposition pattern: compute running products from both ends in two passes, a technique that generalizes to many problems requiring contextual aggregation around each index.',
+    explanation: `This problem requires building an output array where each element equals the product of every other element in the input, without using division. It tests your ability to decompose a global operation into composable local computations.\n\nThe prefix-suffix technique solves this elegantly in two passes. In the first pass (left to right), you compute a running product of all elements before each index. In the second pass (right to left), you multiply each position by the running product of all elements after it.\n\nThe result at each index is the product of its prefix and suffix products. This achieves O(n) time and O(1) extra space (beyond the output array). The prefix-suffix decomposition pattern generalizes to many problems where each element needs aggregated context from both sides, such as computing max from left and right, or tracking running statistics in both directions.`,
     instructions: [
       'Create an output array initialized with 1s',
       'First pass: calculate prefix products (product of all elements to the left)',
@@ -230,6 +233,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'For each element, find the next greater element to its right using a monotonic stack. This foundational pattern powers stock span, daily temperatures, and histogram problems. The key insight is processing right-to-left and maintaining a decreasing stack of candidates.',
+    explanation: `For each element in an array, you need to find the next element to its right that is strictly greater. This is the foundational monotonic stack problem that unlocks an entire family of related questions like daily temperatures, stock span, and largest rectangle in histogram.\n\nThe key technique is the monotonic decreasing stack: by processing elements from right to left, you maintain a stack of candidates that could be the "next greater" for future elements. When you encounter a new element, you pop all stack entries that are smaller or equal — they can never be the answer for any element to the left.\n\nEach element is pushed and popped at most once, giving O(n) amortized time with O(n) space. The elegance of this approach is that the stack naturally prunes irrelevant candidates. In real-world systems, this pattern appears in event processing where you need to find the next event exceeding a threshold, and in financial applications tracking price breakouts.`,
     instructions: [
       'Use a stack to track indices of elements',
       'Iterate through the array from right to left',
@@ -300,6 +304,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Find the maximum profit from buying and selling a stock once. This classic interview problem teaches the single-pass minimum-tracking pattern: maintain the lowest price seen so far and compute the best possible profit at each step, an approach used in many optimization problems with ordering constraints.',
+    explanation: `You are given daily stock prices and must find the maximum profit from a single buy-sell transaction. This is often the first dynamic programming or greedy problem people encounter, and it builds intuition for tracking running optima.\n\nThe algorithm maintains the lowest price seen so far as you scan left to right. At each price, you compute the profit you would earn by selling at that price (current price minus the running minimum) and update the best profit if it improves.\n\nThis single-pass approach runs in O(n) time and O(1) space. The reason it works is that the optimal buy always precedes the optimal sell, so maintaining a running minimum captures every possible buy point. This minimum-tracking pattern extends to problems like finding the maximum difference in an array with ordering constraints, or tracking best entry points in streaming data.`,
     instructions: [
       'Track the minimum price seen so far',
       'For each price, calculate profit if selling at current price',
@@ -369,6 +374,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Maximize stock profit with unlimited buy-sell transactions. The greedy insight is that capturing every positive day-to-day price difference is mathematically equivalent to finding optimal buy-sell windows. This pattern illustrates how greedy decomposition can simplify seemingly complex multi-transaction optimization.',
+    explanation: `This variant allows unlimited buy-sell transactions and asks you to maximize total profit. Unlike the single-transaction version, you can buy and sell repeatedly as long as you don't hold more than one share at a time.\n\nThe greedy insight is surprisingly simple: capture every positive day-to-day price difference. If today's price is higher than yesterday's, you should have been holding (buy yesterday, sell today). Summing all positive consecutive differences is mathematically equivalent to finding optimal buy-sell windows.\n\nThis works because any multi-day profit (buy on day 1, sell on day 5) equals the sum of daily gains within that window. The algorithm runs in O(n) time and O(1) space. This decomposition of complex multi-decision optimization into simple local greedy choices is a powerful technique that appears in scheduling, resource allocation, and any problem where global optimality can be achieved through locally optimal steps.`,
     instructions: [
       'Identify all profitable consecutive day pairs',
       'Add profit whenever next day price is higher',
@@ -429,6 +435,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Determine if you can reach the last index by jumping through an array of maximum jump lengths. This greedy reachability problem teaches tracking the farthest reachable position in a single pass, a technique used in network connectivity and resource allocation problems.',
+    explanation: `Given an array where each element represents the maximum jump length from that position, determine if you can reach the last index starting from the first. This is a reachability problem that introduces the greedy frontier-extension technique.\n\nThe algorithm maintains a single variable: the farthest index reachable so far. As you scan left to right, you update this frontier by taking the maximum of its current value and the current index plus its jump length. If you ever find yourself at an index beyond the frontier, you are stuck.\n\nThis runs in O(n) time and O(1) space. The greedy argument is that if a position is reachable, all positions before it are also reachable (since they were on the path). Therefore, you only need to track the farthest reachable point, not the specific path. This pattern is used in network connectivity analysis, resource coverage problems, and interval scheduling.`,
     instructions: [
       'Track the farthest position reachable',
       'Iterate through the array',
@@ -500,6 +507,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Find the minimum number of jumps to reach the last index in an array of jump lengths. This problem introduces BFS-like level processing on arrays: each "level" represents positions reachable with one additional jump, enabling O(n) greedy optimization over naive O(n^2) approaches.',
+    explanation: `This harder variant asks for the minimum number of jumps to reach the last index, not just whether it is possible. It introduces BFS-style level processing on an array, where each "level" represents positions reachable with one additional jump.\n\nThe algorithm tracks two boundaries: the end of the current jump level and the farthest position reachable from within the current level. When you reach the end of a level, you must take another jump, moving the boundary to the farthest reachable point.\n\nThis is essentially BFS without an explicit queue — each level processes a contiguous range of indices. The time complexity is O(n) and space is O(1). The BFS-on-array pattern applies to any problem where you need the minimum number of steps to traverse a sequence, such as minimum operations in transformation problems or shortest path in implicit graphs defined by array values.`,
     instructions: [
       'Use BFS-like approach with levels representing number of jumps',
       'Track current jump range and next jump range',
@@ -578,6 +586,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the starting gas station to complete a circular route given fuel and cost arrays. This greedy problem relies on a key mathematical insight: if total gas exceeds total cost, a valid start exists, and resetting the start whenever the tank goes negative finds it in one pass.',
+    explanation: `You need to find a starting gas station on a circular route where you can complete a full loop given fuel capacities and travel costs at each station. This problem combines circular array reasoning with a greedy reset strategy.\n\nThe first key insight is mathematical: if total gas is at least total cost, a valid starting station must exist. The second insight is that if your running fuel balance goes negative at some station, no station between your current start and that station can work either — so you reset your start to the next station.\n\nThis single-pass algorithm runs in O(n) time and O(1) space. The proof relies on the fact that if a prefix sum goes negative, starting from any point within that prefix would give an even more negative balance at the failure point. This "reset on failure" greedy pattern appears in problems involving circular arrangements, segment selection, and finding optimal starting points in cyclical processes.`,
     instructions: [
       'Check if total gas >= total cost (otherwise impossible)',
       'Track current tank balance',
@@ -659,6 +668,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find all unique triplets in an array that sum to zero using sorting and two pointers. This quintessential interview problem teaches how sorting enables efficient pair-finding with O(n^2) time, and how to skip duplicates systematically to avoid redundant results.',
+    explanation: `Find all unique triplets in an array that sum to zero. This is perhaps the most commonly asked medium-difficulty interview question, testing your ability to combine sorting with the two-pointer technique and handle duplicates cleanly.\n\nThe approach sorts the array first, then fixes one element and uses two pointers to find complementary pairs in the remaining sorted portion. After finding a valid triplet, both pointers skip over duplicate values to avoid producing the same triplet again.\n\nThe time complexity is O(n^2) — one loop for the fixed element and a linear scan for the two pointers. Space is O(1) beyond the output. The duplicate-skipping technique is critical: without it, you would need to deduplicate results afterward, which is messier and less efficient. This sort-then-two-pointer pattern extends to k-sum problems, closest-sum variants, and any problem requiring efficient pair searching in sorted data.`,
     instructions: [
       'Sort the array first',
       'For each element, use two pointers to find pairs that sum to negative of that element',
@@ -747,6 +757,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Remove duplicates from a sorted array in-place allowing at most two occurrences of each element. This teaches the read-write pointer pattern for in-place array compaction, where comparing against the element two positions behind the write pointer elegantly enforces the at-most-two constraint.',
+    explanation: `Remove duplicates from a sorted array in-place, allowing at most two occurrences of each element. This teaches a general technique for in-place array compaction with frequency constraints that is cleaner than most people expect.\n\nThe elegant solution uses a read pointer and a write pointer. The write pointer starts at position 2 (the first two elements are always kept). For each subsequent element, you compare it against the element two positions before the write pointer. If they differ, the element is valid and gets written.\n\nThis comparison against writePointer - 2 automatically enforces the at-most-two constraint because the written portion is always sorted. The algorithm runs in O(n) time with O(1) space. This "compare against k positions back" technique generalizes to any maximum frequency constraint — just change the offset. It appears in data deduplication, stream processing, and database query result limiting.`,
     instructions: [
       'Use a write pointer to track where to place next valid element',
       'Allow first two occurrences of each element',
@@ -811,6 +822,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Find the longest consecutive integer sequence in an unsorted array in O(n) time. The key insight is using a hash set and only starting a count from sequence beginnings (numbers with no predecessor). This avoids redundant traversals and is a common interview question testing hash-based optimization.',
+    explanation: `Find the length of the longest consecutive integer sequence in an unsorted array, and do it in O(n) time. This rules out sorting and requires a hash-based approach that cleverly avoids redundant work.\n\nThe technique is to insert all numbers into a Set, then only start counting from sequence beginnings — numbers that have no predecessor (num - 1) in the set. From each starting number, you count forward through consecutive values.\n\nThis achieves O(n) time because each number is visited at most twice: once when checking if it is a start, and once when being counted as part of a sequence. The space is O(n) for the set. The "only start from the beginning" optimization is the key insight — without it, you might re-traverse overlapping sequences. This pattern of using hash sets to eliminate redundant traversals applies broadly in problems requiring linear-time detection of patterns in unsorted data.`,
     instructions: [
       'Add all numbers to a Set for O(1) lookup',
       'For each number, check if it is the start of a sequence (no num-1 in set)',
@@ -888,6 +900,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Move all zeros to the end of an array while preserving the relative order of non-zero elements, in-place. This beginner-friendly problem introduces the read-write two-pointer swap technique, a building block for partition-based algorithms like quicksort and the Dutch national flag problem.',
+    explanation: `Move all zeros to the end of an array while maintaining the relative order of non-zero elements, doing everything in-place. This is an excellent introductory problem for learning the read-write pointer swap pattern.\n\nThe algorithm uses a write pointer that marks where the next non-zero element should go. A read pointer scans through the array, and whenever it finds a non-zero value, it swaps that value with the position at the write pointer, then advances the write pointer.\n\nAfter the scan completes, all non-zero elements are packed at the front in their original order, and zeros naturally fill the remaining positions. This runs in O(n) time with O(1) space. The same swap-based partitioning technique is the foundation of quicksort's partition step, the Dutch national flag problem, and any in-place array rearrangement where elements need to be segregated by some predicate.`,
     instructions: [
       'Use a write pointer to track where to place next non-zero',
       'Iterate through array with read pointer',
@@ -947,6 +960,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'beginner' as const,
     description:
       'Partition an array so all even numbers appear before odd numbers while preserving relative order within each group. This stable partitioning exercise teaches the two-pass filtering approach and is a practical introduction to array rearrangement problems common in sorting and data processing.',
+    explanation: `Rearrange an array so all even numbers come before all odd numbers while preserving relative order within each group. This stable partitioning exercise demonstrates a fundamental array rearrangement concept.\n\nThe simplest approach uses two passes: first collect all even numbers in order, then collect all odd numbers in order. This guarantees stability (preserving original relative order within each group) at the cost of O(n) extra space.\n\nAn in-place approach using two pointers is possible but sacrifices stability for O(1) space. The two-pass filter method runs in O(n) time and O(n) space. Stable partitioning appears frequently in data processing pipelines, database query results ordering, and sorting algorithms. Understanding the tradeoff between stability and space is essential for choosing the right approach in production systems.`,
     instructions: [
       'Create result array or use two-pointer in-place approach',
       'Collect all even numbers first in order',
@@ -1018,6 +1032,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'advanced' as const,
     description:
       'Distribute minimum candies to children in a line where higher-rated children get more than their neighbors. This hard greedy problem demonstrates the two-pass constraint satisfaction technique: satisfy left-neighbor constraints in one pass, then right-neighbor in a reverse pass, taking the maximum at each position.',
+    explanation: `Distribute the minimum total number of candies to children in a line where each child with a higher rating than a neighbor must receive more candy. This hard greedy problem requires satisfying simultaneous left and right constraints.\n\nThe two-pass strategy handles each constraint independently. The left-to-right pass ensures each child rated higher than the left neighbor gets more candy. The right-to-left pass does the same for the right neighbor, taking the maximum at each position to satisfy both constraints simultaneously.\n\nThis achieves O(n) time and O(n) space. The key insight is that bidirectional constraints can be decomposed into two unidirectional passes, then merged by taking the maximum. This two-pass constraint satisfaction technique appears in problems like trapping rain water, product of array except self, and any scenario where each element is constrained by both its predecessors and successors.`,
     instructions: [
       'Initialize all children with 1 candy',
       'Left to right pass: if rating[i] > rating[i-1], give more candy',
@@ -1095,6 +1110,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Count the number of islands in a 2D grid of land and water cells using DFS flood-fill. This fundamental graph traversal problem teaches connected component counting on grids, a pattern used in image processing, geographic analysis, and any problem requiring region detection in 2D space.',
+    explanation: `Count the number of islands in a 2D grid where '1' represents land and '0' represents water. This is the canonical connected component counting problem on grids, serving as the gateway to an entire family of grid-based graph problems.\n\nThe algorithm scans every cell. When it finds unvisited land, it increments the island count and launches a DFS (or BFS) flood fill to mark all connected land cells as visited. By "sinking" visited land (setting it to '0'), you avoid revisiting cells without needing a separate visited array.\n\nTime complexity is O(rows * cols) since each cell is visited at most twice (once in the scan, once in the DFS). Space is O(rows * cols) in the worst case for the recursion stack. This flood-fill connected component pattern is used in image processing (region detection), geographic analysis (territory mapping), and game development (pathfinding and terrain analysis).`,
     instructions: [
       'Iterate through each cell in the grid',
       'When land ("1") is found, increment island count',
@@ -1197,6 +1213,7 @@ export const typescriptExtraExercises: Exercise[] = [
     difficulty: 'intermediate' as const,
     description:
       'Create a deep copy of a connected undirected graph by cloning every node and reconstructing all neighbor relationships. This teaches DFS-based graph traversal with visited-node tracking via a hash map, essential for handling circular references during serialization, object cloning, and garbage collection.',
+    explanation: `Create a deep copy of an undirected graph where each node has a value and a list of neighbors. The challenge is handling circular references — nodes that point back to already-visited nodes — without entering infinite recursion.\n\nThe solution uses DFS with a hash map that maps each original node to its clone. Before recursing into a node, check if it has already been cloned. If so, return the existing clone. If not, create the clone, register it in the map, then recursively clone all neighbors.\n\nThis runs in O(V + E) time and O(V) space for the map. The map serves double duty: it prevents infinite loops AND ensures structural sharing is preserved (if two nodes share a neighbor, the clone maintains that relationship). This clone-with-visited-map pattern is fundamental to garbage collection algorithms, serialization frameworks, and any system that needs to deep-copy structures with cycles.`,
     instructions: [
       'Use a Map to track original node -> cloned node mapping',
       'Perform DFS starting from the given node',
@@ -1275,6 +1292,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     difficulty: 'intermediate' as const,
     description:
       'Determine if all courses can be finished given prerequisite dependencies, detecting circular dependencies. This teaches directed graph cycle detection using DFS with three-state coloring, the foundation of topological sorting used in build systems, task schedulers, and dependency resolution.',
+    explanation: `Determine whether all courses can be completed given a set of prerequisite dependencies. This is fundamentally a cycle detection problem on a directed graph — if there is a cycle in the prerequisites, it is impossible to complete all courses.\n\nThe algorithm uses DFS with three-state coloring: unvisited (0), currently visiting (1), and fully visited (2). If during DFS you encounter a node that is currently being visited, you have found a back edge, which means a cycle exists.\n\nTime complexity is O(V + E) where V is the number of courses and E is the number of prerequisites. The three-state approach is more robust than simple visited tracking because it distinguishes between nodes on the current DFS path (where back edges indicate cycles) and nodes already fully explored (which are safe to skip). This cycle detection technique powers build systems (detecting circular dependencies), package managers, task schedulers, and database migration tools.`,
     instructions: [
       'Build adjacency list from prerequisites',
       'Use DFS with three states: unvisited, visiting, visited',
@@ -1381,6 +1399,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     difficulty: 'intermediate' as const,
     description:
       'Capture all O-regions surrounded by X on a 2D board by flipping them to X, sparing boundary-connected regions. This teaches the reverse-thinking DFS strategy: instead of finding surrounded regions directly, mark safe regions from boundaries first, then flip everything else.',
+    explanation: `Capture all 'O' regions on a board that are completely surrounded by 'X', flipping them to 'X'. The trick is that regions touching any edge of the board cannot be captured because they are not fully surrounded.\n\nInstead of checking each 'O' region to see if it is surrounded (which is complex), use the reverse approach: start DFS from every 'O' on the border to mark all border-connected cells as safe. Then everything not marked safe is surrounded and should be flipped.\n\nThis boundary-first DFS runs in O(rows * cols) time and space. The reverse-thinking strategy — marking what to keep instead of what to remove — often simplifies problems where the "remove" condition is harder to verify directly. This pattern appears in image processing (keeping foreground objects connected to edges), game of life variations, and any grid problem where boundary connectivity determines cell fate.`,
     instructions: [
       'Mark all "O"s connected to boundaries as safe (use DFS from border)',
       'Change safe "O"s to a temporary marker (e.g., "S")',
@@ -1487,6 +1506,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     difficulty: 'intermediate' as const,
     description:
       'Simulate rotting oranges spreading in a grid and return the time until all are rotten. This is the canonical multi-source BFS problem: all rotten oranges expand simultaneously, and each BFS level equals one time unit. This pattern applies to wildfire simulation, network broadcast, and infection spread modeling.',
+    explanation: `Simulate rotting oranges spreading in a 2D grid: each minute, every rotten orange infects its four adjacent fresh oranges. Return the time until all oranges are rotten, or -1 if some remain fresh. This is the canonical multi-source BFS problem.\n\nThe key is that ALL initially rotten oranges are seeds that spread simultaneously, not one at a time. You initialize the BFS queue with every rotten orange at once. Each BFS level represents one minute of spreading. After BFS completes, check if any fresh oranges remain.\n\nThe algorithm runs in O(rows * cols) time and space. Multi-source BFS is more natural than running single-source BFS from each rotten orange, because it correctly models simultaneous propagation. This pattern directly applies to wildfire simulation, network broadcast delay estimation, epidemic modeling, and any scenario where multiple sources propagate outward simultaneously.`,
     instructions: [
       'Use BFS with queue initialized with all rotten oranges',
       'Count total fresh oranges initially',
@@ -1604,6 +1624,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     difficulty: 'advanced' as const,
     description:
       'Find the shortest word transformation sequence changing one letter at a time through a dictionary. This models implicit graph BFS where words are nodes and single-letter changes are edges. It teaches building graphs on-the-fly and is used in spell-checkers, NLP pipelines, and puzzle solvers.',
+    explanation: `Find the shortest transformation sequence from a start word to an end word, changing one letter at a time, where each intermediate word must exist in a dictionary. This is an implicit graph shortest-path problem solved with BFS.\n\nEach word is a node, and two words are connected by an edge if they differ by exactly one letter. BFS guarantees finding the shortest path in this unweighted graph. For each word, you generate all possible single-letter variations and check which ones exist in the dictionary.\n\nTime complexity is O(M^2 * N) where M is word length and N is dictionary size — for each word in the queue, you try M positions with 26 letters each, and string operations take O(M). The implicit graph construction (generating neighbors on the fly rather than precomputing all edges) is a common technique in puzzle solvers, spell checkers, and NLP systems where the graph is too large to store explicitly.`,
     instructions: [
       'Return the number of words in the shortest transformation sequence',
       'Each transformed word must exist in the word list',
@@ -1683,6 +1704,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the shortest clear path in a binary grid with 8-directional movement using BFS. BFS guarantees shortest path in unweighted grids, making this a core pattern for robot navigation, game pathfinding, and maze solving. The 8-direction variant adds diagonal neighbors to standard grid BFS.',
+    explanation: `Find the shortest clear path in a binary grid from top-left to bottom-right, where you can move in all 8 directions (including diagonals). This extends standard grid BFS with diagonal movement.\n\nBFS is the correct algorithm because the grid is unweighted — each step costs 1 regardless of direction. You start from (0,0), explore all 8 neighbors at each step, and the first time you reach (n-1, n-1), you have found the shortest path. A visited set prevents revisiting cells.\n\nThe algorithm runs in O(rows * cols) time and space. The 8-directional variant is important because it models more realistic movement (like king moves in chess). BFS guarantees optimality in unweighted graphs, making it the right choice over DFS or Dijkstra here. This pattern is fundamental to robot path planning, game AI navigation, and geographic routing systems.`,
     instructions: [
       'Return the length of the shortest path, or -1 if no path exists',
       '0 represents a passable cell, 1 represents a blocked cell',
@@ -1794,6 +1816,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     difficulty: 'intermediate' as const,
     description:
       'Determine if an undirected graph with n nodes and given edges forms a valid tree (connected and acyclic). This teaches the two properties that define a tree: exactly n-1 edges and full connectivity. DFS cycle detection with parent tracking or union-find are the standard approaches for this frequent interview question.',
+    explanation: `Determine if an undirected graph with n nodes and given edges forms a valid tree. A tree must satisfy two conditions: it is connected (all nodes reachable) and it has no cycles.\n\nA quick mathematical check comes first: a tree with n nodes must have exactly n-1 edges. If the edge count is wrong, return false immediately. Then use DFS from any node, tracking parent nodes to avoid false cycle detection on undirected edges. If you visit an already-visited node that is not the parent, a cycle exists.\n\nAfter DFS, verify all nodes were reached (connectivity). The algorithm runs in O(V + E) time and space. An alternative approach uses Union-Find, which can detect cycles during edge processing and check connectivity by verifying a single connected component. This tree validation pattern is used in network topology verification, spanning tree algorithms, and data structure validation.`,
     instructions: [
       'A valid tree must be connected (all nodes reachable from any node)',
       'A valid tree must not contain any cycles',
@@ -1904,6 +1927,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     difficulty: 'intermediate' as const,
     description:
       'Return the rightmost visible node at each level of a binary tree as seen from the right side. This teaches BFS level-order traversal where you capture the last node per level. The pattern generalizes to left-side view, level averages, and any per-level aggregation on trees.',
+    explanation: `Return the values visible from the right side of a binary tree — the rightmost node at each depth level. This is a classic BFS level-order traversal problem with a twist: you only care about the last node in each level.\n\nUse BFS with a queue, processing nodes level by level. At each level, record how many nodes are in the queue (the level size), then process exactly that many nodes. The last node processed in each level is the one visible from the right side.\n\nThe algorithm runs in O(n) time (every node visited once) and O(w) space where w is the maximum width of the tree. An alternative DFS approach visits right subtrees first and adds the first node seen at each new depth. This per-level aggregation pattern extends to computing level averages, level maximums, left-side views, and zigzag level-order traversals — all common interview variations.`,
     instructions: [
       'Imagine standing on the right side of the tree',
       'Return the rightmost node value at each level',
@@ -1996,6 +2020,7 @@ function rightSideView(root: TreeNode | null): number[] {
     difficulty: 'intermediate' as const,
     description:
       'Validate whether a binary tree satisfies BST ordering rules using recursive bounds checking. The key insight is propagating valid (min, max) ranges down the tree: each left child must be less than its ancestor, and each right child must be greater. This is a top interview question for tree recursion mastery.',
+    explanation: `Validate whether a binary tree satisfies BST ordering rules: every node in the left subtree must be strictly less than the current node, and every node in the right subtree must be strictly greater. A common mistake is only checking immediate children rather than all descendants.\n\nThe correct approach propagates valid (min, max) bounds down the recursion. The root must be in (-Infinity, Infinity). When going left, the upper bound tightens to the current node's value. When going right, the lower bound tightens to the current node's value.\n\nThis runs in O(n) time and O(h) space where h is tree height. An alternative is inorder traversal — if the tree is a valid BST, inorder traversal produces strictly ascending values. The bounds-propagation technique is more general and teaches the important concept of passing constraints down recursive calls, which is used in constraint propagation, type checking, and program verification.`,
     instructions: [
       'Left subtree nodes must all be less than the parent node',
       'Right subtree nodes must all be greater than the parent node',
@@ -2099,6 +2124,7 @@ function validateBST(root: TreeNode | null): boolean {
     difficulty: 'intermediate' as const,
     description:
       'Find the kth smallest element in a BST by leveraging inorder traversal, which visits nodes in ascending sorted order. This teaches how BST structure provides implicit sorting, and how early termination during traversal avoids unnecessary work. Frequently asked in interviews testing tree traversal and BST properties.',
+    explanation: `Find the kth smallest element in a binary search tree. This problem exploits the fundamental property of BSTs: inorder traversal (left-root-right) visits nodes in ascending sorted order.\n\nPerform inorder traversal with a counter. Each time you visit a node (the "process" step between left and right recursive calls), increment the counter. When the counter equals k, you have found your answer. Early termination avoids unnecessary traversal of the remaining tree.\n\nTime complexity is O(H + k) where H is tree height — you must descend to the leftmost node and then visit k nodes. Space is O(H) for the recursion stack. This is more efficient than flattening the entire tree into a sorted array. The inorder-traversal-on-BST technique applies to finding the kth largest (reverse inorder), range queries, and converting a BST to a sorted list. It is one of the most frequently tested BST interview questions.`,
     instructions: [
       'Use inorder traversal (left-root-right) which visits nodes in sorted order',
       'k is 1-indexed (1 means the smallest element)',
@@ -2210,6 +2236,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       "Derive the character ordering of an alien language from a sorted list of words using topological sort. By comparing adjacent words to extract precedence rules, you build a directed graph and apply Kahn's algorithm. This combines string comparison, graph construction, and topological ordering in one advanced problem.",
+    explanation: `Given a sorted list of words from an alien language, derive the character ordering. This advanced problem combines string comparison, directed graph construction, and topological sorting into one cohesive challenge.\n\nFirst, extract ordering rules by comparing adjacent words: the first position where two words differ tells you that one character precedes another. Build a directed graph from these rules. Then apply Kahn's algorithm (BFS-based topological sort) using in-degree tracking to produce a valid character ordering. If the sort cannot include all characters, a cycle exists and the input is invalid.\n\nThe time complexity is O(C) where C is the total number of characters across all words. The combination of string processing, graph building, and topological sorting makes this a challenging but highly instructive problem. Topological sorting is used in build systems, course scheduling, package dependency resolution, and any scenario requiring linearization of partial orderings.`,
     instructions: [
       'Words are sorted lexicographically by the alien language rules',
       'Derive the character order by comparing adjacent words',
@@ -2322,6 +2349,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       "Implement an ordered map maintaining insertion order with set, get, delete, and keys operations. This exercises understanding of JavaScript's built-in Map which preserves insertion order, a feature critical for LRU caches, ordered configurations, and deterministic iteration in real-world applications.",
+    explanation: `Implement an ordered map that maintains insertion order with set, get, delete, and keys operations. This exercise builds understanding of how JavaScript's built-in Map works under the hood — it preserves insertion order, which is not true of plain objects in all cases.\n\nJavaScript's Map is implemented as a hash table with a linked list maintaining insertion order, giving O(1) average time for all operations while preserving iteration order. When a key is updated, its position is not changed. When a key is deleted and re-added, it moves to the end.\n\nThis behavior is critical for implementing LRU caches, ordered configurations, and deterministic serialization. Understanding insertion-order semantics helps you choose between Map and Object in JavaScript, and maps to similar structures like Python's dict (ordered since 3.7) and Java's LinkedHashMap. In interviews, this tests knowledge of language-specific data structure guarantees.`,
     instructions: [
       'Implement an ordered map data structure',
       'Process operations: set(key, value), get(key), delete(key), keys()',
@@ -2416,6 +2444,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Multiply two sparse matrices efficiently by skipping zero-element computations. In real-world systems like recommendation engines and scientific computing, matrices are often 90%+ zeros. Pre-indexing non-zero entries and skipping zero rows dramatically reduces work compared to naive O(n^3) multiplication.',
+    explanation: `Multiply two sparse matrices efficiently by skipping computations involving zero elements. In real-world applications like recommendation engines and scientific simulations, matrices are often 90% or more zeros, making naive O(n^3) multiplication wasteful.\n\nThe optimization pre-indexes non-zero entries in the second matrix by row. During multiplication, when an element in matrix A is zero, the entire inner loop is skipped. When it is non-zero, you only iterate over non-zero entries in the corresponding row of matrix B.\n\nFor truly sparse matrices, this reduces time from O(rows * shared * cols) to O(rows * nonZero * cols) where nonZero is much smaller than shared. The pre-indexing with Maps adds O(shared * cols) preprocessing but pays off during multiplication. Sparse matrix techniques are fundamental in machine learning (feature matrices), graph algorithms (adjacency matrices), and physics simulations (finite element methods).`,
     instructions: [
       'Multiply two matrices represented as 2D arrays',
       'Optimize for sparse matrices (many zeros)',
@@ -2537,6 +2566,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Design a circular double-ended queue with fixed capacity supporting front and rear insert, delete, and peek operations. This teaches bounded buffer management used in OS schedulers, browser history, and sliding window algorithms. Understanding deque internals builds intuition for more complex data structure design.',
+    explanation: `Design a circular double-ended queue supporting insertions and deletions at both ends with a fixed capacity constraint. This data structure is a building block for sliding window algorithms, task schedulers, and browser history implementations.\n\nThe implementation uses an array with insert-at-front (unshift) and insert-at-back (push) operations, checking capacity before each insertion. Delete operations use shift (front) and pop (back), checking emptiness first. Peek operations return the front or rear element without removal.\n\nIn a production setting, you would use a circular buffer with head and tail pointers for true O(1) operations at both ends, avoiding the O(n) cost of array unshift/shift. This exercise focuses on the interface design and state management aspects. Understanding deque internals helps you implement sliding window maximums, work-stealing schedulers, and palindrome checkers efficiently.`,
     instructions: [
       'Implement a circular deque with given capacity',
       'Process operations: insertFront, insertLast, deleteFront, deleteLast, getFront, getRear',
@@ -2671,6 +2701,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Build a trie (prefix tree) that counts both complete word insertions and prefix occurrences. Each node tracks how many words pass through it and how many end there, enabling efficient autocomplete and prefix frequency queries. Tries power search engines, spell-checkers, and IP routing tables.',
+    explanation: `Build a trie (prefix tree) that tracks both complete word counts and prefix passage counts at each node. This enables efficient autocomplete queries and prefix frequency analysis in O(L) time per operation where L is the word length.\n\nEach trie node contains a map of children (one per character), a wordCount (how many times a complete word ends here), and a prefixCount (how many words pass through this node). During insertion, every node along the path gets its prefixCount incremented, and the final node gets its wordCount incremented.\n\nThis structure powers search engine autocomplete, spell-checking systems, IP routing tables (using binary tries), and T9 predictive text. The trie provides O(L) lookup regardless of how many words are stored, making it faster than hash-based approaches when prefix queries are needed. Understanding tries is essential for interviews at companies working on search, NLP, or networking.`,
     instructions: [
       'Build a trie from insert operations',
       'Track how many times each word is inserted',
@@ -2805,6 +2836,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       "Implement a priority queue sorting items by priority number (lower = higher importance) with stable tie-breaking by insertion order. Priority queues underpin Dijkstra's algorithm, task scheduling, and event-driven simulations. This exercise focuses on custom comparator design and stable sort guarantees.",
+    explanation: `Sort items by a custom priority number (lower value = higher priority) with stable tie-breaking by insertion order. This exercise focuses on comparator design and stability guarantees rather than heap implementation.\n\nThe approach augments each item with its insertion index, then sorts by priority first and insertion order second. The stable sort ensures that items with equal priority maintain their original relative order, which is essential for fairness in scheduling systems.\n\nTime complexity is O(n log n) for the sort. In production, a binary heap would provide O(log n) per insertion and extraction, but this exercise emphasizes the comparator logic. Priority queues are fundamental to Dijkstra's shortest path algorithm, A* search, OS process scheduling, event-driven simulations, and hospital triage systems. Getting the comparator right — especially tie-breaking — is where most bugs hide in real implementations.`,
     instructions: [
       'Insert all [value, priority] pairs into a priority queue',
       'Extract all elements in priority order',
@@ -2904,6 +2936,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Count the number of ways to partition an integer n into sums of positive integers where order does not matter. This classic number theory problem uses unbounded knapsack DP where each candidate part can be reused. Integer partitions appear in combinatorics, symmetric functions, and representation theory.',
+    explanation: `Count the number of ways to partition an integer n into sums of positive integers where order does not matter. For example, 4 can be written as 4, 3+1, 2+2, 2+1+1, or 1+1+1+1, giving 5 partitions.\n\nThe DP table dp[sum][maxPart] represents the number of ways to partition sum using parts no larger than maxPart. At each cell, you either exclude maxPart (inheriting from dp[sum][maxPart-1]) or include it (adding dp[sum-maxPart][maxPart], allowing reuse).\n\nThis is structurally identical to the unbounded knapsack problem. Time and space are both O(n^2). Integer partitions are fundamental objects in number theory and combinatorics, appearing in symmetric function theory, representation theory of symmetric groups, and the study of Young diagrams. In practical computing, similar DP patterns arise in coin change problems and resource allocation with reusable units.`,
     instructions: [
       'Count distinct ways to partition n into positive integers',
       'Order does not matter: 3+1 and 1+3 are the same partition',
@@ -2980,6 +3013,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Compute the Stirling number S(n,k) counting ways to partition n distinct elements into exactly k non-empty subsets. The recurrence S(n,k) = k*S(n-1,k) + S(n-1,k-1) captures whether a new element joins an existing subset or forms a new one. These numbers appear in combinatorics, probability, and polynomial algebra.',
+    explanation: `Compute S(n,k), the number of ways to partition n distinct elements into exactly k non-empty subsets. These are the Stirling numbers of the second kind, a fundamental sequence in combinatorics with deep connections to polynomial algebra and probability theory.\n\nThe recurrence S(n,k) = k*S(n-1,k) + S(n-1,k-1) captures two cases for the nth element: it either joins one of the existing k subsets (k choices, giving k*S(n-1,k)), or it forms a new singleton subset (giving S(n-1,k-1)). Base cases are S(0,0)=1 and S(n,0)=S(0,k)=0 for positive n,k.\n\nThe DP table fills in O(n*k) time and space. Stirling numbers appear in converting between different polynomial bases (falling factorials and ordinary powers), in the moments of the Poisson distribution, and in counting surjective functions. They also arise in database theory when analyzing the number of ways to assign records to buckets.`,
     instructions: [
       'Calculate S(n,k) using the recurrence relation',
       'S(n,k) = k*S(n-1,k) + S(n-1,k-1)',
@@ -3055,6 +3089,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Compute the Bell number B(n) counting all possible ways to partition a set of n elements into non-empty subsets. The Bell triangle method builds on previous rows to compute each value efficiently. Bell numbers arise in set theory, database query optimization, and classification problems.',
+    explanation: `Compute the Bell number B(n), which counts all possible ways to partition a set of n elements into non-empty subsets — the sum of all Stirling numbers S(n,k) for k from 0 to n. B(3)=5 because {a,b,c} has five partitions.\n\nThe Bell triangle method builds values row by row. Each row starts with the last element of the previous row, and subsequent elements are computed by adding the element to the left and the element directly above-left. The first element of row n is B(n).\n\nThis runs in O(n^2) time and space. Bell numbers grow very rapidly — B(10) is already 115,975. They appear in set partition enumeration, combinatorial optimization, database query plan counting, and classification problems where you need to know how many ways to group items. The Bell triangle is also related to the Peirce triangle and has connections to exponential generating functions in analytic combinatorics.`,
     instructions: [
       'Calculate B(n) = sum of S(n,k) for k=0 to n',
       'Use Stirling numbers of the second kind',
@@ -3134,6 +3169,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Compute the multinomial coefficient n!/(k1!*k2!*...km!) which counts ways to divide n items into groups of specified sizes. By decomposing into successive binomial coefficients and interleaving multiplication with division, you avoid factorial overflow. This generalizes combinations and appears in probability and statistical mechanics.',
+    explanation: `Compute the multinomial coefficient n!/(k1!*k2!*...km!), which counts the number of ways to divide n items into groups of specified sizes. This generalizes the familiar binomial coefficient "n choose k" to multiple groups.\n\nRather than computing enormous factorials directly (which risks overflow), the algorithm decomposes the multinomial into a product of successive binomial coefficients. For each group, compute C(remaining, groupSize) using interleaved multiplication and division, then subtract the group size from the remaining count.\n\nThis incremental approach maintains numerical stability and runs in O(n) time with O(1) space. Multinomial coefficients appear in probability theory (multinomial distributions), statistical mechanics (counting microstates), and combinatorial optimization. They also arise in polynomial expansion — the multinomial theorem generalizes the binomial theorem to sums of multiple terms.`,
     instructions: [
       'Given n and array of group sizes, compute multinomial coefficient',
       'Formula: n! / (k1! * k2! * ... * km!)',
@@ -3208,6 +3244,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Count permutations of n elements where certain element-position pairs are forbidden. This backtracking problem with constraint checking teaches pruning invalid branches early. Restricted permutations model real-world scheduling constraints, seating arrangements, and assignment problems where conflicts must be avoided.',
+    explanation: `Count permutations of n elements where certain element-position pairs are forbidden. This is a constraint satisfaction problem solved via backtracking with early pruning of invalid placements.\n\nThe algorithm fills positions one by one, trying each unused element. Before placing an element, it checks whether that (element, position) pair is in the forbidden set. If forbidden, the branch is pruned immediately, avoiding exponential wasted work.\n\nWorst-case time is O(n!) but forbidden constraints often prune the tree dramatically. The forbidden set is stored as a HashSet with string keys for O(1) lookup. This problem models real-world scheduling constraints (no teacher in a certain time slot), seating arrangements (enemies cannot sit next to each other), and assignment problems. The derangement problem (no element at its own index) is a special case of restricted permutations, connecting this to classical combinatorics.`,
     instructions: [
       'Given n positions and forbidden pairs [element, position]',
       'Count permutations where element i is not at position j for each forbidden pair',
@@ -3303,6 +3340,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Count paths from top-left to bottom-right in a grid with obstacles, moving only right or down. This DP problem extends the classic lattice path counting by setting obstacle cells to zero paths. It models robot navigation, network routing with blocked nodes, and combinatorial path counting under constraints.',
+    explanation: `Count the number of distinct paths from the top-left to bottom-right corner of a grid, moving only right or down, with some cells blocked by obstacles. This extends the classic lattice path counting problem with a practical constraint.\n\nThe DP table pathCount[r][c] stores the number of ways to reach cell (r,c). For obstacle cells, the count is 0 (no paths go through them). For other cells, the count equals the sum of paths from above and from the left. The first row and column are handled specially since they can only be reached from one direction.\n\nTime and space are both O(rows * cols). Without obstacles, the answer is the binomial coefficient C(m+n-2, m-1), but obstacles break the closed-form solution, making DP necessary. This pattern models robot navigation with blocked zones, network packet routing with failed nodes, and combinatorial path counting in constrained environments. It is a standard interview question testing 2D DP fundamentals.`,
     instructions: [
       'Grid is m x n where 0 is free and 1 is obstacle',
       'Start at (0,0) and reach (m-1, n-1)',
@@ -3400,6 +3438,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Count how many subsets of an array sum to exactly a target value using dynamic programming. This is the counting variant of the classic subset sum decision problem. Using a Map-based DP handles negative numbers and arbitrary ranges, a technique applicable to budget allocation and knapsack variants.',
+    explanation: `Count how many subsets of an array sum to exactly a target value. This is the counting variant of the classic subset sum problem, a foundational NP-complete problem in theoretical computer science.\n\nThe algorithm uses a Map-based DP where keys are achievable sums and values are the number of subsets that produce each sum. For each new element, you create an updated map by adding the element's value to every existing sum and accumulating the counts.\n\nUsing a Map instead of a fixed array handles negative numbers and arbitrary value ranges gracefully. Time complexity is O(n * uniqueSums) and space is O(uniqueSums). This technique applies to budget allocation (how many ways to spend exactly X), cryptographic analysis (finding collisions), and statistical sampling. The Map-based approach is particularly practical in JavaScript/TypeScript where arrays with negative indices are not natural.`,
     instructions: [
       'Given an array of integers and a target sum',
       'Count how many subsets sum to exactly the target',
@@ -3476,6 +3515,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Generate all 2^n combinations of n boolean variables as a truth table using bit manipulation. Each row index maps to a binary number whose bits represent variable assignments. This foundational technique powers SAT solvers, digital circuit testing, and exhaustive boolean formula evaluation.',
+    explanation: `Generate all 2^n combinations of n boolean variables arranged as a truth table. Each row represents one possible assignment of true/false to the variables, ordered like binary counting.\n\nThe algorithm treats each row index as a binary number and extracts its bits as boolean values. For row i, bit position j (counting from the most significant bit) determines whether variable j is true or false. The right-shift and bitwise-AND operations efficiently extract each bit.\n\nTime complexity is O(2^n * n) — you produce 2^n rows, each with n values. This bit-manipulation approach is cleaner than recursive generation and directly maps row indices to variable assignments. Truth table generation is fundamental to digital logic design, SAT solver preprocessing, boolean formula evaluation, and unit test generation for functions with boolean inputs. The technique also serves as the basis for brute-force enumeration of all subsets via bitmasks.`,
     instructions: [
       'Given n boolean variables',
       'Generate all 2^n combinations',
@@ -3556,6 +3596,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the maximum amount you can rob from a row of houses without robbing two adjacent ones. This classic DP problem reduces to a simple recurrence: at each house, choose the better of skipping it or taking it plus the best from two houses back. It models any non-adjacent selection optimization.',
+    explanation: `Find the maximum amount you can rob from a row of houses where no two adjacent houses can be robbed. This classic problem is the introduction to decision-based dynamic programming for most engineers.\n\nAt each house, you face a binary choice: rob it (gaining its value plus the best result from two houses back) or skip it (keeping the best result from the previous house). The recurrence is dp[i] = max(dp[i-1], dp[i-2] + nums[i]).\n\nSince each state only depends on the previous two values, you can optimize space from O(n) to O(1) by maintaining just two rolling variables. Time is O(n). This non-adjacent selection pattern appears in scheduling (no two consecutive tasks), network packet selection, and any optimization where chosen items must maintain minimum spacing. It is also the simplest example of the "include/exclude" DP paradigm that scales to knapsack and subset problems.`,
     instructions: [
       'Given array of house values',
       'Cannot rob adjacent houses',
@@ -3626,6 +3667,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Maximize robbery from houses arranged in a circle where the first and last are adjacent. The key insight is splitting into two linear subproblems: one excluding the first house, one excluding the last. This circular-to-linear reduction technique applies to any DP problem with circular constraints.',
+    explanation: `Maximize robbery from houses arranged in a circle, where the first and last houses are now adjacent. This adds a circular constraint to the standard house robber problem, requiring a reduction technique to handle it.\n\nThe insight is that in any valid solution, you cannot rob both the first AND last house. Therefore, the answer is the maximum of two linear subproblems: rob houses 0 through n-2 (exclude last), or rob houses 1 through n-1 (exclude first). Run the standard house robber algorithm on each subarray and take the maximum.\n\nThis circular-to-linear reduction runs in O(n) time and O(n) space (for array slicing, or O(1) with index bounds). The technique of breaking circular constraints by case-splitting on boundary elements applies broadly: circular arrangement problems in DP, circular buffer scheduling, and any optimization where wrap-around adjacency creates complications. It is a common interview follow-up to the basic house robber.`,
     instructions: [
       'Houses arranged in a circle',
       'First and last houses are adjacent',
@@ -3706,6 +3748,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Count the number of ways to decode a digit string into letters where A=1 through Z=26. At each position, you can decode one or two digits, creating a Fibonacci-like DP recurrence with validity constraints. This teaches handling branching decoding paths and is a common interview DP problem.',
+    explanation: `Count the number of ways to decode a string of digits into letters where A=1, B=2, ..., Z=26. At each position, you can decode one digit or two digits (if the two-digit value is between 10 and 26).\n\nThe DP array dp[i] stores the number of ways to decode the first i characters. At each position, add dp[i-1] if the single digit is valid (1-9), and add dp[i-2] if the two-digit number is valid (10-26). This creates a Fibonacci-like recurrence with validity constraints.\n\nTime is O(n) and space is O(n), reducible to O(1) with rolling variables. The tricky cases involve zeros: '0' alone is invalid, '30' is invalid (30 > 26), but '10' and '20' are valid two-digit decodings. This branching decode problem teaches careful case analysis in DP and mirrors real-world encoding systems like UTF-8 where variable-length byte sequences must be parsed unambiguously.`,
     instructions: [
       'Given a string of digits',
       'Decode where 1=A, 2=B, ..., 26=Z',
@@ -3786,6 +3829,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the length of the longest palindromic subsequence in a string using interval DP. The 2D table dp[i][j] tracks the longest palindrome in substring s[i..j], extending by 2 when endpoints match. This is a foundational problem for learning interval-based dynamic programming on strings.',
+    explanation: `Find the length of the longest palindromic subsequence (not substring — characters need not be contiguous) in a string. This is a fundamental interval DP problem on strings.\n\nThe 2D table dp[i][j] stores the longest palindromic subsequence in the substring s[i..j]. If the endpoints match (s[i] == s[j]), they extend the inner palindrome by 2: dp[i][j] = dp[i+1][j-1] + 2. If they do not match, take the better of excluding either end: dp[i][j] = max(dp[i+1][j], dp[i][j-1]).\n\nTime and space are both O(n^2). Building the table requires processing increasing substring lengths, starting from single characters (length 1, each contributing 1). This interval DP pattern applies to many string problems including optimal parenthesization, matrix chain multiplication, and DNA sequence analysis. An equivalent formulation is computing the LCS of the string with its reverse.`,
     instructions: [
       'Given a string, find longest palindromic subsequence',
       'Subsequence: can skip characters but maintain order',
@@ -3865,6 +3909,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'beginner' as const,
     description:
       'Find the minimum cost to climb stairs where each step has a cost and you can take 1 or 2 steps at a time. This beginner DP problem demonstrates space-optimized bottom-up computation using only two variables instead of a full array, a technique that extends to Fibonacci-style recurrences.',
+    explanation: `Find the minimum cost to reach the top of a staircase where each step has a cost and you can climb 1 or 2 steps at a time. This is perhaps the gentlest introduction to dynamic programming, building directly on the Fibonacci sequence.\n\nThe recurrence is: cost to reach step i equals the step's own cost plus the minimum of costs to reach the two preceding steps. Since you can start from step 0 or step 1, both are valid starting points. The top is one step beyond the last index.\n\nUsing just two variables instead of a full array reduces space to O(1) while maintaining O(n) time. This space optimization technique — replacing an array with rolling variables when only the last few values are needed — applies to any DP with bounded lookback. The problem directly models real-world cost optimization in sequential systems like assembly lines, network routing, and pipeline stage selection.`,
     instructions: [
       'Given array of costs for each step',
       'Can start from step 0 or step 1',
@@ -3932,6 +3977,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Determine if an array can be split into two subsets with equal sum, reducing to a 0/1 knapsack subset sum problem targeting half the total. Iterating backwards through the DP array ensures each element is used at most once. This is a gateway problem to knapsack variants and NP-complete theory.',
+    explanation: `Determine if an array can be split into two subsets with equal sum. This reduces to asking whether any subset sums to exactly half the total, making it a 0/1 knapsack problem.\n\nFirst check if the total is even (odd totals make equal partition impossible). Then use a boolean DP array where isAchievable[s] indicates whether some subset sums to s. For each number, iterate the DP array backwards (from target down to the number's value) to ensure each element is used at most once.\n\nTime is O(n * target) and space is O(target) where target is totalSum/2. The backwards iteration is crucial — going forwards would allow the same element to contribute multiple times, turning it into an unbounded knapsack. This problem is a gateway to the NP-complete subset sum family and appears in load balancing (distributing work equally), portfolio partitioning, and compiler optimization (register allocation).`,
     instructions: [
       'Given an array of positive integers',
       'Check if it can be split into two subsets with equal sum',
@@ -4006,6 +4052,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Assign + or - signs to each array element and count the number of ways to reach a target sum. This problem teaches recursive DFS with memoization keyed on (index, runningSum). It models binary decision trees and connects to subset sum via the mathematical equivalence between sign assignment and subset partitioning.',
+    explanation: `Assign a + or - sign to each element in an array and count the number of ways to achieve a target sum. Each element must be used exactly once with either sign, creating a binary decision tree.\n\nThe recursive approach with memoization explores both branches (add or subtract) at each index, caching results keyed by (index, runningSum) to avoid recomputing overlapping subproblems. The base case checks if the running sum equals the target after all elements are assigned.\n\nTime complexity is O(n * sumRange) where sumRange is the span of possible sums. A mathematical insight converts this to a subset sum problem: if P is the sum of elements assigned +, then P - (total - P) = target, so P = (total + target) / 2. This models any binary decision process with additive outcomes, appearing in game theory, cryptographic analysis, and combinatorial optimization. The memoization key design is an important skill for DP problems with multiple state dimensions.`,
     instructions: [
       'Given array of non-negative integers and a target',
       'Assign + or - sign to each element',
@@ -4086,6 +4133,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the minimum-cost path from top-left to bottom-right in a grid, moving only right or down. Each cell accumulates the minimum of its top and left predecessors, making this a textbook introduction to 2D dynamic programming. This pattern applies to cost optimization in grids, image seam carving, and route planning.',
+    explanation: `Find the path from the top-left to bottom-right corner of a grid that minimizes the sum of cell values, moving only right or down. This is a textbook 2D dynamic programming problem.\n\nBuild a cost table where minCost[r][c] stores the minimum sum to reach cell (r,c). The first row can only be reached from the left, the first column only from above. For interior cells, take the minimum of the cell above and the cell to the left, then add the current cell's value.\n\nTime and space are both O(rows * cols). Space can be optimized to O(cols) by processing row by row, since each cell only depends on the current and previous rows. This pattern directly applies to image seam carving (finding minimum-energy seams), robot path planning with terrain costs, and network routing with weighted links. It is one of the most commonly assigned DP problems in university courses and interview prep.`,
     instructions: [
       'Implement a function that finds the minimum path sum in a grid',
       'You can only move right or down at each step',
@@ -4177,6 +4225,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Find the minimum cuts to partition a string so every piece is a palindrome. This two-phase DP first precomputes a palindrome lookup table, then uses 1D DP for minimum cuts. It teaches how to decompose complex string problems into precomputation and optimization phases for O(n^2) overall complexity.',
+    explanation: `Find the minimum number of cuts to partition a string so that every piece is a palindrome. This hard DP problem uses a two-phase approach that teaches how to decompose complex problems into precomputation and optimization.\n\nPhase 1 builds a 2D boolean table isPalindrome[i][j] for all substrings, using the recurrence that s[i..j] is a palindrome if s[i]==s[j] and s[i+1..j-1] is a palindrome. Phase 2 uses 1D DP where minCuts[i] is the minimum cuts for s[0..i], trying every possible last cut position where the suffix is a palindrome.\n\nBoth phases run in O(n^2) time, giving O(n^2) overall with O(n^2) space. The separation into precomputation and optimization is a powerful design pattern — many string DP problems benefit from precomputing substring properties. This problem appears in text processing (breaking text into meaningful chunks), DNA analysis (finding palindromic sequences), and compiler optimization (optimal code splitting).`,
     instructions: [
       'Implement a function that finds minimum cuts for palindrome partitioning',
       'Each partition must be a palindrome',
@@ -4282,6 +4331,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Find the minimum worst-case trials to identify the critical breaking floor given k eggs and n floors. This classic decision-theory DP problem balances information gain against resource expenditure: breaking an egg narrows the range below, surviving narrows above. It teaches minimax optimization via 2D dynamic programming.',
+    explanation: `Find the minimum number of trials needed in the worst case to identify the critical breaking floor, given k eggs and n floors. This classic puzzle teaches minimax optimization through dynamic programming.\n\nFor each state (eggs, floors), try dropping from every floor. If the egg breaks, search below with one fewer egg. If it survives, search above with the same eggs. The worst case at each drop is the maximum of these two outcomes, and you want the drop floor that minimizes this worst case.\n\nThe basic DP runs in O(eggs * floors^2) time with O(eggs * floors) space, though binary search optimization can reduce it to O(eggs * floors * log(floors)). The egg drop problem is a beautiful example of decision under uncertainty — you are optimizing against an adversary who picks the worst-case breaking floor. This minimax framework appears in game theory, binary search variants, quality testing protocols, and any scenario requiring optimal information-gathering strategies.`,
     instructions: [
       'Implement a function that solves the egg drop problem',
       'Return minimum number of trials in worst case',
@@ -4365,6 +4415,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Burst balloons to maximize coins where bursting balloon i yields nums[left]*nums[i]*nums[right]. The critical insight is thinking about which balloon to burst LAST in each interval rather than first, converting a complex dependency problem into clean interval DP. This is a hallmark advanced DP interview question.',
+    explanation: `Burst balloons to maximize coins, where bursting balloon i yields nums[left] * nums[i] * nums[right] and adjacent balloons become neighbors. The critical difficulty is that bursting order changes the adjacency relationships.\n\nThe breakthrough insight is to think about which balloon to burst LAST in each interval rather than first. If balloon k is the last one burst in interval (i,j), then balloons i and j are its neighbors at burst time, and the left and right subproblems are independent. This converts a complex dependency problem into clean interval DP.\n\nPad the array with virtual balloons of value 1 at both ends. Then dp[i][j] = max over k of (dp[i][k] + dp[k][j] + nums[i]*nums[k]*nums[j]). Time is O(n^3) and space is O(n^2). This "think about the last operation" technique is a hallmark of interval DP and applies to matrix chain multiplication, optimal BST construction, and any problem where operation order creates dependencies.`,
     instructions: [
       'Implement a function to maximize coins from bursting balloons',
       'When bursting balloon i, coins = nums[left] * nums[i] * nums[right]',
@@ -4441,6 +4492,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Find the optimal parenthesization of a matrix chain to minimize total scalar multiplications. This textbook interval DP problem tries every possible split point within each subchain. Matrix chain ordering is foundational in compiler optimization, database query planning, and any problem requiring optimal binary tree construction.',
+    explanation: `Find the optimal way to parenthesize a chain of matrix multiplications to minimize the total number of scalar multiplications. The order of multiplication does not affect the result but dramatically affects the cost.\n\nThe interval DP tries every possible split point within each subchain. For matrices i through j, splitting at position k means computing the product of (matrices i..k) and (matrices k+1..j) separately, then multiplying the two results. The cost is the sum of both subproblems plus the cost of the final multiplication.\n\nTime is O(n^3) and space is O(n^2) where n is the number of matrices. This is one of the most famous DP problems in computer science, appearing in every algorithms textbook. The same interval DP structure applies to optimal binary search tree construction, compiler expression optimization, and database join ordering. In practice, compilers use this algorithm to optimize chain operations on large data structures.`,
     instructions: [
       'Implement a function to find minimum scalar multiplications',
       'dims array represents matrix dimensions: matrix i is dims[i-1] × dims[i]',
@@ -4515,6 +4567,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the longest contiguous substring shared by two strings using 2D DP. Unlike subsequence problems, the match resets to zero on mismatch since characters must be consecutive. This pattern is used in DNA sequence alignment, plagiarism detection, and diff algorithms for file comparison.',
+    explanation: `Find the longest contiguous substring shared by two strings. Unlike the longest common subsequence (which allows gaps), the substring must be a consecutive run of characters matching in both strings.\n\nThe 2D DP table matchLength[i][j] stores the length of the common substring ending at s1[i-1] and s2[j-1]. If these characters match, extend the diagonal: matchLength[i][j] = matchLength[i-1][j-1] + 1. On mismatch, reset to 0 since contiguity is broken. Track the global maximum across all cells.\n\nTime and space are O(m*n). The key difference from subsequence DP is the zero-reset on mismatch — this single change makes the problem fundamentally different. Longest common substring is used in plagiarism detection, DNA sequence alignment, file diff algorithms, and approximate string matching. Rolling hash techniques (Rabin-Karp) can solve it more efficiently for very long strings.`,
     instructions: [
       'Implement a function that finds the longest common substring length',
       'The substring must be contiguous in both strings',
@@ -4594,6 +4647,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       "Check if s3 is formed by interleaving s1 and s2 while preserving each string's character order. The 2D DP table tracks whether s3[0..i+j-1] can be formed from s1[0..i-1] and s2[0..j-1]. This pattern models merging ordered streams and appears in compiler parsing and protocol interleaving verification.",
+    explanation: `Check whether string s3 can be formed by interleaving s1 and s2 while preserving the character order within each source string. Characters from s1 and s2 can alternate freely, but their internal ordering must be maintained.\n\nThe 2D DP table canForm[i][j] indicates whether s3[0..i+j-1] can be formed using s1[0..i-1] and s2[0..j-1]. At each position, the next character in s3 must have come from either s1 or s2: canForm[i][j] is true if (canForm[i-1][j] and s1[i-1] matches) or (canForm[i][j-1] and s2[j-1] matches).\n\nTime and space are O(m*n) where m and n are the lengths of s1 and s2. A quick preliminary check verifies that lengths add up: len(s1) + len(s2) must equal len(s3). This problem models merging ordered streams (like merge sort verification), validating protocol message interleaving, and checking whether a sequence could have been produced by combining two ordered sources. Space can be optimized to O(min(m,n)) using a rolling array.`,
     instructions: [
       'Implement a function to check if s3 is an interleaving of s1 and s2',
       'Character order from s1 and s2 must be preserved',
@@ -4684,6 +4738,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the maximum sum of non-adjacent elements from an array, the generalized form of the house robber problem. The DP recurrence at each index chooses between including the current element plus best-from-two-back, or skipping it. This models resource selection with exclusion zones in scheduling and allocation.',
+    explanation: `Find the maximum sum you can obtain from an array by selecting elements such that no two selected elements are adjacent. This is the generalized form of the house robber problem, applicable to any non-adjacent selection optimization.\n\nThe DP builds an array where bestSum[i] represents the maximum sum achievable from elements 0 through i. At each index, you choose the better of skipping the current element (inheriting bestSum[i-1]) or including it (adding nums[i] to bestSum[i-2]).\n\nTime is O(n) and space is O(n), optimizable to O(1) with rolling variables. This problem models resource selection with exclusion zones: choosing non-conflicting tasks from a sequence, selecting non-adjacent cells in a grid row for maximum value, or picking advertising slots with required gaps. It is structurally identical to the house robber but framed as a pure optimization problem, making it a versatile template for many interview variants.`,
     instructions: [
       'Implement a function to find maximum sum with no adjacent elements',
       'Cannot select two adjacent elements',
@@ -4760,6 +4815,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'beginner' as const,
     description:
       'Check if a string is a valid palindrome considering only alphanumeric characters and ignoring case. This beginner string problem teaches character filtering with regex, case normalization, and the two-pointer palindrome check. It is one of the most common easy interview questions for string manipulation fundamentals.',
+    explanation: `Check whether a string is a palindrome after removing all non-alphanumeric characters and converting to lowercase. This is one of the most common easy-level interview problems testing fundamental string manipulation.\n\nThe approach first normalizes the string: convert to lowercase and strip everything except letters and digits using a regex. Then use two pointers from the start and end, moving inward and comparing characters. If any pair mismatches, the string is not a palindrome.\n\nTime is O(n) and space is O(n) for the cleaned string. An alternative O(1) space approach skips non-alphanumeric characters during the two-pointer scan without creating a new string. This problem tests familiarity with regex, string normalization, and the two-pointer technique. Despite its simplicity, it catches many candidates on edge cases: empty strings, strings with only special characters, and mixed-case comparisons.`,
     instructions: [
       'Implement a function to check if string is a valid palindrome',
       'Consider only alphanumeric characters',
@@ -4832,6 +4888,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the longest substring without repeating characters using the sliding window technique. A hash map tracks the last-seen index of each character, enabling O(n) single-pass processing. This is one of the most frequently asked interview questions and the gateway problem for mastering the sliding window pattern.',
+    explanation: `Find the length of the longest substring with all unique characters. This is the gateway problem for mastering the sliding window technique, one of the most versatile patterns in algorithm interviews.\n\nMaintain a window defined by start and end pointers. A hash map tracks the most recent index of each character. As you expand the window rightward, if the new character was already seen within the current window, jump the start pointer past its previous occurrence to eliminate the duplicate.\n\nTime is O(n) since each character is processed at most twice (once entering, once leaving the window). Space is O(min(n, charset size)). The sliding window approach is fundamentally different from brute force (checking all substrings in O(n^3)) because it maintains the invariant that the window always contains unique characters. This pattern extends to problems with at most k distinct characters, minimum window substring, and any problem requiring optimal contiguous subarray/substring with a constraint.`,
     instructions: [
       'Implement a function to find longest substring without repeats',
       'Use sliding window technique',
@@ -4911,6 +4968,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Find the smallest substring window in s containing all characters of t with required frequencies. This hard sliding window problem uses expand-right-then-shrink-left with frequency maps tracking satisfied character requirements. It is the canonical advanced sliding window question testing careful bookkeeping and optimization.',
+    explanation: `Find the smallest window in string s that contains all characters from string t with at least their required frequencies. This is the hardest standard sliding window problem and a favorite in top-tier tech interviews.\n\nUse two frequency maps: one for target requirements and one for the current window. Expand the window rightward by adding characters. When all requirements are satisfied, shrink from the left to find the minimum valid window. Track a counter of satisfied unique characters to avoid repeatedly checking all frequencies.\n\nTime is O(|s| + |t|) and space is O(|s| + |t|). The expand-then-shrink strategy is the essence of the sliding window pattern. The satisfaction counter optimization is critical — without it, you would need O(alphabet) checks at each step. This problem models real-world scenarios like finding the shortest DNA sequence containing all required codons, log window analysis, and minimum-span text search in information retrieval systems.`,
     instructions: [
       'Implement a function to find minimum window containing all chars from t',
       'Use sliding window technique',
@@ -5017,6 +5075,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Group strings that are anagrams of each other using sorted-character keys for hash map categorization. This frequent interview question tests your ability to design canonical keys for equivalence classes and group data efficiently. The sorted-key approach runs in O(n*k*log(k)) where k is the max string length.',
+    explanation: `Group strings that are anagrams of each other — strings containing the same characters in any order. This is a frequent interview question testing hash map design and canonical key construction.\n\nThe algorithm creates a canonical key for each string by sorting its characters alphabetically. All anagrams of the same set of characters produce the same sorted key. A hash map groups strings by their key, and the final result collects all groups.\n\nTime is O(n * k * log(k)) where n is the number of strings and k is the maximum string length (due to sorting each string). An alternative O(n * k) approach uses character frequency counts as keys instead of sorting. This problem teaches the general technique of defining equivalence classes via canonical forms — a concept that appears in database normalization, compiler optimization (common subexpression elimination), and mathematical group theory. Choosing the right canonical key is the critical design decision.`,
     instructions: [
       'Implement a function to group anagrams together',
       'Anagrams are words with same characters in different order',
@@ -5095,6 +5154,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'beginner' as const,
     description:
       'Compress a string using run-length encoding where consecutive identical characters become char+count. Only return the compressed form if it is actually shorter than the original. This teaches basic RLE compression used in image formats, network protocols, and data storage optimization.',
+    explanation: `Implement run-length encoding: replace consecutive identical characters with the character followed by its count. Return the compressed string only if it is shorter than the original, otherwise return the original.\n\nScan the string with a counter for consecutive identical characters. When the character changes (or the string ends), append the character and its count to the result. After building the compressed version, compare its length to the original.\n\nTime is O(n) and space is O(n) for the result string. The conditional return (only compress if shorter) is important because RLE actually lengthens strings with no repeats (e.g., "abc" becomes "a1b1c1"). RLE is used in bitmap image compression (BMP format), fax transmission, and as a preprocessing step in more sophisticated compression algorithms like JPEG. Understanding when compression helps versus hurts is a practical skill for systems engineers.`,
     instructions: [
       'Implement basic string compression using character counts',
       'Format: "aabcccccaaa" becomes "a2b1c5a3"',
@@ -5168,6 +5228,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Encode an array of strings into a single string and decode it back using length-prefixed format. By prepending each string with its byte length and a delimiter, you handle arbitrary content including the delimiter itself. This serialization pattern is used in network protocols, database storage, and API design.',
+    explanation: `Design an encoding scheme that serializes an array of strings into a single string and can decode it back, handling arbitrary string contents including the delimiter character itself. This is a practical serialization problem.\n\nThe length-prefix format prepends each string with its byte length followed by a '#' delimiter. During decoding, you read the length number, skip the '#', and extract exactly that many characters. Because you know the exact length, the '#' character inside a string content causes no ambiguity.\n\nTime is O(n) for both encoding and decoding where n is the total character count. This is the same approach used in real network protocols like HTTP (Content-Length header), binary serialization formats (Protocol Buffers, MessagePack), and database wire protocols. The alternative approach of escaping special characters is more complex and slower. Understanding length-prefixed serialization is essential for building robust distributed systems and APIs.`,
     instructions: [
       'Implement encode and decode functions for array of strings',
       'Use length-prefixed format: length + delimiter + string',
@@ -5263,6 +5324,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'beginner' as const,
     description:
       'Convert a Roman numeral string to an integer, handling subtractive notation like IV=4 and IX=9. The algorithm scans left to right, subtracting when a smaller value precedes a larger one. This simple but tricky problem tests careful conditional logic and is one of the most popular easy interview questions.',
+    explanation: `Convert a Roman numeral string like "MCMXCIV" to its integer value (1994). The algorithm must handle subtractive notation where a smaller value before a larger one means subtraction (IV=4, IX=9, XL=40, etc.).\n\nScan left to right comparing each character's value with the next. If the current value is less than the next, subtract it (subtractive case); otherwise add it. This simple rule correctly handles all subtractive cases because they always involve exactly two characters.\n\nTime is O(n) and space is O(1) since the Roman numeral value map is fixed-size. Despite its simplicity, this problem trips up many candidates who try to handle subtractive cases with special two-character matching instead of the elegant comparison rule. Roman numeral conversion appears in document formatting, date representation in traditional contexts, and as an exercise in mapping between numeral systems. It is one of the most popular easy-level interview questions.`,
     instructions: [
       'Implement a function to convert roman numerals to integer',
       'Handle I, V, X, L, C, D, M',
@@ -5345,6 +5407,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Convert an integer (1-3999) to its Roman numeral representation using a greedy value table including subtractive pairs. By processing values from largest to smallest (1000, 900, 500, 400...), you greedily build the Roman string. This teaches greedy decomposition and lookup-table-driven string construction.',
+    explanation: `Convert an integer (1-3999) to its Roman numeral representation. The algorithm must produce correct subtractive notation (4 is "IV" not "IIII", 900 is "CM" not "DCCCC").\n\nThe greedy approach uses a lookup table of values in descending order that includes subtractive pairs: [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1] with corresponding symbols. Repeatedly subtract the largest applicable value and append its symbol until the number reaches zero.\n\nTime and space are both O(1) because the input is bounded by 3999, so the output length is bounded. The inclusion of subtractive values (900, 400, 90, 40, 9, 4) in the lookup table is the key design choice that makes the greedy approach work without special-case logic. This table-driven greedy pattern appears in currency denomination problems, unit conversion, and any base-conversion algorithm where certain representations require special notation.`,
     instructions: [
       'Implement a function to convert integer to roman numerals',
       'Handle values 1-3999',
@@ -5416,6 +5479,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'advanced' as const,
     description:
       'Implement the KMP (Knuth-Morris-Pratt) algorithm to find all pattern occurrences in text in O(n+m) time. The failure function (LPS array) precomputes prefix-suffix overlaps so mismatches skip already-matched characters. KMP is fundamental to text editors, DNA analysis, and any high-performance string search system.',
+    explanation: `Implement the Knuth-Morris-Pratt string matching algorithm to find all occurrences of a pattern in a text in O(n+m) time, where n is text length and m is pattern length. This is a significant improvement over the naive O(n*m) approach.\n\nKMP's power comes from the failure function (LPS array), which precomputes for each position in the pattern the length of the longest proper prefix that is also a suffix. When a mismatch occurs during search, instead of restarting from the beginning of the pattern, you jump to the position indicated by the LPS array, skipping characters that are already known to match.\n\nBuilding the LPS array takes O(m) time using a two-pointer technique, and the search phase takes O(n) time since the text pointer never moves backward. KMP is fundamental to text editors (find/replace), DNA sequence analysis, intrusion detection systems, and any application requiring high-performance exact string matching. Understanding the failure function also builds intuition for more advanced automata-based pattern matchers.`,
     instructions: [
       'Implement KMP algorithm for pattern matching',
       'Build failure function (LPS array) for pattern',
@@ -5529,6 +5593,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Find the longest palindromic substring using the expand-around-center technique, checking both odd and even length palindromes at each position. This O(n^2) approach avoids DP table overhead and is intuitive: a palindrome grows outward from its center. A top interview question for string and two-pointer skills.',
+    explanation: `Find the longest palindromic substring (contiguous) in a given string. The expand-around-center technique provides an intuitive O(n^2) solution that avoids the memory overhead of a DP table.\n\nFor each index in the string, try expanding outward from that index as the center of an odd-length palindrome, and from the gap between that index and the next as the center of an even-length palindrome. Expand as long as characters on both sides match.\n\nTime is O(n^2) in the worst case (each of 2n-1 centers can expand up to n/2 steps), and space is O(1). Manacher's algorithm achieves O(n) but is rarely expected in interviews. The expand-around-center approach is preferred because it is simple to implement correctly, easy to explain, and space-efficient. This problem tests palindrome understanding, two-pointer technique, and careful handling of odd versus even length cases. It appears in bioinformatics (palindromic DNA sequences are significant in molecular biology) and text analysis.`,
     instructions: [
       'Implement a function to find longest palindromic substring',
       'Use expand-around-center technique',
@@ -5616,6 +5681,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       "Implement C's atoi function: parse a string into a 32-bit signed integer handling whitespace, signs, and overflow clamping. This state-machine parsing problem tests sequential processing of edge cases in a defined order. Robust string-to-number conversion is essential in compilers, input validation, and data parsers.",
+    explanation: `Implement C's atoi function: parse a string into a 32-bit signed integer, handling leading whitespace, an optional sign, digit extraction, and overflow clamping. This is a state machine problem that tests meticulous edge case handling.\n\nThe algorithm processes the string in strict order: skip whitespace, read optional sign, then read consecutive digits while checking for overflow before each multiplication-and-addition step. Non-digit characters after valid digits terminate parsing. If the result exceeds the 32-bit range, clamp to INT_MAX (2^31-1) or INT_MIN (-2^31).\n\nTime is O(n) and space is O(1). The overflow check is the trickiest part: before computing parsedNumber * 10 + digit, verify that parsedNumber is not already past the threshold where multiplication would overflow. This sequential parsing with state transitions models how real compilers and interpreters tokenize numeric literals. The problem is a favorite at companies building parsers, data pipelines, or input validation systems.`,
     instructions: [
       'Implement string to integer conversion',
       'Skip leading whitespace',
@@ -5710,6 +5776,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     difficulty: 'intermediate' as const,
     description:
       'Write a string in a zigzag pattern across a given number of rows, then read line by line to produce the output. The algorithm simulates row traversal with a direction toggle at boundaries. This teaches index-to-row mapping with periodic direction changes, useful in encryption and display formatting problems.',
+    explanation: `Write a string in a zigzag pattern across a given number of rows and then read the result line by line. For example, "PAYPALISHIRING" with 3 rows produces "PAHNAPLSIIGYIR" after zigzag rearrangement.\n\nThe algorithm simulates the zigzag writing process: maintain an array of string buckets (one per row) and a direction flag. Iterate through characters, appending each to the current row's bucket, then toggling direction when hitting the top or bottom row.\n\nTime is O(n) since each character is processed once, and space is O(n) for the row buckets. The direction-toggle pattern at boundaries is a clean way to handle periodic direction changes without computing modular indices. This simulation approach is often cleaner than the index-formula approach, which computes each character's output position mathematically. The zigzag pattern appears in simple encryption schemes (rail fence cipher), display formatting, and signal processing (triangular wave indexing).`,
     instructions: [
       'Implement zigzag string conversion',
       'Write string in zigzag pattern with numRows rows',

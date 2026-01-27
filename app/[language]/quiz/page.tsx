@@ -5,6 +5,11 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
+import {
+  COMPLEXITY_CATEGORY_CONFIG,
+  getComplexityCategories,
+  getComplexityCategoryCounts,
+} from '@/lib/complexityProblems';
 import { getCategoriesForLanguage, getCategoryCountsForLanguage } from '@/lib/problems';
 import {
   addToLeaderboard,
@@ -18,6 +23,7 @@ import {
   type QuizAnswer,
   type QuizConfig,
   type QuizResult,
+  type QuizType,
   type ScoreResult,
 } from '@/lib/quizGenerator';
 import type { LanguageId, QuizQuestion } from '@/lib/types';
@@ -118,8 +124,8 @@ interface SetupPhaseProps {
   config: QuizConfig;
   onConfigChange: (config: QuizConfig) => void;
   onStart: () => void;
-  availableCategories: string[];
-  categoryCounts: Record<string, number>;
+  methodCategories: string[];
+  methodCategoryCounts: Record<string, number>;
   language: LanguageId;
 }
 
@@ -127,15 +133,21 @@ function SetupPhase({
   config,
   onConfigChange,
   onStart,
-  availableCategories,
-  categoryCounts,
+  methodCategories,
+  methodCategoryCounts,
   language,
 }: SetupPhaseProps) {
   const [soundEnabled, setSoundEnabled] = useState(false);
 
   const timeOptions = [10, 15, 20, 30, 0] as const; // 0 = unlimited
 
-  // Calculate available methods based on selected categories
+  // Get categories/counts based on quiz type
+  const isComplexity =
+    config.quizType === 'time-complexity' || config.quizType === 'space-complexity';
+  const availableCategories = isComplexity ? getComplexityCategories() : methodCategories;
+  const categoryCounts = isComplexity ? getComplexityCategoryCounts() : methodCategoryCounts;
+
+  // Calculate available questions based on selected categories
   const availableMethodsCount =
     config.categories.length === 0
       ? Object.values(categoryCounts).reduce((a, b) => a + b, 0) // All categories
@@ -207,7 +219,41 @@ function SetupPhase({
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Quiz Mode
           </h1>
-          <p className="text-slate-400 text-lg">Test your knowledge of {config.language} methods</p>
+          <p className="text-slate-400 text-lg">
+            {config.quizType === 'methods'
+              ? `Test your knowledge of ${config.language} methods`
+              : config.quizType === 'time-complexity'
+                ? 'Identify the time complexity of algorithms'
+                : 'Identify the space complexity of algorithms'}
+          </p>
+        </div>
+
+        {/* Quiz Type Selection */}
+        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+          <h2 className="text-xl font-semibold mb-4">Quiz Type</h2>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { type: 'methods' as QuizType, label: 'Methods', icon: '📝' },
+              { type: 'time-complexity' as QuizType, label: 'Time Complexity', icon: '⏱' },
+              { type: 'space-complexity' as QuizType, label: 'Space Complexity', icon: '💾' },
+            ].map(({ type, label, icon }) => (
+              <button
+                type="button"
+                key={type}
+                onClick={() => {
+                  onConfigChange({ ...config, quizType: type, categories: [] });
+                }}
+                className={`py-3 px-3 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${
+                  config.quizType === type
+                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                <span className="mr-1.5">{icon}</span>
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Category Selection */}
@@ -251,7 +297,10 @@ function SetupPhase({
                     : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                 }`}
               >
-                {category}
+                {isComplexity
+                  ? COMPLEXITY_CATEGORY_CONFIG[category as keyof typeof COMPLEXITY_CATEGORY_CONFIG]
+                      ?.name || category
+                  : category}
                 <span
                   className={`text-xs px-1.5 py-0.5 rounded-full ${
                     config.categories.includes(category)
@@ -276,7 +325,7 @@ function SetupPhase({
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Number of Questions</h2>
             <span className="text-sm text-slate-400">
-              {availableMethodsCount} methods available
+              {availableMethodsCount} {isComplexity ? 'questions' : 'methods'} available
             </span>
           </div>
           <QuestionCountSlider
@@ -636,16 +685,21 @@ function MethodCard({
 
 interface QuestionDisplayProps {
   question: QuizQuestion;
+  quizType: QuizType;
 }
 
-function QuestionDisplay({ question }: QuestionDisplayProps) {
+function QuestionDisplay({ question, quizType }: QuestionDisplayProps) {
+  const isComplexity = quizType === 'time-complexity' || quizType === 'space-complexity';
+
   return (
     <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-slate-400 text-sm uppercase tracking-wider">
-          Which method produces this output?
+          {isComplexity
+            ? `What is the ${quizType === 'time-complexity' ? 'time' : 'space'} complexity?`
+            : 'Which method produces this output?'}
         </h3>
-        {/* Method type hint */}
+        {/* Hint badge */}
         {question.methodHint && (
           <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-full border border-blue-500/30">
             {question.methodHint}
@@ -653,33 +707,52 @@ function QuestionDisplay({ question }: QuestionDisplayProps) {
         )}
       </div>
 
-      {/* Code snippet */}
-      <div className="mb-4">
-        <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Input</div>
-        <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-          <code className="block">{question.input}</code>
-        </pre>
-      </div>
-
-      {/* Method Arguments */}
-      {question.methodArgs && (
-        <div className="mb-4">
-          <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
-            Method Arguments
+      {isComplexity ? (
+        <>
+          {/* Algorithm title */}
+          <div className="mb-4">
+            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Algorithm</div>
+            <div className="text-lg font-semibold text-white">{question.output}</div>
           </div>
-          <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-purple-300 border border-purple-500/20 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-            <code className="block">({question.methodArgs})</code>
-          </pre>
-        </div>
-      )}
+          {/* Code snippet */}
+          <div>
+            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Code</div>
+            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere overflow-x-auto max-h-64 overflow-y-auto">
+              <code className="block">{question.input}</code>
+            </pre>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Code snippet */}
+          <div className="mb-4">
+            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Input</div>
+            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+              <code className="block">{question.input}</code>
+            </pre>
+          </div>
 
-      {/* Output */}
-      <div>
-        <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Output</div>
-        <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-emerald-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-          <code className="block">{question.output}</code>
-        </pre>
-      </div>
+          {/* Method Arguments */}
+          {question.methodArgs && (
+            <div className="mb-4">
+              <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
+                Method Arguments
+              </div>
+              <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-purple-300 border border-purple-500/20 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+                <code className="block">({question.methodArgs})</code>
+              </pre>
+            </div>
+          )}
+
+          {/* Output */}
+          <div>
+            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Output</div>
+            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-emerald-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+              <code className="block">{question.output}</code>
+            </pre>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -827,7 +900,7 @@ function PlayingPhase({
 
         {/* Question */}
         <div className="mb-8">
-          <QuestionDisplay question={currentQuestion} />
+          <QuestionDisplay question={currentQuestion} quizType={state.config.quizType} />
         </div>
 
         {/* Method Cards */}
@@ -1235,6 +1308,7 @@ export default function QuizPage() {
       categories: [],
       questionCount: 10,
       timePerQuestion: 15,
+      quizType: 'methods',
     },
     questions: [],
     currentQuestionIndex: 0,
@@ -1485,8 +1559,8 @@ export default function QuizPage() {
           config={state.config}
           onConfigChange={handleConfigChange}
           onStart={handleStartQuiz}
-          availableCategories={availableCategories}
-          categoryCounts={categoryCounts}
+          methodCategories={availableCategories}
+          methodCategoryCounts={categoryCounts}
           language={language}
         />
       );

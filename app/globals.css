@@ -119,6 +119,12 @@ html.light {
     box-sizing: border-box;
   }
 
+  /* All buttons show pointer cursor by default */
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
   body {
     background: var(--bg-primary);
     color: var(--text-primary);

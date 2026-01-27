@@ -481,6 +481,19 @@ export default function ExerciseDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Explanation (Learn mode only) */}
+            {viewMode === 'learn' && exercise.explanation && (
+              <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
+                <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <LightbulbIcon className={`w-5 h-5 ${config.color}`} />
+                  Explanation
+                </h2>
+                <div className="text-zinc-300 leading-relaxed whitespace-pre-line text-sm">
+                  {exercise.explanation}
+                </div>
+              </div>
+            )}
+
             {/* Instructions */}
             <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
               <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">

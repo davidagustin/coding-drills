@@ -1,11 +1,19 @@
+import {
+  type ComplexityQuestion,
+  getComplexityQuestionsByCategory,
+  STANDARD_COMPLEXITIES,
+} from './complexityProblems';
 import { getMethodsByLanguage } from './problems';
 import type { Difficulty, LanguageId, Method, QuizQuestion } from './types';
+
+export type QuizType = 'methods' | 'time-complexity' | 'space-complexity';
 
 export interface QuizConfig {
   language: LanguageId;
   categories: string[];
   questionCount: number;
   timePerQuestion: number; // 5-60 seconds, supports slider
+  quizType: QuizType;
 }
 
 /**
@@ -356,9 +364,20 @@ function createQuestionFromMethod(
 }
 
 /**
- * Generates a complete quiz based on the configuration
+ * Generates a complete quiz based on the configuration.
+ * Dispatches to the appropriate generator based on quiz type.
  */
 export function generateQuiz(config: QuizConfig): QuizQuestion[] {
+  if (config.quizType === 'time-complexity' || config.quizType === 'space-complexity') {
+    return generateComplexityQuiz(config);
+  }
+  return generateMethodQuiz(config);
+}
+
+/**
+ * Generates a method-identification quiz (original quiz type)
+ */
+function generateMethodQuiz(config: QuizConfig): QuizQuestion[] {
   const allMethods = getMethodsByLanguage(config.language);
 
   // Filter methods by selected categories
@@ -394,6 +413,59 @@ export function generateQuiz(config: QuizConfig): QuizQuestion[] {
   );
 
   return questions;
+}
+
+/**
+ * Generates complexity option choices (1 correct + 3 wrong)
+ */
+function generateComplexityOptions(correct: string, distractors?: string[]): string[] {
+  if (distractors && distractors.length >= 3) {
+    return shuffleArray([correct, ...distractors.slice(0, 3)]);
+  }
+
+  // Use standard pool, removing the correct answer
+  const pool = STANDARD_COMPLEXITIES.filter((c) => c !== correct);
+  const wrong = shuffleArray(pool).slice(0, 3);
+  return shuffleArray([correct, ...wrong]);
+}
+
+/**
+ * Generates a time or space complexity quiz
+ */
+function generateComplexityQuiz(config: QuizConfig): QuizQuestion[] {
+  const isTime = config.quizType === 'time-complexity';
+  const eligible = getComplexityQuestionsByCategory(config.categories);
+
+  // Select random questions
+  let selected: ComplexityQuestion[];
+  if (eligible.length >= config.questionCount) {
+    selected = getRandomElements(eligible, config.questionCount);
+  } else {
+    selected = [];
+    while (selected.length < config.questionCount) {
+      const remaining = config.questionCount - selected.length;
+      const batch = getRandomElements(eligible, Math.min(remaining, eligible.length));
+      selected = [...selected, ...batch];
+    }
+  }
+
+  return selected.map((q, index) => {
+    const correct = isTime ? q.timeComplexity : q.spaceComplexity;
+    const distractors = isTime ? q.timeDistractors : q.spaceDistractors;
+    const options = generateComplexityOptions(correct, distractors);
+
+    return {
+      id: `${q.id}-${index}`,
+      input: q.code,
+      output: q.title,
+      correctMethod: correct,
+      options,
+      difficulty: 'medium' as Difficulty,
+      explanation: q.explanation,
+      category: q.category,
+      methodHint: isTime ? 'Time Complexity' : 'Space Complexity',
+    };
+  });
 }
 
 /**

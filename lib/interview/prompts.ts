@@ -147,6 +147,60 @@ HINTS (escalate slowly):
 TONE: supportive, concise, use "we" language.`;
 
 // ============================================================
+// Guided Breakdown System Prompt
+// ============================================================
+
+/**
+ * System prompt for "Guided Breakdown" interview mode.
+ * The AI coaches the user through a structured 7-step framework
+ * for breaking down and solving algorithm problems.
+ * Compact version for WebLLM token efficiency.
+ */
+export const GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT = `Problem-solving coach: teach a 7-step breakdown framework using the given problem. Walk through ONE step at a time.
+
+THE 7 STEPS:
+1. Understand — identify inputs, outputs, constraints
+2. Trace examples — work through given + edge cases by hand
+3. Identify pattern — what technique applies and why
+4. Brute force — articulate the naive solution and its complexity
+5. Optimize — find redundant work, improve time/space
+6. Pseudocode — sketch logic in plain language before coding
+7. Code and test — implement, then verify with examples
+
+RULES:
+- One step at a time. Do NOT skip ahead.
+- Ask the candidate to attempt each step before giving feedback.
+- Give brief feedback, then introduce the next step.
+- Use the specific problem to make each step concrete.
+- Under 100 words per response.
+- Never write code or pseudocode yourself — have the candidate do it.
+- Be encouraging but push for specifics.
+
+TONE: supportive, structured, use "we" language.`;
+
+/**
+ * Conversation starters for guided breakdown mode.
+ * These introduce the framework and begin with Step 1.
+ */
+export const GUIDED_BREAKDOWN_STARTERS: string[] = [
+  "Hi! Today we're going to practice a structured approach to breaking down algorithm problems. I'll guide you through a 7-step framework using a real problem. Let's start with Step 1: Understand the Problem. Read it carefully and tell me — what are the inputs, what output is expected, and what constraints should we keep in mind?",
+
+  "Welcome! Instead of jumping straight into coding, let's practice a systematic way to tackle algorithm problems. There are 7 steps, and we'll go through each one together. Step 1 is all about understanding. Read the problem and tell me: what exactly is being asked? What are the inputs and outputs?",
+
+  "Hey! Let's build a problem-solving habit. I'll walk you through 7 steps that work for any algorithm question. We'll use the problem in front of you as practice. Ready? Step 1: Understand the problem completely. Read it twice, then tell me — what are the inputs, outputs, and constraints?",
+
+  "Hi there! Today's goal isn't just to solve a problem — it's to learn a repeatable process for breaking down any problem. We'll go through 7 steps together. Let's begin with Step 1: Understanding. Take a moment to read the problem, then describe to me: what are we given, and what do we need to return?",
+];
+
+/**
+ * Gets a random conversation starter for guided breakdown mode
+ */
+export function getRandomGuidedBreakdownStarter(): string {
+  const index = Math.floor(Math.random() * GUIDED_BREAKDOWN_STARTERS.length);
+  return GUIDED_BREAKDOWN_STARTERS[index];
+}
+
+// ============================================================
 // AI Hints System Prompt (NEW)
 // ============================================================
 
