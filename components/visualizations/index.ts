@@ -281,6 +281,8 @@ const DequeViz = dynamic(() => import('./DequeViz'), { ssr: false });
 const FenwickTreeUpdateViz = dynamic(() => import('./FenwickTreeUpdateViz'), { ssr: false });
 const FenwickTreeQueryViz = dynamic(() => import('./FenwickTreeQueryViz'), { ssr: false });
 const HashMapChainingViz = dynamic(() => import('./HashMapChainingViz'), { ssr: false });
+const FastPowerViz = dynamic(() => import('./FastPowerViz'), { ssr: false });
+const FloodFillViz = dynamic(() => import('./FloodFillViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -372,6 +374,8 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
 
   // Batch 4
   'generate-parens': GenerateParensViz,
+  'fast-power': FastPowerViz,
+  'flood-fill': FloodFillViz,
   'word-search-grid': WordSearchGridViz,
   'n-queens-count': NQueensCountViz,
   'subset-sum-exists': SubsetSumExistsViz,
