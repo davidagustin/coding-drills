@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { getSetting } from '@/lib/storage';
+import { getSetting } from '../lib/storage';
 import { useProgress } from './useProgress';
 import { useTimer } from './useTimer';
 

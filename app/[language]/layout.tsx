@@ -179,7 +179,9 @@ function ModeNav({
           {modes.map((mode) => (
             <Link
               key={mode.slug}
-              href={mode.slug === '__regex__' ? '/regex' : `/${language}/${mode.slug}`}
+              href={
+                mode.slug === '__regex__' ? `/regex?from=${language}` : `/${language}/${mode.slug}`
+              }
               className={`
                 flex items-center gap-2 px-4 py-2 rounded-lg
                 text-sm font-medium whitespace-nowrap

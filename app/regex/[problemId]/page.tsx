@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { isValidLanguage, LANGUAGE_CONFIG } from '@/app/[language]/config';
 import {
   evaluateRegex,
   getAdjacentProblems,
@@ -128,7 +129,12 @@ function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
 
 export default function RegexProblemPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const problemId = params.problemId as string;
+  const fromLanguage = searchParams.get('from');
+  const validFrom = fromLanguage && isValidLanguage(fromLanguage) ? fromLanguage : null;
+  const fromLabel = validFrom ? LANGUAGE_CONFIG[validFrom].name : null;
+  const fromSuffix = validFrom ? `?from=${validFrom}` : '';
 
   const problem = useMemo(() => getRegexProblemById(problemId), [problemId]);
   const adjacent = useMemo(() => getAdjacentProblems(problemId), [problemId]);
@@ -183,7 +189,7 @@ export default function RegexProblemPage() {
           <h1 className="text-2xl font-bold text-zinc-100 mb-4">Problem Not Found</h1>
           <p className="text-zinc-400 mb-6">The specified regex problem does not exist.</p>
           <Link
-            href="/regex"
+            href={`/regex${fromSuffix}`}
             className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
           >
             Back to Regex Trainer
@@ -202,8 +208,22 @@ export default function RegexProblemPage() {
             <Link href="/" className="text-zinc-500 hover:text-zinc-300 transition-colors">
               Home
             </Link>
+            {validFrom && (
+              <>
+                <span className="text-zinc-600">/</span>
+                <Link
+                  href={`/${validFrom}`}
+                  className="text-zinc-500 hover:text-zinc-300 transition-colors"
+                >
+                  {fromLabel}
+                </Link>
+              </>
+            )}
             <span className="text-zinc-600">/</span>
-            <Link href="/regex" className="text-zinc-500 hover:text-zinc-300 transition-colors">
+            <Link
+              href={`/regex${fromSuffix}`}
+              className="text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
               Regex Trainer
             </Link>
             <span className="text-zinc-600">/</span>
@@ -214,7 +234,7 @@ export default function RegexProblemPage() {
           <div className="flex items-center gap-2">
             {adjacent.prev ? (
               <Link
-                href={`/regex/${adjacent.prev.id}`}
+                href={`/regex/${adjacent.prev.id}${fromSuffix}`}
                 className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
                 title={adjacent.prev.title}
               >
@@ -245,7 +265,7 @@ export default function RegexProblemPage() {
             )}
             {adjacent.next ? (
               <Link
-                href={`/regex/${adjacent.next.id}`}
+                href={`/regex/${adjacent.next.id}${fromSuffix}`}
                 className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
                 title={adjacent.next.title}
               >
@@ -477,7 +497,7 @@ export default function RegexProblemPage() {
         {/* Bottom Navigation */}
         <div className="mt-8 flex items-center justify-between">
           <Link
-            href="/regex"
+            href={`/regex${fromSuffix}`}
             className="py-2 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium rounded-lg transition-colors text-sm border border-zinc-700"
           >
             Back to All Problems
@@ -485,7 +505,7 @@ export default function RegexProblemPage() {
           <div className="flex items-center gap-2">
             {adjacent.prev && (
               <Link
-                href={`/regex/${adjacent.prev.id}`}
+                href={`/regex/${adjacent.prev.id}${fromSuffix}`}
                 className="py-2 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium rounded-lg transition-colors text-sm border border-zinc-700 flex items-center gap-2"
               >
                 <svg
@@ -503,7 +523,7 @@ export default function RegexProblemPage() {
             )}
             {adjacent.next && (
               <Link
-                href={`/regex/${adjacent.next.id}`}
+                href={`/regex/${adjacent.next.id}${fromSuffix}`}
                 className="py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors text-sm flex items-center gap-2"
               >
                 Next

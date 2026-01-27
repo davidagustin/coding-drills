@@ -509,7 +509,7 @@ export default function LanguagePage() {
         )}
 
         <ModeCard
-          href="/regex"
+          href={`/regex?from=${language}`}
           icon={<RegexIcon className="w-8 h-8" />}
           title="Regex Trainer"
           description="Master regular expressions with live pattern matching. Drill timed challenges, study at your pace, or experiment in the playground."

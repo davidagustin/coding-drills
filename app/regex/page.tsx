@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { isValidLanguage, LANGUAGE_CONFIG } from '@/app/[language]/config';
 import {
   evaluateRegex,
   getRegexCategories,
@@ -1017,9 +1019,10 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
 
 interface PracticeBrowserProps {
   onBack: () => void;
+  fromLanguage?: string | null;
 }
 
-function PracticeBrowser({ onBack }: PracticeBrowserProps) {
+function PracticeBrowser({ onBack, fromLanguage }: PracticeBrowserProps) {
   const allCategories = useMemo(() => getRegexCategories(), []);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<RegexCategory | null>(null);
@@ -1180,7 +1183,7 @@ function PracticeBrowser({ onBack }: PracticeBrowserProps) {
                 {problems.map((problem) => (
                   <Link
                     key={problem.id}
-                    href={`/regex/${problem.id}`}
+                    href={`/regex/${problem.id}${fromLanguage ? `?from=${fromLanguage}` : ''}`}
                     className="group bg-zinc-900 rounded-xl border border-zinc-800 p-4 hover:border-emerald-500/50 hover:bg-zinc-800/50 transition-all duration-200 cursor-pointer"
                   >
                     <div className="flex items-start justify-between mb-2">
@@ -1451,9 +1454,16 @@ interface ResultsPhaseProps {
   onTryAgain: () => void;
   onChangeSettings: () => void;
   onBack: () => void;
+  backLabel: string;
 }
 
-function ResultsPhase({ state, onTryAgain, onChangeSettings, onBack }: ResultsPhaseProps) {
+function ResultsPhase({
+  state,
+  onTryAgain,
+  onChangeSettings,
+  onBack,
+  backLabel,
+}: ResultsPhaseProps) {
   const [showMissed, setShowMissed] = useState(false);
 
   const totalQuestions = state.answers.length;
@@ -1631,7 +1641,7 @@ function ResultsPhase({ state, onTryAgain, onChangeSettings, onBack }: ResultsPh
         onClick={onBack}
         className="w-full py-3 px-6 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-medium rounded-xl transition-colors border border-zinc-800 cursor-pointer text-sm"
       >
-        Back to Home
+        {backLabel}
       </button>
     </div>
   );
@@ -1642,6 +1652,11 @@ function ResultsPhase({ state, onTryAgain, onChangeSettings, onBack }: ResultsPh
 // ============================================================================
 
 export default function RegexPage() {
+  const searchParams = useSearchParams();
+  const fromLanguage = searchParams.get('from');
+  const validFrom = fromLanguage && isValidLanguage(fromLanguage) ? fromLanguage : null;
+  const fromLabel = validFrom ? LANGUAGE_CONFIG[validFrom].name : null;
+
   const [phase, setPhase] = useState<Phase>('setup');
   const [selectedProblems, setSelectedProblems] = useState<RegexProblem[]>([]);
   const [trainerResult, setTrainerResult] = useState<RegexTrainerState | null>(null);
@@ -1711,8 +1726,8 @@ export default function RegexPage() {
   }, []);
 
   const handleBackToHome = useCallback(() => {
-    window.location.href = '/';
-  }, []);
+    window.location.href = validFrom ? `/${validFrom}` : '/';
+  }, [validFrom]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: phase triggers scroll-to-top on navigation
   useEffect(() => {
@@ -1727,6 +1742,17 @@ export default function RegexPage() {
           <Link href="/" className="text-zinc-500 hover:text-zinc-300 transition-colors">
             Home
           </Link>
+          {validFrom && (
+            <>
+              <span className="text-zinc-600">/</span>
+              <Link
+                href={`/${validFrom}`}
+                className="text-zinc-500 hover:text-zinc-300 transition-colors"
+              >
+                {fromLabel}
+              </Link>
+            </>
+          )}
           <span className="text-zinc-600">/</span>
           <span className="text-zinc-300">Regex Trainer</span>
         </nav>
@@ -1744,7 +1770,9 @@ export default function RegexPage() {
         <DrillPhase problems={selectedProblems} onComplete={handleDrillComplete} />
       )}
 
-      {phase === 'practice-browser' && <PracticeBrowser onBack={handleChangeSettings} />}
+      {phase === 'practice-browser' && (
+        <PracticeBrowser onBack={handleChangeSettings} fromLanguage={validFrom} />
+      )}
 
       {phase === 'playground' && <PlaygroundPhase onBack={handleChangeSettings} />}
 
@@ -1754,6 +1782,7 @@ export default function RegexPage() {
           onTryAgain={handleTryAgain}
           onChangeSettings={handleChangeSettings}
           onBack={handleBackToHome}
+          backLabel={fromLabel ? `Back to ${fromLabel}` : 'Back to Home'}
         />
       )}
     </div>

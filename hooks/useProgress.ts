@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { logError } from '@/lib/errorLogger';
+import { logError } from '../lib/errorLogger';
 import {
   clearProgress,
   type DrillResult,
@@ -15,7 +15,7 @@ import {
   saveDrillSession,
   saveProgress,
   type UserProgress,
-} from '@/lib/storage';
+} from '../lib/storage';
 
 // ============================================================================
 // Types
