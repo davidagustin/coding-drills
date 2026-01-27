@@ -9,7 +9,18 @@ export function buildExerciseTutorSystemPrompt(
   hasVisualization: boolean,
 ): string {
   const vizNote = hasVisualization
-    ? '\nThis exercise has an interactive visualization on the page that the student can view. You have reviewed it and may reference it when explaining concepts.'
+    ? `
+## Interactive Visualization
+This exercise has an interactive step-by-step visualization directly above this chat.
+It animates the "${exercise.title}" algorithm on a sample input, showing how the data structure changes at each step. The student can play/pause, step forward/back, adjust speed, and scrub through the progress bar.
+
+Each step highlights the current state (pointers, values, comparisons, swaps, etc.) and displays a short explanation of what is happening at that moment.
+
+When the student asks about the visualization or how the algorithm works:
+- Encourage them to step through the animation and describe what they see.
+- Ask what they notice about how the data changes between steps.
+- Use the visualization to ground abstract concepts (e.g., "Watch what happens to the left and right pointers when the middle value is too small").
+- If they are confused by a step, ask them to pause on it and describe the current state.`
     : '';
 
   return `You are a friendly, concise coding tutor helping a student with an exercise.
