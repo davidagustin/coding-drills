@@ -240,6 +240,7 @@ const GroupByViz = dynamic(() => import('./GroupByViz'), { ssr: false });
 const CountByViz = dynamic(() => import('./CountByViz'), { ssr: false });
 const SumByViz = dynamic(() => import('./SumByViz'), { ssr: false });
 const MaxByViz = dynamic(() => import('./MaxByViz'), { ssr: false });
+const BinarySearchSqrtViz = dynamic(() => import('./BinarySearchSqrtViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -474,6 +475,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'count-by': CountByViz,
   'sum-by': SumByViz,
   'max-by': MaxByViz,
+  'binary-search-sqrt': BinarySearchSqrtViz,
 };
 
 /**
