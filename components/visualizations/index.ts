@@ -431,6 +431,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'best-time-buy-sell': BestTimeToBuySellViz,
   'majority-element': MajorityElementViz,
   'climbing-stairs-ii': ClimbingStairs2Viz,
+  'house-robber-circular': HouseRobber2Viz,
   'house-robber-ii': HouseRobber2Viz,
   'coin-change-ii': CoinChange2Viz,
   'longest-substring': LongestSubstringViz,
