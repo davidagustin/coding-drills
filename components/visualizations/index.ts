@@ -274,6 +274,7 @@ const DebounceLeadingViz = dynamic(() => import('./DebounceLeadingViz'), { ssr: 
 const ThrottleLeadingTrailingViz = dynamic(() => import('./ThrottleLeadingTrailingViz'), {
   ssr: false,
 });
+const RetryAsyncViz = dynamic(() => import('./RetryAsyncViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -385,6 +386,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'debounce-leading': DebounceLeadingViz,
   throttle: ThrottleViz,
   'throttle-leading-trailing': ThrottleLeadingTrailingViz,
+  'retry-async': RetryAsyncViz,
   'count-inversions': CountInversionsViz,
 
   // Batch 6: Additional Tree & String algorithms
