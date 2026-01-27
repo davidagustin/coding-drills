@@ -41,6 +41,7 @@ const MergeSortedViz = dynamic(() => import('./MergeSortedViz'), { ssr: false })
 const MinHeapInsertViz = dynamic(() => import('./MinHeapInsertViz'), { ssr: false });
 const PrefixSumViz = dynamic(() => import('./PrefixSumViz'), { ssr: false });
 const TrieInsertViz = dynamic(() => import('./TrieInsertViz'), { ssr: false });
+const GeneratePermutationsViz = dynamic(() => import('./GeneratePermutationsViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -81,6 +82,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'min-heap-insert': MinHeapInsertViz,
   'prefix-sum': PrefixSumViz,
   'trie-insert': TrieInsertViz,
+  'generate-permutations': GeneratePermutationsViz,
 };
 
 /**
