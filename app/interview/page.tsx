@@ -7,7 +7,9 @@ import { type AlgorithmProblem, algorithmProblems } from '@/lib/interview/proble
 import {
   type AlgorithmPattern,
   createProblemContext,
+  GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT,
   getRandomConversationStarter,
+  getRandomGuidedBreakdownStarter,
   INTERVIEWER_SYSTEM_PROMPT_COMPACT,
 } from '@/lib/interview/prompts';
 // WebLLM integration
@@ -18,6 +20,7 @@ import { checkCompatibility, initializeModel, isModelLoaded, streamChat } from '
 // ============================================================================
 
 type InterviewPhase = 'setup' | 'loading-model' | 'interviewing' | 'completed';
+type InterviewMode = 'solve' | 'guided-breakdown';
 
 interface Message {
   id: string;
@@ -89,7 +92,7 @@ function DifficultyChip({ value, selected, onClick }: DifficultyChipProps) {
 }
 
 interface SetupPhaseProps {
-  onStart: (problem: AlgorithmProblem) => void;
+  onStart: (problem: AlgorithmProblem, mode: InterviewMode) => void;
   isCompatible: boolean | null;
   compatibilityError: string | null;
 }
@@ -98,6 +101,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | 'all'>('medium');
   const [selectedProblem, setSelectedProblem] = useState<AlgorithmProblem | null>(null);
   const [showProblemList, setShowProblemList] = useState(false);
+  const [interviewMode, setInterviewMode] = useState<InterviewMode>('solve');
 
   const availableProblems = getProblemsbyDifficulty(difficulty);
 
@@ -108,14 +112,23 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
 
   const handleStart = () => {
     const problem = selectedProblem || getRandomProblem(difficulty);
-    onStart(problem);
+    onStart(problem, interviewMode);
   };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="text-center">
         <div className="text-cyan-400 mb-4 flex justify-center">
-          <svg viewBox="0 0 24 24" className="w-16 h-16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            className="w-16 h-16"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
           </svg>
         </div>
@@ -241,12 +254,52 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
             )}
           </div>
 
+          {/* Interview Mode */}
+          <div>
+            <span className="block text-sm font-medium text-zinc-300 mb-3">Mode</span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setInterviewMode('solve')}
+                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                  interviewMode === 'solve'
+                    ? 'bg-cyan-600 text-white'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                }`}
+              >
+                Solve Problem
+              </button>
+              <button
+                type="button"
+                onClick={() => setInterviewMode('guided-breakdown')}
+                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                  interviewMode === 'guided-breakdown'
+                    ? 'bg-cyan-600 text-white'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                }`}
+              >
+                Guided Breakdown
+              </button>
+            </div>
+          </div>
+
           {/* Info Box */}
           <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
             <p className="text-sm text-cyan-400">
-              <span className="font-medium">How it works:</span> The AI interviewer will present the
-              problem and guide you through solving it with questions and hints, just like a real
-              technical interview. The AI runs locally in your browser using WebGPU.
+              {interviewMode === 'solve' ? (
+                <>
+                  <span className="font-medium">Solve Mode:</span> The AI interviewer will present
+                  the problem and guide you through solving it with questions and hints, just like a
+                  real technical interview.
+                </>
+              ) : (
+                <>
+                  <span className="font-medium">Guided Breakdown:</span> The AI coach will teach you
+                  a structured 7-step framework for breaking down algorithm problems, walking
+                  through each step interactively using the selected problem.
+                </>
+              )}{' '}
+              The AI runs locally in your browser using WebGPU.
             </p>
           </div>
         </div>
@@ -630,9 +683,8 @@ export default function InterviewPage() {
   }, []);
 
   // Start the actual interview (must be defined before handleStart)
-  const startInterview = useCallback((problem: AlgorithmProblem) => {
+  const startInterview = useCallback((problem: AlgorithmProblem, mode: InterviewMode) => {
     // Build the system message with problem context
-    // Use compact prompt for WebLLM (token efficiency)
     const problemContext = createProblemContext({
       id: problem.id,
       title: problem.title,
@@ -645,10 +697,19 @@ export default function InterviewPage() {
       patterns: problem.patterns as AlgorithmPattern[],
     });
 
-    systemMessageRef.current = `${INTERVIEWER_SYSTEM_PROMPT_COMPACT}\n\n---\n\n${problemContext}`;
+    // Use different system prompts based on interview mode
+    const systemPrompt =
+      mode === 'guided-breakdown'
+        ? GUIDED_BREAKDOWN_SYSTEM_PROMPT_COMPACT
+        : INTERVIEWER_SYSTEM_PROMPT_COMPACT;
 
-    // Get a conversation starter
-    const starterMessage = getRandomConversationStarter();
+    systemMessageRef.current = `${systemPrompt}\n\n---\n\n${problemContext}`;
+
+    // Get a mode-appropriate conversation starter
+    const starterMessage =
+      mode === 'guided-breakdown'
+        ? getRandomGuidedBreakdownStarter()
+        : getRandomConversationStarter();
 
     // Add the initial assistant message
     const initialMessage: Message = {
@@ -664,12 +725,12 @@ export default function InterviewPage() {
 
   // Handle starting the interview
   const handleStart = useCallback(
-    async (problem: AlgorithmProblem) => {
+    async (problem: AlgorithmProblem, mode: InterviewMode) => {
       setCurrentProblem(problem);
 
       // Check if model is already loaded
       if (isModelLoaded()) {
-        startInterview(problem);
+        startInterview(problem, mode);
         return;
       }
 
@@ -691,7 +752,7 @@ export default function InterviewPage() {
           }
         });
 
-        startInterview(problem);
+        startInterview(problem, mode);
       } catch (error) {
         console.error('Failed to load model:', error);
         setPhase('setup');
