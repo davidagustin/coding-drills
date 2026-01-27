@@ -226,6 +226,8 @@ const ValidPalindromeViz = dynamic(() => import('./ValidPalindromeViz'), { ssr: 
 const LongestPalindromeViz = dynamic(() => import('./LongestPalindromeViz'), { ssr: false });
 const CountAndSayViz = dynamic(() => import('./CountAndSayViz'), { ssr: false });
 const ZigZagConversionViz = dynamic(() => import('./ZigZagConversionViz'), { ssr: false });
+const JosephusViz = dynamic(() => import('./JosephusViz'), { ssr: false });
+const DiagonalTraversalViz = dynamic(() => import('./DiagonalTraversalViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -443,6 +445,8 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'longest-palindrome': LongestPalindromeViz,
   'count-and-say': CountAndSayViz,
   'zigzag-conversion': ZigZagConversionViz,
+  josephus: JosephusViz,
+  'diagonal-traversal': DiagonalTraversalViz,
 };
 
 /**
