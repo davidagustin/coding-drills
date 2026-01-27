@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
 import { getVisualization } from '@/components/visualizations';
 import {
@@ -575,31 +575,27 @@ export default function ExerciseDetailPage() {
             {/* Algorithm Visualization (Learn mode only) */}
             {viewMode === 'learn' &&
               (() => {
-                try {
-                  const VizComponent = getVisualization(exerciseId);
-                  if (!VizComponent) return null;
-                  return (
-                    <div
-                      className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6 overflow-hidden`}
+                const VizComponent = getVisualization(exerciseId);
+                if (!VizComponent) return null;
+                return (
+                  <div
+                    className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6 overflow-hidden`}
+                  >
+                    <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <AnimationIcon className={`w-5 h-5 ${config.color}`} />
+                      Interactive Visualization
+                    </h2>
+                    <Suspense
+                      fallback={
+                        <div className="p-8 text-center text-zinc-400">
+                          Loading visualization...
+                        </div>
+                      }
                     >
-                      <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                        <AnimationIcon className={`w-5 h-5 ${config.color}`} />
-                        Interactive Visualization
-                      </h2>
                       <VizComponent />
-                    </div>
-                  );
-                } catch (error) {
-                  console.error('Visualization error:', error);
-                  return (
-                    <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
-                      <p className="text-red-400">
-                        Error loading visualization:{' '}
-                        {error instanceof Error ? error.message : String(error)}
-                      </p>
-                    </div>
-                  );
-                }
+                    </Suspense>
+                  </div>
+                );
               })()}
 
             {/* AI Tutor (Learn mode only) */}
