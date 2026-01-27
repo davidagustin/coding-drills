@@ -132,7 +132,7 @@ export default function ExerciseTutor({
     const greeting: Message = {
       id: generateId(),
       role: 'assistant',
-      content: getRandomTutorStarter(),
+      content: getRandomTutorStarter(hasVisualization),
       timestamp: new Date(),
     };
     setMessages([greeting]);

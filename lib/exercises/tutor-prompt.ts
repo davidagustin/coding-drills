@@ -18,11 +18,12 @@ Each step highlights the current state (pointers, values, comparisons, swaps, et
 
 You have reviewed the solution code above, so you know exactly what variables, data structures, and logic the algorithm uses. The visualization animates that same logic. Use your knowledge of the code to explain what each step of the visualization is showing — reference the actual operations (comparisons, swaps, pointer movements, recursive calls, etc.) without revealing the code itself.
 
-When the student asks about the visualization or how the algorithm works:
-- Explain what the visualization is demonstrating in terms of the underlying algorithm steps you know from the code.
-- Encourage them to step through and describe what they see, then connect it to the concept.
-- Reference specific operations the animation shows (e.g., the comparison being made, which elements are being swapped, how the search space shrinks).
-- If they are confused by a step, explain what that step does algorithmically and ask them to watch it again.`
+When the student asks about the visualization:
+- Walk them through it step by step like narrating a video: "In the first step you'll see X, then Y happens, then Z..."
+- Explain what each step of the animation is doing in terms of the algorithm logic you know from the code.
+- Reference specific operations the animation shows (comparisons, swaps, pointer movements, how the data structure changes).
+- If they ask about a specific step, explain exactly what that step does algorithmically.
+- You can proactively offer to walk through the entire visualization if the student seems interested.`
     : '';
 
   return `You are a friendly, concise coding tutor helping a student with an exercise. You are embedded in the "Learn" tab of the exercise page. The student can see everything listed below on the same page, so you can freely reference and explain any of it.
@@ -66,17 +67,26 @@ ${vizNote}
 - If the student shares code, comment on it specifically rather than giving generic advice.`;
 }
 
-const TUTOR_STARTERS = [
-  "Hey! I'm here to help you work through this exercise. What's your first thought on how to approach it?",
-  'Hi there! Ready to tackle this one together. Have you read through the instructions yet — any part that stands out or feels tricky?',
-  "Welcome! Let's work through this step by step. What do you think the first thing to figure out is?",
-  'Hey! I can help guide you through this exercise. Where would you like to start?',
-  "Hi! Take a look at the instructions and let me know — what's your initial plan of attack?",
-];
+/**
+ * Build a greeting that tells the student what the tutor can do.
+ * Content-aware: mentions the visualization when one exists.
+ */
+function buildTutorStarters(hasVisualization: boolean): string[] {
+  const vizOffer = hasVisualization
+    ? ' I can also walk you through the visualization step by step — just ask!'
+    : '';
+
+  return [
+    `Hey! I'm your AI tutor for this exercise. I can explain the explanation, walk through each instruction, break down the hints, go over the solution code line by line, and clarify any concept on this page.${vizOffer} What would you like to start with?`,
+    `Hi there! I can help you understand everything on this page — the explanation, instructions, hints, solution code, and concepts.${vizOffer} What are you curious about?`,
+    `Welcome! I'm here to help you learn. Ask me about anything you see — the explanation, any instruction step, what a hint means, how the solution works, or any concept listed.${vizOffer} Where would you like to begin?`,
+  ];
+}
 
 /**
  * Return a random greeting message for the tutor.
  */
-export function getRandomTutorStarter(): string {
-  return TUTOR_STARTERS[Math.floor(Math.random() * TUTOR_STARTERS.length)];
+export function getRandomTutorStarter(hasVisualization: boolean): string {
+  const starters = buildTutorStarters(hasVisualization);
+  return starters[Math.floor(Math.random() * starters.length)];
 }
