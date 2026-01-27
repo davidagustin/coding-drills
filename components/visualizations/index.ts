@@ -288,6 +288,9 @@ const DeepCloneViz = dynamic(() => import('./DeepCloneViz'), { ssr: false });
 const FlattenNestedRecursiveViz = dynamic(() => import('./FlattenNestedRecursiveViz'), {
   ssr: false,
 });
+const FibonacciIterativeViz = dynamic(() => import('./FibonacciIterativeViz'), { ssr: false });
+const FibonacciRecursiveViz = dynamic(() => import('./FibonacciRecursiveViz'), { ssr: false });
+const FactorialRecursiveViz = dynamic(() => import('./FactorialRecursiveViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -541,6 +544,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'zigzag-iteration': ZigzagIterationViz,
   'transpose-matrix': TransposeMatrixViz,
   'sum-recursive': SumRecursiveViz,
+  'fibonacci-iterative': FibonacciIterativeViz,
+  'fibonacci-recursive': FibonacciRecursiveViz,
+  'factorial-recursive': FactorialRecursiveViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
   'prefix-product': PrefixProductViz,

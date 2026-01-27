@@ -1,0 +1,115 @@
+'use client';
+
+import { useMemo } from 'react';
+import { useVizAnimation } from './useVizAnimation';
+import VizControls from './VizControls';
+
+const N = 5;
+
+interface FactorialRecursiveStep {
+  n: number;
+  result: number | null;
+  callStack: Array<{ n: number; result: number | null }>;
+  explanation: string;
+}
+
+function computeSteps(): FactorialRecursiveStep[] {
+  const steps: FactorialRecursiveStep[] = [];
+  const callStack: Array<{ n: number; result: number | null }> = [];
+
+  function factorial(n: number): number {
+    callStack.push({ n, result: null });
+    steps.push({
+      n,
+      result: null,
+      callStack: [...callStack],
+      explanation: `factorial(${n}): ${n <= 1 ? 'Base case, return 1' : `Recursive: ${n} * factorial(${n - 1})`}`,
+    });
+
+    if (n <= 1) {
+      callStack.pop();
+      steps.push({
+        n,
+        result: 1,
+        callStack: [...callStack],
+        explanation: `factorial(${n}) = 1 (base case)`,
+      });
+      return 1;
+    }
+
+    const subResult = factorial(n - 1);
+    const result = n * subResult;
+
+    callStack.pop();
+    steps.push({
+      n,
+      result,
+      callStack: [...callStack],
+      explanation: `factorial(${n}) = ${n} * factorial(${n - 1}) = ${n} * ${subResult} = ${result}`,
+    });
+
+    return result;
+  }
+
+  const finalResult = factorial(N);
+  steps.push({
+    n: N,
+    result: finalResult,
+    callStack: [],
+    explanation: `Complete: ${N}! = ${finalResult}`,
+  });
+
+  return steps;
+}
+
+const STEPS = computeSteps();
+const TOTAL_STEPS = STEPS.length;
+
+export default function FactorialRecursiveViz() {
+  const controls = useVizAnimation(TOTAL_STEPS);
+  const { step } = controls.state;
+
+  const currentStep = useMemo(() => {
+    return step < STEPS.length ? STEPS[step] : STEPS[STEPS.length - 1];
+  }, [step]);
+
+  const { result, callStack, explanation } = currentStep;
+
+  return (
+    <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">
+      <h2 className="text-2xl font-bold text-white mb-4">Factorial (Recursive)</h2>
+
+      <div className="mb-6 p-4 bg-zinc-800 rounded-lg">
+        <p className="text-white text-sm">{explanation}</p>
+        {result !== null && <p className="text-green-400 font-semibold mt-2">Result: {result}</p>}
+      </div>
+
+      <div className="space-y-6">
+        {/* Call Stack */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Call Stack</h3>
+          {callStack.length === 0 ? (
+            <div className="p-4 bg-zinc-800 rounded-lg text-center text-zinc-500">(empty)</div>
+          ) : (
+            <div className="space-y-2">
+              {callStack.map((call, idx) => (
+                <div
+                  key={idx}
+                  className="p-3 bg-zinc-800 rounded-lg border-2 border-zinc-700 font-mono text-sm"
+                >
+                  <span className="text-cyan-400">factorial</span>
+                  <span className="text-white">({call.n})</span>
+                  {call.result !== null && (
+                    <span className="text-green-400 ml-2">→ {call.result}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <VizControls controls={controls} />
+    </div>
+  );
+}
