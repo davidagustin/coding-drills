@@ -575,19 +575,31 @@ export default function ExerciseDetailPage() {
             {/* Algorithm Visualization (Learn mode only) */}
             {viewMode === 'learn' &&
               (() => {
-                const VizComponent = getVisualization(exerciseId);
-                if (!VizComponent) return null;
-                return (
-                  <div
-                    className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6 overflow-hidden`}
-                  >
-                    <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                      <AnimationIcon className={`w-5 h-5 ${config.color}`} />
-                      Interactive Visualization
-                    </h2>
-                    <VizComponent />
-                  </div>
-                );
+                try {
+                  const VizComponent = getVisualization(exerciseId);
+                  if (!VizComponent) return null;
+                  return (
+                    <div
+                      className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6 overflow-hidden`}
+                    >
+                      <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <AnimationIcon className={`w-5 h-5 ${config.color}`} />
+                        Interactive Visualization
+                      </h2>
+                      <VizComponent />
+                    </div>
+                  );
+                } catch (error) {
+                  console.error('Visualization error:', error);
+                  return (
+                    <div className={`rounded-xl border ${config.borderColor} bg-zinc-900/50 p-6`}>
+                      <p className="text-red-400">
+                        Error loading visualization:{' '}
+                        {error instanceof Error ? error.message : String(error)}
+                      </p>
+                    </div>
+                  );
+                }
               })()}
 
             {/* AI Tutor (Learn mode only) */}
