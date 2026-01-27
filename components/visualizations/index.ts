@@ -130,7 +130,6 @@ const LongestCommonPrefixViz = dynamic(() => import('./LongestCommonPrefixViz'),
 const ValidAnagramViz = dynamic(() => import('./ValidAnagramViz'), { ssr: false });
 const SingleNumberViz = dynamic(() => import('./SingleNumberViz'), { ssr: false });
 const PowerOfTwoViz = dynamic(() => import('./PowerOfTwoViz'), { ssr: false });
-const CountBitsViz = dynamic(() => import('./CountBitsViz'), { ssr: false });
 const MissingNumberViz = dynamic(() => import('./MissingNumberViz'), { ssr: false });
 const MergeSortViz = dynamic(() => import('./MergeSortViz'), { ssr: false });
 const QuickSortViz = dynamic(() => import('./QuickSortViz'), { ssr: false });
@@ -268,6 +267,9 @@ const SlidingWindowMaxSumViz = dynamic(() => import('./SlidingWindowMaxSumViz'),
 const IsPowerOfTwoViz = dynamic(() => import('./IsPowerOfTwoViz'), { ssr: false });
 const BinaryToDecimalViz = dynamic(() => import('./BinaryToDecimalViz'), { ssr: false });
 const DecimalToBinaryViz = dynamic(() => import('./DecimalToBinaryViz'), { ssr: false });
+const CountBitsViz = dynamic(() => import('./CountBitsViz'), { ssr: false });
+const ToggleBitViz = dynamic(() => import('./ToggleBitViz'), { ssr: false });
+const MatrixMultiplyViz = dynamic(() => import('./MatrixMultiplyViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -391,7 +393,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'valid-anagram': ValidAnagramViz,
   'single-number': SingleNumberViz,
   'power-of-two': PowerOfTwoViz,
-  'count-bits': CountBitsViz,
   'missing-number': MissingNumberViz,
   'merge-sort': MergeSortViz,
   'quick-sort': QuickSortViz,
@@ -528,6 +529,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'is-power-of-two': IsPowerOfTwoViz,
   'binary-to-decimal': BinaryToDecimalViz,
   'decimal-to-binary': DecimalToBinaryViz,
+  'count-bits': CountBitsViz,
+  'toggle-bit': ToggleBitViz,
+  'matrix-multiply': MatrixMultiplyViz,
 };
 
 /**
