@@ -414,7 +414,7 @@ export default function LanguagePage() {
               href={`/${language}/exercises`}
               icon={<LoopIcon className="w-8 h-8" />}
               title="Building Blocks"
-              description="Master reusable algorithm patterns: permutations, combinations, memoization, and utilities you'll use everywhere."
+              description="Master the reusable sub-patterns behind every coding problem: sliding windows, two pointers, binary search variants, DP, and more."
               buttonText="Train Patterns"
               config={config}
             />

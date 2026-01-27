@@ -471,7 +471,7 @@ export default function ExercisesPage() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-4">Coming Soon</h1>
           <p className="text-xl text-zinc-400 max-w-md mx-auto mb-8">
-            Algorithm and traversal exercises for {config.name} are currently being developed.
+            Building block exercises for {config.name} are currently being developed.
           </p>
           <Link
             href={`/${language}/drill`}
@@ -498,10 +498,11 @@ export default function ExercisesPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-3">Algorithm Building Blocks</h1>
+        <h1 className="text-4xl font-bold text-white mb-3">Building Blocks</h1>
         <p className="text-xl text-zinc-400">
-          Master reusable patterns you&apos;ll apply everywhere: permutations, combinations,
-          memoization, and essential utilities in {config.name}.
+          Master the reusable sub-patterns behind every coding problem: sliding windows, two
+          pointers, binary search variants, dynamic programming, backtracking, and more in{' '}
+          {config.name}.
         </p>
       </div>
 

@@ -1868,8 +1868,8 @@ function traverseLinkedList(head) {
 
   // ========== SEARCH & SORT UTILITIES ==========
   {
-    id: 'js-binary-search',
-    title: 'Binary Search',
+    id: 'js-binary-search-iterative',
+    title: 'Binary Search (Iterative)',
     category: 'searching',
     difficulty: 'intermediate',
     description:
@@ -3038,6 +3038,6231 @@ function traverseLinkedList(head) {
       'When processing a node, decrement in-degree of its neighbors',
     ],
     concepts: ['topological sort', 'DAG', 'Kahn algorithm', 'dependency order'],
+  },
+
+  // ========== ITERATION PATTERNS (Two Pointers, Sliding Window, Prefix, etc.) ==========
+  {
+    id: 'js-two-pointer-palindrome',
+    title: 'Two-Pointer Palindrome Check',
+    category: 'iteration-patterns',
+    difficulty: 'beginner',
+    description:
+      'Check if an array reads the same forwards and backwards using two pointers converging from opposite ends.',
+    instructions: [
+      'Given an array, return true if it is a palindrome (reads the same forwards and backwards)',
+      'Use two pointers: one starting at the beginning, one at the end',
+      'Move them toward each other, comparing elements at each step',
+      'Return false as soon as a mismatch is found',
+    ],
+    starterCode: `function isPalindrome(arr) {
+  // Use two pointers from opposite ends
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function isPalindrome(arr) {
+  let left = 0;
+  let right = arr.length - 1;
+  while (left < right) {
+    if (arr[left] !== arr[right]) return false;
+    left++;
+    right--;
+  }
+  return true;
+}`,
+    testCases: [
+      { input: [[1, 2, 3, 2, 1]], expected: true, description: 'Odd-length palindrome' },
+      { input: [[1, 2, 2, 1]], expected: true, description: 'Even-length palindrome' },
+      { input: [[1, 2, 3, 4, 5]], expected: false, description: 'Not a palindrome' },
+      { input: [[1]], expected: true, description: 'Single element' },
+      { input: [[]], expected: true, description: 'Empty array' },
+    ],
+    hints: [
+      'Initialize left = 0 and right = arr.length - 1',
+      'Loop while left < right',
+      'If arr[left] !== arr[right], it is not a palindrome',
+    ],
+    concepts: ['two pointers', 'converging pointers', 'palindrome check'],
+  },
+  {
+    id: 'js-two-pointer-remove-dupes',
+    title: 'Remove Duplicates from Sorted Array',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      'Remove duplicates from a sorted array in-place using two same-direction pointers, and return the new length.',
+    instructions: [
+      'Given a sorted array, remove duplicates in-place so each element appears only once',
+      'Use a slow pointer to track the write position and a fast pointer to scan ahead',
+      'Return the new length (number of unique elements)',
+      'The array should be modified in-place with unique elements at the front',
+    ],
+    starterCode: `function removeDuplicates(arr) {
+  if (arr.length === 0) return 0;
+  // Use two same-direction pointers: slow (write) and fast (read)
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function removeDuplicates(arr) {
+  if (arr.length === 0) return 0;
+  let slow = 0;
+  for (let fast = 1; fast < arr.length; fast++) {
+    if (arr[fast] !== arr[slow]) {
+      slow++;
+      arr[slow] = arr[fast];
+    }
+  }
+  return slow + 1;
+}`,
+    testCases: [
+      { input: [[1, 1, 2]], expected: 2, description: 'Simple duplicates' },
+      { input: [[0, 0, 1, 1, 1, 2, 2, 3, 3, 4]], expected: 5, description: 'Multiple duplicates' },
+      { input: [[1, 2, 3]], expected: 3, description: 'No duplicates' },
+      { input: [[1, 1, 1, 1]], expected: 1, description: 'All same' },
+      { input: [[5]], expected: 1, description: 'Single element' },
+    ],
+    hints: [
+      'slow starts at 0, fast starts at 1',
+      'When arr[fast] !== arr[slow], increment slow and copy arr[fast] to arr[slow]',
+      'The answer is slow + 1',
+    ],
+    concepts: ['two pointers', 'same-direction pointers', 'in-place modification'],
+  },
+  {
+    id: 'js-sliding-window-max-sum',
+    title: 'Maximum Sum of K Consecutive Elements',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      'Find the maximum sum of k consecutive elements using a fixed-size sliding window.',
+    instructions: [
+      'Given an array of numbers and an integer k, find the maximum sum of any k consecutive elements',
+      'Use a sliding window: compute the first window sum, then slide by subtracting the leaving element and adding the entering element',
+      'Return the maximum sum found',
+    ],
+    starterCode: `function maxSumOfK(arr, k) {
+  if (arr.length < k) return null;
+  // Compute the first window, then slide
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function maxSumOfK(arr, k) {
+  if (arr.length < k) return null;
+  let windowSum = 0;
+  for (let i = 0; i < k; i++) {
+    windowSum += arr[i];
+  }
+  let maxSum = windowSum;
+  for (let i = k; i < arr.length; i++) {
+    windowSum += arr[i] - arr[i - k];
+    maxSum = Math.max(maxSum, windowSum);
+  }
+  return maxSum;
+}`,
+    testCases: [
+      { input: [[2, 1, 5, 1, 3, 2], 3], expected: 9, description: 'Window of 3: [5,1,3]=9' },
+      { input: [[2, 3, 4, 1, 5], 2], expected: 7, description: 'Window of 2: [3,4]=7' },
+      { input: [[1, 1, 1, 1, 1], 3], expected: 3, description: 'Uniform array' },
+      { input: [[5], 1], expected: 5, description: 'Single element window' },
+      { input: [[-1, -2, -3, -4], 2], expected: -3, description: 'Negative numbers' },
+    ],
+    hints: [
+      'First compute the sum of elements 0 through k-1',
+      'Then slide: add arr[i] and subtract arr[i - k]',
+      'Track the maximum sum seen during the slide',
+    ],
+    concepts: ['sliding window', 'fixed window', 'running sum'],
+  },
+  {
+    id: 'js-sliding-window-min-subarray',
+    title: 'Minimum Length Subarray with Sum >= Target',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      'Find the length of the smallest contiguous subarray whose sum is greater than or equal to a target, using a variable-size sliding window.',
+    instructions: [
+      'Given an array of positive integers and a target, find the minimal length of a contiguous subarray with sum >= target',
+      'Use a variable-size sliding window: expand the right end, and shrink from the left when sum >= target',
+      'Return 0 if no such subarray exists',
+    ],
+    starterCode: `function minSubarrayLen(target, arr) {
+  // Variable-size sliding window
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function minSubarrayLen(target, arr) {
+  let minLen = Infinity;
+  let sum = 0;
+  let left = 0;
+  for (let right = 0; right < arr.length; right++) {
+    sum += arr[right];
+    while (sum >= target) {
+      minLen = Math.min(minLen, right - left + 1);
+      sum -= arr[left];
+      left++;
+    }
+  }
+  return minLen === Infinity ? 0 : minLen;
+}`,
+    testCases: [
+      { input: [7, [2, 3, 1, 2, 4, 3]], expected: 2, description: 'Subarray [4,3] has sum 7' },
+      { input: [4, [1, 4, 4]], expected: 1, description: 'Single element meets target' },
+      {
+        input: [11, [1, 1, 1, 1, 1, 1, 1, 1]],
+        expected: 0,
+        description: 'No subarray meets target',
+      },
+      {
+        input: [15, [5, 1, 3, 5, 10, 7, 4, 9, 2, 8]],
+        expected: 2,
+        description: 'Subarray [10,7]=17',
+      },
+      { input: [3, [1, 1, 1]], expected: 3, description: 'Entire array needed' },
+    ],
+    hints: [
+      'Expand the window by moving right pointer and adding to sum',
+      'When sum >= target, try shrinking from the left to find a shorter subarray',
+      'Track the minimum length found',
+    ],
+    concepts: ['sliding window', 'variable window', 'shrink-expand pattern'],
+  },
+  {
+    id: 'js-prefix-sum',
+    title: 'Build Prefix Sum Array',
+    category: 'iteration-patterns',
+    difficulty: 'beginner',
+    description:
+      'Build a prefix sum array where prefixSum[i] equals the sum of all elements from index 0 to i.',
+    instructions: [
+      'Given an array of numbers, return a new array where each element is the cumulative sum up to that index',
+      'prefixSum[0] = arr[0], prefixSum[1] = arr[0] + arr[1], etc.',
+      'This pattern enables O(1) range sum queries',
+    ],
+    starterCode: `function prefixSum(arr) {
+  // Build prefix sum array
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function prefixSum(arr) {
+  if (arr.length === 0) return [];
+  const prefix = [arr[0]];
+  for (let i = 1; i < arr.length; i++) {
+    prefix.push(prefix[i - 1] + arr[i]);
+  }
+  return prefix;
+}`,
+    testCases: [
+      { input: [[1, 2, 3, 4]], expected: [1, 3, 6, 10], description: 'Basic prefix sum' },
+      { input: [[5, 5, 5]], expected: [5, 10, 15], description: 'Uniform values' },
+      { input: [[10]], expected: [10], description: 'Single element' },
+      { input: [[1, -1, 1, -1]], expected: [1, 0, 1, 0], description: 'Alternating signs' },
+      { input: [[]], expected: [], description: 'Empty array' },
+    ],
+    hints: ['Start with prefix[0] = arr[0]', 'Each subsequent element is prefix[i-1] + arr[i]'],
+    concepts: ['prefix sum', 'cumulative sum', 'range query preprocessing'],
+  },
+  {
+    id: 'js-prefix-product',
+    title: 'Product of Array Except Self',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      'Build an array where each element is the product of all other elements, without using division.',
+    instructions: [
+      'Given an array of numbers, return a new array where result[i] is the product of all elements except arr[i]',
+      'Do NOT use division',
+      'Use two passes: build a left-product prefix, then multiply by a right-product suffix',
+    ],
+    starterCode: `function productExceptSelf(arr) {
+  // Two-pass: left products then right products
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function productExceptSelf(arr) {
+  const n = arr.length;
+  const result = new Array(n).fill(1);
+  let leftProduct = 1;
+  for (let i = 0; i < n; i++) {
+    result[i] = leftProduct;
+    leftProduct *= arr[i];
+  }
+  let rightProduct = 1;
+  for (let i = n - 1; i >= 0; i--) {
+    result[i] *= rightProduct;
+    rightProduct *= arr[i];
+  }
+  return result;
+}`,
+    testCases: [
+      { input: [[1, 2, 3, 4]], expected: [24, 12, 8, 6], description: 'Basic case' },
+      { input: [[2, 3, 5]], expected: [15, 10, 6], description: 'Three elements' },
+      { input: [[1, 1, 1, 1]], expected: [1, 1, 1, 1], description: 'All ones' },
+      { input: [[-1, 1, 0, -3, 3]], expected: [0, 0, 9, 0, 0], description: 'Contains zero' },
+    ],
+    hints: [
+      'First pass: result[i] = product of all elements to the left of i',
+      'Second pass (right to left): multiply result[i] by the product of all elements to the right of i',
+      'Use a running product variable in each pass',
+    ],
+    concepts: ['prefix product', 'suffix product', 'two-pass technique'],
+  },
+  {
+    id: 'js-difference-array',
+    title: 'Difference Array Range Updates',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      'Apply multiple range updates to an array efficiently using the difference array technique.',
+    instructions: [
+      'Given an array length n (initialized to zeros) and a list of updates [start, end, value], apply all updates and return the final array',
+      'Each update adds value to all elements from index start to end (inclusive)',
+      'Use a difference array: for each update, add value at start and subtract at end+1, then compute prefix sums',
+    ],
+    starterCode: `function applyRangeUpdates(n, updates) {
+  // Use difference array technique
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function applyRangeUpdates(n, updates) {
+  const diff = new Array(n + 1).fill(0);
+  for (const [start, end, val] of updates) {
+    diff[start] += val;
+    if (end + 1 <= n) diff[end + 1] -= val;
+  }
+  const result = new Array(n);
+  result[0] = diff[0];
+  for (let i = 1; i < n; i++) {
+    result[i] = result[i - 1] + diff[i];
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [
+          5,
+          [
+            [1, 3, 2],
+            [2, 4, 3],
+            [0, 2, -1],
+          ],
+        ],
+        expected: [-1, 1, 4, 5, 3],
+        description: 'Multiple overlapping updates',
+      },
+      {
+        input: [3, [[0, 2, 5]]],
+        expected: [5, 5, 5],
+        description: 'Single update covering all',
+      },
+      {
+        input: [
+          4,
+          [
+            [0, 0, 10],
+            [3, 3, 20],
+          ],
+        ],
+        expected: [10, 0, 0, 20],
+        description: 'Point updates',
+      },
+      {
+        input: [3, []],
+        expected: [0, 0, 0],
+        description: 'No updates',
+      },
+    ],
+    hints: [
+      'Create a difference array of size n+1 initialized to 0',
+      'For each update [s, e, v]: diff[s] += v; diff[e+1] -= v',
+      'Compute prefix sum of the difference array to get the final result',
+    ],
+    concepts: ['difference array', 'range update', 'prefix sum'],
+  },
+  {
+    id: 'js-kadanes-algorithm',
+    title: "Kadane's Algorithm: Maximum Subarray Sum",
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description: "Find the maximum sum of any contiguous subarray using Kadane's algorithm.",
+    instructions: [
+      'Given an array of integers (may include negatives), find the contiguous subarray with the largest sum',
+      "Use Kadane's algorithm: track the current subarray sum and reset it when it drops below 0",
+      'Return the maximum sum found',
+    ],
+    starterCode: `function maxSubarraySum(arr) {
+  // Kadane's algorithm
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function maxSubarraySum(arr) {
+  let maxSum = arr[0];
+  let currentSum = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    currentSum = Math.max(arr[i], currentSum + arr[i]);
+    maxSum = Math.max(maxSum, currentSum);
+  }
+  return maxSum;
+}`,
+    testCases: [
+      {
+        input: [[-2, 1, -3, 4, -1, 2, 1, -5, 4]],
+        expected: 6,
+        description: 'Classic case: [4,-1,2,1]=6',
+      },
+      { input: [[1, 2, 3, 4]], expected: 10, description: 'All positive' },
+      { input: [[-1, -2, -3]], expected: -1, description: 'All negative' },
+      { input: [[5, -9, 6, -2, 3]], expected: 7, description: 'Mixed: [6,-2,3]=7' },
+      { input: [[42]], expected: 42, description: 'Single element' },
+    ],
+    hints: [
+      'Initialize both maxSum and currentSum to arr[0]',
+      'At each step: currentSum = max(arr[i], currentSum + arr[i])',
+      'Update maxSum = max(maxSum, currentSum)',
+    ],
+    concepts: ['Kadane algorithm', 'maximum subarray', 'dynamic programming'],
+  },
+  {
+    id: 'js-dutch-national-flag',
+    title: 'Dutch National Flag Partition',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      'Partition an array into three sections (less than pivot, equal to pivot, greater than pivot) in a single pass.',
+    instructions: [
+      'Given an array and a pivot value, rearrange the array so all elements < pivot come first, then elements == pivot, then elements > pivot',
+      'Use three pointers: low, mid, and high',
+      'Perform this in a single pass through the array',
+      'Return the rearranged array',
+    ],
+    starterCode: `function dutchFlag(arr, pivot) {
+  // Three-way partition with low, mid, high pointers
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function dutchFlag(arr, pivot) {
+  const result = [...arr];
+  let low = 0, mid = 0, high = result.length - 1;
+  while (mid <= high) {
+    if (result[mid] < pivot) {
+      [result[low], result[mid]] = [result[mid], result[low]];
+      low++;
+      mid++;
+    } else if (result[mid] > pivot) {
+      [result[mid], result[high]] = [result[high], result[mid]];
+      high--;
+    } else {
+      mid++;
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [[2, 0, 2, 1, 1, 0], 1],
+        expected: [0, 0, 1, 1, 2, 2],
+        description: 'Three-way partition around 1',
+      },
+      {
+        input: [[3, 1, 2, 3, 1, 2], 2],
+        expected: [1, 1, 2, 2, 3, 3],
+        description: 'Three-way partition around 2',
+      },
+      {
+        input: [[5, 5, 5], 5],
+        expected: [5, 5, 5],
+        description: 'All equal to pivot',
+      },
+      {
+        input: [[1], 1],
+        expected: [1],
+        description: 'Single element',
+      },
+    ],
+    hints: [
+      'low tracks the boundary of the < section, high tracks the > section',
+      'mid scans the array; if arr[mid] < pivot, swap with low and advance both',
+      'If arr[mid] > pivot, swap with high and decrement high (do not advance mid)',
+    ],
+    concepts: ['three-way partition', 'Dutch national flag', 'single-pass partition'],
+  },
+  {
+    id: 'js-fast-slow-pointers',
+    title: "Floyd's Cycle Detection",
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      "Detect a cycle in a linked list represented as an array of next-indices, using Floyd's tortoise and hare algorithm.",
+    instructions: [
+      'Given an array where arr[i] is the index of the next node (simulating a linked list), detect if there is a cycle',
+      'Use two pointers: slow moves 1 step, fast moves 2 steps',
+      'A value of -1 means no next node (end of list)',
+      'Start both pointers at index 0',
+      'Return true if a cycle is detected, false otherwise',
+    ],
+    starterCode: `function hasCycle(nextIndices) {
+  // Floyd's tortoise and hare
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function hasCycle(nextIndices) {
+  if (nextIndices.length === 0) return false;
+  let slow = 0;
+  let fast = 0;
+  while (true) {
+    slow = nextIndices[slow];
+    if (slow === -1) return false;
+    fast = nextIndices[fast];
+    if (fast === -1) return false;
+    fast = nextIndices[fast];
+    if (fast === -1) return false;
+    if (slow === fast) return true;
+  }
+}`,
+    testCases: [
+      { input: [[1, 2, 0]], expected: true, description: 'Cycle: 0->1->2->0' },
+      { input: [[1, 2, -1]], expected: false, description: 'No cycle: 0->1->2->end' },
+      { input: [[1, 2, 3, 1]], expected: true, description: 'Cycle: 1->2->3->1' },
+      { input: [[-1]], expected: false, description: 'Single node, no cycle' },
+      { input: [[0]], expected: true, description: 'Self-loop' },
+    ],
+    hints: [
+      'slow moves one step: slow = nextIndices[slow]',
+      'fast moves two steps: apply nextIndices twice',
+      'If fast or slow reaches -1, there is no cycle',
+      'If slow === fast, a cycle exists',
+    ],
+    concepts: ['Floyd cycle detection', 'fast-slow pointers', 'tortoise and hare'],
+  },
+  {
+    id: 'js-merge-in-place',
+    title: 'Merge Two Sorted Arrays In-Place',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description:
+      'Merge two sorted arrays where the first array has enough trailing zeros to hold both, working from the end.',
+    instructions: [
+      'Given arr1 (sorted, with m valid elements followed by zeros to hold arr2) and arr2 (sorted, n elements), merge arr2 into arr1 in-place',
+      'Work from the end of both arrays to avoid overwriting',
+      'Return the modified arr1',
+    ],
+    starterCode: `function mergeInPlace(arr1, m, arr2, n) {
+  // Merge from the end
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function mergeInPlace(arr1, m, arr2, n) {
+  let p1 = m - 1;
+  let p2 = n - 1;
+  let write = m + n - 1;
+  while (p1 >= 0 && p2 >= 0) {
+    if (arr1[p1] > arr2[p2]) {
+      arr1[write] = arr1[p1];
+      p1--;
+    } else {
+      arr1[write] = arr2[p2];
+      p2--;
+    }
+    write--;
+  }
+  while (p2 >= 0) {
+    arr1[write] = arr2[p2];
+    p2--;
+    write--;
+  }
+  return arr1;
+}`,
+    testCases: [
+      {
+        input: [[1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3],
+        expected: [1, 2, 2, 3, 5, 6],
+        description: 'Standard merge',
+      },
+      {
+        input: [[4, 5, 6, 0, 0, 0], 3, [1, 2, 3], 3],
+        expected: [1, 2, 3, 4, 5, 6],
+        description: 'arr2 all smaller',
+      },
+      {
+        input: [[1, 0], 1, [2], 1],
+        expected: [1, 2],
+        description: 'Minimal merge',
+      },
+      {
+        input: [[0], 0, [1], 1],
+        expected: [1],
+        description: 'arr1 empty',
+      },
+    ],
+    hints: [
+      'Start from the end: write pointer at m + n - 1',
+      'Compare arr1[p1] and arr2[p2], place the larger at the write position',
+      'After p1 is exhausted, copy remaining arr2 elements',
+    ],
+    concepts: ['merge sorted', 'in-place merge', 'reverse iteration'],
+  },
+  {
+    id: 'js-zigzag-iteration',
+    title: 'Zigzag Matrix Traversal',
+    category: 'iteration-patterns',
+    difficulty: 'beginner',
+    description: 'Read a matrix in zigzag order: even rows left-to-right, odd rows right-to-left.',
+    instructions: [
+      'Given a 2D matrix, return all elements in zigzag order',
+      'Row 0: left to right, Row 1: right to left, Row 2: left to right, etc.',
+      'Return a flat array of the elements in this order',
+    ],
+    starterCode: `function zigzagTraversal(matrix) {
+  const result = [];
+  // Alternate direction per row
+  // YOUR CODE HERE
+  return result;
+}`,
+    solutionCode: `function zigzagTraversal(matrix) {
+  const result = [];
+  for (let i = 0; i < matrix.length; i++) {
+    if (i % 2 === 0) {
+      for (let j = 0; j < matrix[i].length; j++) {
+        result.push(matrix[i][j]);
+      }
+    } else {
+      for (let j = matrix[i].length - 1; j >= 0; j--) {
+        result.push(matrix[i][j]);
+      }
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+          ],
+        ],
+        expected: [1, 2, 3, 6, 5, 4, 7, 8, 9],
+        description: '3x3 zigzag',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+            [5, 6],
+            [7, 8],
+          ],
+        ],
+        expected: [1, 2, 4, 3, 5, 6, 8, 7],
+        description: '4x2 zigzag',
+      },
+      {
+        input: [[[1, 2, 3]]],
+        expected: [1, 2, 3],
+        description: 'Single row',
+      },
+      {
+        input: [[]],
+        expected: [],
+        description: 'Empty matrix',
+      },
+    ],
+    hints: [
+      'Check if the row index is even or odd',
+      'Even rows: iterate j from 0 to length-1',
+      'Odd rows: iterate j from length-1 down to 0',
+    ],
+    concepts: ['zigzag traversal', 'matrix iteration', 'alternating direction'],
+  },
+  {
+    id: 'js-spiral-matrix',
+    title: 'Spiral Matrix Traversal',
+    category: 'iteration-patterns',
+    difficulty: 'advanced',
+    description: 'Read a matrix in spiral order, going clockwise from the outside in.',
+    instructions: [
+      'Given an m x n matrix, return all elements in spiral order (clockwise from top-left)',
+      'Traverse: top row left-to-right, right column top-to-bottom, bottom row right-to-left, left column bottom-to-top',
+      'Shrink the boundaries after each layer and repeat',
+    ],
+    starterCode: `function spiralOrder(matrix) {
+  const result = [];
+  // Use top, bottom, left, right boundaries
+  // YOUR CODE HERE
+  return result;
+}`,
+    solutionCode: `function spiralOrder(matrix) {
+  const result = [];
+  if (matrix.length === 0) return result;
+  let top = 0, bottom = matrix.length - 1;
+  let left = 0, right = matrix[0].length - 1;
+  while (top <= bottom && left <= right) {
+    for (let j = left; j <= right; j++) result.push(matrix[top][j]);
+    top++;
+    for (let i = top; i <= bottom; i++) result.push(matrix[i][right]);
+    right--;
+    if (top <= bottom) {
+      for (let j = right; j >= left; j--) result.push(matrix[bottom][j]);
+      bottom--;
+    }
+    if (left <= right) {
+      for (let i = bottom; i >= top; i--) result.push(matrix[i][left]);
+      left++;
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+          ],
+        ],
+        expected: [1, 2, 3, 6, 9, 8, 7, 4, 5],
+        description: '3x3 spiral',
+      },
+      {
+        input: [
+          [
+            [1, 2, 3, 4],
+            [5, 6, 7, 8],
+            [9, 10, 11, 12],
+          ],
+        ],
+        expected: [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7],
+        description: '3x4 spiral',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+          ],
+        ],
+        expected: [1, 2, 4, 3],
+        description: '2x2 spiral',
+      },
+      {
+        input: [[[1]]],
+        expected: [1],
+        description: '1x1 matrix',
+      },
+    ],
+    hints: [
+      'Maintain four boundaries: top, bottom, left, right',
+      'After traversing the top row, increment top',
+      'Check boundaries before traversing bottom row and left column to avoid double-counting',
+    ],
+    concepts: ['spiral traversal', 'boundary shrinking', 'matrix traversal'],
+  },
+  {
+    id: 'js-diagonal-traversal',
+    title: 'Diagonal Matrix Traversal',
+    category: 'iteration-patterns',
+    difficulty: 'intermediate',
+    description: 'Traverse a matrix along its diagonals, from top-right to bottom-left.',
+    instructions: [
+      'Given an m x n matrix, return elements grouped by diagonals',
+      'Each diagonal consists of elements where row + col is the same constant',
+      'Return a flat array reading each diagonal from top to bottom (i.e., increasing row within each diagonal)',
+    ],
+    starterCode: `function diagonalTraversal(matrix) {
+  // Group elements by (row + col) sum
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function diagonalTraversal(matrix) {
+  if (matrix.length === 0) return [];
+  const m = matrix.length;
+  const n = matrix[0].length;
+  const result = [];
+  for (let d = 0; d < m + n - 1; d++) {
+    const startRow = d < n ? 0 : d - n + 1;
+    const startCol = d < n ? d : n - 1;
+    let r = startRow, c = startCol;
+    while (r < m && c >= 0) {
+      result.push(matrix[r][c]);
+      r++;
+      c--;
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+          ],
+        ],
+        expected: [1, 2, 4, 3, 5, 7, 6, 8, 9],
+        description: '3x3 diagonal traversal',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+            [5, 6],
+          ],
+        ],
+        expected: [1, 2, 3, 4, 5, 6],
+        description: '3x2 diagonal traversal',
+      },
+      {
+        input: [[[1]]],
+        expected: [1],
+        description: '1x1 matrix',
+      },
+    ],
+    hints: [
+      'There are m + n - 1 diagonals total',
+      'For diagonal d, elements satisfy row + col = constant or can be indexed by starting position',
+      'Walk each diagonal: increment row and decrement col',
+    ],
+    concepts: ['diagonal traversal', 'matrix iteration', 'anti-diagonal'],
+  },
+  {
+    id: 'js-rotate-matrix',
+    title: 'Rotate Matrix 90 Degrees Clockwise',
+    category: 'iteration-patterns',
+    difficulty: 'advanced',
+    description: 'Rotate an N x N matrix 90 degrees clockwise in-place using transpose + reverse.',
+    instructions: [
+      'Given an NxN matrix, rotate it 90 degrees clockwise in-place',
+      'Strategy: first transpose the matrix (swap rows and columns), then reverse each row',
+      'Return the modified matrix',
+    ],
+    starterCode: `function rotateMatrix(matrix) {
+  // Step 1: Transpose
+  // Step 2: Reverse each row
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function rotateMatrix(matrix) {
+  const n = matrix.length;
+  // Transpose
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]];
+    }
+  }
+  // Reverse each row
+  for (let i = 0; i < n; i++) {
+    matrix[i].reverse();
+  }
+  return matrix;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+          ],
+        ],
+        expected: [
+          [7, 4, 1],
+          [8, 5, 2],
+          [9, 6, 3],
+        ],
+        description: '3x3 rotation',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+          ],
+        ],
+        expected: [
+          [3, 1],
+          [4, 2],
+        ],
+        description: '2x2 rotation',
+      },
+      {
+        input: [[[1]]],
+        expected: [[1]],
+        description: '1x1 matrix',
+      },
+      {
+        input: [
+          [
+            [5, 1, 9, 11],
+            [2, 4, 8, 10],
+            [13, 3, 6, 7],
+            [15, 14, 12, 16],
+          ],
+        ],
+        expected: [
+          [15, 13, 2, 5],
+          [14, 3, 4, 1],
+          [12, 6, 8, 9],
+          [16, 7, 10, 11],
+        ],
+        description: '4x4 rotation',
+      },
+    ],
+    hints: [
+      'Transpose: swap matrix[i][j] with matrix[j][i] for j > i',
+      'Then reverse each row in-place',
+      'These two steps together produce a 90-degree clockwise rotation',
+    ],
+    concepts: ['matrix rotation', 'transpose', 'in-place transformation'],
+  },
+
+  // ========== SEARCHING ==========
+  {
+    id: 'js-lower-bound',
+    title: 'Lower Bound (Binary Search)',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description: 'Find the first index where arr[i] >= target using binary search (lower bound).',
+    instructions: [
+      'Given a sorted array and a target, find the first index i such that arr[i] >= target',
+      'If no such index exists, return the array length',
+      'Use binary search with lo/hi pointers',
+    ],
+    starterCode: `function lowerBound(arr, target) {
+  // Binary search for first index >= target
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function lowerBound(arr, target) {
+  let lo = 0, hi = arr.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (arr[mid] < target) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+  return lo;
+}`,
+    testCases: [
+      { input: [[1, 3, 5, 7, 9], 5], expected: 2, description: 'Target exists' },
+      { input: [[1, 3, 5, 7, 9], 4], expected: 2, description: 'Target between elements' },
+      { input: [[1, 3, 5, 7, 9], 0], expected: 0, description: 'Target smaller than all' },
+      { input: [[1, 3, 5, 7, 9], 10], expected: 5, description: 'Target larger than all' },
+      { input: [[2, 2, 2, 2], 2], expected: 0, description: 'All duplicates, first occurrence' },
+    ],
+    hints: [
+      'Initialize lo = 0 and hi = arr.length',
+      'If arr[mid] < target, search right half: lo = mid + 1',
+      'Otherwise, search left half: hi = mid',
+    ],
+    concepts: ['binary search', 'lower bound', 'bisect left'],
+  },
+  {
+    id: 'js-upper-bound',
+    title: 'Upper Bound (Binary Search)',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description: 'Find the first index where arr[i] > target using binary search (upper bound).',
+    instructions: [
+      'Given a sorted array and a target, find the first index i such that arr[i] > target',
+      'If no such index exists, return the array length',
+      'Use binary search with lo/hi pointers',
+    ],
+    starterCode: `function upperBound(arr, target) {
+  // Binary search for first index > target
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function upperBound(arr, target) {
+  let lo = 0, hi = arr.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (arr[mid] <= target) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+  return lo;
+}`,
+    testCases: [
+      { input: [[1, 3, 5, 7, 9], 5], expected: 3, description: 'Target exists' },
+      { input: [[1, 3, 5, 7, 9], 4], expected: 2, description: 'Target between elements' },
+      { input: [[1, 3, 5, 7, 9], 0], expected: 0, description: 'Target smaller than all' },
+      { input: [[1, 3, 5, 7, 9], 10], expected: 5, description: 'Target larger than all' },
+      { input: [[2, 2, 2, 2], 2], expected: 4, description: 'All duplicates' },
+    ],
+    hints: [
+      'Similar to lower bound but use <= instead of <',
+      'If arr[mid] <= target, search right: lo = mid + 1',
+      'Otherwise, search left: hi = mid',
+    ],
+    concepts: ['binary search', 'upper bound', 'bisect right'],
+  },
+  {
+    id: 'js-binary-search-sqrt',
+    title: 'Integer Square Root via Binary Search',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description: 'Find the integer square root of a number using binary search on the answer.',
+    instructions: [
+      'Given a non-negative integer n, return the largest integer x such that x * x <= n',
+      'Use binary search over the range [0, n] to find this value',
+      'Do not use Math.sqrt',
+    ],
+    starterCode: `function intSqrt(n) {
+  // Binary search on the answer
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function intSqrt(n) {
+  if (n < 2) return n;
+  let lo = 1, hi = Math.floor(n / 2);
+  while (lo <= hi) {
+    const mid = (lo + hi) >>> 1;
+    if (mid * mid === n) return mid;
+    if (mid * mid < n) {
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  return hi;
+}`,
+    testCases: [
+      { input: [16], expected: 4, description: 'Perfect square' },
+      { input: [8], expected: 2, description: 'Non-perfect square (2*2=4 <= 8)' },
+      { input: [0], expected: 0, description: 'Zero' },
+      { input: [1], expected: 1, description: 'One' },
+      { input: [100], expected: 10, description: 'Larger perfect square' },
+      { input: [26], expected: 5, description: '5*5=25 <= 26' },
+    ],
+    hints: [
+      'Search between lo=1 and hi=n/2 (for n>=2)',
+      'If mid*mid === n, return mid',
+      'If mid*mid < n, search higher; otherwise search lower',
+      'When the loop ends, hi is the answer',
+    ],
+    concepts: ['binary search on answer', 'integer square root', 'search space reduction'],
+  },
+  {
+    id: 'js-search-rotated',
+    title: 'Search in Rotated Sorted Array',
+    category: 'searching',
+    difficulty: 'advanced',
+    description:
+      'Search for a target in a sorted array that has been rotated at some pivot, using binary search.',
+    instructions: [
+      'Given a rotated sorted array (e.g., [4,5,6,7,0,1,2]) and a target, find the target index or return -1',
+      'Use binary search: determine which half is sorted, then decide which half to search',
+      'Array has no duplicates',
+    ],
+    starterCode: `function searchRotated(arr, target) {
+  // Binary search on rotated sorted array
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function searchRotated(arr, target) {
+  let lo = 0, hi = arr.length - 1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >>> 1;
+    if (arr[mid] === target) return mid;
+    if (arr[lo] <= arr[mid]) {
+      if (target >= arr[lo] && target < arr[mid]) {
+        hi = mid - 1;
+      } else {
+        lo = mid + 1;
+      }
+    } else {
+      if (target > arr[mid] && target <= arr[hi]) {
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+  }
+  return -1;
+}`,
+    testCases: [
+      { input: [[4, 5, 6, 7, 0, 1, 2], 0], expected: 4, description: 'Target in right portion' },
+      { input: [[4, 5, 6, 7, 0, 1, 2], 5], expected: 1, description: 'Target in left portion' },
+      { input: [[4, 5, 6, 7, 0, 1, 2], 3], expected: -1, description: 'Target not found' },
+      { input: [[1], 1], expected: 0, description: 'Single element found' },
+      { input: [[1], 0], expected: -1, description: 'Single element not found' },
+      { input: [[3, 1], 1], expected: 1, description: 'Two elements rotated' },
+    ],
+    hints: [
+      'Check which half (lo..mid or mid..hi) is sorted',
+      'If the left half is sorted (arr[lo] <= arr[mid]), check if target falls in that range',
+      'Otherwise the right half must be sorted; check that range',
+    ],
+    concepts: ['binary search', 'rotated array', 'sorted subarray detection'],
+  },
+  {
+    id: 'js-quick-select',
+    title: 'QuickSelect: Kth Smallest Element',
+    category: 'searching',
+    difficulty: 'advanced',
+    description:
+      'Find the kth smallest element in an unsorted array using the quickselect (partition-based) algorithm.',
+    instructions: [
+      'Given an unsorted array and k (1-indexed), find the kth smallest element',
+      'Use the quickselect algorithm: pick a pivot, partition, then recurse on the relevant side',
+      'Average O(n) time complexity',
+    ],
+    starterCode: `function quickSelect(arr, k) {
+  // Partition-based selection
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function quickSelect(arr, k) {
+  const a = [...arr];
+  function partition(lo, hi) {
+    const pivot = a[hi];
+    let i = lo;
+    for (let j = lo; j < hi; j++) {
+      if (a[j] <= pivot) {
+        [a[i], a[j]] = [a[j], a[i]];
+        i++;
+      }
+    }
+    [a[i], a[hi]] = [a[hi], a[i]];
+    return i;
+  }
+  let lo = 0, hi = a.length - 1;
+  const target = k - 1;
+  while (lo <= hi) {
+    const pivotIndex = partition(lo, hi);
+    if (pivotIndex === target) return a[pivotIndex];
+    if (pivotIndex < target) lo = pivotIndex + 1;
+    else hi = pivotIndex - 1;
+  }
+}`,
+    testCases: [
+      { input: [[3, 2, 1, 5, 6, 4], 2], expected: 2, description: '2nd smallest = 2' },
+      { input: [[3, 2, 3, 1, 2, 4, 5, 5, 6], 4], expected: 3, description: '4th smallest = 3' },
+      { input: [[7, 10, 4, 3, 20, 15], 1], expected: 3, description: '1st smallest (min)' },
+      { input: [[7, 10, 4, 3, 20, 15], 6], expected: 20, description: '6th smallest (max)' },
+      { input: [[1], 1], expected: 1, description: 'Single element' },
+    ],
+    hints: [
+      'Partition places the pivot in its correct sorted position',
+      'If pivotIndex === k-1, we found the answer',
+      'If pivotIndex < k-1, search the right side; otherwise search the left',
+    ],
+    concepts: ['quickselect', 'partition', 'order statistics', 'selection algorithm'],
+  },
+  {
+    id: 'js-exponential-search',
+    title: 'Exponential Search',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description:
+      'Find an element using exponential search: first find a range by doubling, then binary search within it.',
+    instructions: [
+      'Given a sorted array and a target, find the target index using exponential search',
+      'Start with bound=1 and double it until arr[bound] >= target or bound exceeds array length',
+      'Then binary search in the range [bound/2, min(bound, length-1)]',
+      'Return -1 if not found',
+    ],
+    starterCode: `function exponentialSearch(arr, target) {
+  // Find range then binary search
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function exponentialSearch(arr, target) {
+  if (arr.length === 0) return -1;
+  if (arr[0] === target) return 0;
+  let bound = 1;
+  while (bound < arr.length && arr[bound] < target) {
+    bound *= 2;
+  }
+  let lo = Math.floor(bound / 2);
+  let hi = Math.min(bound, arr.length - 1);
+  while (lo <= hi) {
+    const mid = (lo + hi) >>> 1;
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) lo = mid + 1;
+    else hi = mid - 1;
+  }
+  return -1;
+}`,
+    testCases: [
+      { input: [[1, 3, 5, 7, 9, 11, 13, 15], 7], expected: 3, description: 'Found in middle' },
+      { input: [[1, 3, 5, 7, 9, 11, 13, 15], 1], expected: 0, description: 'Found at start' },
+      { input: [[1, 3, 5, 7, 9, 11, 13, 15], 15], expected: 7, description: 'Found at end' },
+      { input: [[1, 3, 5, 7, 9, 11, 13, 15], 6], expected: -1, description: 'Not found' },
+      { input: [[], 5], expected: -1, description: 'Empty array' },
+    ],
+    hints: [
+      'Double the bound: 1, 2, 4, 8, ... until arr[bound] >= target',
+      'Binary search between bound/2 and min(bound, arr.length-1)',
+      'Handle the edge case where arr[0] is the target',
+    ],
+    concepts: ['exponential search', 'range finding', 'binary search'],
+  },
+  {
+    id: 'js-find-peak',
+    title: 'Find Peak Element',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description:
+      'Find a peak element (strictly greater than its neighbors) in an array using binary search.',
+    instructions: [
+      'A peak element is one that is strictly greater than its neighbors',
+      'The array may have multiple peaks; return the index of any one',
+      'Assume arr[-1] = arr[n] = -Infinity (edges are smaller than any element)',
+      'Use binary search for O(log n) time',
+    ],
+    starterCode: `function findPeak(arr) {
+  // Binary search for a peak
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function findPeak(arr) {
+  let lo = 0, hi = arr.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (arr[mid] < arr[mid + 1]) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+  return lo;
+}`,
+    testCases: [
+      { input: [[1, 2, 3, 1]], expected: 2, description: 'Peak at index 2' },
+      { input: [[1, 2, 1, 3, 5, 6, 4]], expected: 5, description: 'Peak at index 5 (value 6)' },
+      { input: [[5, 4, 3, 2, 1]], expected: 0, description: 'Peak at start (descending)' },
+      { input: [[1, 2, 3, 4, 5]], expected: 4, description: 'Peak at end (ascending)' },
+      { input: [[1]], expected: 0, description: 'Single element' },
+    ],
+    hints: [
+      'If arr[mid] < arr[mid + 1], the peak is to the right',
+      'Otherwise, the peak is at mid or to the left',
+      'This converges to a peak because we always move toward a higher neighbor',
+    ],
+    concepts: ['binary search', 'peak finding', 'search by comparison'],
+  },
+  {
+    id: 'js-search-2d-matrix',
+    title: 'Search a 2D Sorted Matrix',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description:
+      'Search for a target in a matrix where each row and column is sorted in ascending order.',
+    instructions: [
+      'Given a matrix where rows are sorted left-to-right and columns are sorted top-to-bottom, find if a target exists',
+      'Start from the top-right corner: if current > target go left, if current < target go down',
+      'Return [row, col] if found, or [-1, -1] if not found',
+    ],
+    starterCode: `function searchMatrix(matrix, target) {
+  // Start from top-right corner
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function searchMatrix(matrix, target) {
+  if (matrix.length === 0 || matrix[0].length === 0) return [-1, -1];
+  let row = 0;
+  let col = matrix[0].length - 1;
+  while (row < matrix.length && col >= 0) {
+    if (matrix[row][col] === target) return [row, col];
+    if (matrix[row][col] > target) col--;
+    else row++;
+  }
+  return [-1, -1];
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 4, 7, 11],
+            [2, 5, 8, 12],
+            [3, 6, 9, 16],
+            [10, 13, 14, 17],
+          ],
+          5,
+        ],
+        expected: [1, 1],
+        description: 'Target found at [1,1]',
+      },
+      {
+        input: [
+          [
+            [1, 4, 7, 11],
+            [2, 5, 8, 12],
+            [3, 6, 9, 16],
+            [10, 13, 14, 17],
+          ],
+          20,
+        ],
+        expected: [-1, -1],
+        description: 'Target not in matrix',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+          ],
+          3,
+        ],
+        expected: [1, 0],
+        description: '2x2 matrix',
+      },
+      {
+        input: [[[1]], 1],
+        expected: [0, 0],
+        description: '1x1 matrix found',
+      },
+    ],
+    hints: [
+      'Start at top-right: row=0, col=last column',
+      'If current value > target, move left (col--)',
+      'If current value < target, move down (row++)',
+    ],
+    concepts: ['2D search', 'staircase search', 'sorted matrix'],
+  },
+  {
+    id: 'js-count-occurrences',
+    title: 'Count Occurrences in Sorted Array',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description:
+      'Count how many times a target appears in a sorted array using two binary searches.',
+    instructions: [
+      'Given a sorted array and a target, return the number of times target appears',
+      'Use lower bound (first index >= target) and upper bound (first index > target)',
+      'The count is upperBound - lowerBound',
+    ],
+    starterCode: `function countOccurrences(arr, target) {
+  // Use two binary searches: lower bound and upper bound
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function countOccurrences(arr, target) {
+  function lowerBound(a, t) {
+    let lo = 0, hi = a.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (a[mid] < t) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  }
+  function upperBound(a, t) {
+    let lo = 0, hi = a.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (a[mid] <= t) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  }
+  return upperBound(arr, target) - lowerBound(arr, target);
+}`,
+    testCases: [
+      { input: [[1, 2, 2, 2, 3, 4], 2], expected: 3, description: 'Three occurrences' },
+      { input: [[1, 1, 1, 1], 1], expected: 4, description: 'All same' },
+      { input: [[1, 2, 3, 4, 5], 6], expected: 0, description: 'Not found' },
+      { input: [[1, 2, 3, 4, 5], 3], expected: 1, description: 'Single occurrence' },
+      { input: [[], 1], expected: 0, description: 'Empty array' },
+    ],
+    hints: [
+      'Lower bound: first index where arr[i] >= target',
+      'Upper bound: first index where arr[i] > target',
+      'Count = upper - lower',
+    ],
+    concepts: ['binary search', 'lower bound', 'upper bound', 'counting'],
+  },
+  {
+    id: 'js-min-in-rotated',
+    title: 'Find Minimum in Rotated Sorted Array',
+    category: 'searching',
+    difficulty: 'intermediate',
+    description: 'Find the minimum element in a rotated sorted array using binary search.',
+    instructions: [
+      'Given a sorted array rotated at some pivot (e.g., [3,4,5,1,2]), find the minimum element',
+      'Use binary search: compare mid with hi to decide which half to search',
+      'No duplicates in the array',
+    ],
+    starterCode: `function findMin(arr) {
+  // Binary search for minimum in rotated array
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function findMin(arr) {
+  let lo = 0, hi = arr.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (arr[mid] > arr[hi]) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+  return arr[lo];
+}`,
+    testCases: [
+      { input: [[3, 4, 5, 1, 2]], expected: 1, description: 'Rotated at index 3' },
+      { input: [[4, 5, 6, 7, 0, 1, 2]], expected: 0, description: 'Rotated at index 4' },
+      { input: [[1, 2, 3, 4, 5]], expected: 1, description: 'Not rotated' },
+      { input: [[2, 1]], expected: 1, description: 'Two elements' },
+      { input: [[1]], expected: 1, description: 'Single element' },
+    ],
+    hints: [
+      'If arr[mid] > arr[hi], the minimum is in the right half',
+      'Otherwise the minimum is at mid or in the left half',
+      'This converges lo and hi to the minimum element',
+    ],
+    concepts: ['binary search', 'rotated array', 'minimum finding'],
+  },
+
+  // ========== DATA STRUCTURES ==========
+  {
+    id: 'js-max-heap-insert',
+    title: 'Max Heap: Insert and Bubble Up',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description:
+      'Insert a value into a max heap (array-based) and restore the heap property by bubbling up.',
+    instructions: [
+      'Given a max heap as an array and a value to insert, add the value and bubble it up to maintain the max-heap property',
+      'In a max heap, every parent is >= its children',
+      'Parent of index i is at Math.floor((i - 1) / 2)',
+      'Return the modified heap array',
+    ],
+    starterCode: `function heapInsert(heap, value) {
+  // Push value and bubble up
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function heapInsert(heap, value) {
+  heap.push(value);
+  let i = heap.length - 1;
+  while (i > 0) {
+    const parent = Math.floor((i - 1) / 2);
+    if (heap[i] > heap[parent]) {
+      [heap[i], heap[parent]] = [heap[parent], heap[i]];
+      i = parent;
+    } else {
+      break;
+    }
+  }
+  return heap;
+}`,
+    testCases: [
+      {
+        input: [[50, 30, 40, 10, 20], 60],
+        expected: [60, 30, 50, 10, 20, 40],
+        description: 'Insert new max',
+      },
+      { input: [[50, 30, 40], 35], expected: [50, 35, 40, 30], description: 'Insert middle value' },
+      { input: [[], 10], expected: [10], description: 'Insert into empty heap' },
+      { input: [[100], 50], expected: [100, 50], description: 'Insert smaller value' },
+    ],
+    hints: [
+      'Push the value to the end of the array',
+      'Compare with parent at Math.floor((i-1)/2)',
+      'Swap with parent if current is larger, and move up',
+    ],
+    concepts: ['max heap', 'bubble up', 'heap insert', 'priority queue'],
+  },
+  {
+    id: 'js-heap-extract-min',
+    title: 'Min Heap: Extract Minimum',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description:
+      'Extract the minimum element from a min heap and restore the heap property by sifting down.',
+    instructions: [
+      'Given a min heap as an array, extract (remove and return) the minimum element',
+      'Move the last element to the root, then sift down to restore the min-heap property',
+      'Return an object with { min, heap } where min is the extracted value and heap is the remaining heap',
+    ],
+    starterCode: `function heapExtractMin(heap) {
+  // Extract min and sift down
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function heapExtractMin(heap) {
+  if (heap.length === 0) return { min: null, heap: [] };
+  const min = heap[0];
+  const last = heap.pop();
+  if (heap.length > 0) {
+    heap[0] = last;
+    let i = 0;
+    while (true) {
+      let smallest = i;
+      const left = 2 * i + 1;
+      const right = 2 * i + 2;
+      if (left < heap.length && heap[left] < heap[smallest]) smallest = left;
+      if (right < heap.length && heap[right] < heap[smallest]) smallest = right;
+      if (smallest === i) break;
+      [heap[i], heap[smallest]] = [heap[smallest], heap[i]];
+      i = smallest;
+    }
+  }
+  return { min, heap };
+}`,
+    testCases: [
+      {
+        input: [[1, 3, 2, 7, 6, 4, 5]],
+        expected: { min: 1, heap: [2, 3, 4, 7, 6, 5] },
+        description: 'Extract from full heap',
+      },
+      {
+        input: [[5, 10, 15]],
+        expected: { min: 5, heap: [10, 15] },
+        description: 'Small heap',
+      },
+      {
+        input: [[42]],
+        expected: { min: 42, heap: [] },
+        description: 'Single element heap',
+      },
+      {
+        input: [[]],
+        expected: { min: null, heap: [] },
+        description: 'Empty heap',
+      },
+    ],
+    hints: [
+      'Save heap[0] as the min, replace root with the last element',
+      'Sift down: compare with left (2i+1) and right (2i+2) children',
+      'Swap with the smaller child if it is smaller than the current node',
+    ],
+    concepts: ['min heap', 'sift down', 'extract min', 'heapify'],
+  },
+  {
+    id: 'js-lru-cache',
+    title: 'LRU Cache with Map',
+    category: 'data-structures',
+    difficulty: 'advanced',
+    description:
+      'Implement a Least Recently Used cache using JavaScript Map (which preserves insertion order).',
+    instructions: [
+      'Implement an LRU cache with a given capacity',
+      'get(key): return the value if it exists (and mark it as recently used), or -1',
+      'put(key, value): insert or update the key-value pair; if over capacity, evict the least recently used',
+      'Use a Map to leverage insertion-order iteration',
+      'Return an object with get and put methods',
+    ],
+    starterCode: `function createLRUCache(capacity) {
+  // Use a Map for O(1) get/put with insertion order
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function createLRUCache(capacity) {
+  const cache = new Map();
+  return {
+    get(key) {
+      if (!cache.has(key)) return -1;
+      const value = cache.get(key);
+      cache.delete(key);
+      cache.set(key, value);
+      return value;
+    },
+    put(key, value) {
+      if (cache.has(key)) cache.delete(key);
+      cache.set(key, value);
+      if (cache.size > capacity) {
+        const oldest = cache.keys().next().value;
+        cache.delete(oldest);
+      }
+    }
+  };
+}`,
+    testCases: [
+      {
+        input: [
+          2,
+          [
+            ['put', 1, 1],
+            ['put', 2, 2],
+            ['get', 1],
+            ['put', 3, 3],
+            ['get', 2],
+            ['get', 3],
+          ],
+        ],
+        expected: [null, null, 1, null, -1, 3],
+        description: 'Standard LRU operations',
+      },
+      {
+        input: [
+          1,
+          [
+            ['put', 1, 10],
+            ['put', 2, 20],
+            ['get', 1],
+            ['get', 2],
+          ],
+        ],
+        expected: [null, null, -1, 20],
+        description: 'Capacity 1 evicts immediately',
+      },
+      {
+        input: [
+          2,
+          [
+            ['put', 1, 1],
+            ['put', 2, 2],
+            ['put', 1, 10],
+            ['get', 1],
+            ['get', 2],
+          ],
+        ],
+        expected: [null, null, null, 10, 2],
+        description: 'Update existing key',
+      },
+    ],
+    hints: [
+      'Map preserves insertion order; the first key is the least recently used',
+      'On get: delete and re-insert to move to end (most recent)',
+      'On put: if over capacity, delete the first key via cache.keys().next().value',
+    ],
+    concepts: ['LRU cache', 'Map ordering', 'cache eviction'],
+  },
+  {
+    id: 'js-linked-list-reverse',
+    title: 'Reverse a Singly Linked List',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description: 'Reverse a singly linked list represented as nested {val, next} objects.',
+    instructions: [
+      'Given the head of a singly linked list (node = {val, next}), reverse it in-place',
+      'Use three pointers: prev, current, and next',
+      'Return the new head of the reversed list',
+      'null represents the end of the list',
+    ],
+    starterCode: `function reverseLinkedList(head) {
+  // Iterative reversal with prev, current, next
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function reverseLinkedList(head) {
+  let prev = null;
+  let current = head;
+  while (current !== null) {
+    const next = current.next;
+    current.next = prev;
+    prev = current;
+    current = next;
+  }
+  return prev;
+}`,
+    testCases: [
+      {
+        input: [{ val: 1, next: { val: 2, next: { val: 3, next: null } } }],
+        expected: { val: 3, next: { val: 2, next: { val: 1, next: null } } },
+        description: 'Reverse 1->2->3',
+      },
+      {
+        input: [{ val: 10, next: { val: 20, next: null } }],
+        expected: { val: 20, next: { val: 10, next: null } },
+        description: 'Reverse 10->20',
+      },
+      {
+        input: [{ val: 42, next: null }],
+        expected: { val: 42, next: null },
+        description: 'Single node',
+      },
+      {
+        input: [null],
+        expected: null,
+        description: 'Empty list',
+      },
+    ],
+    hints: [
+      'Initialize prev = null, current = head',
+      'In each iteration: save next = current.next, point current.next to prev',
+      'Move prev to current, current to next',
+    ],
+    concepts: ['linked list', 'reversal', 'pointer manipulation'],
+  },
+  {
+    id: 'js-circular-buffer',
+    title: 'Circular Buffer',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description:
+      'Implement a fixed-size circular buffer (ring buffer) with enqueue, dequeue, and peek operations.',
+    instructions: [
+      'Create a circular buffer with a given capacity',
+      'enqueue(val): add to the back; return false if full',
+      'dequeue(): remove from the front; return null if empty',
+      'peek(): return the front element without removing; return null if empty',
+      'Return an object with enqueue, dequeue, peek, and size methods',
+    ],
+    starterCode: `function createCircularBuffer(capacity) {
+  // Fixed-size circular buffer using array
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function createCircularBuffer(capacity) {
+  const buffer = new Array(capacity);
+  let head = 0, tail = 0, count = 0;
+  return {
+    enqueue(val) {
+      if (count === capacity) return false;
+      buffer[tail] = val;
+      tail = (tail + 1) % capacity;
+      count++;
+      return true;
+    },
+    dequeue() {
+      if (count === 0) return null;
+      const val = buffer[head];
+      head = (head + 1) % capacity;
+      count--;
+      return val;
+    },
+    peek() {
+      if (count === 0) return null;
+      return buffer[head];
+    },
+    size() {
+      return count;
+    }
+  };
+}`,
+    testCases: [
+      {
+        input: [
+          3,
+          [
+            ['enqueue', 1],
+            ['enqueue', 2],
+            ['enqueue', 3],
+            ['enqueue', 4],
+            ['dequeue'],
+            ['peek'],
+            ['size'],
+          ],
+        ],
+        expected: [true, true, true, false, 1, 2, 2],
+        description: 'Fill, overflow, dequeue',
+      },
+      {
+        input: [2, [['dequeue'], ['peek'], ['enqueue', 10], ['peek'], ['dequeue'], ['size']]],
+        expected: [null, null, true, 10, 10, 0],
+        description: 'Empty operations then use',
+      },
+      {
+        input: [1, [['enqueue', 5], ['enqueue', 6], ['dequeue'], ['enqueue', 7], ['peek']]],
+        expected: [true, false, 5, true, 7],
+        description: 'Capacity 1 wrap-around',
+      },
+    ],
+    hints: [
+      'Use modular arithmetic: tail = (tail + 1) % capacity',
+      'Track count separately to distinguish full from empty',
+      'head points to the front, tail points to the next write position',
+    ],
+    concepts: ['circular buffer', 'ring buffer', 'modular arithmetic', 'fixed-size queue'],
+  },
+  {
+    id: 'js-monotonic-stack',
+    title: 'Next Greater Element (Monotonic Stack)',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description:
+      'Find the next greater element for each element in an array using a monotonic decreasing stack.',
+    instructions: [
+      'Given an array, for each element find the first element to its right that is greater',
+      'If no greater element exists, use -1',
+      'Use a stack to process elements efficiently in O(n) time',
+      'Return the array of next greater elements',
+    ],
+    starterCode: `function nextGreaterElement(arr) {
+  // Use a monotonic stack
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function nextGreaterElement(arr) {
+  const result = new Array(arr.length).fill(-1);
+  const stack = [];
+  for (let i = 0; i < arr.length; i++) {
+    while (stack.length > 0 && arr[stack[stack.length - 1]] < arr[i]) {
+      const idx = stack.pop();
+      result[idx] = arr[i];
+    }
+    stack.push(i);
+  }
+  return result;
+}`,
+    testCases: [
+      { input: [[4, 5, 2, 10, 8]], expected: [5, 10, 10, -1, -1], description: 'Mixed values' },
+      {
+        input: [[2, 7, 3, 5, 4, 6, 8]],
+        expected: [7, 8, 5, 6, 6, 8, -1],
+        description: 'Multiple next-greaters',
+      },
+      {
+        input: [[5, 4, 3, 2, 1]],
+        expected: [-1, -1, -1, -1, -1],
+        description: 'Descending (no next greater)',
+      },
+      { input: [[1, 2, 3, 4, 5]], expected: [2, 3, 4, 5, -1], description: 'Ascending' },
+      { input: [[1]], expected: [-1], description: 'Single element' },
+    ],
+    hints: [
+      'Maintain a stack of indices whose next greater element has not been found',
+      'When processing arr[i], pop all stack indices where arr[index] < arr[i]',
+      'For each popped index, arr[i] is the next greater element',
+    ],
+    concepts: ['monotonic stack', 'next greater element', 'stack-based iteration'],
+  },
+  {
+    id: 'js-sliding-window-max',
+    title: 'Sliding Window Maximum (Deque)',
+    category: 'data-structures',
+    difficulty: 'advanced',
+    description: 'Find the maximum value in each sliding window of size k using a monotonic deque.',
+    instructions: [
+      'Given an array and window size k, return an array of the maximum value in each window position',
+      'Use a deque (array of indices) that maintains a decreasing order of values',
+      'Remove indices that are out of the current window from the front',
+      'Remove indices with smaller values from the back before adding a new one',
+    ],
+    starterCode: `function slidingWindowMax(arr, k) {
+  // Monotonic deque for window maximums
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function slidingWindowMax(arr, k) {
+  const result = [];
+  const deque = [];
+  for (let i = 0; i < arr.length; i++) {
+    while (deque.length > 0 && deque[0] < i - k + 1) {
+      deque.shift();
+    }
+    while (deque.length > 0 && arr[deque[deque.length - 1]] <= arr[i]) {
+      deque.pop();
+    }
+    deque.push(i);
+    if (i >= k - 1) {
+      result.push(arr[deque[0]]);
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [[1, 3, -1, -3, 5, 3, 6, 7], 3],
+        expected: [3, 3, 5, 5, 6, 7],
+        description: 'Classic sliding window max',
+      },
+      {
+        input: [[1, 2, 3, 4, 5], 2],
+        expected: [2, 3, 4, 5],
+        description: 'Ascending with k=2',
+      },
+      {
+        input: [[5, 4, 3, 2, 1], 3],
+        expected: [5, 4, 3],
+        description: 'Descending with k=3',
+      },
+      {
+        input: [[1], 1],
+        expected: [1],
+        description: 'Single element, k=1',
+      },
+    ],
+    hints: [
+      'The deque stores indices, not values',
+      'Front of deque is always the index of the current window maximum',
+      'Remove from the front if the index is out of the window',
+      'Remove from the back while the value at back index <= new value',
+    ],
+    concepts: ['monotonic deque', 'sliding window maximum', 'double-ended queue'],
+  },
+  {
+    id: 'js-min-stack',
+    title: 'Min Stack (O(1) getMin)',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description:
+      'Implement a stack that supports push, pop, top, and retrieving the minimum element, all in O(1) time.',
+    instructions: [
+      'Create a stack with push, pop, top, and getMin methods',
+      'All operations must run in O(1) time',
+      'Use an auxiliary stack to track minimums',
+      'Return an object with push, pop, top, and getMin methods',
+    ],
+    starterCode: `function createMinStack() {
+  // Stack with O(1) getMin using auxiliary stack
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function createMinStack() {
+  const stack = [];
+  const minStack = [];
+  return {
+    push(val) {
+      stack.push(val);
+      if (minStack.length === 0 || val <= minStack[minStack.length - 1]) {
+        minStack.push(val);
+      }
+    },
+    pop() {
+      const val = stack.pop();
+      if (val === minStack[minStack.length - 1]) {
+        minStack.pop();
+      }
+      return val;
+    },
+    top() {
+      return stack[stack.length - 1];
+    },
+    getMin() {
+      return minStack[minStack.length - 1];
+    }
+  };
+}`,
+    testCases: [
+      {
+        input: [
+          [['push', -2], ['push', 0], ['push', -3], ['getMin'], ['pop'], ['top'], ['getMin']],
+        ],
+        expected: [null, null, null, -3, -3, 0, -2],
+        description: 'Standard min stack operations',
+      },
+      {
+        input: [[['push', 5], ['push', 3], ['push', 3], ['getMin'], ['pop'], ['getMin']]],
+        expected: [null, null, null, 3, 3, 3],
+        description: 'Duplicate minimums',
+      },
+      {
+        input: [[['push', 1], ['push', 2], ['push', 3], ['getMin'], ['pop'], ['pop'], ['getMin']]],
+        expected: [null, null, null, 1, 3, 2, 1],
+        description: 'Min stays at bottom',
+      },
+    ],
+    hints: [
+      'Maintain a second stack that only tracks minimum values',
+      'Push to minStack when the new value is <= current minimum',
+      'Pop from minStack when the popped value equals the current minimum',
+    ],
+    concepts: ['min stack', 'auxiliary stack', 'O(1) minimum'],
+  },
+  {
+    id: 'js-two-stack-queue',
+    title: 'Queue Using Two Stacks',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description: 'Implement a FIFO queue using two LIFO stacks.',
+    instructions: [
+      'Implement enqueue and dequeue operations using only two stacks (arrays with push/pop)',
+      'enqueue(val): add to the queue',
+      'dequeue(): remove and return the front element, or null if empty',
+      'Use an input stack and an output stack; transfer elements lazily',
+      'Return an object with enqueue, dequeue, and peek methods',
+    ],
+    starterCode: `function createQueueFromStacks() {
+  // Two stacks: input and output
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function createQueueFromStacks() {
+  const inStack = [];
+  const outStack = [];
+  function transfer() {
+    if (outStack.length === 0) {
+      while (inStack.length > 0) {
+        outStack.push(inStack.pop());
+      }
+    }
+  }
+  return {
+    enqueue(val) {
+      inStack.push(val);
+    },
+    dequeue() {
+      transfer();
+      return outStack.length > 0 ? outStack.pop() : null;
+    },
+    peek() {
+      transfer();
+      return outStack.length > 0 ? outStack[outStack.length - 1] : null;
+    }
+  };
+}`,
+    testCases: [
+      {
+        input: [
+          [['enqueue', 1], ['enqueue', 2], ['dequeue'], ['enqueue', 3], ['dequeue'], ['dequeue']],
+        ],
+        expected: [null, null, 1, null, 2, 3],
+        description: 'FIFO order maintained',
+      },
+      {
+        input: [[['dequeue'], ['enqueue', 10], ['peek'], ['dequeue'], ['dequeue']]],
+        expected: [null, null, 10, 10, null],
+        description: 'Empty dequeue and peek',
+      },
+      {
+        input: [
+          [['enqueue', 1], ['enqueue', 2], ['enqueue', 3], ['dequeue'], ['dequeue'], ['dequeue']],
+        ],
+        expected: [null, null, null, 1, 2, 3],
+        description: 'Batch enqueue then dequeue',
+      },
+    ],
+    hints: [
+      'enqueue always pushes to inStack',
+      'dequeue pops from outStack; if outStack is empty, transfer all from inStack first',
+      'Lazy transfer gives amortized O(1) per operation',
+    ],
+    concepts: ['queue', 'two stacks', 'amortized complexity', 'lazy transfer'],
+  },
+
+  // ========== DATA STRUCTURES (continued) ==========
+  {
+    id: 'js-disjoint-set-rank',
+    title: 'Union-Find with Rank and Path Compression',
+    category: 'data-structures',
+    difficulty: 'advanced',
+    description:
+      "Implement Union-Find (Disjoint Set Union) with union by rank and path compression. This is a fundamental building block for connected components, Kruskal's MST, and cycle detection.",
+    instructions: [
+      'Implement find(parent, x) with path compression: make every node point directly to root',
+      'Implement union(parent, rank, x, y): merge sets by rank, attach smaller tree under larger',
+      'Return an object { parent, rank } after performing all union operations on n elements',
+    ],
+    starterCode: `function disjointSetRank(n, unions) {
+  const parent = Array.from({ length: n }, (_, i) => i);
+  const rank = new Array(n).fill(0);
+
+  function find(x) {
+    // Path compression: make x point directly to root
+    // YOUR CODE HERE
+  }
+
+  function union(x, y) {
+    const rootX = find(x);
+    const rootY = find(y);
+    if (rootX === rootY) return;
+    // Union by rank: attach smaller tree under bigger
+    // YOUR CODE HERE
+  }
+
+  for (const [x, y] of unions) {
+    union(x, y);
+  }
+
+  // Compress all paths for final state
+  for (let i = 0; i < n; i++) find(i);
+  return { parent: [...parent], rank: [...rank] };
+}`,
+    solutionCode: `function disjointSetRank(n, unions) {
+  const parent = Array.from({ length: n }, (_, i) => i);
+  const rank = new Array(n).fill(0);
+
+  function find(x) {
+    if (parent[x] !== x) {
+      parent[x] = find(parent[x]);
+    }
+    return parent[x];
+  }
+
+  function union(x, y) {
+    const rootX = find(x);
+    const rootY = find(y);
+    if (rootX === rootY) return;
+    if (rank[rootX] < rank[rootY]) {
+      parent[rootX] = rootY;
+    } else if (rank[rootX] > rank[rootY]) {
+      parent[rootY] = rootX;
+    } else {
+      parent[rootY] = rootX;
+      rank[rootX]++;
+    }
+  }
+
+  for (const [x, y] of unions) {
+    union(x, y);
+  }
+
+  for (let i = 0; i < n; i++) find(i);
+  return { parent: [...parent], rank: [...rank] };
+}`,
+    testCases: [
+      {
+        input: [
+          5,
+          [
+            [0, 1],
+            [2, 3],
+            [1, 3],
+          ],
+        ],
+        expected: { parent: [0, 0, 0, 0, 4], rank: [2, 0, 0, 0, 0] },
+        description: 'Merge three pairs into one component',
+      },
+      {
+        input: [
+          4,
+          [
+            [0, 1],
+            [2, 3],
+          ],
+        ],
+        expected: { parent: [0, 0, 2, 2], rank: [1, 0, 1, 0] },
+        description: 'Two separate components',
+      },
+      {
+        input: [3, []],
+        expected: { parent: [0, 1, 2], rank: [0, 0, 0] },
+        description: 'No unions, each is its own root',
+      },
+    ],
+    hints: [
+      'Path compression: if parent[x] !== x, set parent[x] = find(parent[x])',
+      'Union by rank: attach root with smaller rank under root with larger rank',
+      'When ranks are equal, pick one as root and increment its rank',
+    ],
+    concepts: ['union-find', 'path compression', 'union by rank', 'disjoint sets'],
+  },
+  {
+    id: 'js-weighted-graph',
+    title: 'Build Weighted Adjacency List',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description:
+      'Build a weighted adjacency list from an edge list. This is the standard graph representation used in Dijkstra, Bellman-Ford, and many graph algorithms.',
+    instructions: [
+      'Given edges as [u, v, weight] triples and number of nodes, build an adjacency list',
+      'Each node maps to an array of { node, weight } objects',
+      'The graph is undirected: add edges in both directions',
+    ],
+    starterCode: `function buildWeightedGraph(n, edges) {
+  const graph = {};
+  for (let i = 0; i < n; i++) {
+    graph[i] = [];
+  }
+
+  // Add each edge in both directions with weight
+  // YOUR CODE HERE
+
+  return graph;
+}`,
+    solutionCode: `function buildWeightedGraph(n, edges) {
+  const graph = {};
+  for (let i = 0; i < n; i++) {
+    graph[i] = [];
+  }
+
+  for (const [u, v, w] of edges) {
+    graph[u].push({ node: v, weight: w });
+    graph[v].push({ node: u, weight: w });
+  }
+
+  return graph;
+}`,
+    testCases: [
+      {
+        input: [
+          3,
+          [
+            [0, 1, 5],
+            [1, 2, 3],
+          ],
+        ],
+        expected: {
+          0: [{ node: 1, weight: 5 }],
+          1: [
+            { node: 0, weight: 5 },
+            { node: 2, weight: 3 },
+          ],
+          2: [{ node: 1, weight: 3 }],
+        },
+        description: 'Simple 3-node graph',
+      },
+      {
+        input: [2, [[0, 1, 10]]],
+        expected: {
+          0: [{ node: 1, weight: 10 }],
+          1: [{ node: 0, weight: 10 }],
+        },
+        description: 'Two nodes, one edge',
+      },
+      {
+        input: [3, []],
+        expected: { 0: [], 1: [], 2: [] },
+        description: 'No edges',
+      },
+    ],
+    hints: [
+      'Destructure each edge as [u, v, w]',
+      'Push { node: v, weight: w } to graph[u]',
+      'For undirected, also push { node: u, weight: w } to graph[v]',
+    ],
+    concepts: ['adjacency list', 'weighted graph', 'graph representation'],
+  },
+  {
+    id: 'js-fenwick-tree-update',
+    title: 'Fenwick Tree: Point Update',
+    category: 'data-structures',
+    difficulty: 'advanced',
+    description:
+      'Implement the point update operation for a Binary Indexed Tree (Fenwick Tree). This allows efficient prefix sum queries after updates in O(log n).',
+    instructions: [
+      'Given a Fenwick tree array (1-indexed), update index i by adding delta',
+      'Traverse upward by adding the lowest set bit: i += i & (-i)',
+      'Return the updated tree array',
+    ],
+    starterCode: `function fenwickUpdate(tree, n, i, delta) {
+  // Update Fenwick tree at index i (1-indexed) by adding delta
+  // Move to next responsible node: i += i & (-i)
+  // YOUR CODE HERE
+
+  return tree;
+}`,
+    solutionCode: `function fenwickUpdate(tree, n, i, delta) {
+  while (i <= n) {
+    tree[i] += delta;
+    i += i & (-i);
+  }
+  return tree;
+}`,
+    testCases: [
+      {
+        input: [[0, 0, 0, 0, 0, 0], 5, 1, 3],
+        expected: [0, 3, 3, 0, 3, 0],
+        description: 'Update index 1 by +3',
+      },
+      {
+        input: [[0, 0, 0, 0, 0, 0], 5, 3, 5],
+        expected: [0, 0, 0, 5, 5, 0],
+        description: 'Update index 3 by +5',
+      },
+      {
+        input: [[0, 1, 1, 0, 1, 0], 5, 2, 4],
+        expected: [0, 1, 5, 0, 5, 0],
+        description: 'Update existing tree at index 2',
+      },
+    ],
+    hints: [
+      'Fenwick tree is 1-indexed, so index 0 is unused',
+      'i & (-i) isolates the lowest set bit of i',
+      'Keep adding delta and moving up: i += i & (-i)',
+    ],
+    concepts: ['Fenwick tree', 'binary indexed tree', 'point update', 'bit manipulation'],
+  },
+  {
+    id: 'js-fenwick-tree-query',
+    title: 'Fenwick Tree: Prefix Sum Query',
+    category: 'data-structures',
+    difficulty: 'advanced',
+    description:
+      'Implement the prefix sum query for a Binary Indexed Tree (Fenwick Tree). Computes sum of elements from index 1 to i in O(log n).',
+    instructions: [
+      'Given a Fenwick tree array (1-indexed), compute the prefix sum from index 1 to i',
+      'Traverse downward by removing the lowest set bit: i -= i & (-i)',
+      'Accumulate the sum at each step',
+    ],
+    starterCode: `function fenwickQuery(tree, i) {
+  let sum = 0;
+  // Accumulate sum by removing lowest set bit: i -= i & (-i)
+  // YOUR CODE HERE
+
+  return sum;
+}`,
+    solutionCode: `function fenwickQuery(tree, i) {
+  let sum = 0;
+  while (i > 0) {
+    sum += tree[i];
+    i -= i & (-i);
+  }
+  return sum;
+}`,
+    testCases: [
+      {
+        input: [[0, 1, 3, 2, 10, 4], 5],
+        expected: 14,
+        description: 'Prefix sum of all 5 elements',
+      },
+      {
+        input: [[0, 1, 3, 2, 10, 4], 3],
+        expected: 4,
+        description: 'Prefix sum of first 3 elements',
+      },
+      {
+        input: [[0, 1, 3, 2, 10, 4], 1],
+        expected: 1,
+        description: 'Prefix sum of first element only',
+      },
+    ],
+    hints: [
+      'Start from index i and move toward index 0',
+      'At each step, add tree[i] to sum',
+      'Remove lowest set bit: i -= i & (-i)',
+    ],
+    concepts: ['Fenwick tree', 'prefix sum', 'binary indexed tree', 'bit manipulation'],
+  },
+  {
+    id: 'js-hash-map-chaining',
+    title: 'Hash Map with Separate Chaining',
+    category: 'data-structures',
+    difficulty: 'intermediate',
+    description:
+      'Implement a simple hash map using separate chaining for collision resolution. Supports put, get, and remove operations.',
+    instructions: [
+      'Implement put(key, value), get(key), and remove(key) operations',
+      'Use a simple hash: sum of char codes mod capacity',
+      'Each bucket is an array of [key, value] pairs',
+      'Execute the given operations and return results of all get operations',
+    ],
+    starterCode: `function hashMapChaining(capacity, operations) {
+  const buckets = Array.from({ length: capacity }, () => []);
+  const results = [];
+
+  function hash(key) {
+    let h = 0;
+    for (const c of String(key)) h += c.charCodeAt(0);
+    return h % capacity;
+  }
+
+  function put(key, value) {
+    const idx = hash(key);
+    const bucket = buckets[idx];
+    // Update existing or add new [key, value]
+    // YOUR CODE HERE
+  }
+
+  function get(key) {
+    const idx = hash(key);
+    const bucket = buckets[idx];
+    // Find and return value, or -1 if not found
+    // YOUR CODE HERE
+  }
+
+  function remove(key) {
+    const idx = hash(key);
+    const bucket = buckets[idx];
+    // Remove pair with matching key
+    // YOUR CODE HERE
+  }
+
+  for (const op of operations) {
+    if (op[0] === 'put') put(op[1], op[2]);
+    else if (op[0] === 'get') results.push(get(op[1]));
+    else if (op[0] === 'remove') remove(op[1]);
+  }
+
+  return results;
+}`,
+    solutionCode: `function hashMapChaining(capacity, operations) {
+  const buckets = Array.from({ length: capacity }, () => []);
+  const results = [];
+
+  function hash(key) {
+    let h = 0;
+    for (const c of String(key)) h += c.charCodeAt(0);
+    return h % capacity;
+  }
+
+  function put(key, value) {
+    const idx = hash(key);
+    const bucket = buckets[idx];
+    for (const pair of bucket) {
+      if (pair[0] === key) {
+        pair[1] = value;
+        return;
+      }
+    }
+    bucket.push([key, value]);
+  }
+
+  function get(key) {
+    const idx = hash(key);
+    const bucket = buckets[idx];
+    for (const pair of bucket) {
+      if (pair[0] === key) return pair[1];
+    }
+    return -1;
+  }
+
+  function remove(key) {
+    const idx = hash(key);
+    const bucket = buckets[idx];
+    const i = bucket.findIndex(pair => pair[0] === key);
+    if (i !== -1) bucket.splice(i, 1);
+  }
+
+  for (const op of operations) {
+    if (op[0] === 'put') put(op[1], op[2]);
+    else if (op[0] === 'get') results.push(get(op[1]));
+    else if (op[0] === 'remove') remove(op[1]);
+  }
+
+  return results;
+}`,
+    testCases: [
+      {
+        input: [
+          10,
+          [
+            ['put', 'a', 1],
+            ['put', 'b', 2],
+            ['get', 'a'],
+            ['get', 'b'],
+            ['get', 'c'],
+          ],
+        ],
+        expected: [1, 2, -1],
+        description: 'Basic put and get',
+      },
+      {
+        input: [
+          10,
+          [
+            ['put', 'a', 1],
+            ['put', 'a', 99],
+            ['get', 'a'],
+          ],
+        ],
+        expected: [99],
+        description: 'Overwrite existing key',
+      },
+      {
+        input: [
+          10,
+          [
+            ['put', 'x', 5],
+            ['remove', 'x'],
+            ['get', 'x'],
+          ],
+        ],
+        expected: [-1],
+        description: 'Remove then get returns -1',
+      },
+    ],
+    hints: [
+      'For put: scan bucket for existing key, update if found, else push new pair',
+      'For get: scan bucket for key, return value or -1',
+      'For remove: find index with findIndex, splice if found',
+    ],
+    concepts: ['hash map', 'separate chaining', 'collision resolution', 'hash function'],
+  },
+  {
+    id: 'js-deque',
+    title: 'Double-Ended Queue (Deque)',
+    category: 'data-structures',
+    difficulty: 'beginner',
+    description:
+      'Implement a deque (double-ended queue) supporting push and pop from both front and back. Used in sliding window algorithms and BFS optimizations.',
+    instructions: [
+      'Process a list of operations: pushFront, pushBack, popFront, popBack',
+      'popFront/popBack return the removed value or -1 if empty',
+      'Return an array of all pop results',
+    ],
+    starterCode: `function dequeOperations(operations) {
+  const deque = [];
+  const results = [];
+
+  for (const op of operations) {
+    if (op[0] === 'pushFront') {
+      // Add to front
+      // YOUR CODE HERE
+    } else if (op[0] === 'pushBack') {
+      // Add to back
+      // YOUR CODE HERE
+    } else if (op[0] === 'popFront') {
+      // Remove from front, push result or -1
+      // YOUR CODE HERE
+    } else if (op[0] === 'popBack') {
+      // Remove from back, push result or -1
+      // YOUR CODE HERE
+    }
+  }
+
+  return results;
+}`,
+    solutionCode: `function dequeOperations(operations) {
+  const deque = [];
+  const results = [];
+
+  for (const op of operations) {
+    if (op[0] === 'pushFront') {
+      deque.unshift(op[1]);
+    } else if (op[0] === 'pushBack') {
+      deque.push(op[1]);
+    } else if (op[0] === 'popFront') {
+      results.push(deque.length > 0 ? deque.shift() : -1);
+    } else if (op[0] === 'popBack') {
+      results.push(deque.length > 0 ? deque.pop() : -1);
+    }
+  }
+
+  return results;
+}`,
+    testCases: [
+      {
+        input: [[['pushBack', 1], ['pushBack', 2], ['pushFront', 0], ['popFront'], ['popBack']]],
+        expected: [0, 2],
+        description: 'Push both ends, pop both ends',
+      },
+      {
+        input: [[['popFront'], ['popBack']]],
+        expected: [-1, -1],
+        description: 'Pop from empty deque',
+      },
+      {
+        input: [
+          [
+            ['pushFront', 3],
+            ['pushFront', 2],
+            ['pushFront', 1],
+            ['popFront'],
+            ['popFront'],
+            ['popFront'],
+          ],
+        ],
+        expected: [1, 2, 3],
+        description: 'All pushFront then popFront gives LIFO order',
+      },
+    ],
+    hints: [
+      'unshift adds to the front, shift removes from front',
+      'push adds to back, pop removes from back',
+      'Check deque.length > 0 before removing',
+    ],
+    concepts: ['deque', 'double-ended queue', 'unshift', 'shift'],
+  },
+
+  // ========== RECURSION ==========
+  {
+    id: 'js-fast-power',
+    title: 'Fast Power (Binary Exponentiation)',
+    category: 'recursion',
+    difficulty: 'intermediate',
+    description:
+      'Compute base^exp using binary exponentiation in O(log n) time. This is a key building block in modular arithmetic, cryptography, and competitive programming.',
+    instructions: [
+      'If exp is 0, return 1',
+      'If exp is even, compute half = fastPower(base, exp/2) and return half * half',
+      'If exp is odd, return base * fastPower(base, exp - 1)',
+    ],
+    starterCode: `function fastPower(base, exp) {
+  // Base case
+  // YOUR CODE HERE
+
+  // Even exponent: square the half result
+  // Odd exponent: multiply by base
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function fastPower(base, exp) {
+  if (exp === 0) return 1;
+  if (exp % 2 === 0) {
+    const half = fastPower(base, exp / 2);
+    return half * half;
+  }
+  return base * fastPower(base, exp - 1);
+}`,
+    testCases: [
+      { input: [2, 10], expected: 1024, description: '2^10 = 1024' },
+      { input: [3, 5], expected: 243, description: '3^5 = 243' },
+      { input: [5, 0], expected: 1, description: 'Any^0 = 1' },
+      { input: [7, 1], expected: 7, description: '7^1 = 7' },
+      { input: [2, 20], expected: 1048576, description: '2^20 = 1048576' },
+    ],
+    hints: [
+      'Base case: exp === 0 returns 1',
+      'Even case: fastPower(base, exp/2) squared avoids redundant work',
+      'Odd case: reduce to even by multiplying out one base',
+    ],
+    concepts: ['binary exponentiation', 'divide and conquer', 'recursion', 'logarithmic time'],
+  },
+  {
+    id: 'js-flood-fill',
+    title: 'Flood Fill',
+    category: 'recursion',
+    difficulty: 'intermediate',
+    description:
+      'Flood fill a 2D grid from a starting position with a new color, like a paint bucket tool. A core pattern for grid-based DFS problems.',
+    instructions: [
+      'Given a grid, starting row r, column c, and newColor, fill all connected same-color cells',
+      'Connected means up, down, left, right (4-directional)',
+      'Return the modified grid',
+    ],
+    starterCode: `function floodFill(grid, r, c, newColor) {
+  const origColor = grid[r][c];
+  if (origColor === newColor) return grid;
+
+  function fill(row, col) {
+    // Check bounds and matching color, then recurse in 4 directions
+    // YOUR CODE HERE
+  }
+
+  fill(r, c);
+  return grid;
+}`,
+    solutionCode: `function floodFill(grid, r, c, newColor) {
+  const origColor = grid[r][c];
+  if (origColor === newColor) return grid;
+
+  function fill(row, col) {
+    if (row < 0 || row >= grid.length) return;
+    if (col < 0 || col >= grid[0].length) return;
+    if (grid[row][col] !== origColor) return;
+
+    grid[row][col] = newColor;
+    fill(row + 1, col);
+    fill(row - 1, col);
+    fill(row, col + 1);
+    fill(row, col - 1);
+  }
+
+  fill(r, c);
+  return grid;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 1, 1],
+            [1, 1, 0],
+            [1, 0, 1],
+          ],
+          1,
+          1,
+          2,
+        ],
+        expected: [
+          [2, 2, 2],
+          [2, 2, 0],
+          [2, 0, 1],
+        ],
+        description: 'Fill connected 1s with 2',
+      },
+      {
+        input: [
+          [
+            [0, 0, 0],
+            [0, 0, 0],
+          ],
+          0,
+          0,
+          5,
+        ],
+        expected: [
+          [5, 5, 5],
+          [5, 5, 5],
+        ],
+        description: 'Fill entire grid',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+          ],
+          0,
+          0,
+          9,
+        ],
+        expected: [
+          [9, 2],
+          [3, 4],
+        ],
+        description: 'Single cell with no matching neighbors',
+      },
+    ],
+    hints: [
+      'Save the original color before filling',
+      'Check bounds first: row/col must be within grid',
+      'Only fill cells that match the original color',
+      'Recurse in all 4 directions after setting current cell',
+    ],
+    concepts: ['flood fill', 'DFS', '2D grid', 'recursion', 'connected components'],
+  },
+  {
+    id: 'js-generate-parens',
+    title: 'Generate Valid Parentheses',
+    category: 'recursion',
+    difficulty: 'intermediate',
+    description:
+      'Generate all valid combinations of n pairs of parentheses. A classic backtracking problem that teaches constraint-based recursion.',
+    instructions: [
+      'Generate all strings of n pairs of balanced parentheses',
+      'Track open and close counts; only add "(" if open < n, ")" if close < open',
+      'Base case: when string length equals 2*n, add to result',
+    ],
+    starterCode: `function generateParens(n) {
+  const result = [];
+
+  function generate(current, open, close) {
+    if (current.length === 2 * n) {
+      result.push(current);
+      return;
+    }
+    // Add '(' if open < n
+    // Add ')' if close < open
+    // YOUR CODE HERE
+  }
+
+  generate('', 0, 0);
+  return result;
+}`,
+    solutionCode: `function generateParens(n) {
+  const result = [];
+
+  function generate(current, open, close) {
+    if (current.length === 2 * n) {
+      result.push(current);
+      return;
+    }
+    if (open < n) {
+      generate(current + '(', open + 1, close);
+    }
+    if (close < open) {
+      generate(current + ')', open, close + 1);
+    }
+  }
+
+  generate('', 0, 0);
+  return result;
+}`,
+    testCases: [
+      {
+        input: 3,
+        expected: ['((()))', '(()())', '(())()', '()(())', '()()()'],
+        description: '3 pairs of parentheses',
+      },
+      {
+        input: 2,
+        expected: ['(())', '()()'],
+        description: '2 pairs',
+      },
+      {
+        input: 1,
+        expected: ['()'],
+        description: '1 pair',
+      },
+    ],
+    hints: [
+      'Track how many open and close parens have been placed',
+      'Can add "(" only if open count < n',
+      'Can add ")" only if close count < open count (ensures validity)',
+    ],
+    concepts: ['backtracking', 'parentheses generation', 'constraint recursion', 'string building'],
+  },
+  {
+    id: 'js-tower-of-hanoi',
+    title: 'Tower of Hanoi',
+    category: 'recursion',
+    difficulty: 'intermediate',
+    description:
+      'Return the list of moves to solve the Tower of Hanoi for n disks. Each move is [from, to]. This classic recursion problem demonstrates divide-and-conquer thinking.',
+    instructions: [
+      'Move n disks from source peg to target peg using auxiliary peg',
+      'Move n-1 disks from source to auxiliary, move disk n to target, move n-1 from auxiliary to target',
+      'Return array of [from, to] moves using peg labels "A", "B", "C"',
+    ],
+    starterCode: `function towerOfHanoi(n, source, target, auxiliary) {
+  const moves = [];
+
+  function solve(disks, src, tgt, aux) {
+    if (disks === 0) return;
+    // Move n-1 disks to auxiliary, move 1 disk to target, move n-1 to target
+    // YOUR CODE HERE
+  }
+
+  solve(n, source, target, auxiliary);
+  return moves;
+}`,
+    solutionCode: `function towerOfHanoi(n, source, target, auxiliary) {
+  const moves = [];
+
+  function solve(disks, src, tgt, aux) {
+    if (disks === 0) return;
+    solve(disks - 1, src, aux, tgt);
+    moves.push([src, tgt]);
+    solve(disks - 1, aux, tgt, src);
+  }
+
+  solve(n, source, target, auxiliary);
+  return moves;
+}`,
+    testCases: [
+      {
+        input: [2, 'A', 'C', 'B'],
+        expected: [
+          ['A', 'B'],
+          ['A', 'C'],
+          ['B', 'C'],
+        ],
+        description: '2 disks: 3 moves',
+      },
+      {
+        input: [3, 'A', 'C', 'B'],
+        expected: [
+          ['A', 'C'],
+          ['A', 'B'],
+          ['C', 'B'],
+          ['A', 'C'],
+          ['B', 'A'],
+          ['B', 'C'],
+          ['A', 'C'],
+        ],
+        description: '3 disks: 7 moves',
+      },
+      {
+        input: [1, 'A', 'C', 'B'],
+        expected: [['A', 'C']],
+        description: '1 disk: 1 move',
+      },
+    ],
+    hints: [
+      'Base case: 0 disks means no moves',
+      'Recursive: move n-1 to aux, move largest to target, move n-1 from aux to target',
+      'Total moves = 2^n - 1',
+    ],
+    concepts: ['Tower of Hanoi', 'recursion', 'divide and conquer', 'classic problem'],
+  },
+  {
+    id: 'js-deep-clone',
+    title: 'Deep Clone Object/Array',
+    category: 'recursion',
+    difficulty: 'intermediate',
+    description:
+      'Deep clone a nested object or array structure without circular references. A fundamental utility pattern used everywhere in JavaScript.',
+    instructions: [
+      'If value is null or not an object, return it directly (primitive)',
+      'If value is an array, recursively clone each element',
+      'If value is an object, recursively clone each property',
+    ],
+    starterCode: `function deepClone(value) {
+  // Handle primitives and null
+  // Handle arrays
+  // Handle objects
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function deepClone(value) {
+  if (value === null || typeof value !== 'object') {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return value.map(item => deepClone(item));
+  }
+  const result = {};
+  for (const key in value) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+      result[key] = deepClone(value[key]);
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [{ a: 1, b: { c: 2, d: [3, 4] } }],
+        expected: { a: 1, b: { c: 2, d: [3, 4] } },
+        description: 'Nested object with array',
+      },
+      {
+        input: [[1, [2, [3, [4]]]]],
+        expected: [1, [2, [3, [4]]]],
+        description: 'Deeply nested array',
+      },
+      {
+        input: [42],
+        expected: 42,
+        description: 'Primitive value returned as-is',
+      },
+      {
+        input: [null],
+        expected: null,
+        description: 'Null returned as-is',
+      },
+    ],
+    hints: [
+      'Check typeof value !== "object" or value === null for primitives',
+      'Use Array.isArray() to differentiate arrays from objects',
+      'Recursively clone each property or element',
+    ],
+    concepts: ['deep clone', 'recursion', 'type checking', 'object traversal'],
+  },
+  {
+    id: 'js-subset-sum-exists',
+    title: 'Subset Sum Exists (Backtracking)',
+    category: 'recursion',
+    difficulty: 'intermediate',
+    description:
+      'Check if any subset of the array sums to a target value using backtracking. This is the decision version of the subset sum problem.',
+    instructions: [
+      'Given an array of positive integers and a target, return true if any subset sums to target',
+      'For each element, try including it or excluding it',
+      'Use early termination: stop if current sum exceeds target',
+    ],
+    starterCode: `function subsetSumExists(nums, target) {
+  function backtrack(index, currentSum) {
+    if (currentSum === target) return true;
+    if (index >= nums.length || currentSum > target) return false;
+
+    // Include nums[index] or skip it
+    // YOUR CODE HERE
+  }
+
+  return backtrack(0, 0);
+}`,
+    solutionCode: `function subsetSumExists(nums, target) {
+  function backtrack(index, currentSum) {
+    if (currentSum === target) return true;
+    if (index >= nums.length || currentSum > target) return false;
+
+    return backtrack(index + 1, currentSum + nums[index])
+        || backtrack(index + 1, currentSum);
+  }
+
+  return backtrack(0, 0);
+}`,
+    testCases: [
+      { input: [[3, 34, 4, 12, 5, 2], 9], expected: true, description: 'Subset {4, 5} sums to 9' },
+      { input: [[3, 34, 4, 12, 5, 2], 30], expected: false, description: 'No subset sums to 30' },
+      { input: [[1, 2, 3], 6], expected: true, description: 'All elements sum to target' },
+      { input: [[1, 2, 3], 0], expected: true, description: 'Empty subset sums to 0' },
+      { input: [[], 1], expected: false, description: 'Empty array, nonzero target' },
+    ],
+    hints: [
+      'Two choices per element: include (add to sum) or exclude (skip)',
+      'Return true if either branch returns true (use ||)',
+      'Prune: if currentSum > target, return false early',
+    ],
+    concepts: ['backtracking', 'subset sum', 'include/exclude pattern', 'pruning'],
+  },
+  {
+    id: 'js-n-queens-count',
+    title: 'N-Queens Count',
+    category: 'recursion',
+    difficulty: 'advanced',
+    description:
+      'Count the number of valid N-Queens placements on an NxN board. Queens cannot share a row, column, or diagonal.',
+    instructions: [
+      'Place queens row by row; for each row, try each column',
+      'Track occupied columns and diagonals using Sets',
+      'Diagonals: row-col for one direction, row+col for the other',
+    ],
+    starterCode: `function nQueensCount(n) {
+  let count = 0;
+  const cols = new Set();
+  const diag1 = new Set();  // row - col
+  const diag2 = new Set();  // row + col
+
+  function solve(row) {
+    if (row === n) {
+      count++;
+      return;
+    }
+    for (let col = 0; col < n; col++) {
+      // Check if column and diagonals are free, place queen, recurse, remove
+      // YOUR CODE HERE
+    }
+  }
+
+  solve(0);
+  return count;
+}`,
+    solutionCode: `function nQueensCount(n) {
+  let count = 0;
+  const cols = new Set();
+  const diag1 = new Set();
+  const diag2 = new Set();
+
+  function solve(row) {
+    if (row === n) {
+      count++;
+      return;
+    }
+    for (let col = 0; col < n; col++) {
+      if (cols.has(col) || diag1.has(row - col) || diag2.has(row + col)) continue;
+      cols.add(col);
+      diag1.add(row - col);
+      diag2.add(row + col);
+      solve(row + 1);
+      cols.delete(col);
+      diag1.delete(row - col);
+      diag2.delete(row + col);
+    }
+  }
+
+  solve(0);
+  return count;
+}`,
+    testCases: [
+      { input: 4, expected: 2, description: '4-Queens has 2 solutions' },
+      { input: 1, expected: 1, description: '1-Queen has 1 solution' },
+      { input: 5, expected: 10, description: '5-Queens has 10 solutions' },
+      { input: 8, expected: 92, description: '8-Queens has 92 solutions' },
+    ],
+    hints: [
+      'Two queens share a diagonal if |row1-row2| === |col1-col2|',
+      'Use row-col for one diagonal direction, row+col for the other',
+      'Backtrack: add to sets before recursing, remove after returning',
+    ],
+    concepts: ['N-Queens', 'backtracking', 'constraint propagation', 'diagonal tracking'],
+  },
+  {
+    id: 'js-word-search-grid',
+    title: 'Word Search in Grid',
+    category: 'recursion',
+    difficulty: 'advanced',
+    description:
+      'Check if a word exists in a 2D grid of characters by traversing adjacent cells (up, down, left, right). Each cell can be used only once per path.',
+    instructions: [
+      'Search for word starting from every cell in the grid',
+      'For each cell, try extending the path in 4 directions',
+      'Mark visited cells to prevent reuse, then unmark (backtrack)',
+    ],
+    starterCode: `function wordSearch(board, word) {
+  const rows = board.length;
+  const cols = board[0].length;
+
+  function dfs(r, c, idx) {
+    if (idx === word.length) return true;
+    if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
+    if (board[r][c] !== word[idx]) return false;
+
+    // Mark visited, recurse 4 directions, unmark
+    // YOUR CODE HERE
+  }
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (dfs(r, c, 0)) return true;
+    }
+  }
+  return false;
+}`,
+    solutionCode: `function wordSearch(board, word) {
+  const rows = board.length;
+  const cols = board[0].length;
+
+  function dfs(r, c, idx) {
+    if (idx === word.length) return true;
+    if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
+    if (board[r][c] !== word[idx]) return false;
+
+    const temp = board[r][c];
+    board[r][c] = '#';
+    const found = dfs(r + 1, c, idx + 1)
+              || dfs(r - 1, c, idx + 1)
+              || dfs(r, c + 1, idx + 1)
+              || dfs(r, c - 1, idx + 1);
+    board[r][c] = temp;
+    return found;
+  }
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (dfs(r, c, 0)) return true;
+    }
+  }
+  return false;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            ['A', 'B', 'C', 'E'],
+            ['S', 'F', 'C', 'S'],
+            ['A', 'D', 'E', 'E'],
+          ],
+          'ABCCED',
+        ],
+        expected: true,
+        description: 'Word found with turns',
+      },
+      {
+        input: [
+          [
+            ['A', 'B', 'C', 'E'],
+            ['S', 'F', 'C', 'S'],
+            ['A', 'D', 'E', 'E'],
+          ],
+          'SEE',
+        ],
+        expected: true,
+        description: 'Word found at bottom-right',
+      },
+      {
+        input: [
+          [
+            ['A', 'B', 'C', 'E'],
+            ['S', 'F', 'C', 'S'],
+            ['A', 'D', 'E', 'E'],
+          ],
+          'ABCB',
+        ],
+        expected: false,
+        description: 'Word not found (cannot reuse cell)',
+      },
+    ],
+    hints: [
+      'Save the cell value, mark as visited with a sentinel like "#"',
+      'Try all 4 directions; short-circuit with || if any returns true',
+      'Restore the cell value after recursion (backtrack)',
+    ],
+    concepts: ['word search', 'DFS', 'backtracking', '2D grid', 'visited marking'],
+  },
+  {
+    id: 'js-flatten-nested-recursive',
+    title: 'Flatten Nested Arrays Recursively',
+    category: 'recursion',
+    difficulty: 'beginner',
+    description:
+      'Flatten arbitrarily nested arrays into a single flat array using recursion. A fundamental recursive pattern for tree-like structures.',
+    instructions: [
+      'Given a nested array like [1, [2, [3, [4]]]], return [1, 2, 3, 4]',
+      'If element is an array, recursively flatten it',
+      'If element is not an array, push it to the result',
+    ],
+    starterCode: `function flattenDeep(arr) {
+  const result = [];
+
+  function flatten(items) {
+    for (const item of items) {
+      // If array, recurse; otherwise push to result
+      // YOUR CODE HERE
+    }
+  }
+
+  flatten(arr);
+  return result;
+}`,
+    solutionCode: `function flattenDeep(arr) {
+  const result = [];
+
+  function flatten(items) {
+    for (const item of items) {
+      if (Array.isArray(item)) {
+        flatten(item);
+      } else {
+        result.push(item);
+      }
+    }
+  }
+
+  flatten(arr);
+  return result;
+}`,
+    testCases: [
+      {
+        input: [[1, [2, [3, [4]]]]],
+        expected: [1, 2, 3, 4],
+        description: 'Deeply nested',
+      },
+      {
+        input: [[1, 2, [3, 4], [5, [6]]]],
+        expected: [1, 2, 3, 4, 5, 6],
+        description: 'Mixed nesting levels',
+      },
+      {
+        input: [[[[[1]]]]],
+        expected: [1],
+        description: 'Single element deeply nested',
+      },
+      {
+        input: [[1, 2, 3]],
+        expected: [1, 2, 3],
+        description: 'Already flat',
+      },
+      {
+        input: [[]],
+        expected: [],
+        description: 'Empty array',
+      },
+    ],
+    hints: [
+      'Use Array.isArray() to check if an element is an array',
+      'If it is an array, recurse into it',
+      'If not, push the value to the result',
+    ],
+    concepts: ['flatten', 'recursion', 'Array.isArray', 'nested structures'],
+  },
+  {
+    id: 'js-string-perms-dedup',
+    title: 'Unique String Permutations',
+    category: 'recursion',
+    difficulty: 'advanced',
+    description:
+      'Generate all unique permutations of a string that may contain duplicate characters. Avoids generating duplicate permutations by sorting and skipping.',
+    instructions: [
+      'Sort characters first so duplicates are adjacent',
+      'Use a used[] boolean array to track which characters are currently placed',
+      'Skip a character if it equals the previous one and the previous was not used in this branch',
+    ],
+    starterCode: `function uniquePermutations(str) {
+  const result = [];
+  const chars = str.split('').sort();
+  const used = new Array(chars.length).fill(false);
+
+  function backtrack(current) {
+    if (current.length === chars.length) {
+      result.push(current);
+      return;
+    }
+    for (let i = 0; i < chars.length; i++) {
+      // Skip used chars and duplicates
+      // YOUR CODE HERE
+    }
+  }
+
+  backtrack('');
+  return result;
+}`,
+    solutionCode: `function uniquePermutations(str) {
+  const result = [];
+  const chars = str.split('').sort();
+  const used = new Array(chars.length).fill(false);
+
+  function backtrack(current) {
+    if (current.length === chars.length) {
+      result.push(current);
+      return;
+    }
+    for (let i = 0; i < chars.length; i++) {
+      if (used[i]) continue;
+      if (i > 0 && chars[i] === chars[i - 1] && !used[i - 1]) continue;
+      used[i] = true;
+      backtrack(current + chars[i]);
+      used[i] = false;
+    }
+  }
+
+  backtrack('');
+  return result;
+}`,
+    testCases: [
+      {
+        input: 'aab',
+        expected: ['aab', 'aba', 'baa'],
+        description: 'String with duplicates',
+      },
+      {
+        input: 'abc',
+        expected: ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'],
+        description: 'All unique characters',
+      },
+      {
+        input: 'aa',
+        expected: ['aa'],
+        description: 'All same characters',
+      },
+    ],
+    hints: [
+      'Sort first so duplicates are adjacent',
+      'Skip if used[i] is true (already in current permutation)',
+      'Skip if chars[i] === chars[i-1] and !used[i-1] (dedup trick)',
+    ],
+    concepts: ['permutations', 'deduplication', 'backtracking', 'sorting trick'],
+  },
+
+  // ========== COMBINATORICS ==========
+  {
+    id: 'js-combinations-with-rep',
+    title: 'Combinations with Repetition',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Generate combinations where elements can be chosen more than once (multiset combinations). For example, choose 2 from [1,2,3] allows [1,1], [1,2], etc.',
+    instructions: [
+      'Given an array and size k, generate all combinations allowing repeated elements',
+      'Use backtracking starting from the current index (not i+1) to allow repeats',
+      'Elements should be in non-decreasing order to avoid duplicates',
+    ],
+    starterCode: `function combinationsWithRep(arr, k) {
+  const result = [];
+
+  function backtrack(start, current) {
+    if (current.length === k) {
+      result.push([...current]);
+      return;
+    }
+    // Iterate from start (not start+1) to allow repeats
+    // YOUR CODE HERE
+  }
+
+  backtrack(0, []);
+  return result;
+}`,
+    solutionCode: `function combinationsWithRep(arr, k) {
+  const result = [];
+
+  function backtrack(start, current) {
+    if (current.length === k) {
+      result.push([...current]);
+      return;
+    }
+    for (let i = start; i < arr.length; i++) {
+      current.push(arr[i]);
+      backtrack(i, current);
+      current.pop();
+    }
+  }
+
+  backtrack(0, []);
+  return result;
+}`,
+    testCases: [
+      {
+        input: [[1, 2, 3], 2],
+        expected: [
+          [1, 1],
+          [1, 2],
+          [1, 3],
+          [2, 2],
+          [2, 3],
+          [3, 3],
+        ],
+        description: 'Choose 2 with repetition from [1,2,3]',
+      },
+      {
+        input: [[1, 2], 3],
+        expected: [
+          [1, 1, 1],
+          [1, 1, 2],
+          [1, 2, 2],
+          [2, 2, 2],
+        ],
+        description: 'Choose 3 with repetition from [1,2]',
+      },
+      {
+        input: [[5], 2],
+        expected: [[5, 5]],
+        description: 'Single element, choose 2',
+      },
+    ],
+    hints: [
+      'Key difference from normal combinations: recurse with i (not i+1)',
+      'This allows the same element to be picked again',
+      'Still start from current index to maintain non-decreasing order',
+    ],
+    concepts: ['combinations with repetition', 'multiset', 'backtracking'],
+  },
+  {
+    id: 'js-next-permutation',
+    title: 'Next Lexicographic Permutation',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Transform an array to its next permutation in lexicographic order, in-place. If already the largest permutation, wrap to the smallest (sorted ascending).',
+    instructions: [
+      'Find the largest index i such that arr[i] < arr[i+1] (the "pivot")',
+      'Find the largest index j > i such that arr[j] > arr[i], then swap',
+      'Reverse the suffix from i+1 to end',
+      'If no pivot exists, reverse the entire array',
+    ],
+    starterCode: `function nextPermutation(arr) {
+  const n = arr.length;
+
+  // Step 1: find pivot (rightmost arr[i] < arr[i+1])
+  // Step 2: find rightmost element > pivot and swap
+  // Step 3: reverse suffix after pivot
+  // YOUR CODE HERE
+
+  return arr;
+}`,
+    solutionCode: `function nextPermutation(arr) {
+  const n = arr.length;
+  let i = n - 2;
+
+  while (i >= 0 && arr[i] >= arr[i + 1]) i--;
+
+  if (i >= 0) {
+    let j = n - 1;
+    while (arr[j] <= arr[i]) j--;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+
+  let left = i + 1, right = n - 1;
+  while (left < right) {
+    [arr[left], arr[right]] = [arr[right], arr[left]];
+    left++;
+    right--;
+  }
+
+  return arr;
+}`,
+    testCases: [
+      { input: [[1, 2, 3]], expected: [1, 3, 2], description: '[1,2,3] -> [1,3,2]' },
+      { input: [[3, 2, 1]], expected: [1, 2, 3], description: 'Largest perm wraps to smallest' },
+      { input: [[1, 1, 5]], expected: [1, 5, 1], description: 'With duplicates' },
+      { input: [[1, 3, 2]], expected: [2, 1, 3], description: '[1,3,2] -> [2,1,3]' },
+    ],
+    hints: [
+      'Scan right-to-left for first decrease: arr[i] < arr[i+1]',
+      'Scan right-to-left for smallest element larger than arr[i]',
+      'After swapping, reverse the suffix to get the smallest next permutation',
+    ],
+    concepts: ['next permutation', 'lexicographic order', 'in-place algorithm'],
+  },
+  {
+    id: 'js-permutation-rank',
+    title: 'Permutation Rank (1-based)',
+    category: 'combinatorics',
+    difficulty: 'advanced',
+    description:
+      'Find the 1-based rank of a permutation in lexicographic order among all permutations of its elements. Assumes all elements are distinct.',
+    instructions: [
+      'For each position, count how many smaller elements remain unused (these would form earlier permutations)',
+      'Multiply that count by the factorial of remaining positions',
+      'Sum all contributions and add 1 for 1-based ranking',
+    ],
+    starterCode: `function permutationRank(perm) {
+  const n = perm.length;
+  let rank = 0;
+
+  function factorial(x) {
+    let f = 1;
+    for (let i = 2; i <= x; i++) f *= i;
+    return f;
+  }
+
+  for (let i = 0; i < n; i++) {
+    // Count elements after index i that are smaller than perm[i]
+    // Multiply by factorial of remaining positions
+    // YOUR CODE HERE
+  }
+
+  return rank + 1;
+}`,
+    solutionCode: `function permutationRank(perm) {
+  const n = perm.length;
+  let rank = 0;
+
+  function factorial(x) {
+    let f = 1;
+    for (let i = 2; i <= x; i++) f *= i;
+    return f;
+  }
+
+  for (let i = 0; i < n; i++) {
+    let smaller = 0;
+    for (let j = i + 1; j < n; j++) {
+      if (perm[j] < perm[i]) smaller++;
+    }
+    rank += smaller * factorial(n - 1 - i);
+  }
+
+  return rank + 1;
+}`,
+    testCases: [
+      { input: [[1, 2, 3]], expected: 1, description: 'First permutation' },
+      { input: [[3, 2, 1]], expected: 6, description: 'Last permutation of 3 elements' },
+      { input: [[2, 1, 3]], expected: 3, description: 'Third permutation' },
+      { input: [[1, 3, 2]], expected: 2, description: 'Second permutation' },
+    ],
+    hints: [
+      'For position i, count elements perm[j] < perm[i] where j > i',
+      'Each such element contributes factorial(n-1-i) earlier permutations',
+      'Add 1 at the end for 1-based ranking',
+    ],
+    concepts: ['permutation rank', 'factorial number system', 'lexicographic ordering'],
+  },
+  {
+    id: 'js-derangements-count',
+    title: 'Count Derangements',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Count the number of derangements of n elements: permutations where no element appears in its original position. Uses the recurrence D(n) = (n-1) * (D(n-1) + D(n-2)).',
+    instructions: [
+      'D(0) = 1, D(1) = 0',
+      'D(n) = (n - 1) * (D(n - 1) + D(n - 2)) for n >= 2',
+      'Use iteration (bottom-up) for efficiency',
+    ],
+    starterCode: `function derangements(n) {
+  if (n === 0) return 1;
+  if (n === 1) return 0;
+
+  let prev2 = 1; // D(0)
+  let prev1 = 0; // D(1)
+
+  // Compute D(2) through D(n) iteratively
+  // YOUR CODE HERE
+
+  return prev1;
+}`,
+    solutionCode: `function derangements(n) {
+  if (n === 0) return 1;
+  if (n === 1) return 0;
+
+  let prev2 = 1;
+  let prev1 = 0;
+
+  for (let i = 2; i <= n; i++) {
+    const current = (i - 1) * (prev1 + prev2);
+    prev2 = prev1;
+    prev1 = current;
+  }
+
+  return prev1;
+}`,
+    testCases: [
+      { input: 0, expected: 1, description: 'D(0) = 1 (empty derangement)' },
+      { input: 1, expected: 0, description: 'D(1) = 0 (single element)' },
+      { input: 2, expected: 1, description: 'D(2) = 1 (swap two)' },
+      { input: 3, expected: 2, description: 'D(3) = 2' },
+      { input: 5, expected: 44, description: 'D(5) = 44' },
+    ],
+    hints: [
+      'Recurrence: D(n) = (n-1) * (D(n-1) + D(n-2))',
+      'Use two variables to track D(i-1) and D(i-2)',
+      'Update them in a loop from 2 to n',
+    ],
+    concepts: ['derangements', 'recurrence relation', 'dynamic programming', 'combinatorics'],
+  },
+  {
+    id: 'js-pascals-triangle-row',
+    title: "Pascal's Triangle Row",
+    category: 'combinatorics',
+    difficulty: 'beginner',
+    description:
+      "Generate the nth row (0-indexed) of Pascal's triangle. Each element is the sum of the two elements above it.",
+    instructions: [
+      'Row 0 = [1], Row 1 = [1, 1], Row 2 = [1, 2, 1], etc.',
+      'Build iteratively: each new row[j] = prev[j-1] + prev[j]',
+      'First and last elements are always 1',
+    ],
+    starterCode: `function pascalRow(n) {
+  let row = [1];
+
+  for (let i = 1; i <= n; i++) {
+    const newRow = [1];
+    // Fill middle elements using previous row
+    // YOUR CODE HERE
+
+    newRow.push(1);
+    row = newRow;
+  }
+
+  return row;
+}`,
+    solutionCode: `function pascalRow(n) {
+  let row = [1];
+
+  for (let i = 1; i <= n; i++) {
+    const newRow = [1];
+    for (let j = 1; j < row.length; j++) {
+      newRow.push(row[j - 1] + row[j]);
+    }
+    newRow.push(1);
+    row = newRow;
+  }
+
+  return row;
+}`,
+    testCases: [
+      { input: 0, expected: [1], description: 'Row 0' },
+      { input: 1, expected: [1, 1], description: 'Row 1' },
+      { input: 4, expected: [1, 4, 6, 4, 1], description: 'Row 4' },
+      { input: 6, expected: [1, 6, 15, 20, 15, 6, 1], description: 'Row 6' },
+    ],
+    hints: [
+      'Start with row = [1]',
+      'Each new element is sum of two adjacent elements in previous row',
+      'First and last elements of every row are 1',
+    ],
+    concepts: ["Pascal's triangle", 'binomial coefficients', 'iterative construction'],
+  },
+  {
+    id: 'js-catalan-number',
+    title: 'Catalan Number',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Compute the nth Catalan number. Catalan numbers count balanced parentheses, BST shapes, polygon triangulations, and many other structures.',
+    instructions: [
+      'C(0) = 1',
+      'C(n) = sum of C(i) * C(n-1-i) for i from 0 to n-1',
+      'Or use the formula: C(n) = C(2n, n) / (n+1)',
+      'Use iterative DP for efficiency',
+    ],
+    starterCode: `function catalanNumber(n) {
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+
+  // Fill dp[1] through dp[n] using the recurrence
+  // dp[i] = sum of dp[j] * dp[i-1-j] for j = 0..i-1
+  // YOUR CODE HERE
+
+  return dp[n];
+}`,
+    solutionCode: `function catalanNumber(n) {
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+
+  for (let i = 1; i <= n; i++) {
+    for (let j = 0; j < i; j++) {
+      dp[i] += dp[j] * dp[i - 1 - j];
+    }
+  }
+
+  return dp[n];
+}`,
+    testCases: [
+      { input: 0, expected: 1, description: 'C(0) = 1' },
+      { input: 1, expected: 1, description: 'C(1) = 1' },
+      { input: 3, expected: 5, description: 'C(3) = 5' },
+      { input: 5, expected: 42, description: 'C(5) = 42' },
+      { input: 10, expected: 16796, description: 'C(10) = 16796' },
+    ],
+    hints: [
+      'dp[0] = 1 is the base case',
+      'For dp[i], sum over all ways to split into left/right subproblems',
+      'dp[j] * dp[i-1-j] counts structures with j elements on the left',
+    ],
+    concepts: ['Catalan numbers', 'dynamic programming', 'combinatorial counting'],
+  },
+  {
+    id: 'js-power-set-bitmask',
+    title: 'Power Set via Bitmask',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Generate the power set (all subsets) using bitmask iteration instead of recursion. Each integer from 0 to 2^n-1 represents a subset.',
+    instructions: [
+      'There are 2^n subsets for an array of length n',
+      'For each number from 0 to 2^n - 1, check each bit',
+      'If bit j is set, include arr[j] in the current subset',
+    ],
+    starterCode: `function powerSetBitmask(arr) {
+  const n = arr.length;
+  const total = 1 << n; // 2^n
+  const result = [];
+
+  for (let mask = 0; mask < total; mask++) {
+    const subset = [];
+    // Check each bit of mask and include corresponding element
+    // YOUR CODE HERE
+
+    result.push(subset);
+  }
+
+  return result;
+}`,
+    solutionCode: `function powerSetBitmask(arr) {
+  const n = arr.length;
+  const total = 1 << n;
+  const result = [];
+
+  for (let mask = 0; mask < total; mask++) {
+    const subset = [];
+    for (let j = 0; j < n; j++) {
+      if (mask & (1 << j)) {
+        subset.push(arr[j]);
+      }
+    }
+    result.push(subset);
+  }
+
+  return result;
+}`,
+    testCases: [
+      {
+        input: [[1, 2, 3]],
+        expected: [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]],
+        description: 'Power set of [1,2,3]',
+      },
+      {
+        input: [['a', 'b']],
+        expected: [[], ['a'], ['b'], ['a', 'b']],
+        description: 'Power set of [a,b]',
+      },
+      {
+        input: [[]],
+        expected: [[]],
+        description: 'Power set of empty array',
+      },
+    ],
+    hints: [
+      '1 << n computes 2^n',
+      'mask & (1 << j) checks if bit j is set',
+      'Each mask from 0 to 2^n-1 uniquely represents one subset',
+    ],
+    concepts: ['power set', 'bitmask', 'bit manipulation', 'subset enumeration'],
+  },
+  {
+    id: 'js-gray-code',
+    title: 'Gray Code Sequence',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Generate the n-bit Gray code sequence. Gray code is a binary numeral system where two successive values differ in only one bit.',
+    instructions: [
+      'For n bits, generate 2^n values',
+      'Gray code formula: gray(i) = i ^ (i >> 1)',
+      'Return the sequence as an array of integers',
+    ],
+    starterCode: `function grayCode(n) {
+  const result = [];
+  const total = 1 << n; // 2^n
+
+  for (let i = 0; i < total; i++) {
+    // Compute Gray code using: i ^ (i >> 1)
+    // YOUR CODE HERE
+  }
+
+  return result;
+}`,
+    solutionCode: `function grayCode(n) {
+  const result = [];
+  const total = 1 << n;
+
+  for (let i = 0; i < total; i++) {
+    result.push(i ^ (i >> 1));
+  }
+
+  return result;
+}`,
+    testCases: [
+      { input: 2, expected: [0, 1, 3, 2], description: '2-bit Gray code' },
+      { input: 3, expected: [0, 1, 3, 2, 6, 7, 5, 4], description: '3-bit Gray code' },
+      { input: 1, expected: [0, 1], description: '1-bit Gray code' },
+      { input: 0, expected: [0], description: '0-bit Gray code' },
+    ],
+    hints: [
+      'Gray code for value i is: i XOR (i right-shifted by 1)',
+      'In JavaScript: i ^ (i >> 1)',
+      'Total values = 2^n = 1 << n',
+    ],
+    concepts: ['Gray code', 'bit manipulation', 'XOR', 'binary sequences'],
+  },
+  {
+    id: 'js-josephus',
+    title: 'Josephus Problem',
+    category: 'combinatorics',
+    difficulty: 'intermediate',
+    description:
+      'Solve the Josephus problem: n people in a circle, every kth person is eliminated. Find the 0-based position of the survivor.',
+    instructions: [
+      'Use the iterative Josephus formula',
+      'J(1) = 0',
+      'J(i) = (J(i-1) + k) % i for i from 2 to n',
+      'Return the 0-based survivor position',
+    ],
+    starterCode: `function josephus(n, k) {
+  let survivor = 0; // J(1) = 0
+
+  // Compute J(2), J(3), ..., J(n)
+  // YOUR CODE HERE
+
+  return survivor;
+}`,
+    solutionCode: `function josephus(n, k) {
+  let survivor = 0;
+
+  for (let i = 2; i <= n; i++) {
+    survivor = (survivor + k) % i;
+  }
+
+  return survivor;
+}`,
+    testCases: [
+      { input: [7, 3], expected: 3, description: '7 people, every 3rd eliminated' },
+      { input: [5, 2], expected: 2, description: '5 people, every 2nd eliminated' },
+      { input: [1, 5], expected: 0, description: '1 person is always survivor' },
+      { input: [6, 1], expected: 5, description: 'Every 1st: last person survives' },
+    ],
+    hints: [
+      'Start with survivor = 0 for the base case of 1 person',
+      'Build up: for each additional person, adjust position',
+      'Formula: (previous + k) % current_count',
+    ],
+    concepts: ['Josephus problem', 'modular arithmetic', 'iterative formula', 'circle elimination'],
+  },
+  {
+    id: 'js-count-inversions',
+    title: 'Count Inversions (Merge Sort)',
+    category: 'combinatorics',
+    difficulty: 'advanced',
+    description:
+      'Count the number of inversions in an array using a modified merge sort. An inversion is a pair (i,j) where i < j but arr[i] > arr[j]. O(n log n).',
+    instructions: [
+      'Modify merge sort to count inversions during the merge step',
+      'When right element is smaller, it forms inversions with all remaining left elements',
+      'Return the total inversion count',
+    ],
+    starterCode: `function countInversions(arr) {
+  function mergeSort(a) {
+    if (a.length <= 1) return { sorted: a, count: 0 };
+
+    const mid = Math.floor(a.length / 2);
+    const left = mergeSort(a.slice(0, mid));
+    const right = mergeSort(a.slice(mid));
+
+    // Merge and count cross-inversions
+    // YOUR CODE HERE
+  }
+
+  return mergeSort(arr).count;
+}`,
+    solutionCode: `function countInversions(arr) {
+  function mergeSort(a) {
+    if (a.length <= 1) return { sorted: a, count: 0 };
+
+    const mid = Math.floor(a.length / 2);
+    const left = mergeSort(a.slice(0, mid));
+    const right = mergeSort(a.slice(mid));
+
+    const merged = [];
+    let count = left.count + right.count;
+    let i = 0, j = 0;
+
+    while (i < left.sorted.length && j < right.sorted.length) {
+      if (left.sorted[i] <= right.sorted[j]) {
+        merged.push(left.sorted[i++]);
+      } else {
+        merged.push(right.sorted[j++]);
+        count += left.sorted.length - i;
+      }
+    }
+
+    while (i < left.sorted.length) merged.push(left.sorted[i++]);
+    while (j < right.sorted.length) merged.push(right.sorted[j++]);
+
+    return { sorted: merged, count };
+  }
+
+  return mergeSort(arr).count;
+}`,
+    testCases: [
+      {
+        input: [[2, 4, 1, 3, 5]],
+        expected: 2,
+        description: 'Two inversions: (2,1) and (4,1) and (4,3)',
+      },
+      { input: [[1, 2, 3, 4]], expected: 0, description: 'Already sorted, no inversions' },
+      { input: [[4, 3, 2, 1]], expected: 6, description: 'Reverse sorted, maximum inversions' },
+      { input: [[1, 5, 2, 4, 3]], expected: 3, description: 'Three inversions' },
+    ],
+    hints: [
+      'When right[j] < left[i], all remaining left elements form inversions with right[j]',
+      'Add left.sorted.length - i to count when picking from the right',
+      'Recursively count inversions in both halves plus cross-inversions in merge',
+    ],
+    concepts: ['inversions', 'merge sort', 'divide and conquer', 'counting'],
+  },
+
+  // ========== TRAVERSAL ==========
+  {
+    id: 'js-preorder-iterative',
+    title: 'Preorder Traversal (Iterative)',
+    category: 'traversal',
+    difficulty: 'intermediate',
+    description:
+      'Implement binary tree preorder traversal using an explicit stack instead of recursion. Visit root, then left, then right.',
+    instructions: [
+      'Use a stack initialized with the root node',
+      'Pop from stack, visit, then push right child first, then left child',
+      'Pushing right before left ensures left is processed first (LIFO)',
+    ],
+    starterCode: `// Node: { value, left, right }
+function preorderIterative(root) {
+  if (!root) return [];
+
+  const result = [];
+  const stack = [root];
+
+  while (stack.length > 0) {
+    // Pop node, push value, push right then left child
+    // YOUR CODE HERE
+  }
+
+  return result;
+}`,
+    solutionCode: `function preorderIterative(root) {
+  if (!root) return [];
+
+  const result = [];
+  const stack = [root];
+
+  while (stack.length > 0) {
+    const node = stack.pop();
+    result.push(node.value);
+    if (node.right) stack.push(node.right);
+    if (node.left) stack.push(node.left);
+  }
+
+  return result;
+}`,
+    testCases: [
+      {
+        input: {
+          value: 1,
+          left: {
+            value: 2,
+            left: { value: 4, left: null, right: null },
+            right: { value: 5, left: null, right: null },
+          },
+          right: { value: 3, left: null, right: null },
+        },
+        expected: [1, 2, 4, 5, 3],
+        description: 'Preorder: root-left-right',
+      },
+      {
+        input: { value: 1, left: null, right: { value: 2, left: null, right: null } },
+        expected: [1, 2],
+        description: 'Right-skewed tree',
+      },
+      {
+        input: null,
+        expected: [],
+        description: 'Empty tree',
+      },
+    ],
+    hints: [
+      'Use an array as a stack with push/pop',
+      'Push right child first, then left, so left is popped first',
+      'Process (visit) the node immediately after popping',
+    ],
+    concepts: ['preorder traversal', 'iterative DFS', 'explicit stack'],
+  },
+  {
+    id: 'js-postorder-iterative',
+    title: 'Postorder Traversal (Iterative)',
+    category: 'traversal',
+    difficulty: 'advanced',
+    description:
+      'Implement binary tree postorder traversal using an explicit stack. Visit left, then right, then root. This is the trickiest iterative traversal.',
+    instructions: [
+      'Use two stacks or a modified approach: push to stack, process as root-right-left, then reverse',
+      'Stack 1: process nodes. Stack 2 (or result reversed): collect in reverse postorder',
+      'Alternatively, push to result in root-right-left order and reverse at the end',
+    ],
+    starterCode: `// Node: { value, left, right }
+function postorderIterative(root) {
+  if (!root) return [];
+
+  const result = [];
+  const stack = [root];
+
+  // Build result in root-right-left order, then reverse
+  // YOUR CODE HERE
+
+  return result.reverse();
+}`,
+    solutionCode: `function postorderIterative(root) {
+  if (!root) return [];
+
+  const result = [];
+  const stack = [root];
+
+  while (stack.length > 0) {
+    const node = stack.pop();
+    result.push(node.value);
+    if (node.left) stack.push(node.left);
+    if (node.right) stack.push(node.right);
+  }
+
+  return result.reverse();
+}`,
+    testCases: [
+      {
+        input: {
+          value: 1,
+          left: {
+            value: 2,
+            left: { value: 4, left: null, right: null },
+            right: { value: 5, left: null, right: null },
+          },
+          right: { value: 3, left: null, right: null },
+        },
+        expected: [4, 5, 2, 3, 1],
+        description: 'Postorder: left-right-root',
+      },
+      {
+        input: { value: 1, left: { value: 2, left: null, right: null }, right: null },
+        expected: [2, 1],
+        description: 'Left-skewed tree',
+      },
+      {
+        input: null,
+        expected: [],
+        description: 'Empty tree',
+      },
+    ],
+    hints: [
+      'Postorder is reverse of modified preorder (root-right-left)',
+      'Push left first, then right (opposite of preorder), collect values, then reverse',
+      'This is much simpler than tracking visited state',
+    ],
+    concepts: ['postorder traversal', 'iterative DFS', 'reverse trick', 'two-stack method'],
+  },
+  {
+    id: 'js-zigzag-level-order',
+    title: 'Zigzag Level Order Traversal',
+    category: 'traversal',
+    difficulty: 'intermediate',
+    description:
+      'Traverse a binary tree level by level, alternating direction: left-to-right, then right-to-left, etc.',
+    instructions: [
+      'Use BFS with a queue, processing one level at a time',
+      'Track direction: even levels go left-to-right, odd levels right-to-left',
+      'Reverse the level array for right-to-left levels',
+    ],
+    starterCode: `// Node: { value, left, right }
+function zigzagLevelOrder(root) {
+  if (!root) return [];
+
+  const result = [];
+  const queue = [root];
+  let leftToRight = true;
+
+  while (queue.length > 0) {
+    const levelSize = queue.length;
+    const level = [];
+
+    for (let i = 0; i < levelSize; i++) {
+      // Dequeue, collect value, enqueue children
+      // YOUR CODE HERE
+    }
+
+    // Add level in correct direction
+    // YOUR CODE HERE
+
+    leftToRight = !leftToRight;
+  }
+
+  return result;
+}`,
+    solutionCode: `function zigzagLevelOrder(root) {
+  if (!root) return [];
+
+  const result = [];
+  const queue = [root];
+  let leftToRight = true;
+
+  while (queue.length > 0) {
+    const levelSize = queue.length;
+    const level = [];
+
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue.shift();
+      level.push(node.value);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+
+    result.push(leftToRight ? level : level.reverse());
+    leftToRight = !leftToRight;
+  }
+
+  return result;
+}`,
+    testCases: [
+      {
+        input: {
+          value: 3,
+          left: { value: 9, left: null, right: null },
+          right: {
+            value: 20,
+            left: { value: 15, left: null, right: null },
+            right: { value: 7, left: null, right: null },
+          },
+        },
+        expected: [[3], [20, 9], [15, 7]],
+        description: 'Zigzag: L-R, R-L, L-R',
+      },
+      {
+        input: { value: 1, left: null, right: null },
+        expected: [[1]],
+        description: 'Single node',
+      },
+      {
+        input: null,
+        expected: [],
+        description: 'Empty tree',
+      },
+    ],
+    hints: [
+      'Process entire level at once using levelSize = queue.length',
+      'Toggle leftToRight after each level',
+      'Reverse the level array when going right-to-left',
+    ],
+    concepts: ['zigzag traversal', 'BFS', 'level order', 'alternating direction'],
+  },
+  {
+    id: 'js-tree-level-widths',
+    title: 'Tree Level Widths',
+    category: 'traversal',
+    difficulty: 'intermediate',
+    description:
+      'Calculate the number of nodes (width) at each level of a binary tree. Uses BFS to process one level at a time.',
+    instructions: [
+      'Use BFS with a queue, processing one level at a time',
+      'For each level, record how many nodes are in it',
+      'Return an array of widths from top to bottom',
+    ],
+    starterCode: `// Node: { value, left, right }
+function treeLevelWidths(root) {
+  if (!root) return [];
+
+  const widths = [];
+  const queue = [root];
+
+  while (queue.length > 0) {
+    const levelSize = queue.length;
+    // Record this level's width and enqueue children
+    // YOUR CODE HERE
+  }
+
+  return widths;
+}`,
+    solutionCode: `function treeLevelWidths(root) {
+  if (!root) return [];
+
+  const widths = [];
+  const queue = [root];
+
+  while (queue.length > 0) {
+    const levelSize = queue.length;
+    widths.push(levelSize);
+
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue.shift();
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+  }
+
+  return widths;
+}`,
+    testCases: [
+      {
+        input: {
+          value: 1,
+          left: {
+            value: 2,
+            left: { value: 4, left: null, right: null },
+            right: { value: 5, left: null, right: null },
+          },
+          right: { value: 3, left: null, right: { value: 6, left: null, right: null } },
+        },
+        expected: [1, 2, 3],
+        description: 'Widths: 1, 2, 3',
+      },
+      {
+        input: {
+          value: 1,
+          left: { value: 2, left: null, right: null },
+          right: { value: 3, left: null, right: null },
+        },
+        expected: [1, 2],
+        description: 'Widths: 1, 2',
+      },
+      {
+        input: { value: 1, left: null, right: null },
+        expected: [1],
+        description: 'Single node: width 1',
+      },
+    ],
+    hints: [
+      'Before processing each level, queue.length gives the width',
+      'Push levelSize to widths array',
+      'Process exactly levelSize nodes in the inner loop',
+    ],
+    concepts: ['tree width', 'BFS', 'level order', 'queue'],
+  },
+  {
+    id: 'js-lowest-common-ancestor',
+    title: 'Lowest Common Ancestor',
+    category: 'traversal',
+    difficulty: 'intermediate',
+    description:
+      'Find the Lowest Common Ancestor (LCA) of two node values in a binary tree. The LCA is the deepest node that is an ancestor of both target nodes.',
+    instructions: [
+      'If root is null or matches either target, return root',
+      'Recursively search left and right subtrees',
+      'If both sides return non-null, current node is the LCA',
+      'Otherwise, return whichever side is non-null',
+    ],
+    starterCode: `// Node: { value, left, right }
+function lowestCommonAncestor(root, p, q) {
+  // Base case: null or found one of the targets
+  // YOUR CODE HERE
+
+  // Recurse left and right
+  // YOUR CODE HERE
+
+  // If both sides found something, this is the LCA
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function lowestCommonAncestor(root, p, q) {
+  if (!root || root.value === p || root.value === q) return root;
+
+  const left = lowestCommonAncestor(root.left, p, q);
+  const right = lowestCommonAncestor(root.right, p, q);
+
+  if (left && right) return root;
+  return left || right;
+}`,
+    testCases: [
+      {
+        input: [
+          {
+            value: 3,
+            left: {
+              value: 5,
+              left: { value: 6, left: null, right: null },
+              right: { value: 2, left: null, right: null },
+            },
+            right: { value: 1, left: null, right: null },
+          },
+          5,
+          1,
+        ],
+        expected: {
+          value: 3,
+          left: {
+            value: 5,
+            left: { value: 6, left: null, right: null },
+            right: { value: 2, left: null, right: null },
+          },
+          right: { value: 1, left: null, right: null },
+        },
+        description: 'LCA of 5 and 1 is root 3',
+      },
+      {
+        input: [
+          {
+            value: 3,
+            left: {
+              value: 5,
+              left: { value: 6, left: null, right: null },
+              right: { value: 2, left: null, right: null },
+            },
+            right: { value: 1, left: null, right: null },
+          },
+          6,
+          2,
+        ],
+        expected: {
+          value: 5,
+          left: { value: 6, left: null, right: null },
+          right: { value: 2, left: null, right: null },
+        },
+        description: 'LCA of 6 and 2 is node 5',
+      },
+    ],
+    hints: [
+      'If root is null or matches a target, return root immediately',
+      'Recurse on both subtrees; the answers bubble up',
+      'If both left and right return non-null, current node is LCA',
+    ],
+    concepts: ['lowest common ancestor', 'recursion', 'tree traversal', 'divide and conquer'],
+  },
+  {
+    id: 'js-tree-diameter',
+    title: 'Binary Tree Diameter',
+    category: 'traversal',
+    difficulty: 'intermediate',
+    description:
+      'Find the diameter of a binary tree: the longest path between any two nodes. The path may or may not pass through the root.',
+    instructions: [
+      'For each node, the path through it is leftHeight + rightHeight',
+      'Track the maximum diameter seen across all nodes',
+      'Return height from the recursive function, update diameter as side effect',
+    ],
+    starterCode: `// Node: { value, left, right }
+function treeDiameter(root) {
+  let diameter = 0;
+
+  function height(node) {
+    if (!node) return 0;
+    // Compute left and right heights
+    // Update diameter as max of current and leftH + rightH
+    // Return height of this subtree
+    // YOUR CODE HERE
+  }
+
+  height(root);
+  return diameter;
+}`,
+    solutionCode: `function treeDiameter(root) {
+  let diameter = 0;
+
+  function height(node) {
+    if (!node) return 0;
+    const leftH = height(node.left);
+    const rightH = height(node.right);
+    diameter = Math.max(diameter, leftH + rightH);
+    return 1 + Math.max(leftH, rightH);
+  }
+
+  height(root);
+  return diameter;
+}`,
+    testCases: [
+      {
+        input: {
+          value: 1,
+          left: {
+            value: 2,
+            left: { value: 4, left: null, right: null },
+            right: { value: 5, left: null, right: null },
+          },
+          right: { value: 3, left: null, right: null },
+        },
+        expected: 3,
+        description: 'Diameter 3: path 4->2->1->3 or 5->2->1->3',
+      },
+      {
+        input: { value: 1, left: { value: 2, left: null, right: null }, right: null },
+        expected: 1,
+        description: 'Diameter 1: single edge',
+      },
+      {
+        input: { value: 1, left: null, right: null },
+        expected: 0,
+        description: 'Single node: diameter 0',
+      },
+    ],
+    hints: [
+      'Diameter at a node = left height + right height',
+      'Height of a node = 1 + max(leftH, rightH)',
+      'Track global maximum diameter across all nodes',
+    ],
+    concepts: ['tree diameter', 'height calculation', 'recursion', 'global variable tracking'],
+  },
+  {
+    id: 'js-serialize-tree',
+    title: 'Serialize and Deserialize Binary Tree',
+    category: 'traversal',
+    difficulty: 'advanced',
+    description:
+      'Serialize a binary tree to a string and deserialize it back to the original tree. Uses preorder traversal with a null marker.',
+    instructions: [
+      'Serialize: preorder traversal, use "null" for null nodes, comma-separated',
+      'Deserialize: split string by comma, process tokens in preorder',
+      'Use an index tracker to consume tokens sequentially',
+    ],
+    starterCode: `// Node: { value, left, right }
+function serialize(root) {
+  const parts = [];
+
+  function preorder(node) {
+    if (!node) {
+      parts.push('null');
+      return;
+    }
+    // Push value, recurse left, recurse right
+    // YOUR CODE HERE
+  }
+
+  preorder(root);
+  return parts.join(',');
+}
+
+function deserialize(str) {
+  const tokens = str.split(',');
+  let index = 0;
+
+  function build() {
+    if (tokens[index] === 'null') {
+      index++;
+      return null;
+    }
+    // Create node, recurse left, recurse right
+    // YOUR CODE HERE
+  }
+
+  return build();
+}`,
+    solutionCode: `function serialize(root) {
+  const parts = [];
+
+  function preorder(node) {
+    if (!node) {
+      parts.push('null');
+      return;
+    }
+    parts.push(String(node.value));
+    preorder(node.left);
+    preorder(node.right);
+  }
+
+  preorder(root);
+  return parts.join(',');
+}
+
+function deserialize(str) {
+  const tokens = str.split(',');
+  let index = 0;
+
+  function build() {
+    if (tokens[index] === 'null') {
+      index++;
+      return null;
+    }
+    const node = { value: Number(tokens[index]), left: null, right: null };
+    index++;
+    node.left = build();
+    node.right = build();
+    return node;
+  }
+
+  return build();
+}`,
+    testCases: [
+      {
+        input: {
+          value: 1,
+          left: { value: 2, left: null, right: null },
+          right: {
+            value: 3,
+            left: { value: 4, left: null, right: null },
+            right: { value: 5, left: null, right: null },
+          },
+        },
+        expected: '1,2,null,null,3,4,null,null,5,null,null',
+        description: 'Serialize tree to string',
+      },
+      {
+        input: null,
+        expected: 'null',
+        description: 'Serialize null tree',
+      },
+    ],
+    hints: [
+      'Preorder: visit node, then left, then right',
+      'Use "null" as a sentinel for missing children',
+      'Deserialize consumes tokens in the same preorder sequence',
+    ],
+    concepts: ['tree serialization', 'preorder traversal', 'string encoding', 'recursive parsing'],
+  },
+
+  // ========== MEMOIZATION / DYNAMIC PROGRAMMING ==========
+  {
+    id: 'js-lcs-length',
+    title: 'Longest Common Subsequence Length',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Compute the length of the longest common subsequence of two strings using a bottom-up DP table.',
+    instructions: [
+      'Build a 2D DP table of size (m+1) x (n+1)',
+      'If characters match, dp[i][j] = dp[i-1][j-1] + 1',
+      'Otherwise dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1])',
+      'Return dp[m][n]',
+    ],
+    starterCode: `function lcsLength(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  // Fill the DP table
+  // YOUR CODE HERE
+
+  return dp[m][n];
+}`,
+    solutionCode: `function lcsLength(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+  return dp[m][n];
+}`,
+    testCases: [
+      {
+        input: ['abcde', 'ace'],
+        expected: 3,
+        description: 'LCS of "abcde" and "ace" is "ace" (length 3)',
+      },
+      { input: ['abc', 'abc'], expected: 3, description: 'Identical strings' },
+      { input: ['abc', 'def'], expected: 0, description: 'No common subsequence' },
+      { input: ['abcdef', 'fbdamn'], expected: 2, description: 'LCS is "bd" (length 2)' },
+      { input: ['', 'abc'], expected: 0, description: 'Empty first string' },
+    ],
+    hints: [
+      'Initialize a (m+1) x (n+1) grid of zeros',
+      'Compare a[i-1] with b[j-1] (1-indexed DP table)',
+      'The answer is in the bottom-right cell dp[m][n]',
+    ],
+    concepts: ['dynamic programming', 'DP table', 'subsequence', 'string comparison'],
+  },
+  {
+    id: 'js-edit-distance',
+    title: 'Edit Distance (Levenshtein)',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Compute the minimum number of insertions, deletions, and substitutions to transform one string into another.',
+    instructions: [
+      'Build a (m+1) x (n+1) DP table',
+      'Base cases: dp[i][0] = i (delete all), dp[0][j] = j (insert all)',
+      'If chars match: dp[i][j] = dp[i-1][j-1]',
+      'Otherwise: 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])',
+    ],
+    starterCode: `function editDistance(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+
+  // Initialize base cases
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+  // Fill the DP table
+  // YOUR CODE HERE
+
+  return dp[m][n];
+}`,
+    solutionCode: `function editDistance(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+      }
+    }
+  }
+  return dp[m][n];
+}`,
+    testCases: [
+      { input: ['kitten', 'sitting'], expected: 3, description: 'kitten -> sitting (3 edits)' },
+      { input: ['abc', 'abc'], expected: 0, description: 'Identical strings need 0 edits' },
+      { input: ['', 'hello'], expected: 5, description: 'Empty to "hello" needs 5 insertions' },
+      { input: ['horse', 'ros'], expected: 3, description: 'horse -> ros (3 edits)' },
+      {
+        input: ['intention', 'execution'],
+        expected: 5,
+        description: 'intention -> execution (5 edits)',
+      },
+    ],
+    hints: [
+      'Base case: transforming empty string to string of length k costs k operations',
+      'Three operations: insert (dp[i][j-1]), delete (dp[i-1][j]), replace (dp[i-1][j-1])',
+      'If characters match, no operation needed: carry dp[i-1][j-1]',
+    ],
+    concepts: ['edit distance', 'Levenshtein', 'dynamic programming', 'string transformation'],
+  },
+  {
+    id: 'js-coin-change-min',
+    title: 'Minimum Coins to Make Amount',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Find the minimum number of coins needed to make a given amount. Each coin denomination can be used unlimited times.',
+    instructions: [
+      'Create a DP array of size amount+1 initialized to Infinity',
+      'Base case: dp[0] = 0 (zero coins for amount 0)',
+      'For each amount, try every coin and take the minimum',
+      'Return dp[amount] or -1 if impossible',
+    ],
+    starterCode: `function coinChangeMin(coins, amount) {
+  const dp = Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  // Fill DP table
+  // YOUR CODE HERE
+
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}`,
+    solutionCode: `function coinChangeMin(coins, amount) {
+  const dp = Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  for (let i = 1; i <= amount; i++) {
+    for (const coin of coins) {
+      if (coin <= i && dp[i - coin] + 1 < dp[i]) {
+        dp[i] = dp[i - coin] + 1;
+      }
+    }
+  }
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}`,
+    testCases: [
+      { input: [[1, 5, 10, 25], 30], expected: 2, description: '30 cents = 25 + 5 (2 coins)' },
+      { input: [[1, 2, 5], 11], expected: 3, description: '11 = 5 + 5 + 1 (3 coins)' },
+      { input: [[2], 3], expected: -1, description: 'Impossible to make 3 with only 2-cent coins' },
+      { input: [[1], 0], expected: 0, description: 'Amount 0 needs 0 coins' },
+      { input: [[1, 3, 4], 6], expected: 2, description: '6 = 3 + 3 (2 coins)' },
+    ],
+    hints: [
+      'dp[i] = minimum coins to make amount i',
+      'For each coin, if coin <= i, try dp[i - coin] + 1',
+      'Start dp[0] = 0, everything else Infinity',
+    ],
+    concepts: ['coin change', 'dynamic programming', 'unbounded knapsack', 'optimization'],
+  },
+  {
+    id: 'js-knapsack-01',
+    title: '0/1 Knapsack',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Given items with weights and values, find the maximum value that fits in a knapsack of given capacity. Each item can be used at most once.',
+    instructions: [
+      'Build a DP table of size (n+1) x (capacity+1)',
+      'For each item, decide to include or exclude it',
+      'If item fits: dp[i][w] = max(exclude, value[i-1] + dp[i-1][w - weight[i-1]])',
+      'If not: dp[i][w] = dp[i-1][w]',
+    ],
+    starterCode: `function knapsack01(weights, values, capacity) {
+  const n = weights.length;
+  const dp = Array.from({ length: n + 1 }, () => Array(capacity + 1).fill(0));
+  // Fill the DP table
+  // YOUR CODE HERE
+
+  return dp[n][capacity];
+}`,
+    solutionCode: `function knapsack01(weights, values, capacity) {
+  const n = weights.length;
+  const dp = Array.from({ length: n + 1 }, () => Array(capacity + 1).fill(0));
+  for (let i = 1; i <= n; i++) {
+    for (let w = 0; w <= capacity; w++) {
+      dp[i][w] = dp[i - 1][w];
+      if (weights[i - 1] <= w) {
+        dp[i][w] = Math.max(dp[i][w], values[i - 1] + dp[i - 1][w - weights[i - 1]]);
+      }
+    }
+  }
+  return dp[n][capacity];
+}`,
+    testCases: [
+      {
+        input: [[2, 3, 4, 5], [3, 4, 5, 6], 5],
+        expected: 7,
+        description: 'Items (w:2,v:3) + (w:3,v:4) = 7',
+      },
+      {
+        input: [[1, 1, 1], [10, 20, 30], 2],
+        expected: 50,
+        description: 'Pick two best: 20 + 30 = 50',
+      },
+      { input: [[10], [100], 5], expected: 0, description: 'Item too heavy, cannot pick any' },
+      {
+        input: [[1, 2, 3], [6, 10, 12], 5],
+        expected: 22,
+        description: 'Pick items 2 and 3: 10 + 12 = 22',
+      },
+    ],
+    hints: [
+      'Row i represents considering first i items',
+      'Column w represents remaining capacity w',
+      'For each cell, choose max of including or excluding current item',
+    ],
+    concepts: ['0/1 knapsack', 'dynamic programming', 'optimization', 'include/exclude'],
+  },
+  {
+    id: 'js-lis-length',
+    title: 'Longest Increasing Subsequence Length',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Find the length of the longest strictly increasing subsequence in an array using dynamic programming.',
+    instructions: [
+      'Create dp array where dp[i] = LIS length ending at index i',
+      'Initialize all dp values to 1 (each element is a subsequence of length 1)',
+      'For each i, check all j < i: if nums[j] < nums[i], dp[i] = max(dp[i], dp[j] + 1)',
+      'Return the maximum value in dp',
+    ],
+    starterCode: `function lisLength(nums) {
+  if (nums.length === 0) return 0;
+  const dp = Array(nums.length).fill(1);
+  // Fill DP table
+  // YOUR CODE HERE
+
+  return Math.max(...dp);
+}`,
+    solutionCode: `function lisLength(nums) {
+  if (nums.length === 0) return 0;
+  const dp = Array(nums.length).fill(1);
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (nums[j] < nums[i]) {
+        dp[i] = Math.max(dp[i], dp[j] + 1);
+      }
+    }
+  }
+  return Math.max(...dp);
+}`,
+    testCases: [
+      {
+        input: [[10, 9, 2, 5, 3, 7, 101, 18]],
+        expected: 4,
+        description: 'LIS is [2,3,7,101] or [2,5,7,101]',
+      },
+      { input: [[0, 1, 0, 3, 2, 3]], expected: 4, description: 'LIS is [0,1,2,3]' },
+      { input: [[7, 7, 7, 7]], expected: 1, description: 'All equal, LIS length 1' },
+      { input: [[1, 2, 3, 4, 5]], expected: 5, description: 'Already sorted, entire array' },
+      { input: [[5, 4, 3, 2, 1]], expected: 1, description: 'Decreasing, LIS length 1' },
+    ],
+    hints: [
+      'dp[i] stores the length of LIS ending at index i',
+      'For each element, look at all previous elements that are smaller',
+      'The answer is the maximum across all dp values',
+    ],
+    concepts: ['LIS', 'dynamic programming', 'subsequence', 'O(n^2) DP'],
+  },
+  {
+    id: 'js-rod-cutting',
+    title: 'Rod Cutting',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Given a rod of length n and an array of prices for each length 1..n, find the maximum revenue from cutting the rod into pieces.',
+    instructions: [
+      'prices[i] is the price for a rod piece of length i+1',
+      'Create dp array where dp[i] = max revenue for rod of length i',
+      'dp[0] = 0 (no rod, no revenue)',
+      'dp[i] = max over all cuts j: prices[j] + dp[i - j - 1]',
+    ],
+    starterCode: `function rodCutting(prices, n) {
+  const dp = Array(n + 1).fill(0);
+  // Fill DP table
+  // YOUR CODE HERE
+
+  return dp[n];
+}`,
+    solutionCode: `function rodCutting(prices, n) {
+  const dp = Array(n + 1).fill(0);
+  for (let i = 1; i <= n; i++) {
+    for (let j = 0; j < i; j++) {
+      dp[i] = Math.max(dp[i], prices[j] + dp[i - j - 1]);
+    }
+  }
+  return dp[n];
+}`,
+    testCases: [
+      {
+        input: [[1, 5, 8, 9, 10, 17, 17, 20], 8],
+        expected: 22,
+        description: 'Rod of length 8, optimal is 2+6',
+      },
+      {
+        input: [[3, 5, 8, 9, 10, 17, 17, 20], 8],
+        expected: 24,
+        description: 'Cut into all pieces of length 1: 3*8=24',
+      },
+      {
+        input: [[1, 5, 8, 9], 4],
+        expected: 10,
+        description: 'Rod of length 4, cut into 2+2 = 5+5 = 10',
+      },
+      { input: [[10], 1], expected: 10, description: 'Single piece, price 10' },
+    ],
+    hints: [
+      'Try every possible first cut of length j+1',
+      'Revenue = price of first piece + best revenue of remainder',
+      'prices[j] gives price for piece of length j+1',
+    ],
+    concepts: ['rod cutting', 'dynamic programming', 'unbounded', 'optimization'],
+  },
+  {
+    id: 'js-climbing-stairs',
+    title: 'Climbing Stairs',
+    category: 'memoization',
+    difficulty: 'beginner',
+    description:
+      'Count the number of distinct ways to climb n stairs, taking either 1 or 2 steps at a time.',
+    instructions: [
+      'dp[0] = 1 (one way to stay at ground), dp[1] = 1 (one way to reach step 1)',
+      'For each step i >= 2: dp[i] = dp[i-1] + dp[i-2]',
+      'Return dp[n]',
+    ],
+    starterCode: `function climbStairs(n) {
+  if (n <= 1) return 1;
+  const dp = Array(n + 1).fill(0);
+  dp[0] = 1;
+  dp[1] = 1;
+  // Fill DP table
+  // YOUR CODE HERE
+
+  return dp[n];
+}`,
+    solutionCode: `function climbStairs(n) {
+  if (n <= 1) return 1;
+  const dp = Array(n + 1).fill(0);
+  dp[0] = 1;
+  dp[1] = 1;
+  for (let i = 2; i <= n; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2];
+  }
+  return dp[n];
+}`,
+    testCases: [
+      { input: 2, expected: 2, description: '2 stairs: (1+1) or (2)' },
+      { input: 3, expected: 3, description: '3 stairs: (1+1+1), (1+2), (2+1)' },
+      { input: 5, expected: 8, description: '5 stairs: 8 ways' },
+      { input: 1, expected: 1, description: '1 stair: 1 way' },
+      { input: 10, expected: 89, description: '10 stairs: 89 ways' },
+    ],
+    hints: [
+      'This is essentially the Fibonacci sequence',
+      'To reach step i, you came from step i-1 or step i-2',
+      'Add the number of ways to reach each of those',
+    ],
+    concepts: ['climbing stairs', 'dynamic programming', 'Fibonacci', 'counting paths'],
+  },
+  {
+    id: 'js-unique-paths-grid',
+    title: 'Unique Paths in Grid',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Count the number of unique paths from top-left to bottom-right in an m x n grid, moving only right or down.',
+    instructions: [
+      'Create an m x n DP table',
+      'First row and first column are all 1 (only one way to reach them)',
+      'dp[i][j] = dp[i-1][j] + dp[i][j-1]',
+      'Return dp[m-1][n-1]',
+    ],
+    starterCode: `function uniquePaths(m, n) {
+  const dp = Array.from({ length: m }, () => Array(n).fill(1));
+  // Fill the DP table starting from (1,1)
+  // YOUR CODE HERE
+
+  return dp[m - 1][n - 1];
+}`,
+    solutionCode: `function uniquePaths(m, n) {
+  const dp = Array.from({ length: m }, () => Array(n).fill(1));
+  for (let i = 1; i < m; i++) {
+    for (let j = 1; j < n; j++) {
+      dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+    }
+  }
+  return dp[m - 1][n - 1];
+}`,
+    testCases: [
+      { input: [3, 7], expected: 28, description: '3x7 grid has 28 unique paths' },
+      { input: [3, 2], expected: 3, description: '3x2 grid has 3 paths' },
+      { input: [1, 1], expected: 1, description: '1x1 grid has 1 path (already there)' },
+      { input: [2, 2], expected: 2, description: '2x2 grid: right-down or down-right' },
+      { input: [4, 4], expected: 20, description: '4x4 grid has 20 paths' },
+    ],
+    hints: [
+      'First row: all 1s (can only move right)',
+      'First column: all 1s (can only move down)',
+      'Each cell = paths from above + paths from left',
+    ],
+    concepts: ['grid paths', 'dynamic programming', '2D DP', 'combinatorics'],
+  },
+  {
+    id: 'js-word-break',
+    title: 'Word Break',
+    category: 'memoization',
+    difficulty: 'advanced',
+    description:
+      'Determine if a string can be segmented into a space-separated sequence of dictionary words.',
+    instructions: [
+      'Create dp array where dp[i] = true if s.substring(0, i) can be segmented',
+      'dp[0] = true (empty string is valid)',
+      'For each position i, check all positions j < i',
+      'If dp[j] is true and s.substring(j, i) is in the dictionary, set dp[i] = true',
+    ],
+    starterCode: `function wordBreak(s, wordDict) {
+  const wordSet = new Set(wordDict);
+  const dp = Array(s.length + 1).fill(false);
+  dp[0] = true;
+  // Fill DP table
+  // YOUR CODE HERE
+
+  return dp[s.length];
+}`,
+    solutionCode: `function wordBreak(s, wordDict) {
+  const wordSet = new Set(wordDict);
+  const dp = Array(s.length + 1).fill(false);
+  dp[0] = true;
+  for (let i = 1; i <= s.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (dp[j] && wordSet.has(s.substring(j, i))) {
+        dp[i] = true;
+        break;
+      }
+    }
+  }
+  return dp[s.length];
+}`,
+    testCases: [
+      { input: ['leetcode', ['leet', 'code']], expected: true, description: '"leet" + "code"' },
+      {
+        input: ['applepenapple', ['apple', 'pen']],
+        expected: true,
+        description: '"apple" + "pen" + "apple"',
+      },
+      {
+        input: ['catsandog', ['cats', 'dog', 'sand', 'and', 'cat']],
+        expected: false,
+        description: 'Cannot fully segment',
+      },
+      { input: ['abcd', ['a', 'abc', 'b', 'cd']], expected: true, description: '"a" + "b" + "cd"' },
+      { input: ['', ['a', 'b']], expected: true, description: 'Empty string is always valid' },
+    ],
+    hints: [
+      'Use a Set for O(1) dictionary lookups',
+      'dp[i] means the first i characters can be split into words',
+      'For each end position, try all possible last-word starting positions',
+    ],
+    concepts: ['word break', 'dynamic programming', 'string segmentation', 'Set lookup'],
+  },
+  {
+    id: 'js-max-product-subarray',
+    title: 'Maximum Product Subarray',
+    category: 'memoization',
+    difficulty: 'intermediate',
+    description:
+      'Find the contiguous subarray within an array of integers that has the largest product.',
+    instructions: [
+      'Track both currentMax and currentMin (negative * negative = positive)',
+      'For each element, compute new max and min from: element, element * prevMax, element * prevMin',
+      'Update the global maximum after each step',
+    ],
+    starterCode: `function maxProductSubarray(nums) {
+  if (nums.length === 0) return 0;
+  let maxProduct = nums[0];
+  let currentMax = nums[0];
+  let currentMin = nums[0];
+  // Iterate from index 1
+  // YOUR CODE HERE
+
+  return maxProduct;
+}`,
+    solutionCode: `function maxProductSubarray(nums) {
+  if (nums.length === 0) return 0;
+  let maxProduct = nums[0];
+  let currentMax = nums[0];
+  let currentMin = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    const candidates = [nums[i], nums[i] * currentMax, nums[i] * currentMin];
+    currentMax = Math.max(...candidates);
+    currentMin = Math.min(...candidates);
+    maxProduct = Math.max(maxProduct, currentMax);
+  }
+  return maxProduct;
+}`,
+    testCases: [
+      { input: [[2, 3, -2, 4]], expected: 6, description: 'Subarray [2,3] has product 6' },
+      { input: [[-2, 0, -1]], expected: 0, description: 'Best is 0 (single element)' },
+      { input: [[-2, 3, -4]], expected: 24, description: 'Entire array: -2 * 3 * -4 = 24' },
+      { input: [[1, -2, -3, 4]], expected: 24, description: '(-2)*(-3)*4 = 24' },
+      { input: [[-1]], expected: -1, description: 'Single negative element' },
+    ],
+    hints: [
+      'Negative numbers can flip min to max when multiplied',
+      'Track both running max and running min products',
+      'Consider three candidates at each step: start fresh, extend max, extend min',
+    ],
+    concepts: ['maximum product', 'dynamic programming', 'tracking min/max', 'subarray'],
+  },
+
+  // ========== UTILITIES ==========
+  {
+    id: 'js-deep-equals',
+    title: 'Deep Equality Check',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      'Implement a deep equality check that compares nested objects, arrays, and primitive values recursively.',
+    instructions: [
+      'Handle primitives: use === for direct comparison',
+      'Handle null: null === null is true, null vs object is false',
+      'Handle arrays: same length and all elements deeply equal',
+      'Handle objects: same keys and all values deeply equal',
+    ],
+    starterCode: `function deepEquals(a, b) {
+  // Handle primitives and null
+  // YOUR CODE HERE
+
+  // Handle arrays
+  // YOUR CODE HERE
+
+  // Handle objects
+  // YOUR CODE HERE
+}`,
+    solutionCode: `function deepEquals(a, b) {
+  if (a === b) return true;
+  if (a === null || b === null) return false;
+  if (typeof a !== 'object' || typeof b !== 'object') return false;
+
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+
+  return keysA.every(key => deepEquals(a[key], b[key]));
+}`,
+    testCases: [
+      {
+        input: [
+          { a: 1, b: { c: 2 } },
+          { a: 1, b: { c: 2 } },
+        ],
+        expected: true,
+        description: 'Nested objects equal',
+      },
+      { input: [{ a: 1 }, { a: 2 }], expected: false, description: 'Different values' },
+      {
+        input: [
+          [1, [2, 3]],
+          [1, [2, 3]],
+        ],
+        expected: true,
+        description: 'Nested arrays equal',
+      },
+      {
+        input: [
+          [1, 2],
+          [1, 2, 3],
+        ],
+        expected: false,
+        description: 'Different array lengths',
+      },
+      { input: [null, null], expected: true, description: 'Both null' },
+      { input: [1, 1], expected: true, description: 'Same primitives' },
+      { input: [{ a: 1 }, { b: 1 }], expected: false, description: 'Different keys' },
+    ],
+    hints: [
+      'Use === for primitive comparison (handles NaN edge case aside)',
+      'typeof null is "object", handle it separately',
+      'Object.keys gets all own enumerable keys for comparison',
+    ],
+    concepts: ['deep equality', 'recursion', 'type checking', 'object comparison'],
+  },
+  {
+    id: 'js-merge-intervals',
+    title: 'Merge Overlapping Intervals',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      'Given an array of intervals [start, end], merge all overlapping intervals and return the non-overlapping result.',
+    instructions: [
+      'Sort intervals by start time',
+      'Initialize merged array with the first interval',
+      'For each subsequent interval, check if it overlaps with the last merged interval',
+      'If overlap: extend the end of the last merged interval; otherwise push new interval',
+    ],
+    starterCode: `function mergeIntervals(intervals) {
+  if (intervals.length <= 1) return intervals;
+  intervals.sort((a, b) => a[0] - b[0]);
+  const merged = [intervals[0]];
+  // Merge overlapping intervals
+  // YOUR CODE HERE
+
+  return merged;
+}`,
+    solutionCode: `function mergeIntervals(intervals) {
+  if (intervals.length <= 1) return intervals;
+  intervals.sort((a, b) => a[0] - b[0]);
+  const merged = [intervals[0]];
+  for (let i = 1; i < intervals.length; i++) {
+    const last = merged[merged.length - 1];
+    if (intervals[i][0] <= last[1]) {
+      last[1] = Math.max(last[1], intervals[i][1]);
+    } else {
+      merged.push(intervals[i]);
+    }
+  }
+  return merged;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 3],
+            [2, 6],
+            [8, 10],
+            [15, 18],
+          ],
+        ],
+        expected: [
+          [1, 6],
+          [8, 10],
+          [15, 18],
+        ],
+        description: 'Merge [1,3] and [2,6]',
+      },
+      {
+        input: [
+          [
+            [1, 4],
+            [4, 5],
+          ],
+        ],
+        expected: [[1, 5]],
+        description: 'Touching intervals merge',
+      },
+      {
+        input: [
+          [
+            [1, 4],
+            [0, 4],
+          ],
+        ],
+        expected: [[0, 4]],
+        description: 'Unsorted input',
+      },
+      { input: [[[1, 2]]], expected: [[1, 2]], description: 'Single interval' },
+      {
+        input: [
+          [
+            [1, 4],
+            [2, 3],
+          ],
+        ],
+        expected: [[1, 4]],
+        description: 'One fully contains other',
+      },
+    ],
+    hints: [
+      'Sort by start time first so overlapping intervals are adjacent',
+      'Overlap means current start <= last merged end',
+      'When merging, take the maximum of both end values',
+    ],
+    concepts: ['intervals', 'merge', 'sorting', 'greedy'],
+  },
+  {
+    id: 'js-insert-interval',
+    title: 'Insert Interval',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      'Insert a new interval into a sorted, non-overlapping list of intervals and merge if necessary.',
+    instructions: [
+      'Add intervals that end before newInterval starts (no overlap)',
+      'Merge all intervals that overlap with newInterval',
+      'Add remaining intervals that start after newInterval ends',
+    ],
+    starterCode: `function insertInterval(intervals, newInterval) {
+  const result = [];
+  let i = 0;
+  // Add all intervals ending before newInterval starts
+  // YOUR CODE HERE
+
+  // Merge overlapping intervals
+  // YOUR CODE HERE
+
+  // Add remaining intervals
+  // YOUR CODE HERE
+
+  return result;
+}`,
+    solutionCode: `function insertInterval(intervals, newInterval) {
+  const result = [];
+  let i = 0;
+
+  while (i < intervals.length && intervals[i][1] < newInterval[0]) {
+    result.push(intervals[i]);
+    i++;
+  }
+
+  while (i < intervals.length && intervals[i][0] <= newInterval[1]) {
+    newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
+    newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
+    i++;
+  }
+  result.push(newInterval);
+
+  while (i < intervals.length) {
+    result.push(intervals[i]);
+    i++;
+  }
+
+  return result;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 3],
+            [6, 9],
+          ],
+          [2, 5],
+        ],
+        expected: [
+          [1, 5],
+          [6, 9],
+        ],
+        description: 'Merge with first interval',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 5],
+            [6, 7],
+            [8, 10],
+            [12, 16],
+          ],
+          [4, 8],
+        ],
+        expected: [
+          [1, 2],
+          [3, 10],
+          [12, 16],
+        ],
+        description: 'Merge across multiple',
+      },
+      { input: [[], [5, 7]], expected: [[5, 7]], description: 'Insert into empty list' },
+      {
+        input: [[[1, 5]], [2, 3]],
+        expected: [[1, 5]],
+        description: 'New interval fully contained',
+      },
+    ],
+    hints: [
+      'Three phases: before overlap, during overlap, after overlap',
+      'During merge phase, expand newInterval to cover all overlapping intervals',
+      'Check overlap: current start <= newInterval end',
+    ],
+    concepts: ['insert interval', 'merge', 'sorted intervals', 'three-pass'],
+  },
+  {
+    id: 'js-event-emitter',
+    title: 'Simple Event Emitter',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      'Build a simple event emitter with on (subscribe), off (unsubscribe), and emit (trigger) methods.',
+    instructions: [
+      'on(event, fn): register a listener for the event',
+      'off(event, fn): remove a specific listener',
+      'emit(event, ...args): call all listeners for the event with the given arguments',
+      'Return an object with on, off, and emit methods',
+    ],
+    starterCode: `function createEmitter() {
+  const listeners = {};
+  // Implement on, off, emit
+  // YOUR CODE HERE
+
+  return { on, off, emit };
+}`,
+    solutionCode: `function createEmitter() {
+  const listeners = {};
+
+  function on(event, fn) {
+    if (!listeners[event]) listeners[event] = [];
+    listeners[event].push(fn);
+  }
+
+  function off(event, fn) {
+    if (!listeners[event]) return;
+    listeners[event] = listeners[event].filter(f => f !== fn);
+  }
+
+  function emit(event, ...args) {
+    if (!listeners[event]) return;
+    listeners[event].forEach(fn => fn(...args));
+  }
+
+  return { on, off, emit };
+}`,
+    testCases: [
+      {
+        input: ['basic'],
+        expected: [1, 2],
+        description: 'Emit calls all listeners and collects results',
+      },
+      {
+        input: ['off'],
+        expected: [1],
+        description: 'Off removes a listener so it is not called again',
+      },
+      {
+        input: ['no-listeners'],
+        expected: [],
+        description: 'Emitting event with no listeners does nothing',
+      },
+    ],
+    hints: [
+      'Use an object to map event names to arrays of functions',
+      'filter out the function reference in off()',
+      'Use forEach and spread args when emitting',
+    ],
+    concepts: ['event emitter', 'pub-sub', 'observer pattern', 'callbacks'],
+  },
+  {
+    id: 'js-promise-all',
+    title: 'Implement Promise.all',
+    category: 'utilities',
+    difficulty: 'advanced',
+    description:
+      'Implement Promise.all from scratch. It takes an array of promises and resolves when all resolve, or rejects on the first rejection.',
+    instructions: [
+      'Return a new Promise',
+      'Track resolved count and results array',
+      'When all promises resolve, resolve with results in order',
+      'If any promise rejects, reject immediately',
+      'Handle empty array: resolve with []',
+    ],
+    starterCode: `function promiseAll(promises) {
+  return new Promise((resolve, reject) => {
+    if (promises.length === 0) return resolve([]);
+    const results = new Array(promises.length);
+    let resolved = 0;
+    // Iterate and handle each promise
+    // YOUR CODE HERE
+  });
+}`,
+    solutionCode: `function promiseAll(promises) {
+  return new Promise((resolve, reject) => {
+    if (promises.length === 0) return resolve([]);
+    const results = new Array(promises.length);
+    let resolved = 0;
+    promises.forEach((p, i) => {
+      Promise.resolve(p).then(value => {
+        results[i] = value;
+        resolved++;
+        if (resolved === promises.length) resolve(results);
+      }).catch(reject);
+    });
+  });
+}`,
+    testCases: [
+      {
+        input: ['all-resolve'],
+        expected: [1, 2, 3],
+        description: 'All promises resolve: returns array of results in order',
+      },
+      {
+        input: ['one-rejects'],
+        expected: 'error',
+        description: 'One rejection causes the whole promise to reject',
+      },
+      {
+        input: ['empty'],
+        expected: [],
+        description: 'Empty array resolves immediately with []',
+      },
+    ],
+    hints: [
+      'Use Promise.resolve(p) to handle non-promise values',
+      'Store results by index to preserve order',
+      'Increment counter on each resolve, check if all done',
+    ],
+    concepts: ['Promise.all', 'promise composition', 'async patterns', 'error propagation'],
+  },
+  {
+    id: 'js-promise-race',
+    title: 'Implement Promise.race',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      'Implement Promise.race from scratch. It resolves or rejects with the first promise that settles.',
+    instructions: [
+      'Return a new Promise',
+      'Iterate over all promises',
+      'The first promise to resolve or reject determines the outcome',
+      'Handle empty array: the promise never settles (pending forever)',
+    ],
+    starterCode: `function promiseRace(promises) {
+  return new Promise((resolve, reject) => {
+    // Handle each promise
+    // YOUR CODE HERE
+  });
+}`,
+    solutionCode: `function promiseRace(promises) {
+  return new Promise((resolve, reject) => {
+    promises.forEach(p => {
+      Promise.resolve(p).then(resolve).catch(reject);
+    });
+  });
+}`,
+    testCases: [
+      {
+        input: ['fastest-wins'],
+        expected: 'first',
+        description: 'First settled promise determines result',
+      },
+      {
+        input: ['reject-first'],
+        expected: 'error',
+        description: 'First rejection wins if it settles first',
+      },
+    ],
+    hints: [
+      'Each promise calls the same resolve/reject',
+      'Once a promise settles, subsequent calls to resolve/reject are ignored',
+      'Wrap with Promise.resolve() to handle non-promise values',
+    ],
+    concepts: ['Promise.race', 'promise composition', 'first-settled', 'async patterns'],
+  },
+  {
+    id: 'js-deep-freeze',
+    title: 'Deep Freeze Object',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description: 'Recursively freeze an object so that no properties at any depth can be modified.',
+    instructions: [
+      'Use Object.freeze on the current object',
+      'Iterate over all property values',
+      'If a value is a non-null object, recursively freeze it',
+      'Return the frozen object',
+    ],
+    starterCode: `function deepFreeze(obj) {
+  // Freeze current object and recursively freeze nested objects
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function deepFreeze(obj) {
+  Object.freeze(obj);
+  Object.values(obj).forEach(val => {
+    if (val !== null && typeof val === 'object' && !Object.isFrozen(val)) {
+      deepFreeze(val);
+    }
+  });
+  return obj;
+}`,
+    testCases: [
+      {
+        input: [{ a: 1, b: { c: 2, d: { e: 3 } } }],
+        expected: true,
+        description: 'All nested levels are frozen',
+      },
+      {
+        input: [{ x: [1, 2, 3] }],
+        expected: true,
+        description: 'Arrays inside objects are also frozen',
+      },
+      {
+        input: [{ simple: 'value' }],
+        expected: true,
+        description: 'Shallow object is frozen',
+      },
+    ],
+    hints: [
+      'Object.freeze only freezes top-level properties',
+      'Check typeof val === "object" && val !== null before recursing',
+      'Use Object.isFrozen to avoid re-freezing',
+    ],
+    concepts: ['deep freeze', 'immutability', 'recursion', 'Object.freeze'],
+  },
+  {
+    id: 'js-object-pick',
+    title: 'Pick Keys from Object',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description: 'Create a new object containing only the specified keys from the source object.',
+    instructions: [
+      'Given an object and an array of keys, return a new object with only those keys',
+      'If a key does not exist on the source, skip it',
+      'Do not mutate the original object',
+    ],
+    starterCode: `function pick(obj, keys) {
+  // Return new object with only the specified keys
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function pick(obj, keys) {
+  const result = {};
+  for (const key of keys) {
+    if (key in obj) {
+      result[key] = obj[key];
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [{ a: 1, b: 2, c: 3 }, ['a', 'c']],
+        expected: { a: 1, c: 3 },
+        description: 'Pick a and c',
+      },
+      {
+        input: [{ x: 10, y: 20 }, ['x', 'z']],
+        expected: { x: 10 },
+        description: 'Skip missing key z',
+      },
+      { input: [{ a: 1 }, []], expected: {}, description: 'Empty keys returns empty object' },
+      { input: [{}, ['a']], expected: {}, description: 'Empty object returns empty' },
+    ],
+    hints: [
+      'Iterate over the keys array, not the object',
+      'Use the "in" operator to check if a key exists',
+      'Build a new result object',
+    ],
+    concepts: ['pick', 'object manipulation', 'key filtering', 'non-mutating'],
+  },
+  {
+    id: 'js-object-omit',
+    title: 'Omit Keys from Object',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description: 'Create a new object with all keys from the source except the specified ones.',
+    instructions: [
+      'Given an object and an array of keys to omit, return a new object without those keys',
+      'Use a Set for efficient lookup of keys to omit',
+      'Do not mutate the original object',
+    ],
+    starterCode: `function omit(obj, keys) {
+  // Return new object excluding the specified keys
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function omit(obj, keys) {
+  const omitSet = new Set(keys);
+  const result = {};
+  for (const key of Object.keys(obj)) {
+    if (!omitSet.has(key)) {
+      result[key] = obj[key];
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      { input: [{ a: 1, b: 2, c: 3 }, ['b']], expected: { a: 1, c: 3 }, description: 'Omit b' },
+      {
+        input: [{ x: 10, y: 20, z: 30 }, ['x', 'z']],
+        expected: { y: 20 },
+        description: 'Omit x and z',
+      },
+      { input: [{ a: 1 }, ['b']], expected: { a: 1 }, description: 'Omit non-existent key' },
+      { input: [{ a: 1, b: 2 }, []], expected: { a: 1, b: 2 }, description: 'Omit nothing' },
+    ],
+    hints: [
+      'Convert omit keys to a Set for O(1) lookups',
+      'Iterate over Object.keys(obj)',
+      'Include key only if it is NOT in the omit set',
+    ],
+    concepts: ['omit', 'object manipulation', 'Set', 'key exclusion'],
+  },
+  {
+    id: 'js-flat-map',
+    title: 'Implement flatMap',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description:
+      'Implement flatMap: map each element using a function, then flatten the result by one level.',
+    instructions: [
+      'Apply the mapping function to each element',
+      'The mapping function may return arrays or single values',
+      'Flatten the result by one level (concat all results)',
+    ],
+    starterCode: `function flatMap(arr, fn) {
+  // Map then flatten one level
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function flatMap(arr, fn) {
+  const result = [];
+  for (const item of arr) {
+    const mapped = fn(item);
+    if (Array.isArray(mapped)) {
+      result.push(...mapped);
+    } else {
+      result.push(mapped);
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [[1, 2, 3], 'double'],
+        expected: [1, 1, 2, 2, 3, 3],
+        description: 'Each element duplicated: x => [x, x]',
+      },
+      {
+        input: [['hello world', 'foo bar'], 'split'],
+        expected: ['hello', 'world', 'foo', 'bar'],
+        description: 'Split strings: s => s.split(" ")',
+      },
+      {
+        input: [[1, 2, 3], 'identity'],
+        expected: [1, 2, 3],
+        description: 'Identity: x => x (no nesting)',
+      },
+      { input: [[], 'double'], expected: [], description: 'Empty array' },
+    ],
+    hints: [
+      'Map each element, then check if result is an array',
+      'Use spread operator to flatten arrays into result',
+      'Non-array results are pushed directly',
+    ],
+    concepts: ['flatMap', 'map', 'flatten', 'array transformation'],
+  },
+  {
+    id: 'js-run-length-encode',
+    title: 'Run-Length Encoding',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description:
+      'Encode a string using run-length encoding: consecutive identical characters are replaced by count + character.',
+    instructions: [
+      'Iterate through the string tracking current character and its count',
+      'When the character changes, append count + character to result',
+      'Handle the last group after the loop ends',
+      'Example: "aaabbc" becomes "3a2b1c"',
+    ],
+    starterCode: `function runLengthEncode(str) {
+  if (str.length === 0) return '';
+  let result = '';
+  let count = 1;
+  // Iterate and encode
+  // YOUR CODE HERE
+
+  return result;
+}`,
+    solutionCode: `function runLengthEncode(str) {
+  if (str.length === 0) return '';
+  let result = '';
+  let count = 1;
+  for (let i = 1; i <= str.length; i++) {
+    if (i < str.length && str[i] === str[i - 1]) {
+      count++;
+    } else {
+      result += count + str[i - 1];
+      count = 1;
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      { input: ['aaabbc'], expected: '3a2b1c', description: 'Basic encoding' },
+      { input: ['aaa'], expected: '3a', description: 'Single character repeated' },
+      { input: ['abcd'], expected: '1a1b1c1d', description: 'All unique characters' },
+      { input: ['a'], expected: '1a', description: 'Single character' },
+      { input: [''], expected: '', description: 'Empty string' },
+    ],
+    hints: [
+      'Compare each character with the previous one',
+      'When characters differ, flush the count and character',
+      "Don't forget to handle the last group",
+    ],
+    concepts: ['run-length encoding', 'string processing', 'compression', 'counting'],
+  },
+  {
+    id: 'js-run-length-decode',
+    title: 'Run-Length Decoding',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description: 'Decode a run-length encoded string: "3a2b1c" becomes "aaabbc".',
+    instructions: [
+      'Parse the encoded string for number-character pairs',
+      'Extract the count (may be multiple digits) and the character',
+      'Repeat each character by its count',
+    ],
+    starterCode: `function runLengthDecode(encoded) {
+  let result = '';
+  let i = 0;
+  // Parse and decode
+  // YOUR CODE HERE
+
+  return result;
+}`,
+    solutionCode: `function runLengthDecode(encoded) {
+  let result = '';
+  let i = 0;
+  while (i < encoded.length) {
+    let numStr = '';
+    while (i < encoded.length && encoded[i] >= '0' && encoded[i] <= '9') {
+      numStr += encoded[i];
+      i++;
+    }
+    const count = parseInt(numStr, 10);
+    result += encoded[i].repeat(count);
+    i++;
+  }
+  return result;
+}`,
+    testCases: [
+      { input: ['3a2b1c'], expected: 'aaabbc', description: 'Basic decoding' },
+      { input: ['1a1b1c1d'], expected: 'abcd', description: 'All count 1' },
+      { input: ['10a'], expected: 'aaaaaaaaaa', description: 'Multi-digit count' },
+      { input: ['3a'], expected: 'aaa', description: 'Single group' },
+      { input: [''], expected: '', description: 'Empty string' },
+    ],
+    hints: [
+      'Parse digits until you hit a non-digit character',
+      'Use parseInt to convert the digit string to a number',
+      'Use String.prototype.repeat() to expand the character',
+    ],
+    concepts: ['run-length decoding', 'string parsing', 'decompression', 'character repeat'],
+  },
+  {
+    id: 'js-debounce-leading',
+    title: 'Debounce with Leading Edge',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      'Implement a leading-edge debounce: fire the function immediately on the first call, then ignore subsequent calls within the delay period.',
+    instructions: [
+      'On first call (no active timer), invoke the function immediately',
+      'Start a timer for the delay period',
+      'Ignore calls while the timer is active',
+      'After the timer expires, the next call fires immediately again',
+    ],
+    starterCode: `function debounceLeading(fn, delay) {
+  let timer = null;
+  // Return debounced function
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function debounceLeading(fn, delay) {
+  let timer = null;
+  return function (...args) {
+    if (!timer) {
+      fn.apply(this, args);
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+    }, delay);
+  };
+}`,
+    testCases: [
+      {
+        input: ['leading-fires-first'],
+        expected: true,
+        description: 'First call fires immediately',
+      },
+      {
+        input: ['subsequent-ignored'],
+        expected: true,
+        description: 'Calls within delay are ignored',
+      },
+      {
+        input: ['resets-after-delay'],
+        expected: true,
+        description: 'After delay expires, next call fires immediately',
+      },
+    ],
+    hints: [
+      'Check if timer is null to decide whether to invoke',
+      'Always reset the timer on each call',
+      'Set timer to null in the setTimeout callback',
+    ],
+    concepts: ['debounce', 'leading edge', 'setTimeout', 'closure'],
+  },
+  {
+    id: 'js-decimal-to-binary',
+    title: 'Decimal to Binary Conversion',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description:
+      'Convert a non-negative decimal integer to its binary string representation without using built-in toString(2).',
+    instructions: [
+      'Handle special case: 0 returns "0"',
+      'Repeatedly divide by 2 and collect remainders',
+      'Build the binary string from remainders in reverse order',
+    ],
+    starterCode: `function decimalToBinary(num) {
+  if (num === 0) return '0';
+  let binary = '';
+  // Convert using division by 2
+  // YOUR CODE HERE
+
+  return binary;
+}`,
+    solutionCode: `function decimalToBinary(num) {
+  if (num === 0) return '0';
+  let binary = '';
+  while (num > 0) {
+    binary = (num % 2) + binary;
+    num = Math.floor(num / 2);
+  }
+  return binary;
+}`,
+    testCases: [
+      { input: [10], expected: '1010', description: '10 in binary is 1010' },
+      { input: [0], expected: '0', description: '0 in binary is 0' },
+      { input: [1], expected: '1', description: '1 in binary is 1' },
+      { input: [255], expected: '11111111', description: '255 is 8 ones' },
+      { input: [7], expected: '111', description: '7 in binary is 111' },
+    ],
+    hints: [
+      'num % 2 gives the least significant bit',
+      'Math.floor(num / 2) removes the least significant bit',
+      'Prepend each bit to build the string in correct order',
+    ],
+    concepts: ['binary conversion', 'modulo', 'integer division', 'number bases'],
+  },
+  {
+    id: 'js-binary-to-decimal',
+    title: 'Binary to Decimal Conversion',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description:
+      'Convert a binary string to its decimal number representation without using parseInt with radix.',
+    instructions: [
+      'Iterate through each character of the binary string',
+      'For each bit, multiply running total by 2 and add the bit value',
+      'Return the final decimal number',
+    ],
+    starterCode: `function binaryToDecimal(binary) {
+  let decimal = 0;
+  // Convert binary string to decimal
+  // YOUR CODE HERE
+
+  return decimal;
+}`,
+    solutionCode: `function binaryToDecimal(binary) {
+  let decimal = 0;
+  for (const bit of binary) {
+    decimal = decimal * 2 + Number(bit);
+  }
+  return decimal;
+}`,
+    testCases: [
+      { input: ['1010'], expected: 10, description: '1010 is 10' },
+      { input: ['0'], expected: 0, description: '0 is 0' },
+      { input: ['1'], expected: 1, description: '1 is 1' },
+      { input: ['11111111'], expected: 255, description: '8 ones is 255' },
+      { input: ['111'], expected: 7, description: '111 is 7' },
+    ],
+    hints: [
+      'Process bits from left to right',
+      'Multiply accumulator by 2 then add current bit',
+      'Convert character to number with Number(bit)',
+    ],
+    concepts: ['binary conversion', 'positional notation', 'number bases', 'accumulator'],
+  },
+  {
+    id: 'js-count-bits',
+    title: 'Count Set Bits (Brian Kernighan)',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      "Count the number of 1-bits in a number using Brian Kernighan's algorithm: n & (n-1) clears the lowest set bit.",
+    instructions: [
+      'Initialize a count to 0',
+      'While n is not 0, apply n = n & (n - 1) and increment count',
+      'Each iteration removes the lowest set bit',
+      'Return the count',
+    ],
+    starterCode: `function countBits(n) {
+  let count = 0;
+  // Use Brian Kernighan's algorithm
+  // YOUR CODE HERE
+
+  return count;
+}`,
+    solutionCode: `function countBits(n) {
+  let count = 0;
+  while (n !== 0) {
+    n = n & (n - 1);
+    count++;
+  }
+  return count;
+}`,
+    testCases: [
+      { input: [7], expected: 3, description: '7 = 111 has 3 set bits' },
+      { input: [0], expected: 0, description: '0 has no set bits' },
+      { input: [1], expected: 1, description: '1 = 1 has 1 set bit' },
+      { input: [255], expected: 8, description: '255 = 11111111 has 8 set bits' },
+      { input: [10], expected: 2, description: '10 = 1010 has 2 set bits' },
+    ],
+    hints: [
+      'n & (n-1) turns off the rightmost set bit',
+      'Count how many times you can do this before n becomes 0',
+      'This is more efficient than checking each bit individually',
+    ],
+    concepts: ['bit manipulation', 'Brian Kernighan', 'set bits', 'bitwise AND'],
+  },
+  {
+    id: 'js-is-power-of-two',
+    title: 'Is Power of Two (Bit Trick)',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description:
+      'Check if a number is a power of 2 using bit manipulation. A power of 2 has exactly one set bit.',
+    instructions: [
+      'A power of 2 in binary is 1 followed by zeros: 1, 10, 100, 1000...',
+      'n & (n - 1) clears the lowest set bit',
+      'If n is a power of 2, n & (n - 1) === 0',
+      'Also check that n > 0',
+    ],
+    starterCode: `function isPowerOfTwo(n) {
+  // Use bit manipulation to check
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function isPowerOfTwo(n) {
+  return n > 0 && (n & (n - 1)) === 0;
+}`,
+    testCases: [
+      { input: [1], expected: true, description: '2^0 = 1' },
+      { input: [2], expected: true, description: '2^1 = 2' },
+      { input: [16], expected: true, description: '2^4 = 16' },
+      { input: [0], expected: false, description: '0 is not a power of 2' },
+      { input: [6], expected: false, description: '6 = 110 is not a power of 2' },
+      { input: [1024], expected: true, description: '2^10 = 1024' },
+    ],
+    hints: [
+      'Powers of 2 have exactly one bit set',
+      'n & (n - 1) removes the lowest set bit',
+      'If only one bit is set, result is 0',
+    ],
+    concepts: ['power of two', 'bit manipulation', 'bitwise AND', 'single bit check'],
+  },
+  {
+    id: 'js-toggle-bit',
+    title: 'Toggle the Nth Bit',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description:
+      'Toggle (flip) the nth bit of a number using the XOR operator. Bit positions are 0-indexed from the right.',
+    instructions: [
+      'Use the XOR operator (^) to flip a specific bit',
+      'Create a mask with 1 shifted left by n positions: 1 << n',
+      'XOR the number with the mask to toggle that bit',
+    ],
+    starterCode: `function toggleBit(num, n) {
+  // Toggle the nth bit using XOR
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function toggleBit(num, n) {
+  return num ^ (1 << n);
+}`,
+    testCases: [
+      { input: [5, 0], expected: 4, description: '5 (101) toggle bit 0 -> 4 (100)' },
+      { input: [5, 1], expected: 7, description: '5 (101) toggle bit 1 -> 7 (111)' },
+      { input: [0, 3], expected: 8, description: '0 toggle bit 3 -> 8 (1000)' },
+      { input: [15, 2], expected: 11, description: '15 (1111) toggle bit 2 -> 11 (1011)' },
+      { input: [8, 3], expected: 0, description: '8 (1000) toggle bit 3 -> 0 (0000)' },
+    ],
+    hints: [
+      'XOR with 1 flips a bit: 0^1=1, 1^1=0',
+      '1 << n creates a mask with only bit n set',
+      'num ^ mask toggles only the bit at position n',
+    ],
+    concepts: ['bit toggle', 'XOR', 'bit shift', 'bit mask'],
+  },
+  {
+    id: 'js-matrix-multiply',
+    title: 'Matrix Multiplication',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description: 'Multiply two matrices A (m x n) and B (n x p) to produce matrix C (m x p).',
+    instructions: [
+      'C[i][j] = sum of A[i][k] * B[k][j] for all k',
+      'A must have the same number of columns as B has rows',
+      'Use three nested loops: row of A, column of B, shared dimension',
+    ],
+    starterCode: `function matrixMultiply(a, b) {
+  const m = a.length;
+  const n = b.length;
+  const p = b[0].length;
+  const result = Array.from({ length: m }, () => Array(p).fill(0));
+  // Multiply matrices
+  // YOUR CODE HERE
+
+  return result;
+}`,
+    solutionCode: `function matrixMultiply(a, b) {
+  const m = a.length;
+  const n = b.length;
+  const p = b[0].length;
+  const result = Array.from({ length: m }, () => Array(p).fill(0));
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < p; j++) {
+      for (let k = 0; k < n; k++) {
+        result[i][j] += a[i][k] * b[k][j];
+      }
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+          ],
+          [
+            [5, 6],
+            [7, 8],
+          ],
+        ],
+        expected: [
+          [19, 22],
+          [43, 50],
+        ],
+        description: '2x2 * 2x2',
+      },
+      {
+        input: [[[1, 2, 3]], [[4], [5], [6]]],
+        expected: [[32]],
+        description: '1x3 * 3x1 = 1x1',
+      },
+      {
+        input: [
+          [
+            [1, 0],
+            [0, 1],
+          ],
+          [
+            [5, 6],
+            [7, 8],
+          ],
+        ],
+        expected: [
+          [5, 6],
+          [7, 8],
+        ],
+        description: 'Identity matrix multiplication',
+      },
+      {
+        input: [
+          [
+            [2, 0],
+            [0, 3],
+          ],
+          [
+            [1, 2],
+            [3, 4],
+          ],
+        ],
+        expected: [
+          [2, 4],
+          [9, 12],
+        ],
+        description: 'Diagonal matrix scaling',
+      },
+    ],
+    hints: [
+      'Outer two loops iterate over result positions (i, j)',
+      'Inner loop computes the dot product of row i and column j',
+      'result[i][j] += a[i][k] * b[k][j]',
+    ],
+    concepts: ['matrix multiplication', 'nested loops', 'dot product', 'linear algebra'],
+  },
+  {
+    id: 'js-transpose-matrix',
+    title: 'Transpose a Matrix',
+    category: 'utilities',
+    difficulty: 'beginner',
+    description:
+      'Transpose a matrix: swap rows and columns so that element at [i][j] moves to [j][i].',
+    instructions: [
+      'If input is m x n, output is n x m',
+      'result[j][i] = matrix[i][j]',
+      'Create the transposed matrix with swapped dimensions',
+    ],
+    starterCode: `function transpose(matrix) {
+  if (matrix.length === 0) return [];
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  // Build transposed matrix
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function transpose(matrix) {
+  if (matrix.length === 0) return [];
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  const result = Array.from({ length: cols }, () => Array(rows).fill(0));
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      result[j][i] = matrix[i][j];
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+          ],
+        ],
+        expected: [
+          [1, 4],
+          [2, 5],
+          [3, 6],
+        ],
+        description: '2x3 transposed to 3x2',
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+          ],
+        ],
+        expected: [
+          [1, 3],
+          [2, 4],
+        ],
+        description: '2x2 transpose',
+      },
+      {
+        input: [[[1, 2, 3]]],
+        expected: [[1], [2], [3]],
+        description: '1x3 transposed to 3x1',
+      },
+      {
+        input: [[]],
+        expected: [],
+        description: 'Empty matrix',
+      },
+    ],
+    hints: [
+      'The transposed matrix has dimensions cols x rows',
+      'Simply assign result[j][i] = matrix[i][j]',
+      'Use Array.from to create the new matrix with correct dimensions',
+    ],
+    concepts: ['transpose', 'matrix', 'row-column swap', '2D arrays'],
+  },
+  {
+    id: 'js-object-deep-merge',
+    title: 'Deep Merge Two Objects',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    description:
+      'Deep merge two objects: nested objects are merged recursively rather than overwritten.',
+    instructions: [
+      'If both values are plain objects, merge them recursively',
+      'Otherwise, the value from the second object wins',
+      'Arrays are NOT merged, they are replaced',
+      'Return a new object (do not mutate inputs)',
+    ],
+    starterCode: `function deepMerge(target, source) {
+  const result = { ...target };
+  // Recursively merge source into result
+  // YOUR CODE HERE
+
+  return result;
+}`,
+    solutionCode: `function deepMerge(target, source) {
+  const result = { ...target };
+  for (const key of Object.keys(source)) {
+    if (
+      result[key] && typeof result[key] === 'object' && !Array.isArray(result[key]) &&
+      source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])
+    ) {
+      result[key] = deepMerge(result[key], source[key]);
+    } else {
+      result[key] = source[key];
+    }
+  }
+  return result;
+}`,
+    testCases: [
+      {
+        input: [{ a: 1, b: { c: 2, d: 3 } }, { b: { d: 4, e: 5 } }],
+        expected: { a: 1, b: { c: 2, d: 4, e: 5 } },
+        description: 'Nested merge preserves c, updates d, adds e',
+      },
+      {
+        input: [{ a: 1 }, { b: 2 }],
+        expected: { a: 1, b: 2 },
+        description: 'Non-overlapping keys',
+      },
+      {
+        input: [{ a: [1, 2] }, { a: [3, 4] }],
+        expected: { a: [3, 4] },
+        description: 'Arrays are replaced, not merged',
+      },
+      {
+        input: [{ a: { b: { c: 1 } } }, { a: { b: { d: 2 } } }],
+        expected: { a: { b: { c: 1, d: 2 } } },
+        description: 'Deeply nested merge',
+      },
+    ],
+    hints: [
+      'Check if both values are plain objects (not arrays, not null)',
+      'If both are objects, recurse. Otherwise assign source value.',
+      'Spread target first, then override with merged/source values',
+    ],
+    concepts: ['deep merge', 'recursion', 'object manipulation', 'type checking'],
+  },
+  {
+    id: 'js-retry-async',
+    title: 'Retry Async Function',
+    category: 'utilities',
+    difficulty: 'advanced',
+    description:
+      'Implement a retry wrapper that retries a failing async function up to n times with a delay between attempts.',
+    instructions: [
+      'Call the async function',
+      'If it succeeds, return the result',
+      'If it fails and retries remain, wait for delay ms then retry',
+      'If all retries exhausted, throw the last error',
+    ],
+    starterCode: `async function retry(fn, retries, delay) {
+  // Attempt fn up to retries+1 times
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `async function retry(fn, retries, delay) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (i === retries) throw err;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}`,
+    testCases: [
+      {
+        input: ['succeeds-first-try'],
+        expected: 'ok',
+        description: 'Function succeeds immediately, no retries needed',
+      },
+      {
+        input: ['succeeds-after-2'],
+        expected: 'ok',
+        description: 'Fails twice then succeeds on third attempt',
+      },
+      {
+        input: ['always-fails'],
+        expected: 'error',
+        description: 'Exhausts all retries and throws last error',
+      },
+    ],
+    hints: [
+      'Use a for loop from 0 to retries (inclusive)',
+      'Wrap fn() call in try/catch',
+      'Use await new Promise(r => setTimeout(r, delay)) for delay',
+    ],
+    concepts: ['retry', 'async/await', 'error handling', 'delay', 'resilience'],
+  },
+  {
+    id: 'js-throttle-leading-trailing',
+    title: 'Throttle with Leading and Trailing',
+    category: 'utilities',
+    difficulty: 'advanced',
+    description:
+      'Implement throttle that fires on both the leading edge (immediately) and trailing edge (after the interval, with the most recent arguments).',
+    instructions: [
+      'On the first call, invoke immediately (leading edge)',
+      'During the throttle interval, save the most recent arguments',
+      'When the interval expires, if there are saved arguments, invoke with them (trailing edge)',
+      'Reset and allow the next call to fire as leading again',
+    ],
+    starterCode: `function throttle(fn, interval) {
+  let lastArgs = null;
+  let timer = null;
+  // Return throttled function
+  // YOUR CODE HERE
+
+}`,
+    solutionCode: `function throttle(fn, interval) {
+  let lastArgs = null;
+  let timer = null;
+
+  function invoke() {
+    if (lastArgs) {
+      fn.apply(null, lastArgs);
+      lastArgs = null;
+      timer = setTimeout(invoke, interval);
+    } else {
+      timer = null;
+    }
+  }
+
+  return function (...args) {
+    if (!timer) {
+      fn.apply(this, args);
+      timer = setTimeout(invoke, interval);
+    } else {
+      lastArgs = args;
+    }
+  };
+}`,
+    testCases: [
+      {
+        input: ['leading-fires'],
+        expected: true,
+        description: 'First call fires immediately',
+      },
+      {
+        input: ['trailing-fires'],
+        expected: true,
+        description: 'Last call during interval fires after interval',
+      },
+      {
+        input: ['respects-interval'],
+        expected: true,
+        description: 'Calls within interval are throttled',
+      },
+    ],
+    hints: [
+      'Track whether a timer is active to decide leading invocation',
+      'Store the latest args for the trailing call',
+      'After interval, check if trailing args exist to invoke',
+    ],
+    concepts: ['throttle', 'leading edge', 'trailing edge', 'rate limiting', 'closure'],
   },
 ];
 
