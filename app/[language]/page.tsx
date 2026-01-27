@@ -434,7 +434,9 @@ export default function LanguagePage() {
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
           {isDatabaseLanguage
             ? `Master ${config.name} through interactive drills, quizzes, and problem-solving.`
-            : `Master ${config.name} methods through interactive drills, quizzes, and comprehensive references.`}
+            : language === 'typescript'
+              ? `Master ${config.name} types and methods through interactive drills, quizzes, and comprehensive references.`
+              : `Master ${config.name} methods through interactive drills, quizzes, and comprehensive references.`}
         </p>
       </div>
 
@@ -444,7 +446,11 @@ export default function LanguagePage() {
           href={`/${language}/drill`}
           icon={<KeyboardIcon className="w-8 h-8" />}
           title="Drill Mode"
-          description="Type code solutions to method challenges. Build muscle memory and improve your typing speed."
+          description={
+            language === 'typescript'
+              ? 'Type code for utility types, type guards, generics, mapped types, and more. Build muscle memory for the TypeScript type system.'
+              : 'Type code solutions to method challenges. Build muscle memory and improve your typing speed.'
+          }
           buttonText="Start Drilling"
           config={config}
           badge={methodCount > 0 ? `${methodCount} methods` : undefined}
@@ -469,7 +475,9 @@ export default function LanguagePage() {
           description={
             isDatabaseLanguage
               ? 'Train your ability to write queries, use operators, and master database patterns. Build muscle memory for common operations.'
-              : 'Train your ability to use methods, transform data, and write clean solutions. Build muscle memory for common patterns.'
+              : language === 'typescript'
+                ? 'Train your ability to use utility types, type guards, generics, and type-level patterns. Build muscle memory for TypeScript idioms.'
+                : 'Train your ability to use methods, transform data, and write clean solutions. Build muscle memory for common patterns.'
           }
           buttonText="Start Training"
           config={config}

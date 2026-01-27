@@ -604,6 +604,7 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'cartesian-product': CartesianProductViz,
   'cartesian-n-arrays': CartesianNArraysViz,
   'truth-table': TruthTableViz,
+  'truth-table-gen': TruthTableViz,
   'circular-buffer': CircularBufferViz,
   'fenwick-tree-update': FenwickTreeUpdateViz,
   'fenwick-tree-query': FenwickTreeQueryViz,
@@ -618,6 +619,19 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'count-bits': CountBitsViz,
   'toggle-bit': ToggleBitViz,
   'matrix-multiply': MatrixMultiplyViz,
+
+  // Aliases for exercises with slightly different naming conventions
+  'invert-binary-tree': InvertTreeViz,
+  'first-last-position': FindFirstLastViz,
+  'median-two-sorted': MedianSortedArraysViz,
+  'subsets-with-dups': Subsets2Viz,
+  'permutations-with-dups': Permutations2Viz,
+  'flatten-tree-list': FlattenTreeViz,
+  'longest-palindrome-subseq': LongestPalindromeViz,
+  'jump-game-min': JumpGameViz,
+  'sparse-matrix-multiply': MatrixMultiplyViz,
+  'stock-buy-sell-multi': BestTimeToBuySellViz,
+  'subset-sum-count': SubsetSumExistsViz,
 };
 
 /**
