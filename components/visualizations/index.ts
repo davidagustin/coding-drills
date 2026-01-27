@@ -250,6 +250,9 @@ const PipeFunctionsViz = dynamic(() => import('./PipeFunctionsViz'), { ssr: fals
 const UniqueByViz = dynamic(() => import('./UniqueByViz'), { ssr: false });
 const FlattenDeepViz = dynamic(() => import('./FlattenDeepViz'), { ssr: false });
 const OnceFunctionViz = dynamic(() => import('./OnceFunctionViz'), { ssr: false });
+const ZigzagIterationViz = dynamic(() => import('./ZigzagIterationViz'), { ssr: false });
+const TransposeMatrixViz = dynamic(() => import('./TransposeMatrixViz'), { ssr: false });
+const SumRecursiveViz = dynamic(() => import('./SumRecursiveViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -494,6 +497,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'unique-by': UniqueByViz,
   'flatten-deep': FlattenDeepViz,
   'once-function': OnceFunctionViz,
+  'zigzag-iteration': ZigzagIterationViz,
+  'transpose-matrix': TransposeMatrixViz,
+  'sum-recursive': SumRecursiveViz,
 };
 
 /**
