@@ -369,6 +369,38 @@ export default function LanguagePage() {
           <LanguageIcon language={language} className="w-16 h-16" />
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{config.name}</h1>
+
+        {/* Version and Documentation Link */}
+        <div className="flex items-center justify-center gap-4 mb-4 flex-wrap">
+          <span
+            className={`text-sm px-3 py-1 rounded-full ${config.bgColor} ${config.color} ${config.borderColor} border`}
+          >
+            {config.version}
+          </span>
+          <a
+            href={config.docsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`text-sm px-3 py-1 rounded-full ${config.bgColor} ${config.color} ${config.borderColor} border hover:opacity-80 transition-opacity inline-flex items-center gap-1.5`}
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+            Official Docs
+          </a>
+        </div>
+
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
           {isDatabaseLanguage
             ? `Master ${config.name} through interactive drills, quizzes, and problem-solving.`
@@ -401,8 +433,12 @@ export default function LanguagePage() {
         <ModeCard
           href={`/${language}/problems`}
           icon={<ListBulletIcon className="w-8 h-8" />}
-          title="Method Training"
-          description="Train your ability to use methods, transform data, and write clean solutions. Build muscle memory for common patterns."
+          title={isDatabaseLanguage ? 'Query Training' : 'Method Training'}
+          description={
+            isDatabaseLanguage
+              ? 'Train your ability to write queries, use operators, and master database patterns. Build muscle memory for common operations.'
+              : 'Train your ability to use methods, transform data, and write clean solutions. Build muscle memory for common patterns.'
+          }
           buttonText="Start Training"
           config={config}
           badge={`${problemsByLanguage[language as LanguageId]?.length || 0} exercises`}
@@ -443,14 +479,16 @@ export default function LanguagePage() {
           config={config}
         />
 
-        <ModeCard
-          href={`/${language}/interview`}
-          icon={<ChatBubbleIcon className="w-8 h-8" />}
-          title="AI Mock Interview"
-          description="Talk through coding problems with an AI interviewer. Practice explaining your approach and reasoning out loud."
-          buttonText="Start Mock Interview"
-          config={config}
-        />
+        {!isDatabaseLanguage && (
+          <ModeCard
+            href={`/${language}/interview`}
+            icon={<ChatBubbleIcon className="w-8 h-8" />}
+            title="AI Mock Interview"
+            description="Talk through coding problems with an AI interviewer. Practice explaining your approach and reasoning out loud."
+            buttonText="Start Mock Interview"
+            config={config}
+          />
+        )}
       </div>
 
       {/* Stats section (only if user has previous activity) */}

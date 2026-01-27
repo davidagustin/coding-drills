@@ -5,7 +5,13 @@ import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { problemsByLanguage } from '@/lib/problems/index';
 import type { Difficulty, LanguageId, Problem } from '@/lib/types';
-import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from '../config';
+import {
+  getTrainingLabel,
+  isDatabaseLanguage,
+  isValidLanguage,
+  LANGUAGE_CONFIG,
+  type SupportedLanguage,
+} from '../config';
 
 // ============================================================================
 // Types
@@ -472,10 +478,13 @@ export default function ProblemsPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">{config.name} Method Training</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">
+          {config.name} {getTrainingLabel(language)}
+        </h1>
         <p className="text-zinc-400">
-          Train your ability to transform data, use methods, and write clean code with{' '}
-          {allProblems.length} challenges
+          {isDatabaseLanguage(language)
+            ? `Train your ability to write queries, use operators, and master database patterns with ${allProblems.length} challenges`
+            : `Train your ability to transform data, use methods, and write clean code with ${allProblems.length} challenges`}
         </p>
       </div>
 

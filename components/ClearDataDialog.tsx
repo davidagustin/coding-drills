@@ -45,7 +45,7 @@ interface CategoryDef {
 const CATEGORY_DEFS: CategoryDef[] = [
   {
     id: 'problems',
-    label: 'Method Training Progress',
+    label: 'Training Progress',
     description: 'Problem-solving progress per language (drills, streaks)',
     mode: 'prefix',
     keyPattern: 'coding-drills-problems-',

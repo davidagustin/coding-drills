@@ -1,18 +1,36 @@
 <div align="center">
 
+<br />
+
 # Coding Drills
 
-### Master Programming Languages Through Interactive Practice
+### Build Muscle Memory. Master Methods. Become Fluent in Code.
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
-[![Playwright](https://img.shields.io/badge/Playwright-E2E-45ba4b?style=for-the-badge&logo=playwright)](https://playwright.dev/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+<br />
 
-**Build muscle memory. Master methods. Become fluent in code.**
+[![Next.js](https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
+[![License](https://img.shields.io/badge/MIT-green?style=for-the-badge&label=License)](LICENSE)
 
-[Live Demo](https://coding-drills.vercel.app) · [Report Bug](https://github.com/davidagustin/coding-drills/issues) · [Request Feature](https://github.com/davidagustin/coding-drills/issues)
+<br />
+
+An interactive learning platform for mastering programming languages through hands-on practice.
+**9,400+ problems** across **24 languages**, with real-time code execution, algorithm visualizations, and AI mock interviews.
+
+<br />
+
+[**Live Demo**](https://coding-drills.vercel.app) &nbsp;&middot;&nbsp; [Report Bug](https://github.com/davidagustin/coding-drills/issues) &nbsp;&middot;&nbsp; [Request Feature](https://github.com/davidagustin/coding-drills/issues)
+
+<br />
+
+|  |  |  |  |  |  |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| **9,434** | **520** | **1,182** | **25** | **24** | **24** |
+| Problems | Exercises | Methods | Visualizations | Languages | Cheatsheets |
+
+<br />
 
 </div>
 
@@ -20,49 +38,76 @@
 
 ## Overview
 
-**Coding Drills** is a comprehensive, interactive learning platform that transforms programming syntax mastery into an engaging, game-like experience. Built with modern web technologies, it provides hands-on practice across **24 programming languages** through multiple learning modes, real-time code validation, and extensive problem databases.
+**Coding Drills** transforms programming syntax mastery into an engaging, game-like experience. Learning method syntax requires **repetition** and **active recall** &mdash; not passive reading. This platform provides the reps.
 
-### The Problem
-
-Learning programming syntax is like learning vocabulary in a new language—you need **repetition** and **active recall**, not passive reading. Most developers:
-
-- Forget method syntax minutes after looking it up
-- Rely on autocomplete without understanding what methods do
-- Can't write code fluently without constant documentation checks
-
-### The Solution
-
-**Coding Drills** addresses this through interactive, hands-on practice with:
-- **Real-time code execution** and validation
-- **Anti-hardcoding protection** to ensure genuine learning
-- **Multiple learning modes** tailored to different learning styles
-- **Comprehensive problem databases** with 3,400+ coding challenges
-- **Progress tracking** with detailed analytics
+Most developers forget method syntax minutes after looking it up, rely on autocomplete without understanding what methods do, and can't write code fluently without constant documentation checks. Coding Drills fixes that with real-time code execution, anti-hardcoding validation, multiple learning modes, and detailed progress tracking.
 
 ---
 
-## Key Features
+## Learning Modes
 
-### 🎯 Seven Learning Modes
+### Drill
 
-| Mode | Description |
-|------|-------------|
-| **Drill Mode** | Type code solutions with Monaco Editor (VS Code's editor) featuring syntax highlighting and IntelliSense. Real-time execution for JavaScript/TypeScript with scoring based on speed and streaks. Browse problems and jump to individual practice sessions. |
-| **Quiz Mode** | Timed card selection matching inputs to methods. Supports unlimited time option, shows method arguments for context. Scoring system with streaks and leaderboards. |
-| **Problems** | LeetCode-style browsable problem list with filtering by category, difficulty, and completion status. Individual problem pages with split-view layout (description + code editor), prev/next navigation, and progress tracking. |
-| **AI Mock Interview** | Practice coding interviews with AI-powered feedback. Simulates real interview scenarios with hints and explanations. Quick access from homepage for popular languages. |
-| **Algorithm Exercises** | Master traversal patterns (DFS, BFS), recursion, prime generation, Fibonacci, and iteration control. |
-| **Method Reference** | Browse 469+ methods with full documentation, examples, and complexity analysis. |
-| **Cheatsheets** | Comprehensive language cheatsheets covering syntax, data structures, common patterns, and best practices for all 24 languages. |
+Type code solutions in a full Monaco Editor (VS Code's editor engine) with syntax highlighting and IntelliSense. Real-time execution for JavaScript/TypeScript validates your answers instantly. Scoring is based on speed, difficulty, and streaks.
 
-### 🌍 Twenty-Four Languages Supported
+### Quiz
+
+Timed card-selection challenges matching inputs to correct methods. Pick the right method from multiple choices, with optional unlimited time for focused study. Scoring with streaks and accuracy tracking.
+
+### Method Training / Query Training
+
+9,434 browsable coding challenges across 24 languages. Filter by category, difficulty, and completion status. Each problem has a dedicated page with split-view layout (description + code editor), prev/next navigation, and progress tracking. Programming languages show "Method Training"; database languages (PostgreSQL, MySQL, MongoDB) show "Query Training".
+
+### Building Blocks
+
+520 structured algorithm exercises covering traversal patterns (DFS, BFS), recursion, sorting, searching, dynamic programming, and data structures. Each exercise includes:
+- **Learn mode** with detailed explanations and step-by-step breakdowns
+- **Practice mode** with code editor and validation
+- **25 interactive visualizations** that animate algorithm execution in real-time
+
+### AI Mock Interview
+
+Practice coding interviews with AI-powered feedback for programming languages. Simulates real interview scenarios with progressive hints, detailed explanations, and performance assessment. Supports both cloud (OpenAI) and offline (WebLLM) modes.
+
+### Reference
+
+Browse 1,182 methods across 10 languages with full documentation, usage examples, argument descriptions, and time/space complexity analysis.
+
+### Cheatsheet
+
+24 comprehensive language cheatsheets covering syntax fundamentals, data structures, common patterns, and best practices.
+
+---
+
+## Interactive Visualizations
+
+Algorithm exercises include animated, step-through visualizations that show exactly how each algorithm works. Controls include play/pause, step forward/back, speed adjustment, and reset.
+
+<div align="center">
+
+| Category | Visualizations |
+|----------|---------------|
+| **Tree Traversal** | BFS Tree, DFS Tree (pre/in-order) |
+| **Two Pointers** | Palindrome Check, Move Zeroes, Three Sum, Container With Most Water, Trapping Rain Water, Dutch National Flag |
+| **Sliding Window** | Max Sum Subarray, Min Subarray Length, Sliding Window Max, Longest Substring Without Repeating, Min Window Substring |
+| **Binary Search** | Sorted Array Search, Search in Rotated Array |
+| **Data Structures** | Stack Operations, Queue Operations, Linked List Traversal, Min-Heap Insert, Trie Insert |
+| **Other Patterns** | Spiral Matrix, Merge Sorted Arrays, Prefix Sum, Generate Permutations |
+
+</div>
+
+Each visualization pre-computes every algorithm step and renders it through SVG or animated components with color-coded state transitions, pointer tracking, and annotated descriptions per step.
+
+---
+
+## Languages
 
 <div align="center">
 
 | | | | |
 |:---:|:---:|:---:|:---:|
 | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white) |
-| ![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white) | ![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=csharp&logoColor=white) | ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white) | ![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=flat-square&logo=ruby&logoColor=white) |
+| ![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white) | ![C%23](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=csharp&logoColor=white) | ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white) | ![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=flat-square&logo=ruby&logoColor=white) |
 | ![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black) | ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white) | ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white) | ![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white) |
 | ![Swift](https://img.shields.io/badge/Swift-FA7343?style=flat-square&logo=swift&logoColor=white) | ![Scala](https://img.shields.io/badge/Scala-DC322F?style=flat-square&logo=scala&logoColor=white) | ![R](https://img.shields.io/badge/R-276DC3?style=flat-square&logo=r&logoColor=white) | ![Perl](https://img.shields.io/badge/Perl-39457E?style=flat-square&logo=perl&logoColor=white) |
 | ![Lua](https://img.shields.io/badge/Lua-2C2D72?style=flat-square&logo=lua&logoColor=white) | ![Haskell](https://img.shields.io/badge/Haskell-5D4F85?style=flat-square&logo=haskell&logoColor=white) | ![Elixir](https://img.shields.io/badge/Elixir-4B275F?style=flat-square&logo=elixir&logoColor=white) | ![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=dart&logoColor=white) |
@@ -70,140 +115,99 @@ Learning programming syntax is like learning vocabulary in a new language—you 
 
 </div>
 
-### 🛡️ Anti-Hardcoding Protection
+---
 
-Our validation system ensures you actually **learn** the methods, not just memorize outputs:
+## Problem Distribution
+
+<div align="center">
+
+| Language | Problems | | Language | Problems |
+|:---------|:--------:|:---:|:---------|:--------:|
+| TypeScript | 1,015 | | JavaScript | 880 |
+| Clojure | 553 | | PostgreSQL | 518 |
+| Ruby | 491 | | Java | 477 |
+| Python | 465 | | R | 430 |
+| C# | 427 | | MongoDB | 404 |
+| C++ | 395 | | Dart | 366 |
+| MySQL | 362 | | Go | 350 |
+| Swift | 331 | | Lua | 330 |
+| PHP | 312 | | Scala | 301 |
+| Haskell | 300 | | Rust | 257 |
+| Kotlin | 170 | | C | 166 |
+| Elixir | 84 | | Perl | 50 |
+
+</div>
+
+---
+
+## Anti-Hardcoding Protection
+
+The validation system ensures genuine learning by rejecting hardcoded answers and requiring use of the correct methods:
 
 ```javascript
-// ❌ Rejected - hardcoded answer
+// Rejected - hardcoded answer
 "hello world"
 
-// ❌ Rejected - doesn't use the required method
+// Rejected - doesn't use the required method
 str.toLowerCase()
 
-// ✅ Accepted - uses split() correctly
+// Accepted - uses split() correctly
 str.split(" ").join("-")
 ```
 
-### 📊 Progress Tracking
-
-- Track solved problems per language with localStorage persistence
-- View accuracy percentages and streaks
-- Filter problems by completion status (Solved/Attempted/New)
-- Problem count badges showing progress at a glance
-- Cross-tab synchronization
+Each problem defines `validPatterns` (regex patterns the solution must match) and an `expected` output, so every submission is checked for both correctness and method usage.
 
 ---
 
 ## Tech Stack
 
 | Category | Technology |
-|----------|------------|
+|:---------|:-----------|
 | **Framework** | Next.js 16 (App Router) |
-| **Language** | TypeScript 5 |
+| **Language** | TypeScript 5 (strict mode) |
 | **Styling** | Tailwind CSS 4 |
-| **Code Editor** | Monaco Editor (VS Code's editor) |
-| **Testing** | Playwright (8,000+ lines of E2E tests) |
-| **State Management** | React Context + Zustand + localStorage |
-| **Code Execution** | Browser-based JS execution, pattern matching for compiled languages |
-| **AI Integration** | OpenAI SDK + Web LLM for offline AI interviews |
-| **Build Tool** | Turbopack (Next.js) |
-| **Code Quality** | ESLint + Biome + TypeScript strict mode |
+| **Code Editor** | Monaco Editor |
+| **Animation** | Framer Motion (motion/react) |
+| **Testing** | Playwright (8,800+ lines of E2E tests) |
+| **State** | React Context + Zustand + localStorage |
+| **Code Execution** | Browser-based JS/TS execution, pattern matching for compiled languages |
+| **AI** | OpenAI SDK + WebLLM (offline) |
+| **Build** | Turbopack |
+| **Linting** | ESLint + Biome |
 
-### Architecture Highlights
+### Architecture
 
-- **Server Components** for static generation with `generateStaticParams()`
+- **Server Components** for static generation via `generateStaticParams()`
 - **Client Components** for interactive drills with real-time validation
+- **Dynamic imports** for visualization components to minimize bundle size
 - **Type-safe** throughout with comprehensive TypeScript interfaces
-- **Responsive** design from mobile to desktop
-- **Dark mode** by default with theme provider
-- **SEO optimized** with sitemap.ts and robots.ts
-- **Comprehensive E2E testing** with 100% coverage for database languages
-
----
-
-## Project Statistics
-
-<div align="center">
-
-| Metric | Count |
-|--------|-------|
-| **Languages Supported** | 24 |
-| **Coding Problems** | 3,417 |
-| **Method References** | 469 |
-| **Cheatsheets** | 24 |
-| **E2E Test Lines** | 8,156 |
-| **Total Lines of Code** | 137,554+ |
-
-</div>
-
-### Problem Distribution by Language
-
-| Language | Problems | Language | Problems |
-|----------|----------|----------|----------|
-| JavaScript | 738 | TypeScript | 679 |
-| Python | 235 | Java | 196 |
-| Kotlin | 170 | Go | 169 |
-| PHP | 155 | C# | 147 |
-| Ruby | 136 | MongoDB | 130 |
-| Rust | 113 | Dart | 91 |
-| C | 90 | Elixir | 84 |
-| MySQL | 70 | PostgreSQL | 63 |
-| R | 56 | Clojure | 50 |
-| Haskell | 50 | Lua | 50 |
-| Perl | 50 | Scala | 50 |
-| Swift | 50 | C++ | 46 |
+- **Responsive** from mobile to desktop with dark mode default
+- **SEO** optimized with `sitemap.ts` and `robots.ts`
 
 ---
 
 ## Quick Start
 
-### Prerequisites
-
-- Node.js 18+
-- npm, yarn, or pnpm
-
-### Installation
-
 ```bash
-# Clone the repository
 git clone https://github.com/davidagustin/coding-drills.git
 cd coding-drills
-
-# Install dependencies
 pnpm install
-
-# Start development server
 pnpm dev
-
 # Open http://localhost:3000
 ```
 
-### Running Tests
+### Commands
 
 ```bash
-# Run all E2E tests
-pnpm test:e2e
-
-# Run with interactive UI
-pnpm test:e2e:ui
-
-# Run specific test suites
-pnpm test:e2e:drill      # Drill mode tests
-pnpm test:e2e:quiz       # Quiz mode tests
-pnpm test:e2e:problems  # Individual problem tests
-```
-
-### Development Commands
-
-```bash
-pnpm dev              # Start dev server with Turbopack
-pnpm build           # Production build
-pnpm start            # Start production server
-pnpm lint             # Run ESLint
-pnpm lint:biome       # Run Biome linter
-pnpm typecheck        # TypeScript type checking
-pnpm validate         # Run all validation checks
+pnpm dev              # Dev server with Turbopack
+pnpm build            # Production build
+pnpm start            # Production server
+pnpm lint             # ESLint
+pnpm lint:biome       # Biome
+pnpm typecheck        # TypeScript checking
+pnpm validate         # All checks
+pnpm test:e2e         # E2E tests
+pnpm test:e2e:ui      # E2E with Playwright UI
 ```
 
 ---
@@ -213,73 +217,60 @@ pnpm validate         # Run all validation checks
 ```
 coding-drills/
 ├── app/
-│   ├── [language]/           # Dynamic routes per language
-│   │   ├── drill/            # Drill mode - type code solutions
-│   │   ├── quiz/             # Quiz mode - timed method matching
-│   │   ├── problems/         # LeetCode-style problem browser
-│   │   │   └── [problemId]/ # Individual problem pages
-│   │   ├── interview/        # AI Mock Interview mode
-│   │   ├── exercises/        # Algorithm exercises
-│   │   │   └── [exerciseId]/ # Individual exercise pages
-│   │   ├── reference/        # Method reference documentation
-│   │   └── cheatsheet/       # Language cheatsheets
-│   ├── layout.tsx            # Root layout with providers
-│   ├── page.tsx              # Home page with language grid
-│   ├── sitemap.ts            # SEO sitemap generation
-│   └── robots.ts             # SEO robots.txt
+│   ├── [language]/
+│   │   ├── drill/              # Drill mode
+│   │   ├── quiz/               # Quiz mode
+│   │   ├── problems/           # Problem browser
+│   │   │   └── [problemId]/    # Individual problem pages
+│   │   ├── exercises/          # Algorithm exercises
+│   │   │   └── [exerciseId]/   # Exercise pages (learn + practice)
+│   │   ├── interview/          # AI mock interview
+│   │   ├── reference/          # Method reference
+│   │   └── cheatsheet/         # Language cheatsheets
+│   ├── interview/              # Standalone interview landing
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── sitemap.ts
+│   └── robots.ts
 ├── components/
-│   ├── ThemeProvider.tsx     # Dark/light mode context
-│   ├── ProgressProvider.tsx  # Progress tracking context
-│   ├── ErrorBoundary.tsx     # Error handling
-│   └── ...                   # UI components
+│   ├── visualizations/         # 25 interactive algorithm visualizations
+│   │   ├── useVizAnimation.ts  # Shared animation state hook
+│   │   ├── VizControls.tsx     # Shared play/pause/step controls
+│   │   ├── index.ts            # Visualization registry
+│   │   ├── BinarySearchViz.tsx
+│   │   ├── BFSTreeViz.tsx
+│   │   ├── DFSTreeViz.tsx
+│   │   └── ...                 # 22 more visualization components
+│   ├── ThemeProvider.tsx
+│   ├── ProgressProvider.tsx
+│   └── ErrorBoundary.tsx
 ├── lib/
-│   ├── problems/             # 3,417 coding problems (24 languages)
-│   ├── methods/              # 469 method references (10 languages)
-│   ├── cheatsheets/          # Comprehensive cheatsheets (24 languages)
-│   ├── exercises/            # Algorithm exercise definitions
-│   ├── constants/            # Shared constants (difficulty colors, etc.)
-│   ├── codeValidator.ts      # Anti-hardcoding validation
-│   ├── codeRunner.ts         # Code execution engine
-│   ├── quizGenerator.ts      # Quiz question generation
-│   └── types.ts              # TypeScript interfaces
+│   ├── problems/               # 9,434 coding problems (24 languages)
+│   ├── exercises/              # 520 algorithm exercises
+│   ├── methods/                # 1,182 method references (10 languages)
+│   ├── cheatsheets/            # 24 language cheatsheets
+│   ├── constants/
+│   ├── codeValidator.ts        # Anti-hardcoding validation
+│   ├── codeRunner.ts           # Code execution engine
+│   ├── quizGenerator.ts        # Quiz generation
+│   └── types.ts
 ├── hooks/
-│   ├── useDrill.ts           # Drill mode state management
-│   ├── useProblemProgress.ts # Problem progress tracking
-│   └── useProgress.ts        # General progress tracking hook
-├── e2e/
-│   ├── problems/             # Per-problem E2E tests
-│   ├── drill-mode.spec.ts    # Drill mode tests
-│   ├── quiz-mode.spec.ts     # Quiz mode tests
-│   └── reference.spec.ts     # Reference page tests
-└── playwright.config.ts      # E2E test configuration
+│   ├── useDrill.ts
+│   ├── useProblemProgress.ts
+│   └── useProgress.ts
+├── e2e/                        # 8,800+ lines of E2E tests
+└── playwright.config.ts
 ```
 
 ---
 
 ## Contributing
 
-We welcome contributions! This project is perfect for:
+Contributions welcome. This project is approachable for first-time contributors and language enthusiasts.
 
-- **First-time contributors** - Add problems or method references
-- **Frontend developers** - Improve UI/UX or add features
-- **Language enthusiasts** - Add problems for your favorite language
+### Adding a Problem
 
-### Ways to Contribute
-
-| Contribution Type | Difficulty | Impact |
-|-------------------|------------|--------|
-| Add coding problems | 🟢 Easy | High |
-| Add method documentation | 🟢 Easy | High |
-| Add cheatsheet content | 🟢 Easy | High |
-| Fix bugs | 🟡 Medium | Medium |
-| Add new features | 🟡 Medium | High |
-| Improve accessibility | 🟡 Medium | High |
-| Add new languages | 🔴 Hard | Very High |
-
-### Adding a New Problem
-
-1. Navigate to `lib/problems/{language}.ts`
-2. Add a problem following the `Problem` interface:
+Add to `lib/problems/{language}.ts` following the `Problem` interface:
 
 ```typescript
 {
@@ -298,79 +289,63 @@ We welcome contributions! This project is perfect for:
 }
 ```
 
-3. Run tests: `pnpm test:e2e:problems`
-4. Submit a PR!
+Run `pnpm test:e2e:problems` to validate, then submit a PR.
 
-### Development Workflow
+### Contribution Ideas
 
-```bash
-# Create a feature branch
-git checkout -b feature/add-new-problems
-
-# Make your changes
-# ...
-
-# Run linting
-pnpm lint
-
-# Run tests
-pnpm test:e2e
-
-# Commit with conventional commits
-git commit -m "feat: add 25 new Python dictionary problems"
-
-# Push and create PR
-git push origin feature/add-new-problems
-```
+| What | Difficulty |
+|:-----|:----------|
+| Add coding problems | Easy |
+| Add method documentation | Easy |
+| Add cheatsheet content | Easy |
+| Add algorithm exercises | Medium |
+| Add visualizations | Medium |
+| Add new languages | Hard |
 
 ---
 
 ## Roadmap
 
-### ✅ Completed Features
+**Completed:**
+- Monaco Editor with IntelliSense
+- Scoring system with speed/difficulty/streak multipliers
+- JS/TS toggle for bilingual practice
+- 24 languages including 3 databases
+- LeetCode-style problem browser with 9,434 challenges
+- AI mock interviews (cloud + offline)
+- 24 language cheatsheets
+- 520 algorithm exercises with explanations
+- 25 interactive algorithm visualizations
+- 1,182 method references across 10 languages
+- 8,800+ lines of E2E test coverage
+- SEO optimization with sitemap and robots.txt
 
-- [x] **Monaco Editor** - Syntax highlighting and IntelliSense in drill mode
-- [x] **Scoring System** - Points based on speed, difficulty, and streaks
-- [x] **JS/TS Toggle** - Practice JavaScript and TypeScript together
-- [x] **Data Management** - Clear saved data with selective deletion dialog
-- [x] **24 Languages** - Full support for 24 programming languages including databases
-- [x] **LeetCode-style Problems** - Browsable problem list with individual problem pages
-- [x] **AI Mock Interview** - Practice coding interviews with AI feedback
-- [x] **Cheatsheets** - Comprehensive language reference guides
-- [x] **Unlimited Quiz Time** - Option for untimed practice
-- [x] **SEO Optimization** - Sitemap and robots.txt generation
-- [x] **Comprehensive E2E Testing** - 8,000+ lines of test coverage
-
-### 🚀 Planned Features
-
-- [ ] **User Accounts** - Cloud sync for progress across devices
-- [ ] **Spaced Repetition** - Smart review scheduling based on performance
-- [ ] **Multiplayer Mode** - Race against friends in real-time
-- [ ] **Mobile App** - Native iOS/Android apps
-- [ ] **API** - Public API for integration with other learning platforms
-- [ ] **Problem Database Expansion** - Adding more problems per language
+**Planned:**
+- User accounts with cloud sync
+- Spaced repetition scheduling
+- Multiplayer racing mode
+- Mobile app (iOS/Android)
+- Public API
+- More languages and problems
 
 ---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT &mdash; see [LICENSE](LICENSE).
 
 ---
 
 ## Acknowledgments
 
-- Inspired by [LeetCode](https://leetcode.com/), [Exercism](https://exercism.org/), and [Typing.io](https://typing.io/)
-- Built with [Next.js](https://nextjs.org/) and [Tailwind CSS](https://tailwindcss.com/)
-- Icons from [Heroicons](https://heroicons.com/)
-- Code editor powered by [Monaco Editor](https://microsoft.github.io/monaco-editor/)
+Inspired by [LeetCode](https://leetcode.com/), [Exercism](https://exercism.org/), and [Typing.io](https://typing.io/). Built with [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), [Monaco Editor](https://microsoft.github.io/monaco-editor/), and [Framer Motion](https://motion.dev/).
 
 ---
 
 <div align="center">
 
-**Built with ❤️ for developers who want to code faster**
+**Built for developers who want to code faster**
 
-[⬆ Back to Top](#coding-drills)
+[Back to Top](#coding-drills)
 
 </div>

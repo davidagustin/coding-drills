@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
+  getTrainingLabel,
+  isDatabaseLanguage,
   isValidLanguage,
   LANGUAGE_CONFIG,
   SUPPORTED_LANGUAGES,
@@ -11,7 +13,8 @@ import { LanguageIcon } from './LanguageIcon';
 import { SettingsMenu } from './SettingsMenu';
 
 // Mode definitions for navigation
-const MODES = [
+// Note: 'problems' label is dynamic (set in getModes) based on language type
+const BASE_MODES = [
   { slug: 'drill', label: 'Drill', icon: '🎯' },
   { slug: 'quiz', label: 'Quiz', icon: '🧠' },
   { slug: 'problems', label: 'Method Training', icon: '💪' },
@@ -20,6 +23,14 @@ const MODES = [
   { slug: 'cheatsheet', label: 'Cheatsheet', icon: '📋' },
   { slug: 'interview', label: 'AI Mock Interview', icon: '🎙️' },
 ] as const;
+
+function getModes(language: string) {
+  const trainingLabel = getTrainingLabel(language);
+  const isDb = isDatabaseLanguage(language);
+  return BASE_MODES.filter((mode) => !(isDb && mode.slug === 'interview')).map((mode) =>
+    mode.slug === 'problems' ? { ...mode, label: trainingLabel } : mode,
+  );
+}
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -60,11 +71,12 @@ function ModeNav({
   language: string;
   config: (typeof LANGUAGE_CONFIG)[SupportedLanguage];
 }) {
+  const modes = getModes(language);
   return (
     <nav className={`border-b ${config.borderColor} bg-zinc-900/30`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-1 overflow-x-auto py-2 scrollbar-hide">
-          {MODES.map((mode) => (
+          {modes.map((mode) => (
             <Link
               key={mode.slug}
               href={`/${language}/${mode.slug}`}
@@ -127,7 +139,33 @@ export default async function LanguageLayout({ children, params }: LayoutProps) 
               >
                 <LanguageIcon language={language as SupportedLanguage} className="w-4 h-4" />
                 <span className={`text-sm font-medium ${config.color}`}>{config.name}</span>
+                <span className={`text-xs ${config.color} opacity-70`}>{config.version}</span>
               </div>
+
+              {/* Documentation Link */}
+              <a
+                href={config.docsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-xs px-2.5 py-1 rounded-full ${config.bgColor} ${config.color} ${config.borderColor} border hover:opacity-80 transition-opacity inline-flex items-center gap-1`}
+                title="Official Documentation"
+              >
+                <svg
+                  className="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+                Docs
+              </a>
 
               {/* Settings Menu */}
               <SettingsMenu />
