@@ -211,6 +211,9 @@ const ThreeSumViz2 = dynamic(() => import('./ThreeSumViz2'), { ssr: false });
 const MaxSubarrayViz = dynamic(() => import('./MaxSubarrayViz'), { ssr: false });
 const BestTimeToBuySellViz = dynamic(() => import('./BestTimeToBuySellViz'), { ssr: false });
 const MajorityElementViz = dynamic(() => import('./MajorityElementViz'), { ssr: false });
+const ClimbingStairs2Viz = dynamic(() => import('./ClimbingStairs2Viz'), { ssr: false });
+const HouseRobber2Viz = dynamic(() => import('./HouseRobber2Viz'), { ssr: false });
+const CoinChange2Viz = dynamic(() => import('./CoinChange2Viz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -413,6 +416,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'max-subarray': MaxSubarrayViz,
   'best-time-buy-sell': BestTimeToBuySellViz,
   'majority-element': MajorityElementViz,
+  'climbing-stairs-ii': ClimbingStairs2Viz,
+  'house-robber-ii': HouseRobber2Viz,
+  'coin-change-ii': CoinChange2Viz,
 };
 
 /**
