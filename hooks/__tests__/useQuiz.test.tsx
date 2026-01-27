@@ -13,16 +13,25 @@ vi.mock('../useProgress', () => ({
 }));
 
 // Mock useTimer
-vi.mock('../useTimer', () => ({
-  useTimer: () => ({
-    time: 60,
-    formatted: '01:00',
-    isRunning: true,
-    pause: vi.fn(),
-    start: vi.fn(),
-    reset: vi.fn(),
-  }),
-}));
+// Mock useTimer with stable references to avoid infinite loops
+vi.mock('../useTimer', () => {
+  const pause = vi.fn();
+  const start = vi.fn();
+  const reset = vi.fn();
+  const setTime = vi.fn();
+  // Return a hook that returns the SAME functions
+  return {
+    useTimer: () => ({
+      time: 60,
+      formatted: '01:00',
+      isRunning: true,
+      pause,
+      start,
+      reset,
+      setTime,
+    }),
+  };
+});
 
 describe('useQuiz', () => {
   const mockQuestions = [
