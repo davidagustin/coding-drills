@@ -474,7 +474,10 @@ export default function ExerciseDetailPage() {
         <div className="flex gap-2 mb-6">
           <button
             type="button"
-            onClick={() => setViewMode('learn')}
+            onClick={() => {
+              setViewMode('learn');
+              setTimerRunning(false);
+            }}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
               viewMode === 'learn'
                 ? `${config.bgColor} ${config.color}`
@@ -558,10 +561,12 @@ export default function ExerciseDetailPage() {
             >
               <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
                 <span className="text-sm font-medium text-zinc-400">Your Solution</span>
-                <div className="flex items-center gap-2 text-zinc-400">
-                  <ClockIcon className="w-4 h-4" />
-                  <span className="font-mono text-sm">{formatTime(timer)}</span>
-                </div>
+                {viewMode === 'practice' && (
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <ClockIcon className="w-4 h-4" />
+                    <span className="font-mono text-sm">{formatTime(timer)}</span>
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col">

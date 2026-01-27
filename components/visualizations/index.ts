@@ -208,6 +208,9 @@ const IntersectionTwoArraysViz = dynamic(() => import('./IntersectionTwoArraysVi
 const ContainsDuplicateViz = dynamic(() => import('./ContainsDuplicateViz'), { ssr: false });
 const TwoSumViz = dynamic(() => import('./TwoSumViz'), { ssr: false });
 const ThreeSumViz2 = dynamic(() => import('./ThreeSumViz2'), { ssr: false });
+const MaxSubarrayViz = dynamic(() => import('./MaxSubarrayViz'), { ssr: false });
+const BestTimeToBuySellViz = dynamic(() => import('./BestTimeToBuySellViz'), { ssr: false });
+const MajorityElementViz = dynamic(() => import('./MajorityElementViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -407,6 +410,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'contains-duplicate': ContainsDuplicateViz,
   'two-sum': TwoSumViz,
   'three-sum-all': ThreeSumViz2,
+  'max-subarray': MaxSubarrayViz,
+  'best-time-buy-sell': BestTimeToBuySellViz,
+  'majority-element': MajorityElementViz,
 };
 
 /**
