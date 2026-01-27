@@ -39,6 +39,8 @@ const SearchRotatedViz = dynamic(() => import('./SearchRotatedViz'), { ssr: fals
 const QueueViz = dynamic(() => import('./QueueViz'), { ssr: false });
 const MergeSortedViz = dynamic(() => import('./MergeSortedViz'), { ssr: false });
 const MinHeapInsertViz = dynamic(() => import('./MinHeapInsertViz'), { ssr: false });
+const PrefixSumViz = dynamic(() => import('./PrefixSumViz'), { ssr: false });
+const TrieInsertViz = dynamic(() => import('./TrieInsertViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -77,6 +79,8 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'queue-operations': QueueViz,
   'merge-sorted': MergeSortedViz,
   'min-heap-insert': MinHeapInsertViz,
+  'prefix-sum': PrefixSumViz,
+  'trie-insert': TrieInsertViz,
 };
 
 /**
