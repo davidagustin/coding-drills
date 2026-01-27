@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -13,6 +14,8 @@ import {
 } from '@/lib/exercises';
 import type { LanguageId } from '@/lib/types';
 import { isValidLanguage, LANGUAGE_CONFIG } from '../../config';
+
+const ExerciseTutor = dynamic(() => import('@/components/ExerciseTutor'), { ssr: false });
 
 // Icon components
 function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
@@ -787,6 +790,17 @@ export default function ExerciseDetailPage() {
                 </div>
               </div>
             )}
+
+            {/* AI Tutor */}
+            <ExerciseTutor
+              exercise={exercise}
+              hasVisualization={getVisualization(exerciseId) !== null}
+              languageConfig={{
+                color: config.color,
+                bgColor: config.bgColor,
+                borderColor: config.borderColor,
+              }}
+            />
           </div>
         </div>
       </div>
