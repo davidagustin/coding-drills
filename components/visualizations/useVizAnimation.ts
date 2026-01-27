@@ -15,6 +15,7 @@ export interface VizAnimationControls {
   pause: () => void;
   togglePlay: () => void;
   stepForward: () => void;
+  stepBackward: () => void;
   reset: () => void;
   setSpeed: (speed: number) => void;
 }
@@ -83,6 +84,14 @@ export function useVizAnimation(
     }
   }, [step, totalSteps, onStep]);
 
+  const stepBackward = useCallback(() => {
+    if (step > 0) {
+      const prevStep = step - 1;
+      setStep(prevStep);
+      onStep?.(prevStep);
+    }
+  }, [step, onStep]);
+
   const reset = useCallback(() => {
     setStep(0);
     setIsPlaying(false);
@@ -94,6 +103,7 @@ export function useVizAnimation(
     pause,
     togglePlay,
     stepForward,
+    stepBackward,
     reset,
     setSpeed,
   };

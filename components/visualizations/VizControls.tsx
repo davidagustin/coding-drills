@@ -11,8 +11,8 @@ interface VizControlsProps {
  * Shared play/pause/step/reset controls and speed slider for algorithm visualizations.
  */
 export default function VizControls({ controls, accentColor = '#9775fa' }: VizControlsProps) {
-  const { state, togglePlay, stepForward, reset, setSpeed } = controls;
-  const { isPlaying, speed, isComplete } = state;
+  const { state, togglePlay, stepForward, stepBackward, reset, setSpeed } = controls;
+  const { step, isPlaying, speed, isComplete } = state;
 
   return (
     <div className="space-y-3 pt-4">
@@ -28,6 +28,16 @@ export default function VizControls({ controls, accentColor = '#9775fa' }: VizCo
           }}
         >
           {isPlaying ? 'Pause' : isComplete ? 'Replay' : 'Play'}
+        </button>
+
+        <button
+          type="button"
+          onClick={stepBackward}
+          disabled={isPlaying || step === 0}
+          className="px-4 py-2 text-sm font-semibold rounded-lg border-none cursor-pointer text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{ background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)' }}
+        >
+          Back
         </button>
 
         <button
