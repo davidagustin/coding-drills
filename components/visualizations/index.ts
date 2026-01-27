@@ -219,6 +219,16 @@ const CountAndSayViz = dynamic(() => import('./CountAndSayViz'), { ssr: false })
 const ZigZagConversionViz = dynamic(() => import('./ZigZagConversionViz'), { ssr: false });
 const JosephusViz = dynamic(() => import('./JosephusViz'), { ssr: false });
 const DiagonalTraversalViz = dynamic(() => import('./DiagonalTraversalViz'), { ssr: false });
+const SkipEveryOtherViz = dynamic(() => import('./SkipEveryOtherViz'), { ssr: false });
+const ReverseIterationViz = dynamic(() => import('./ReverseIterationViz'), { ssr: false });
+const StepIterationViz = dynamic(() => import('./StepIterationViz'), { ssr: false });
+const NestedLoopMatrixViz = dynamic(() => import('./NestedLoopMatrixViz'), { ssr: false });
+const RotateLeftViz = dynamic(() => import('./RotateLeftViz'), { ssr: false });
+const InterleaveViz = dynamic(() => import('./InterleaveViz'), { ssr: false });
+const ZipArraysViz = dynamic(() => import('./ZipArraysViz'), { ssr: false });
+const UnzipPairsViz = dynamic(() => import('./UnzipPairsViz'), { ssr: false });
+const ChunkArrayViz = dynamic(() => import('./ChunkArrayViz'), { ssr: false });
+const CompactViz = dynamic(() => import('./CompactViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -432,6 +442,16 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'zigzag-string': ZigZagConversionViz,
   josephus: JosephusViz,
   'diagonal-traversal': DiagonalTraversalViz,
+  'skip-every-other': SkipEveryOtherViz,
+  'reverse-iteration': ReverseIterationViz,
+  'step-iteration': StepIterationViz,
+  'nested-loop-matrix': NestedLoopMatrixViz,
+  'rotate-left': RotateLeftViz,
+  interleave: InterleaveViz,
+  'zip-arrays': ZipArraysViz,
+  'unzip-pairs': UnzipPairsViz,
+  'chunk-array': ChunkArrayViz,
+  compact: CompactViz,
 };
 
 /**
