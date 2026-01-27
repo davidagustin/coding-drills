@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { getExerciseCount } from '@/lib/exercises/index';
+import { getMethodCountByLanguage } from '@/lib/methods/index';
 import { problemsByLanguage } from '@/lib/problems/index';
 import type { LanguageId } from '@/lib/types';
 import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from './config';
@@ -350,6 +352,11 @@ export default function LanguagePage() {
   // Database languages don't have algorithm exercises or method references
   const isDatabaseLanguage = ['postgresql', 'mysql', 'mongodb'].includes(language);
 
+  // Get counts for badges
+  const methodCounts = getMethodCountByLanguage();
+  const methodCount = methodCounts[language] || 0;
+  const exerciseCount = !isDatabaseLanguage ? getExerciseCount(language) : 0;
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Back to home link */}
@@ -417,6 +424,7 @@ export default function LanguagePage() {
           description="Type code solutions to method challenges. Build muscle memory and improve your typing speed."
           buttonText="Start Drilling"
           config={config}
+          badge={methodCount > 0 ? `${methodCount} methods` : undefined}
         />
 
         {!isDatabaseLanguage && (
@@ -427,6 +435,7 @@ export default function LanguagePage() {
             description="Match inputs and outputs to methods. Test your knowledge and learn new patterns."
             buttonText="Start Quiz"
             config={config}
+            badge={methodCount > 0 ? `${methodCount} methods` : undefined}
           />
         )}
 
@@ -453,6 +462,7 @@ export default function LanguagePage() {
               description="Master the reusable sub-patterns behind every coding problem: sliding windows, two pointers, binary search variants, DP, and more."
               buttonText="Train Patterns"
               config={config}
+              badge={exerciseCount > 0 ? `${exerciseCount} exercises` : undefined}
             />
 
             <ModeCard
@@ -462,6 +472,7 @@ export default function LanguagePage() {
               description="Browse all methods with examples. A comprehensive guide to the language's built-in methods."
               buttonText="View Reference"
               config={config}
+              badge={methodCount > 0 ? `${methodCount} methods` : undefined}
             />
           </>
         )}
