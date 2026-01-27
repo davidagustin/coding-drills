@@ -289,8 +289,31 @@ export default function ExerciseDetailPage() {
     setResult(null);
 
     try {
-      // Simple JavaScript execution using Function constructor
-      const testCode = userCode;
+      // Transpile TypeScript to JavaScript if needed
+      let testCode = userCode;
+      if (language === 'typescript') {
+        try {
+          const response = await fetch('/api/transpile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: userCode }),
+          });
+          if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.error || 'TypeScript transpilation failed');
+          }
+          const { code: transpiledCode } = await response.json();
+          testCode = transpiledCode;
+        } catch (transpileErr) {
+          setResult({
+            success: false,
+            message: `TypeScript Error: ${transpileErr instanceof Error ? transpileErr.message : 'Transpilation failed'}`,
+          });
+          setIsRunning(false);
+          return;
+        }
+      }
+
       let allPassed = true;
       const messages: string[] = [];
 

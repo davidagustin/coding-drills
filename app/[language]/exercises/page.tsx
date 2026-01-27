@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   DIFFICULTY_CONFIG,
   EXERCISE_CATEGORIES,
   type Exercise,
   type ExerciseCategory,
+  type ExerciseDifficulty,
   getExerciseStats,
   getExercisesByCategory,
   getExercisesForLanguage,
@@ -408,6 +409,8 @@ export default function ExercisesPage() {
   const [mounted, setMounted] = useState(false);
   const [progress, setProgress] = useState<Record<string, ExerciseProgress>>({});
   const [selectedCategory, setSelectedCategory] = useState<ExerciseCategory | 'all'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState<ExerciseDifficulty | 'all'>('all');
 
   // Track mount state for hydration safety
   useEffect(() => {
@@ -430,6 +433,35 @@ export default function ExercisesPage() {
     }
   }, [language, mounted]);
 
+  // Filter exercises based on search query and difficulty
+  // Must be called before early returns to satisfy React hooks rules
+  const filteredExercisesByCategory = useMemo(() => {
+    const byCategory = getExercisesByCategory(language);
+    const result = {} as Record<ExerciseCategory, Exercise[]>;
+
+    for (const cat of Object.keys(byCategory) as ExerciseCategory[]) {
+      let exercises = byCategory[cat];
+
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        exercises = exercises.filter(
+          (ex) =>
+            ex.title.toLowerCase().includes(query) ||
+            ex.description.toLowerCase().includes(query) ||
+            ex.concepts.some((c) => c.toLowerCase().includes(query)),
+        );
+      }
+
+      if (difficultyFilter !== 'all') {
+        exercises = exercises.filter((ex) => ex.difficulty === difficultyFilter);
+      }
+
+      result[cat] = exercises;
+    }
+
+    return result;
+  }, [language, searchQuery, difficultyFilter]);
+
   if (!mounted) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
@@ -446,6 +478,13 @@ export default function ExercisesPage() {
   const exercisesByCategory = getExercisesByCategory(language);
   const allExercises = getExercisesForLanguage(language);
   const categories = Object.keys(exercisesByCategory) as ExerciseCategory[];
+
+  const totalFilteredCount = Object.values(filteredExercisesByCategory).reduce(
+    (sum, exs) => sum + exs.length,
+    0,
+  );
+
+  const hasActiveFilters = searchQuery.trim() !== '' || difficultyFilter !== 'all';
 
   const handleExerciseClick = (exercise: Exercise) => {
     router.push(`/${language}/exercises/${exercise.id}`);
@@ -509,6 +548,54 @@ export default function ExercisesPage() {
       {/* Stats Overview */}
       <StatsOverview language={language} languageConfig={config} progress={progress} />
 
+      {/* Search & Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <div className="flex-1 relative">
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <input
+            type="text"
+            placeholder="Search by name, concept, or keyword..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-10 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 transition-colors"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 cursor-pointer"
+            >
+              ×
+            </button>
+          )}
+        </div>
+
+        <select
+          value={difficultyFilter}
+          onChange={(e) => setDifficultyFilter(e.target.value as ExerciseDifficulty | 'all')}
+          className="bg-zinc-900/50 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-600 cursor-pointer"
+        >
+          <option value="all">All Levels</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery('');
+              setDifficultyFilter('all');
+              setSelectedCategory('all');
+            }}
+            className="text-sm text-zinc-500 hover:text-white px-3 py-2.5 transition-colors whitespace-nowrap"
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
+
       {/* Category Filter */}
       <div className="flex flex-wrap gap-2 mb-8">
         <button
@@ -520,11 +607,11 @@ export default function ExercisesPage() {
               : 'bg-zinc-800 text-zinc-400 hover:text-white'
           }`}
         >
-          All ({allExercises.length})
+          All ({totalFilteredCount})
         </button>
         {categories.map((category) => {
-          const count = exercisesByCategory[category].length;
-          if (count === 0) return null;
+          const count = filteredExercisesByCategory[category].length;
+          if (exercisesByCategory[category].length === 0) return null;
           return (
             <button
               type="button"
@@ -543,12 +630,29 @@ export default function ExercisesPage() {
       </div>
 
       {/* Exercise Categories */}
-      {selectedCategory === 'all' ? (
+      {totalFilteredCount === 0 ? (
+        <div className="text-center py-16">
+          <SearchIcon className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-zinc-400 mb-2">No exercises found</h3>
+          <p className="text-sm text-zinc-500 mb-4">Try adjusting your search or filters</p>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery('');
+              setDifficultyFilter('all');
+              setSelectedCategory('all');
+            }}
+            className={`text-sm ${config.color} hover:underline cursor-pointer`}
+          >
+            Clear all filters
+          </button>
+        </div>
+      ) : selectedCategory === 'all' ? (
         categories.map((category) => (
           <CategorySection
             key={category}
             category={category}
-            exercises={exercisesByCategory[category]}
+            exercises={filteredExercisesByCategory[category]}
             languageConfig={config}
             progress={progress}
             onExerciseClick={handleExerciseClick}
@@ -557,11 +661,18 @@ export default function ExercisesPage() {
       ) : (
         <CategorySection
           category={selectedCategory}
-          exercises={exercisesByCategory[selectedCategory]}
+          exercises={filteredExercisesByCategory[selectedCategory]}
           languageConfig={config}
           progress={progress}
           onExerciseClick={handleExerciseClick}
         />
+      )}
+
+      {/* Results summary when filtering */}
+      {hasActiveFilters && totalFilteredCount > 0 && (
+        <div className="text-center text-sm text-zinc-500 mt-4">
+          Showing {totalFilteredCount} of {allExercises.length} exercises
+        </div>
       )}
     </div>
   );

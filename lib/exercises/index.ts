@@ -8,6 +8,7 @@ import {
   type Exercise,
   type ExerciseCategory,
 } from './types';
+import { typescriptExercises } from './typescript';
 
 // Re-export types
 export * from './types';
@@ -15,7 +16,7 @@ export * from './types';
 // Combined exercises by language
 export const exercisesByLanguage: Record<string, Exercise[]> = {
   javascript: javascriptExercises,
-  typescript: javascriptExercises, // TypeScript uses same exercises as JS for now
+  typescript: typescriptExercises,
   python: pythonExercises,
   // Other languages will use pattern-matching based exercises
   java: [], // TODO: Add Java-specific exercises
