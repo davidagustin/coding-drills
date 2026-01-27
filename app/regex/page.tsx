@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   evaluateRegex,
   getRegexCategories,
@@ -664,28 +664,13 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
   const [pattern, setPattern] = useState('');
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(() => Date.now());
+  const [questionTime, setQuestionTime] = useState(0);
   const [revealedHintCount, setRevealedHintCount] = useState(0);
+  const [currentFeedback, setCurrentFeedback] = useState<RegexAnswerRecord | null>(null);
 
   const debouncedPattern = useDebounce(pattern, 150);
 
   const currentProblem = problems[trainerState.currentIndex];
-
-  const currentProblemRef = useRef(currentProblem);
-  const patternRef = useRef(pattern);
-  const userMatchesRef = useRef<MatchRange[]>([]);
-  const trainerStateRef = useRef(trainerState);
-  const questionStartTimeRef = useRef(questionStartTime);
-  const problemsLengthRef = useRef(problems.length);
-  const onCompleteRef = useRef(onComplete);
-
-  useEffect(() => {
-    currentProblemRef.current = currentProblem;
-    patternRef.current = pattern;
-    trainerStateRef.current = trainerState;
-    questionStartTimeRef.current = questionStartTime;
-    problemsLengthRef.current = problems.length;
-    onCompleteRef.current = onComplete;
-  });
 
   // Timer
   useEffect(() => {
@@ -694,6 +679,17 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
     }, 1000);
     return () => clearInterval(interval);
   }, [trainerState.startTime]);
+
+  // Per-question stopwatch effect
+  // biome-ignore lint/correctness/useExhaustiveDependencies: currentIndex needed to reset timer on question change
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer reset is intentional on question change
+    setQuestionTime(0);
+    const interval = setInterval(() => {
+      setQuestionTime(Date.now() - questionStartTime);
+    }, 100);
+    return () => clearInterval(interval);
+  }, [questionStartTime, trainerState.currentIndex]);
 
   // Live evaluation
   const evalResult = useMemo(() => {
@@ -714,55 +710,68 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
   const isCorrect = evalData?.isCorrect ?? false;
   const regexError = evalResult?.parsed?.error ?? null;
 
-  useEffect(() => {
-    userMatchesRef.current = userMatches;
-  });
-
-  // Auto-advance on correct
-  useEffect(() => {
-    if (!isCorrect || !currentProblemRef.current) return;
-
-    const timer = setTimeout(() => {
-      const problem = currentProblemRef.current;
-      const state = trainerStateRef.current;
-      if (!problem) return;
-
-      const timeTaken = (Date.now() - questionStartTimeRef.current) / 1000;
-      const points = calculatePoints(true, timeTaken, state.streak, problem.difficulty);
-
-      const record: RegexAnswerRecord = {
-        problem,
-        userPattern: patternRef.current,
-        isCorrect: true,
-        actualMatches: userMatchesRef.current,
-        skipped: false,
-        timeTaken,
-        pointsEarned: points,
-      };
-
-      const newStreak = state.streak + 1;
-      const newState: RegexTrainerState = {
-        ...state,
-        answers: [...state.answers, record],
-        totalScore: state.totalScore + points,
-        streak: newStreak,
-        maxStreak: Math.max(state.maxStreak, newStreak),
-        currentIndex: state.currentIndex + 1,
-      };
-
-      if (newState.currentIndex >= problemsLengthRef.current) {
+  const advanceToNext = useCallback(
+    (newState: RegexTrainerState) => {
+      if (newState.currentIndex >= problems.length) {
         newState.endTime = Date.now();
-        onCompleteRef.current(newState);
+        onComplete(newState);
       } else {
         setTrainerState(newState);
         setPattern('');
         setQuestionStartTime(Date.now());
         setRevealedHintCount(0);
       }
-    }, 800);
+    },
+    [problems.length, onComplete],
+  );
 
-    return () => clearTimeout(timer);
-  }, [isCorrect]);
+  const handleSubmit = useCallback(() => {
+    if (!currentProblem) return;
+    if (!pattern.trim() || regexError) return;
+
+    const timeTaken = (Date.now() - questionStartTime) / 1000;
+    const points = calculatePoints(
+      isCorrect,
+      timeTaken,
+      trainerState.streak,
+      currentProblem.difficulty,
+    );
+
+    const record: RegexAnswerRecord = {
+      problem: currentProblem,
+      userPattern: pattern,
+      isCorrect,
+      actualMatches: userMatches,
+      skipped: false,
+      timeTaken,
+      pointsEarned: points,
+    };
+
+    const newStreak = isCorrect ? trainerState.streak + 1 : 0;
+    const newState: RegexTrainerState = {
+      ...trainerState,
+      answers: [...trainerState.answers, record],
+      totalScore: trainerState.totalScore + points,
+      streak: newStreak,
+      maxStreak: Math.max(trainerState.maxStreak, newStreak),
+      currentIndex: trainerState.currentIndex + 1,
+    };
+
+    setCurrentFeedback(record);
+    setTimeout(() => {
+      setCurrentFeedback(null);
+      advanceToNext(newState);
+    }, 1500);
+  }, [
+    currentProblem,
+    pattern,
+    regexError,
+    isCorrect,
+    userMatches,
+    questionStartTime,
+    trainerState,
+    advanceToNext,
+  ]);
 
   const handleSkip = useCallback(() => {
     const timeTaken = (Date.now() - questionStartTime) / 1000;
@@ -783,29 +792,111 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
       currentIndex: trainerState.currentIndex + 1,
     };
 
-    if (newState.currentIndex >= problems.length) {
-      newState.endTime = Date.now();
-      onComplete(newState);
-    } else {
-      setTrainerState(newState);
-      setPattern('');
-      setQuestionStartTime(Date.now());
-      setRevealedHintCount(0);
-    }
-  }, [
-    currentProblem,
-    pattern,
-    userMatches,
-    questionStartTime,
-    trainerState,
-    problems.length,
-    onComplete,
-  ]);
+    setCurrentFeedback(record);
+    setTimeout(() => {
+      setCurrentFeedback(null);
+      advanceToNext(newState);
+    }, 1500);
+  }, [currentProblem, pattern, userMatches, questionStartTime, trainerState, advanceToNext]);
 
   if (!currentProblem) return null;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-32">
+    <div className="max-w-3xl mx-auto space-y-6 pb-32 relative">
+      {/* Snackbar Notification */}
+      {currentFeedback && (
+        <div
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-lg shadow-2xl border px-6 py-4 min-w-[320px] max-w-md animate-in slide-in-from-top-5 fade-in-0 duration-300 ${
+            currentFeedback.skipped
+              ? 'bg-zinc-800 border-zinc-700'
+              : currentFeedback.isCorrect
+                ? 'bg-green-500/20 border-green-500/30 backdrop-blur-sm'
+                : 'bg-red-500/20 border-red-500/30 backdrop-blur-sm'
+          }`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div
+                className={`text-2xl font-bold ${
+                  currentFeedback.skipped
+                    ? 'text-zinc-400'
+                    : currentFeedback.isCorrect
+                      ? 'text-green-400'
+                      : 'text-red-400'
+                }`}
+              >
+                {currentFeedback.skipped ? (
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-7 h-7 inline-block"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polygon points="5,4 15,12 5,20" fill="currentColor" stroke="none" />
+                    <line x1="19" y1="5" x2="19" y2="19" />
+                  </svg>
+                ) : currentFeedback.isCorrect ? (
+                  '\u2713'
+                ) : (
+                  '\u2717'
+                )}
+              </div>
+              <div className="flex-1">
+                <div
+                  className={`text-lg font-semibold ${
+                    currentFeedback.skipped
+                      ? 'text-zinc-300'
+                      : currentFeedback.isCorrect
+                        ? 'text-green-400'
+                        : 'text-red-400'
+                  }`}
+                >
+                  {currentFeedback.skipped
+                    ? 'Skipped'
+                    : currentFeedback.isCorrect
+                      ? 'Correct!'
+                      : 'Incorrect'}
+                </div>
+                <div className="flex items-center gap-3 mt-1 text-sm">
+                  {currentFeedback.isCorrect && currentFeedback.pointsEarned > 0 && (
+                    <span className="text-emerald-400 font-medium">
+                      +{currentFeedback.pointsEarned} pts
+                    </span>
+                  )}
+                  <span className="text-zinc-500">{currentFeedback.timeTaken.toFixed(1)}s</span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="text-zinc-400 hover:text-zinc-300 transition-colors opacity-50"
+              aria-label="Dismiss"
+              disabled
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-label="Close"
+                role="img"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Top Bar */}
       <div className="flex items-center justify-between bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-800">
         <div className="flex items-center gap-6">
@@ -819,7 +910,7 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
             <div className="text-2xl font-bold text-zinc-100 font-mono">
               {formatTime(elapsedSeconds)}
             </div>
-            <div className="text-xs text-zinc-500">Timer</div>
+            <div className="text-xs text-zinc-500">Total Time</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-emerald-500">
@@ -828,12 +919,20 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
             <div className="text-xs text-zinc-500">Score</div>
           </div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-orange-500">
-            {trainerState.streak > 0 && '\uD83D\uDD25 '}
-            {trainerState.streak}
+        <div className="flex items-center gap-6">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-400 font-mono">
+              {(questionTime / 1000).toFixed(1)}s
+            </div>
+            <div className="text-xs text-zinc-500">Question</div>
           </div>
-          <div className="text-xs text-zinc-500">Streak</div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-orange-500">
+              {trainerState.streak > 0 && '\uD83D\uDD25 '}
+              {trainerState.streak}
+            </div>
+            <div className="text-xs text-zinc-500">Streak</div>
+          </div>
         </div>
       </div>
 
@@ -876,16 +975,27 @@ function DrillPhase({ problems, onComplete }: DrillPhaseProps) {
           <RegexInput
             value={pattern}
             onChange={setPattern}
+            onSubmit={handleSubmit}
             error={regexError}
             isCorrect={isCorrect}
+            disabled={!!currentFeedback}
           />
         </div>
 
         <div className="flex gap-3 p-4 bg-zinc-800/50 border-t border-zinc-800">
           <button
             type="button"
+            onClick={handleSubmit}
+            disabled={!pattern.trim() || !!regexError || !!currentFeedback}
+            className="flex-1 py-2.5 px-6 bg-emerald-600 hover:bg-emerald-700 disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors cursor-pointer text-sm"
+          >
+            Submit
+          </button>
+          <button
+            type="button"
             onClick={handleSkip}
-            className="py-2.5 px-6 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 font-medium rounded-lg transition-colors cursor-pointer text-sm"
+            disabled={!!currentFeedback}
+            className="py-2.5 px-6 bg-zinc-700 hover:bg-zinc-600 disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed text-zinc-300 font-medium rounded-lg transition-colors cursor-pointer text-sm"
           >
             Skip
           </button>
@@ -1348,6 +1458,8 @@ function ResultsPhase({ state, onTryAgain, onChangeSettings, onBack }: ResultsPh
 
   const totalQuestions = state.answers.length;
   const correctAnswers = state.answers.filter((a) => a.isCorrect && !a.skipped).length;
+  const skippedAnswers = state.answers.filter((a) => a.skipped).length;
+  const incorrectAnswers = totalQuestions - correctAnswers - skippedAnswers;
   const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
   const avgTimeSeconds =
     totalQuestions > 0
@@ -1388,6 +1500,55 @@ function ResultsPhase({ state, onTryAgain, onChangeSettings, onBack }: ResultsPh
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
           <div className="text-3xl font-bold text-orange-500">{state.maxStreak}</div>
           <div className="text-sm text-zinc-500 mt-1">Max Streak</div>
+        </div>
+      </div>
+
+      {/* Breakdown */}
+      <div className="bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-800">
+        <h3 className="text-lg font-semibold text-zinc-100 mb-4">Breakdown</h3>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-green-500" />
+              <span className="text-zinc-300">Correct</span>
+            </span>
+            <span className="font-medium text-zinc-100">{correctAnswers}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="text-zinc-300">Incorrect</span>
+            </span>
+            <span className="font-medium text-zinc-100">{incorrectAnswers}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-zinc-500" />
+              <span className="text-zinc-300">Skipped</span>
+            </span>
+            <span className="font-medium text-zinc-100">{skippedAnswers}</span>
+          </div>
+        </div>
+        {/* Progress Bar */}
+        <div className="mt-4 h-3 rounded-full overflow-hidden bg-zinc-800 flex">
+          <div
+            className="bg-green-500 h-full"
+            style={{
+              width: `${totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0}%`,
+            }}
+          />
+          <div
+            className="bg-red-500 h-full"
+            style={{
+              width: `${totalQuestions > 0 ? (incorrectAnswers / totalQuestions) * 100 : 0}%`,
+            }}
+          />
+          <div
+            className="bg-zinc-500 h-full"
+            style={{
+              width: `${totalQuestions > 0 ? (skippedAnswers / totalQuestions) * 100 : 0}%`,
+            }}
+          />
         </div>
       </div>
 
