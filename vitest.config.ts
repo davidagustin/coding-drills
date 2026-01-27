@@ -39,6 +39,8 @@ export default defineConfig({
             'lib/**/__tests__/**/*.ts',
             'hooks/**/*.test.{ts,tsx}',
             'hooks/**/__tests__/**/*.{ts,tsx}',
+            'components/**/*.test.{ts,tsx}',
+            'components/**/__tests__/**/*.{ts,tsx}',
           ],
           environment: 'node',
           globals: true,
