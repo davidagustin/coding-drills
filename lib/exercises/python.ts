@@ -160,11 +160,11 @@ export const pythonExercises: Exercise[] = [
     concepts: ['list comprehension', 'filtering', 'transformation'],
   },
 
-  // ========== GENERATION ALGORITHMS ==========
+  // ========== SEQUENCE GENERATION ==========
   {
     id: 'py-prime-generation',
     title: 'Generate Prime Numbers',
-    category: 'generation',
+    category: 'iteration-patterns',
     difficulty: 'intermediate',
     description: 'Generate all prime numbers between 1 and 100.',
     instructions: [
@@ -210,7 +210,7 @@ export const pythonExercises: Exercise[] = [
   {
     id: 'py-fibonacci-generator',
     title: 'Fibonacci Generator',
-    category: 'generation',
+    category: 'iteration-patterns',
     difficulty: 'intermediate',
     description: 'Create a generator function that yields Fibonacci numbers.',
     instructions: [

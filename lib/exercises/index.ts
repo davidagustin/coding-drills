@@ -35,10 +35,12 @@ export function getExercisesForLanguage(language: string): Exercise[] {
 export function getExercisesByCategory(language: string): Record<ExerciseCategory, Exercise[]> {
   const exercises = getExercisesForLanguage(language);
   const byCategory: Record<ExerciseCategory, Exercise[]> = {
+    combinatorics: [],
+    memoization: [],
+    utilities: [],
     traversal: [],
     'iteration-patterns': [],
     recursion: [],
-    generation: [],
     searching: [],
     'data-structures': [],
   };

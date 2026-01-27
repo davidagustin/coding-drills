@@ -472,8 +472,11 @@ export default function ProblemsPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">{config.name} Problems</h1>
-        <p className="text-zinc-400">Browse and solve {allProblems.length} practice problems</p>
+        <h1 className="text-3xl font-bold text-white mb-2">{config.name} Method Training</h1>
+        <p className="text-zinc-400">
+          Train your ability to transform data, use methods, and write clean code with{' '}
+          {allProblems.length} challenges
+        </p>
       </div>
 
       {/* Progress Stats */}
@@ -502,7 +505,7 @@ export default function ProblemsPage() {
               <input
                 id="problems-search"
                 type="text"
-                placeholder="Search problems..."
+                placeholder="Search exercises..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-4 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -558,7 +561,7 @@ export default function ProblemsPage() {
         </div>
       </div>
 
-      {/* Problems Table */}
+      {/* Drills Table */}
       <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
         {/* Table Header */}
         <div className="flex items-center gap-4 px-4 py-3 bg-zinc-800/50 border-b border-zinc-700">
@@ -615,7 +618,7 @@ export default function ProblemsPage() {
 
         {/* Table Body */}
         {filteredProblems.length === 0 ? (
-          <div className="p-8 text-center text-zinc-500">No problems match your filters.</div>
+          <div className="p-8 text-center text-zinc-500">No exercises match your filters.</div>
         ) : (
           <div className="max-h-[600px] overflow-y-auto">
             {filteredProblems.map((problem) => (
@@ -633,7 +636,7 @@ export default function ProblemsPage() {
 
         {/* Table Footer */}
         <div className="px-4 py-3 bg-zinc-800/50 border-t border-zinc-700 text-sm text-zinc-500">
-          Showing {filteredProblems.length} of {allProblems.length} problems
+          Showing {filteredProblems.length} of {allProblems.length} exercises
         </div>
       </div>
     </div>

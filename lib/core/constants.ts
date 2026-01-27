@@ -187,34 +187,44 @@ export const CATEGORY_COLORS: Record<string, string> = {
 // ============================================================================
 
 export const EXERCISE_CATEGORY_CONFIG = {
+  combinatorics: {
+    name: 'Combinatorics',
+    icon: 'generate',
+    description: 'Generate permutations, combinations, subsets, and cartesian products',
+  },
+  memoization: {
+    name: 'Memoization & Caching',
+    icon: 'cache',
+    description: 'Cache results, debounce, throttle, and optimize with memoization',
+  },
+  utilities: {
+    name: 'Array Utilities',
+    icon: 'utility',
+    description: 'Chunk, zip, partition, group, and transform arrays',
+  },
   traversal: {
     name: 'Tree & Graph Traversal',
     icon: 'tree',
-    description: 'Master DFS, BFS, and graph navigation patterns',
+    description: 'BFS, DFS, and graph navigation patterns you can reuse',
   },
   'iteration-patterns': {
     name: 'Iteration Patterns',
     icon: 'loop',
-    description: 'Control loops with skip patterns, step sizes, and conditions',
+    description: 'Sliding windows, two pointers, and iteration control',
   },
   recursion: {
     name: 'Recursion',
     icon: 'recursion',
-    description: 'Solve problems using recursive function calls',
-  },
-  generation: {
-    name: 'Generation Algorithms',
-    icon: 'generate',
-    description: 'Generate sequences, primes, and mathematical patterns',
+    description: 'Recursive patterns for trees, backtracking, and divide-conquer',
   },
   searching: {
-    name: 'Searching',
+    name: 'Search & Sort',
     icon: 'search',
-    description: 'Find elements using linear, binary, and other search methods',
+    description: 'Binary search, merge sorted, and comparison utilities',
   },
   'data-structures': {
     name: 'Data Structures',
     icon: 'structure',
-    description: 'Work with arrays, linked lists, stacks, and queues',
+    description: 'Stacks, queues, heaps, tries, and union-find implementations',
   },
 } as const;

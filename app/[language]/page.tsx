@@ -401,11 +401,11 @@ export default function LanguagePage() {
         <ModeCard
           href={`/${language}/problems`}
           icon={<ListBulletIcon className="w-8 h-8" />}
-          title="Problems"
-          description="Browse and solve individual problems LeetCode-style. Track your progress and master each challenge."
-          buttonText="Browse Problems"
+          title="Method Training"
+          description="Train your ability to use methods, transform data, and write clean solutions. Build muscle memory for common patterns."
+          buttonText="Start Training"
           config={config}
-          badge={`${problemsByLanguage[language as LanguageId]?.length || 0} problems`}
+          badge={`${problemsByLanguage[language as LanguageId]?.length || 0} exercises`}
         />
 
         {!isDatabaseLanguage && (
@@ -413,9 +413,9 @@ export default function LanguagePage() {
             <ModeCard
               href={`/${language}/exercises`}
               icon={<LoopIcon className="w-8 h-8" />}
-              title="Algorithm Exercises"
-              description="Master traversal patterns, DFS/BFS, recursion, and iteration control with guided exercises."
-              buttonText="Start Exercises"
+              title="Building Blocks"
+              description="Master reusable algorithm patterns: permutations, combinations, memoization, and utilities you'll use everywhere."
+              buttonText="Train Patterns"
               config={config}
             />
 

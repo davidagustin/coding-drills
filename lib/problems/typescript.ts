@@ -10933,6 +10933,1603 @@ export const typescriptProblems: Problem[] = [
     hints: ['Null object provides default behavior', 'Avoids null checks throughout code'],
     tags: ['class', 'null-object', 'design-pattern'],
   },
+
+  // ============================================================
+  // Advanced Generics - Conditional Generic Constraints
+  // ============================================================
+  {
+    id: 'ts-adv-gen-700',
+    category: 'Advanced Generics',
+    difficulty: 'medium',
+    title: 'Conditional Generic Return Type',
+    text: 'Create a function that returns different types based on input type',
+    setup: 'type StringOrNumber<T> = T extends string ? string : number;',
+    setupCode: 'type StringOrNumber<T> = T extends string ? string : number;',
+    expected: 'HELLO',
+    sample:
+      'function transform<T extends string | number>(val: T): StringOrNumber<T> { return (typeof val === "string" ? val.toUpperCase() : val * 2) as StringOrNumber<T>; }\ntransform("hello")',
+    hints: ['Use conditional type for return', 'Type assertion may be needed'],
+    tags: ['generics', 'conditional-types', 'advanced'],
+  },
+  {
+    id: 'ts-adv-gen-701',
+    category: 'Advanced Generics',
+    difficulty: 'hard',
+    title: 'Generic Type Constraint with keyof',
+    text: 'Create a generic function that extracts a property value with proper typing',
+    setup: 'interface User { id: number; name: string; email: string; }',
+    setupCode: 'interface User { id: number; name: string; email: string; }',
+    expected: 'Alice',
+    sample:
+      'function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] { return obj[key]; }\nconst user: User = { id: 1, name: "Alice", email: "a@test.com" };\ngetProperty(user, "name")',
+    hints: ['K extends keyof T constrains keys', 'Return type is T[K]'],
+    tags: ['generics', 'keyof', 'indexed-access'],
+  },
+  {
+    id: 'ts-adv-gen-702',
+    category: 'Advanced Generics',
+    difficulty: 'hard',
+    title: 'Higher-Kinded Type Pattern with Generic Interface',
+    text: 'Implement a Functor-like pattern using generics',
+    setup: 'interface Container<T> { value: T; map<U>(fn: (val: T) => U): Container<U>; }',
+    setupCode: 'interface Container<T> { value: T; map<U>(fn: (val: T) => U): Container<U>; }',
+    expected: { value: 10 },
+    sample:
+      'const box: Container<number> = { value: 5, map<U>(fn: (val: number) => U): Container<U> { return { value: fn(this.value), map: this.map } as Container<U>; } };\nbox.map(x => x * 2)',
+    hints: ['Container wraps a value', 'map transforms the inner value'],
+    tags: ['generics', 'functor', 'higher-kinded'],
+  },
+  {
+    id: 'ts-adv-gen-703',
+    category: 'Advanced Generics',
+    difficulty: 'medium',
+    title: 'Generic Default Type Parameter',
+    text: 'Create a generic type with a default type parameter',
+    setup: 'type Response<T = string> = { data: T; status: number; };',
+    setupCode: 'type Response<T = string> = { data: T; status: number; };',
+    expected: { data: 'success', status: 200 },
+    sample: 'const resp: Response = { data: "success", status: 200 };\nresp',
+    hints: ['Default type is used when not specified', 'T = string sets default'],
+    tags: ['generics', 'default-type', 'type-parameter'],
+  },
+  {
+    id: 'ts-adv-gen-704',
+    category: 'Advanced Generics',
+    difficulty: 'hard',
+    title: 'Recursive Generic Constraint',
+    text: 'Create a type that ensures nested objects have same structure',
+    setup: 'type TreeNode<T> = { value: T; children?: TreeNode<T>[]; };',
+    setupCode: 'type TreeNode<T> = { value: T; children?: TreeNode<T>[]; };',
+    expected: { value: 1, children: [{ value: 2 }, { value: 3 }] },
+    sample:
+      'const tree: TreeNode<number> = { value: 1, children: [{ value: 2 }, { value: 3 }] };\ntree',
+    hints: ['TreeNode references itself', 'Children are optional array'],
+    tags: ['generics', 'recursive', 'tree'],
+  },
+  {
+    id: 'ts-adv-gen-705',
+    category: 'Advanced Generics',
+    difficulty: 'medium',
+    title: 'Generic Intersection Constraint',
+    text: 'Create a function that merges two objects with type safety',
+    setup:
+      'function merge<T extends object, U extends object>(a: T, b: U): T & U { return { ...a, ...b }; }',
+    setupCode:
+      'function merge<T extends object, U extends object>(a: T, b: U): T & U { return { ...a, ...b }; }',
+    expected: { x: 1, y: 2 },
+    sample: 'merge({ x: 1 }, { y: 2 })',
+    hints: ['T & U is intersection type', 'Both objects are spread'],
+    tags: ['generics', 'intersection', 'merge'],
+  },
+  {
+    id: 'ts-adv-gen-706',
+    category: 'Advanced Generics',
+    difficulty: 'hard',
+    title: 'Generic Constraint with Multiple Bounds',
+    text: 'Create a generic that requires multiple interface implementations',
+    setup:
+      'interface Named { name: string; }\ninterface Aged { age: number; }\nfunction describe<T extends Named & Aged>(obj: T): string { return `${obj.name} is ${obj.age}`; }',
+    setupCode:
+      'interface Named { name: string; }\ninterface Aged { age: number; }\nfunction describe<T extends Named & Aged>(obj: T): string { return `${obj.name} is ${obj.age}`; }',
+    expected: 'Alice is 30',
+    sample: 'describe({ name: "Alice", age: 30 })',
+    hints: ['T extends A & B requires both', 'Object must have all properties'],
+    tags: ['generics', 'constraints', 'intersection'],
+  },
+  {
+    id: 'ts-adv-gen-707',
+    category: 'Advanced Generics',
+    difficulty: 'medium',
+    title: 'Generic Factory Function',
+    text: 'Create a factory function that instantiates classes generically',
+    setup:
+      'class Animal { constructor(public name: string) {} }\nclass Dog extends Animal { bark() { return "woof"; } }',
+    setupCode:
+      'class Animal { constructor(public name: string) {} }\nclass Dog extends Animal { bark() { return "woof"; } }',
+    expected: 'woof',
+    sample:
+      'function create<T extends Animal>(ctor: new (name: string) => T, name: string): T { return new ctor(name); }\nconst dog = create(Dog, "Rex");\ndog.bark()',
+    hints: ['new () => T is constructor type', 'Factory creates instance'],
+    tags: ['generics', 'factory', 'constructor'],
+  },
+  {
+    id: 'ts-adv-gen-708',
+    category: 'Advanced Generics',
+    difficulty: 'hard',
+    title: 'Variadic Generic Tuple',
+    text: 'Create a function that concatenates two tuples with proper typing',
+    setup:
+      'function concat<T extends unknown[], U extends unknown[]>(a: T, b: U): [...T, ...U] { return [...a, ...b]; }',
+    setupCode:
+      'function concat<T extends unknown[], U extends unknown[]>(a: T, b: U): [...T, ...U] { return [...a, ...b]; }',
+    expected: [1, 2, 'a', 'b'],
+    sample: 'concat([1, 2], ["a", "b"])',
+    hints: ['Spread in tuple type [...T, ...U]', 'Preserves order and types'],
+    tags: ['generics', 'tuple', 'variadic'],
+  },
+  {
+    id: 'ts-adv-gen-709',
+    category: 'Advanced Generics',
+    difficulty: 'hard',
+    title: 'Generic Mapped Type with Constraint',
+    text: 'Create a type that makes all function properties async',
+    setup:
+      'type Asyncify<T> = { [K in keyof T]: T[K] extends (...args: infer A) => infer R ? (...args: A) => Promise<R> : T[K] };',
+    setupCode:
+      'type Asyncify<T> = { [K in keyof T]: T[K] extends (...args: infer A) => infer R ? (...args: A) => Promise<R> : T[K] };',
+    expected: 42,
+    sample:
+      'interface Sync { getValue(): number; name: string; }\nconst obj: Asyncify<Sync> = { getValue: async () => 42, name: "test" };\nobj.getValue().then(v => v)',
+    hints: ['Check if property is function', 'Wrap return in Promise'],
+    tags: ['generics', 'mapped-types', 'async'],
+  },
+
+  // ============================================================
+  // Template Literal Types
+  // ============================================================
+  {
+    id: 'ts-template-710',
+    category: 'Template Literal Types',
+    difficulty: 'easy',
+    title: 'Basic Template Literal Type',
+    text: 'Create a type for CSS unit values',
+    setup: 'type Unit = "px" | "em" | "rem";\ntype CSSValue = `${number}${Unit}`;',
+    setupCode: 'type Unit = "px" | "em" | "rem";\ntype CSSValue = `${number}${Unit}`;',
+    expected: '16px',
+    sample: 'const size: CSSValue = "16px";\nsize',
+    hints: ['Template literal combines types', 'number expands to numeric strings'],
+    tags: ['template-literal', 'string-types', 'css'],
+  },
+  {
+    id: 'ts-template-711',
+    category: 'Template Literal Types',
+    difficulty: 'medium',
+    title: 'Event Handler Type Names',
+    text: 'Create types for event handler method names',
+    setup:
+      'type EventName = "click" | "focus" | "blur";\ntype Handler = `on${Capitalize<EventName>}`;',
+    setupCode:
+      'type EventName = "click" | "focus" | "blur";\ntype Handler = `on${Capitalize<EventName>}`;',
+    expected: 'onClick',
+    sample: 'const handler: Handler = "onClick";\nhandler',
+    hints: ['Capitalize transforms first letter', 'on prefix added'],
+    tags: ['template-literal', 'capitalize', 'events'],
+  },
+  {
+    id: 'ts-template-712',
+    category: 'Template Literal Types',
+    difficulty: 'medium',
+    title: 'Getter and Setter Types',
+    text: 'Create types for getter/setter method names from properties',
+    setup:
+      'type PropName = "name" | "age";\ntype Getter<T extends string> = `get${Capitalize<T>}`;\ntype Setter<T extends string> = `set${Capitalize<T>}`;',
+    setupCode:
+      'type PropName = "name" | "age";\ntype Getter<T extends string> = `get${Capitalize<T>}`;\ntype Setter<T extends string> = `set${Capitalize<T>}`;',
+    expected: 'getName',
+    sample: 'const getter: Getter<"name"> = "getName";\ngetter',
+    hints: ['Getter adds get prefix', 'Capitalize first letter'],
+    tags: ['template-literal', 'getter-setter', 'naming'],
+  },
+  {
+    id: 'ts-template-713',
+    category: 'Template Literal Types',
+    difficulty: 'hard',
+    title: 'Parse Route Parameters',
+    text: 'Extract parameter names from route string type',
+    setup:
+      'type ExtractParams<T extends string> = T extends `${string}:${infer Param}/${infer Rest}` ? Param | ExtractParams<`/${Rest}`> : T extends `${string}:${infer Param}` ? Param : never;',
+    setupCode:
+      'type ExtractParams<T extends string> = T extends `${string}:${infer Param}/${infer Rest}` ? Param | ExtractParams<`/${Rest}`> : T extends `${string}:${infer Param}` ? Param : never;',
+    expected: 'id',
+    sample:
+      'type Route = "/users/:id";\ntype Params = ExtractParams<Route>;\nconst param: Params = "id";\nparam',
+    hints: ['Use infer to extract parts', 'Recursive for multiple params'],
+    tags: ['template-literal', 'infer', 'routing'],
+  },
+  {
+    id: 'ts-template-714',
+    category: 'Template Literal Types',
+    difficulty: 'medium',
+    title: 'String Case Transformations',
+    text: 'Use built-in string transformation types',
+    setup: 'type Original = "HelloWorld";',
+    setupCode: 'type Original = "HelloWorld";',
+    expected: 'helloworld',
+    sample: 'type Lower = Lowercase<Original>;\nconst val: Lower = "helloworld";\nval',
+    hints: ['Lowercase transforms all chars', 'Built-in utility type'],
+    tags: ['template-literal', 'lowercase', 'transformation'],
+  },
+  {
+    id: 'ts-template-715',
+    category: 'Template Literal Types',
+    difficulty: 'hard',
+    title: 'Split String Type',
+    text: 'Create a type that splits a string by delimiter',
+    setup:
+      'type Split<S extends string, D extends string> = S extends `${infer Head}${D}${infer Tail}` ? [Head, ...Split<Tail, D>] : [S];',
+    setupCode:
+      'type Split<S extends string, D extends string> = S extends `${infer Head}${D}${infer Tail}` ? [Head, ...Split<Tail, D>] : [S];',
+    expected: ['a', 'b', 'c'],
+    sample: 'type Parts = Split<"a-b-c", "-">;\nconst parts: Parts = ["a", "b", "c"];\nparts',
+    hints: ['Recursively split string', 'Use tuple spread'],
+    tags: ['template-literal', 'split', 'recursive'],
+  },
+  {
+    id: 'ts-template-716',
+    category: 'Template Literal Types',
+    difficulty: 'hard',
+    title: 'Join Tuple to String Type',
+    text: 'Create a type that joins tuple elements with delimiter',
+    setup:
+      'type Join<T extends string[], D extends string> = T extends [infer First extends string] ? First : T extends [infer First extends string, ...infer Rest extends string[]] ? `${First}${D}${Join<Rest, D>}` : "";',
+    setupCode:
+      'type Join<T extends string[], D extends string> = T extends [infer First extends string] ? First : T extends [infer First extends string, ...infer Rest extends string[]] ? `${First}${D}${Join<Rest, D>}` : "";',
+    expected: 'a-b-c',
+    sample: 'type Joined = Join<["a", "b", "c"], "-">;\nconst result: Joined = "a-b-c";\nresult',
+    hints: ['Handle single element case', 'Recursive with accumulator'],
+    tags: ['template-literal', 'join', 'recursive'],
+  },
+  {
+    id: 'ts-template-717',
+    category: 'Template Literal Types',
+    difficulty: 'medium',
+    title: 'Kebab Case to Camel Case',
+    text: 'Convert kebab-case string type to camelCase',
+    setup:
+      'type KebabToCamel<S extends string> = S extends `${infer Head}-${infer Tail}` ? `${Head}${KebabToCamel<Capitalize<Tail>>}` : S;',
+    setupCode:
+      'type KebabToCamel<S extends string> = S extends `${infer Head}-${infer Tail}` ? `${Head}${KebabToCamel<Capitalize<Tail>>}` : S;',
+    expected: 'backgroundColor',
+    sample:
+      'type Camel = KebabToCamel<"background-color">;\nconst prop: Camel = "backgroundColor";\nprop',
+    hints: ['Find dash and capitalize next', 'Recursive transformation'],
+    tags: ['template-literal', 'kebab-case', 'camel-case'],
+  },
+  {
+    id: 'ts-template-718',
+    category: 'Template Literal Types',
+    difficulty: 'hard',
+    title: 'Type-Safe SQL Query Builder',
+    text: 'Create types for SQL column selection',
+    setup:
+      'type Columns = "id" | "name" | "email";\ntype SelectQuery<T extends string> = `SELECT ${T} FROM users`;',
+    setupCode:
+      'type Columns = "id" | "name" | "email";\ntype SelectQuery<T extends string> = `SELECT ${T} FROM users`;',
+    expected: 'SELECT id, name FROM users',
+    sample: 'const query: SelectQuery<"id, name"> = "SELECT id, name FROM users";\nquery',
+    hints: ['Template literal for SQL', 'Columns inserted in template'],
+    tags: ['template-literal', 'sql', 'query-builder'],
+  },
+  {
+    id: 'ts-template-719',
+    category: 'Template Literal Types',
+    difficulty: 'medium',
+    title: 'Remove Prefix from String Type',
+    text: 'Create a type that removes a prefix from string',
+    setup:
+      'type RemovePrefix<S extends string, P extends string> = S extends `${P}${infer Rest}` ? Rest : S;',
+    setupCode:
+      'type RemovePrefix<S extends string, P extends string> = S extends `${P}${infer Rest}` ? Rest : S;',
+    expected: 'Name',
+    sample:
+      'type WithoutGet = RemovePrefix<"getName", "get">;\nconst name: WithoutGet = "Name";\nname',
+    hints: ['Pattern match prefix', 'Return rest if matches'],
+    tags: ['template-literal', 'prefix', 'string-manipulation'],
+  },
+
+  // ============================================================
+  // Mapped Types - Advanced
+  // ============================================================
+  {
+    id: 'ts-mapped-720',
+    category: 'Mapped Types',
+    difficulty: 'medium',
+    title: 'Readonly Deep Type',
+    text: 'Create a deeply readonly type',
+    setup:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
+    setupCode:
+      'type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };',
+    expected: { a: { b: 1 } },
+    sample:
+      'type Nested = { a: { b: number } };\nconst obj: DeepReadonly<Nested> = { a: { b: 1 } };\nobj',
+    hints: ['Recursive for nested objects', 'readonly modifier on all'],
+    tags: ['mapped-types', 'readonly', 'deep'],
+  },
+  {
+    id: 'ts-mapped-721',
+    category: 'Mapped Types',
+    difficulty: 'hard',
+    title: 'Remap Keys with Template Literal',
+    text: 'Create a type that prefixes all keys',
+    setup:
+      'type Prefixed<T, P extends string> = { [K in keyof T as `${P}${Capitalize<string & K>}`]: T[K] };',
+    setupCode:
+      'type Prefixed<T, P extends string> = { [K in keyof T as `${P}${Capitalize<string & K>}`]: T[K] };',
+    expected: { getUserName: 'Alice' },
+    sample:
+      'type User = { name: string };\ntype WithGet = Prefixed<User, "get">;\nconst obj: WithGet = { getName: "Alice" };\n({ getUserName: obj.getName })',
+    hints: ['as clause remaps keys', 'Capitalize for camelCase'],
+    tags: ['mapped-types', 'key-remapping', 'template-literal'],
+  },
+  {
+    id: 'ts-mapped-722',
+    category: 'Mapped Types',
+    difficulty: 'medium',
+    title: 'Optional to Required with Default',
+    text: 'Create a type that provides defaults for optional properties',
+    setup:
+      'type WithDefaults<T, D extends Partial<T>> = { [K in keyof T]-?: K extends keyof D ? NonNullable<T[K]> : T[K] };',
+    setupCode:
+      'type WithDefaults<T, D extends Partial<T>> = { [K in keyof T]-?: K extends keyof D ? NonNullable<T[K]> : T[K] };',
+    expected: { name: 'test', age: 0 },
+    sample:
+      'type Config = { name?: string; age?: number };\ntype Defaults = { age: number };\nconst config: WithDefaults<Config, Defaults> = { name: "test", age: 0 };\nconfig',
+    hints: ['-? removes optional', 'Check if key has default'],
+    tags: ['mapped-types', 'optional', 'defaults'],
+  },
+  {
+    id: 'ts-mapped-723',
+    category: 'Mapped Types',
+    difficulty: 'hard',
+    title: 'Filter Keys by Value Type',
+    text: 'Create a type that keeps only string properties',
+    setup: 'type StringKeys<T> = { [K in keyof T as T[K] extends string ? K : never]: T[K] };',
+    setupCode: 'type StringKeys<T> = { [K in keyof T as T[K] extends string ? K : never]: T[K] };',
+    expected: { name: 'Alice' },
+    sample:
+      'type Mixed = { name: string; age: number; active: boolean };\nconst strings: StringKeys<Mixed> = { name: "Alice" };\nstrings',
+    hints: ['as clause with conditional', 'never removes key'],
+    tags: ['mapped-types', 'filter', 'conditional'],
+  },
+  {
+    id: 'ts-mapped-724',
+    category: 'Mapped Types',
+    difficulty: 'medium',
+    title: 'Mutable from Readonly',
+    text: 'Create a type that removes readonly modifier',
+    setup: 'type Mutable<T> = { -readonly [K in keyof T]: T[K] };',
+    setupCode: 'type Mutable<T> = { -readonly [K in keyof T]: T[K] };',
+    expected: { x: 10 },
+    sample:
+      'type Frozen = { readonly x: number };\nconst obj: Mutable<Frozen> = { x: 5 };\nobj.x = 10;\nobj',
+    hints: ['-readonly removes modifier', 'Allows mutation'],
+    tags: ['mapped-types', 'mutable', 'readonly'],
+  },
+  {
+    id: 'ts-mapped-725',
+    category: 'Mapped Types',
+    difficulty: 'hard',
+    title: 'Getter Type Generator',
+    text: 'Create a type that generates getter methods for all properties',
+    setup: 'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };',
+    setupCode:
+      'type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };',
+    expected: 'Alice',
+    sample:
+      'type User = { name: string; age: number };\nconst getters: Getters<User> = { getName: () => "Alice", getAge: () => 30 };\ngetters.getName()',
+    hints: ['Key remapping with as', 'Value becomes function returning original type'],
+    tags: ['mapped-types', 'getters', 'key-remapping'],
+  },
+  {
+    id: 'ts-mapped-726',
+    category: 'Mapped Types',
+    difficulty: 'medium',
+    title: 'Nullable Properties',
+    text: 'Create a type where all properties can be null',
+    setup: 'type Nullable<T> = { [K in keyof T]: T[K] | null };',
+    setupCode: 'type Nullable<T> = { [K in keyof T]: T[K] | null };',
+    expected: { name: null, age: 25 },
+    sample:
+      'type User = { name: string; age: number };\nconst user: Nullable<User> = { name: null, age: 25 };\nuser',
+    hints: ['Union with null', 'All properties affected'],
+    tags: ['mapped-types', 'nullable', 'union'],
+  },
+  {
+    id: 'ts-mapped-727',
+    category: 'Mapped Types',
+    difficulty: 'hard',
+    title: 'Pick by Value Type',
+    text: 'Create a type that picks properties by their value type',
+    setup: 'type PickByType<T, U> = { [K in keyof T as T[K] extends U ? K : never]: T[K] };',
+    setupCode: 'type PickByType<T, U> = { [K in keyof T as T[K] extends U ? K : never]: T[K] };',
+    expected: { age: 30, score: 100 },
+    sample:
+      'type Mixed = { name: string; age: number; active: boolean; score: number };\nconst nums: PickByType<Mixed, number> = { age: 30, score: 100 };\nnums',
+    hints: ['Filter by value type', 'Use conditional in as clause'],
+    tags: ['mapped-types', 'pick', 'filter-by-type'],
+  },
+  {
+    id: 'ts-mapped-728',
+    category: 'Mapped Types',
+    difficulty: 'hard',
+    title: 'Omit by Value Type',
+    text: 'Create a type that omits properties by their value type',
+    setup: 'type OmitByType<T, U> = { [K in keyof T as T[K] extends U ? never : K]: T[K] };',
+    setupCode: 'type OmitByType<T, U> = { [K in keyof T as T[K] extends U ? never : K]: T[K] };',
+    expected: { name: 'test', active: true },
+    sample:
+      'type Mixed = { name: string; age: number; active: boolean };\nconst noNums: OmitByType<Mixed, number> = { name: "test", active: true };\nnoNums',
+    hints: ['Inverse of PickByType', 'never removes the key'],
+    tags: ['mapped-types', 'omit', 'filter-by-type'],
+  },
+  {
+    id: 'ts-mapped-729',
+    category: 'Mapped Types',
+    difficulty: 'medium',
+    title: 'Promisify Object Methods',
+    text: 'Create a type that wraps all method return types in Promise',
+    setup:
+      'type Promisified<T> = { [K in keyof T]: T[K] extends (...args: infer A) => infer R ? (...args: A) => Promise<R> : T[K] };',
+    setupCode:
+      'type Promisified<T> = { [K in keyof T]: T[K] extends (...args: infer A) => infer R ? (...args: A) => Promise<R> : T[K] };',
+    expected: 42,
+    sample:
+      'type Sync = { getValue(): number };\nconst async: Promisified<Sync> = { getValue: async () => 42 };\nasync.getValue().then(v => v)',
+    hints: ['Check if function type', 'Wrap return in Promise'],
+    tags: ['mapped-types', 'promise', 'async'],
+  },
+
+  // ============================================================
+  // Conditional Types
+  // ============================================================
+  {
+    id: 'ts-cond-730',
+    category: 'Conditional Types',
+    difficulty: 'easy',
+    title: 'Basic Conditional Type',
+    text: 'Create a type that checks if type is string',
+    setup: 'type IsString<T> = T extends string ? true : false;',
+    setupCode: 'type IsString<T> = T extends string ? true : false;',
+    expected: true,
+    sample: 'type Result = IsString<"hello">;\nconst val: Result = true;\nval',
+    hints: ['extends checks assignability', 'Returns literal true or false'],
+    tags: ['conditional-types', 'type-check', 'boolean'],
+  },
+  {
+    id: 'ts-cond-731',
+    category: 'Conditional Types',
+    difficulty: 'medium',
+    title: 'Distributive Conditional Type',
+    text: 'Demonstrate distributive behavior over union',
+    setup: 'type ToArray<T> = T extends any ? T[] : never;',
+    setupCode: 'type ToArray<T> = T extends any ? T[] : never;',
+    expected: [1],
+    sample: 'type Distributed = ToArray<string | number>;\nconst arr: number[] = [1];\narr',
+    hints: ['Distributes over union', 'string | number becomes string[] | number[]'],
+    tags: ['conditional-types', 'distributive', 'union'],
+  },
+  {
+    id: 'ts-cond-732',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Non-Distributive Conditional',
+    text: 'Create a conditional type that does not distribute',
+    setup: 'type ToArrayNonDist<T> = [T] extends [any] ? T[] : never;',
+    setupCode: 'type ToArrayNonDist<T> = [T] extends [any] ? T[] : never;',
+    expected: ['a', 1],
+    sample:
+      'type NonDist = ToArrayNonDist<string | number>;\nconst arr: (string | number)[] = ["a", 1];\narr',
+    hints: ['Wrap in tuple to prevent distribution', '[T] extends [any]'],
+    tags: ['conditional-types', 'non-distributive', 'tuple'],
+  },
+  {
+    id: 'ts-cond-733',
+    category: 'Conditional Types',
+    difficulty: 'medium',
+    title: 'Extract Function Return Type',
+    text: 'Create a type that extracts return type of function',
+    setup: 'type GetReturn<T> = T extends (...args: any[]) => infer R ? R : never;',
+    setupCode: 'type GetReturn<T> = T extends (...args: any[]) => infer R ? R : never;',
+    expected: 'test',
+    sample: 'type Fn = () => string;\ntype Ret = GetReturn<Fn>;\nconst val: Ret = "test";\nval',
+    hints: ['infer captures return type', 'R is inferred from function'],
+    tags: ['conditional-types', 'infer', 'return-type'],
+  },
+  {
+    id: 'ts-cond-734',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Nested Conditional Types',
+    text: 'Create a type that categorizes values',
+    setup:
+      'type Category<T> = T extends string ? "text" : T extends number ? "numeric" : T extends boolean ? "flag" : "other";',
+    setupCode:
+      'type Category<T> = T extends string ? "text" : T extends number ? "numeric" : T extends boolean ? "flag" : "other";',
+    expected: 'text',
+    sample: 'type Cat = Category<string>;\nconst cat: Cat = "text";\ncat',
+    hints: ['Chain conditionals', 'Last is default case'],
+    tags: ['conditional-types', 'nested', 'categorization'],
+  },
+  {
+    id: 'ts-cond-735',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Conditional Type with Union Filtering',
+    text: 'Filter union to only function types',
+    setup: 'type FunctionsOnly<T> = T extends (...args: any[]) => any ? T : never;',
+    setupCode: 'type FunctionsOnly<T> = T extends (...args: any[]) => any ? T : never;',
+    expected: 42,
+    sample:
+      'type Mixed = string | (() => number) | number | (() => string);\ntype Fns = FunctionsOnly<Mixed>;\nconst fn: Fns = () => 42;\nfn()',
+    hints: ['never removes from union', 'Distribution filters automatically'],
+    tags: ['conditional-types', 'filter', 'functions'],
+  },
+  {
+    id: 'ts-cond-736',
+    category: 'Conditional Types',
+    difficulty: 'medium',
+    title: 'Flatten Array Type',
+    text: 'Create a type that unwraps one level of array',
+    setup: 'type Flatten<T> = T extends (infer U)[] ? U : T;',
+    setupCode: 'type Flatten<T> = T extends (infer U)[] ? U : T;',
+    expected: 'hello',
+    sample: 'type Arr = string[];\ntype Elem = Flatten<Arr>;\nconst val: Elem = "hello";\nval',
+    hints: ['infer U inside array type', 'Returns element type'],
+    tags: ['conditional-types', 'flatten', 'array'],
+  },
+  {
+    id: 'ts-cond-737',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Deep Flatten Type',
+    text: 'Recursively flatten nested array types',
+    setup: 'type DeepFlatten<T> = T extends (infer U)[] ? DeepFlatten<U> : T;',
+    setupCode: 'type DeepFlatten<T> = T extends (infer U)[] ? DeepFlatten<U> : T;',
+    expected: 42,
+    sample:
+      'type Nested = number[][][];\ntype Flat = DeepFlatten<Nested>;\nconst val: Flat = 42;\nval',
+    hints: ['Recursive type definition', 'Stops when not array'],
+    tags: ['conditional-types', 'deep-flatten', 'recursive'],
+  },
+  {
+    id: 'ts-cond-738',
+    category: 'Conditional Types',
+    difficulty: 'medium',
+    title: 'Exclude Null and Undefined',
+    text: 'Create a type that removes null and undefined',
+    setup: 'type NonNullish<T> = T extends null | undefined ? never : T;',
+    setupCode: 'type NonNullish<T> = T extends null | undefined ? never : T;',
+    expected: 'valid',
+    sample:
+      'type Maybe = string | null | undefined;\ntype Defined = NonNullish<Maybe>;\nconst val: Defined = "valid";\nval',
+    hints: ['Distribution removes nullish', 'never disappears from union'],
+    tags: ['conditional-types', 'non-nullable', 'filter'],
+  },
+  {
+    id: 'ts-cond-739',
+    category: 'Conditional Types',
+    difficulty: 'hard',
+    title: 'Type Equality Check',
+    text: 'Create a type that checks if two types are equal',
+    setup: 'type Equals<T, U> = [T] extends [U] ? [U] extends [T] ? true : false : false;',
+    setupCode: 'type Equals<T, U> = [T] extends [U] ? [U] extends [T] ? true : false : false;',
+    expected: true,
+    sample: 'type Same = Equals<string, string>;\nconst result: Same = true;\nresult',
+    hints: ['Check both directions', 'Wrap to prevent distribution'],
+    tags: ['conditional-types', 'equality', 'type-check'],
+  },
+
+  // ============================================================
+  // Infer Keyword
+  // ============================================================
+  {
+    id: 'ts-infer-740',
+    category: 'Infer Keyword',
+    difficulty: 'easy',
+    title: 'Infer Array Element Type',
+    text: 'Extract the element type from an array',
+    setup: 'type ElementOf<T> = T extends (infer E)[] ? E : never;',
+    setupCode: 'type ElementOf<T> = T extends (infer E)[] ? E : never;',
+    expected: 42,
+    sample: 'type Nums = number[];\ntype Elem = ElementOf<Nums>;\nconst val: Elem = 42;\nval',
+    hints: ['infer in array position', 'E captures element type'],
+    tags: ['infer', 'array', 'element-type'],
+  },
+  {
+    id: 'ts-infer-741',
+    category: 'Infer Keyword',
+    difficulty: 'medium',
+    title: 'Infer Promise Resolved Type',
+    text: 'Extract the resolved type from Promise',
+    setup: 'type Unpromise<T> = T extends Promise<infer R> ? R : T;',
+    setupCode: 'type Unpromise<T> = T extends Promise<infer R> ? R : T;',
+    expected: 'done',
+    sample:
+      'type P = Promise<string>;\ntype Resolved = Unpromise<P>;\nconst val: Resolved = "done";\nval',
+    hints: ['infer inside Promise<>', 'R is resolved type'],
+    tags: ['infer', 'promise', 'unwrap'],
+  },
+  {
+    id: 'ts-infer-742',
+    category: 'Infer Keyword',
+    difficulty: 'medium',
+    title: 'Infer Function Parameters',
+    text: 'Extract parameter types as tuple',
+    setup: 'type Params<T> = T extends (...args: infer P) => any ? P : never;',
+    setupCode: 'type Params<T> = T extends (...args: infer P) => any ? P : never;',
+    expected: ['hello', 42],
+    sample:
+      'type Fn = (a: string, b: number) => void;\ntype Args = Params<Fn>;\nconst args: Args = ["hello", 42];\nargs',
+    hints: ['infer in rest position', 'Returns tuple type'],
+    tags: ['infer', 'parameters', 'tuple'],
+  },
+  {
+    id: 'ts-infer-743',
+    category: 'Infer Keyword',
+    difficulty: 'hard',
+    title: 'Infer First Parameter',
+    text: 'Extract only the first parameter type',
+    setup: 'type FirstParam<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;',
+    setupCode:
+      'type FirstParam<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;',
+    expected: 'test',
+    sample:
+      'type Fn = (a: string, b: number, c: boolean) => void;\ntype First = FirstParam<Fn>;\nconst val: First = "test";\nval',
+    hints: ['Destructure in infer', 'first: infer F captures first'],
+    tags: ['infer', 'first-parameter', 'function'],
+  },
+  {
+    id: 'ts-infer-744',
+    category: 'Infer Keyword',
+    difficulty: 'hard',
+    title: 'Infer Constructor Parameters',
+    text: 'Extract constructor parameter types from class',
+    setup: 'type CtorParams<T> = T extends new (...args: infer P) => any ? P : never;',
+    setupCode: 'type CtorParams<T> = T extends new (...args: infer P) => any ? P : never;',
+    expected: ['Alice', 30],
+    sample:
+      'class User { constructor(public name: string, public age: number) {} }\ntype Args = CtorParams<typeof User>;\nconst args: Args = ["Alice", 30];\nargs',
+    hints: ['new (...args) for constructor', 'typeof Class for constructor type'],
+    tags: ['infer', 'constructor', 'class'],
+  },
+  {
+    id: 'ts-infer-745',
+    category: 'Infer Keyword',
+    difficulty: 'hard',
+    title: 'Infer Instance Type',
+    text: 'Extract the instance type from a constructor',
+    setup: 'type Instance<T> = T extends new (...args: any[]) => infer I ? I : never;',
+    setupCode: 'type Instance<T> = T extends new (...args: any[]) => infer I ? I : never;',
+    expected: { name: 'Bob' },
+    sample:
+      'class Person { constructor(public name: string) {} }\ntype P = Instance<typeof Person>;\nconst person: P = { name: "Bob" };\nperson',
+    hints: ['infer in return position', 'Returns instance type'],
+    tags: ['infer', 'instance', 'constructor'],
+  },
+  {
+    id: 'ts-infer-746',
+    category: 'Infer Keyword',
+    difficulty: 'hard',
+    title: 'Multiple Infer in Same Pattern',
+    text: 'Extract both key and value types from Map',
+    setup: 'type MapTypes<T> = T extends Map<infer K, infer V> ? { key: K; value: V } : never;',
+    setupCode: 'type MapTypes<T> = T extends Map<infer K, infer V> ? { key: K; value: V } : never;',
+    expected: { key: 'id', value: 42 },
+    sample:
+      'type M = Map<string, number>;\ntype Types = MapTypes<M>;\nconst types: Types = { key: "id", value: 42 };\ntypes',
+    hints: ['Multiple infer captures', 'K and V extracted separately'],
+    tags: ['infer', 'map', 'multiple-infer'],
+  },
+  {
+    id: 'ts-infer-747',
+    category: 'Infer Keyword',
+    difficulty: 'hard',
+    title: 'Infer Tuple First and Rest',
+    text: 'Split tuple into first element and rest',
+    setup:
+      'type Head<T> = T extends [infer H, ...any[]] ? H : never;\ntype Tail<T> = T extends [any, ...infer R] ? R : never;',
+    setupCode:
+      'type Head<T> = T extends [infer H, ...any[]] ? H : never;\ntype Tail<T> = T extends [any, ...infer R] ? R : never;',
+    expected: 1,
+    sample:
+      'type Tuple = [number, string, boolean];\ntype First = Head<Tuple>;\nconst val: First = 1;\nval',
+    hints: ['infer with spread', 'H is first, R is rest'],
+    tags: ['infer', 'tuple', 'head-tail'],
+  },
+  {
+    id: 'ts-infer-748',
+    category: 'Infer Keyword',
+    difficulty: 'hard',
+    title: 'Infer Last Element of Tuple',
+    text: 'Extract the last element type from tuple',
+    setup: 'type Last<T> = T extends [...any[], infer L] ? L : never;',
+    setupCode: 'type Last<T> = T extends [...any[], infer L] ? L : never;',
+    expected: true,
+    sample:
+      'type Tuple = [number, string, boolean];\ntype LastType = Last<Tuple>;\nconst val: LastType = true;\nval',
+    hints: ['Spread before infer', 'L captures last element'],
+    tags: ['infer', 'tuple', 'last'],
+  },
+  {
+    id: 'ts-infer-749',
+    category: 'Infer Keyword',
+    difficulty: 'hard',
+    title: 'Infer String Literal Parts',
+    text: 'Extract parts of a template literal string',
+    setup: 'type ExtractParts<T> = T extends `${infer A}-${infer B}` ? [A, B] : never;',
+    setupCode: 'type ExtractParts<T> = T extends `${infer A}-${infer B}` ? [A, B] : never;',
+    expected: ['hello', 'world'],
+    sample:
+      'type Parts = ExtractParts<"hello-world">;\nconst parts: Parts = ["hello", "world"];\nparts',
+    hints: ['infer in template literal', 'Extracts before and after delimiter'],
+    tags: ['infer', 'template-literal', 'string'],
+  },
+
+  // ============================================================
+  // Recursive Types
+  // ============================================================
+  {
+    id: 'ts-recursive-750',
+    category: 'Recursive Types',
+    difficulty: 'medium',
+    title: 'JSON Value Type',
+    text: 'Define a recursive type for JSON values',
+    setup:
+      'type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };',
+    setupCode:
+      'type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };',
+    expected: { nested: { value: [1, 'two', true] } },
+    sample: 'const json: JSONValue = { nested: { value: [1, "two", true] } };\njson',
+    hints: ['Self-referential type', 'Covers all JSON structures'],
+    tags: ['recursive', 'json', 'nested'],
+  },
+  {
+    id: 'ts-recursive-751',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Deeply Nested Path Type',
+    text: 'Create a type for nested object paths',
+    setup:
+      'type Path<T, K extends keyof T = keyof T> = K extends string ? T[K] extends object ? K | `${K}.${Path<T[K]>}` : K : never;',
+    setupCode:
+      'type Path<T, K extends keyof T = keyof T> = K extends string ? T[K] extends object ? K | `${K}.${Path<T[K]>}` : K : never;',
+    expected: 'user.address.city',
+    sample:
+      'type Obj = { user: { name: string; address: { city: string } } };\ntype Paths = Path<Obj>;\nconst path: Paths = "user.address.city";\npath',
+    hints: ['Recursive with dot notation', 'Template literal for concatenation'],
+    tags: ['recursive', 'path', 'nested-access'],
+  },
+  {
+    id: 'ts-recursive-752',
+    category: 'Recursive Types',
+    difficulty: 'medium',
+    title: 'Linked List Type',
+    text: 'Define a type-safe linked list',
+    setup: 'type ListNode<T> = { value: T; next: ListNode<T> | null };',
+    setupCode: 'type ListNode<T> = { value: T; next: ListNode<T> | null };',
+    expected: { value: 1, next: { value: 2, next: null } },
+    sample: 'const list: ListNode<number> = { value: 1, next: { value: 2, next: null } };\nlist',
+    hints: ['Self-referential with null terminator', 'Generic for value type'],
+    tags: ['recursive', 'linked-list', 'data-structure'],
+  },
+  {
+    id: 'ts-recursive-753',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Deep Partial Type',
+    text: 'Make all nested properties optional recursively',
+    setup:
+      'type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] };',
+    setupCode:
+      'type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] };',
+    expected: { user: { name: 'Alice' } },
+    sample:
+      'type Config = { user: { name: string; settings: { theme: string } } };\nconst partial: DeepPartial<Config> = { user: { name: "Alice" } };\npartial',
+    hints: ['Recursive for objects', 'Optional modifier at each level'],
+    tags: ['recursive', 'partial', 'deep'],
+  },
+  {
+    id: 'ts-recursive-754',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Tuple Length Type',
+    text: 'Compute tuple length at type level',
+    setup: 'type Length<T extends any[]> = T extends { length: infer L } ? L : never;',
+    setupCode: 'type Length<T extends any[]> = T extends { length: infer L } ? L : never;',
+    expected: 3,
+    sample:
+      'type Tuple = [string, number, boolean];\ntype Len = Length<Tuple>;\nconst len: Len = 3;\nlen',
+    hints: ['Arrays have length property', 'infer extracts literal length'],
+    tags: ['recursive', 'tuple', 'length'],
+  },
+  {
+    id: 'ts-recursive-755',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Flatten Tuple Type',
+    text: 'Flatten nested tuples into single tuple',
+    setup:
+      'type FlattenTuple<T extends any[]> = T extends [infer First, ...infer Rest] ? First extends any[] ? [...FlattenTuple<First>, ...FlattenTuple<Rest>] : [First, ...FlattenTuple<Rest>] : [];',
+    setupCode:
+      'type FlattenTuple<T extends any[]> = T extends [infer First, ...infer Rest] ? First extends any[] ? [...FlattenTuple<First>, ...FlattenTuple<Rest>] : [First, ...FlattenTuple<Rest>] : [];',
+    expected: [1, 2, 3, 4],
+    sample:
+      'type Nested = [[1, 2], [3, 4]];\ntype Flat = FlattenTuple<Nested>;\nconst arr: Flat = [1, 2, 3, 4];\narr',
+    hints: ['Check if element is array', 'Spread both parts recursively'],
+    tags: ['recursive', 'tuple', 'flatten'],
+  },
+  {
+    id: 'ts-recursive-756',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Binary Tree Type',
+    text: 'Define a binary tree with type-safe structure',
+    setup: 'type BinaryTree<T> = { value: T; left?: BinaryTree<T>; right?: BinaryTree<T> };',
+    setupCode: 'type BinaryTree<T> = { value: T; left?: BinaryTree<T>; right?: BinaryTree<T> };',
+    expected: { value: 1, left: { value: 2 }, right: { value: 3 } },
+    sample:
+      'const tree: BinaryTree<number> = { value: 1, left: { value: 2 }, right: { value: 3 } };\ntree',
+    hints: ['Optional left and right', 'Self-referential structure'],
+    tags: ['recursive', 'binary-tree', 'data-structure'],
+  },
+  {
+    id: 'ts-recursive-757',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Reverse Tuple Type',
+    text: 'Reverse a tuple type at compile time',
+    setup:
+      'type Reverse<T extends any[]> = T extends [infer First, ...infer Rest] ? [...Reverse<Rest>, First] : [];',
+    setupCode:
+      'type Reverse<T extends any[]> = T extends [infer First, ...infer Rest] ? [...Reverse<Rest>, First] : [];',
+    expected: [3, 2, 1],
+    sample:
+      'type Original = [1, 2, 3];\ntype Reversed = Reverse<Original>;\nconst arr: Reversed = [3, 2, 1];\narr',
+    hints: ['Move first to end', 'Recursive until empty'],
+    tags: ['recursive', 'tuple', 'reverse'],
+  },
+  {
+    id: 'ts-recursive-758',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Deep Required Type',
+    text: 'Make all nested properties required recursively',
+    setup:
+      'type DeepRequired<T> = { [K in keyof T]-?: T[K] extends object ? DeepRequired<T[K]> : T[K] };',
+    setupCode:
+      'type DeepRequired<T> = { [K in keyof T]-?: T[K] extends object ? DeepRequired<T[K]> : T[K] };',
+    expected: { a: { b: { c: 1 } } },
+    sample:
+      'type Partial = { a?: { b?: { c?: number } } };\nconst obj: DeepRequired<Partial> = { a: { b: { c: 1 } } };\nobj',
+    hints: ['-? removes optional', 'Recursive for nested objects'],
+    tags: ['recursive', 'required', 'deep'],
+  },
+  {
+    id: 'ts-recursive-759',
+    category: 'Recursive Types',
+    difficulty: 'hard',
+    title: 'Count Type in Union',
+    text: 'Count members of a union type (limited)',
+    setup:
+      'type UnionToTuple<T, R extends any[] = []> = [T] extends [never] ? R : UnionToTuple<Exclude<T, T extends infer U ? U : never>, [...R, T]>;',
+    setupCode:
+      'type UnionToTuple<T, R extends any[] = []> = [T] extends [never] ? R : UnionToTuple<Exclude<T, T extends infer U ? U : never>, [...R, T]>;',
+    expected: 3,
+    sample:
+      'type Union = "a" | "b" | "c";\ntype Arr = ["a", "b", "c"];\nconst count: 3 = 3;\ncount',
+    hints: ['Union counting is complex', 'Convert to tuple first'],
+    tags: ['recursive', 'union', 'count'],
+  },
+
+  // ============================================================
+  // Discriminated Unions
+  // ============================================================
+  {
+    id: 'ts-discrim-760',
+    category: 'Discriminated Unions',
+    difficulty: 'easy',
+    title: 'Basic Discriminated Union',
+    text: 'Create a discriminated union for shapes',
+    setup: 'type Shape = { kind: "circle"; radius: number } | { kind: "square"; side: number };',
+    setupCode:
+      'type Shape = { kind: "circle"; radius: number } | { kind: "square"; side: number };',
+    expected: 78.5,
+    sample:
+      'function area(s: Shape): number { return s.kind === "circle" ? Math.PI * s.radius ** 2 : s.side ** 2; }\nMath.round(area({ kind: "circle", radius: 5 }) * 10) / 10',
+    hints: ['kind is discriminant', 'Narrowing by checking kind'],
+    tags: ['discriminated-union', 'narrowing', 'shapes'],
+  },
+  {
+    id: 'ts-discrim-761',
+    category: 'Discriminated Unions',
+    difficulty: 'medium',
+    title: 'Result Type Pattern',
+    text: 'Implement a Result type for error handling',
+    setup: 'type Result<T, E> = { success: true; data: T } | { success: false; error: E };',
+    setupCode: 'type Result<T, E> = { success: true; data: T } | { success: false; error: E };',
+    expected: 'Value: 42',
+    sample:
+      'function handle<T, E>(r: Result<T, E>): string { return r.success ? `Value: ${r.data}` : `Error: ${r.error}`; }\nhandle({ success: true, data: 42 })',
+    hints: ['success is discriminant', 'Narrows to correct branch'],
+    tags: ['discriminated-union', 'result', 'error-handling'],
+  },
+  {
+    id: 'ts-discrim-762',
+    category: 'Discriminated Unions',
+    difficulty: 'medium',
+    title: 'State Machine with Discriminated Union',
+    text: 'Model state machine states with discriminated union',
+    setup:
+      'type State = { status: "idle" } | { status: "loading" } | { status: "success"; data: string } | { status: "error"; message: string };',
+    setupCode:
+      'type State = { status: "idle" } | { status: "loading" } | { status: "success"; data: string } | { status: "error"; message: string };',
+    expected: 'Data: loaded',
+    sample:
+      'function render(s: State): string { switch (s.status) { case "idle": return "Ready"; case "loading": return "Loading..."; case "success": return `Data: ${s.data}`; case "error": return `Error: ${s.message}`; } }\nrender({ status: "success", data: "loaded" })',
+    hints: ['status is discriminant', 'switch for exhaustive check'],
+    tags: ['discriminated-union', 'state-machine', 'switch'],
+  },
+  {
+    id: 'ts-discrim-763',
+    category: 'Discriminated Unions',
+    difficulty: 'hard',
+    title: 'Exhaustiveness Checking',
+    text: 'Ensure all union cases are handled',
+    setup:
+      'type Action = { type: "ADD"; item: string } | { type: "REMOVE"; id: number } | { type: "CLEAR" };\nfunction assertNever(x: never): never { throw new Error("Unexpected: " + x); }',
+    setupCode:
+      'type Action = { type: "ADD"; item: string } | { type: "REMOVE"; id: number } | { type: "CLEAR" };\nfunction assertNever(x: never): never { throw new Error("Unexpected: " + x); }',
+    expected: 'Added: item1',
+    sample:
+      'function process(a: Action): string { switch (a.type) { case "ADD": return `Added: ${a.item}`; case "REMOVE": return `Removed: ${a.id}`; case "CLEAR": return "Cleared"; default: return assertNever(a); } }\nprocess({ type: "ADD", item: "item1" })',
+    hints: ['never in default catches missed cases', 'Compile error if not exhaustive'],
+    tags: ['discriminated-union', 'exhaustiveness', 'never'],
+  },
+  {
+    id: 'ts-discrim-764',
+    category: 'Discriminated Unions',
+    difficulty: 'medium',
+    title: 'Event Types Discriminated Union',
+    text: 'Model different event types with proper payloads',
+    setup:
+      'type Event = { type: "CLICK"; x: number; y: number } | { type: "KEYDOWN"; key: string } | { type: "SCROLL"; delta: number };',
+    setupCode:
+      'type Event = { type: "CLICK"; x: number; y: number } | { type: "KEYDOWN"; key: string } | { type: "SCROLL"; delta: number };',
+    expected: 'Clicked at 10, 20',
+    sample:
+      'function handleEvent(e: Event): string { if (e.type === "CLICK") return `Clicked at ${e.x}, ${e.y}`; if (e.type === "KEYDOWN") return `Key: ${e.key}`; return `Scrolled: ${e.delta}`; }\nhandleEvent({ type: "CLICK", x: 10, y: 20 })',
+    hints: ['Each event has unique payload', 'type narrows correctly'],
+    tags: ['discriminated-union', 'events', 'payload'],
+  },
+  {
+    id: 'ts-discrim-765',
+    category: 'Discriminated Unions',
+    difficulty: 'hard',
+    title: 'Nested Discriminated Unions',
+    text: 'Handle nested discriminated union types',
+    setup:
+      'type Response = { status: "ok"; data: { type: "user"; name: string } | { type: "post"; title: string } } | { status: "error"; code: number };',
+    setupCode:
+      'type Response = { status: "ok"; data: { type: "user"; name: string } | { type: "post"; title: string } } | { status: "error"; code: number };',
+    expected: 'User: Alice',
+    sample:
+      'function process(r: Response): string { if (r.status === "error") return `Error: ${r.code}`; if (r.data.type === "user") return `User: ${r.data.name}`; return `Post: ${r.data.title}`; }\nprocess({ status: "ok", data: { type: "user", name: "Alice" } })',
+    hints: ['Narrow outer first', 'Then narrow nested union'],
+    tags: ['discriminated-union', 'nested', 'narrowing'],
+  },
+  {
+    id: 'ts-discrim-766',
+    category: 'Discriminated Unions',
+    difficulty: 'medium',
+    title: 'Optional Type Pattern',
+    text: 'Create an Option/Maybe type using discriminated union',
+    setup: 'type Option<T> = { tag: "some"; value: T } | { tag: "none" };',
+    setupCode: 'type Option<T> = { tag: "some"; value: T } | { tag: "none" };',
+    expected: 10,
+    sample:
+      'function map<T, U>(opt: Option<T>, fn: (v: T) => U): Option<U> { return opt.tag === "some" ? { tag: "some", value: fn(opt.value) } : { tag: "none" }; }\nconst result = map({ tag: "some", value: 5 }, x => x * 2);\nresult.tag === "some" ? result.value : 0',
+    hints: ['tag distinguishes variants', 'Map preserves structure'],
+    tags: ['discriminated-union', 'option', 'functor'],
+  },
+  {
+    id: 'ts-discrim-767',
+    category: 'Discriminated Unions',
+    difficulty: 'hard',
+    title: 'Extract Discriminant Values',
+    text: 'Extract all possible discriminant values from union',
+    setup:
+      'type GetDiscriminant<T, K extends keyof T> = T extends { [P in K]: infer V } ? V : never;',
+    setupCode:
+      'type GetDiscriminant<T, K extends keyof T> = T extends { [P in K]: infer V } ? V : never;',
+    expected: 'click',
+    sample:
+      'type Events = { type: "click"; x: number } | { type: "key"; key: string };\ntype Types = GetDiscriminant<Events, "type">;\nconst t: Types = "click";\nt',
+    hints: ['Distribution extracts all', 'infer captures values'],
+    tags: ['discriminated-union', 'extract', 'discriminant'],
+  },
+  {
+    id: 'ts-discrim-768',
+    category: 'Discriminated Unions',
+    difficulty: 'hard',
+    title: 'Filter Union by Discriminant',
+    text: 'Extract union member by discriminant value',
+    setup: 'type FilterByType<T, K extends string, V> = T extends { [P in K]: V } ? T : never;',
+    setupCode: 'type FilterByType<T, K extends string, V> = T extends { [P in K]: V } ? T : never;',
+    expected: { type: 'circle', radius: 5 },
+    sample:
+      'type Shapes = { type: "circle"; radius: number } | { type: "square"; side: number };\ntype Circle = FilterByType<Shapes, "type", "circle">;\nconst c: Circle = { type: "circle", radius: 5 };\nc',
+    hints: ['Conditional filters union', 'Matches discriminant value'],
+    tags: ['discriminated-union', 'filter', 'extract'],
+  },
+  {
+    id: 'ts-discrim-769',
+    category: 'Discriminated Unions',
+    difficulty: 'medium',
+    title: 'Type-Safe Action Creators',
+    text: 'Create type-safe action creator functions',
+    setup:
+      'type Action = { type: "INCREMENT"; amount: number } | { type: "DECREMENT"; amount: number } | { type: "RESET" };',
+    setupCode:
+      'type Action = { type: "INCREMENT"; amount: number } | { type: "DECREMENT"; amount: number } | { type: "RESET" };',
+    expected: { type: 'INCREMENT', amount: 5 },
+    sample:
+      'const increment = (amount: number): Action => ({ type: "INCREMENT", amount });\nincrement(5)',
+    hints: ['Factory returns specific variant', 'Return type is full union'],
+    tags: ['discriminated-union', 'action-creator', 'redux'],
+  },
+
+  // ============================================================
+  // Type Guards
+  // ============================================================
+  {
+    id: 'ts-guard-770',
+    category: 'Type Guards',
+    difficulty: 'easy',
+    title: 'Basic typeof Guard',
+    text: 'Use typeof to narrow union type',
+    setup:
+      'function process(val: string | number): string { return typeof val === "string" ? val.toUpperCase() : val.toFixed(2); }',
+    setupCode:
+      'function process(val: string | number): string { return typeof val === "string" ? val.toUpperCase() : val.toFixed(2); }',
+    expected: 'HELLO',
+    sample: 'process("hello")',
+    hints: ['typeof narrows type', 'Each branch has specific type'],
+    tags: ['type-guard', 'typeof', 'narrowing'],
+  },
+  {
+    id: 'ts-guard-771',
+    category: 'Type Guards',
+    difficulty: 'medium',
+    title: 'Custom Type Guard Function',
+    text: 'Create a custom type guard predicate',
+    setup:
+      'interface Dog { bark(): string; }\ninterface Cat { meow(): string; }\nfunction isDog(pet: Dog | Cat): pet is Dog { return (pet as Dog).bark !== undefined; }',
+    setupCode:
+      'interface Dog { bark(): string; }\ninterface Cat { meow(): string; }\nfunction isDog(pet: Dog | Cat): pet is Dog { return (pet as Dog).bark !== undefined; }',
+    expected: 'Woof!',
+    sample: 'const pet: Dog | Cat = { bark: () => "Woof!" };\nisDog(pet) ? pet.bark() : pet.meow()',
+    hints: ['pet is Dog is type predicate', 'Returns boolean narrows type'],
+    tags: ['type-guard', 'custom', 'predicate'],
+  },
+  {
+    id: 'ts-guard-772',
+    category: 'Type Guards',
+    difficulty: 'medium',
+    title: 'instanceof Type Guard',
+    text: 'Use instanceof to narrow class types',
+    setup:
+      'class HttpError { constructor(public status: number) {} }\nclass NetworkError { constructor(public message: string) {} }',
+    setupCode:
+      'class HttpError { constructor(public status: number) {} }\nclass NetworkError { constructor(public message: string) {} }',
+    expected: 404,
+    sample:
+      'function getCode(err: HttpError | NetworkError): number { return err instanceof HttpError ? err.status : 0; }\ngetCode(new HttpError(404))',
+    hints: ['instanceof checks class', 'Narrows to specific class'],
+    tags: ['type-guard', 'instanceof', 'class'],
+  },
+  {
+    id: 'ts-guard-773',
+    category: 'Type Guards',
+    difficulty: 'hard',
+    title: 'Assertion Function',
+    text: 'Create an assertion function that throws on invalid input',
+    setup:
+      'function assertString(val: unknown): asserts val is string { if (typeof val !== "string") throw new Error("Not a string"); }',
+    setupCode:
+      'function assertString(val: unknown): asserts val is string { if (typeof val !== "string") throw new Error("Not a string"); }',
+    expected: 'HELLO',
+    sample:
+      'function process(val: unknown): string { assertString(val); return val.toUpperCase(); }\nprocess("hello")',
+    hints: ['asserts keyword for assertions', 'Throws if not matching'],
+    tags: ['type-guard', 'assertion', 'throws'],
+  },
+  {
+    id: 'ts-guard-774',
+    category: 'Type Guards',
+    difficulty: 'medium',
+    title: 'in Operator Guard',
+    text: 'Use in operator to narrow object types',
+    setup: 'type Bird = { fly(): string };\ntype Fish = { swim(): string };',
+    setupCode: 'type Bird = { fly(): string };\ntype Fish = { swim(): string };',
+    expected: 'Flying',
+    sample:
+      'function move(animal: Bird | Fish): string { return "fly" in animal ? animal.fly() : animal.swim(); }\nmove({ fly: () => "Flying" })',
+    hints: ['in checks property existence', 'Narrows to type with property'],
+    tags: ['type-guard', 'in-operator', 'narrowing'],
+  },
+  {
+    id: 'ts-guard-775',
+    category: 'Type Guards',
+    difficulty: 'hard',
+    title: 'Generic Type Guard',
+    text: 'Create a generic type guard for arrays',
+    setup:
+      'function isArrayOf<T>(arr: unknown, check: (item: unknown) => item is T): arr is T[] { return Array.isArray(arr) && arr.every(check); }\nfunction isString(x: unknown): x is string { return typeof x === "string"; }',
+    setupCode:
+      'function isArrayOf<T>(arr: unknown, check: (item: unknown) => item is T): arr is T[] { return Array.isArray(arr) && arr.every(check); }\nfunction isString(x: unknown): x is string { return typeof x === "string"; }',
+    expected: true,
+    sample: 'const data: unknown = ["a", "b", "c"];\nisArrayOf(data, isString)',
+    hints: ['Generic guard with callback', 'Check each element'],
+    tags: ['type-guard', 'generic', 'array'],
+  },
+  {
+    id: 'ts-guard-776',
+    category: 'Type Guards',
+    difficulty: 'hard',
+    title: 'Assertion with Condition',
+    text: 'Create assertion that checks specific condition',
+    setup:
+      'function assertDefined<T>(val: T | undefined | null, msg?: string): asserts val is T { if (val == null) throw new Error(msg ?? "Value is null or undefined"); }',
+    setupCode:
+      'function assertDefined<T>(val: T | undefined | null, msg?: string): asserts val is T { if (val == null) throw new Error(msg ?? "Value is null or undefined"); }',
+    expected: 5,
+    sample:
+      'function process(val: number | undefined): number { assertDefined(val); return val * val; }\nprocess(Math.sqrt(25))',
+    hints: ['Generic assertion function', 'Removes undefined/null'],
+    tags: ['type-guard', 'assertion', 'defined'],
+  },
+  {
+    id: 'ts-guard-777',
+    category: 'Type Guards',
+    difficulty: 'medium',
+    title: 'Discriminated Union Guard',
+    text: 'Type guard for discriminated union member',
+    setup:
+      'type Result = { ok: true; value: number } | { ok: false; error: string };\nfunction isSuccess(r: Result): r is { ok: true; value: number } { return r.ok === true; }',
+    setupCode:
+      'type Result = { ok: true; value: number } | { ok: false; error: string };\nfunction isSuccess(r: Result): r is { ok: true; value: number } { return r.ok === true; }',
+    expected: 42,
+    sample: 'const result: Result = { ok: true, value: 42 };\nisSuccess(result) ? result.value : 0',
+    hints: ['Check discriminant property', 'Narrows to specific variant'],
+    tags: ['type-guard', 'discriminated-union', 'predicate'],
+  },
+  {
+    id: 'ts-guard-778',
+    category: 'Type Guards',
+    difficulty: 'hard',
+    title: 'Type Guard with Type Parameter Constraint',
+    text: 'Create a guard that checks for specific property',
+    setup:
+      'function hasProperty<T extends object, K extends string>(obj: T, key: K): obj is T & Record<K, unknown> { return key in obj; }',
+    setupCode:
+      'function hasProperty<T extends object, K extends string>(obj: T, key: K): obj is T & Record<K, unknown> { return key in obj; }',
+    expected: 'Alice',
+    sample:
+      'const obj: object = { name: "Alice" };\nhasProperty(obj, "name") ? (obj as { name: string }).name : "unknown"',
+    hints: ['Intersection adds property', 'Generic for any key'],
+    tags: ['type-guard', 'generic', 'property'],
+  },
+  {
+    id: 'ts-guard-779',
+    category: 'Type Guards',
+    difficulty: 'hard',
+    title: 'Negated Type Guard',
+    text: 'Create a guard for excluding types',
+    setup: 'function isNotNull<T>(val: T | null): val is T { return val !== null; }',
+    setupCode: 'function isNotNull<T>(val: T | null): val is T { return val !== null; }',
+    expected: [1, 2, 3],
+    sample: 'const arr: (number | null)[] = [1, null, 2, null, 3];\narr.filter(isNotNull)',
+    hints: ['Filter removes nulls', 'Type narrows in filter'],
+    tags: ['type-guard', 'filter', 'null'],
+  },
+
+  // ============================================================
+  // Branded Types
+  // ============================================================
+  {
+    id: 'ts-branded-780',
+    category: 'Branded Types',
+    difficulty: 'medium',
+    title: 'Basic Branded Type',
+    text: 'Create a branded type for validated emails',
+    setup: 'type Brand<T, B> = T & { __brand: B };\ntype Email = Brand<string, "Email">;',
+    setupCode: 'type Brand<T, B> = T & { __brand: B };\ntype Email = Brand<string, "Email">;',
+    expected: 'test@example.com',
+    sample:
+      'function validateEmail(s: string): Email { if (!s.includes("@")) throw new Error("Invalid"); return s as Email; }\nconst email: Email = validateEmail("test@example.com");\nemail',
+    hints: ['Brand adds phantom type', 'Assertion after validation'],
+    tags: ['branded-types', 'validation', 'email'],
+  },
+  {
+    id: 'ts-branded-781',
+    category: 'Branded Types',
+    difficulty: 'medium',
+    title: 'Type-Safe ID',
+    text: 'Create distinct ID types for different entities',
+    setup:
+      'type UserId = Brand<number, "UserId">;\ntype PostId = Brand<number, "PostId">;\ntype Brand<T, B> = T & { __brand: B };',
+    setupCode:
+      'type UserId = Brand<number, "UserId">;\ntype PostId = Brand<number, "PostId">;\ntype Brand<T, B> = T & { __brand: B };',
+    expected: 1,
+    sample:
+      'function getUser(id: UserId): number { return id; }\nconst userId = 1 as UserId;\ngetUser(userId)',
+    hints: ['Different brands are incompatible', 'Prevents mixing IDs'],
+    tags: ['branded-types', 'id', 'type-safe'],
+  },
+  {
+    id: 'ts-branded-782',
+    category: 'Branded Types',
+    difficulty: 'hard',
+    title: 'Positive Number Brand',
+    text: 'Create a branded type for positive numbers',
+    setup:
+      'type Positive = number & { __positive: true };\nfunction toPositive(n: number): Positive { if (n <= 0) throw new Error("Not positive"); return n as Positive; }',
+    setupCode:
+      'type Positive = number & { __positive: true };\nfunction toPositive(n: number): Positive { if (n <= 0) throw new Error("Not positive"); return n as Positive; }',
+    expected: 25,
+    sample: 'function square(n: Positive): number { return n * n; }\nsquare(toPositive(5))',
+    hints: ['Runtime validation required', 'Compile-time type safety'],
+    tags: ['branded-types', 'positive', 'validation'],
+  },
+  {
+    id: 'ts-branded-783',
+    category: 'Branded Types',
+    difficulty: 'hard',
+    title: 'Non-Empty Array Brand',
+    text: 'Create a branded type for non-empty arrays',
+    setup:
+      'type NonEmptyArray<T> = [T, ...T[]] & { __nonEmpty: true };\nfunction toNonEmpty<T>(arr: T[]): NonEmptyArray<T> { if (arr.length === 0) throw new Error("Empty"); return arr as NonEmptyArray<T>; }',
+    setupCode:
+      'type NonEmptyArray<T> = [T, ...T[]] & { __nonEmpty: true };\nfunction toNonEmpty<T>(arr: T[]): NonEmptyArray<T> { if (arr.length === 0) throw new Error("Empty"); return arr as NonEmptyArray<T>; }',
+    expected: 1,
+    sample:
+      'function first<T>(arr: NonEmptyArray<T>): T { return arr[0]; }\nfirst(toNonEmpty([1, 2, 3]))',
+    hints: ['Tuple ensures at least one', 'Brand adds nominal typing'],
+    tags: ['branded-types', 'non-empty', 'array'],
+  },
+  {
+    id: 'ts-branded-784',
+    category: 'Branded Types',
+    difficulty: 'medium',
+    title: 'Currency Brand',
+    text: 'Create branded types for different currencies',
+    setup:
+      'type USD = Brand<number, "USD">;\ntype EUR = Brand<number, "EUR">;\ntype Brand<T, B> = T & { __brand: B };',
+    setupCode:
+      'type USD = Brand<number, "USD">;\ntype EUR = Brand<number, "EUR">;\ntype Brand<T, B> = T & { __brand: B };',
+    expected: 200,
+    sample:
+      'function addUSD(a: USD, b: USD): USD { return (a + b) as USD; }\naddUSD(100 as USD, 100 as USD)',
+    hints: ['Prevents mixing currencies', 'Type-safe arithmetic'],
+    tags: ['branded-types', 'currency', 'type-safe'],
+  },
+  {
+    id: 'ts-branded-785',
+    category: 'Branded Types',
+    difficulty: 'hard',
+    title: 'URL Brand with Validation',
+    text: 'Create a branded URL type with validation',
+    setup:
+      'type ValidURL = string & { __validUrl: true };\nfunction toURL(s: string): ValidURL { try { new URL(s); return s as ValidURL; } catch { throw new Error("Invalid URL"); } }',
+    setupCode:
+      'type ValidURL = string & { __validUrl: true };\nfunction toURL(s: string): ValidURL { try { new URL(s); return s as ValidURL; } catch { throw new Error("Invalid URL"); } }',
+    expected: 'https://example.com',
+    sample: 'const url: ValidURL = toURL("https://example.com");\nurl',
+    hints: ['URL constructor validates', 'Brand ensures validation happened'],
+    tags: ['branded-types', 'url', 'validation'],
+  },
+  {
+    id: 'ts-branded-786',
+    category: 'Branded Types',
+    difficulty: 'hard',
+    title: 'Integer Brand',
+    text: 'Create a branded type for integers only',
+    setup:
+      'type Integer = number & { __integer: true };\nfunction toInteger(n: number): Integer { if (!Number.isInteger(n)) throw new Error("Not integer"); return n as Integer; }',
+    setupCode:
+      'type Integer = number & { __integer: true };\nfunction toInteger(n: number): Integer { if (!Number.isInteger(n)) throw new Error("Not integer"); return n as Integer; }',
+    expected: 6,
+    sample:
+      'function factorial(n: Integer): Integer { return n <= 1 ? (1 as Integer) : ((n * factorial(toInteger(n - 1))) as Integer); }\nfactorial(toInteger(3))',
+    hints: ['Number.isInteger checks', 'Prevents floating point'],
+    tags: ['branded-types', 'integer', 'validation'],
+  },
+  {
+    id: 'ts-branded-787',
+    category: 'Branded Types',
+    difficulty: 'medium',
+    title: 'Sanitized String Brand',
+    text: 'Create a branded type for sanitized HTML strings',
+    setup:
+      'type SafeHTML = string & { __safe: true };\nfunction sanitize(s: string): SafeHTML { return s.replace(/</g, "&lt;").replace(/>/g, "&gt;") as SafeHTML; }',
+    setupCode:
+      'type SafeHTML = string & { __safe: true };\nfunction sanitize(s: string): SafeHTML { return s.replace(/</g, "&lt;").replace(/>/g, "&gt;") as SafeHTML; }',
+    expected: '&lt;script&gt;',
+    sample: 'const safe: SafeHTML = sanitize("<script>");\nsafe',
+    hints: ['Escapes HTML characters', 'Brand indicates safety'],
+    tags: ['branded-types', 'html', 'security'],
+  },
+  {
+    id: 'ts-branded-788',
+    category: 'Branded Types',
+    difficulty: 'hard',
+    title: 'Bounded Number Brand',
+    text: 'Create a branded type for numbers in range',
+    setup:
+      'type Percentage = number & { __percentage: true };\nfunction toPercentage(n: number): Percentage { if (n < 0 || n > 100) throw new Error("Out of range"); return n as Percentage; }',
+    setupCode:
+      'type Percentage = number & { __percentage: true };\nfunction toPercentage(n: number): Percentage { if (n < 0 || n > 100) throw new Error("Out of range"); return n as Percentage; }',
+    expected: 0.75,
+    sample:
+      'function toDecimal(p: Percentage): number { return p / 100; }\ntoDecimal(toPercentage(75))',
+    hints: ['Range validation at runtime', 'Brand ensures valid range'],
+    tags: ['branded-types', 'percentage', 'bounded'],
+  },
+  {
+    id: 'ts-branded-789',
+    category: 'Branded Types',
+    difficulty: 'hard',
+    title: 'Opaque Type Pattern',
+    text: 'Create opaque types using unique symbols',
+    setup:
+      'declare const OpaqueTag: unique symbol;\ntype Opaque<T, K> = T & { [OpaqueTag]: K };\ntype Meters = Opaque<number, "Meters">;\ntype Feet = Opaque<number, "Feet">;',
+    setupCode:
+      'declare const OpaqueTag: unique symbol;\ntype Opaque<T, K> = T & { [OpaqueTag]: K };\ntype Meters = Opaque<number, "Meters">;\ntype Feet = Opaque<number, "Feet">;',
+    expected: 3.28,
+    sample:
+      'function metersToFeet(m: Meters): Feet { return (m * 3.28) as Feet; }\nconst distance = 1 as Meters;\nMath.round(metersToFeet(distance) * 100) / 100',
+    hints: ['unique symbol is truly unique', 'More robust than string brand'],
+    tags: ['branded-types', 'opaque', 'symbol'],
+  },
+
+  // ============================================================
+  // Utility Types - Custom
+  // ============================================================
+  {
+    id: 'ts-util-790',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'PartialBy Type',
+    text: 'Make only specific properties optional',
+    setup: 'type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;',
+    setupCode: 'type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;',
+    expected: { id: 1, name: 'Test' },
+    sample:
+      'type User = { id: number; name: string; email: string };\ntype CreateUser = PartialBy<User, "id">;\nconst user: CreateUser = { name: "Test", id: 1 };\n({ id: user.id!, name: user.name })',
+    hints: ['Omit removes then Partial makes optional', 'Intersection combines'],
+    tags: ['utility-types', 'partial', 'custom'],
+  },
+  {
+    id: 'ts-util-791',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'RequiredBy Type',
+    text: 'Make only specific properties required',
+    setup: 'type RequiredBy<T, K extends keyof T> = T & Required<Pick<T, K>>;',
+    setupCode: 'type RequiredBy<T, K extends keyof T> = T & Required<Pick<T, K>>;',
+    expected: { name: 'Test' },
+    sample:
+      'type Config = { name?: string; debug?: boolean };\ntype WithName = RequiredBy<Config, "name">;\nconst config: WithName = { name: "Test" };\n({ name: config.name })',
+    hints: ['Required on picked keys', 'Intersection adds constraint'],
+    tags: ['utility-types', 'required', 'custom'],
+  },
+  {
+    id: 'ts-util-792',
+    category: 'Utility Types',
+    difficulty: 'hard',
+    title: 'DeepPick Type',
+    text: 'Pick deeply nested properties',
+    setup:
+      'type DeepPick<T, K extends string> = K extends `${infer Head}.${infer Tail}` ? Head extends keyof T ? { [P in Head]: DeepPick<T[P], Tail> } : never : K extends keyof T ? { [P in K]: T[P] } : never;',
+    setupCode:
+      'type DeepPick<T, K extends string> = K extends `${infer Head}.${infer Tail}` ? Head extends keyof T ? { [P in Head]: DeepPick<T[P], Tail> } : never : K extends keyof T ? { [P in K]: T[P] } : never;',
+    expected: { user: { name: 'Alice' } },
+    sample:
+      'type State = { user: { name: string; age: number }; settings: { theme: string } };\ntype Picked = DeepPick<State, "user.name">;\nconst obj: Picked = { user: { name: "Alice" } };\nobj',
+    hints: ['Parse path with template literal', 'Recursive for depth'],
+    tags: ['utility-types', 'deep', 'pick'],
+  },
+  {
+    id: 'ts-util-793',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'Merge Type',
+    text: 'Merge two types with second overwriting first',
+    setup: 'type Merge<T, U> = Omit<T, keyof U> & U;',
+    setupCode: 'type Merge<T, U> = Omit<T, keyof U> & U;',
+    expected: { a: 1, b: 'updated', c: true },
+    sample:
+      'type A = { a: number; b: number };\ntype B = { b: string; c: boolean };\ntype Merged = Merge<A, B>;\nconst obj: Merged = { a: 1, b: "updated", c: true };\nobj',
+    hints: ['Omit conflicting keys', 'Second type wins'],
+    tags: ['utility-types', 'merge', 'overwrite'],
+  },
+  {
+    id: 'ts-util-794',
+    category: 'Utility Types',
+    difficulty: 'hard',
+    title: 'UnionToIntersection Type',
+    text: 'Convert union type to intersection',
+    setup:
+      'type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;',
+    setupCode:
+      'type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;',
+    expected: { a: 1, b: 2 },
+    sample:
+      'type Union = { a: number } | { b: number };\ntype Inter = UnionToIntersection<Union>;\nconst obj: Inter = { a: 1, b: 2 };\nobj',
+    hints: ['Contravariant position trick', 'Function params are contravariant'],
+    tags: ['utility-types', 'union', 'intersection'],
+  },
+  {
+    id: 'ts-util-795',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'Mutable Type',
+    text: 'Remove readonly from all properties',
+    setup: 'type Mutable<T> = { -readonly [K in keyof T]: T[K] };',
+    setupCode: 'type Mutable<T> = { -readonly [K in keyof T]: T[K] };',
+    expected: { x: 10 },
+    sample:
+      'type Frozen = { readonly x: number; readonly y: number };\ntype Mut = Mutable<Frozen>;\nconst obj: Mut = { x: 5, y: 5 };\nobj.x = 10;\n({ x: obj.x })',
+    hints: ['-readonly removes modifier', 'Allows mutation'],
+    tags: ['utility-types', 'mutable', 'readonly'],
+  },
+  {
+    id: 'ts-util-796',
+    category: 'Utility Types',
+    difficulty: 'hard',
+    title: 'Prettify Type',
+    text: 'Flatten intersection into readable type',
+    setup: 'type Prettify<T> = { [K in keyof T]: T[K] } & {};',
+    setupCode: 'type Prettify<T> = { [K in keyof T]: T[K] } & {};',
+    expected: { a: 1, b: 2 },
+    sample:
+      'type Ugly = { a: number } & { b: number };\ntype Pretty = Prettify<Ugly>;\nconst obj: Pretty = { a: 1, b: 2 };\nobj',
+    hints: ['Maps over all keys', 'Flattens for IDE display'],
+    tags: ['utility-types', 'prettify', 'intersection'],
+  },
+  {
+    id: 'ts-util-797',
+    category: 'Utility Types',
+    difficulty: 'hard',
+    title: 'XOR Type',
+    text: 'Create exclusive or type for objects',
+    setup:
+      'type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };\ntype XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;',
+    setupCode:
+      'type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };\ntype XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;',
+    expected: { type: 'a', a: 1 },
+    sample:
+      'type A = { type: "a"; a: number };\ntype B = { type: "b"; b: string };\ntype Either = XOR<A, B>;\nconst obj: Either = { type: "a", a: 1 };\nobj',
+    hints: ['Exclusive union pattern', 'Prevents mixing properties'],
+    tags: ['utility-types', 'xor', 'exclusive'],
+  },
+  {
+    id: 'ts-util-798',
+    category: 'Utility Types',
+    difficulty: 'medium',
+    title: 'ValueOf Type',
+    text: 'Extract all value types from object',
+    setup: 'type ValueOf<T> = T[keyof T];',
+    setupCode: 'type ValueOf<T> = T[keyof T];',
+    expected: 42,
+    sample:
+      'type Config = { port: number; host: string; debug: boolean };\ntype Values = ValueOf<Config>;\nconst val: Values = 42;\nval',
+    hints: ['Index with keyof', 'Creates union of values'],
+    tags: ['utility-types', 'valueof', 'union'],
+  },
+  {
+    id: 'ts-util-799',
+    category: 'Utility Types',
+    difficulty: 'hard',
+    title: 'FunctionKeys Type',
+    text: 'Extract only function property keys',
+    setup:
+      'type FunctionKeys<T> = { [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never }[keyof T];',
+    setupCode:
+      'type FunctionKeys<T> = { [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never }[keyof T];',
+    expected: 'greet',
+    sample:
+      'type Obj = { name: string; age: number; greet(): void };\ntype FnKeys = FunctionKeys<Obj>;\nconst key: FnKeys = "greet";\nkey',
+    hints: ['Map then index to filter', 'never removes non-functions'],
+    tags: ['utility-types', 'function-keys', 'filter'],
+  },
+
+  // ============================================================
+  // Declaration Files
+  // ============================================================
+  {
+    id: 'ts-decl-800',
+    category: 'Declaration Files',
+    difficulty: 'easy',
+    title: 'Declare Global Variable',
+    text: 'Declare a global variable type',
+    setup: 'declare const VERSION: string;',
+    setupCode: 'declare const VERSION: string;\n(globalThis as any).VERSION = "1.0.0";',
+    expected: '1.0.0',
+    sample: 'VERSION',
+    hints: ['declare without implementation', 'Ambient declaration'],
+    tags: ['declaration', 'global', 'ambient'],
+  },
+  {
+    id: 'ts-decl-801',
+    category: 'Declaration Files',
+    difficulty: 'medium',
+    title: 'Declare Module Augmentation',
+    text: 'Augment existing module with new properties',
+    setup: 'interface String { toTitleCase(): string; }',
+    setupCode:
+      'interface String { toTitleCase(): string; }\nString.prototype.toTitleCase = function() { return this.charAt(0).toUpperCase() + this.slice(1); };',
+    expected: 'Hello',
+    sample: '"hello".toTitleCase()',
+    hints: ['Interface merging adds methods', 'Augments built-in type'],
+    tags: ['declaration', 'augmentation', 'interface'],
+  },
+  {
+    id: 'ts-decl-802',
+    category: 'Declaration Files',
+    difficulty: 'medium',
+    title: 'Declare Namespace',
+    text: 'Create namespace for library types',
+    setup:
+      'declare namespace MyLib { interface Config { name: string; } function init(config: Config): void; }',
+    setupCode:
+      'declare namespace MyLib { interface Config { name: string; } function init(config: Config): void; }\n(globalThis as any).MyLib = { init: (c: any) => c.name };',
+    expected: 'App',
+    sample: 'const config: MyLib.Config = { name: "App" };\nMyLib.init(config);\nconfig.name',
+    hints: ['namespace groups declarations', 'Dot notation access'],
+    tags: ['declaration', 'namespace', 'library'],
+  },
+  {
+    id: 'ts-decl-803',
+    category: 'Declaration Files',
+    difficulty: 'hard',
+    title: 'Declare Class with Static',
+    text: 'Declare a class with static members',
+    setup:
+      'declare class Logger { static level: string; static log(msg: string): void; constructor(name: string); name: string; info(msg: string): void; }',
+    setupCode:
+      'declare class Logger { static level: string; static log(msg: string): void; constructor(name: string); name: string; info(msg: string): void; }\n(globalThis as any).Logger = class { static level = "info"; static log(m: string) {} constructor(public name: string) {} info(m: string) {} };',
+    expected: 'info',
+    sample: 'Logger.level',
+    hints: ['static for class properties', 'Both instance and static'],
+    tags: ['declaration', 'class', 'static'],
+  },
+  {
+    id: 'ts-decl-804',
+    category: 'Declaration Files',
+    difficulty: 'hard',
+    title: 'Declare Function Overloads',
+    text: 'Declare function with multiple signatures',
+    setup:
+      'declare function parse(input: string): object;\ndeclare function parse(input: string, reviver: (key: string, value: any) => any): object;',
+    setupCode:
+      'declare function parse(input: string): object;\ndeclare function parse(input: string, reviver: (key: string, value: any) => any): object;\n(globalThis as any).parse = JSON.parse;',
+    expected: { a: 1 },
+    sample: 'parse(\'{"a": 1}\')',
+    hints: ['Multiple declare signatures', 'Overloads in declarations'],
+    tags: ['declaration', 'overload', 'function'],
+  },
 ];
 
 // Helper functions
