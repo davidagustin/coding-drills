@@ -16,11 +16,13 @@ It animates the "${exercise.title}" algorithm on a sample input, showing how the
 
 Each step highlights the current state (pointers, values, comparisons, swaps, etc.) and displays a short explanation of what is happening at that moment.
 
+You have reviewed the solution code above, so you know exactly what variables, data structures, and logic the algorithm uses. The visualization animates that same logic. Use your knowledge of the code to explain what each step of the visualization is showing — reference the actual operations (comparisons, swaps, pointer movements, recursive calls, etc.) without revealing the code itself.
+
 When the student asks about the visualization or how the algorithm works:
-- Encourage them to step through the animation and describe what they see.
-- Ask what they notice about how the data changes between steps.
-- Use the visualization to ground abstract concepts (e.g., "Watch what happens to the left and right pointers when the middle value is too small").
-- If they are confused by a step, ask them to pause on it and describe the current state.`
+- Explain what the visualization is demonstrating in terms of the underlying algorithm steps you know from the code.
+- Encourage them to step through and describe what they see, then connect it to the concept.
+- Reference specific operations the animation shows (e.g., the comparison being made, which elements are being swapped, how the search space shrinks).
+- If they are confused by a step, explain what that step does algorithmically and ask them to watch it again.`
     : '';
 
   return `You are a friendly, concise coding tutor helping a student with an exercise.
