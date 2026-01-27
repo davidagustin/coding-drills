@@ -70,26 +70,21 @@ ${vizNote}
  * Build a greeting that tells the student what the tutor can do.
  * Content-aware: mentions the visualization when one exists.
  */
-function buildTutorStarters(hasVisualization: boolean): string[] {
-  if (hasVisualization) {
-    return [
-      "Hey! I'm your AI tutor for this exercise. I can help you with:\n\n- The explanation and instructions\n- Breaking down hints and the solution code\n- Any concept on this page\n- The interactive visualization above — I've studied it and can walk you through each step\n\nWhat would you like to start with?",
-      'Hi there! I can help you understand everything on this page — the explanation, instructions, hints, solution code, and concepts.\n\nI also know the interactive visualization above and can explain each step of the animation. Just ask!\n\nWhat are you curious about?',
-      "Welcome! I'm here to help you learn. Ask me about anything — the explanation, instructions, hints, how the solution works, or any concept.\n\nI've also reviewed the visualization above and can narrate what happens at each step. What would you like to explore?",
-    ];
-  }
+function buildTutorStarters(exercise: Exercise, hasVisualization: boolean): string[] {
+  const conceptsList = exercise.concepts.join(', ');
+  const vizBlock = hasVisualization
+    ? `\n- **The interactive visualization** above — I've studied it and can walk you through each step of the animation, explaining exactly what the algorithm is doing`
+    : '';
 
   return [
-    "Hey! I'm your AI tutor for this exercise. I can help you with:\n\n- The explanation and instructions\n- Breaking down hints and the solution code\n- Any concept on this page\n\nWhat would you like to start with?",
-    'Hi there! I can help you understand everything on this page — the explanation, instructions, hints, solution code, and concepts. What are you curious about?',
-    "Welcome! I'm here to help you learn. Ask me about anything you see — the explanation, any instruction step, what a hint means, how the solution works, or any concept listed. Where would you like to begin?",
+    `Hey! I'm your AI tutor for **${exercise.title}**.\n\nThis exercise is about ${exercise.description.toLowerCase()}\n\nHere's what I can help you with:\n\n- **The explanation** — I can break it down further or rephrase it\n- **Each instruction step** — I can clarify what's being asked\n- **The hints** — I can explain what each one means and how it connects to the solution\n- **The solution code** — I can go through it line by line and explain why it works\n- **Concepts** like ${conceptsList}${vizBlock}\n\nWhat would you like to dive into?`,
   ];
 }
 
 /**
  * Return a random greeting message for the tutor.
  */
-export function getRandomTutorStarter(hasVisualization: boolean): string {
-  const starters = buildTutorStarters(hasVisualization);
+export function getRandomTutorStarter(exercise: Exercise, hasVisualization: boolean): string {
+  const starters = buildTutorStarters(exercise, hasVisualization);
   return starters[Math.floor(Math.random() * starters.length)];
 }
