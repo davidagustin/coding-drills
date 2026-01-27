@@ -46,6 +46,9 @@ const GenerateCombinationsViz = dynamic(() => import('./GenerateCombinationsViz'
 const HeapExtractMinViz = dynamic(() => import('./HeapExtractMinViz'), { ssr: false });
 const LRUCacheViz = dynamic(() => import('./LRUCacheViz'), { ssr: false });
 const BasicMemoizeViz = dynamic(() => import('./BasicMemoizeViz'), { ssr: false });
+const GenerateSubsetsViz = dynamic(() => import('./GenerateSubsetsViz'), { ssr: false });
+const MergeInPlaceViz = dynamic(() => import('./MergeInPlaceViz'), { ssr: false });
+const RotateMatrixViz = dynamic(() => import('./RotateMatrixViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -88,9 +91,12 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'trie-insert': TrieInsertViz,
   'generate-permutations': GeneratePermutationsViz,
   'generate-combinations': GenerateCombinationsViz,
+  'generate-subsets': GenerateSubsetsViz,
   'heap-extract-min': HeapExtractMinViz,
   'lru-cache': LRUCacheViz,
   'basic-memoize': BasicMemoizeViz,
+  'merge-in-place': MergeInPlaceViz,
+  'rotate-matrix': RotateMatrixViz,
 };
 
 /**
