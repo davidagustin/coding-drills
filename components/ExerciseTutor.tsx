@@ -92,7 +92,6 @@ export default function ExerciseTutor({
   const [streamingContent, setStreamingContent] = useState('');
   const [input, setInput] = useState('');
 
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const systemPromptRef = useRef('');
 
@@ -119,15 +118,6 @@ export default function ExerciseTutor({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Auto-scroll within chat container only (not the page)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll on new content
-  useEffect(() => {
-    const el = messagesContainerRef.current;
-    if (el) {
-      el.scrollTop = el.scrollHeight;
-    }
-  }, [messages, streamingContent]);
 
   // Focus input when ready
   // biome-ignore lint/correctness/useExhaustiveDependencies: focus on phase change
@@ -352,7 +342,7 @@ export default function ExerciseTutor({
       </div>
 
       {/* Messages */}
-      <div ref={messagesContainerRef} className="max-h-[500px] overflow-y-auto p-4 space-y-3">
+      <div className="max-h-[500px] overflow-y-auto p-4 space-y-3">
         {messages.map((msg) => (
           <div
             key={msg.id}
