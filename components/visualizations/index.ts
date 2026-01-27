@@ -205,6 +205,9 @@ const DetectCycleViz = dynamic(() => import('./DetectCycleViz'), { ssr: false })
 const IntersectionTwoArraysViz = dynamic(() => import('./IntersectionTwoArraysViz'), {
   ssr: false,
 });
+const ContainsDuplicateViz = dynamic(() => import('./ContainsDuplicateViz'), { ssr: false });
+const TwoSumViz = dynamic(() => import('./TwoSumViz'), { ssr: false });
+const ThreeSumViz2 = dynamic(() => import('./ThreeSumViz2'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -401,6 +404,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'has-cycle': HasCycleViz,
   'detect-cycle': DetectCycleViz,
   'intersection-two-arrays': IntersectionTwoArraysViz,
+  'contains-duplicate': ContainsDuplicateViz,
+  'two-sum': TwoSumViz,
+  'three-sum-all': ThreeSumViz2,
 };
 
 /**
