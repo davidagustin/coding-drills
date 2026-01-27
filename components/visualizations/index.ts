@@ -265,6 +265,9 @@ const TruthTableViz = dynamic(() => import('./TruthTableViz'), { ssr: false });
 const CircularBufferViz = dynamic(() => import('./CircularBufferViz'), { ssr: false });
 const SampleArrayViz = dynamic(() => import('./SampleArrayViz'), { ssr: false });
 const SlidingWindowMaxSumViz = dynamic(() => import('./SlidingWindowMaxSumViz'), { ssr: false });
+const IsPowerOfTwoViz = dynamic(() => import('./IsPowerOfTwoViz'), { ssr: false });
+const BinaryToDecimalViz = dynamic(() => import('./BinaryToDecimalViz'), { ssr: false });
+const DecimalToBinaryViz = dynamic(() => import('./DecimalToBinaryViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -522,6 +525,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'prefix-sum': PrefixSumViz,
   'sliding-window-max-sum': SlidingWindowMaxSumViz,
   'sliding-window-min-subarray': SlidingWindowMinSubarrayViz,
+  'is-power-of-two': IsPowerOfTwoViz,
+  'binary-to-decimal': BinaryToDecimalViz,
+  'decimal-to-binary': DecimalToBinaryViz,
 };
 
 /**
