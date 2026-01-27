@@ -242,6 +242,11 @@ const PreorderIterativeViz = dynamic(() => import('./PreorderIterativeViz'), { s
 const PostorderIterativeViz = dynamic(() => import('./PostorderIterativeViz'), { ssr: false });
 const TreeLevelWidthsViz = dynamic(() => import('./TreeLevelWidthsViz'), { ssr: false });
 const RodCuttingViz = dynamic(() => import('./RodCuttingViz'), { ssr: false });
+const DeepEqualsViz = dynamic(() => import('./DeepEqualsViz'), { ssr: false });
+const EventEmitterViz = dynamic(() => import('./EventEmitterViz'), { ssr: false });
+const PromiseAllViz = dynamic(() => import('./PromiseAllViz'), { ssr: false });
+const PromiseRaceViz = dynamic(() => import('./PromiseRaceViz'), { ssr: false });
+const DeepFreezeViz = dynamic(() => import('./DeepFreezeViz'), { ssr: false });
 const TakeWhileViz = dynamic(() => import('./TakeWhileViz'), { ssr: false });
 const DropWhileViz = dynamic(() => import('./DropWhileViz'), { ssr: false });
 const FrequencyCounterViz = dynamic(() => import('./FrequencyCounterViz'), { ssr: false });
@@ -573,6 +578,11 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'postorder-iterative': PostorderIterativeViz,
   'tree-level-widths': TreeLevelWidthsViz,
   'rod-cutting': RodCuttingViz,
+  'deep-equals': DeepEqualsViz,
+  'event-emitter': EventEmitterViz,
+  'promise-all': PromiseAllViz,
+  'promise-race': PromiseRaceViz,
+  'deep-freeze': DeepFreezeViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
   'prefix-product': PrefixProductViz,
