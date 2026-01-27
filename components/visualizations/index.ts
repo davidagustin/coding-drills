@@ -198,6 +198,8 @@ const DijkstraViz = dynamic(() => import('./DijkstraViz'), { ssr: false });
 const BellmanFordViz = dynamic(() => import('./BellmanFordViz'), { ssr: false });
 const KruskalMSTViz = dynamic(() => import('./KruskalMSTViz'), { ssr: false });
 const PrimMSTViz = dynamic(() => import('./PrimMSTViz'), { ssr: false });
+const ReverseLinkedListViz = dynamic(() => import('./ReverseLinkedListViz'), { ssr: false });
+const MergeTwoListsViz = dynamic(() => import('./MergeTwoListsViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -389,6 +391,8 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'bellman-ford': BellmanFordViz,
   'kruskal-mst': KruskalMSTViz,
   'prim-mst': PrimMSTViz,
+  'reverse-linked-list': ReverseLinkedListViz,
+  'merge-two-lists': MergeTwoListsViz,
 };
 
 /**
