@@ -7,7 +7,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'advanced' as const,
     description:
-      'Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.',
+      'Compute how much rainwater is trapped between bars of an elevation map. This classic hard interview problem teaches the two-pointer technique for computing bounded areas, widely used in problems requiring simultaneous left-right boundary tracking with O(n) time and O(1) space.',
     instructions: [
       'Use a two-pointer approach with left and right pointers',
       'Track the maximum height seen from left and right',
@@ -91,7 +91,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given n non-negative integers representing vertical lines, find two lines that together with the x-axis form a container that holds the most water.',
+      'Find two vertical lines that form a container holding the most water. This problem demonstrates why the greedy two-pointer convergence strategy works for optimization on pairs: always move the shorter side inward because widening cannot compensate for a shorter boundary.',
     instructions: [
       'Use two pointers at the beginning and end of the array',
       'Calculate area = min(height[left], height[right]) * (right - left)',
@@ -161,7 +161,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given an integer array nums, return an array where each element is the product of all elements except itself, without using division.',
+      'Build an array where each element is the product of all other elements, without using division. This teaches the prefix-suffix decomposition pattern: compute running products from both ends in two passes, a technique that generalizes to many problems requiring contextual aggregation around each index.',
     instructions: [
       'Create an output array initialized with 1s',
       'First pass: calculate prefix products (product of all elements to the left)',
@@ -229,7 +229,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'For each element in the array, find the next greater element to its right. Return -1 if no greater element exists.',
+      'For each element, find the next greater element to its right using a monotonic stack. This foundational pattern powers stock span, daily temperatures, and histogram problems. The key insight is processing right-to-left and maintaining a decreasing stack of candidates.',
     instructions: [
       'Use a stack to track indices of elements',
       'Iterate through the array from right to left',
@@ -299,7 +299,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'beginner' as const,
     description:
-      'Given an array of prices where prices[i] is the price on day i, find the maximum profit from one buy and one sell. You must buy before you sell.',
+      'Find the maximum profit from buying and selling a stock once. This classic interview problem teaches the single-pass minimum-tracking pattern: maintain the lowest price seen so far and compute the best possible profit at each step, an approach used in many optimization problems with ordering constraints.',
     instructions: [
       'Track the minimum price seen so far',
       'For each price, calculate profit if selling at current price',
@@ -368,7 +368,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given an array of prices, find the maximum profit with unlimited transactions. You can buy and sell multiple times but must sell before buying again.',
+      'Maximize stock profit with unlimited buy-sell transactions. The greedy insight is that capturing every positive day-to-day price difference is mathematically equivalent to finding optimal buy-sell windows. This pattern illustrates how greedy decomposition can simplify seemingly complex multi-transaction optimization.',
     instructions: [
       'Identify all profitable consecutive day pairs',
       'Add profit whenever next day price is higher',
@@ -428,7 +428,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given an array where each element represents maximum jump length from that position, determine if you can reach the last index starting from index 0.',
+      'Determine if you can reach the last index by jumping through an array of maximum jump lengths. This greedy reachability problem teaches tracking the farthest reachable position in a single pass, a technique used in network connectivity and resource allocation problems.',
     instructions: [
       'Track the farthest position reachable',
       'Iterate through the array',
@@ -499,7 +499,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'advanced' as const,
     description:
-      'Given an array of jump lengths, return the minimum number of jumps to reach the last index. You can assume you can always reach the end.',
+      'Find the minimum number of jumps to reach the last index in an array of jump lengths. This problem introduces BFS-like level processing on arrays: each "level" represents positions reachable with one additional jump, enabling O(n) greedy optimization over naive O(n^2) approaches.',
     instructions: [
       'Use BFS-like approach with levels representing number of jumps',
       'Track current jump range and next jump range',
@@ -577,7 +577,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given circular route with gas stations, where gas[i] is gas at station i and cost[i] is gas needed to travel to next station, find the starting station index to complete the circuit, or -1 if impossible.',
+      'Find the starting gas station to complete a circular route given fuel and cost arrays. This greedy problem relies on a key mathematical insight: if total gas exceeds total cost, a valid start exists, and resetting the start whenever the tank goes negative finds it in one pass.',
     instructions: [
       'Check if total gas >= total cost (otherwise impossible)',
       'Track current tank balance',
@@ -657,7 +657,8 @@ export const typescriptExtraExercises: Exercise[] = [
     title: 'Three Sum',
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
-    description: 'Given an integer array, find all unique triplets that sum to zero.',
+    description:
+      'Find all unique triplets in an array that sum to zero using sorting and two pointers. This quintessential interview problem teaches how sorting enables efficient pair-finding with O(n^2) time, and how to skip duplicates systematically to avoid redundant results.',
     instructions: [
       'Sort the array first',
       'For each element, use two pointers to find pairs that sum to negative of that element',
@@ -745,7 +746,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given a sorted array, remove duplicates in-place such that each element appears at most twice. Return the new length.',
+      'Remove duplicates from a sorted array in-place allowing at most two occurrences of each element. This teaches the read-write pointer pattern for in-place array compaction, where comparing against the element two positions behind the write pointer elegantly enforces the at-most-two constraint.',
     instructions: [
       'Use a write pointer to track where to place next valid element',
       'Allow first two occurrences of each element',
@@ -809,7 +810,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given an unsorted array of integers, find the length of the longest consecutive elements sequence in O(n) time.',
+      'Find the longest consecutive integer sequence in an unsorted array in O(n) time. The key insight is using a hash set and only starting a count from sequence beginnings (numbers with no predecessor). This avoids redundant traversals and is a common interview question testing hash-based optimization.',
     instructions: [
       'Add all numbers to a Set for O(1) lookup',
       'For each number, check if it is the start of a sequence (no num-1 in set)',
@@ -886,7 +887,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'beginner' as const,
     description:
-      'Given an integer array, move all 0s to the end while maintaining the relative order of non-zero elements. Modify in-place.',
+      'Move all zeros to the end of an array while preserving the relative order of non-zero elements, in-place. This beginner-friendly problem introduces the read-write two-pointer swap technique, a building block for partition-based algorithms like quicksort and the Dutch national flag problem.',
     instructions: [
       'Use a write pointer to track where to place next non-zero',
       'Iterate through array with read pointer',
@@ -945,7 +946,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'beginner' as const,
     description:
-      'Given an integer array, return an array with all even numbers first, then odd numbers, maintaining relative order within each group.',
+      'Partition an array so all even numbers appear before odd numbers while preserving relative order within each group. This stable partitioning exercise teaches the two-pass filtering approach and is a practical introduction to array rearrangement problems common in sorting and data processing.',
     instructions: [
       'Create result array or use two-pointer in-place approach',
       'Collect all even numbers first in order',
@@ -1016,7 +1017,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'iteration-patterns' as const,
     difficulty: 'advanced' as const,
     description:
-      'Children with ratings stand in a line. Each child must receive at least one candy. Children with higher rating than neighbors must get more candies. Return minimum total candies needed.',
+      'Distribute minimum candies to children in a line where higher-rated children get more than their neighbors. This hard greedy problem demonstrates the two-pass constraint satisfaction technique: satisfy left-neighbor constraints in one pass, then right-neighbor in a reverse pass, taking the maximum at each position.',
     instructions: [
       'Initialize all children with 1 candy',
       'Left to right pass: if rating[i] > rating[i-1], give more candy',
@@ -1093,7 +1094,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given a 2D grid of "1"s (land) and "0"s (water), count the number of islands. An island is surrounded by water and formed by connecting adjacent lands horizontally or vertically.',
+      'Count the number of islands in a 2D grid of land and water cells using DFS flood-fill. This fundamental graph traversal problem teaches connected component counting on grids, a pattern used in image processing, geographic analysis, and any problem requiring region detection in 2D space.',
     instructions: [
       'Iterate through each cell in the grid',
       'When land ("1") is found, increment island count',
@@ -1195,7 +1196,7 @@ export const typescriptExtraExercises: Exercise[] = [
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given a reference to a node in a connected undirected graph, return a deep copy (clone) of the graph. Each node contains a value and a list of neighbors.',
+      'Create a deep copy of a connected undirected graph by cloning every node and reconstructing all neighbor relationships. This teaches DFS-based graph traversal with visited-node tracking via a hash map, essential for handling circular references during serialization, object cloning, and garbage collection.',
     instructions: [
       'Use a Map to track original node -> cloned node mapping',
       'Perform DFS starting from the given node',
@@ -1273,7 +1274,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given numCourses and an array of prerequisite pairs [a, b] (must take b before a), determine if it is possible to finish all courses. Return true if no circular dependencies exist.',
+      'Determine if all courses can be finished given prerequisite dependencies, detecting circular dependencies. This teaches directed graph cycle detection using DFS with three-state coloring, the foundation of topological sorting used in build systems, task schedulers, and dependency resolution.',
     instructions: [
       'Build adjacency list from prerequisites',
       'Use DFS with three states: unvisited, visiting, visited',
@@ -1379,7 +1380,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given a 2D board containing "X" and "O", capture all regions surrounded by "X" by flipping "O" to "X". A region is captured if it is not connected to the boundary.',
+      'Capture all O-regions surrounded by X on a 2D board by flipping them to X, sparing boundary-connected regions. This teaches the reverse-thinking DFS strategy: instead of finding surrounded regions directly, mark safe regions from boundaries first, then flip everything else.',
     instructions: [
       'Mark all "O"s connected to boundaries as safe (use DFS from border)',
       'Change safe "O"s to a temporary marker (e.g., "S")',
@@ -1485,7 +1486,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'In a grid, 0 = empty, 1 = fresh orange, 2 = rotten orange. Every minute, fresh oranges adjacent (4-directionally) to rotten oranges become rotten. Return minimum minutes until no fresh oranges remain, or -1 if impossible.',
+      'Simulate rotting oranges spreading in a grid and return the time until all are rotten. This is the canonical multi-source BFS problem: all rotten oranges expand simultaneously, and each BFS level equals one time unit. This pattern applies to wildfire simulation, network broadcast, and infection spread modeling.',
     instructions: [
       'Use BFS with queue initialized with all rotten oranges',
       'Count total fresh oranges initially',
@@ -1602,7 +1603,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     category: 'traversal' as const,
     difficulty: 'advanced' as const,
     description:
-      'Find the shortest transformation sequence from beginWord to endWord, changing one letter at a time using words from the dictionary.',
+      'Find the shortest word transformation sequence changing one letter at a time through a dictionary. This models implicit graph BFS where words are nodes and single-letter changes are edges. It teaches building graphs on-the-fly and is used in spell-checkers, NLP pipelines, and puzzle solvers.',
     instructions: [
       'Return the number of words in the shortest transformation sequence',
       'Each transformed word must exist in the word list',
@@ -1681,7 +1682,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Find the shortest clear path from top-left to bottom-right in a binary grid where 0 is passable and 1 is blocked.',
+      'Find the shortest clear path in a binary grid with 8-directional movement using BFS. BFS guarantees shortest path in unweighted grids, making this a core pattern for robot navigation, game pathfinding, and maze solving. The 8-direction variant adds diagonal neighbors to standard grid BFS.',
     instructions: [
       'Return the length of the shortest path, or -1 if no path exists',
       '0 represents a passable cell, 1 represents a blocked cell',
@@ -1792,7 +1793,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given n nodes and a list of edges, determine if the graph forms a valid tree (connected and acyclic).',
+      'Determine if an undirected graph with n nodes and given edges forms a valid tree (connected and acyclic). This teaches the two properties that define a tree: exactly n-1 edges and full connectivity. DFS cycle detection with parent tracking or union-find are the standard approaches for this frequent interview question.',
     instructions: [
       'A valid tree must be connected (all nodes reachable from any node)',
       'A valid tree must not contain any cycles',
@@ -1902,7 +1903,7 @@ function cloneGraph(node: GraphNode | null): GraphNode | null {
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Return the values of nodes you can see from the right side of a binary tree, ordered from top to bottom.',
+      'Return the rightmost visible node at each level of a binary tree as seen from the right side. This teaches BFS level-order traversal where you capture the last node per level. The pattern generalizes to left-side view, level averages, and any per-level aggregation on trees.',
     instructions: [
       'Imagine standing on the right side of the tree',
       'Return the rightmost node value at each level',
@@ -1993,7 +1994,8 @@ function rightSideView(root: TreeNode | null): number[] {
     title: 'Validate Binary Search Tree',
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
-    description: 'Determine if a binary tree is a valid binary search tree.',
+    description:
+      'Validate whether a binary tree satisfies BST ordering rules using recursive bounds checking. The key insight is propagating valid (min, max) ranges down the tree: each left child must be less than its ancestor, and each right child must be greater. This is a top interview question for tree recursion mastery.',
     instructions: [
       'Left subtree nodes must all be less than the parent node',
       'Right subtree nodes must all be greater than the parent node',
@@ -2095,7 +2097,8 @@ function validateBST(root: TreeNode | null): boolean {
     title: 'Kth Smallest Element in BST',
     category: 'traversal' as const,
     difficulty: 'intermediate' as const,
-    description: 'Find the kth smallest element in a binary search tree.',
+    description:
+      'Find the kth smallest element in a BST by leveraging inorder traversal, which visits nodes in ascending sorted order. This teaches how BST structure provides implicit sorting, and how early termination during traversal avoids unnecessary work. Frequently asked in interviews testing tree traversal and BST properties.',
     instructions: [
       'Use inorder traversal (left-root-right) which visits nodes in sorted order',
       'k is 1-indexed (1 means the smallest element)',
@@ -2206,7 +2209,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'traversal' as const,
     difficulty: 'advanced' as const,
     description:
-      'Given a sorted list of words in an alien language, derive the order of characters in that language.',
+      "Derive the character ordering of an alien language from a sorted list of words using topological sort. By comparing adjacent words to extract precedence rules, you build a directed graph and apply Kahn's algorithm. This combines string comparison, graph construction, and topological ordering in one advanced problem.",
     instructions: [
       'Words are sorted lexicographically by the alien language rules',
       'Derive the character order by comparing adjacent words',
@@ -2318,7 +2321,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'data-structures' as const,
     difficulty: 'advanced' as const,
     description:
-      'Implement a map that maintains insertion order and supports set, get, delete, and keys operations.',
+      "Implement an ordered map maintaining insertion order with set, get, delete, and keys operations. This exercises understanding of JavaScript's built-in Map which preserves insertion order, a feature critical for LRU caches, ordered configurations, and deterministic iteration in real-world applications.",
     instructions: [
       'Implement an ordered map data structure',
       'Process operations: set(key, value), get(key), delete(key), keys()',
@@ -2411,7 +2414,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Sparse Matrix Multiplication',
     category: 'data-structures' as const,
     difficulty: 'intermediate' as const,
-    description: 'Multiply two sparse matrices efficiently by only considering non-zero elements.',
+    description:
+      'Multiply two sparse matrices efficiently by skipping zero-element computations. In real-world systems like recommendation engines and scientific computing, matrices are often 90%+ zeros. Pre-indexing non-zero entries and skipping zero rows dramatically reduces work compared to naive O(n^3) multiplication.',
     instructions: [
       'Multiply two matrices represented as 2D arrays',
       'Optimize for sparse matrices (many zeros)',
@@ -2532,7 +2536,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'data-structures' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Implement a circular deque with fixed capacity supporting insertFront, insertLast, deleteFront, deleteLast, getFront, and getRear operations.',
+      'Design a circular double-ended queue with fixed capacity supporting front and rear insert, delete, and peek operations. This teaches bounded buffer management used in OS schedulers, browser history, and sliding window algorithms. Understanding deque internals builds intuition for more complex data structure design.',
     instructions: [
       'Implement a circular deque with given capacity',
       'Process operations: insertFront, insertLast, deleteFront, deleteLast, getFront, getRear',
@@ -2665,7 +2669,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Trie with Word and Prefix Count',
     category: 'data-structures' as const,
     difficulty: 'intermediate' as const,
-    description: 'Implement a trie that tracks the count of complete words and prefixes.',
+    description:
+      'Build a trie (prefix tree) that counts both complete word insertions and prefix occurrences. Each node tracks how many words pass through it and how many end there, enabling efficient autocomplete and prefix frequency queries. Tries power search engines, spell-checkers, and IP routing tables.',
     instructions: [
       'Build a trie from insert operations',
       'Track how many times each word is inserted',
@@ -2799,7 +2804,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'data-structures' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Implement a priority queue that sorts items by priority (lower number = higher priority) and returns values in order.',
+      "Implement a priority queue sorting items by priority number (lower = higher importance) with stable tie-breaking by insertion order. Priority queues underpin Dijkstra's algorithm, task scheduling, and event-driven simulations. This exercise focuses on custom comparator design and stable sort guarantees.",
     instructions: [
       'Insert all [value, priority] pairs into a priority queue',
       'Extract all elements in priority order',
@@ -2898,7 +2903,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'combinatorics' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Count the number of ways to write n as a sum of positive integers where order does not matter.',
+      'Count the number of ways to partition an integer n into sums of positive integers where order does not matter. This classic number theory problem uses unbounded knapsack DP where each candidate part can be reused. Integer partitions appear in combinatorics, symmetric functions, and representation theory.',
     instructions: [
       'Count distinct ways to partition n into positive integers',
       'Order does not matter: 3+1 and 1+3 are the same partition',
@@ -2974,7 +2979,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'combinatorics' as const,
     difficulty: 'advanced' as const,
     description:
-      'Compute the Stirling number S(n,k) which counts ways to partition n elements into exactly k non-empty subsets.',
+      'Compute the Stirling number S(n,k) counting ways to partition n distinct elements into exactly k non-empty subsets. The recurrence S(n,k) = k*S(n-1,k) + S(n-1,k-1) captures whether a new element joins an existing subset or forms a new one. These numbers appear in combinatorics, probability, and polynomial algebra.',
     instructions: [
       'Calculate S(n,k) using the recurrence relation',
       'S(n,k) = k*S(n-1,k) + S(n-1,k-1)',
@@ -3049,7 +3054,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'combinatorics' as const,
     difficulty: 'advanced' as const,
     description:
-      'Compute the Bell number B(n) which counts the total number of ways to partition a set of n elements.',
+      'Compute the Bell number B(n) counting all possible ways to partition a set of n elements into non-empty subsets. The Bell triangle method builds on previous rows to compute each value efficiently. Bell numbers arise in set theory, database query optimization, and classification problems.',
     instructions: [
       'Calculate B(n) = sum of S(n,k) for k=0 to n',
       'Use Stirling numbers of the second kind',
@@ -3128,7 +3133,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'combinatorics' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Compute the multinomial coefficient n! / (k1! * k2! * ... * km!) where groups sum to n.',
+      'Compute the multinomial coefficient n!/(k1!*k2!*...km!) which counts ways to divide n items into groups of specified sizes. By decomposing into successive binomial coefficients and interleaving multiplication with division, you avoid factorial overflow. This generalizes combinations and appears in probability and statistical mechanics.',
     instructions: [
       'Given n and array of group sizes, compute multinomial coefficient',
       'Formula: n! / (k1! * k2! * ... * km!)',
@@ -3202,7 +3207,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'combinatorics' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Count valid permutations of n elements where certain elements cannot occupy certain positions.',
+      'Count permutations of n elements where certain element-position pairs are forbidden. This backtracking problem with constraint checking teaches pruning invalid branches early. Restricted permutations model real-world scheduling constraints, seating arrangements, and assignment problems where conflicts must be avoided.',
     instructions: [
       'Given n positions and forbidden pairs [element, position]',
       'Count permutations where element i is not at position j for each forbidden pair',
@@ -3297,7 +3302,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'combinatorics' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Count paths from top-left to bottom-right in a grid with obstacles, moving only right or down.',
+      'Count paths from top-left to bottom-right in a grid with obstacles, moving only right or down. This DP problem extends the classic lattice path counting by setting obstacle cells to zero paths. It models robot navigation, network routing with blocked nodes, and combinatorial path counting under constraints.',
     instructions: [
       'Grid is m x n where 0 is free and 1 is obstacle',
       'Start at (0,0) and reach (m-1, n-1)',
@@ -3393,7 +3398,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Subset Sum Count',
     category: 'combinatorics' as const,
     difficulty: 'intermediate' as const,
-    description: 'Count the number of subsets of an array that sum to a target value.',
+    description:
+      'Count how many subsets of an array sum to exactly a target value using dynamic programming. This is the counting variant of the classic subset sum decision problem. Using a Map-based DP handles negative numbers and arbitrary ranges, a technique applicable to budget allocation and knapsack variants.',
     instructions: [
       'Given an array of integers and a target sum',
       'Count how many subsets sum to exactly the target',
@@ -3468,7 +3474,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Truth Table Generator',
     category: 'combinatorics' as const,
     difficulty: 'intermediate' as const,
-    description: 'Generate all possible combinations of n boolean variables as a truth table.',
+    description:
+      'Generate all 2^n combinations of n boolean variables as a truth table using bit manipulation. Each row index maps to a binary number whose bits represent variable assignments. This foundational technique powers SAT solvers, digital circuit testing, and exhaustive boolean formula evaluation.',
     instructions: [
       'Given n boolean variables',
       'Generate all 2^n combinations',
@@ -3547,7 +3554,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'House Robber',
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
-    description: 'Find maximum amount you can rob from houses without robbing two adjacent houses.',
+    description:
+      'Find the maximum amount you can rob from a row of houses without robbing two adjacent ones. This classic DP problem reduces to a simple recurrence: at each house, choose the better of skipping it or taking it plus the best from two houses back. It models any non-adjacent selection optimization.',
     instructions: [
       'Given array of house values',
       'Cannot rob adjacent houses',
@@ -3617,7 +3625,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Find maximum amount to rob from circular arrangement of houses where first and last are adjacent.',
+      'Maximize robbery from houses arranged in a circle where the first and last are adjacent. The key insight is splitting into two linear subproblems: one excluding the first house, one excluding the last. This circular-to-linear reduction technique applies to any DP problem with circular constraints.',
     instructions: [
       'Houses arranged in a circle',
       'First and last houses are adjacent',
@@ -3696,7 +3704,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Decode Ways',
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
-    description: 'Count the number of ways to decode a digit string where A=1, B=2, ..., Z=26.',
+    description:
+      'Count the number of ways to decode a digit string into letters where A=1 through Z=26. At each position, you can decode one or two digits, creating a Fibonacci-like DP recurrence with validity constraints. This teaches handling branching decoding paths and is a common interview DP problem.',
     instructions: [
       'Given a string of digits',
       'Decode where 1=A, 2=B, ..., 26=Z',
@@ -3775,7 +3784,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Longest Palindromic Subsequence',
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
-    description: 'Find the length of the longest palindromic subsequence in a string.',
+    description:
+      'Find the length of the longest palindromic subsequence in a string using interval DP. The 2D table dp[i][j] tracks the longest palindrome in substring s[i..j], extending by 2 when endpoints match. This is a foundational problem for learning interval-based dynamic programming on strings.',
     instructions: [
       'Given a string, find longest palindromic subsequence',
       'Subsequence: can skip characters but maintain order',
@@ -3854,7 +3864,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'beginner' as const,
     description:
-      'Find the minimum cost to reach the top of stairs where you can climb 1 or 2 steps at a time.',
+      'Find the minimum cost to climb stairs where each step has a cost and you can take 1 or 2 steps at a time. This beginner DP problem demonstrates space-optimized bottom-up computation using only two variables instead of a full array, a technique that extends to Fibonacci-style recurrences.',
     instructions: [
       'Given array of costs for each step',
       'Can start from step 0 or step 1',
@@ -3920,7 +3930,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Partition Equal Subset Sum',
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
-    description: 'Determine if an array can be partitioned into two subsets with equal sum.',
+    description:
+      'Determine if an array can be split into two subsets with equal sum, reducing to a 0/1 knapsack subset sum problem targeting half the total. Iterating backwards through the DP array ensures each element is used at most once. This is a gateway problem to knapsack variants and NP-complete theory.',
     instructions: [
       'Given an array of positive integers',
       'Check if it can be split into two subsets with equal sum',
@@ -3993,7 +4004,8 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     title: 'Target Sum',
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
-    description: 'Assign + or - to each array element and count ways to reach a target sum.',
+    description:
+      'Assign + or - signs to each array element and count the number of ways to reach a target sum. This problem teaches recursive DFS with memoization keyed on (index, runningSum). It models binary decision trees and connects to subset sum via the mathematical equivalence between sign assignment and subset partitioning.',
     instructions: [
       'Given array of non-negative integers and a target',
       'Assign + or - sign to each element',
@@ -4073,7 +4085,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Given an m×n grid of non-negative numbers, find a path from top-left to bottom-right that minimizes the sum of all numbers along the path. You can only move right or down.',
+      'Find the minimum-cost path from top-left to bottom-right in a grid, moving only right or down. Each cell accumulates the minimum of its top and left predecessors, making this a textbook introduction to 2D dynamic programming. This pattern applies to cost optimization in grids, image seam carving, and route planning.',
     instructions: [
       'Implement a function that finds the minimum path sum in a grid',
       'You can only move right or down at each step',
@@ -4164,7 +4176,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'advanced' as const,
     description:
-      'Given a string, return the minimum number of cuts needed to partition the string such that every substring is a palindrome.',
+      'Find the minimum cuts to partition a string so every piece is a palindrome. This two-phase DP first precomputes a palindrome lookup table, then uses 1D DP for minimum cuts. It teaches how to decompose complex string problems into precomputation and optimization phases for O(n^2) overall complexity.',
     instructions: [
       'Implement a function that finds minimum cuts for palindrome partitioning',
       'Each partition must be a palindrome',
@@ -4269,7 +4281,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'advanced' as const,
     description:
-      'Given k eggs and n floors, find the minimum number of trials needed in the worst case to determine the critical floor from which an egg will break.',
+      'Find the minimum worst-case trials to identify the critical breaking floor given k eggs and n floors. This classic decision-theory DP problem balances information gain against resource expenditure: breaking an egg narrows the range below, surviving narrows above. It teaches minimax optimization via 2D dynamic programming.',
     instructions: [
       'Implement a function that solves the egg drop problem',
       'Return minimum number of trials in worst case',
@@ -4352,7 +4364,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'advanced' as const,
     description:
-      'Given an array of balloon values, burst them to maximize coins. When you burst balloon i, you get nums[left] * nums[i] * nums[right] coins. Find the maximum coins you can collect.',
+      'Burst balloons to maximize coins where bursting balloon i yields nums[left]*nums[i]*nums[right]. The critical insight is thinking about which balloon to burst LAST in each interval rather than first, converting a complex dependency problem into clean interval DP. This is a hallmark advanced DP interview question.',
     instructions: [
       'Implement a function to maximize coins from bursting balloons',
       'When bursting balloon i, coins = nums[left] * nums[i] * nums[right]',
@@ -4428,7 +4440,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'advanced' as const,
     description:
-      'Given an array of matrix dimensions where matrix i has dimensions dims[i-1] × dims[i], find the minimum number of scalar multiplications needed to compute the product.',
+      'Find the optimal parenthesization of a matrix chain to minimize total scalar multiplications. This textbook interval DP problem tries every possible split point within each subchain. Matrix chain ordering is foundational in compiler optimization, database query planning, and any problem requiring optimal binary tree construction.',
     instructions: [
       'Implement a function to find minimum scalar multiplications',
       'dims array represents matrix dimensions: matrix i is dims[i-1] × dims[i]',
@@ -4502,7 +4514,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Find the length of the longest contiguous common substring between two strings. This is different from longest common subsequence as characters must be consecutive.',
+      'Find the longest contiguous substring shared by two strings using 2D DP. Unlike subsequence problems, the match resets to zero on mismatch since characters must be consecutive. This pattern is used in DNA sequence alignment, plagiarism detection, and diff algorithms for file comparison.',
     instructions: [
       'Implement a function that finds the longest common substring length',
       'The substring must be contiguous in both strings',
@@ -4581,7 +4593,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Check if string s3 is formed by interleaving strings s1 and s2, where interleaving means preserving the relative order of characters from each string.',
+      "Check if s3 is formed by interleaving s1 and s2 while preserving each string's character order. The 2D DP table tracks whether s3[0..i+j-1] can be formed from s1[0..i-1] and s2[0..j-1]. This pattern models merging ordered streams and appears in compiler parsing and protocol interleaving verification.",
     instructions: [
       'Implement a function to check if s3 is an interleaving of s1 and s2',
       'Character order from s1 and s2 must be preserved',
@@ -4671,7 +4683,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'memoization' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Find the maximum sum of elements from an array where no two selected elements are adjacent. This is similar to the house robber problem but framed as a general array problem.',
+      'Find the maximum sum of non-adjacent elements from an array, the generalized form of the house robber problem. The DP recurrence at each index chooses between including the current element plus best-from-two-back, or skipping it. This models resource selection with exclusion zones in scheduling and allocation.',
     instructions: [
       'Implement a function to find maximum sum with no adjacent elements',
       'Cannot select two adjacent elements',
@@ -4747,7 +4759,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'beginner' as const,
     description:
-      'Check if a string is a palindrome, considering only alphanumeric characters and ignoring case.',
+      'Check if a string is a valid palindrome considering only alphanumeric characters and ignoring case. This beginner string problem teaches character filtering with regex, case normalization, and the two-pointer palindrome check. It is one of the most common easy interview questions for string manipulation fundamentals.',
     instructions: [
       'Implement a function to check if string is a valid palindrome',
       'Consider only alphanumeric characters',
@@ -4819,7 +4831,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Find the length of the longest substring without repeating characters using a sliding window approach.',
+      'Find the longest substring without repeating characters using the sliding window technique. A hash map tracks the last-seen index of each character, enabling O(n) single-pass processing. This is one of the most frequently asked interview questions and the gateway problem for mastering the sliding window pattern.',
     instructions: [
       'Implement a function to find longest substring without repeats',
       'Use sliding window technique',
@@ -4898,7 +4910,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'advanced' as const,
     description:
-      'Find the minimum window in string s that contains all characters of string t. If no such window exists, return empty string.',
+      'Find the smallest substring window in s containing all characters of t with required frequencies. This hard sliding window problem uses expand-right-then-shrink-left with frequency maps tracking satisfied character requirements. It is the canonical advanced sliding window question testing careful bookkeeping and optimization.',
     instructions: [
       'Implement a function to find minimum window containing all chars from t',
       'Use sliding window technique',
@@ -5004,7 +5016,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Group strings that are anagrams of each other. Return an array of groups where each group contains anagrams sorted alphabetically, and groups are sorted by their first element.',
+      'Group strings that are anagrams of each other using sorted-character keys for hash map categorization. This frequent interview question tests your ability to design canonical keys for equivalence classes and group data efficiently. The sorted-key approach runs in O(n*k*log(k)) where k is the max string length.',
     instructions: [
       'Implement a function to group anagrams together',
       'Anagrams are words with same characters in different order',
@@ -5082,7 +5094,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'beginner' as const,
     description:
-      'Compress a string by replacing consecutive characters with the character followed by count. If compressed string is not shorter than original, return original.',
+      'Compress a string using run-length encoding where consecutive identical characters become char+count. Only return the compressed form if it is actually shorter than the original. This teaches basic RLE compression used in image formats, network protocols, and data storage optimization.',
     instructions: [
       'Implement basic string compression using character counts',
       'Format: "aabcccccaaa" becomes "a2b1c5a3"',
@@ -5155,7 +5167,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Design an algorithm to encode an array of strings to a single string, and decode it back. Use length-prefixed format.',
+      'Encode an array of strings into a single string and decode it back using length-prefixed format. By prepending each string with its byte length and a delimiter, you handle arbitrary content including the delimiter itself. This serialization pattern is used in network protocols, database storage, and API design.',
     instructions: [
       'Implement encode and decode functions for array of strings',
       'Use length-prefixed format: length + delimiter + string',
@@ -5250,7 +5262,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'beginner' as const,
     description:
-      'Convert a roman numeral string to an integer. Handle subtractive notation (IV = 4, IX = 9, XL = 40, etc.).',
+      'Convert a Roman numeral string to an integer, handling subtractive notation like IV=4 and IX=9. The algorithm scans left to right, subtracting when a smaller value precedes a larger one. This simple but tricky problem tests careful conditional logic and is one of the most popular easy interview questions.',
     instructions: [
       'Implement a function to convert roman numerals to integer',
       'Handle I, V, X, L, C, D, M',
@@ -5332,7 +5344,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Convert an integer (1-3999) to a roman numeral string. Use standard roman numeral symbols and subtractive notation.',
+      'Convert an integer (1-3999) to its Roman numeral representation using a greedy value table including subtractive pairs. By processing values from largest to smallest (1000, 900, 500, 400...), you greedily build the Roman string. This teaches greedy decomposition and lookup-table-driven string construction.',
     instructions: [
       'Implement a function to convert integer to roman numerals',
       'Handle values 1-3999',
@@ -5403,7 +5415,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'advanced' as const,
     description:
-      'Implement the Knuth-Morris-Pratt (KMP) pattern matching algorithm to find all starting indices where a pattern occurs in text.',
+      'Implement the KMP (Knuth-Morris-Pratt) algorithm to find all pattern occurrences in text in O(n+m) time. The failure function (LPS array) precomputes prefix-suffix overlaps so mismatches skip already-matched characters. KMP is fundamental to text editors, DNA analysis, and any high-performance string search system.',
     instructions: [
       'Implement KMP algorithm for pattern matching',
       'Build failure function (LPS array) for pattern',
@@ -5516,7 +5528,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Find the longest palindromic substring in a string using the expand-around-center approach.',
+      'Find the longest palindromic substring using the expand-around-center technique, checking both odd and even length palindromes at each position. This O(n^2) approach avoids DP table overhead and is intuitive: a palindrome grows outward from its center. A top interview question for string and two-pointer skills.',
     instructions: [
       'Implement a function to find longest palindromic substring',
       'Use expand-around-center technique',
@@ -5603,7 +5615,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'intermediate' as const,
     description:
-      "Convert a string to a 32-bit signed integer, similar to C's atoi function. Handle whitespace, optional sign, and integer overflow.",
+      "Implement C's atoi function: parse a string into a 32-bit signed integer handling whitespace, signs, and overflow clamping. This state-machine parsing problem tests sequential processing of edge cases in a defined order. Robust string-to-number conversion is essential in compilers, input validation, and data parsers.",
     instructions: [
       'Implement string to integer conversion',
       'Skip leading whitespace',
@@ -5697,7 +5709,7 @@ function kthSmallestBST(root: TreeNode, k: number): number | null {
     category: 'utilities' as const,
     difficulty: 'intermediate' as const,
     description:
-      'Convert a string to a zigzag pattern on a given number of rows, then read line by line.',
+      'Write a string in a zigzag pattern across a given number of rows, then read line by line to produce the output. The algorithm simulates row traversal with a direction toggle at boundaries. This teaches index-to-row mapping with periodic direction changes, useful in encryption and display formatting problems.',
     instructions: [
       'Implement zigzag string conversion',
       'Write string in zigzag pattern with numRows rows',
