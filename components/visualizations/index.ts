@@ -216,7 +216,6 @@ const ValidPalindromeViz = dynamic(() => import('./ValidPalindromeViz'), { ssr: 
 const LongestPalindromeViz = dynamic(() => import('./LongestPalindromeViz'), { ssr: false });
 const CountAndSayViz = dynamic(() => import('./CountAndSayViz'), { ssr: false });
 const ZigZagConversionViz = dynamic(() => import('./ZigZagConversionViz'), { ssr: false });
-const JosephusViz = dynamic(() => import('./JosephusViz'), { ssr: false });
 const DiagonalTraversalViz = dynamic(() => import('./DiagonalTraversalViz'), { ssr: false });
 const SkipEveryOtherViz = dynamic(() => import('./SkipEveryOtherViz'), { ssr: false });
 const ReverseIterationViz = dynamic(() => import('./ReverseIterationViz'), { ssr: false });
@@ -238,6 +237,11 @@ const PascalsTriangleRowViz = dynamic(() => import('./PascalsTriangleRowViz'), {
 const CatalanNumberViz = dynamic(() => import('./CatalanNumberViz'), { ssr: false });
 const PowerSetBitmaskViz = dynamic(() => import('./PowerSetBitmaskViz'), { ssr: false });
 const GrayCodeViz = dynamic(() => import('./GrayCodeViz'), { ssr: false });
+const JosephusViz = dynamic(() => import('./JosephusViz'), { ssr: false });
+const PreorderIterativeViz = dynamic(() => import('./PreorderIterativeViz'), { ssr: false });
+const PostorderIterativeViz = dynamic(() => import('./PostorderIterativeViz'), { ssr: false });
+const TreeLevelWidthsViz = dynamic(() => import('./TreeLevelWidthsViz'), { ssr: false });
+const RodCuttingViz = dynamic(() => import('./RodCuttingViz'), { ssr: false });
 const TakeWhileViz = dynamic(() => import('./TakeWhileViz'), { ssr: false });
 const DropWhileViz = dynamic(() => import('./DropWhileViz'), { ssr: false });
 const FrequencyCounterViz = dynamic(() => import('./FrequencyCounterViz'), { ssr: false });
@@ -517,7 +521,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'longest-palindrome-substr': LongestPalindromeViz,
   'count-and-say': CountAndSayViz,
   'zigzag-string': ZigZagConversionViz,
-  josephus: JosephusViz,
   'diagonal-traversal': DiagonalTraversalViz,
   'skip-every-other': SkipEveryOtherViz,
   'reverse-iteration': ReverseIterationViz,
@@ -565,6 +568,11 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'catalan-number': CatalanNumberViz,
   'power-set-bitmask': PowerSetBitmaskViz,
   'gray-code': GrayCodeViz,
+  josephus: JosephusViz,
+  'preorder-iterative': PreorderIterativeViz,
+  'postorder-iterative': PostorderIterativeViz,
+  'tree-level-widths': TreeLevelWidthsViz,
+  'rod-cutting': RodCuttingViz,
   'prime-generation': PrimeGenerationViz,
   'fast-slow-pointers': FastSlowPointersViz,
   'prefix-product': PrefixProductViz,
