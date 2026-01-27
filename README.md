@@ -17,7 +17,7 @@
 <br />
 
 An interactive learning platform for mastering programming languages through hands-on practice.
-**9,400+ problems** across **24 languages**, with real-time code execution, algorithm visualizations, and AI mock interviews.
+**9,000+ problems** across **24 languages**, with real-time code execution, algorithm visualizations, AI mock interviews, and an AI exercise tutor.
 
 <br />
 
@@ -27,7 +27,7 @@ An interactive learning platform for mastering programming languages through han
 
 |  |  |  |  |  |  |
 |:--:|:--:|:--:|:--:|:--:|:--:|
-| **9,434** | **520** | **1,182** | **25** | **24** | **24** |
+| **9,000+** | **520** | **1,182** | **188** | **24** | **24** |
 | Problems | Exercises | Methods | Visualizations | Languages | Cheatsheets |
 
 <br />
@@ -38,7 +38,7 @@ An interactive learning platform for mastering programming languages through han
 
 ## Overview
 
-**Coding Drills** transforms programming syntax mastery into an engaging, game-like experience. Learning method syntax requires **repetition** and **active recall** &mdash; not passive reading. This platform provides the reps.
+**Coding Drills** transforms programming mastery into an engaging, game-like experience. Learning method syntax requires **repetition** and **active recall** &mdash; not passive reading. This platform provides the reps.
 
 Most developers forget method syntax minutes after looking it up, rely on autocomplete without understanding what methods do, and can't write code fluently without constant documentation checks. Coding Drills fixes that with real-time code execution, anti-hardcoding validation, multiple learning modes, and detailed progress tracking.
 
@@ -56,18 +56,36 @@ Timed card-selection challenges matching inputs to correct methods. Pick the rig
 
 ### Method Training / Query Training
 
-9,434 browsable coding challenges across 24 languages. Filter by category, difficulty, and completion status. Each problem has a dedicated page with split-view layout (description + code editor), prev/next navigation, and progress tracking. Programming languages show "Method Training"; database languages (PostgreSQL, MySQL, MongoDB) show "Query Training".
+9,000+ browsable coding challenges across 24 languages. Filter by category, difficulty, and completion status. Each problem has a dedicated page with split-view layout (description + code editor), prev/next navigation, and progress tracking. Programming languages show "Method Training"; database languages (PostgreSQL, MySQL, MongoDB) show "Query Training".
 
 ### Building Blocks
 
 520 structured algorithm exercises covering traversal patterns (DFS, BFS), recursion, sorting, searching, dynamic programming, and data structures. Each exercise includes:
-- **Learn mode** with detailed explanations and step-by-step breakdowns
-- **Practice mode** with code editor and validation
-- **34 interactive visualizations** that animate algorithm execution in real-time
+- **Learn mode** with detailed explanations, step-by-step breakdowns, and an AI tutor
+- **Practice mode** with code editor and test validation
+- **188 interactive visualizations** that animate algorithm execution in real-time
+
+### AI Exercise Tutor
+
+An AI-powered tutor embedded in the Learn tab of each exercise. Runs locally in the browser via WebLLM (Llama-3.1-8B-Instruct) using WebGPU &mdash; no API keys, no server, complete privacy.
+
+The tutor has full context about the exercise and can:
+- Explain the explanation section in simpler terms or more depth
+- Clarify each instruction step
+- Break down what each hint means and how it connects to the solution
+- Walk through the solution code line by line
+- Explain concepts and how they apply to the exercise
+- Narrate the interactive visualization step by step, explaining what the algorithm is doing at each frame
+
+Activates on-demand with a single click. ~3 GB model download on first use, cached for future sessions.
 
 ### AI Mock Interview
 
-Practice coding interviews with AI-powered feedback for programming languages. Simulates real interview scenarios with progressive hints, detailed explanations, and performance assessment. Supports both cloud (OpenAI) and offline (WebLLM) modes.
+Practice coding interviews with an AI interviewer that guides you through 73 algorithm problems. Two modes:
+- **Solve Mode**: The AI presents a problem and guides you through solving it with questions and hints, simulating a real technical interview
+- **Guided Breakdown**: The AI teaches a structured 7-step framework for breaking down algorithm problems
+
+Supports both offline (WebLLM via WebGPU) and cloud (OpenAI) inference.
 
 ### Reference
 
@@ -81,18 +99,21 @@ Browse 1,182 methods across 10 languages with full documentation, usage examples
 
 ## Interactive Visualizations
 
-Algorithm exercises include animated, step-through visualizations that show exactly how each algorithm works. Controls include play/pause, step forward/back, speed adjustment, and reset.
+188 algorithm exercises include animated, step-through visualizations that show exactly how each algorithm works. Controls include play/pause, step forward/back, speed adjustment, and reset.
 
 <div align="center">
 
-| Category | Visualizations |
-|----------|---------------|
-| **Tree Traversal** | BFS Tree, DFS Tree (pre/in-order) |
-| **Two Pointers** | Palindrome Check, Move Zeroes, Three Sum, Container With Most Water, Trapping Rain Water, Dutch National Flag |
-| **Sliding Window** | Max Sum Subarray, Min Subarray Length, Sliding Window Max, Longest Substring Without Repeating, Min Window Substring |
-| **Binary Search** | Sorted Array Search, Search in Rotated Array |
-| **Data Structures** | Stack Operations, Queue Operations, Linked List Traversal, Min-Heap Insert, Trie Insert |
-| **Other Patterns** | Spiral Matrix, Merge Sorted Arrays, Prefix Sum, Generate Permutations |
+| Category | Examples |
+|----------|---------|
+| **Tree Traversal** | BFS, DFS (pre/in/post-order), Level Order, Zigzag |
+| **Two Pointers** | Palindrome, Move Zeroes, Three Sum, Container With Most Water, Trapping Rain Water, Dutch National Flag |
+| **Sliding Window** | Max Sum Subarray, Min Subarray Length, Longest Substring Without Repeating, Min Window Substring |
+| **Binary Search** | Sorted Array, Rotated Array, Search Insert Position |
+| **Dynamic Programming** | Climbing Stairs, House Robber, Coin Change, LCS, Knapsack, Edit Distance |
+| **Data Structures** | Stack, Queue, Linked List, Min-Heap, Trie, LRU Cache, Union-Find |
+| **Sorting** | Merge Sort, Quick Sort, Counting Sort |
+| **Graph** | Topological Sort, Dijkstra, Course Schedule, Number of Islands |
+| **Backtracking** | N-Queens, Sudoku Solver, Word Search, Generate Parentheses |
 
 </div>
 
@@ -112,29 +133,6 @@ Each visualization pre-computes every algorithm step and renders it through SVG 
 | ![Swift](https://img.shields.io/badge/Swift-FA7343?style=flat-square&logo=swift&logoColor=white) | ![Scala](https://img.shields.io/badge/Scala-DC322F?style=flat-square&logo=scala&logoColor=white) | ![R](https://img.shields.io/badge/R-276DC3?style=flat-square&logo=r&logoColor=white) | ![Perl](https://img.shields.io/badge/Perl-39457E?style=flat-square&logo=perl&logoColor=white) |
 | ![Lua](https://img.shields.io/badge/Lua-2C2D72?style=flat-square&logo=lua&logoColor=white) | ![Haskell](https://img.shields.io/badge/Haskell-5D4F85?style=flat-square&logo=haskell&logoColor=white) | ![Elixir](https://img.shields.io/badge/Elixir-4B275F?style=flat-square&logo=elixir&logoColor=white) | ![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=dart&logoColor=white) |
 | ![Clojure](https://img.shields.io/badge/Clojure-5881D8?style=flat-square&logo=clojure&logoColor=white) | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white) | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white) | ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white) |
-
-</div>
-
----
-
-## Problem Distribution
-
-<div align="center">
-
-| Language | Problems | | Language | Problems |
-|:---------|:--------:|:---:|:---------|:--------:|
-| TypeScript | 1,015 | | JavaScript | 880 |
-| Clojure | 553 | | PostgreSQL | 518 |
-| Ruby | 491 | | Java | 477 |
-| Python | 465 | | R | 430 |
-| C# | 427 | | MongoDB | 404 |
-| C++ | 395 | | Dart | 366 |
-| MySQL | 362 | | Go | 350 |
-| Swift | 331 | | Lua | 330 |
-| PHP | 312 | | Scala | 301 |
-| Haskell | 300 | | Rust | 257 |
-| Kotlin | 170 | | C | 166 |
-| Elixir | 84 | | Perl | 50 |
 
 </div>
 
@@ -168,21 +166,23 @@ Each problem defines `validPatterns` (regex patterns the solution must match) an
 | **Styling** | Tailwind CSS 4 |
 | **Code Editor** | Monaco Editor |
 | **Animation** | Framer Motion (motion/react) |
-| **Testing** | Playwright (8,800+ lines of E2E tests) |
+| **Testing** | Playwright (E2E) + Vitest (unit) |
 | **State** | React Context + Zustand + localStorage |
 | **Code Execution** | Browser-based JS/TS execution, pattern matching for compiled languages |
-| **AI** | OpenAI SDK + WebLLM (offline) |
+| **AI** | WebLLM (Llama-3.1-8B-Instruct, offline via WebGPU) + OpenAI SDK (cloud) |
 | **Build** | Turbopack |
 | **Linting** | ESLint + Biome |
+| **Validation** | Zod + React Hook Form |
 
 ### Architecture
 
 - **Server Components** for static generation via `generateStaticParams()`
 - **Client Components** for interactive drills with real-time validation
-- **Dynamic imports** for visualization components to minimize bundle size
+- **Dynamic imports** for visualization and AI components to minimize bundle size
 - **Type-safe** throughout with comprehensive TypeScript interfaces
 - **Responsive** from mobile to desktop with dark mode default
 - **SEO** optimized with `sitemap.ts` and `robots.ts`
+- **Local-first AI** &mdash; model runs on user's GPU, no data leaves the browser
 
 ---
 
@@ -199,15 +199,28 @@ pnpm dev
 ### Commands
 
 ```bash
+# Development
 pnpm dev              # Dev server with Turbopack
 pnpm build            # Production build
 pnpm start            # Production server
+
+# Code Quality
 pnpm lint             # ESLint
 pnpm lint:biome       # Biome
 pnpm typecheck        # TypeScript checking
+pnpm format           # Format with Biome
 pnpm validate         # All checks
-pnpm test:e2e         # E2E tests
+
+# Testing
+pnpm test             # Unit tests (Vitest)
+pnpm test:e2e         # E2E tests (Playwright)
 pnpm test:e2e:ui      # E2E with Playwright UI
+
+# Visualizations
+pnpm viz:list         # List visualization progress
+pnpm viz:next [id]    # Show next tasks for agent
+pnpm viz:generate <id> # Generate viz boilerplate
+pnpm viz:status       # Detailed agent status
 ```
 
 ---
@@ -228,37 +241,37 @@ coding-drills/
 │   │   ├── reference/          # Method reference
 │   │   └── cheatsheet/         # Language cheatsheets
 │   ├── interview/              # Standalone interview landing
+│   ├── api/transpile/          # TypeScript transpilation endpoint
 │   ├── layout.tsx
 │   ├── page.tsx
 │   ├── sitemap.ts
 │   └── robots.ts
 ├── components/
-│   ├── visualizations/         # 34 interactive algorithm visualizations
+│   ├── visualizations/         # 188 interactive algorithm visualizations
 │   │   ├── useVizAnimation.ts  # Shared animation state hook
 │   │   ├── VizControls.tsx     # Shared play/pause/step controls
 │   │   ├── index.ts            # Visualization registry
-│   │   ├── BinarySearchViz.tsx
-│   │   ├── BFSTreeViz.tsx
-│   │   ├── DFSTreeViz.tsx
-│   │   └── ...                 # 22 more visualization components
-│   ├── ThemeProvider.tsx
+│   │   └── ...                 # 188 visualization components
+│   ├── ExerciseTutor.tsx       # AI tutor chat panel (WebLLM)
+│   ├── CodeEditor.tsx          # Monaco editor wrapper
 │   ├── ProgressProvider.tsx
 │   └── ErrorBoundary.tsx
 ├── lib/
-│   ├── problems/               # 9,434 coding problems (24 languages)
+│   ├── problems/               # 9,000+ coding problems (24 languages)
 │   ├── exercises/              # 520 algorithm exercises
+│   │   └── tutor-prompt.ts     # AI tutor system prompts
 │   ├── methods/                # 1,182 method references (10 languages)
+│   ├── interview/              # 73 algorithm interview problems
 │   ├── cheatsheets/            # 24 language cheatsheets
-│   ├── constants/
+│   ├── webllm.ts               # WebLLM integration (Llama-3.1-8B)
 │   ├── codeValidator.ts        # Anti-hardcoding validation
 │   ├── codeRunner.ts           # Code execution engine
-│   ├── quizGenerator.ts        # Quiz generation
-│   └── types.ts
+│   └── quizGenerator.ts        # Quiz generation
 ├── hooks/
 │   ├── useDrill.ts
 │   ├── useProblemProgress.ts
 │   └── useProgress.ts
-├── e2e/                        # 8,800+ lines of E2E tests
+├── e2e/                        # E2E tests (Playwright)
 └── playwright.config.ts
 ```
 
@@ -289,41 +302,19 @@ Add to `lib/problems/{language}.ts` following the `Problem` interface:
 }
 ```
 
-Run `pnpm test:e2e:problems` to validate, then submit a PR.
-
 ### Adding Visualizations
 
-The project includes a parallel agent system for coordinating visualization development. Use the following commands:
-
 ```bash
-# List progress summary for all agents
-npm run viz:list
-
-# Show next tasks for an agent (default: agent 1, limit 5)
-npm run viz:next [agent-id] [limit]
-npm run viz:next 2 10  # Show next 10 tasks for agent 2
-
-# Generate boilerplate for a visualization
-npm run viz:generate <exercise-id>
-npm run viz:generate min-stack
-
-# Show detailed status for all agents
-npm run viz:status
+npm run viz:generate <exercise-id>   # Generate boilerplate
+npm run viz:status                   # Check progress
 ```
 
-**Visualization Pattern:**
+**Pattern:**
 1. Use `useVizAnimation` hook for play/pause/step controls
 2. Pre-compute algorithm steps in a `computeSteps()` function
 3. Use `VizControls` component for consistent UI
-4. Follow existing patterns (see `BinarySearchViz.tsx`, `TwoPointerViz.tsx`)
+4. Follow existing patterns (see `BinarySearchViz.tsx`)
 5. Register in `components/visualizations/index.ts` with dynamic import
-
-**Example Workflow:**
-1. Check available tasks: `npm run viz:next 1 5`
-2. Generate boilerplate: `npm run viz:generate min-stack`
-3. Implement visualization in `components/visualizations/MinStackViz.tsx`
-4. Register in `components/visualizations/index.ts`
-5. Check progress: `npm run viz:status`
 
 ### Contribution Ideas
 
@@ -345,13 +336,14 @@ npm run viz:status
 - Scoring system with speed/difficulty/streak multipliers
 - JS/TS toggle for bilingual practice
 - 24 languages including 3 databases
-- LeetCode-style problem browser with 9,434 challenges
-- AI mock interviews (cloud + offline)
+- 9,000+ coding challenges with problem browser
+- AI mock interviews (WebLLM offline + OpenAI cloud)
+- AI exercise tutor with visualization narration
 - 24 language cheatsheets
 - 520 algorithm exercises with explanations
-- 34 interactive algorithm visualizations
+- 188 interactive algorithm visualizations
 - 1,182 method references across 10 languages
-- 8,800+ lines of E2E test coverage
+- E2E test coverage with Playwright
 - SEO optimization with sitemap and robots.txt
 
 **Planned:**
