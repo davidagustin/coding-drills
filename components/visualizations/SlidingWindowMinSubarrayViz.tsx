@@ -4,259 +4,139 @@ import { useMemo } from 'react';
 import { useVizAnimation } from './useVizAnimation';
 import VizControls from './VizControls';
 
-// ---------------------------------------------------------------------------
-// Algorithm data
-// ---------------------------------------------------------------------------
-const DATA = [2, 1, 5, 1, 3, 2, 8, 1] as const;
+const ARRAY = [2, 3, 1, 2, 4, 3];
 const TARGET = 7;
-const _TOTAL_STEPS = DATA.length; // We'll slide through the array
 
-interface WindowState {
+interface SlidingWindowMinSubarrayStep {
+  arr: number[];
+  sum: number;
   left: number;
   right: number;
-  sum: number;
-  minLength: number;
-  action: string;
-  found: boolean;
+  minLen: number;
+  explanation: string;
 }
 
-// ---------------------------------------------------------------------------
-// Pre-compute every window position
-// ---------------------------------------------------------------------------
-function precompute(): WindowState[] {
-  const states: WindowState[] = [];
-  let minLength = Infinity;
-  let left = 0;
+function computeSteps(): SlidingWindowMinSubarrayStep[] {
+  const steps: SlidingWindowMinSubarrayStep[] = [];
   let sum = 0;
+  let left = 0;
+  let minLen = Infinity;
 
-  // Initial state
-  states.push({
+  steps.push({
+    arr: [...ARRAY],
+    sum: 0,
     left: 0,
     right: -1,
-    sum: 0,
-    minLength: Infinity,
-    action: 'Initialize: Start with empty window',
-    found: false,
+    minLen: Infinity,
+    explanation: `Start: Find minimum length subarray with sum >= ${TARGET}`,
   });
 
-  for (let right = 0; right < DATA.length; right++) {
-    sum += DATA[right];
+  for (let right = 0; right < ARRAY.length; right++) {
+    sum += ARRAY[right];
+    steps.push({
+      arr: [...ARRAY],
+      sum,
+      left,
+      right,
+      minLen: minLen === Infinity ? Infinity : minLen,
+      explanation: `Expand right to ${right}: sum = ${sum}`,
+    });
 
-    // Shrink window while sum >= target
-    while (sum >= TARGET && left <= right) {
-      const currentLength = right - left + 1;
-      if (currentLength < minLength) {
-        minLength = currentLength;
-        states.push({
-          left,
-          right,
-          sum,
-          minLength,
-          action: `Window [${left}..${right}] sums to ${sum} >= ${TARGET}, length ${currentLength} (new min!)`,
-          found: true,
-        });
-      } else {
-        states.push({
-          left,
-          right,
-          sum,
-          minLength,
-          action: `Window [${left}..${right}] sums to ${sum} >= ${TARGET}, length ${currentLength}`,
-          found: false,
-        });
-      }
-      sum -= DATA[left];
-      left++;
-    }
-
-    // Window doesn't meet target yet
-    if (sum < TARGET) {
-      states.push({
+    while (sum >= TARGET) {
+      minLen = Math.min(minLen, right - left + 1);
+      steps.push({
+        arr: [...ARRAY],
+        sum,
         left,
         right,
-        sum,
-        minLength,
-        action: `Window [${left}..${right}] sums to ${sum} < ${TARGET}, expand right`,
-        found: false,
+        minLen,
+        explanation: `Shrink left from ${left}: sum = ${sum} >= ${TARGET}, minLen = ${minLen}`,
       });
+      sum -= ARRAY[left];
+      left++;
     }
   }
 
-  // Final state
-  states.push({
-    left: -1,
-    right: -1,
-    sum: 0,
-    minLength: minLength === Infinity ? 0 : minLength,
-    action: `Complete! Minimum subarray length: ${minLength === Infinity ? 0 : minLength}`,
-    found: false,
+  steps.push({
+    arr: [...ARRAY],
+    sum,
+    left,
+    right: ARRAY.length - 1,
+    minLen: minLen === Infinity ? 0 : minLen,
+    explanation: `Complete: Minimum length = ${minLen === Infinity ? 0 : minLen}`,
   });
 
-  return states;
+  return steps;
 }
 
-// ---------------------------------------------------------------------------
-// Accent colours
-// ---------------------------------------------------------------------------
-const ACCENT = '#f59e0b'; // amber-500
-const ACCENT_BG = 'rgba(245, 158, 11, 0.15)';
-const GREEN = '#22c55e';
-const _RED = '#ef4444';
+const STEPS = computeSteps();
+const TOTAL_STEPS = STEPS.length;
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 export default function SlidingWindowMinSubarrayViz() {
-  const windowStates = useMemo(() => precompute(), []);
-  const controls = useVizAnimation(windowStates.length);
+  const controls = useVizAnimation(TOTAL_STEPS);
   const { step } = controls.state;
 
-  const current: WindowState | null =
-    step < windowStates.length ? windowStates[step] : windowStates[windowStates.length - 1];
-  const isComplete = step >= windowStates.length - 1;
+  const currentStep = useMemo(() => {
+    return step < STEPS.length ? STEPS[step] : STEPS[STEPS.length - 1];
+  }, [step]);
+
+  const { arr, sum, left, right, minLen, explanation } = currentStep;
 
   return (
-    <div className="flex flex-col items-center gap-6 rounded-2xl bg-zinc-900 border border-zinc-800 p-6 shadow-lg select-none">
-      {/* Title */}
-      <div className="text-center">
-        <h3
-          className="text-lg font-bold tracking-tight"
-          style={{
-            background: `linear-gradient(135deg, ${ACCENT}, #fbbf24)`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          Minimum Size Subarray Sum
-        </h3>
-        <p className="mt-1 text-xs text-zinc-500">
-          Find minimum length subarray with sum &ge; {TARGET}
-        </p>
+    <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">
+      <h2 className="text-2xl font-bold text-white mb-4">
+        Minimum Length Subarray with Sum &gt;= Target
+      </h2>
+
+      <div className="mb-6 p-4 bg-zinc-800 rounded-lg">
+        <p className="text-white text-sm">{explanation}</p>
       </div>
 
-      {/* Array visualisation */}
-      <div className="relative flex items-end gap-0">
-        {/* Window frame overlay */}
-        {current && current.left >= 0 && (
-          <div
-            className="absolute top-0 bottom-0 rounded-lg pointer-events-none"
-            style={{
-              left: `${current.left * 56}px`,
-              width: `${(current.right - current.left + 1) * 56}px`,
-              border: `2px solid ${current.found ? GREEN : ACCENT}`,
-              background: current.found ? 'rgba(34, 197, 94, 0.15)' : ACCENT_BG,
-              boxShadow: `0 0 16px ${current.found ? GREEN : ACCENT}44`,
-              transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
-              zIndex: 10,
-            }}
-          />
-        )}
+      <div className="space-y-6">
+        {/* Array */}
+        <div>
+          <h3 className="text-sm font-medium text-zinc-400 mb-2">Array</h3>
+          <div className="flex gap-2 flex-wrap">
+            {arr.map((val, idx) => {
+              const isInWindow = idx >= left && idx <= right;
+              return (
+                <div
+                  key={idx}
+                  className={`w-16 h-16 rounded-lg flex items-center justify-center font-mono text-lg font-semibold border-2 ${
+                    isInWindow
+                      ? sum >= TARGET
+                        ? 'bg-green-500/20 border-green-500 text-green-400'
+                        : 'bg-blue-500/20 border-blue-500 text-blue-400'
+                      : 'bg-zinc-800 border-zinc-700 text-zinc-300'
+                  }`}
+                >
+                  {val}
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-        {DATA.map((value, idx) => {
-          const insideWindow =
-            current !== null && current.left >= 0 && idx >= current.left && idx <= current.right;
-
-          return (
-            <div
-              key={idx}
-              className="flex flex-col items-center"
-              style={{ width: 56, position: 'relative', zIndex: 20 }}
-            >
-              {/* Cell */}
-              <div
-                className="flex items-center justify-center rounded-md text-sm font-bold transition-colors duration-300"
-                style={{
-                  width: 48,
-                  height: 48,
-                  margin: '0 auto',
-                  background: insideWindow
-                    ? current?.found
-                      ? 'rgba(34, 197, 94, 0.22)'
-                      : 'rgba(245, 158, 11, 0.22)'
-                    : '#27272a', // zinc-800
-                  color: insideWindow ? (current?.found ? '#4ade80' : '#fbbf24') : '#a1a1aa', // zinc-400
-                  border: insideWindow
-                    ? `1.5px solid ${current?.found ? GREEN : ACCENT}`
-                    : '1.5px solid #3f3f46', // zinc-700
-                }}
-              >
-                {value}
-              </div>
-
-              {/* Index label */}
-              <span className="mt-1 text-[10px] text-zinc-600">{idx}</span>
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="p-4 bg-zinc-800 rounded-lg">
+            <div className="text-xs text-zinc-400 mb-1">Sum</div>
+            <div className="text-2xl font-bold text-blue-400">{sum}</div>
+          </div>
+          <div className="p-4 bg-zinc-800 rounded-lg">
+            <div className="text-xs text-zinc-400 mb-1">Target</div>
+            <div className="text-2xl font-bold text-yellow-400">{TARGET}</div>
+          </div>
+          <div className="p-4 bg-zinc-800 rounded-lg">
+            <div className="text-xs text-zinc-400 mb-1">Min Length</div>
+            <div className="text-2xl font-bold text-green-400">
+              {minLen === Infinity ? '∞' : minLen}
             </div>
-          );
-        })}
-      </div>
-
-      {/* Stats panel */}
-      <div className="flex flex-wrap justify-center gap-4 text-sm">
-        {/* Window range */}
-        <div className="flex items-center gap-2 rounded-lg bg-zinc-800 px-3 py-2">
-          <span className="text-zinc-500">Window:</span>
-          <span className="font-mono font-semibold text-zinc-300">
-            {current && current.left >= 0 ? `[${current.left}..${current.right}]` : '--'}
-          </span>
-        </div>
-
-        {/* Current window sum */}
-        <div className="flex items-center gap-2 rounded-lg bg-zinc-800 px-3 py-2">
-          <span className="text-zinc-500">Sum:</span>
-          <span
-            className="font-mono font-semibold"
-            style={{
-              color:
-                current && current.sum >= TARGET ? (current.found ? GREEN : ACCENT) : '#a1a1aa',
-            }}
-          >
-            {current ? current.sum : '--'}
-          </span>
-        </div>
-
-        {/* Target */}
-        <div className="flex items-center gap-2 rounded-lg bg-zinc-800 px-3 py-2">
-          <span className="text-zinc-500">Target:</span>
-          <span className="font-mono font-semibold text-zinc-300">{TARGET}</span>
-        </div>
-
-        {/* Minimum length */}
-        <div className="flex items-center gap-2 rounded-lg bg-zinc-800 px-3 py-2">
-          <span className="text-zinc-500">Min Length:</span>
-          <span
-            className="font-mono font-bold"
-            style={{
-              color: current && current.minLength !== Infinity ? GREEN : '#a1a1aa',
-            }}
-          >
-            {current && current.minLength !== Infinity ? current.minLength : '--'}
-          </span>
+          </div>
         </div>
       </div>
 
-      {/* Action panel */}
-      <div className="w-full rounded-xl bg-zinc-800 border border-zinc-700 p-4 text-sm">
-        <div className="flex items-start gap-2">
-          <span className="text-zinc-500 shrink-0">Action:</span>
-          <span className="text-zinc-200 font-mono">{current?.action || '--'}</span>
-        </div>
-      </div>
-
-      {/* Complete banner */}
-      {isComplete && current && current.minLength !== Infinity && (
-        <div
-          className="text-center py-3 px-4 rounded-xl font-bold text-white text-sm w-full"
-          style={{
-            background: `linear-gradient(135deg, ${GREEN}, #16a34a)`,
-            animation: 'fadeInUp 0.4s ease-out',
-          }}
-        >
-          Minimum subarray length: {current.minLength}
-        </div>
-      )}
-
-      {/* Controls */}
-      <VizControls controls={controls} accentColor={ACCENT} />
+      <VizControls controls={controls} />
     </div>
   );
 }

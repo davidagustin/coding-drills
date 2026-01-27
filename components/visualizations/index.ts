@@ -264,6 +264,7 @@ const CartesianNArraysViz = dynamic(() => import('./CartesianNArraysViz'), { ssr
 const TruthTableViz = dynamic(() => import('./TruthTableViz'), { ssr: false });
 const CircularBufferViz = dynamic(() => import('./CircularBufferViz'), { ssr: false });
 const SampleArrayViz = dynamic(() => import('./SampleArrayViz'), { ssr: false });
+const SlidingWindowMaxSumViz = dynamic(() => import('./SlidingWindowMaxSumViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -275,7 +276,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'dfs-traversal': DFSTreeViz,
   'dfs-inorder': DFSTreeViz,
   'sliding-window': SlidingWindowViz,
-  'sliding-window-max-sum': SlidingWindowViz,
   'spiral-matrix': SpiralMatrixViz,
   'stack-operations': StackViz,
   'two-pointer-palindrome': TwoPointerViz,
@@ -289,8 +289,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'container-most-water': ContainerMostWaterViz,
   'trapping-rain-water': TrappingRainWaterViz,
   'dutch-national-flag': DutchNationalFlagViz,
-  // Agent 1: Sliding Window
-  'sliding-window-min-subarray': SlidingWindowMinSubarrayViz,
   'sliding-window-max': SlidingWindowMaxViz,
   // Agent 1: Binary Search
   'search-rotated': SearchRotatedViz,
@@ -299,7 +297,6 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'queue-operations': QueueViz,
   'merge-sorted': MergeSortedViz,
   'min-heap-insert': MinHeapInsertViz,
-  'prefix-sum': PrefixSumViz,
   'trie-insert': TrieInsertViz,
   'generate-permutations': GeneratePermutationsViz,
   'generate-combinations': GenerateCombinationsViz,
@@ -522,6 +519,9 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'truth-table': TruthTableViz,
   'circular-buffer': CircularBufferViz,
   'sample-array': SampleArrayViz,
+  'prefix-sum': PrefixSumViz,
+  'sliding-window-max-sum': SlidingWindowMaxSumViz,
+  'sliding-window-min-subarray': SlidingWindowMinSubarrayViz,
 };
 
 /**
