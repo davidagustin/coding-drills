@@ -118,7 +118,9 @@ export function validateJavaScript(
     // Use the existing executeJavaScript from codeRunner
     // This will compile and execute the code
     // Note: executeJavaScript will also strip TypeScript annotations, but we do it here too for safety
-    const result = executeJavaScript(sanitizedSetupCode, fullCode);
+    const result = executeJavaScript(sanitizedSetupCode, fullCode, {
+      stripTypes: false, // Type annotations already stripped above
+    });
 
     if (!result.success) {
       // Provide more helpful error messages
@@ -463,10 +465,12 @@ export function validateDrillAnswer(
 
   // Additional check: look for return statements with literal expected values
   // This catches cases like: return [1, 2, 3] when expected is [1, 2, 3]
-  const returnLiteralPattern = new RegExp(
-    `return\\s*(${escapeRegex(expectedStr)}|${escapeRegex(String(expectedOutput))})`,
-    'i',
-  );
+  const patternParts = [escapeRegex(String(expectedOutput))];
+  if (expectedStr) {
+    patternParts.push(escapeRegex(expectedStr));
+  }
+
+  const returnLiteralPattern = new RegExp(`return\\s*(${patternParts.join('|')})`, 'i');
   if (returnLiteralPattern.test(normalizedAnswer)) {
     // Allow if setup variables are used in the code
     const setupVars = setupCode.match(/(?:const|let|var)\s+(\w+)/g);

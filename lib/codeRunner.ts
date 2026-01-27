@@ -89,16 +89,27 @@ const ERROR_HINTS: ErrorHint[] = [
 // JavaScript/TypeScript Execution
 // ============================================================
 
+export interface ExecutionOptions {
+  timeout?: number;
+  stripTypes?: boolean;
+}
+
 /**
  * Executes JavaScript code safely with timeout protection
  */
 export function executeJavaScript(
   setupCode: string,
   userCode: string,
-  timeout: number = DEFAULT_TIMEOUT,
+  optionsOrTimeout: number | ExecutionOptions = DEFAULT_TIMEOUT,
 ): ExecutionResult {
   const startTime = performance.now();
   const logs: string[] = [];
+
+  // Parse options
+  const options: ExecutionOptions =
+    typeof optionsOrTimeout === 'number' ? { timeout: optionsOrTimeout } : optionsOrTimeout;
+
+  const { timeout = DEFAULT_TIMEOUT, stripTypes = true } = options;
 
   // Validate timeout
   const safeTimeout = Math.min(Math.max(timeout, 100), MAX_TIMEOUT);
@@ -119,8 +130,8 @@ export function executeJavaScript(
 
     // Strip TypeScript type annotations from setup code for JavaScript execution
     // TypeScript syntax like `: string[]` is not valid JavaScript
-    const sanitizedSetupCode = stripTypeScriptAnnotations(setupCode);
-    const sanitizedUserCode = stripTypeScriptAnnotations(userCode);
+    const sanitizedSetupCode = stripTypes ? stripTypeScriptAnnotations(setupCode) : setupCode;
+    const sanitizedUserCode = stripTypes ? stripTypeScriptAnnotations(userCode) : userCode;
 
     // Combine setup and user code
     const fullCode = `

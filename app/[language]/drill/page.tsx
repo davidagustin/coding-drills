@@ -7,6 +7,11 @@ import CodeEditor from '@/components/CodeEditor';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
 import { getProblemCountsByCategory, problemsByLanguage } from '@/lib/problems/index';
+import {
+  getInterviewRecommendedCount,
+  getInterviewRecommendedIds,
+  hasInterviewRecommended,
+} from '@/lib/problems/interview-recommended';
 import type { Difficulty, LanguageId, Problem } from '@/lib/types';
 import { LANGUAGE_CONFIG } from '../config';
 
@@ -25,6 +30,7 @@ interface DrillConfig {
   difficulty: Difficulty | 'all';
   selectedQuestionIds?: string[];
   includeSiblingLanguage?: boolean;
+  interviewOnly?: boolean;
 }
 
 // Define sibling language pairs
@@ -261,6 +267,14 @@ function selectProblems(language: LanguageId, config: DrillConfig): ProblemWithL
     return shuffleArray(problems);
   }
 
+  // Filter by interview-recommended
+  if (config.interviewOnly) {
+    problems = problems.filter((p) => {
+      const ids = getInterviewRecommendedIds(p.sourceLanguage);
+      return ids.has(p.id);
+    });
+  }
+
   // Filter by categories
   if (config.categories.length > 0) {
     problems = problems.filter((p) => config.categories.includes(p.category));
@@ -397,6 +411,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [questionCount, setQuestionCount] = useState(10);
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
+  const [interviewOnly, setInterviewOnly] = useState(false);
   const [showQuestionBrowser, setShowQuestionBrowser] = useState(false);
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
@@ -432,6 +447,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
       selectedQuestionIds:
         selectedQuestionIds.size > 0 ? Array.from(selectedQuestionIds) : undefined,
       includeSiblingLanguage: includeSibling,
+      interviewOnly,
     });
   };
 
@@ -443,6 +459,14 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
     if (includeSibling && siblingLanguage) {
       const siblingProblems = PROBLEMS_BY_LANGUAGE[siblingLanguage] || [];
       problems = [...problems, ...siblingProblems];
+    }
+
+    // Filter by interview-recommended
+    if (interviewOnly) {
+      const langIds = getInterviewRecommendedIds(language);
+      const siblingIds =
+        includeSibling && siblingLanguage ? getInterviewRecommendedIds(siblingLanguage) : new Set();
+      problems = problems.filter((p) => langIds.has(p.id) || siblingIds.has(p.id));
     }
 
     // Filter by categories
@@ -547,6 +571,36 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
               <div
                 className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
                   includeSibling ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        )}
+
+        {/* Interview Recommended Filter */}
+        {hasInterviewRecommended(language) && (
+          <div className="flex items-center justify-between p-4 bg-amber-500/5 rounded-lg border border-amber-500/20">
+            <div>
+              <span className="block text-sm font-medium text-zinc-300">Interview Recommended</span>
+              <span className="text-xs text-zinc-500">
+                Curated problems commonly tested in technical interviews (
+                {getInterviewRecommendedCount(
+                  language,
+                  includeSibling && siblingLanguage ? siblingLanguage : undefined,
+                )}
+                )
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setInterviewOnly(!interviewOnly)}
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
+                interviewOnly ? 'bg-amber-500' : 'bg-zinc-600'
+              }`}
+            >
+              <div
+                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
+                  interviewOnly ? 'translate-x-7' : 'translate-x-1'
                 }`}
               />
             </button>

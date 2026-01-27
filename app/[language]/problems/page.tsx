@@ -4,6 +4,10 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { problemsByLanguage } from '@/lib/problems/index';
+import {
+  getInterviewRecommendedIds,
+  hasInterviewRecommended,
+} from '@/lib/problems/interview-recommended';
 import type { Difficulty, LanguageId, Problem } from '@/lib/types';
 import {
   getTrainingLabel,
@@ -316,6 +320,7 @@ export default function ProblemsPage() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [interviewOnly, setInterviewOnly] = useState(false);
   const [sortField, setSortField] = useState<SortField>('number');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -392,6 +397,12 @@ export default function ProblemsPage() {
       });
     }
 
+    // Interview recommended filter
+    if (interviewOnly) {
+      const ids = getInterviewRecommendedIds(language);
+      result = result.filter((p) => ids.has(p.id));
+    }
+
     // Sort
     result.sort((a, b) => {
       let comparison = 0;
@@ -423,6 +434,8 @@ export default function ProblemsPage() {
     categoryFilter,
     difficultyFilter,
     statusFilter,
+    interviewOnly,
+    language,
     sortField,
     sortDirection,
     progress,
@@ -569,6 +582,37 @@ export default function ProblemsPage() {
           />
         </div>
       </div>
+
+      {/* Interview Recommended Toggle */}
+      {hasInterviewRecommended(language) && (
+        <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="block text-sm font-medium text-zinc-300">Interview Recommended</span>
+              <span className="text-xs text-zinc-500">
+                Show only problems commonly tested in technical interviews (
+                {getInterviewRecommendedIds(language).size})
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setInterviewOnly(!interviewOnly)}
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
+                interviewOnly ? 'bg-amber-500' : 'bg-zinc-600'
+              }`}
+              role="switch"
+              aria-checked={interviewOnly}
+              aria-label="Filter to interview recommended problems"
+            >
+              <div
+                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
+                  interviewOnly ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Drills Table */}
       <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
