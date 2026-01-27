@@ -35,6 +35,11 @@ const LongestNoRepeatViz = dynamic(() => import('./LongestNoRepeatViz'), { ssr: 
 const MinWindowSubstrViz = dynamic(() => import('./MinWindowSubstrViz'), { ssr: false });
 const SearchRotatedViz = dynamic(() => import('./SearchRotatedViz'), { ssr: false });
 
+// Building blocks
+const QueueViz = dynamic(() => import('./QueueViz'), { ssr: false });
+const MergeSortedViz = dynamic(() => import('./MergeSortedViz'), { ssr: false });
+const MinHeapInsertViz = dynamic(() => import('./MinHeapInsertViz'), { ssr: false });
+
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
   'binary-search': BinarySearchViz,
@@ -67,6 +72,11 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'min-window-substr': MinWindowSubstrViz,
   // Agent 1: Binary Search
   'search-rotated': SearchRotatedViz,
+
+  // Building blocks
+  'queue-operations': QueueViz,
+  'merge-sorted': MergeSortedViz,
+  'min-heap-insert': MinHeapInsertViz,
 };
 
 /**
