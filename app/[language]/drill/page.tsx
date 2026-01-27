@@ -923,11 +923,24 @@ function DrillPhaseComponent({
                 }`}
               >
                 {currentAnswer.skipped ? (
-                  <svg viewBox="0 0 24 24" className="w-7 h-7 inline-block" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-7 h-7 inline-block"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <polygon points="5,4 15,12 5,20" fill="currentColor" stroke="none" />
                     <line x1="19" y1="5" x2="19" y2="19" />
                   </svg>
-                ) : currentAnswer.isCorrect ? '✓' : '✗'}
+                ) : currentAnswer.isCorrect ? (
+                  '✓'
+                ) : (
+                  '✗'
+                )}
               </div>
               <div className="flex-1">
                 <div
@@ -1341,8 +1354,8 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
                   </div>
                   <p className="text-sm text-zinc-400 mb-3">{record.problem.text}</p>
                   <div className="text-sm">
-                    <span className="text-zinc-500">Solution: </span>
-                    <code className="bg-zinc-800 px-2 py-1 rounded text-blue-400 border border-zinc-700">
+                    <span className="text-zinc-500 block mb-1">Solution:</span>
+                    <code className="block bg-zinc-800 px-2 py-1 rounded text-blue-400 border border-zinc-700 whitespace-pre-wrap break-words">
                       {record.problem.sample}
                     </code>
                   </div>
