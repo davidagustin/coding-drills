@@ -229,6 +229,12 @@ const ZipArraysViz = dynamic(() => import('./ZipArraysViz'), { ssr: false });
 const UnzipPairsViz = dynamic(() => import('./UnzipPairsViz'), { ssr: false });
 const ChunkArrayViz = dynamic(() => import('./ChunkArrayViz'), { ssr: false });
 const CompactViz = dynamic(() => import('./CompactViz'), { ssr: false });
+const GenerateRangeViz = dynamic(() => import('./GenerateRangeViz'), { ssr: false });
+const PartitionViz = dynamic(() => import('./PartitionViz'), { ssr: false });
+const DifferenceViz = dynamic(() => import('./DifferenceViz'), { ssr: false });
+const IntersectionViz = dynamic(() => import('./IntersectionViz'), { ssr: false });
+const TakeWhileViz = dynamic(() => import('./TakeWhileViz'), { ssr: false });
+const DropWhileViz = dynamic(() => import('./DropWhileViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -452,6 +458,12 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'unzip-pairs': UnzipPairsViz,
   'chunk-array': ChunkArrayViz,
   compact: CompactViz,
+  'generate-range': GenerateRangeViz,
+  partition: PartitionViz,
+  difference: DifferenceViz,
+  intersection: IntersectionViz,
+  'take-while': TakeWhileViz,
+  'drop-while': DropWhileViz,
 };
 
 /**
