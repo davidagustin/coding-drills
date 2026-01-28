@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
+import { getPatternCategories } from '@/lib/algorithmPatterns';
 import {
   COMPLEXITY_CATEGORY_CONFIG,
   getComplexityCategories,
@@ -144,12 +145,22 @@ function SetupPhase({
   // Get categories/counts based on quiz type
   const isComplexity =
     config.quizType === 'time-complexity' || config.quizType === 'space-complexity';
-  const availableCategories = isComplexity ? getComplexityCategories() : methodCategories;
-  const categoryCounts = isComplexity ? getComplexityCategoryCounts() : methodCategoryCounts;
+  const isPatternQuiz = config.quizType === 'pattern-recognition';
+  const availableCategories = isComplexity
+    ? getComplexityCategories()
+    : isPatternQuiz
+      ? getPatternCategories()
+      : methodCategories;
+  const categoryCounts = isComplexity
+    ? getComplexityCategoryCounts()
+    : isPatternQuiz
+      ? {} // Pattern quiz doesn't use category counts the same way
+      : methodCategoryCounts;
 
   // Calculate available questions based on selected categories
-  const availableMethodsCount =
-    config.categories.length === 0
+  const availableMethodsCount = isPatternQuiz
+    ? 170 // Pattern quiz has 170 problems
+    : config.categories.length === 0
       ? Object.values(categoryCounts).reduce((a, b) => a + b, 0) // All categories
       : config.categories.reduce((sum, cat) => sum + (categoryCounts[cat] || 0), 0);
 
@@ -224,18 +235,21 @@ function SetupPhase({
               ? `Test your knowledge of ${config.language} methods`
               : config.quizType === 'time-complexity'
                 ? 'Identify the time complexity of algorithms'
-                : 'Identify the space complexity of algorithms'}
+                : config.quizType === 'space-complexity'
+                  ? 'Identify the space complexity of algorithms'
+                  : 'Recognize algorithm patterns from LeetCode-style problems'}
           </p>
         </div>
 
         {/* Quiz Type Selection */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <h2 className="text-xl font-semibold mb-4">Quiz Type</h2>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {[
               { type: 'methods' as QuizType, label: 'Methods', icon: '📝' },
               { type: 'time-complexity' as QuizType, label: 'Time Complexity', icon: '⏱' },
               { type: 'space-complexity' as QuizType, label: 'Space Complexity', icon: '💾' },
+              { type: 'pattern-recognition' as QuizType, label: 'Pattern Quiz', icon: '🧩' },
             ].map(({ type, label, icon }) => (
               <button
                 type="button"
@@ -256,76 +270,80 @@ function SetupPhase({
           </div>
         </div>
 
-        {/* Category Selection */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">
-              Categories
-              {config.categories.length > 0 && (
-                <span className="text-sm font-normal text-slate-400 ml-2">
-                  ({config.categories.length} selected)
-                </span>
-              )}
-            </h2>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={selectAllCategories}
-                className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
-              >
-                Select All
-              </button>
-              <span className="text-slate-600">|</span>
-              <button
-                type="button"
-                onClick={clearAllCategories}
-                className="text-sm text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
-              >
-                Clear
-              </button>
+        {/* Category Selection - Skip for pattern quiz */}
+        {!isPatternQuiz && (
+          <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">
+                Categories
+                {config.categories.length > 0 && (
+                  <span className="text-sm font-normal text-slate-400 ml-2">
+                    ({config.categories.length} selected)
+                  </span>
+                )}
+              </h2>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={selectAllCategories}
+                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+                >
+                  Select All
+                </button>
+                <span className="text-slate-600">|</span>
+                <button
+                  type="button"
+                  onClick={clearAllCategories}
+                  className="text-sm text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
+                >
+                  Clear
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {availableCategories.map((category) => (
-              <button
-                type="button"
-                key={category}
-                onClick={() => toggleCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer flex items-center gap-2 ${
-                  config.categories.includes(category)
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                {isComplexity
-                  ? COMPLEXITY_CATEGORY_CONFIG[category as keyof typeof COMPLEXITY_CATEGORY_CONFIG]
-                      ?.name || category
-                  : category}
-                <span
-                  className={`text-xs px-1.5 py-0.5 rounded-full ${
+            <div className="flex flex-wrap gap-2">
+              {availableCategories.map((category) => (
+                <button
+                  type="button"
+                  key={category}
+                  onClick={() => toggleCategory(category)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer flex items-center gap-2 ${
                     config.categories.includes(category)
-                      ? 'bg-blue-400/30 text-blue-100'
-                      : 'bg-slate-600 text-slate-400'
+                      ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                      : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                   }`}
                 >
-                  {categoryCounts[category] || 0}
-                </span>
-              </button>
-            ))}
+                  {isComplexity
+                    ? COMPLEXITY_CATEGORY_CONFIG[
+                        category as keyof typeof COMPLEXITY_CATEGORY_CONFIG
+                      ]?.name || category
+                    : category}
+                  <span
+                    className={`text-xs px-1.5 py-0.5 rounded-full ${
+                      config.categories.includes(category)
+                        ? 'bg-blue-400/30 text-blue-100'
+                        : 'bg-slate-600 text-slate-400'
+                    }`}
+                  >
+                    {categoryCounts[category] || 0}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {config.categories.length === 0 && (
+              <p className="text-slate-500 text-sm mt-3">
+                No categories selected - all categories will be included
+              </p>
+            )}
           </div>
-          {config.categories.length === 0 && (
-            <p className="text-slate-500 text-sm mt-3">
-              No categories selected - all categories will be included
-            </p>
-          )}
-        </div>
+        )}
 
         {/* Question Count */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Number of Questions</h2>
             <span className="text-sm text-slate-400">
-              {availableMethodsCount} {isComplexity ? 'questions' : 'methods'} available
+              {availableMethodsCount}{' '}
+              {isPatternQuiz ? 'problems' : isComplexity ? 'questions' : 'methods'} available
             </span>
           </div>
           <QuestionCountSlider
@@ -1385,6 +1403,9 @@ Try it yourself!`;
 export default function QuizPage() {
   const params = useParams();
   const language = (params?.language as LanguageId) || 'javascript';
+  const searchParams =
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const initialQuizType = (searchParams?.get('type') as QuizType) || 'methods';
 
   // Database languages don't support quiz mode (no method reference data)
   const isDatabaseLanguage = ['postgresql', 'mysql', 'mongodb'].includes(language);
@@ -1402,7 +1423,7 @@ export default function QuizPage() {
       categories: [],
       questionCount: 10,
       timePerQuestion: 15,
-      quizType: 'methods',
+      quizType: initialQuizType === 'pattern-recognition' ? 'pattern-recognition' : 'methods',
     },
     questions: [],
     currentQuestionIndex: 0,
@@ -1427,6 +1448,12 @@ export default function QuizPage() {
 
   // Start quiz
   const handleStartQuiz = () => {
+    if (state.config.quizType === 'pattern-recognition') {
+      // For pattern quiz, redirect to pattern-quiz page
+      // This maintains the existing pattern quiz functionality
+      window.location.href = `/${language}/pattern-quiz`;
+      return;
+    }
     const questions = generateQuiz(state.config);
     setState((prev) => ({
       ...prev,
