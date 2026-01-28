@@ -188,6 +188,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'String',
       outputFormat: 'Single number (length)',
       keywords: ['substring', 'without repeating', 'longest'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Sliding Window maintains valid substring.',
+      pattern:
+        'Keywords: "Substring", "Longest", "Window" → Sliding Window pattern. Use Hash Map to track character frequencies.',
     },
     difficulty: 'medium',
     category: 'String',
@@ -440,6 +443,11 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of heights',
       outputFormat: 'Single number (water trapped)',
       keywords: ['trapping', 'water', 'elevation', 'bars'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Two Pointers or Stack approach.',
+      pattern:
+        'Keywords: "Trapping", "Water" → Two-Pass (prefix/suffix) or Two Pointers. Compute max from left, then from right.',
+      advancedLogic:
+        'Two-Pass Technique: Calculate max height from left, then from right. Water trapped = min(leftMax, rightMax) - height[i].',
     },
     difficulty: 'hard',
     category: 'Array',
@@ -464,6 +472,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of integers',
       outputFormat: 'List of lists (triplets)',
       keywords: ['three numbers', 'sum to zero', 'triplets'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). Sort first, then use Two Pointers.',
+      pattern:
+        'Input-Based Strategy: Array → Sort + Two Pointers. Fix one element, use two pointers for remaining two.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -487,6 +498,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of integers, target',
       outputFormat: 'List of lists (quadruplets)',
       keywords: ['four numbers', 'sum to target', 'quadruplets'],
+      bigO: 'N ≤ 500 → Target: O(N³). Sort + nested loops with Two Pointers.',
+      pattern:
+        'Input-Based Strategy: Array → Sort + Two Pointers. Fix two elements, use two pointers for remaining two.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -562,6 +576,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of characters',
       outputFormat: 'Reversed array in-place',
       keywords: ['reverse', 'in-place', 'O(1) memory'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Two Pointers swap from both ends.',
+      pattern:
+        'Input-Based Strategy: Array → Two Pointers. Swap elements from start and end, move inward.',
     },
     difficulty: 'easy',
     category: 'String',
@@ -609,6 +626,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'String',
       outputFormat: 'Single number (count)',
       keywords: ['palindromic', 'substrings', 'count'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). Expand around centers (odd and even length palindromes).',
+      pattern:
+        'Input-Based Strategy: String → Two Pointers. Expand around each possible center to count palindromes.',
     },
     difficulty: 'medium',
     category: 'String',
@@ -715,6 +735,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Binary array, integer k',
       outputFormat: 'Single number (max consecutive ones)',
       keywords: ['consecutive', 'flip zeros', 'maximum'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Sliding Window with at most K zeros.',
+      pattern:
+        'Keywords: "Contiguous", "Window" → Sliding Window. Expand window while zeros ≤ K, shrink when exceeded.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -817,6 +840,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Two strings',
       outputFormat: 'Boolean',
       keywords: ['permutation', 'contains', 'substring'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Sliding Window with character frequency matching.',
+      pattern:
+        'Keywords: "Permutation", "Substring", "Window" → Sliding Window. Match character frequencies in fixed-size window.',
     },
     difficulty: 'medium',
     category: 'String',
@@ -922,6 +948,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Rotated sorted array, target',
       outputFormat: 'Index or -1',
       keywords: ['rotated', 'sorted', 'search', 'target'],
+      bigO: 'N ≥ 10⁷ → Target: O(log N). Binary Search with rotation handling.',
+      pattern:
+        'Keywords: "Search in sorted" → Binary Search. Determine which half is sorted, then search accordingly.',
     },
     difficulty: 'medium',
     category: 'Binary Search',
@@ -1003,6 +1032,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of piles, hours h',
       outputFormat: 'Single number (minimum k)',
       keywords: ['minimum', 'eating speed', 'within h hours'],
+      bigO: 'N ≥ 10⁷ → Target: O(log N). Binary Search on Answer (search space: 1 to max(piles)).',
+      pattern:
+        'Keywords: "Minimize maximum" → Binary Search on Answer. Check if speed K is feasible, adjust search space.',
     },
     difficulty: 'medium',
     category: 'Binary Search',
@@ -1108,6 +1140,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of weights, days',
       outputFormat: 'Single number (minimum capacity)',
       keywords: ['ship packages', 'within days', 'minimum capacity'],
+      bigO: 'N ≥ 10⁷ → Target: O(log N). Binary Search on Answer (search space: max(weights) to sum(weights)).',
+      pattern:
+        'Keywords: "Minimize maximum" → Binary Search on Answer. Check if capacity C is feasible within D days.',
     },
     difficulty: 'medium',
     category: 'Binary Search',
@@ -1209,6 +1244,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Two integers n, k',
       outputFormat: 'List of lists',
       keywords: ['combinations', 'all possible', 'chosen from range'],
+      bigO: 'N ≤ 25 → Target: O(2^N). Backtracking generates all combinations.',
+      pattern:
+        'Output Format: List of Lists → Backtracking. Build combinations recursively, backtrack when size equals K.',
     },
     difficulty: 'medium',
     category: 'Backtracking',
@@ -1311,6 +1349,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Integer n',
       outputFormat: 'List of lists (solutions)',
       keywords: ['n-queens', 'no two attack', 'all distinct solutions'],
+      bigO: 'N ≤ 12 → Target: O(N!). Backtracking tries all valid queen placements.',
+      pattern:
+        'Output Format: List of Lists → Backtracking. Place queens row by row, backtrack on conflicts.',
     },
     difficulty: 'hard',
     category: 'Backtracking',
@@ -1416,6 +1457,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'String of digits',
       outputFormat: 'List of strings (IP addresses)',
       keywords: ['IP addresses', 'four integers', 'inserting dots'],
+      bigO: 'N ≤ 25 → Target: O(2^N). Backtracking tries all valid IP segmentations.',
+      pattern:
+        'Output Format: List of Lists → Backtracking. Build IP segments recursively, validate each segment (0-255, no leading zeros).',
     },
     difficulty: 'medium',
     category: 'Backtracking',
@@ -1513,6 +1557,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of integers',
       outputFormat: 'Single number (length)',
       keywords: ['longest', 'increasing', 'subsequence'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). DP tracks longest increasing subsequence ending at each index.',
+      pattern:
+        'Keywords: "Longest", "Optimal" → Dynamic Programming. dp[i] = length of LIS ending at index i.',
     },
     difficulty: 'medium',
     category: 'Dynamic Programming',
@@ -1620,6 +1667,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Two strings',
       outputFormat: 'Single number (length)',
       keywords: ['longest', 'common', 'subsequence'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). DP with 2D state: dp[i][j] = LCS of text1[0..i] and text2[0..j].',
+      pattern:
+        'Keywords: "Longest", "Common", "Optimal" → Dynamic Programming. Match characters or skip one.',
     },
     difficulty: 'medium',
     category: 'Dynamic Programming',
@@ -1920,6 +1970,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of points, integer k',
       outputFormat: 'Array of k points',
       keywords: ['k closest', 'points', 'origin', 'distance'],
+      bigO: 'N ≤ 10⁶ → Target: O(N log K). Max heap of size K maintains K closest points.',
+      pattern:
+        'Keywords: "K closest", "Top K" → Heap / Priority Queue. Max heap keeps K smallest distances.',
     },
     difficulty: 'medium',
     category: 'Heap',
@@ -2100,6 +2153,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of temperatures',
       outputFormat: 'Array of days to wait',
       keywords: ['next greater', 'warmer temperature', 'days to wait'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Monotonic Stack processes each element once.',
+      pattern:
+        'Keywords: "Next greater element" → Monotonic Stack. Maintain decreasing stack, pop when current > stack top.',
     },
     difficulty: 'medium',
     category: 'Stack',
@@ -2130,6 +2186,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Two arrays',
       outputFormat: 'Array of next greater elements',
       keywords: ['next greater element', 'first greater', 'to the right'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Monotonic Stack finds next greater in one pass.',
+      pattern:
+        'Keywords: "Next greater element" → Monotonic Stack. Build next greater map for nums2, then lookup for nums1.',
     },
     difficulty: 'easy',
     category: 'Stack',
@@ -2207,6 +2266,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'String num, integer k',
       outputFormat: 'String (smallest number)',
       keywords: ['remove k digits', 'smallest', 'greedy'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Monotonic Stack removes digits greedily.',
+      pattern:
+        'Keywords: "Minimum operations" → Greedy + Stack. Remove larger digits from left while maintaining order.',
     },
     difficulty: 'medium',
     category: 'Stack',
@@ -2311,6 +2373,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Stream of prices',
       outputFormat: 'Span (integer)',
       keywords: ['stock span', 'consecutive days', 'less than or equal'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Monotonic Stack tracks decreasing prices.',
+      pattern:
+        'Keywords: "Consecutive", "Less than or equal" → Monotonic Stack. Store (price, span) pairs, pop smaller prices.',
     },
     difficulty: 'medium',
     category: 'Stack',
@@ -2414,6 +2479,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Binary tree root',
       outputFormat: 'Inverted tree root',
       keywords: ['invert', 'binary tree', 'swap children'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). DFS visits each node once.',
+      pattern: 'Input-Based Strategy: Tree → DFS. Swap left and right children recursively.',
     },
     difficulty: 'easy',
     category: 'Tree',
@@ -2519,6 +2586,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Binary tree root, two nodes',
       outputFormat: 'Node (LCA)',
       keywords: ['lowest common ancestor', 'LCA', 'two nodes'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). DFS finds both nodes and returns their LCA.',
+      pattern:
+        'Input-Based Strategy: Tree → DFS. Return node if found, null otherwise. LCA is where both subtrees return non-null.',
     },
     difficulty: 'medium',
     category: 'Tree',
@@ -2631,6 +2701,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Number of courses, prerequisites array',
       outputFormat: 'Boolean',
       keywords: ['course schedule', 'prerequisites', 'cycle detection'],
+      bigO: 'N ≤ 5,000 → Target: O(V+E). DFS detects cycles in dependency graph.',
+      pattern:
+        'Input-Based Strategy: Graph → DFS. Use three-color marking: white (unvisited), gray (visiting), black (visited).',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -2717,6 +2790,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: '2D grid',
       outputFormat: 'Single number (minutes)',
       keywords: ['rotting oranges', 'minimum minutes', '4-directionally adjacent'],
+      bigO: 'N ≤ 10⁶ → Target: O(V+E). Multi-source BFS from all rotten oranges.',
+      pattern:
+        'Input-Based Strategy: 2D Grid → BFS. Start BFS from all rotten oranges simultaneously, track minutes.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -2813,6 +2889,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: '2D board, list of words',
       outputFormat: 'List of found words',
       keywords: ['word search', 'trie', 'all words', 'adjacent cells'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Trie + DFS: build trie, then DFS on board matching trie paths.',
+      pattern:
+        'Input-Based Strategy: Strings → Trie. Build trie from words, DFS on board following trie paths.',
     },
     difficulty: 'hard',
     category: 'Trie',
@@ -2905,6 +2984,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Adjacency matrix',
       outputFormat: 'Single number (provinces)',
       keywords: ['number of provinces', 'connected components', 'union find'],
+      bigO: 'N ≤ 10⁶ → Target: O(α(N)) ≈ O(1). Union-Find groups connected nodes.',
+      pattern:
+        'Keywords: "Connected", "Number of groups" → Union-Find. Union connected nodes, count distinct roots.',
     },
     difficulty: 'medium',
     category: 'Union-Find',
@@ -3109,6 +3191,11 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Linked list head',
       outputFormat: 'Boolean',
       keywords: ['cycle', 'linked list', 'fast and slow'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Floyd Cycle Detection: fast pointer moves 2x, slow moves 1x.',
+      pattern:
+        'Input-Based Strategy: Linked List → Fast & Slow Pointers. If fast meets slow, cycle exists.',
+      advancedLogic:
+        'Floyd Cycle Detection: Two pointers at different speeds will meet if cycle exists.',
     },
     difficulty: 'easy',
     category: 'Linked List',
@@ -3325,6 +3412,10 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of integers',
       outputFormat: 'Single number',
       keywords: ['single number', 'appears twice', 'XOR'],
+      bigO: 'N ≥ 10⁷ → Target: O(N). XOR all numbers: pairs cancel out (x ^ x = 0).',
+      pattern: 'Bitwise Magic: x ^ x = 0. XOR all elements, pairs cancel, single number remains.',
+      advancedLogic:
+        'Bitwise Magic: XOR property x ^ x = 0 finds the single unique number in pair-heavy array.',
     },
     difficulty: 'easy',
     category: 'Bit Manipulation',
@@ -3426,6 +3517,11 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Integer n',
       outputFormat: 'Array of counts',
       keywords: ['counting bits', 'number of 1s', 'DP'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). DP: ans[i] = ans[i >> 1] + (i & 1).',
+      pattern:
+        'Keywords: "Counting", "Optimal" → Dynamic Programming. Reuse previous counts: remove last bit, add it back.',
+      advancedLogic:
+        'DP Pattern: ans[i] = ans[i >> 1] + (i & 1). Right shift removes last bit, AND gets it.',
     },
     difficulty: 'easy',
     category: 'Bit Manipulation',
@@ -3609,6 +3705,11 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Double x, integer n',
       outputFormat: 'Double (xⁿ)',
       keywords: ['power', 'exponentiation', 'fast power'],
+      bigO: 'N ≥ 10⁷ → Target: O(log N). Fast Power: xⁿ = (xⁿ/²)² if n even, x * (xⁿ/²)² if n odd.',
+      pattern:
+        'Math Pattern: Exponentiation → Fast Power. Divide exponent by 2, square result, handle odd exponents.',
+      advancedLogic:
+        'Fast Power: Use binary representation of exponent. xⁿ = x^(binary bits). O(log N) instead of O(N).',
     },
     difficulty: 'medium',
     category: 'Math',
@@ -3710,6 +3811,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of jump lengths',
       outputFormat: 'Boolean',
       keywords: ['jump game', 'reach last index', 'greedy'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Greedy tracks farthest reachable index.',
+      pattern:
+        'Keywords: "Minimum operations", "Intervals" → Greedy. Track max reachable index, return true if reaches end.',
     },
     difficulty: 'medium',
     category: 'Greedy',
@@ -3819,6 +3923,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Binary array, integer n',
       outputFormat: 'Boolean',
       keywords: ['place flowers', 'no adjacent', 'greedy'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Greedy places flowers whenever possible.',
+      pattern:
+        'Keywords: "Minimum operations" → Greedy. Place flower if current and adjacent are empty, count placed.',
     },
     difficulty: 'easy',
     category: 'Greedy',
@@ -4225,6 +4332,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Matrix of heights',
       outputFormat: 'List of coordinates',
       keywords: ['water flow', 'pacific atlantic', 'DFS'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). DFS from Pacific and Atlantic borders, find intersection.',
+      pattern:
+        'Input-Based Strategy: 2D Grid → DFS. Start DFS from Pacific (top/left) and Atlantic (bottom/right) borders.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -4316,6 +4426,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Number of courses, prerequisites',
       outputFormat: 'Array of course order',
       keywords: ['course schedule', 'topological sort', 'ordering'],
+      bigO: "N ≤ 5,000 → Target: O(V+E). Topological Sort: Kahn's algorithm (BFS) or DFS.",
+      pattern:
+        "Input-Based Strategy: Graph → Topological Sort. Dependencies → use Kahn's algorithm (BFS with in-degree tracking).",
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -4414,6 +4527,11 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of tickets',
       outputFormat: 'Array of airports',
       keywords: ['reconstruct itinerary', 'Eulerian path', 'DFS'],
+      bigO: 'N ≤ 5,000 → Target: O(E log E). DFS with backtracking, sort edges lexicographically.',
+      pattern:
+        'Input-Based Strategy: Graph → DFS. Eulerian Path: DFS with backtracking, visit edges in lexicographic order.',
+      advancedLogic:
+        'Eulerian Path: Start from "JFK", DFS greedily, backtrack if stuck. Reverse result for correct order.',
     },
     difficulty: 'hard',
     category: 'Graph',
@@ -4526,6 +4644,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: '2D matrix',
       outputFormat: 'Array in spiral order',
       keywords: ['spiral matrix', 'spiral order', 'simulation'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). Simulation: traverse right, down, left, up with boundary tracking.',
+      pattern:
+        'Input-Based Strategy: Matrix → Simulation. Use four boundaries (top, bottom, left, right), shrink after each direction.',
     },
     difficulty: 'medium',
     category: 'Matrix',
@@ -4609,6 +4730,11 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Binary matrix',
       outputFormat: 'Next generation matrix',
       keywords: ['game of life', 'cellular automaton', 'simulation'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). Simulation: count neighbors, apply rules. Use extra state or copy matrix.',
+      pattern:
+        "Input-Based Strategy: Matrix → Simulation. Count live neighbors (8 directions), apply Conway's rules.",
+      advancedLogic:
+        'In-Place Marking: Use special values (2 = was dead, now alive; 3 = was alive, now dead) to track transitions.',
     },
     difficulty: 'medium',
     category: 'Matrix',
@@ -4633,6 +4759,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: '9x9 Sudoku board',
       outputFormat: 'Boolean',
       keywords: ['valid sudoku', 'no repetition', 'hash map'],
+      bigO: 'N ≤ 10⁶ → Target: O(N²). Hash Map tracks seen digits in rows, columns, boxes.',
+      pattern:
+        'Input-Based Strategy: Matrix → Hash Map. Use sets for rows, columns, and 3x3 boxes. Check for duplicates.',
     },
     difficulty: 'medium',
     category: 'Matrix',
