@@ -286,16 +286,43 @@ function PlayingPhase({
 
         {/* Hints (if available) */}
         {problem.hints && (
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 space-y-2">
+          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 space-y-3">
             <h3 className="text-sm font-semibold text-blue-400">💡 Hints:</h3>
+            {problem.hints.bigO && (
+              <div className="text-sm text-zinc-300">
+                <strong className="text-blue-400">Big O Analysis:</strong> {problem.hints.bigO}
+              </div>
+            )}
             {problem.hints.constraints && (
               <div className="text-sm text-zinc-300">
                 <strong>Constraints:</strong> {problem.hints.constraints}
               </div>
             )}
+            {problem.hints.pattern && (
+              <div className="text-sm text-zinc-300">
+                <strong className="text-yellow-400">Pattern Recognition:</strong>{' '}
+                {problem.hints.pattern}
+              </div>
+            )}
+            {problem.hints.inputFormat && (
+              <div className="text-sm text-zinc-300">
+                <strong>Input Format:</strong> {problem.hints.inputFormat}
+              </div>
+            )}
+            {problem.hints.outputFormat && (
+              <div className="text-sm text-zinc-300">
+                <strong>Output Format:</strong> {problem.hints.outputFormat}
+              </div>
+            )}
             {problem.hints.keywords && problem.hints.keywords.length > 0 && (
               <div className="text-sm text-zinc-300">
                 <strong>Keywords:</strong> {problem.hints.keywords.join(', ')}
+              </div>
+            )}
+            {problem.hints.advancedLogic && (
+              <div className="text-sm text-purple-300 mt-2 p-2 bg-purple-500/10 rounded border border-purple-500/30">
+                <strong className="text-purple-400">⚡ Advanced Logic:</strong>{' '}
+                {problem.hints.advancedLogic}
               </div>
             )}
           </div>
