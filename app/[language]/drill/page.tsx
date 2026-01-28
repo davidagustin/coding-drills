@@ -1412,22 +1412,37 @@ function ResultsPhase({
       )}
 
       {/* Actions */}
-      <div className="flex flex-col gap-3">
-        <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={onTryAgainSameQuestions}
-            className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
-          >
-            Try Again (Same Questions)
-          </button>
-          <button
-            type="button"
-            onClick={onTryAgain}
-            className="flex-1 py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
-          >
-            New Drill
-          </button>
+      <div className="flex flex-col gap-4">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
+          <h3 className="text-sm font-semibold text-zinc-300 mb-3">Retry Options</h3>
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={onTryAgainSameQuestions}
+              className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors cursor-pointer flex flex-col items-center gap-1"
+            >
+              <span>Try Again</span>
+              <span className="text-xs font-normal opacity-90">Same Questions</span>
+            </button>
+            <button
+              type="button"
+              onClick={onTryAgain}
+              className="flex-1 py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors cursor-pointer flex flex-col items-center gap-1"
+            >
+              <span>New Drill</span>
+              <span className="text-xs font-normal opacity-90">New Questions</span>
+            </button>
+          </div>
+          <div className="mt-3 text-xs text-zinc-500 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              <span>Practice the exact same questions again</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-purple-500" />
+              <span>Generate new questions with the same settings</span>
+            </div>
+          </div>
         </div>
         <button
           type="button"
