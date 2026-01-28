@@ -71,7 +71,19 @@ export type AlgorithmPattern =
   | 'Inorder Traversal'
   | 'Topological Sort'
   | 'Multi-source BFS'
-  | 'Set';
+  | 'Set'
+  | 'Floyd Cycle Detection'
+  | 'Dummy Node'
+  | 'XOR'
+  | 'Brian Kernighan'
+  | 'Prefix'
+  | 'Fast Power'
+  | 'Doubly Linked List'
+  | 'Design'
+  | 'Dijkstra'
+  | 'Eulerian Path'
+  | 'Bijection'
+  | 'Two Maps';
 
 export const ALGORITHM_PATTERNS: AlgorithmPattern[] = [
   'Dynamic Programming',
@@ -2988,6 +3000,1670 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     },
     difficulty: 'medium',
     category: 'Union-Find',
+  },
+  // Batch 10: Linked List (10 problems)
+  {
+    id: 'reverse-linked-list',
+    title: 'Reverse Linked List',
+    description:
+      'Given the head of a singly linked list, reverse the list, and return the reversed list.',
+    examples: [
+      {
+        input: 'head = [1,2,3,4,5]',
+        output: '[5,4,3,2,1]',
+      },
+    ],
+    constraints: [
+      'The number of nodes in the list is the range [0, 5000]',
+      '-5000 ≤ Node.val ≤ 5000',
+    ],
+    correctPattern: 'Linked List',
+    patterns: ['Linked List', 'Recursion', 'Two Pointers', 'Stack'],
+    hints: {
+      constraints: 'nodes ≤ 5000 allows iterative or recursive',
+      inputFormat: 'Linked list head',
+      outputFormat: 'Reversed linked list',
+      keywords: ['reverse', 'linked list', 'singly'],
+    },
+    difficulty: 'easy',
+    category: 'Linked List',
+  },
+  {
+    id: 'merge-two-sorted',
+    title: 'Merge Two Sorted Lists',
+    description:
+      'You are given the heads of two sorted linked lists list1 and list2. Merge the two lists in a one sorted list. The list should be made by splicing together the nodes of the first two lists.',
+    examples: [
+      {
+        input: 'list1 = [1,2,4], list2 = [1,3,4]',
+        output: '[1,1,2,3,4,4]',
+      },
+    ],
+    constraints: [
+      'The number of nodes in both lists is in the range [0, 50]',
+      '-100 ≤ Node.val ≤ 100',
+      'Both list1 and list2 are sorted in non-decreasing order',
+    ],
+    correctPattern: 'Linked List',
+    patterns: ['Linked List', 'Two Pointers', 'Recursion', 'Merge Sort'],
+    hints: {
+      constraints: 'nodes ≤ 50 allows simple merge',
+      inputFormat: 'Two sorted linked lists',
+      outputFormat: 'Merged sorted linked list',
+      keywords: ['merge', 'two sorted', 'linked lists'],
+    },
+    difficulty: 'easy',
+    category: 'Linked List',
+  },
+  {
+    id: 'linked-list-cycle',
+    title: 'Linked List Cycle',
+    description:
+      'Given head, the head of a linked list, determine if the linked list has a cycle in it. There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer.',
+    examples: [
+      {
+        input: 'head = [3,2,0,-4], pos = 1',
+        output: 'true',
+        explanation:
+          'There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).',
+      },
+    ],
+    constraints: [
+      'The number of the nodes in the list is in the range [0, 10⁴]',
+      '-10⁵ ≤ Node.val ≤ 10⁵',
+      'pos is -1 or a valid index in the linked-list',
+    ],
+    correctPattern: 'Two Pointers',
+    patterns: ['Two Pointers', 'Hash Map', 'Linked List', 'Floyd Cycle Detection'],
+    hints: {
+      constraints: 'nodes ≤ 10⁴ suggests Floyd cycle detection',
+      inputFormat: 'Linked list head',
+      outputFormat: 'Boolean',
+      keywords: ['cycle', 'linked list', 'fast and slow'],
+    },
+    difficulty: 'easy',
+    category: 'Linked List',
+  },
+  {
+    id: 'remove-nth-node',
+    title: 'Remove Nth Node From End of List',
+    description:
+      'Given the head of a linked list, remove the nth node from the end of the list and return its head.',
+    examples: [
+      {
+        input: 'head = [1,2,3,4,5], n = 2',
+        output: '[1,2,3,5]',
+      },
+    ],
+    constraints: [
+      'The number of nodes in the list is sz',
+      '1 ≤ sz ≤ 30',
+      '0 ≤ Node.val ≤ 100',
+      '1 ≤ n ≤ sz',
+    ],
+    correctPattern: 'Two Pointers',
+    patterns: ['Two Pointers', 'Linked List', 'Dummy Node', 'Stack'],
+    hints: {
+      constraints: 'sz ≤ 30 allows two pointers',
+      inputFormat: 'Linked list head, integer n',
+      outputFormat: 'Modified linked list',
+      keywords: ['remove nth', 'from end', 'two pointers'],
+    },
+    difficulty: 'medium',
+    category: 'Linked List',
+  },
+  {
+    id: 'add-two-numbers',
+    title: 'Add Two Numbers',
+    description:
+      'You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.',
+    examples: [
+      {
+        input: 'l1 = [2,4,3], l2 = [5,6,4]',
+        output: '[7,0,8]',
+        explanation: '342 + 465 = 807.',
+      },
+    ],
+    constraints: [
+      'The number of nodes in each linked list is in the range [1, 100]',
+      '0 ≤ Node.val ≤ 9',
+      'It is guaranteed that the list represents a number that does not have leading zeros',
+    ],
+    correctPattern: 'Linked List',
+    patterns: ['Linked List', 'Math', 'Simulation', 'Two Pointers'],
+    hints: {
+      constraints: 'nodes ≤ 100 allows simulation',
+      inputFormat: 'Two linked lists',
+      outputFormat: 'Sum as linked list',
+      keywords: ['add two numbers', 'reverse order', 'carry'],
+    },
+    difficulty: 'medium',
+    category: 'Linked List',
+  },
+  {
+    id: 'swap-nodes-pairs',
+    title: 'Swap Nodes in Pairs',
+    description:
+      "Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the values in the list's nodes (i.e., only nodes themselves may be changed).",
+    examples: [
+      {
+        input: 'head = [1,2,3,4]',
+        output: '[2,1,4,3]',
+      },
+    ],
+    constraints: ['The number of nodes in the list is in the range [0, 100]', '0 ≤ Node.val ≤ 100'],
+    correctPattern: 'Linked List',
+    patterns: ['Linked List', 'Recursion', 'Two Pointers', 'Simulation'],
+    hints: {
+      constraints: 'nodes ≤ 100 allows recursion or iteration',
+      inputFormat: 'Linked list head',
+      outputFormat: 'Modified linked list',
+      keywords: ['swap', 'pairs', 'adjacent nodes'],
+    },
+    difficulty: 'medium',
+    category: 'Linked List',
+  },
+  {
+    id: 'rotate-list',
+    title: 'Rotate List',
+    description: 'Given the head of a linked list, rotate the list to the right by k places.',
+    examples: [
+      {
+        input: 'head = [1,2,3,4,5], k = 2',
+        output: '[4,5,1,2,3]',
+      },
+    ],
+    constraints: [
+      'The number of nodes in the list is in the range [0, 500]',
+      '0 ≤ Node.val ≤ 100',
+      '0 ≤ k ≤ 2 * 10⁹',
+    ],
+    correctPattern: 'Linked List',
+    patterns: ['Linked List', 'Two Pointers', 'Math', 'Simulation'],
+    hints: {
+      constraints: 'nodes ≤ 500, k ≤ 2 * 10⁹ suggests modulo',
+      inputFormat: 'Linked list head, integer k',
+      outputFormat: 'Rotated linked list',
+      keywords: ['rotate', 'right by k', 'circular'],
+    },
+    difficulty: 'medium',
+    category: 'Linked List',
+  },
+  {
+    id: 'copy-random-list',
+    title: 'Copy List with Random Pointer',
+    description:
+      'A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null. Construct a deep copy of the list.',
+    examples: [
+      {
+        input: 'head = [[7,null],[13,0],[11,4],[10,2],[1,0]]',
+        output: '[[7,null],[13,0],[11,4],[10,2],[1,0]]',
+      },
+    ],
+    constraints: [
+      '0 ≤ n ≤ 1000',
+      '-10⁴ ≤ Node.val ≤ 10⁴',
+      'Node.random is null or pointing to a node in the linked list',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Linked List', 'Two Pointers', 'Recursion'],
+    hints: {
+      constraints: 'n ≤ 1000 suggests hash map',
+      inputFormat: 'Linked list with random pointers',
+      outputFormat: 'Deep copied linked list',
+      keywords: ['copy', 'random pointer', 'deep copy'],
+    },
+    difficulty: 'medium',
+    category: 'Linked List',
+  },
+  {
+    id: 'reverse-nodes-k',
+    title: 'Reverse Nodes in k-Group',
+    description:
+      'Given the head of a linked list, reverse the nodes of the list k at a time, and return the modified list.',
+    examples: [
+      {
+        input: 'head = [1,2,3,4,5], k = 2',
+        output: '[2,1,4,3,5]',
+      },
+    ],
+    constraints: [
+      'The number of nodes in the list is n',
+      '1 ≤ k ≤ n ≤ 5000',
+      '0 ≤ Node.val ≤ 1000',
+    ],
+    correctPattern: 'Linked List',
+    patterns: ['Linked List', 'Recursion', 'Two Pointers', 'Stack'],
+    hints: {
+      constraints: 'n ≤ 5000 allows recursion',
+      inputFormat: 'Linked list head, integer k',
+      outputFormat: 'Modified linked list',
+      keywords: ['reverse', 'k-group', 'groups of k'],
+    },
+    difficulty: 'hard',
+    category: 'Linked List',
+  },
+  {
+    id: 'merge-k-lists',
+    title: 'Merge k Sorted Lists (Linked List)',
+    description:
+      'You are given an array of k linked-lists lists, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.',
+    examples: [
+      {
+        input: 'lists = [[1,4,5],[1,3,4],[2,6]]',
+        output: '[1,1,2,3,4,4,5,6]',
+      },
+    ],
+    constraints: [
+      'k == lists.length',
+      '0 ≤ k ≤ 10⁴',
+      '0 ≤ lists[i].length ≤ 500',
+      '-10⁴ ≤ lists[i][j] ≤ 10⁴',
+      'lists[i] is sorted in ascending order',
+    ],
+    correctPattern: 'Heap / Priority Queue',
+    patterns: ['Heap / Priority Queue', 'Divide and Conquer', 'Linked List', 'Merge Sort'],
+    hints: {
+      constraints: 'k ≤ 10⁴ suggests heap',
+      inputFormat: 'Array of sorted linked lists',
+      outputFormat: 'Merged sorted linked list',
+      keywords: ['merge k', 'sorted lists', 'heap'],
+    },
+    difficulty: 'hard',
+    category: 'Linked List',
+  },
+  // Batch 11: Bit Manipulation (10 problems)
+  {
+    id: 'single-number',
+    title: 'Single Number',
+    description:
+      'Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.',
+    examples: [
+      {
+        input: 'nums = [2,2,1]',
+        output: '1',
+      },
+    ],
+    constraints: [
+      '1 ≤ nums.length ≤ 3 * 10⁴',
+      '-3 * 10⁴ ≤ nums[i] ≤ 3 * 10⁴',
+      'Each element in the array appears twice except for one element which appears only once',
+    ],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Hash Map', 'Math', 'XOR'],
+    hints: {
+      constraints: 'n ≤ 3 * 10⁴, XOR trick',
+      inputFormat: 'Array of integers',
+      outputFormat: 'Single number',
+      keywords: ['single number', 'appears twice', 'XOR'],
+    },
+    difficulty: 'easy',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'number-of-1-bits',
+    title: 'Number of 1 Bits',
+    description:
+      'Write a function that takes the binary representation of an unsigned integer and returns the number of "1" bits it has (also known as the Hamming weight).',
+    examples: [
+      {
+        input: 'n = 00000000000000000000000000001011',
+        output: '3',
+        explanation:
+          'The input binary string 00000000000000000000000000001011 has a total of three "1" bits.',
+      },
+    ],
+    constraints: ['The input must be a binary string of length 32'],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Math', 'String', 'Brian Kernighan'],
+    hints: {
+      constraints: '32-bit integer suggests bit manipulation',
+      inputFormat: 'Unsigned integer',
+      outputFormat: 'Single number (count)',
+      keywords: ['number of 1 bits', 'Hamming weight', 'bit count'],
+    },
+    difficulty: 'easy',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'reverse-bits',
+    title: 'Reverse Bits',
+    description: 'Reverse bits of a given 32 bits unsigned integer.',
+    examples: [
+      {
+        input: 'n = 00000010100101000001111010011100',
+        output: '964176192 (00111001011110000010100101000000)',
+      },
+    ],
+    constraints: ['The input must be a binary string of length 32'],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Math', 'Two Pointers', 'String'],
+    hints: {
+      constraints: '32-bit integer suggests bit manipulation',
+      inputFormat: 'Unsigned integer',
+      outputFormat: 'Reversed bits integer',
+      keywords: ['reverse bits', '32 bits', 'unsigned'],
+    },
+    difficulty: 'easy',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'missing-number',
+    title: 'Missing Number',
+    description:
+      'Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.',
+    examples: [
+      {
+        input: 'nums = [3,0,1]',
+        output: '2',
+        explanation:
+          'n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.',
+      },
+    ],
+    constraints: [
+      'n == nums.length',
+      '1 ≤ n ≤ 10⁴',
+      '0 ≤ nums[i] ≤ n',
+      'All the numbers of nums are unique',
+    ],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Math', 'Hash Map', 'Sorting'],
+    hints: {
+      constraints: 'n ≤ 10⁴, XOR trick',
+      inputFormat: 'Array of distinct numbers',
+      outputFormat: 'Single number (missing)',
+      keywords: ['missing number', 'range [0, n]', 'XOR'],
+    },
+    difficulty: 'easy',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'counting-bits',
+    title: 'Counting Bits',
+    description:
+      "Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.",
+    examples: [
+      {
+        input: 'n = 2',
+        output: '[0,1,1]',
+        explanation: '0 --> 0, 1 --> 1, 2 --> 10',
+      },
+    ],
+    constraints: ['0 ≤ n ≤ 10⁵'],
+    correctPattern: 'Dynamic Programming',
+    patterns: ['Dynamic Programming', 'Bit Manipulation', 'Math', 'Brian Kernighan'],
+    hints: {
+      constraints: 'n ≤ 10⁵ suggests DP',
+      inputFormat: 'Integer n',
+      outputFormat: 'Array of counts',
+      keywords: ['counting bits', 'number of 1s', 'DP'],
+    },
+    difficulty: 'easy',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'sum-of-two',
+    title: 'Sum of Two Integers',
+    description:
+      'Given two integers a and b, return the sum of the two integers without using the operators + and -.',
+    examples: [
+      {
+        input: 'a = 1, b = 2',
+        output: '3',
+      },
+    ],
+    constraints: ['-1000 ≤ a, b ≤ 1000'],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Math', 'Recursion', 'Simulation'],
+    hints: {
+      constraints: 'Bit manipulation required',
+      inputFormat: 'Two integers',
+      outputFormat: 'Sum (integer)',
+      keywords: ['sum', 'without + and -', 'bit manipulation'],
+    },
+    difficulty: 'medium',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'single-number-2',
+    title: 'Single Number II',
+    description:
+      'Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.',
+    examples: [
+      {
+        input: 'nums = [2,2,3,2]',
+        output: '3',
+      },
+    ],
+    constraints: [
+      '1 ≤ nums.length ≤ 3 * 10⁴',
+      '-2³¹ ≤ nums[i] ≤ 2³¹ - 1',
+      'Each element in nums appears exactly three times except for one element which appears once',
+    ],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Hash Map', 'Math', 'XOR'],
+    hints: {
+      constraints: 'n ≤ 3 * 10⁴, bit manipulation trick',
+      inputFormat: 'Array of integers',
+      outputFormat: 'Single number',
+      keywords: ['single number', 'appears three times', 'bit manipulation'],
+    },
+    difficulty: 'medium',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'single-number-3',
+    title: 'Single Number III',
+    description:
+      'Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once.',
+    examples: [
+      {
+        input: 'nums = [1,2,1,3,2,5]',
+        output: '[3,5]',
+        explanation: '[5, 3] is also a valid answer.',
+      },
+    ],
+    constraints: [
+      '2 ≤ nums.length ≤ 3 * 10⁴',
+      '-2³¹ ≤ nums[i] ≤ 2³¹ - 1',
+      'Each integer in nums will appear twice, except for two integers which will appear only once',
+    ],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Hash Map', 'XOR', 'Math'],
+    hints: {
+      constraints: 'n ≤ 3 * 10⁴, XOR trick',
+      inputFormat: 'Array of integers',
+      outputFormat: 'Array of two numbers',
+      keywords: ['single number', 'two elements', 'XOR'],
+    },
+    difficulty: 'medium',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'maximum-xor',
+    title: 'Maximum XOR of Two Numbers in an Array',
+    description:
+      'Given an integer array nums, return the maximum result of nums[i] XOR nums[j], where 0 <= i <= j < n.',
+    examples: [
+      {
+        input: 'nums = [3,10,5,25,2,8]',
+        output: '28',
+        explanation: 'The maximum result is 5 XOR 25 = 28.',
+      },
+    ],
+    constraints: ['1 ≤ nums.length ≤ 2 * 10⁵', '0 ≤ nums[i] ≤ 2³¹ - 1'],
+    correctPattern: 'Trie',
+    patterns: ['Trie', 'Bit Manipulation', 'Hash Map', 'Brute Force'],
+    hints: {
+      constraints: 'n ≤ 2 * 10⁵ suggests trie',
+      inputFormat: 'Array of integers',
+      outputFormat: 'Single number (max XOR)',
+      keywords: ['maximum XOR', 'two numbers', 'trie'],
+    },
+    difficulty: 'medium',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'bitwise-and-range',
+    title: 'Bitwise AND of Numbers Range',
+    description:
+      'Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.',
+    examples: [
+      {
+        input: 'left = 5, right = 7',
+        output: '4',
+      },
+    ],
+    constraints: ['0 ≤ left ≤ right ≤ 2³¹ - 1'],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Math', 'Brute Force', 'Prefix'],
+    hints: {
+      constraints: 'range ≤ 2³¹ suggests bit manipulation',
+      inputFormat: 'Two integers left, right',
+      outputFormat: 'Single number (bitwise AND)',
+      keywords: ['bitwise AND', 'range', 'common prefix'],
+    },
+    difficulty: 'medium',
+    category: 'Bit Manipulation',
+  },
+  // Batch 12: Math & Greedy (10 problems)
+  {
+    id: 'plus-one',
+    title: 'Plus One',
+    description:
+      'You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer. The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading zeros. Increment the large integer by one and return the resulting array of digits.',
+    examples: [
+      {
+        input: 'digits = [1,2,3]',
+        output: '[1,2,4]',
+        explanation:
+          'The array represents the integer 123. Incrementing by one gives 123 + 1 = 124. Thus, the result should be [1,2,4].',
+      },
+    ],
+    constraints: [
+      '1 ≤ digits.length ≤ 100',
+      '0 ≤ digits[i] ≤ 9',
+      'digits does not contain any leading zeros',
+    ],
+    correctPattern: 'Math',
+    patterns: ['Math', 'Array', 'Simulation', 'String'],
+    hints: {
+      constraints: 'length ≤ 100 allows simulation',
+      inputFormat: 'Array of digits',
+      outputFormat: 'Array of digits',
+      keywords: ['plus one', 'increment', 'carry'],
+    },
+    difficulty: 'easy',
+    category: 'Math',
+  },
+  {
+    id: 'pow-x-n',
+    title: 'Pow(x, n)',
+    description: 'Implement pow(x, n), which calculates x raised to the power n (i.e., xⁿ).',
+    examples: [
+      {
+        input: 'x = 2.00000, n = 10',
+        output: '1024.00000',
+      },
+    ],
+    constraints: [
+      '-100.0 < x < 100.0',
+      '-2³¹ ≤ n ≤ 2³¹-1',
+      'n is an integer',
+      'Either x is not zero or n > 0',
+      '-10⁴ ≤ xⁿ ≤ 10⁴',
+    ],
+    correctPattern: 'Math',
+    patterns: ['Math', 'Recursion', 'Bit Manipulation', 'Fast Power'],
+    hints: {
+      constraints: 'n ≤ 2³¹ suggests fast power',
+      inputFormat: 'Double x, integer n',
+      outputFormat: 'Double (xⁿ)',
+      keywords: ['power', 'exponentiation', 'fast power'],
+    },
+    difficulty: 'medium',
+    category: 'Math',
+  },
+  {
+    id: 'divide-two-integers',
+    title: 'Divide Two Integers',
+    description:
+      'Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator. The integer division should truncate toward zero, which means losing its fractional part.',
+    examples: [
+      {
+        input: 'dividend = 10, divisor = 3',
+        output: '3',
+        explanation: '10/3 = 3.33333.. which is truncated to 3.',
+      },
+    ],
+    constraints: ['-2³¹ ≤ dividend, divisor ≤ 2³¹ - 1', 'divisor != 0'],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Math', 'Binary Search', 'Simulation'],
+    hints: {
+      constraints: 'range ≤ 2³¹ suggests bit manipulation',
+      inputFormat: 'Two integers',
+      outputFormat: 'Integer (quotient)',
+      keywords: ['divide', 'without */%', 'bit manipulation'],
+    },
+    difficulty: 'medium',
+    category: 'Math',
+  },
+  {
+    id: 'fraction-to-decimal',
+    title: 'Fraction to Recurring Decimal',
+    description:
+      'Given two integers representing the numerator and denominator of a fraction, return the fraction in string format. If the fractional part is repeating, enclose the repeating part in parentheses.',
+    examples: [
+      {
+        input: 'numerator = 1, denominator = 2',
+        output: '"0.5"',
+      },
+    ],
+    constraints: ['-2³¹ ≤ numerator, denominator ≤ 2³¹ - 1', 'denominator != 0'],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Math', 'String', 'Simulation'],
+    hints: {
+      constraints: 'range ≤ 2³¹ suggests hash map for repeating',
+      inputFormat: 'Two integers',
+      outputFormat: 'String (decimal)',
+      keywords: ['fraction', 'recurring decimal', 'repeating'],
+    },
+    difficulty: 'medium',
+    category: 'Math',
+  },
+  {
+    id: 'gas-station',
+    title: 'Gas Station',
+    description:
+      "There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i]. You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the ith station to (i + 1)th station. Return the starting gas station's index if you can travel around the circuit once in the clockwise direction, otherwise return -1.",
+    examples: [
+      {
+        input: 'gas = [1,2,3,4,5], cost = [3,4,5,1,2]',
+        output: '3',
+        explanation:
+          'Start at station 3 (index 3) and fill up with 4 unit of gas. Your tank = 0 + 4 = 4. Travel to station 4. Your tank = 4 - 1 + 5 = 8. Travel to station 0. Your tank = 8 - 2 + 1 = 7. Travel to station 1. Your tank = 7 - 3 + 2 = 6. Travel to station 2. Your tank = 6 - 4 + 3 = 5. Travel to station 3. The cost is 5. Your gas is just enough to travel back to station 3. Therefore, return 3 as the starting index.',
+      },
+    ],
+    constraints: [
+      'gas.length == n',
+      'cost.length == n',
+      '1 ≤ n ≤ 10⁵',
+      '0 ≤ gas[i], cost[i] ≤ 10⁴',
+    ],
+    correctPattern: 'Greedy',
+    patterns: ['Greedy', 'Array', 'Simulation', 'Two Pointers'],
+    hints: {
+      constraints: 'n ≤ 10⁵ suggests greedy',
+      inputFormat: 'Two arrays gas, cost',
+      outputFormat: 'Index or -1',
+      keywords: ['gas station', 'circular route', 'greedy'],
+    },
+    difficulty: 'medium',
+    category: 'Greedy',
+  },
+  {
+    id: 'jump-game',
+    title: 'Jump Game',
+    description:
+      "You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return true if you can reach the last index, or false otherwise.",
+    examples: [
+      {
+        input: 'nums = [2,3,1,1,4]',
+        output: 'true',
+        explanation: 'Jump 1 step from index 0 to 1, then 3 steps to the last index.',
+      },
+    ],
+    constraints: ['1 ≤ nums.length ≤ 10⁴', '0 ≤ nums[i] ≤ 10⁵'],
+    correctPattern: 'Greedy',
+    patterns: ['Greedy', 'Dynamic Programming', 'Array', 'Backtracking'],
+    hints: {
+      constraints: 'n ≤ 10⁴ suggests greedy',
+      inputFormat: 'Array of jump lengths',
+      outputFormat: 'Boolean',
+      keywords: ['jump game', 'reach last index', 'greedy'],
+    },
+    difficulty: 'medium',
+    category: 'Greedy',
+  },
+  {
+    id: 'jump-game-2',
+    title: 'Jump Game II',
+    description:
+      'You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0]. Each element nums[i] represents the maximum length of a forward jump from index i. Return the minimum number of jumps to reach nums[n - 1].',
+    examples: [
+      {
+        input: 'nums = [2,3,1,1,4]',
+        output: '2',
+        explanation:
+          'The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.',
+      },
+    ],
+    constraints: [
+      '1 ≤ nums.length ≤ 10⁴',
+      '0 ≤ nums[i] ≤ 1000',
+      "It's guaranteed that you can reach nums[n - 1]",
+    ],
+    correctPattern: 'Greedy',
+    patterns: ['Greedy', 'Dynamic Programming', 'BFS', 'Array'],
+    hints: {
+      constraints: 'n ≤ 10⁴ suggests greedy',
+      inputFormat: 'Array of jump lengths',
+      outputFormat: 'Single number (min jumps)',
+      keywords: ['jump game', 'minimum jumps', 'greedy'],
+    },
+    difficulty: 'medium',
+    category: 'Greedy',
+  },
+  {
+    id: 'non-overlapping-intervals',
+    title: 'Non-overlapping Intervals',
+    description:
+      'Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.',
+    examples: [
+      {
+        input: 'intervals = [[1,2],[2,3],[3,4],[1,3]]',
+        output: '1',
+        explanation: '[1,3] can be removed and the rest of the intervals are non-overlapping.',
+      },
+    ],
+    constraints: [
+      '1 ≤ intervals.length ≤ 10⁵',
+      'intervals[i].length == 2',
+      '-5 * 10⁴ ≤ starti < endi ≤ 5 * 10⁴',
+    ],
+    correctPattern: 'Greedy',
+    patterns: ['Greedy', 'Sorting', 'Dynamic Programming', 'Interval'],
+    hints: {
+      constraints: 'n ≤ 10⁵ suggests greedy',
+      inputFormat: 'Array of intervals',
+      outputFormat: 'Single number (min to remove)',
+      keywords: ['non-overlapping', 'minimum remove', 'greedy'],
+    },
+    difficulty: 'medium',
+    category: 'Greedy',
+  },
+  {
+    id: 'partition-labels',
+    title: 'Partition Labels',
+    description:
+      'You are given a string s. We want to partition the string into as many parts as possible so that each letter appears in at most one part. Return a list of integers representing the size of these parts.',
+    examples: [
+      {
+        input: 's = "ababcbacadefegdehijhklij"',
+        output: '[9,7,8]',
+        explanation: 'The partition is "ababcbaca", "defegde", "hijhklij".',
+      },
+    ],
+    constraints: ['1 ≤ s.length ≤ 500', 's consists of lowercase English letters'],
+    correctPattern: 'Greedy',
+    patterns: ['Greedy', 'Hash Map', 'Two Pointers', 'String'],
+    hints: {
+      constraints: 'length ≤ 500 suggests greedy',
+      inputFormat: 'String',
+      outputFormat: 'Array of sizes',
+      keywords: ['partition', 'labels', 'greedy'],
+    },
+    difficulty: 'medium',
+    category: 'Greedy',
+  },
+  {
+    id: 'can-place-flowers',
+    title: 'Can Place Flowers',
+    description:
+      "You have a long flowerbed in which some of the plots are planted, and some are not. However, flowers cannot be planted in adjacent plots. Given an integer array flowerbed containing 0's and 1's, where 0 means empty and 1 means not empty, and an integer n, return true if n new flowers can be planted in the flowerbed without violating the no-adjacent-flowers rule.",
+    examples: [
+      {
+        input: 'flowerbed = [1,0,0,0,1], n = 1',
+        output: 'true',
+      },
+    ],
+    constraints: [
+      '1 ≤ flowerbed.length ≤ 2 * 10⁴',
+      'flowerbed[i] is 0 or 1',
+      'There are no two adjacent flowers in flowerbed',
+      '0 ≤ n ≤ flowerbed.length',
+    ],
+    correctPattern: 'Greedy',
+    patterns: ['Greedy', 'Array', 'Simulation', 'Two Pointers'],
+    hints: {
+      constraints: 'length ≤ 2 * 10⁴ suggests greedy',
+      inputFormat: 'Binary array, integer n',
+      outputFormat: 'Boolean',
+      keywords: ['place flowers', 'no adjacent', 'greedy'],
+    },
+    difficulty: 'easy',
+    category: 'Greedy',
+  },
+  // Batch 13: Design & System Design (10 problems)
+  {
+    id: 'lru-cache',
+    title: 'LRU Cache',
+    description:
+      'Design a data structure that follows the constraints of a Least Recently Used (LRU) cache. Implement the LRUCache class.',
+    examples: [
+      {
+        input: 'LRUCache(2) -> put(1,1) -> put(2,2) -> get(1) -> 1 -> put(3,3) -> get(2) -> -1',
+        output: 'null, null, null, 1, null, -1',
+      },
+    ],
+    constraints: [
+      '1 ≤ capacity ≤ 3000',
+      '0 ≤ key ≤ 10⁴',
+      '0 ≤ value ≤ 10⁵',
+      'At most 2 * 10⁵ calls will be made to get and put',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Linked List', 'Doubly Linked List', 'Design'],
+    hints: {
+      constraints: '2 * 10⁵ calls suggests hash map + doubly linked list',
+      inputFormat: 'Cache operations',
+      outputFormat: 'Cache values',
+      keywords: ['LRU cache', 'least recently used', 'design'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-twitter',
+    title: 'Design Twitter',
+    description:
+      "Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user's news feed.",
+    examples: [
+      {
+        input:
+          'Twitter() -> postTweet(1, 5) -> getNewsFeed(1) -> [5] -> follow(1, 2) -> postTweet(2, 6) -> getNewsFeed(1) -> [6, 5]',
+        output: 'null, null, [5], null, null, [6,5]',
+      },
+    ],
+    constraints: [
+      '1 ≤ userId, followerId, followeeId ≤ 500',
+      '0 ≤ tweetId ≤ 10⁴',
+      'All the tweets have unique IDs',
+      'At most 3 * 10⁴ calls will be made to postTweet, getNewsFeed, follow, and unfollow',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Heap / Priority Queue', 'Design', 'Graph'],
+    hints: {
+      constraints: '3 * 10⁴ calls suggests hash map + heap',
+      inputFormat: 'Social media operations',
+      outputFormat: 'News feed',
+      keywords: ['design twitter', 'news feed', 'follow/unfollow'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-hit-counter',
+    title: 'Design Hit Counter',
+    description:
+      'Design a hit counter which counts the number of hits received in the past 5 minutes (i.e., the past 300 seconds).',
+    examples: [
+      {
+        input:
+          'HitCounter() -> hit(1) -> hit(2) -> hit(3) -> getHits(4) -> 3 -> hit(300) -> getHits(300) -> 4 -> getHits(301) -> 3',
+        output: 'null, null, null, null, 3, null, 4, 3',
+      },
+    ],
+    constraints: [
+      '1 ≤ timestamp ≤ 2 * 10⁹',
+      'All the calls are being made to the system in chronological order (i.e., timestamp is monotonically increasing)',
+      'At most 300 calls will be made to hit and getHits',
+    ],
+    correctPattern: 'Queue',
+    patterns: ['Queue', 'Hash Map', 'Design', 'Array'],
+    hints: {
+      constraints: '300 calls suggests queue',
+      inputFormat: 'Timestamp operations',
+      outputFormat: 'Hit counts',
+      keywords: ['hit counter', 'past 5 minutes', 'queue'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-tic-tac-toe',
+    title: 'Design Tic-Tac-Toe',
+    description:
+      'Assume the following rules are for the tic-tac-toe game on an n x n board between two players: A move is guaranteed to be valid and is placed on an empty block. Once a winning condition is reached, no more moves are allowed. A player who succeeds in placing n of their marks in a horizontal, vertical, or diagonal row wins the game. Implement the TicTacToe class.',
+    examples: [
+      {
+        input:
+          'TicTacToe(3) -> move(0, 0, 1) -> move(0, 2, 2) -> move(2, 2, 1) -> move(1, 1, 2) -> move(2, 0, 1) -> move(1, 0, 2) -> move(2, 1, 1) -> 1',
+        output: 'null, 0, 0, 0, 0, 0, 0, 1',
+      },
+    ],
+    constraints: [
+      '2 ≤ n ≤ 100',
+      'player is 1 or 2',
+      '1 ≤ row, col ≤ n',
+      'At most n² calls will be made to move',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Array', 'Design', 'Matrix'],
+    hints: {
+      constraints: 'n ≤ 100, n² calls suggests hash map',
+      inputFormat: 'Move operations',
+      outputFormat: 'Winner or 0',
+      keywords: ['tic-tac-toe', 'design', 'winning condition'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-snake-game',
+    title: 'Design Snake Game',
+    description:
+      'Design a Snake game that is played on a device with screen size height x width. The snake is initially positioned at the top left corner (0, 0) with length = 1 unit. You are given an array of food positions.',
+    examples: [
+      {
+        input:
+          'SnakeGame(3, 2, [[1,2],[0,1]]) -> move("R") -> move("D") -> move("R") -> move("U") -> move("L") -> move("U")',
+        output: 'null, 0, 0, 1, 1, 2, -1',
+      },
+    ],
+    constraints: [
+      '1 ≤ width, height ≤ 10⁴',
+      '1 ≤ food.length ≤ 2000',
+      'food[i].length == 2',
+      '0 ≤ food[i][0] < height',
+      '0 ≤ food[i][1] < width',
+      '1 ≤ directions.length ≤ 5000',
+      'directions[i] is one of ["U","D","L","R"]',
+    ],
+    correctPattern: 'Queue',
+    patterns: ['Queue', 'Hash Map', 'Design', 'Simulation'],
+    hints: {
+      constraints: 'directions ≤ 5000 suggests queue',
+      inputFormat: 'Game dimensions, food, moves',
+      outputFormat: 'Score',
+      keywords: ['snake game', 'design', 'queue'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-underground',
+    title: 'Design Underground System',
+    description:
+      'An underground railway system is keeping track of customer travel times between different stations. Implement the UndergroundSystem class.',
+    examples: [
+      {
+        input:
+          'UndergroundSystem() -> checkIn(45, "Leyton", 3) -> checkIn(32, "Paradise", 8) -> checkIn(27, "Leyton", 10) -> checkOut(45, "Waterloo", 15) -> checkOut(27, "Waterloo", 20) -> checkOut(32, "Cambridge", 22) -> getAverageTime("Paradise", "Cambridge") -> 14.0',
+        output: 'null, null, null, null, null, null, null, 14.0',
+      },
+    ],
+    constraints: [
+      '1 ≤ id, t ≤ 10⁶',
+      '1 ≤ stationName.length, startStation.length, endStation.length ≤ 10',
+      'All strings consist of uppercase and lowercase English letters and digits',
+      'There will be at most 2 * 10⁴ calls in total to checkIn, checkOut, and getAverageTime',
+      'Answers within 10⁻⁵ of the actual value will be accepted',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Design', 'String', 'Math'],
+    hints: {
+      constraints: '2 * 10⁴ calls suggests hash map',
+      inputFormat: 'Check-in/check-out operations',
+      outputFormat: 'Average time',
+      keywords: ['underground system', 'design', 'average time'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-browser-history',
+    title: 'Design Browser History',
+    description:
+      'You have a browser of one tab where you start on the homepage and you can visit another url, get back in the history number of steps or move forward in the history number of steps.',
+    examples: [
+      {
+        input:
+          'BrowserHistory("leetcode.com") -> visit("google.com") -> visit("facebook.com") -> visit("youtube.com") -> back(1) -> "facebook.com" -> forward(1) -> "youtube.com"',
+        output: 'null, null, null, null, "facebook.com", "youtube.com"',
+      },
+    ],
+    constraints: [
+      '1 ≤ homepage.length ≤ 20',
+      '1 ≤ url.length ≤ 20',
+      '1 ≤ steps ≤ 100',
+      'At most 5000 calls will be made to visit, back, and forward',
+    ],
+    correctPattern: 'Stack',
+    patterns: ['Stack', 'Array', 'Design', 'Two Pointers'],
+    hints: {
+      constraints: '5000 calls suggests stack or array',
+      inputFormat: 'Browser operations',
+      outputFormat: 'Current URL',
+      keywords: ['browser history', 'back/forward', 'design'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-phone-directory',
+    title: 'Design Phone Directory',
+    description:
+      'Design a phone directory that initially has maxNumbers empty slots that can store numbers. The directory should store numbers, check if a certain slot is empty or not, and empty a given slot.',
+    examples: [
+      {
+        input:
+          'PhoneDirectory(3) -> get() -> 0 -> get() -> 1 -> check(2) -> true -> get() -> 2 -> check(2) -> false',
+        output: 'null, 0, 1, true, 2, false',
+      },
+    ],
+    constraints: [
+      '1 ≤ maxNumbers ≤ 10⁴',
+      'At most 2 * 10⁴ calls will be made to get, check, and release',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Set', 'Design', 'Queue'],
+    hints: {
+      constraints: '2 * 10⁴ calls suggests hash map',
+      inputFormat: 'Directory operations',
+      outputFormat: 'Numbers or booleans',
+      keywords: ['phone directory', 'design', 'available numbers'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-log-storage',
+    title: 'Design Log Storage System',
+    description:
+      'You are given several logs, where each log is a space-delimited string of words. The first word in each log is an alphanumeric identifier. Implement the LogSystem class.',
+    examples: [
+      {
+        input:
+          'LogSystem() -> put(1, "2017:01:01:23:59:59") -> put(2, "2017:01:01:22:59:59") -> retrieve("2017:01:01:23:00:00", "2017:01:01:23:59:59", "Year") -> [1]',
+        output: 'null, null, null, [1]',
+      },
+    ],
+    constraints: [
+      '1 ≤ id ≤ 500',
+      '2000 ≤ Year ≤ 2017',
+      '1 ≤ Month ≤ 12',
+      '1 ≤ Day ≤ 31',
+      '0 ≤ Hour ≤ 23',
+      '0 ≤ Minute, Second ≤ 59',
+      'At most 500 calls will be made to put and retrieve',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'String', 'Design', 'Sorting'],
+    hints: {
+      constraints: '500 calls suggests hash map',
+      inputFormat: 'Log operations',
+      outputFormat: 'List of IDs',
+      keywords: ['log storage', 'design', 'retrieve by time'],
+    },
+    difficulty: 'medium',
+    category: 'Design',
+  },
+  {
+    id: 'design-search-autocomplete',
+    title: 'Design Search Autocomplete System',
+    description:
+      'Design a search autocomplete system for a search engine. Users may input a sentence (at least one word and end with a special character "#").',
+    examples: [
+      {
+        input:
+          'AutocompleteSystem(["i love you", "island","ironman", "i love leetcode"], [5,3,2,2]) -> input("i") -> ["i love you", "island", "i love leetcode"]',
+        output: 'null, ["i love you", "island", "i love leetcode"]',
+      },
+    ],
+    constraints: [
+      '1 ≤ sentences.length ≤ 100',
+      '1 ≤ sentences[i].length ≤ 100',
+      '1 ≤ times.length ≤ 50',
+      '0 ≤ times[i] ≤ 100',
+      '1 ≤ c.length ≤ 1',
+      'c is a lowercase English letter or "#"',
+      'At most 100 calls will be made to input',
+    ],
+    correctPattern: 'Trie',
+    patterns: ['Trie', 'Hash Map', 'Design', 'Heap / Priority Queue'],
+    hints: {
+      constraints: '100 calls suggests trie',
+      inputFormat: 'Sentences, times, character input',
+      outputFormat: 'Top 3 suggestions',
+      keywords: ['autocomplete', 'trie', 'design'],
+    },
+    difficulty: 'hard',
+    category: 'Design',
+  },
+  // Batch 14: Advanced Graph & Matrix (10 problems)
+  {
+    id: 'shortest-path-binary',
+    title: 'Shortest Path in Binary Matrix',
+    description:
+      'Given an n x n binary matrix grid, return the length of the shortest clear path from the top-left corner (0, 0) to the bottom-right corner (n - 1, n - 1). If such a path does not exist, return -1.',
+    examples: [
+      {
+        input: 'grid = [[0,1],[1,0]]',
+        output: '2',
+      },
+    ],
+    constraints: ['n == grid.length', 'n == grid[i].length', '1 ≤ n ≤ 100', 'grid[i][j] is 0 or 1'],
+    correctPattern: 'BFS',
+    patterns: ['BFS', 'Matrix', 'Graph', 'Dijkstra'],
+    hints: {
+      constraints: 'n ≤ 100 allows BFS',
+      inputFormat: 'Binary matrix',
+      outputFormat: 'Single number (path length)',
+      keywords: ['shortest path', 'binary matrix', 'BFS'],
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'walls-and-gates',
+    title: 'Walls and Gates',
+    description:
+      'You are given an m x n grid rooms initialized with these three possible values: -1 represents a wall or an obstacle, 0 represents a gate, INF represents an empty room. Fill each empty room with the distance to its nearest gate.',
+    examples: [
+      {
+        input:
+          'rooms = [[2147483647,-1,0,2147483647],[2147483647,2147483647,2147483647,-1],[2147483647,-1,2147483647,-1],[0,-1,2147483647,2147483647]]',
+        output: '[[3,-1,0,1],[2,2,1,-1],[1,-1,2,-1],[0,-1,3,4]]',
+      },
+    ],
+    constraints: [
+      'm == rooms.length',
+      'n == rooms[i].length',
+      '1 ≤ m, n ≤ 250',
+      'rooms[i][j] is -1, 0, or 2³¹ - 1',
+    ],
+    correctPattern: 'BFS',
+    patterns: ['BFS', 'Matrix', 'Graph', 'Multi-source BFS'],
+    hints: {
+      constraints: 'm, n ≤ 250 allows BFS',
+      inputFormat: 'Matrix with gates and walls',
+      outputFormat: 'Matrix with distances',
+      keywords: ['walls and gates', 'nearest gate', 'BFS'],
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'surrounded-regions',
+    title: 'Surrounded Regions',
+    description:
+      'Given an m x n matrix board containing "X" and "O", capture all regions that are 4-directionally surrounded by "X". A region is captured by flipping all "O"s into "X"s in that surrounded region.',
+    examples: [
+      {
+        input: 'board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]',
+        output: '[["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]',
+      },
+    ],
+    constraints: [
+      'm == board.length',
+      'n == board[i].length',
+      '1 ≤ m, n ≤ 200',
+      'board[i][j] is "X" or "O"',
+    ],
+    correctPattern: 'DFS',
+    patterns: ['DFS', 'BFS', 'Union-Find', 'Matrix'],
+    hints: {
+      constraints: 'm, n ≤ 200 allows DFS/BFS',
+      inputFormat: 'Matrix with X and O',
+      outputFormat: 'Modified matrix',
+      keywords: ['surrounded regions', 'capture', 'DFS/BFS'],
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'pacific-atlantic',
+    title: 'Pacific Atlantic Water Flow',
+    description:
+      "There is an m x n rectangular island that borders both the Pacific Ocean and the Atlantic Ocean. The Pacific Ocean touches the island's left and top edges, and the Atlantic Ocean touches the island's right and bottom edges. Water can only flow in four directions. Return a 2D list of grid coordinates result where result[i] = [ri, ci] denotes that rain water can flow from cell (ri, ci) to both the Pacific and Atlantic oceans.",
+    examples: [
+      {
+        input: 'heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]',
+        output: '[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]',
+      },
+    ],
+    constraints: [
+      'm == heights.length',
+      'n == heights[i].length',
+      '1 ≤ m, n ≤ 200',
+      '0 ≤ heights[i][j] ≤ 10⁵',
+    ],
+    correctPattern: 'DFS',
+    patterns: ['DFS', 'BFS', 'Matrix', 'Graph'],
+    hints: {
+      constraints: 'm, n ≤ 200 allows DFS/BFS',
+      inputFormat: 'Matrix of heights',
+      outputFormat: 'List of coordinates',
+      keywords: ['water flow', 'pacific atlantic', 'DFS'],
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'word-ladder-2',
+    title: 'Word Ladder II',
+    description:
+      'A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words. Given two words, beginWord and endWord, and a dictionary wordList, return all the shortest transformation sequences from beginWord to endWord.',
+    examples: [
+      {
+        input:
+          'beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]',
+        output: '[["hit","hot","dot","dog","cog"],["hit","hot","lot","log","cog"]]',
+      },
+    ],
+    constraints: [
+      '1 ≤ beginWord.length ≤ 5',
+      'endWord.length == beginWord.length',
+      '1 ≤ wordList.length ≤ 500',
+      'wordList[i].length == beginWord.length',
+      'beginWord, endWord, and wordList[i] consist of lowercase English letters',
+      'beginWord != endWord',
+      'All the words in wordList are unique',
+    ],
+    correctPattern: 'BFS',
+    patterns: ['BFS', 'Backtracking', 'Graph', 'Hash Map'],
+    hints: {
+      constraints: 'wordList ≤ 500 allows BFS + backtracking',
+      inputFormat: 'beginWord, endWord, wordList',
+      outputFormat: 'List of lists (all shortest paths)',
+      keywords: ['word ladder', 'all shortest paths', 'BFS'],
+    },
+    difficulty: 'hard',
+    category: 'Graph',
+  },
+  {
+    id: 'alien-dictionary',
+    title: 'Alien Dictionary',
+    description:
+      "There is a new alien language that uses the English alphabet. However, the order among the letters is unknown to you. You are given a list of strings words from the alien language's dictionary. Return a string of the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules.",
+    examples: [
+      {
+        input: 'words = ["wrt","wrf","er","ett","rftt"]',
+        output: '"wertf"',
+      },
+    ],
+    constraints: [
+      '1 ≤ words.length ≤ 100',
+      '1 ≤ words[i].length ≤ 100',
+      'words[i] consists of only lowercase English letters',
+    ],
+    correctPattern: 'Topological Sort',
+    patterns: ['Topological Sort', 'Graph', 'DFS', 'Hash Map'],
+    hints: {
+      constraints: 'words ≤ 100 suggests topological sort',
+      inputFormat: 'List of words',
+      outputFormat: 'String (sorted letters)',
+      keywords: ['alien dictionary', 'topological sort', 'dependency'],
+    },
+    difficulty: 'hard',
+    category: 'Graph',
+  },
+  {
+    id: 'course-schedule-2',
+    title: 'Course Schedule II',
+    description:
+      'There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai. Return the ordering of courses you should take to finish all courses.',
+    examples: [
+      {
+        input: 'numCourses = 2, prerequisites = [[1,0]]',
+        output: '[0,1]',
+        explanation:
+          'There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1].',
+      },
+    ],
+    constraints: [
+      '1 ≤ numCourses ≤ 2000',
+      '0 ≤ prerequisites.length ≤ numCourses * (numCourses - 1)',
+      'prerequisites[i].length == 2',
+      '0 ≤ ai, bi < numCourses',
+      'ai != bi',
+      'All the pairs [ai, bi] are distinct',
+    ],
+    correctPattern: 'Topological Sort',
+    patterns: ['Topological Sort', 'DFS', 'BFS', 'Graph'],
+    hints: {
+      constraints: 'courses ≤ 2000 suggests topological sort',
+      inputFormat: 'Number of courses, prerequisites',
+      outputFormat: 'Array of course order',
+      keywords: ['course schedule', 'topological sort', 'ordering'],
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'network-delay-time',
+    title: 'Network Delay Time',
+    description:
+      'You are given a network of n nodes, labeled from 1 to n. You are also given times, a list of travel times as directed edges times[i] = (ui, vi, wi), where ui is the source node, vi is the target node, and wi is the time it takes for a signal to travel from source to target. We will send a signal from a given node k. Return the minimum time it takes for all the n nodes to receive the signal.',
+    examples: [
+      {
+        input: 'times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2',
+        output: '2',
+      },
+    ],
+    constraints: [
+      '1 ≤ k ≤ n ≤ 100',
+      '1 ≤ times.length ≤ 6000',
+      'times[i].length == 3',
+      '1 ≤ ui, vi ≤ n',
+      'ui != vi',
+      '0 ≤ wi ≤ 100',
+      'All the pairs (ui, vi) are unique',
+    ],
+    correctPattern: 'BFS',
+    patterns: ['BFS', 'Dijkstra', 'Graph', 'Heap / Priority Queue'],
+    hints: {
+      constraints: 'n ≤ 100 suggests Dijkstra or BFS',
+      inputFormat: 'Times array, n nodes, source k',
+      outputFormat: 'Single number (min time)',
+      keywords: ['network delay', 'shortest path', 'Dijkstra'],
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'cheapest-flights',
+    title: 'Cheapest Flights Within K Stops',
+    description:
+      'There are n cities connected by some number of flights. You are given an array flights where flights[i] = [fromi, toi, pricei] indicates that there is a flight from city fromi to city toi with cost pricei. You are also given three integers src, dst, and k, return the cheapest price from src to dst with at most k stops.',
+    examples: [
+      {
+        input:
+          'n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1',
+        output: '700',
+        explanation:
+          'The optimal path with at most 1 stop from city 0 to 3 is marked in red and costs 100 + 600 = 700.',
+      },
+    ],
+    constraints: [
+      '1 ≤ n ≤ 100',
+      '0 ≤ flights.length ≤ (n * (n - 1) / 2)',
+      'flights[i].length == 3',
+      '0 ≤ fromi, toi < n',
+      'fromi != toi',
+      '1 ≤ pricei ≤ 10⁴',
+      'There will not be any multiple flights between two cities',
+      '0 ≤ src, dst < n',
+      'src != dst',
+      '0 ≤ k < n',
+    ],
+    correctPattern: 'Dynamic Programming',
+    patterns: ['Dynamic Programming', 'BFS', 'Dijkstra', 'Graph'],
+    hints: {
+      constraints: 'n ≤ 100, k < n suggests DP',
+      inputFormat: 'Flights array, src, dst, k',
+      outputFormat: 'Single number (cheapest price)',
+      keywords: ['cheapest flights', 'at most k stops', 'DP'],
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'reconstruct-itinerary',
+    title: 'Reconstruct Itinerary',
+    description:
+      'You are given a list of airline tickets where tickets[i] = [fromi, toi] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.',
+    examples: [
+      {
+        input: 'tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]',
+        output: '["JFK","MUC","LHR","SFO","SJC"]',
+      },
+    ],
+    constraints: [
+      '1 ≤ tickets.length ≤ 300',
+      'tickets[i].length == 2',
+      'fromi.length == 3',
+      'toi.length == 3',
+      'fromi and toi consist of uppercase English letters',
+      'fromi != toi',
+    ],
+    correctPattern: 'DFS',
+    patterns: ['DFS', 'Graph', 'Eulerian Path', 'Backtracking'],
+    hints: {
+      constraints: 'tickets ≤ 300 allows DFS',
+      inputFormat: 'Array of tickets',
+      outputFormat: 'Array of airports',
+      keywords: ['reconstruct itinerary', 'Eulerian path', 'DFS'],
+    },
+    difficulty: 'hard',
+    category: 'Graph',
+  },
+  // Batch 15: Advanced String & Matrix (10 problems)
+  {
+    id: 'multiply-strings',
+    title: 'Multiply Strings',
+    description:
+      'Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.',
+    examples: [
+      {
+        input: 'num1 = "2", num2 = "3"',
+        output: '"6"',
+      },
+    ],
+    constraints: [
+      '1 ≤ num1.length, num2.length ≤ 200',
+      'num1 and num2 consist of digits only',
+      'Both num1 and num2 do not contain any leading zero, except the number 0 itself',
+    ],
+    correctPattern: 'Math',
+    patterns: ['Math', 'String', 'Simulation', 'Array'],
+    hints: {
+      constraints: 'length ≤ 200 allows simulation',
+      inputFormat: 'Two strings',
+      outputFormat: 'String (product)',
+      keywords: ['multiply strings', 'large numbers', 'simulation'],
+    },
+    difficulty: 'medium',
+    category: 'String',
+  },
+  {
+    id: 'simplify-path',
+    title: 'Simplify Path',
+    description:
+      'Given a string path, which is an absolute path (starting with a slash "/") to a file or directory in a Unix-style file system, convert it to the simplified canonical path.',
+    examples: [
+      {
+        input: 'path = "/home/"',
+        output: '"/home"',
+        explanation: 'Note that there is no trailing slash after the last directory name.',
+      },
+    ],
+    constraints: [
+      '1 ≤ path.length ≤ 3000',
+      'path consists of English letters, digits, period ".", slash "/" or "_"',
+      'path is a valid absolute Unix path',
+    ],
+    correctPattern: 'Stack',
+    patterns: ['Stack', 'String', 'Simulation', 'Array'],
+    hints: {
+      constraints: 'length ≤ 3000 suggests stack',
+      inputFormat: 'Unix path string',
+      outputFormat: 'Simplified path string',
+      keywords: ['simplify path', 'canonical', 'stack'],
+    },
+    difficulty: 'medium',
+    category: 'String',
+  },
+  {
+    id: 'min-window-subsequence',
+    title: 'Minimum Window Subsequence',
+    description:
+      'Given strings s1 and s2, return the minimum (contiguous) substring part of s1, so that s2 is a subsequence of the part.',
+    examples: [
+      {
+        input: 's1 = "abcdebdde", s2 = "bde"',
+        output: '"bcde"',
+        explanation:
+          '"bcde" is the answer because it occurs before "bdde" which has the same length.',
+      },
+    ],
+    constraints: [
+      '1 ≤ s1.length ≤ 2 * 10⁴',
+      '1 ≤ s2.length ≤ 100',
+      's1 and s2 consist of lowercase English letters',
+    ],
+    correctPattern: 'Dynamic Programming',
+    patterns: ['Dynamic Programming', 'Two Pointers', 'String', 'Sliding Window'],
+    hints: {
+      constraints: 's1 ≤ 2 * 10⁴, s2 ≤ 100 suggests DP',
+      inputFormat: 'Two strings',
+      outputFormat: 'String (minimum window)',
+      keywords: ['minimum window', 'subsequence', 'DP'],
+    },
+    difficulty: 'hard',
+    category: 'String',
+  },
+  {
+    id: 'spiral-matrix',
+    title: 'Spiral Matrix',
+    description: 'Given an m x n matrix, return all elements of the matrix in spiral order.',
+    examples: [
+      {
+        input: 'matrix = [[1,2,3],[4,5,6],[7,8,9]]',
+        output: '[1,2,3,6,9,8,7,4,5]',
+      },
+    ],
+    constraints: [
+      'm == matrix.length',
+      'n == matrix[i].length',
+      '1 ≤ m, n ≤ 10',
+      '-100 ≤ matrix[i][j] ≤ 100',
+    ],
+    correctPattern: 'Matrix',
+    patterns: ['Matrix', 'Simulation', 'Array', 'Two Pointers'],
+    hints: {
+      constraints: 'm, n ≤ 10 allows simulation',
+      inputFormat: '2D matrix',
+      outputFormat: 'Array in spiral order',
+      keywords: ['spiral matrix', 'spiral order', 'simulation'],
+    },
+    difficulty: 'medium',
+    category: 'Matrix',
+  },
+  {
+    id: 'rotate-image',
+    title: 'Rotate Image',
+    description:
+      'You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).',
+    examples: [
+      {
+        input: 'matrix = [[1,2,3],[4,5,6],[7,8,9]]',
+        output: '[[7,4,1],[8,5,2],[9,6,3]]',
+      },
+    ],
+    constraints: [
+      'n == matrix.length == matrix[i].length',
+      '1 ≤ n ≤ 20',
+      '-1000 ≤ matrix[i][j] ≤ 1000',
+    ],
+    correctPattern: 'Matrix',
+    patterns: ['Matrix', 'Math', 'Array', 'Simulation'],
+    hints: {
+      constraints: 'n ≤ 20 allows in-place rotation',
+      inputFormat: 'n x n matrix',
+      outputFormat: 'Rotated matrix',
+      keywords: ['rotate image', '90 degrees', 'clockwise'],
+    },
+    difficulty: 'medium',
+    category: 'Matrix',
+  },
+  {
+    id: 'set-matrix-zeroes',
+    title: 'Set Matrix Zeroes',
+    description:
+      "Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's. You must do it in place.",
+    examples: [
+      {
+        input: 'matrix = [[1,1,1],[1,0,1],[1,1,1]]',
+        output: '[[1,0,1],[0,0,0],[1,0,1]]',
+      },
+    ],
+    constraints: [
+      'm == matrix.length',
+      'n == matrix[0].length',
+      '1 ≤ m, n ≤ 200',
+      '-2³¹ ≤ matrix[i][j] ≤ 2³¹ - 1',
+    ],
+    correctPattern: 'Matrix',
+    patterns: ['Matrix', 'Hash Map', 'Array', 'Simulation'],
+    hints: {
+      constraints: 'm, n ≤ 200 allows in-place',
+      inputFormat: 'm x n matrix',
+      outputFormat: 'Modified matrix',
+      keywords: ['set matrix zeroes', 'in place', 'row and column'],
+    },
+    difficulty: 'medium',
+    category: 'Matrix',
+  },
+  {
+    id: 'game-of-life',
+    title: 'Game of Life',
+    description:
+      'According to Wikipedia\'s article: "The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970." The board is made up of an m x n grid of cells, where each cell has an initial state: live (represented by a 1) or dead (represented by a 0).',
+    examples: [
+      {
+        input: 'board = [[0,1,0],[0,0,1],[1,1,1],[0,0,0]]',
+        output: '[[0,0,0],[1,0,1],[0,1,1],[0,1,0]]',
+      },
+    ],
+    constraints: [
+      'm == board.length',
+      'n == board[i].length',
+      '1 ≤ m, n ≤ 25',
+      'board[i][j] is 0 or 1',
+    ],
+    correctPattern: 'Matrix',
+    patterns: ['Matrix', 'Simulation', 'Array', 'Bit Manipulation'],
+    hints: {
+      constraints: 'm, n ≤ 25 allows simulation',
+      inputFormat: 'Binary matrix',
+      outputFormat: 'Next generation matrix',
+      keywords: ['game of life', 'cellular automaton', 'simulation'],
+    },
+    difficulty: 'medium',
+    category: 'Matrix',
+  },
+  {
+    id: 'valid-sudoku',
+    title: 'Valid Sudoku',
+    description:
+      'Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules: Each row must contain the digits 1-9 without repetition. Each column must contain the digits 1-9 without repetition. Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.',
+    examples: [
+      {
+        input:
+          'board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]',
+        output: 'true',
+      },
+    ],
+    constraints: ['board.length == 9', 'board[i].length == 9', 'board[i][j] is a digit 1-9 or "."'],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Matrix', 'Set', 'Array'],
+    hints: {
+      constraints: '9x9 board suggests hash map',
+      inputFormat: '9x9 Sudoku board',
+      outputFormat: 'Boolean',
+      keywords: ['valid sudoku', 'no repetition', 'hash map'],
+    },
+    difficulty: 'medium',
+    category: 'Matrix',
+  },
+  {
+    id: 'word-pattern',
+    title: 'Word Pattern',
+    description:
+      'Given a pattern and a string s, find if s follows the same pattern. Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in s.',
+    examples: [
+      {
+        input: 'pattern = "abba", s = "dog cat cat dog"',
+        output: 'true',
+      },
+    ],
+    constraints: [
+      '1 ≤ pattern.length ≤ 300',
+      'pattern contains only lower-case English letters',
+      '1 ≤ s.length ≤ 3000',
+      's contains only lowercase English letters and spaces " "',
+      's does not contain any leading or trailing spaces',
+      'All the words in s are separated by a single space',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'String', 'Bijection', 'Two Maps'],
+    hints: {
+      constraints: 'length ≤ 3000 suggests hash map',
+      inputFormat: 'Pattern string, string s',
+      outputFormat: 'Boolean',
+      keywords: ['word pattern', 'bijection', 'hash map'],
+    },
+    difficulty: 'easy',
+    category: 'String',
+  },
+  {
+    id: 'group-anagrams',
+    title: 'Group Anagrams',
+    description:
+      'Given an array of strings strs, group the anagrams together. You can return the answer in any order.',
+    examples: [
+      {
+        input: 'strs = ["eat","tea","tan","ate","nat","bat"]',
+        output: '[["bat"],["nat","tan"],["ate","eat","tea"]]',
+      },
+    ],
+    constraints: [
+      '1 ≤ strs.length ≤ 10⁴',
+      '0 ≤ strs[i].length ≤ 100',
+      'strs[i] consists of lowercase English letters',
+    ],
+    correctPattern: 'Hash Map',
+    patterns: ['Hash Map', 'Sorting', 'String', 'Array'],
+    hints: {
+      constraints: 'strs.length ≤ 10⁴ suggests hash map',
+      inputFormat: 'Array of strings',
+      outputFormat: 'List of lists (grouped)',
+      keywords: ['group anagrams', 'anagrams', 'hash map'],
+    },
+    difficulty: 'medium',
+    category: 'String',
   },
 ];
 
