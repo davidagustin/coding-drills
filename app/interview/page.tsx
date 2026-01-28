@@ -208,6 +208,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
                 type="button"
                 onClick={() => {
                   setInterviewType('system-design');
+                  setInterviewMode('solve');
                   setSelectedProblem(null);
                   setShowProblemList(false);
                 }}
@@ -314,39 +315,41 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
                     {selectedProblem.difficulty}
                   </span>
                 </div>
-                <p className="text-sm text-zinc-400 line-clamp-2">{selectedProblem.description}</p>
+                <p className="text-sm text-zinc-400 line-clamp-4">{selectedProblem.description}</p>
               </div>
             )}
           </div>
 
-          {/* Interview Mode */}
-          <div>
-            <span className="block text-sm font-medium text-zinc-300 mb-3">Mode</span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setInterviewMode('solve')}
-                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
-                  interviewMode === 'solve'
-                    ? 'bg-cyan-600 text-white'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                }`}
-              >
-                {interviewType === 'system-design' ? 'Mock Interview' : 'Solve Problem'}
-              </button>
-              <button
-                type="button"
-                onClick={() => setInterviewMode('guided-breakdown')}
-                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
-                  interviewMode === 'guided-breakdown'
-                    ? 'bg-cyan-600 text-white'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                }`}
-              >
-                Guided Breakdown
-              </button>
+          {/* Interview Mode - only show for algorithm interviews */}
+          {interviewType === 'algorithm' && (
+            <div>
+              <span className="block text-sm font-medium text-zinc-300 mb-3">Mode</span>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setInterviewMode('solve')}
+                  className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                    interviewMode === 'solve'
+                      ? 'bg-cyan-600 text-white'
+                      : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  }`}
+                >
+                  Solve Problem
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInterviewMode('guided-breakdown')}
+                  className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                    interviewMode === 'guided-breakdown'
+                      ? 'bg-cyan-600 text-white'
+                      : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  }`}
+                >
+                  Guided Breakdown
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Info Box */}
           <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
@@ -365,18 +368,11 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
                     through each step interactively using the selected problem.
                   </>
                 )
-              ) : interviewMode === 'solve' ? (
+              ) : (
                 <>
                   <span className="font-medium">Mock Interview:</span> The AI interviewer will guide
                   you through a system design discussion covering requirements, estimation, API
                   design, architecture, and trade-offs.
-                </>
-              ) : (
-                <>
-                  <span className="font-medium">Guided Breakdown:</span> The AI coach will walk you
-                  through a structured 7-phase framework for system design: Requirements,
-                  Estimation, API Design, Data Model, High-Level Design, Detailed Design, and
-                  Trade-offs.
                 </>
               )}{' '}
               The AI runs locally in your browser using WebGPU.
