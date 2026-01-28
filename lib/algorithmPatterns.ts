@@ -20,6 +20,9 @@ export interface AlgorithmPatternProblem {
     inputFormat?: string;
     outputFormat?: string;
     keywords?: string[];
+    bigO?: string; // Big O constraint analysis
+    pattern?: string; // Pattern recognition tell
+    advancedLogic?: string; // Advanced logic technique if applicable
   };
   difficulty: 'easy' | 'medium' | 'hard';
   category: string;
@@ -129,6 +132,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of integers',
       outputFormat: 'Array of two indices',
       keywords: ['indices', 'two numbers', 'add up'],
+      bigO: 'N ≤ 10⁶ → Target: O(N) or O(N log N). Hash Map gives O(N) lookup.',
+      pattern: 'Need fast lookup for complement (target - current). Hash Map provides O(1) access.',
     },
     difficulty: 'easy',
     category: 'Array',
@@ -153,6 +158,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of prices',
       outputFormat: 'Single number (max profit)',
       keywords: ['maximize', 'profit', 'optimal'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Greedy approach tracks minimum price seen.',
+      pattern:
+        'Keywords: "Maximize profit" → Greedy (local optimal choice) or DP. Since single transaction, Greedy works.',
     },
     difficulty: 'easy',
     category: 'Array',
@@ -204,6 +212,11 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of heights',
       outputFormat: 'Single number (max area)',
       keywords: ['two lines', 'most water', 'maximize'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Two Pointers approach.',
+      pattern:
+        'Keywords: "Two lines", "Maximize" → Two Pointers. Start from both ends, move pointer with smaller height.',
+      advancedLogic:
+        'Greedy insight: Always move the shorter pointer since area is limited by height.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -228,6 +241,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of coins, target amount',
       outputFormat: 'Single number (fewest coins)',
       keywords: ['fewest', 'number of ways', 'optimal'],
+      bigO: 'N ≤ 5,000 → Target: O(N²). DP with amount as state.',
+      pattern:
+        'Keywords: "Fewest", "Optimal" → Dynamic Programming. Build up from smaller amounts.',
     },
     difficulty: 'medium',
     category: 'Dynamic Programming',
@@ -252,6 +268,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array, k value',
       outputFormat: 'Single number (kth largest)',
       keywords: ['kth largest', 'top k', 'kth element'],
+      bigO: 'N ≤ 10⁶ → Target: O(N log K). Heap maintains K smallest elements.',
+      pattern: 'Keywords: "Kth largest", "Top K" → Heap / Priority Queue. Min heap of size K.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -276,6 +294,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'String of parentheses',
       outputFormat: 'Boolean',
       keywords: ['parentheses', 'nested', 'matching'],
+      bigO: 'N ≤ 10⁶ → Target: O(N). Stack processes one character at a time.',
+      pattern: 'Keywords: "Parentheses", "Nested", "Valid" → Stack. Push opening, pop on closing.',
     },
     difficulty: 'easy',
     category: 'Stack',
@@ -305,6 +325,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Sorted array, target',
       outputFormat: 'Index or -1',
       keywords: ['sorted', 'search', 'target'],
+      bigO: 'N ≥ 10⁷ → Target: O(log N). Binary search halves search space.',
+      pattern:
+        'Keywords: "Search in sorted" → Binary Search. Compare middle element, eliminate half.',
     },
     difficulty: 'easy',
     category: 'Binary Search',
@@ -329,6 +352,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of integers',
       outputFormat: 'Single number (max sum)',
       keywords: ['maximum', 'subarray', 'contiguous', 'largest sum'],
+      bigO: "N ≤ 10⁶ → Target: O(N). Kadane's algorithm (DP) tracks max ending at each position.",
+      pattern:
+        'Keywords: "Maximum", "Subarray", "Optimal" → Dynamic Programming. Track max sum ending at each index.',
     },
     difficulty: 'easy',
     category: 'Dynamic Programming',
@@ -357,6 +383,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of intervals [start, end]',
       outputFormat: 'Array of merged intervals',
       keywords: ['merge', 'overlapping', 'intervals'],
+      bigO: 'N ≤ 10⁶ → Target: O(N log N). Sort first, then merge in one pass.',
+      pattern:
+        'Keywords: "Intervals", "Merge" → Sorting + Greedy. Sort by start, merge overlapping.',
     },
     difficulty: 'medium',
     category: 'Array',
