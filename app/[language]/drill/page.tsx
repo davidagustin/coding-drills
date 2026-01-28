@@ -881,6 +881,7 @@ interface DrillPhaseProps {
   language: LanguageId;
   onAnswer: (answer: string) => void;
   onSkip: () => void;
+  onEnd: () => void;
   questionStartTime: number;
   currentAnswer: AnswerRecord | null; // Add current answer for snackbar
 }
@@ -891,6 +892,7 @@ function DrillPhaseComponent({
   language,
   onAnswer,
   onSkip,
+  onEnd,
   questionStartTime,
   currentAnswer,
 }: DrillPhaseProps) {
@@ -1161,6 +1163,14 @@ function DrillPhaseComponent({
             className="py-3 px-6 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 font-medium rounded-lg transition-colors cursor-pointer"
           >
             Skip
+          </button>
+          <button
+            type="button"
+            onClick={onEnd}
+            className="py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors cursor-pointer"
+            title="End drill and view results"
+          >
+            End
           </button>
         </div>
       </div>
@@ -1603,6 +1613,38 @@ export default function DrillPage() {
     handleNext();
   }, [problems, drillState.currentIndex, questionStartTime, handleNext]);
 
+  const handleEnd = useCallback(() => {
+    // Mark current question as skipped if not already answered
+    if (drillState.currentIndex < problems.length) {
+      const currentProblem = problems[drillState.currentIndex];
+      const timeTaken = Date.now() - questionStartTime;
+
+      const answerRecord: AnswerRecord = {
+        problem: currentProblem,
+        userAnswer: '',
+        isCorrect: false,
+        error: 'Ended early',
+        skipped: true,
+        timeTaken,
+        pointsEarned: 0,
+      };
+
+      setDrillState((prev) => ({
+        ...prev,
+        answers: [...prev.answers, answerRecord],
+        endTime: Date.now(),
+      }));
+    } else {
+      // Just set end time if we're already past all questions
+      setDrillState((prev) => ({
+        ...prev,
+        endTime: Date.now(),
+      }));
+    }
+
+    setPhase('results');
+  }, [problems, drillState.currentIndex, questionStartTime]);
+
   const handleTryAgainSameQuestions = useCallback(() => {
     // Restart with the same problems array (same exact questions)
     if (problems.length > 0) {
@@ -1650,6 +1692,7 @@ export default function DrillPage() {
           language={language}
           onAnswer={handleAnswer}
           onSkip={handleSkip}
+          onEnd={handleEnd}
           questionStartTime={questionStartTime}
           currentAnswer={currentAnswer}
         />
