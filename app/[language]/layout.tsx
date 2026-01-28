@@ -50,18 +50,6 @@ const BASE_MODES: { slug: string; label: string; icon: ReactNode }[] = [
     ),
   },
   {
-    slug: 'pattern-quiz',
-    label: 'Pattern Quiz',
-    // Puzzle piece icon for pattern recognition
-    icon: (
-      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" {...s} />
-        <path d="M2 17l10 5 10-5" {...s} />
-        <path d="M2 12l10 5 10-5" {...s} />
-      </svg>
-    ),
-  },
-  {
     slug: 'problems',
     label: 'Method Training',
     // Code brackets icon
