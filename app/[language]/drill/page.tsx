@@ -1265,10 +1265,16 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
 interface ResultsPhaseProps {
   state: DrillState;
   onTryAgain: () => void;
+  onTryAgainSameQuestions: () => void;
   onBackToMenu: () => void;
 }
 
-function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
+function ResultsPhase({
+  state,
+  onTryAgain,
+  onTryAgainSameQuestions,
+  onBackToMenu,
+}: ResultsPhaseProps) {
   const [showMissed, setShowMissed] = useState(false);
   // Use lazy initializer to capture time only once (on first render)
   const [capturedTime] = useState(() => Date.now());
@@ -1406,18 +1412,27 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
       )}
 
       {/* Actions */}
-      <div className="flex gap-4">
-        <button
-          type="button"
-          onClick={onTryAgain}
-          className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
-        >
-          Try Again
-        </button>
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={onTryAgainSameQuestions}
+            className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
+          >
+            Try Again (Same Questions)
+          </button>
+          <button
+            type="button"
+            onClick={onTryAgain}
+            className="flex-1 py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors cursor-pointer"
+          >
+            New Drill
+          </button>
+        </div>
         <button
           type="button"
           onClick={onBackToMenu}
-          className="flex-1 py-4 px-6 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-xl transition-colors border border-zinc-700 cursor-pointer"
+          className="w-full py-4 px-6 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-xl transition-colors border border-zinc-700 cursor-pointer"
         >
           Back to Menu
         </button>
@@ -1573,7 +1588,26 @@ export default function DrillPage() {
     handleNext();
   }, [problems, drillState.currentIndex, questionStartTime, handleNext]);
 
+  const handleTryAgainSameQuestions = useCallback(() => {
+    // Restart with the same problems array (same exact questions)
+    if (problems.length > 0) {
+      const now = Date.now();
+      setDrillState({
+        currentIndex: 0,
+        answers: [],
+        streak: 0,
+        maxStreak: 0,
+        startTime: now,
+        totalScore: 0,
+      });
+      setQuestionStartTime(now);
+      setCurrentAnswer(null);
+      setPhase('drilling');
+    }
+  }, [problems]);
+
   const handleTryAgain = useCallback(() => {
+    // Generate new questions with the same config
     if (config) {
       handleStart(config);
     }
@@ -1614,6 +1648,7 @@ export default function DrillPage() {
         <ResultsPhase
           state={drillState}
           onTryAgain={handleTryAgain}
+          onTryAgainSameQuestions={handleTryAgainSameQuestions}
           onBackToMenu={handleBackToMenu}
         />
       )}
