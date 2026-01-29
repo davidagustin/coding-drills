@@ -69,6 +69,18 @@ export function GlobalNavbar() {
       ),
     },
     {
+      href: '/typescript/pattern-quiz',
+      label: 'Pattern Quiz',
+      icon: (
+        <svg {...navIconProps}>
+          <title>Pattern Quiz</title>
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      ),
+    },
+    {
       href: '/regex',
       label: 'Regex Trainer',
       icon: (
