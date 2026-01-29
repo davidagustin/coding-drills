@@ -14,7 +14,7 @@ import {
 // Types
 // ============================================================================
 
-type Phase = 'setup' | 'playing' | 'results';
+type Phase = 'setup' | 'playing' | 'results' | 'review';
 
 interface PatternQuizState {
   phase: Phase;
@@ -321,6 +321,7 @@ function PlayingPhase({
   timeLeft,
   timeLimitSeconds,
 }: PlayingPhaseProps) {
+  const [hintsExpanded, setHintsExpanded] = useState(false);
   // Memoize shuffled patterns so they don't change on every render
   const shuffledPatterns = useMemo(() => shuffleArray(problem.patterns), [problem.patterns]);
 
@@ -396,45 +397,66 @@ function PlayingPhase({
           </ul>
         </div>
 
-        {/* Hints (if available) */}
+        {/* Hints (if available) - expandable, closed by default so they don't give away the answer */}
         {problem.hints && (
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-blue-400">💡 Hints:</h3>
-            {problem.hints.bigO && (
-              <div className="text-sm text-zinc-300">
-                <strong className="text-blue-400">Big O Analysis:</strong> {problem.hints.bigO}
-              </div>
-            )}
-            {problem.hints.constraints && (
-              <div className="text-sm text-zinc-300">
-                <strong>Constraints:</strong> {problem.hints.constraints}
-              </div>
-            )}
-            {problem.hints.pattern && (
-              <div className="text-sm text-zinc-300">
-                <strong className="text-yellow-400">Pattern Recognition:</strong>{' '}
-                {problem.hints.pattern}
-              </div>
-            )}
-            {problem.hints.inputFormat && (
-              <div className="text-sm text-zinc-300">
-                <strong>Input Format:</strong> {problem.hints.inputFormat}
-              </div>
-            )}
-            {problem.hints.outputFormat && (
-              <div className="text-sm text-zinc-300">
-                <strong>Output Format:</strong> {problem.hints.outputFormat}
-              </div>
-            )}
-            {problem.hints.keywords && problem.hints.keywords.length > 0 && (
-              <div className="text-sm text-zinc-300">
-                <strong>Keywords:</strong> {problem.hints.keywords.join(', ')}
-              </div>
-            )}
-            {problem.hints.advancedLogic && (
-              <div className="text-sm text-purple-300 mt-2 p-2 bg-purple-500/10 rounded border border-purple-500/30">
-                <strong className="text-purple-400">⚡ Advanced Logic:</strong>{' '}
-                {problem.hints.advancedLogic}
+          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setHintsExpanded((prev) => !prev)}
+              className="w-full flex items-center justify-between gap-2 px-4 py-3 text-left hover:bg-blue-500/10 transition-colors"
+              aria-expanded={hintsExpanded}
+            >
+              <span className="text-sm font-semibold text-blue-400">💡 Hints</span>
+              <svg
+                className={`w-4 h-4 text-blue-400 shrink-0 transition-transform ${hintsExpanded ? 'rotate-180' : ''}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {hintsExpanded && (
+              <div className="px-4 pb-4 pt-0 space-y-3 border-t border-blue-500/20">
+                {problem.hints.bigO && (
+                  <div className="text-sm text-zinc-300 pt-3">
+                    <strong className="text-blue-400">Big O Analysis:</strong> {problem.hints.bigO}
+                  </div>
+                )}
+                {problem.hints.constraints && (
+                  <div className="text-sm text-zinc-300">
+                    <strong>Constraints:</strong> {problem.hints.constraints}
+                  </div>
+                )}
+                {problem.hints.pattern && (
+                  <div className="text-sm text-zinc-300">
+                    <strong className="text-yellow-400">Pattern Recognition:</strong>{' '}
+                    {problem.hints.pattern}
+                  </div>
+                )}
+                {problem.hints.inputFormat && (
+                  <div className="text-sm text-zinc-300">
+                    <strong>Input Format:</strong> {problem.hints.inputFormat}
+                  </div>
+                )}
+                {problem.hints.outputFormat && (
+                  <div className="text-sm text-zinc-300">
+                    <strong>Output Format:</strong> {problem.hints.outputFormat}
+                  </div>
+                )}
+                {problem.hints.keywords && problem.hints.keywords.length > 0 && (
+                  <div className="text-sm text-zinc-300">
+                    <strong>Keywords:</strong> {problem.hints.keywords.join(', ')}
+                  </div>
+                )}
+                {problem.hints.advancedLogic && (
+                  <div className="text-sm text-purple-300 mt-2 p-2 bg-purple-500/10 rounded border border-purple-500/30">
+                    <strong className="text-purple-400">⚡ Advanced Logic:</strong>{' '}
+                    {problem.hints.advancedLogic}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -502,9 +524,10 @@ interface ResultsPhaseProps {
   state: PatternQuizState;
   onTryAgain: () => void;
   onBackToMenu: () => void;
+  onReviewAnswers: () => void;
 }
 
-function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
+function ResultsPhase({ state, onTryAgain, onBackToMenu, onReviewAnswers }: ResultsPhaseProps) {
   const totalQuestions = state.answers.length;
   const correctAnswers = state.answers.filter((a) => a.isCorrect).length;
   const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
@@ -543,13 +566,115 @@ function ResultsPhase({ state, onTryAgain, onBackToMenu }: ResultsPhaseProps) {
       </div>
 
       {/* Actions */}
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={onTryAgain}
+            className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
+          >
+            Try Again
+          </button>
+          <button
+            type="button"
+            onClick={onBackToMenu}
+            className="flex-1 py-4 px-6 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-xl transition-colors border border-zinc-700"
+          >
+            Back to Menu
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={onReviewAnswers}
+          className="w-full py-3 px-6 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 font-medium rounded-xl transition-colors border border-zinc-700"
+        >
+          Review Answers
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Review Phase Component
+// ============================================================================
+
+interface ReviewPhaseProps {
+  state: PatternQuizState;
+  onBackToResults: () => void;
+  onBackToMenu: () => void;
+}
+
+function ReviewPhase({ state, onBackToResults, onBackToMenu }: ReviewPhaseProps) {
+  const problemById = useMemo(() => {
+    const map = new Map<string, AlgorithmPatternProblem>();
+    for (const p of state.problems) {
+      map.set(p.id, p);
+    }
+    return map;
+  }, [state.problems]);
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-zinc-100 mb-2">Review Answers</h1>
+        <p className="text-zinc-400">See what you got right and wrong</p>
+      </div>
+
+      <div className="space-y-4">
+        {state.answers.map((answer, index) => {
+          const problem = problemById.get(answer.problemId);
+          const title = problem?.title ?? answer.problemId;
+          return (
+            <div
+              key={`${answer.problemId}-${index}`}
+              className={`rounded-xl p-4 border ${
+                answer.isCorrect
+                  ? 'bg-green-500/5 border-green-500/30'
+                  : 'bg-red-500/5 border-red-500/30'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-zinc-400 text-sm">Question {index + 1}</span>
+                {answer.isCorrect ? (
+                  <span className="text-green-400 text-sm font-medium">Correct</span>
+                ) : (
+                  <span className="text-red-400 text-sm font-medium">Incorrect</span>
+                )}
+              </div>
+              <h3 className="font-semibold text-white mb-2">{title}</h3>
+              <div className="flex flex-wrap gap-2 text-sm">
+                <span className="text-zinc-500">Your answer:</span>
+                <span
+                  className={
+                    answer.isCorrect ? 'text-green-400 font-medium' : 'text-red-400 font-medium'
+                  }
+                >
+                  {answer.selectedPattern}
+                </span>
+                {!answer.isCorrect && (
+                  <>
+                    <span className="text-zinc-500">→</span>
+                    <span className="text-zinc-500">Correct:</span>
+                    <span className="text-green-400 font-medium">{answer.correctPattern}</span>
+                  </>
+                )}
+              </div>
+              <div className="text-xs text-zinc-500 mt-1">
+                {answer.timeSpent}s · {answer.points} pts
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
       <div className="flex gap-4">
         <button
           type="button"
-          onClick={onTryAgain}
+          onClick={onBackToResults}
           className="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
         >
-          Try Again
+          Back to Results
         </button>
         <button
           type="button"
@@ -791,7 +916,20 @@ export function PatternQuizContent({ backHref }: PatternQuizContentProps) {
       )}
 
       {state.phase === 'results' && (
-        <ResultsPhase state={state} onTryAgain={handleTryAgain} onBackToMenu={handleBackToMenu} />
+        <ResultsPhase
+          state={state}
+          onTryAgain={handleTryAgain}
+          onBackToMenu={handleBackToMenu}
+          onReviewAnswers={() => setState((prev) => ({ ...prev, phase: 'review' }))}
+        />
+      )}
+
+      {state.phase === 'review' && (
+        <ReviewPhase
+          state={state}
+          onBackToResults={() => setState((prev) => ({ ...prev, phase: 'results' }))}
+          onBackToMenu={handleBackToMenu}
+        />
       )}
 
       <PatternRecognitionGuide
