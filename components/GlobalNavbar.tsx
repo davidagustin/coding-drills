@@ -29,7 +29,9 @@ export function GlobalNavbar() {
   const currentLanguage = pathParts[0];
   const isLanguagePage =
     currentLanguage &&
-    !['interview', 'regex', 'links', 'api', 'sitemap.xml', 'robots.txt'].includes(currentLanguage);
+    !['interview', 'regex', 'links', 'api', 'pattern-quiz', 'sitemap.xml', 'robots.txt'].includes(
+      currentLanguage,
+    );
 
   // Don't render GlobalNavbar on language pages - they have their own layout with header
   if (isLanguagePage) {
@@ -69,7 +71,7 @@ export function GlobalNavbar() {
       ),
     },
     {
-      href: '/typescript/pattern-quiz',
+      href: '/pattern-quiz',
       label: 'Pattern Quiz',
       icon: (
         <svg {...navIconProps}>

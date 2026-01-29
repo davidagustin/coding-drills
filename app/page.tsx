@@ -512,7 +512,7 @@ export default function Home() {
               {/* Right: Start Button */}
               <div className="flex-shrink-0">
                 <Link
-                  href="/typescript/pattern-quiz"
+                  href="/pattern-quiz"
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-purple-600 hover:bg-purple-500
                              text-white font-semibold text-lg transition-all duration-200
                              shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 cursor-pointer"
