@@ -5587,6 +5587,190 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     difficulty: 'medium',
     category: 'Tree',
   },
+  {
+    id: 'shortest-path-nonnegative-named',
+    title: 'Single-Source Shortest Path, Non-Negative Weights (Name the Algorithm)',
+    description:
+      'Shortest path from one source to all other nodes in a weighted graph with non-negative edge weights. Repeatedly extract the unvisited node with smallest tentative distance and relax its outgoing edges.',
+    examples: [
+      {
+        input: 'n nodes, weighted edges, source node',
+        output: 'Shortest distance from source to each node',
+        explanation: 'Dijkstra: priority queue of (distance, node), relax neighbors.',
+      },
+    ],
+    constraints: ['All edge weights ≥ 0', '1 ≤ V ≤ 10⁴'],
+    correctPattern: 'Dijkstra',
+    patterns: ['Dijkstra', 'Bellman-Ford', 'BFS', 'Floyd-Warshall'],
+    hints: {
+      keywords: ['shortest path', 'non-negative', 'single source', 'priority queue'],
+      bigO: 'O((V+E) log V) with binary heap.',
+      pattern: '"Shortest path, non-negative weights" → Dijkstra\'s.',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'cycle-detection-linked-list-named',
+    title: 'Detect Cycle in Linked List O(1) Space (Name the Algorithm)',
+    description:
+      'Determine if a linked list has a cycle. Use two pointers: one moves one step, the other two steps. If they meet, there is a cycle. O(n) time, O(1) space.',
+    examples: [
+      {
+        input: 'head = [3,2,0,-4], tail connects to node 1',
+        output: 'true',
+        explanation: 'Tortoise and hare: fast and slow pointers meet inside cycle.',
+      },
+    ],
+    constraints: ['0 ≤ nodes ≤ 10⁴', 'O(1) extra space required'],
+    correctPattern: 'Floyd Cycle Detection',
+    patterns: ['Floyd Cycle Detection', 'Hash Map', 'Two Pointers', 'Linked List'],
+    hints: {
+      keywords: ['cycle', 'linked list', 'O(1) space', 'two pointers'],
+      bigO: 'O(n) time, O(1) space.',
+      pattern: '"Detect cycle in linked list" / "O(1) space" → Floyd\'s Tortoise and Hare.',
+    },
+    difficulty: 'easy',
+    category: 'Linked List',
+  },
+  {
+    id: 'eulerian-path-reconstruct-named',
+    title: 'Reconstruct Itinerary / Visit Every Edge Once (Name the Algorithm)',
+    description:
+      'Find a path that uses every directed edge exactly once (Eulerian path). Start from designated vertex; DFS, post-order record vertices when backtracking; reverse to get path. Handles lexicographic order with sorted adjacency.',
+    examples: [
+      {
+        input: 'tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]',
+        output: '["JFK","MUC","LHR","SFO","SJC",...]',
+        explanation: "Hierholzer's: DFS, pop and record when stuck, reverse result.",
+      },
+    ],
+    constraints: ['Directed graph', 'Exactly one Eulerian path possible'],
+    correctPattern: 'Eulerian Path',
+    patterns: ['Eulerian Path', 'DFS', 'Backtracking', 'Topological Sort'],
+    hints: {
+      keywords: ['use every edge once', 'itinerary', 'Eulerian path'],
+      bigO: 'O(E log E) with sorted adjacency.',
+      pattern: '"Visit every edge exactly once" → Hierholzer\'s (Eulerian path).',
+    },
+    difficulty: 'hard',
+    category: 'Graph',
+  },
+  {
+    id: 'longest-palindromic-substring-on-named',
+    title: 'Longest Palindromic Substring in O(n) (Name the Algorithm)',
+    description:
+      'Find the longest palindromic substring in O(n) time. Expand around centers (or use transformed string with delimiters); maintain center and right boundary; use previously computed lengths to skip work.',
+    examples: [
+      {
+        input: 's = "babad"',
+        output: '"bab" or "aba"',
+        explanation: "Manacher's: palindromic radii array, linear scan.",
+      },
+    ],
+    constraints: ['1 ≤ s.length ≤ 1000', 'O(n) time required'],
+    correctPattern: 'Manacher',
+    patterns: ['Manacher', 'Two Pointers', 'Dynamic Programming', 'String'],
+    hints: {
+      keywords: ['longest palindrome', 'O(n)', 'substring'],
+      bigO: 'O(n).',
+      pattern: '"Longest palindromic substring in O(n)" → Manacher\'s.',
+    },
+    difficulty: 'medium',
+    category: 'String',
+  },
+  {
+    id: 'count-set-bits-named',
+    title: 'Count Set Bits in Integer (Name the Algorithm)',
+    description:
+      'Count the number of 1 bits in the binary representation of an integer. Repeatedly clear the lowest set bit using n & (n-1) until zero. Number of iterations = number of set bits.',
+    examples: [
+      {
+        input: 'n = 11 (binary 1011)',
+        output: '3',
+        explanation: "Brian Kernighan's: 11 & 10 = 10, 10 & 9 = 8, 8 & 7 = 0 → 3 iterations.",
+      },
+    ],
+    constraints: ['0 ≤ n ≤ 2³¹ - 1', 'O(set bits) time'],
+    correctPattern: 'Brian Kernighan',
+    patterns: ['Brian Kernighan', 'Bit Manipulation', 'Math', 'XOR'],
+    hints: {
+      keywords: ['count 1 bits', 'population count', 'n & (n-1)'],
+      bigO: 'O(number of set bits).',
+      pattern: '"Count set bits" / "n & (n-1)" → Brian Kernighan\'s.',
+    },
+    difficulty: 'easy',
+    category: 'Bit Manipulation',
+  },
+  {
+    id: 'kth-largest-without-full-sort-named',
+    title: 'Kth Largest / Smallest Without Full Sort (Name the Algorithm)',
+    description:
+      'Find the kth largest (or smallest) element in an unsorted array in O(n) average time. Partition around a pivot (like quicksort); recurse on the side that contains the kth element. No need to sort the whole array.',
+    examples: [
+      {
+        input: 'nums = [3,2,1,5,6,4], k = 2',
+        output: '5',
+        explanation: 'Quickselect: partition until pivot is at index n-k.',
+      },
+    ],
+    constraints: ['1 ≤ k ≤ nums.length ≤ 10⁵', 'O(n) average'],
+    correctPattern: 'Quickselect',
+    patterns: ['Quickselect', 'Heap / Priority Queue', 'Sorting', 'Binary Search'],
+    hints: {
+      keywords: ['kth largest', 'kth smallest', 'without full sort', 'O(n) average'],
+      bigO: "O(n) average, O(n²) worst. Hoare's selection.",
+      pattern: '"Kth largest without full sort" → Quickselect (Hoare\'s).',
+    },
+    difficulty: 'medium',
+    category: 'Array',
+  },
+  {
+    id: 'connected-components-dsu-named',
+    title: 'Group Connected Elements / Cycle in Undirected Graph (Name the Algorithm)',
+    description:
+      'Merge sets by connection; answer "are u and v in the same set?" or "how many connected components?" in near-constant time. Maintain parent and rank; path compression and union by rank.',
+    examples: [
+      {
+        input: 'Edges (u,v); queries: same component? or count components',
+        output: 'true/false or component count',
+        explanation: 'Union-Find (DSU): find with path compression, union by rank.',
+      },
+    ],
+    constraints: ['1 ≤ V ≤ 10⁵', 'O(α(n)) ≈ O(1) per operation'],
+    correctPattern: 'Union-Find',
+    patterns: ['Union-Find', 'DFS', 'BFS', 'Graph'],
+    hints: {
+      keywords: ['connected components', 'disjoint set', 'union find', 'cycle in undirected graph'],
+      bigO: 'O(α(n)) ≈ O(1) per find/union.',
+      pattern: '"Group connected" / "same component?" → Union-Find (DSU).',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'square-root-newton-named',
+    title: 'Integer Square Root / Find Root Numerically (Name the Algorithm)',
+    description:
+      "Compute integer square root of x (or find root of f). Iteratively improve guess: next = (guess + x/guess) / 2 for sqrt, or next = guess - f(guess)/f'(guess) in general. Converges quickly.",
+    examples: [
+      {
+        input: 'x = 8',
+        output: '2',
+        explanation: 'Newton-Raphson: 8/2=4, (2+4)/2=3; 8/3≈2.67, (3+2.67)/2≈2.83; ... → 2.',
+      },
+    ],
+    constraints: ['0 ≤ x ≤ 2³¹ - 1', 'Integer sqrt, no built-in'],
+    correctPattern: 'Newton Method',
+    patterns: ['Newton Method', 'Binary Search', 'Math', 'Bit Manipulation'],
+    hints: {
+      keywords: ['square root', 'integer sqrt', 'find root', 'numerical'],
+      bigO: 'Converges quadratically.',
+      pattern: '"Integer square root" / "find root" → Newton-Raphson.',
+    },
+    difficulty: 'easy',
+    category: 'Math',
+  },
 ];
 
 /**
