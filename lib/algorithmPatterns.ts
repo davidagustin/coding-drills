@@ -5257,7 +5257,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   // Named interview algorithms — "Which algorithm?" recognition
   {
     id: 'max-subarray-named',
-    title: 'Maximum Subarray (Name the Algorithm)',
+    title: 'Maximum Subarray',
     description:
       'Find the contiguous subarray with the largest sum. One pass, O(n) time, O(1) space. Track max ending here and global max.',
     examples: [
@@ -5280,7 +5280,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'majority-element-named',
-    title: 'Majority Element (Name the Algorithm)',
+    title: 'Majority Element',
     description:
       'Find the majority element that appears more than ⌊n/2⌋ times. O(n) time and O(1) space. One candidate, count; cancel opposite votes.',
     examples: [
@@ -5299,7 +5299,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'sort-colors-dutch',
-    title: 'Sort Colors / 3-Way Partition (Name the Algorithm)',
+    title: 'Sort Colors / 3-Way Partition',
     description:
       'Array of 0s, 1s, and 2s. Sort in-place in one pass. Three pointers: low, mid, high; swap so 0s left, 1s middle, 2s right.',
     examples: [
@@ -5319,7 +5319,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'shortest-path-negative-weights',
-    title: 'Shortest Path with Negative Weights (Name the Algorithm)',
+    title: 'Shortest Path with Negative Weights',
     description:
       'Single-source shortest path in a weighted directed graph that may have negative edge weights. Relax all edges repeatedly (V-1 times); detect negative cycle if round V still relaxes.',
     examples: [
@@ -5342,7 +5342,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'all-pairs-shortest-path',
-    title: 'All Pairs Shortest Path (Name the Algorithm)',
+    title: 'All Pairs Shortest Path',
     description:
       'Compute shortest path between every pair of vertices in a weighted graph. DP: for each intermediate vertex k, relax i→j via k. O(V³).',
     examples: [
@@ -5365,7 +5365,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'topological-sort-bfs',
-    title: 'Topological Sort BFS-Based (Name the Algorithm)',
+    title: 'Topological Sort BFS-Based',
     description:
       'Linear ordering of vertices in a DAG such that for every edge (u,v), u comes before v. BFS: enqueue nodes with in-degree 0, reduce neighbor in-degrees.',
     examples: [
@@ -5388,7 +5388,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'mst-union-find',
-    title: 'Minimum Spanning Tree via Edge Sorting (Name the Algorithm)',
+    title: 'Minimum Spanning Tree via Edge Sorting',
     description:
       'Connect all vertices with minimum total edge weight. Sort edges by weight; add edge if it does not form a cycle (use disjoint set).',
     examples: [
@@ -5411,7 +5411,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'mst-heap',
-    title: 'Minimum Spanning Tree via Growing from a Node (Name the Algorithm)',
+    title: 'Minimum Spanning Tree via Growing from a Node',
     description:
       'Start from one vertex; repeatedly add the minimum-weight edge that connects the current tree to a new vertex. Use a min-heap of edges from tree frontier.',
     examples: [
@@ -5434,7 +5434,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'strongly-connected-components',
-    title: 'Strongly Connected Components (Name the Algorithm)',
+    title: 'Strongly Connected Components',
     description:
       'Decompose a directed graph into strongly connected components (every pair reachable within each). One classic approach: two DFS passes; second on reversed graph by finishing times.',
     examples: [
@@ -5457,7 +5457,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'pattern-matching-prefix-table',
-    title: 'Pattern Matching with Prefix Table (Name the Algorithm)',
+    title: 'Pattern Matching with Prefix Table',
     description:
       'Find all occurrences of pattern string in text. Precompute longest proper prefix that is also suffix (LPS) for pattern; on mismatch, shift pattern by LPS instead of restarting.',
     examples: [
@@ -5480,7 +5480,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'pattern-matching-rolling-hash',
-    title: 'Pattern Matching with Rolling Hash (Name the Algorithm)',
+    title: 'Pattern Matching with Rolling Hash',
     description:
       'Find pattern in text using hash. Compute hash of pattern and hash of each length-m window in text; roll hash in O(1) when sliding. Good for multiple patterns.',
     examples: [
@@ -5503,7 +5503,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'count-primes-sieve',
-    title: 'Count Primes / Generate Primes (Name the Algorithm)',
+    title: 'Count Primes / Generate Primes',
     description:
       'Count the number of prime numbers less than n (or list them). Mark multiples of each prime starting from 2; remaining unmarked are prime.',
     examples: [{ input: 'n = 10', output: '4', explanation: 'Primes < 10: 2, 3, 5, 7.' }],
@@ -5520,7 +5520,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'random-pick-stream',
-    title: 'Random Pick from Stream (Name the Algorithm)',
+    title: 'Random Pick from Stream',
     description:
       'Process a stream of elements one by one; at each step, each element seen so far should have equal probability of being chosen. O(1) space.',
     examples: [
@@ -5543,7 +5543,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'shuffle-array-unbiased',
-    title: 'Shuffle Array Unbiased (Name the Algorithm)',
+    title: 'Shuffle Array Unbiased',
     description:
       'Uniformly random permutation of an array in place. For i from n-1 down to 1, swap element at i with a random index in [0, i] (inclusive).',
     examples: [
@@ -5566,7 +5566,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'inorder-traversal-o1-space',
-    title: 'Inorder Traversal in O(1) Space (Name the Algorithm)',
+    title: 'Inorder Traversal in O(1) Space',
     description:
       'Inorder traversal of a binary tree without recursion and without stack. Use threaded links: temporarily point right of rightmost of left subtree to current, then restore.',
     examples: [
@@ -5589,7 +5589,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'shortest-path-nonnegative-named',
-    title: 'Single-Source Shortest Path, Non-Negative Weights (Name the Algorithm)',
+    title: 'Single-Source Shortest Path, Non-Negative Weights',
     description:
       'Shortest path from one source to all other nodes in a weighted graph with non-negative edge weights. Repeatedly extract the unvisited node with smallest tentative distance and relax its outgoing edges.',
     examples: [
@@ -5612,7 +5612,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'cycle-detection-linked-list-named',
-    title: 'Detect Cycle in Linked List O(1) Space (Name the Algorithm)',
+    title: 'Detect Cycle in Linked List O(1) Space',
     description:
       'Determine if a linked list has a cycle. Use two pointers: one moves one step, the other two steps. If they meet, there is a cycle. O(n) time, O(1) space.',
     examples: [
@@ -5635,7 +5635,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'eulerian-path-reconstruct-named',
-    title: 'Reconstruct Itinerary / Visit Every Edge Once (Name the Algorithm)',
+    title: 'Reconstruct Itinerary / Visit Every Edge Once',
     description:
       'Find a path that uses every directed edge exactly once (Eulerian path). Start from designated vertex; DFS, post-order record vertices when backtracking; reverse to get path. Handles lexicographic order with sorted adjacency.',
     examples: [
@@ -5658,7 +5658,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'longest-palindromic-substring-on-named',
-    title: 'Longest Palindromic Substring in O(n) (Name the Algorithm)',
+    title: 'Longest Palindromic Substring in O(n)',
     description:
       'Find the longest palindromic substring in O(n) time. Expand around centers (or use transformed string with delimiters); maintain center and right boundary; use previously computed lengths to skip work.',
     examples: [
@@ -5681,7 +5681,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'count-set-bits-named',
-    title: 'Count Set Bits in Integer (Name the Algorithm)',
+    title: 'Count Set Bits in Integer',
     description:
       'Count the number of 1 bits in the binary representation of an integer. Repeatedly clear the lowest set bit using n & (n-1) until zero. Number of iterations = number of set bits.',
     examples: [
@@ -5704,7 +5704,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'kth-largest-without-full-sort-named',
-    title: 'Kth Largest / Smallest Without Full Sort (Name the Algorithm)',
+    title: 'Kth Largest / Smallest Without Full Sort',
     description:
       'Find the kth largest (or smallest) element in an unsorted array in O(n) average time. Partition around a pivot (like quicksort); recurse on the side that contains the kth element. No need to sort the whole array.',
     examples: [
@@ -5727,7 +5727,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'connected-components-dsu-named',
-    title: 'Group Connected Elements / Cycle in Undirected Graph (Name the Algorithm)',
+    title: 'Group Connected Elements / Cycle in Undirected Graph',
     description:
       'Merge sets by connection; answer "are u and v in the same set?" or "how many connected components?" in near-constant time. Maintain parent and rank; path compression and union by rank.',
     examples: [
@@ -5750,7 +5750,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
   },
   {
     id: 'square-root-newton-named',
-    title: 'Integer Square Root / Find Root Numerically (Name the Algorithm)',
+    title: 'Integer Square Root / Find Root Numerically',
     description:
       "Compute integer square root of x (or find root of f). Iteratively improve guess: next = (guess + x/guess) / 2 for sqrt, or next = guess - f(guess)/f'(guess) in general. Converges quickly.",
     examples: [
