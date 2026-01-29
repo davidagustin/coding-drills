@@ -86,7 +86,23 @@ export type AlgorithmPattern =
   | 'Dijkstra'
   | 'Eulerian Path'
   | 'Bijection'
-  | 'Two Maps';
+  | 'Two Maps'
+  // Named interview algorithms
+  | "Kadane's"
+  | "Moore's Voting"
+  | 'Dutch National Flag'
+  | 'Bellman-Ford'
+  | 'Floyd-Warshall'
+  | "Kahn's"
+  | "Kruskal's"
+  | "Prim's"
+  | "Tarjan's"
+  | 'KMP'
+  | 'Rabin-Karp'
+  | 'Sieve of Eratosthenes'
+  | 'Reservoir Sampling'
+  | 'Fisher-Yates'
+  | 'Morris Traversal';
 
 export const ALGORITHM_PATTERNS: AlgorithmPattern[] = [
   'Dynamic Programming',
@@ -4822,6 +4838,754 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     },
     difficulty: 'medium',
     category: 'String',
+  },
+  // VisuAlgo-inspired: Array, Sorting, Cycle Finding, Prefix Sum, Graph, Union-Find, etc.
+  {
+    id: 'find-duplicate-number',
+    title: 'Find the Duplicate Number',
+    description:
+      'Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive. There is only one repeated number in nums. Return this repeated number. You must solve the problem without modifying the array and using only constant extra space.',
+    examples: [
+      {
+        input: 'nums = [1,3,4,2,2]',
+        output: '2',
+        explanation: 'The duplicate is 2; array can be treated as linked list with cycle.',
+      },
+    ],
+    constraints: ['1 ≤ n ≤ 10⁵', 'nums.length == n + 1', '1 ≤ nums[i] ≤ n'],
+    correctPattern: 'Floyd Cycle Detection',
+    patterns: ['Floyd Cycle Detection', 'Two Pointers', 'Hash Map', 'Binary Search'],
+    hints: {
+      constraints: 'O(1) space rules out hash map; array indices form a linked list.',
+      inputFormat: 'Array of n+1 integers in [1, n]',
+      outputFormat: 'The single duplicate value',
+      keywords: ['duplicate', 'constant space', 'cycle'],
+      bigO: 'O(N) time, O(1) space. Treat index → value as next pointer; find cycle entry.',
+      pattern:
+        'Array as linked list: index i → value nums[i]. Duplicate creates cycle. Floyd finds cycle then entry point.',
+    },
+    difficulty: 'medium',
+    category: 'Array',
+  },
+  {
+    id: 'range-sum-query-immutable',
+    title: 'Range Sum Query - Immutable',
+    description:
+      'Given an integer array nums, handle multiple queries of the following type: Calculate the sum of the elements of nums between indices left and right inclusive. Implement the NumArray class with NumArray(int[] nums) and int sumRange(int left, int right).',
+    examples: [
+      {
+        input: 'NumArray([-2,0,3,-5,2,-1]), sumRange(0,2), sumRange(2,5), sumRange(0,5)',
+        output: '1, -1, -3',
+        explanation: 'Precompute prefix sums so each query is O(1).',
+      },
+    ],
+    constraints: [
+      '1 ≤ nums.length ≤ 10⁴',
+      '-10⁵ ≤ nums[i] ≤ 10⁵',
+      '0 ≤ left ≤ right < nums.length',
+      'At most 10⁴ calls to sumRange',
+    ],
+    correctPattern: 'Prefix Sum',
+    patterns: ['Prefix Sum', 'Array', 'Math', 'Hash Map'],
+    hints: {
+      constraints: 'Many range queries → precompute to answer each in O(1).',
+      inputFormat: 'Array and multiple (left, right) queries',
+      outputFormat: 'Sum for each query',
+      keywords: ['range sum', 'multiple queries', 'prefix'],
+      pattern: 'VisuAlgo Array/Fenwick theme: range sum over static array → Prefix Sum.',
+    },
+    difficulty: 'easy',
+    category: 'Array',
+  },
+  {
+    id: 'min-cost-to-connect-all-points',
+    title: 'Min Cost to Connect All Points',
+    description:
+      'You are given an array of points representing integer coordinates on a 2D plane. Connect all points with minimum total cost. The cost of connecting two points is the Manhattan distance between them. Return the minimum cost to make all points connected.',
+    examples: [
+      {
+        input: 'points = [[0,0],[2,2],[3,10],[5,2],[7,0]]',
+        output: '20',
+        explanation:
+          'Minimum spanning tree (Prim or Kruskal) over complete graph of Manhattan distances.',
+      },
+    ],
+    constraints: [
+      '1 ≤ points.length ≤ 1000',
+      '-10⁶ ≤ xi, yi ≤ 10⁶',
+      'All pairs of points are unique',
+    ],
+    correctPattern: 'Union-Find',
+    patterns: ['Union-Find', 'Greedy', 'Graph', 'Heap / Priority Queue'],
+    hints: {
+      constraints: 'Connect all nodes with minimum total edge cost → MST.',
+      inputFormat: 'Array of 2D points',
+      outputFormat: 'Minimum total cost (integer)',
+      keywords: ['connect all', 'minimum cost', 'Manhattan distance'],
+      pattern: 'VisuAlgo Min Spanning Tree: Kruskal (sort edges, Union-Find) or Prim (heap).',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'sliding-window-maximum',
+    title: 'Sliding Window Maximum',
+    description:
+      'You are given an array of integers nums and an integer k. There is a sliding window of size k which is moving from the very left of the array to the very right. Return the maximum element in each window.',
+    examples: [
+      {
+        input: 'nums = [1,3,-1,-3,5,3,6,7], k = 3',
+        output: '[3,3,5,5,6,7]',
+        explanation:
+          'Maintain a monotonic deque of indices so front is always max for current window.',
+      },
+    ],
+    constraints: ['1 ≤ nums.length ≤ 10⁵', '-10⁴ ≤ nums[i] ≤ 10⁴', '1 ≤ k ≤ nums.length'],
+    correctPattern: 'Monotonic Stack',
+    patterns: ['Monotonic Stack', 'Sliding Window', 'Heap / Priority Queue', 'Queue'],
+    hints: {
+      constraints: 'n ≤ 10⁵ requires O(n) or O(n log k); deque gives O(n).',
+      inputFormat: 'Array and window size k',
+      outputFormat: 'Array of max values per window',
+      keywords: ['sliding window', 'maximum', 'deque'],
+      pattern:
+        'VisuAlgo-style: maintain decreasing order (monotonic deque) so front is current max.',
+    },
+    difficulty: 'hard',
+    category: 'Array',
+  },
+  {
+    id: 'sort-list',
+    title: 'Sort List',
+    description:
+      'Given the head of a linked list, return the list after sorting it in ascending order. Solve it in O(n log n) time and O(1) extra space (i.e. constant space for recursion stack does not count).',
+    examples: [
+      {
+        input: 'head = [4,2,1,3]',
+        output: '[1,2,3,4]',
+        explanation: 'Merge sort on linked list: find mid, sort halves, merge in O(1) space.',
+      },
+    ],
+    constraints: [
+      'Number of nodes in the list is in the range [0, 5 * 10⁴]',
+      '-10⁵ ≤ Node.val ≤ 10⁵',
+    ],
+    correctPattern: 'Merge Sort',
+    patterns: ['Merge Sort', 'Linked List', 'Divide and Conquer', 'Two Pointers'],
+    hints: {
+      constraints: 'O(n log n) and O(1) space → merge sort on list (no extra array).',
+      inputFormat: 'Linked list head',
+      outputFormat: 'Sorted linked list head',
+      keywords: ['sort list', 'O(1) space', 'merge sort'],
+      pattern: 'VisuAlgo Sorting / Linked List: Merge Sort fits linked list (split at mid, merge).',
+    },
+    difficulty: 'medium',
+    category: 'Linked List',
+  },
+  {
+    id: 'count-inversions',
+    title: 'Count Inversions',
+    description:
+      'Given an array of integers, count the number of inversions (pairs (i, j) such that i < j and arr[i] > arr[j]). This is a classic divide-and-conquer problem solvable in O(n log n).',
+    examples: [
+      {
+        input: 'arr = [2, 4, 1, 3, 5]',
+        output: '3',
+        explanation: 'Inversions: (2,1), (4,1), (4,3). Merge sort variant counts during merge.',
+      },
+    ],
+    constraints: ['1 ≤ arr.length ≤ 5 * 10⁵', '-10⁹ ≤ arr[i] ≤ 10⁹'],
+    correctPattern: 'Merge Sort',
+    patterns: ['Merge Sort', 'Divide and Conquer', 'Binary Search', 'Sorting'],
+    hints: {
+      constraints: 'O(n log n) → merge sort; count inversions while merging.',
+      inputFormat: 'Array of integers',
+      outputFormat: 'Number of inversion pairs',
+      keywords: ['inversions', 'pairs i<j and arr[i]>arr[j]', 'merge sort'],
+      pattern: 'VisuAlgo Sorting: count cross-inversions in merge step of merge sort.',
+    },
+    difficulty: 'medium',
+    category: 'Sorting',
+  },
+  {
+    id: 'longest-increasing-path-matrix',
+    title: 'Longest Increasing Path in a Matrix',
+    description:
+      'Given an m x n integers matrix, return the length of the longest strictly increasing path. From each cell you can move either left, right, up, or down. You may not move diagonally or outside the boundary.',
+    examples: [
+      {
+        input: 'matrix = [[9,9,4],[6,6,8],[2,1,1]]',
+        output: '4',
+        explanation: 'Longest path is [1, 2, 6, 9]. DFS from each cell with memoization.',
+      },
+    ],
+    constraints: [
+      'm == matrix.length',
+      'n == matrix[i].length',
+      '1 ≤ m, n ≤ 200',
+      '0 ≤ matrix[i][j] ≤ 2³¹ - 1',
+    ],
+    correctPattern: 'Dynamic Programming',
+    patterns: ['Dynamic Programming', 'DFS', 'Graph', 'Memoization'],
+    hints: {
+      constraints: 'Grid with strict increase → DAG; longest path in DAG via DFS + memo.',
+      inputFormat: '2D matrix',
+      outputFormat: 'Length of longest increasing path',
+      keywords: ['longest path', 'strictly increasing', 'matrix'],
+      pattern:
+        'VisuAlgo Graph/DP: DFS with memoization (or topological order) for longest path in DAG.',
+    },
+    difficulty: 'hard',
+    category: 'Matrix',
+  },
+  {
+    id: 'next-permutation',
+    title: 'Next Permutation',
+    description:
+      'Given an array of integers nums, find the next lexicographically greater permutation. The replacement must be in place and use only constant extra space. If no greater permutation exists, rearrange into lowest order.',
+    examples: [
+      {
+        input: 'nums = [1,2,3]',
+        output: '[1,3,2]',
+        explanation: 'Find rightmost ascent, swap with smallest larger element, reverse suffix.',
+      },
+    ],
+    constraints: ['1 ≤ nums.length ≤ 100', '0 ≤ nums[i] ≤ 100'],
+    correctPattern: 'Array',
+    patterns: ['Array', 'Two Pointers', 'Math', 'Backtracking'],
+    hints: {
+      constraints: 'In-place and O(1) space → two-pointer scan from right.',
+      inputFormat: 'Array of integers (permutation)',
+      outputFormat: 'Next permutation in place',
+      keywords: ['next permutation', 'lexicographic', 'in place'],
+      pattern: 'VisuAlgo-style: single pass from right (find ascent, swap, reverse).',
+    },
+    difficulty: 'medium',
+    category: 'Array',
+  },
+  {
+    id: 'maximum-product-subarray',
+    title: 'Maximum Product Subarray',
+    description:
+      'Given an integer array nums, find a contiguous non-empty subarray that has the largest product and return the product. The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.',
+    examples: [
+      {
+        input: 'nums = [2,3,-2,4]',
+        output: '6',
+        explanation:
+          'Subarray [2,3] has the largest product 6. Track max and min product (negatives).',
+      },
+    ],
+    constraints: ['1 ≤ nums.length ≤ 2 * 10⁴', '-10 ≤ nums[i] ≤ 10'],
+    correctPattern: 'Dynamic Programming',
+    patterns: ['Dynamic Programming', 'Sliding Window', 'Array', 'Greedy'],
+    hints: {
+      constraints: 'Negative numbers can flip sign; track both max and min product ending at i.',
+      inputFormat: 'Array of integers',
+      outputFormat: 'Maximum product (integer)',
+      keywords: ['maximum product', 'contiguous subarray', 'negative'],
+      pattern: 'DP: maxProd[i] and minProd[i] (min becomes max when multiplied by negative).',
+    },
+    difficulty: 'medium',
+    category: 'Array',
+  },
+  {
+    id: 'binary-tree-maximum-path-sum',
+    title: 'Binary Tree Maximum Path Sum',
+    description:
+      'A path in a binary tree is a sequence of nodes where each pair of adjacent nodes has an edge. A path sum is the sum of node values in the path. Given the root, return the maximum path sum. A path can start and end at any node (at most one turn at a node).',
+    examples: [
+      {
+        input: 'root = [1,2,3]',
+        output: '6',
+        explanation:
+          'Optimal path is 2 → 1 → 3 (or 2 → 1 → 3). DFS returns max single-arm sum; update global max with turn.',
+      },
+    ],
+    constraints: [
+      'Number of nodes in the tree is in the range [1, 3 * 10⁴]',
+      '-1000 ≤ Node.val ≤ 1000',
+    ],
+    correctPattern: 'DFS',
+    patterns: ['DFS', 'Tree', 'Dynamic Programming', 'Recursion'],
+    hints: {
+      constraints:
+        'Path with at most one turn → DFS returning max sum to parent; combine left + node + right for candidate.',
+      inputFormat: 'Binary tree root',
+      outputFormat: 'Maximum path sum (integer)',
+      keywords: ['path sum', 'any node to any node', 'one turn'],
+      pattern:
+        'VisuAlgo Tree: post-order DFS; return max single path upward, update answer with path through node.',
+    },
+    difficulty: 'hard',
+    category: 'Tree',
+  },
+  {
+    id: 'reachable-nodes-with-restrictions',
+    title: 'Reachable Nodes With Restrictions',
+    description:
+      'There is an undirected tree with n nodes labeled from 0 to n - 1 and n - 1 edges. You are given a 2D integer array edges and an integer array restricted. Return the maximum number of nodes you can reach from node 0 without visiting any node in restricted.',
+    examples: [
+      {
+        input: 'n = 7, edges = [[0,1],[1,2],[3,1],[4,0],[5,2],[6,5]], restricted = [4,5]',
+        output: '4',
+        explanation: 'BFS/DFS from 0, skip restricted nodes. Reach 0,1,2,3.',
+      },
+    ],
+    constraints: ['2 ≤ n ≤ 10⁵', 'edges.length == n - 1', '0 ≤ restricted.length < n'],
+    correctPattern: 'BFS',
+    patterns: ['BFS', 'DFS', 'Graph', 'Union-Find'],
+    hints: {
+      constraints: 'Tree and reachability from 0 → BFS or DFS, mark restricted as blocked.',
+      inputFormat: 'n, edge list, restricted list',
+      outputFormat: 'Count of reachable nodes',
+      keywords: ['reachable', 'restrictions', 'tree'],
+      pattern: 'VisuAlgo Graph Traversal: BFS/DFS from source, avoid restricted nodes.',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'critical-connections-network',
+    title: 'Critical Connections in a Network',
+    description:
+      'There are n servers numbered from 0 to n - 1 connected by undirected server-to-server connections. A critical connection is a connection that, if removed, will make some servers unable to reach some other server. Return all critical connections in any order.',
+    examples: [
+      {
+        input: 'n = 4, connections = [[0,1],[1,2],[2,0],[1,3]]',
+        output: '[[1,3]]',
+        explanation:
+          '[1,3] is the only bridge. Tarjan or DFS with discovery/low link finds bridges.',
+      },
+    ],
+    constraints: ['2 ≤ n ≤ 10⁵', 'n - 1 ≤ connections.length ≤ 10⁵', 'No duplicate connections'],
+    correctPattern: 'DFS',
+    patterns: ['DFS', 'Graph', 'BFS', 'Union-Find'],
+    hints: {
+      constraints: 'Critical connections = bridges. DFS with discovery time and low link value.',
+      inputFormat: 'n, list of edges',
+      outputFormat: 'List of critical edges',
+      keywords: ['critical connection', 'bridge', 'remove disconnects'],
+      pattern:
+        'VisuAlgo Graph Traversal: find bridges (edges not in any cycle) via DFS and low-link.',
+    },
+    difficulty: 'hard',
+    category: 'Graph',
+  },
+  {
+    id: 'implement-queue-using-stacks',
+    title: 'Implement Queue using Stacks',
+    description:
+      'Implement a first-in-first-out (FIFO) queue using only two stacks. The implemented queue should support push, peek, pop, and empty. Implement each operation in amortized O(1) time.',
+    examples: [
+      {
+        input: 'MyQueue(); push(1); push(2); peek(); pop(); empty()',
+        output: 'null, null, 1, 1, false',
+        explanation: 'Use two stacks: one for push, one for pop; flip when pop stack is empty.',
+      },
+    ],
+    constraints: [
+      '1 ≤ x ≤ 9',
+      'At most 100 calls to push, pop, peek, empty',
+      'All calls to pop and peek are valid',
+    ],
+    correctPattern: 'Stack',
+    patterns: ['Stack', 'Queue', 'Design', 'Simulation'],
+    hints: {
+      constraints: 'FIFO with two LIFOs: invert order by moving elements between stacks.',
+      inputFormat: 'Sequence of queue operations',
+      outputFormat: 'Results of peek/pop/empty',
+      keywords: ['queue', 'two stacks', 'FIFO'],
+      pattern: 'VisuAlgo Linked List/Stack/Queue: classic two-stack queue (lazy or eager flip).',
+    },
+    difficulty: 'easy',
+    category: 'Stack',
+  },
+  {
+    id: 'sort-array-by-increasing-frequency',
+    title: 'Sort Array by Increasing Frequency',
+    description:
+      'Given an array of integers nums, sort the array in increasing order based on the frequency of the values. If multiple values have the same frequency, sort them in decreasing order by value.',
+    examples: [
+      {
+        input: 'nums = [1,1,2,2,2,3]',
+        output: '[3,1,1,2,2,2]',
+        explanation:
+          '3 appears 1 time; 1 appears 2 times; 2 appears 3 times. Sort by frequency then by value.',
+      },
+    ],
+    constraints: ['1 ≤ nums.length ≤ 100', '-100 ≤ nums[i] ≤ 100'],
+    correctPattern: 'Sorting',
+    patterns: ['Sorting', 'Hash Map', 'Array', 'Bucket Sort'],
+    hints: {
+      constraints: 'Count frequency then sort by (freq, -value) for stable secondary order.',
+      inputFormat: 'Array of integers',
+      outputFormat: 'Sorted array by frequency then value',
+      keywords: ['sort by frequency', 'increasing frequency', 'counting'],
+      pattern: 'VisuAlgo Sorting: counting/sort by key (frequency, then value).',
+    },
+    difficulty: 'easy',
+    category: 'Sorting',
+  },
+  {
+    id: 'bitwise-ors-of-subarrays',
+    title: 'Bitwise ORs of Subarrays',
+    description:
+      'We have an array arr of non-negative integers. For every (contiguous) subarray we take the bitwise OR of all elements in it. Return the number of distinct values that appear in the set of results.',
+    examples: [
+      {
+        input: 'arr = [0]',
+        output: '1',
+        explanation:
+          'Only one result: 0. For [1,1,2] we get {1, 1|1=1, 1|2=3, 1|1|2=3} → 2 distinct.',
+      },
+    ],
+    constraints: ['1 ≤ arr.length ≤ 5 * 10⁴', '0 ≤ arr[i] ≤ 10⁹'],
+    correctPattern: 'Bit Manipulation',
+    patterns: ['Bit Manipulation', 'Dynamic Programming', 'Set', 'Array'],
+    hints: {
+      constraints: 'Distinct ORs: at most 30 distinct values per position (bits only grow).',
+      inputFormat: 'Array of non-negative integers',
+      outputFormat: 'Number of distinct subarray ORs',
+      keywords: ['bitwise OR', 'subarrays', 'distinct'],
+      pattern:
+        'VisuAlgo Bitmask: maintain set of ORs ending at i (at most ~30); OR with previous set.',
+    },
+    difficulty: 'medium',
+    category: 'Bit Manipulation',
+  },
+  // Named interview algorithms — "Which algorithm?" recognition
+  {
+    id: 'max-subarray-named',
+    title: 'Maximum Subarray (Name the Algorithm)',
+    description:
+      'Find the contiguous subarray with the largest sum. One pass, O(n) time, O(1) space. Track max ending here and global max.',
+    examples: [
+      {
+        input: 'nums = [-2,1,-3,4,-1,2,1,-5,4]',
+        output: '6',
+        explanation: 'Subarray [4,-1,2,1] has sum 6.',
+      },
+    ],
+    constraints: ['1 ≤ nums.length ≤ 10⁵', '-10⁴ ≤ nums[i] ≤ 10⁴'],
+    correctPattern: "Kadane's",
+    patterns: ["Kadane's", 'Dynamic Programming', 'Greedy', 'Sliding Window'],
+    hints: {
+      keywords: ['maximum sum subarray', 'contiguous', 'one pass'],
+      bigO: 'O(n) time, O(1) space.',
+      pattern: '"Maximum sum subarray" → Kadane\'s: max_ending_here = max(x, max_ending_here + x).',
+    },
+    difficulty: 'easy',
+    category: 'Array',
+  },
+  {
+    id: 'majority-element-named',
+    title: 'Majority Element (Name the Algorithm)',
+    description:
+      'Find the majority element that appears more than ⌊n/2⌋ times. O(n) time and O(1) space. One candidate, count; cancel opposite votes.',
+    examples: [
+      { input: 'nums = [2,2,1,1,1,2,2]', output: '2', explanation: '2 appears 4 times, majority.' },
+    ],
+    constraints: ['n == nums.length', '1 ≤ n ≤ 5 * 10⁴', '-10⁹ ≤ nums[i] ≤ 10⁹'],
+    correctPattern: "Moore's Voting",
+    patterns: ["Moore's Voting", 'Hash Map', 'Sorting', 'Bit Manipulation'],
+    hints: {
+      keywords: ['majority', 'more than half', 'O(1) space'],
+      bigO: 'O(n) time, O(1) space.',
+      pattern: '"Majority element" → Moore\'s Voting: candidate + count; same +1, different -1.',
+    },
+    difficulty: 'easy',
+    category: 'Array',
+  },
+  {
+    id: 'sort-colors-dutch',
+    title: 'Sort Colors / 3-Way Partition (Name the Algorithm)',
+    description:
+      'Array of 0s, 1s, and 2s. Sort in-place in one pass. Three pointers: low, mid, high; swap so 0s left, 1s middle, 2s right.',
+    examples: [
+      { input: 'nums = [2,0,2,1,1,0]', output: '[0,0,1,1,2,2]', explanation: 'In-place one pass.' },
+    ],
+    constraints: ['n == nums.length', '1 ≤ n ≤ 300', 'nums[i] is 0, 1, or 2'],
+    correctPattern: 'Dutch National Flag',
+    patterns: ['Dutch National Flag', 'Two Pointers', 'Sorting', 'Bucket Sort'],
+    hints: {
+      keywords: ['sort 0s 1s 2s', 'in-place', 'one pass', 'three-way partition'],
+      bigO: 'O(n) one pass.',
+      pattern:
+        '"Sort colors" / "3-way partition" → Dutch National Flag (Dijkstra\'s partitioning).',
+    },
+    difficulty: 'medium',
+    category: 'Array',
+  },
+  {
+    id: 'shortest-path-negative-weights',
+    title: 'Shortest Path with Negative Weights (Name the Algorithm)',
+    description:
+      'Single-source shortest path in a weighted directed graph that may have negative edge weights. Relax all edges repeatedly (V-1 times); detect negative cycle if round V still relaxes.',
+    examples: [
+      {
+        input: 'n=4, edges with negative weights from source 0',
+        output: 'Distances or "negative cycle"',
+        explanation: 'Bellman-Ford relaxes all edges V-1 times.',
+      },
+    ],
+    constraints: ['1 ≤ n ≤ 100', 'Edges may have negative weight'],
+    correctPattern: 'Bellman-Ford',
+    patterns: ['Bellman-Ford', 'Dijkstra', 'BFS', 'Floyd-Warshall'],
+    hints: {
+      keywords: ['shortest path', 'negative weights', 'negative cycle'],
+      bigO: 'O(VE). Use when graph has negative edges; Dijkstra fails.',
+      pattern: '"Shortest path with negative weights" → Bellman-Ford.',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'all-pairs-shortest-path',
+    title: 'All Pairs Shortest Path (Name the Algorithm)',
+    description:
+      'Compute shortest path between every pair of vertices in a weighted graph. DP: for each intermediate vertex k, relax i→j via k. O(V³).',
+    examples: [
+      {
+        input: 'n nodes, weighted adjacency',
+        output: 'n×n distance matrix',
+        explanation: 'Floyd-Warshall: dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]).',
+      },
+    ],
+    constraints: ['Vertices 0..n-1', 'Handles negative edges, detects negative cycles'],
+    correctPattern: 'Floyd-Warshall',
+    patterns: ['Floyd-Warshall', 'Dijkstra', 'Bellman-Ford', 'BFS'],
+    hints: {
+      keywords: ['all pairs', 'shortest path', 'every pair', 'O(V³)'],
+      bigO: 'O(V³). Use when you need every pair; Dijkstra V times is O(V² E log V).',
+      pattern: '"All pairs shortest path" → Floyd-Warshall.',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'topological-sort-bfs',
+    title: 'Topological Sort BFS-Based (Name the Algorithm)',
+    description:
+      'Linear ordering of vertices in a DAG such that for every edge (u,v), u comes before v. BFS: enqueue nodes with in-degree 0, reduce neighbor in-degrees.',
+    examples: [
+      {
+        input: 'DAG with edges (prerequisites)',
+        output: 'Valid topological order',
+        explanation: "Kahn's: in-degree count, queue zeros, process.",
+      },
+    ],
+    constraints: ['Directed acyclic graph', '1 ≤ V ≤ 10⁴'],
+    correctPattern: "Kahn's",
+    patterns: ["Kahn's", 'DFS', 'BFS', 'Topological Sort'],
+    hints: {
+      keywords: ['topological order', 'DAG', 'in-degree', 'BFS'],
+      bigO: 'O(V+E).',
+      pattern: '"Topological sort" (BFS style, in-degrees) → Kahn\'s.',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'mst-union-find',
+    title: 'Minimum Spanning Tree via Edge Sorting (Name the Algorithm)',
+    description:
+      'Connect all vertices with minimum total edge weight. Sort edges by weight; add edge if it does not form a cycle (use disjoint set).',
+    examples: [
+      {
+        input: 'Weighted undirected graph',
+        output: 'MST total weight or edges',
+        explanation: "Kruskal's: sort edges, Union-Find to avoid cycles.",
+      },
+    ],
+    constraints: ['1 ≤ V ≤ 10⁴', 'Undirected, connected'],
+    correctPattern: "Kruskal's",
+    patterns: ["Kruskal's", "Prim's", 'Union-Find', 'Greedy'],
+    hints: {
+      keywords: ['minimum spanning tree', 'sort edges', 'no cycle'],
+      bigO: 'O(E log E). Union-Find for cycle detection.',
+      pattern: '"MST by adding smallest non-cycle edge" → Kruskal\'s.',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'mst-heap',
+    title: 'Minimum Spanning Tree via Growing from a Node (Name the Algorithm)',
+    description:
+      'Start from one vertex; repeatedly add the minimum-weight edge that connects the current tree to a new vertex. Use a min-heap of edges from tree frontier.',
+    examples: [
+      {
+        input: 'Weighted undirected graph',
+        output: 'MST total weight or edges',
+        explanation: "Prim's: heap of (weight, node), expand cheapest.",
+      },
+    ],
+    constraints: ['1 ≤ V ≤ 10⁴', 'Undirected, connected'],
+    correctPattern: "Prim's",
+    patterns: ["Prim's", "Kruskal's", 'Heap / Priority Queue', 'Greedy'],
+    hints: {
+      keywords: ['MST', 'grow from one node', 'min edge from tree'],
+      bigO: 'O(E log V) with binary heap.',
+      pattern: '"MST by growing from a node" → Prim\'s.',
+    },
+    difficulty: 'medium',
+    category: 'Graph',
+  },
+  {
+    id: 'strongly-connected-components',
+    title: 'Strongly Connected Components (Name the Algorithm)',
+    description:
+      'Decompose a directed graph into strongly connected components (every pair reachable within each). One classic approach: two DFS passes; second on reversed graph by finishing times.',
+    examples: [
+      {
+        input: 'Directed graph',
+        output: 'List of SCCs',
+        explanation: "Tarjan's (one DFS, low-link) or Kosaraju's (two DFS).",
+      },
+    ],
+    constraints: ['1 ≤ V ≤ 10⁴', 'Directed graph'],
+    correctPattern: "Tarjan's",
+    patterns: ["Tarjan's", 'DFS', 'BFS', 'Topological Sort'],
+    hints: {
+      keywords: ['strongly connected', 'SCC', 'low-link', 'finishing time'],
+      bigO: 'O(V+E). Tarjan uses one DFS; Kosaraju uses two.',
+      pattern: '"Strongly connected components" → Tarjan\'s or Kosaraju\'s.',
+    },
+    difficulty: 'hard',
+    category: 'Graph',
+  },
+  {
+    id: 'pattern-matching-prefix-table',
+    title: 'Pattern Matching with Prefix Table (Name the Algorithm)',
+    description:
+      'Find all occurrences of pattern string in text. Precompute longest proper prefix that is also suffix (LPS) for pattern; on mismatch, shift pattern by LPS instead of restarting.',
+    examples: [
+      {
+        input: 'text = "ABABDABACDABABC", pattern = "ABABC"',
+        output: 'Indices of matches',
+        explanation: 'KMP: build LPS, then scan text with smart shift.',
+      },
+    ],
+    constraints: ['1 ≤ text.length, pattern.length ≤ 10⁴'],
+    correctPattern: 'KMP',
+    patterns: ['KMP', 'Rabin-Karp', 'Brute Force', 'String'],
+    hints: {
+      keywords: ['pattern matching', 'prefix', 'LPS', 'no backtrack'],
+      bigO: 'O(n + m).',
+      pattern: '"Pattern matching with prefix table / no backtrack" → KMP.',
+    },
+    difficulty: 'medium',
+    category: 'String',
+  },
+  {
+    id: 'pattern-matching-rolling-hash',
+    title: 'Pattern Matching with Rolling Hash (Name the Algorithm)',
+    description:
+      'Find pattern in text using hash. Compute hash of pattern and hash of each length-m window in text; roll hash in O(1) when sliding. Good for multiple patterns.',
+    examples: [
+      {
+        input: 'text, pattern(s)',
+        output: 'Indices where pattern(s) match',
+        explanation: 'Rabin-Karp: rolling hash, check on collision.',
+      },
+    ],
+    constraints: ['1 ≤ text.length, pattern.length ≤ 10⁴'],
+    correctPattern: 'Rabin-Karp',
+    patterns: ['Rabin-Karp', 'KMP', 'Hash Map', 'String'],
+    hints: {
+      keywords: ['rolling hash', 'multiple patterns', 'hash match'],
+      bigO: 'O(n + m) average.',
+      pattern: '"Pattern matching with rolling hash" / "multiple patterns" → Rabin-Karp.',
+    },
+    difficulty: 'medium',
+    category: 'String',
+  },
+  {
+    id: 'count-primes-sieve',
+    title: 'Count Primes / Generate Primes (Name the Algorithm)',
+    description:
+      'Count the number of prime numbers less than n (or list them). Mark multiples of each prime starting from 2; remaining unmarked are prime.',
+    examples: [{ input: 'n = 10', output: '4', explanation: 'Primes < 10: 2, 3, 5, 7.' }],
+    constraints: ['0 ≤ n ≤ 5 * 10⁶'],
+    correctPattern: 'Sieve of Eratosthenes',
+    patterns: ['Sieve of Eratosthenes', 'Math', 'Brute Force', 'Hash Map'],
+    hints: {
+      keywords: ['prime', 'count primes', 'generate primes'],
+      bigO: 'O(n log log n).',
+      pattern: '"Generate primes up to n" → Sieve of Eratosthenes.',
+    },
+    difficulty: 'medium',
+    category: 'Math',
+  },
+  {
+    id: 'random-pick-stream',
+    title: 'Random Pick from Stream (Name the Algorithm)',
+    description:
+      'Process a stream of elements one by one; at each step, each element seen so far should have equal probability of being chosen. O(1) space.',
+    examples: [
+      {
+        input: 'Stream: 1, 2, 3, ...',
+        output: 'One random element from stream so far',
+        explanation: 'Reservoir sampling: replace with prob 1/i.',
+      },
+    ],
+    constraints: ['Single pass', 'O(1) extra space'],
+    correctPattern: 'Reservoir Sampling',
+    patterns: ['Reservoir Sampling', 'Hash Map', 'Math', 'Design'],
+    hints: {
+      keywords: ['stream', 'random pick', 'equal probability', 'single pass'],
+      bigO: 'O(n) time, O(1) space.',
+      pattern: '"Random sample from stream" → Reservoir Sampling.',
+    },
+    difficulty: 'medium',
+    category: 'Math',
+  },
+  {
+    id: 'shuffle-array-unbiased',
+    title: 'Shuffle Array Unbiased (Name the Algorithm)',
+    description:
+      'Uniformly random permutation of an array in place. For i from n-1 down to 1, swap element at i with a random index in [0, i] (inclusive).',
+    examples: [
+      {
+        input: 'nums = [1,2,3,4,5]',
+        output: 'One of 5! equally likely permutations',
+        explanation: 'Fisher-Yates: each permutation equally likely.',
+      },
+    ],
+    constraints: ['In-place', 'Each permutation equally likely'],
+    correctPattern: 'Fisher-Yates',
+    patterns: ['Fisher-Yates', 'Sorting', 'Hash Map', 'Math'],
+    hints: {
+      keywords: ['shuffle', 'random permutation', 'unbiased'],
+      bigO: 'O(n).',
+      pattern: '"Unbiased shuffle" → Fisher-Yates.',
+    },
+    difficulty: 'medium',
+    category: 'Array',
+  },
+  {
+    id: 'inorder-traversal-o1-space',
+    title: 'Inorder Traversal in O(1) Space (Name the Algorithm)',
+    description:
+      'Inorder traversal of a binary tree without recursion and without stack. Use threaded links: temporarily point right of rightmost of left subtree to current, then restore.',
+    examples: [
+      {
+        input: 'Binary tree root',
+        output: 'Inorder sequence',
+        explanation: 'Morris: use right pointers of leaves as temporary link back.',
+      },
+    ],
+    constraints: ['1 ≤ nodes ≤ 10⁴', 'O(1) extra space'],
+    correctPattern: 'Morris Traversal',
+    patterns: ['Morris Traversal', 'DFS', 'Stack', 'Inorder Traversal'],
+    hints: {
+      keywords: ['inorder', 'O(1) space', 'no stack', 'no recursion'],
+      bigO: 'O(n) time, O(1) space.',
+      pattern: '"Inorder without stack/recursion" → Morris Traversal.',
+    },
+    difficulty: 'medium',
+    category: 'Tree',
   },
 ];
 
