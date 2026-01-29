@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { PatternRecognitionGuide } from '@/components/PatternRecognitionGuide';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { getPatternCategories } from '@/lib/algorithmPatterns';
 import {
@@ -128,6 +129,7 @@ interface SetupPhaseProps {
   methodCategories: string[];
   methodCategoryCounts: Record<string, number>;
   language: LanguageId;
+  onShowPatternGuide?: () => void;
 }
 
 function SetupPhase({
@@ -137,6 +139,7 @@ function SetupPhase({
   methodCategories,
   methodCategoryCounts,
   language,
+  onShowPatternGuide,
 }: SetupPhaseProps) {
   const [soundEnabled, setSoundEnabled] = useState(false);
 
@@ -269,6 +272,41 @@ function SetupPhase({
             ))}
           </div>
         </div>
+
+        {/* Pattern Quiz: View Guide before starting (quiz is timed) - show right after quiz type */}
+        {isPatternQuiz && onShowPatternGuide && (
+          <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold">Pattern Recognition Guide</h2>
+                <p className="text-slate-400 text-sm">
+                  Review the framework before the timed quiz starts
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onShowPatternGuide}
+                className="flex items-center gap-2 px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-colors cursor-pointer"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+                View Guide
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Category Selection - Skip for pattern quiz */}
         {!isPatternQuiz && (
@@ -1439,6 +1477,7 @@ export default function QuizPage() {
   });
 
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [showPatternGuide, setShowPatternGuide] = useState(false);
   const autoAdvanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Update config
@@ -1676,14 +1715,21 @@ export default function QuizPage() {
   switch (state.phase) {
     case 'setup':
       return (
-        <SetupPhase
-          config={state.config}
-          onConfigChange={handleConfigChange}
-          onStart={handleStartQuiz}
-          methodCategories={availableCategories}
-          methodCategoryCounts={categoryCounts}
-          language={language}
-        />
+        <>
+          <SetupPhase
+            config={state.config}
+            onConfigChange={handleConfigChange}
+            onStart={handleStartQuiz}
+            methodCategories={availableCategories}
+            methodCategoryCounts={categoryCounts}
+            language={language}
+            onShowPatternGuide={() => setShowPatternGuide(true)}
+          />
+          <PatternRecognitionGuide
+            isOpen={showPatternGuide}
+            onClose={() => setShowPatternGuide(false)}
+          />
+        </>
       );
 
     case 'playing':
