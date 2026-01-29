@@ -652,9 +652,17 @@ export default function PatternQuizPage() {
 
   const currentProblem = state.phase === 'playing' ? state.problems[state.currentIndex] : null;
 
+  // When arriving with autoStart=true, show a loading state instead of flashing the setup form
+  const isAutoStarting = autoStart && state.phase === 'setup';
+
   return (
     <div className="min-h-screen bg-zinc-950 py-8 px-4">
-      {state.phase === 'setup' && (
+      {isAutoStarting && (
+        <div className="min-h-screen flex flex-col items-center justify-center text-zinc-400">
+          <div className="animate-pulse text-lg">Starting quiz…</div>
+        </div>
+      )}
+      {state.phase === 'setup' && !autoStart && (
         <SetupPhase
           config={config}
           onConfigChange={setConfig}
