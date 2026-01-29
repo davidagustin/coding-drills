@@ -470,6 +470,75 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Pattern Recognition Quiz Quick Access */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-violet-500/10 p-8 md:p-12">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl" />
+
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Left: Icon and Title */}
+              <div className="text-center md:text-left flex-1">
+                <div className="text-purple-400 mb-4">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-16 h-16"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">
+                  Algorithm Pattern Quiz
+                </h2>
+                <p className="text-gray-400 max-w-lg mb-2">
+                  Test your ability to recognize algorithm patterns from LeetCode-style problems.
+                  Identify the right approach before coding.
+                </p>
+                <p className="text-gray-500 text-sm">
+                  170 problems &middot; Multiple patterns &middot; Timed challenges
+                </p>
+              </div>
+
+              {/* Right: Start Button */}
+              <div className="flex-shrink-0">
+                <Link
+                  href="/typescript/pattern-quiz"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-purple-600 hover:bg-purple-500
+                             text-white font-semibold text-lg transition-all duration-200
+                             shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 cursor-pointer"
+                >
+                  <span>Start Quiz</span>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Regex Trainer Quick Access */}
       <section className="max-w-6xl mx-auto px-6 py-16">
         <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-green-500/5 to-teal-500/10 p-8 md:p-12">
