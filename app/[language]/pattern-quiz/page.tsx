@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { PatternRecognitionGuide } from '@/components/PatternRecognitionGuide';
 import {
   type AlgorithmPattern,
@@ -213,7 +213,8 @@ function PlayingPhase({
   onShowGuide,
   timeLeft,
 }: PlayingPhaseProps) {
-  const shuffledPatterns = shuffleArray(problem.patterns);
+  // Memoize shuffled patterns so they don't change on every render
+  const shuffledPatterns = useMemo(() => shuffleArray(problem.patterns), [problem.patterns]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
