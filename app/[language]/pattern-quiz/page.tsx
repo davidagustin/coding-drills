@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PatternRecognitionGuide } from '@/components/PatternRecognitionGuide';
 import {
   type AlgorithmPattern,
@@ -463,11 +463,18 @@ export default function PatternQuizPage() {
 
   const categories = getPatternCategories();
 
+  // Read URL params for configuration
+  const searchParams =
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const urlQuestionCount = searchParams?.get('questionCount');
+  const urlTimePerQuestion = searchParams?.get('timePerQuestion');
+  const autoStart = searchParams?.get('autoStart') === 'true';
+
   const [config, setConfig] = useState<PatternQuizConfig>({
     difficulty: 'all',
     category: 'all',
-    questionCount: 10,
-    timePerQuestion: 30,
+    questionCount: urlQuestionCount ? parseInt(urlQuestionCount, 10) : 10,
+    timePerQuestion: urlTimePerQuestion ? parseInt(urlTimePerQuestion, 10) : 30,
   });
 
   const [state, setState] = useState<PatternQuizState>({
@@ -487,6 +494,7 @@ export default function PatternQuizPage() {
   });
 
   const [timeLeft, setTimeLeft] = useState(config.timePerQuestion);
+  const hasAutoStartedRef = useRef(false);
 
   const advanceToNextQuestion = useCallback(() => {
     setState((prev) => {
@@ -583,6 +591,17 @@ export default function PatternQuizPage() {
     });
     setTimeLeft(config.timePerQuestion);
   }, [config]);
+
+  // Auto-start quiz if coming from quiz page with autoStart param
+  useEffect(() => {
+    if (autoStart && state.phase === 'setup' && !hasAutoStartedRef.current) {
+      hasAutoStartedRef.current = true;
+      // Use setTimeout to avoid calling setState synchronously in effect
+      setTimeout(() => {
+        handleStart();
+      }, 0);
+    }
+  }, [autoStart, handleStart, state.phase]);
 
   const handleSelectPattern = useCallback(
     (pattern: AlgorithmPattern) => {

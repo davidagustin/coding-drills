@@ -1488,9 +1488,13 @@ export default function QuizPage() {
   // Start quiz
   const handleStartQuiz = () => {
     if (state.config.quizType === 'pattern-recognition') {
-      // For pattern quiz, redirect to pattern-quiz page
-      // This maintains the existing pattern quiz functionality
-      window.location.href = `/${language}/pattern-quiz`;
+      // For pattern quiz, redirect to pattern-quiz page with configuration
+      const params = new URLSearchParams({
+        questionCount: state.config.questionCount.toString(),
+        timePerQuestion: state.config.timePerQuestion.toString(),
+        autoStart: 'true',
+      });
+      window.location.href = `/${language}/pattern-quiz?${params.toString()}`;
       return;
     }
     const questions = generateQuiz(state.config);
