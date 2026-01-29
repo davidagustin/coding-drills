@@ -591,19 +591,6 @@ function InterviewPhaseComponent({
                   ))}
                 </ul>
               </div>
-              <div>
-                <span className="text-xs font-medium text-zinc-500 uppercase">Key Components</span>
-                <div className="flex flex-wrap gap-1.5 mt-1">
-                  {(problem as SystemDesignProblem).keyComponents.map((component, idx) => (
-                    <span
-                      key={idx}
-                      className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-300 border border-zinc-700"
-                    >
-                      {component}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </>
           )}
           <div>

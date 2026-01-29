@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PatternRecognitionGuide } from '@/components/PatternRecognitionGuide';
+import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import {
   type AlgorithmPattern,
   type AlgorithmPatternProblem,
@@ -88,33 +89,81 @@ interface SetupPhaseProps {
   config: PatternQuizConfig;
   onConfigChange: (config: PatternQuizConfig) => void;
   onStart: () => void;
+  onShowGuide?: () => void;
   categories: string[];
 }
 
-function SetupPhase({ config, onConfigChange, onStart, categories }: SetupPhaseProps) {
-  return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-white mb-2">Algorithm Pattern Quiz</h1>
-        <p className="text-zinc-400">
-          Test your ability to recognize algorithm patterns from LeetCode-style problems
-        </p>
-      </div>
+const TIME_OPTIONS = [10, 15, 20, 30, 0] as const;
 
-      <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800 space-y-6">
+function SetupPhase({ config, onConfigChange, onStart, onShowGuide, categories }: SetupPhaseProps) {
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const availableCount = getPatternProblems(
+    config.difficulty === 'all' ? undefined : config.difficulty,
+    config.category === 'all' ? undefined : config.category,
+  ).length;
+  const maxQuestions = Math.max(1, availableCount);
+  const questionCount = Math.min(config.questionCount, maxQuestions);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+      <div className="container mx-auto px-4 py-12 max-w-2xl">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            Algorithm Pattern Quiz
+          </h1>
+          <p className="text-slate-400 text-lg">
+            Test your ability to recognize algorithm patterns from LeetCode-style problems
+          </p>
+        </div>
+
+        {/* Pattern Recognition Guide */}
+        {onShowGuide && (
+          <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold">Pattern Recognition Guide</h2>
+                <p className="text-slate-400 text-sm">
+                  Review the framework before the timed quiz starts
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onShowGuide}
+                className="flex items-center gap-2 px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-colors cursor-pointer"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+                View Guide
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Difficulty */}
-        <div>
-          <div className="block text-sm font-medium text-zinc-300 mb-2">Difficulty</div>
+        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+          <h2 className="text-xl font-semibold mb-4">Difficulty</h2>
           <div className="flex gap-2">
             {(['all', 'easy', 'medium', 'hard'] as const).map((diff) => (
               <button
                 key={diff}
                 type="button"
                 onClick={() => onConfigChange({ ...config, difficulty: diff })}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                   config.difficulty === diff
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                 }`}
               >
                 {diff === 'all' ? 'All' : diff.charAt(0).toUpperCase() + diff.slice(1)}
@@ -124,15 +173,15 @@ function SetupPhase({ config, onConfigChange, onStart, categories }: SetupPhaseP
         </div>
 
         {/* Category */}
-        <div>
-          <label htmlFor="category-select" className="block text-sm font-medium text-zinc-300 mb-2">
+        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+          <label htmlFor="category-select" className="block text-xl font-semibold mb-4">
             Category
           </label>
           <select
             id="category-select"
             value={config.category}
             onChange={(e) => onConfigChange({ ...config, category: e.target.value })}
-            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-white"
+            className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white"
           >
             <option value="all">All Categories</option>
             {categories.map((cat) => (
@@ -143,51 +192,105 @@ function SetupPhase({ config, onConfigChange, onStart, categories }: SetupPhaseP
           </select>
         </div>
 
-        {/* Question Count */}
-        <div>
-          <label htmlFor="question-count" className="block text-sm font-medium text-zinc-300 mb-2">
-            Number of Questions: {config.questionCount}
-          </label>
-          <input
-            id="question-count"
-            type="range"
-            min="5"
-            max="20"
-            value={config.questionCount}
-            onChange={(e) =>
-              onConfigChange({ ...config, questionCount: parseInt(e.target.value, 10) })
-            }
-            className="w-full"
+        {/* Number of Questions */}
+        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Number of Questions</h2>
+            <span className="text-sm text-slate-400">{availableCount} problems available</span>
+          </div>
+          <QuestionCountSlider
+            value={questionCount}
+            onChange={(value) => onConfigChange({ ...config, questionCount: value })}
+            min={1}
+            max={maxQuestions}
+            showLabel={false}
           />
         </div>
 
         {/* Time Per Question */}
-        <div>
-          <label
-            htmlFor="time-per-question"
-            className="block text-sm font-medium text-zinc-300 mb-2"
-          >
-            Time Per Question: {config.timePerQuestion}s
-          </label>
-          <input
-            id="time-per-question"
-            type="range"
-            min="10"
-            max="60"
-            step="5"
-            value={config.timePerQuestion}
-            onChange={(e) =>
-              onConfigChange({ ...config, timePerQuestion: parseInt(e.target.value, 10) })
-            }
-            className="w-full"
-          />
+        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+          <h2 className="text-xl font-semibold mb-4">Time Per Question</h2>
+          <div className="flex gap-3 mb-4">
+            {TIME_OPTIONS.map((time) => (
+              <button
+                type="button"
+                key={time}
+                onClick={() => onConfigChange({ ...config, timePerQuestion: time })}
+                className={`flex-1 py-3 rounded-lg font-semibold transition-all duration-200 cursor-pointer ${
+                  config.timePerQuestion === time
+                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                {time === 0 ? '∞' : `${time}s`}
+              </button>
+            ))}
+          </div>
+          {config.timePerQuestion !== 0 && (
+            <div className="pt-2 border-t border-slate-700/50">
+              <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
+                <span>Custom time</span>
+                <span className="font-mono bg-slate-700/50 px-2 py-1 rounded">
+                  {config.timePerQuestion}s
+                </span>
+              </div>
+              <input
+                type="range"
+                min={5}
+                max={60}
+                step={1}
+                value={config.timePerQuestion}
+                onChange={(e) =>
+                  onConfigChange({ ...config, timePerQuestion: Number(e.target.value) })
+                }
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+              />
+              <div className="flex justify-between text-xs text-slate-500 mt-1">
+                <span>5s</span>
+                <span>60s</span>
+              </div>
+            </div>
+          )}
+          {config.timePerQuestion === 0 && (
+            <div className="pt-2 border-t border-slate-700/50">
+              <p className="text-sm text-slate-400 text-center py-2">
+                No time limit - take as long as you need
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Sound Effects */}
+        <div className="bg-slate-800/50 rounded-2xl p-6 mb-8 border border-slate-700/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Sound Effects</h2>
+              <p className="text-slate-400 text-sm">Audio feedback for answers and timer</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
+                soundEnabled ? 'bg-blue-500' : 'bg-slate-600'
+              }`}
+            >
+              <div
+                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
+                  soundEnabled ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
         </div>
 
         {/* Start Button */}
         <button
           type="button"
           onClick={onStart}
-          className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
+          className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-bold text-xl cursor-pointer
+                     hover:from-blue-600 hover:to-purple-700 transition-all duration-200
+                     shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40
+                     transform hover:scale-[1.02] active:scale-[0.98]"
         >
           Start Quiz
         </button>
@@ -206,6 +309,8 @@ interface PlayingPhaseProps {
   onSelectPattern: (pattern: AlgorithmPattern) => void;
   onShowGuide: () => void;
   timeLeft: number;
+  /** When 0, no time limit (show ∞) */
+  timeLimitSeconds: number;
 }
 
 function PlayingPhase({
@@ -214,6 +319,7 @@ function PlayingPhase({
   onSelectPattern,
   onShowGuide,
   timeLeft,
+  timeLimitSeconds,
 }: PlayingPhaseProps) {
   // Memoize shuffled patterns so they don't change on every render
   const shuffledPatterns = useMemo(() => shuffleArray(problem.patterns), [problem.patterns]);
@@ -233,7 +339,10 @@ function PlayingPhase({
             Streak: <span className="text-orange-400 font-semibold">{state.streak}</span>
           </div>
           <div className="text-zinc-400">
-            Time: <span className="text-purple-400 font-semibold">{timeLeft}s</span>
+            Time:{' '}
+            <span className="text-purple-400 font-semibold">
+              {timeLimitSeconds === 0 ? '∞' : `${timeLeft}s`}
+            </span>
           </div>
         </div>
       </div>
@@ -541,9 +650,9 @@ export function PatternQuizContent({ backHref }: PatternQuizContentProps) {
     }, 2000);
   }, [state, config.timePerQuestion, advanceToNextQuestion]);
 
-  // Timer effect
+  // Timer effect (skip when unlimited time)
   useEffect(() => {
-    if (state.phase !== 'playing' || state.showingAnswer) return;
+    if (state.phase !== 'playing' || state.showingAnswer || config.timePerQuestion === 0) return;
 
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
@@ -557,7 +666,7 @@ export function PatternQuizContent({ backHref }: PatternQuizContentProps) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [state.phase, state.showingAnswer, handleTimeout]);
+  }, [state.phase, state.showingAnswer, config.timePerQuestion, handleTimeout]);
 
   const handleStart = useCallback(() => {
     let problems = getPatternProblems(
@@ -665,6 +774,7 @@ export function PatternQuizContent({ backHref }: PatternQuizContentProps) {
           config={config}
           onConfigChange={setConfig}
           onStart={handleStart}
+          onShowGuide={() => setState((prev) => ({ ...prev, showGuide: true }))}
           categories={categories}
         />
       )}
@@ -676,6 +786,7 @@ export function PatternQuizContent({ backHref }: PatternQuizContentProps) {
           onSelectPattern={handleSelectPattern}
           onShowGuide={() => setState((prev) => ({ ...prev, showGuide: true }))}
           timeLeft={timeLeft}
+          timeLimitSeconds={config.timePerQuestion}
         />
       )}
 
