@@ -8,6 +8,7 @@ import {
   type FrameworkId,
   isValidFramework,
 } from '@/lib/frontend-drills';
+import { FrameworkSwitcher } from './FrameworkSwitcher';
 
 // Shared icon props for nav SVGs
 const iconClass = 'w-4 h-4';
@@ -21,17 +22,6 @@ const s = {
 
 // Mode definitions for navigation
 const MODES: { slug: string; label: string; icon: ReactNode }[] = [
-  {
-    slug: '',
-    label: 'Overview',
-    // Home/overview icon
-    icon: (
-      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" {...s} />
-        <polyline points="9 22 9 12 15 12 15 22" {...s} />
-      </svg>
-    ),
-  },
   {
     slug: 'drill',
     label: 'Drill',
@@ -57,7 +47,7 @@ const MODES: { slug: string; label: string; icon: ReactNode }[] = [
   {
     slug: 'ui-patterns',
     label: 'UI Patterns',
-    // Grid layout icon
+    // Grid layout icon (4 squares)
     icon: (
       <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
         <rect x="3" y="3" width="7" height="7" rx="1" {...s} />
@@ -113,7 +103,7 @@ export function generateStaticParams() {
   }));
 }
 
-// Client component for mode navigation
+// Server component for mode navigation
 function ModeNav({
   framework,
   config,
@@ -128,11 +118,7 @@ function ModeNav({
           {MODES.map((mode) => (
             <Link
               key={mode.slug}
-              href={
-                mode.slug === ''
-                  ? `/frontend-drills/${framework}`
-                  : `/frontend-drills/${framework}/${mode.slug}`
-              }
+              href={`/frontend-drills/${framework}/${mode.slug}`}
               className={`
                 flex items-center gap-2 px-4 py-2 rounded-lg
                 text-sm font-medium whitespace-nowrap
@@ -166,7 +152,7 @@ export default async function FrameworkLayout({ children, params }: LayoutProps)
         className={`border-b ${config.borderColor} bg-zinc-900/50 backdrop-blur-sm sticky top-0 z-50`}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-16">
             {/* Logo and breadcrumbs */}
             <div className="flex items-center gap-3">
               <Link
@@ -194,6 +180,11 @@ export default async function FrameworkLayout({ children, params }: LayoutProps)
                 </span>
                 <span className={`font-semibold ${config.color}`}>{config.name}</span>
               </Link>
+            </div>
+
+            {/* Framework switcher dropdown */}
+            <div className="flex items-center gap-3">
+              <FrameworkSwitcher framework={framework as FrameworkId} />
             </div>
           </div>
         </div>

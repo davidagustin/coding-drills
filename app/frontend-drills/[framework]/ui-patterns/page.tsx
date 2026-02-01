@@ -399,7 +399,6 @@ export default function UIPatterns() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-3">UI Patterns</h1>
         <p className="text-xl text-zinc-400">
           Master common UI patterns and component implementations for {config.name}: forms,
           interactivity, data display, navigation, and advanced features.

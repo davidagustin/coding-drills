@@ -1,10 +1,12 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { LivePreview } from '@/components/LivePreview';
+import type { Exercise, ExerciseCategory, ExerciseDifficulty } from '@/lib/exercises/types';
 import {
   FRAMEWORK_CONFIG,
   type FrameworkId,
@@ -12,7 +14,14 @@ import {
   isValidFramework,
   UI_PATTERN_CATEGORIES,
   UI_PATTERN_DIFFICULTY_CONFIG,
+  type UIPattern,
 } from '@/lib/frontend-drills';
+
+const CodeEditor = dynamic(
+  () => import('@/components/CodeEditor').then((mod) => mod.default || mod),
+  { ssr: false },
+);
+const ExerciseTutor = dynamic(() => import('@/components/ExerciseTutor'), { ssr: false });
 
 function getImplementationHint(concept: string, framework: string): string {
   const hints: Record<string, string> = {
@@ -40,13 +49,35 @@ function getImplementationHint(concept: string, framework: string): string {
   return `Implement ${concept} using ${framework} patterns and best practices`;
 }
 
+function patternToExercise(pattern: UIPattern, frameworkName: string): Exercise {
+  return {
+    id: pattern.id,
+    title: pattern.title,
+    category: pattern.category as unknown as ExerciseCategory,
+    difficulty: pattern.difficulty as unknown as ExerciseDifficulty,
+    description: pattern.description,
+    explanation:
+      pattern.promptDescription ||
+      `Build a ${pattern.title} component using ${frameworkName}. Focus on implementing each building block step by step.`,
+    instructions: pattern.concepts.map((c, i) => `Step ${i + 1}: Implement ${c}`),
+    starterCode: pattern.demoCode
+      ? `// Reference demo code available above\n// Implement your own version below\n`
+      : `// Implement ${pattern.title}\n`,
+    solutionCode: pattern.demoCode
+      ? `// HTML:\n${pattern.demoCode.html}\n\n// CSS:\n${pattern.demoCode.css}\n\n// JS:\n${pattern.demoCode.js}`
+      : `// No reference solution available yet`,
+    testCases: [],
+    hints: pattern.concepts.map((c) => `Focus on implementing: ${c}`),
+    concepts: pattern.concepts,
+  };
+}
+
 export default function UIPatternDetail() {
   const params = useParams();
   const framework = params.framework as string;
   const patternId = params.patternId as string;
   const [mounted, setMounted] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [aiPromptExpanded, setAiPromptExpanded] = useState(false);
+  const [userCode, setUserCode] = useState('');
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Required for hydration safety
@@ -115,33 +146,8 @@ export default function UIPatternDetail() {
 
   const diffConfig = UI_PATTERN_DIFFICULTY_CONFIG[pattern.difficulty];
   const categoryConfig = UI_PATTERN_CATEGORIES[pattern.category];
-
-  const generatedPrompt = `Help me build a "${pattern.title}" UI component using ${frameworkConfig.name}.
-
-## Requirements
-${pattern.description}
-
-## Key Concepts to Implement
-${pattern.concepts.map((c, i) => `${i + 1}. ${c}`).join('\n')}
-
-## Implementation Steps
-Please guide me through building this step by step:
-${pattern.concepts.map((c, i) => `${i + 1}. Implement ${c}`).join('\n')}${
-  pattern.promptDescription
-    ? `
-
-## Additional Context
-${pattern.promptDescription}`
-    : ''
-}
-
-Please provide the complete working code with explanations for each step. Use modern ${frameworkConfig.name} best practices.`;
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(generatedPrompt);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const editorLanguage =
+    framework === 'angular' || framework === 'react' ? 'typescript' : 'javascript';
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -263,7 +269,7 @@ Please provide the complete working code with explanations for each step. Use mo
                 </div>
                 <p className="text-zinc-500 text-lg font-medium mb-2">Live demo coming soon</p>
                 <p className="text-zinc-600 text-sm max-w-xs">
-                  Use the AI prompt below to build this pattern yourself and see it in action
+                  Use the AI tutor below to get guidance on building this pattern yourself
                 </p>
               </div>
             )}
@@ -325,56 +331,12 @@ Please provide the complete working code with explanations for each step. Use mo
           </div>
         </div>
 
-        {/* Build with AI Section - Full Width Below */}
-        <div className="bg-gradient-to-r from-purple-950/20 via-zinc-900/40 to-blue-950/20 rounded-2xl border border-purple-500/10 overflow-hidden mb-8">
-          <button
-            type="button"
-            onClick={() => setAiPromptExpanded(!aiPromptExpanded)}
-            className="w-full flex items-center justify-between p-5 hover:bg-zinc-900/30 transition-colors group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
-                  />
-                </svg>
-              </div>
-              <div className="text-left">
-                <h2 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors">
-                  Build with AI
-                </h2>
-                <p className="text-zinc-400 text-sm">
-                  Copy this prompt to your favorite AI assistant for step-by-step guidance
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCopy();
-                }}
-                className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
-                  copied
-                    ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl'
-                }`}
-              >
-                {copied ? 'Copied!' : 'Copy Prompt'}
-              </button>
+        {/* Code Editor Section */}
+        <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
               <svg
-                className={`w-5 h-5 text-zinc-400 transition-transform ${aiPromptExpanded ? 'rotate-180' : ''}`}
+                className="w-5 h-5 text-amber-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -384,21 +346,36 @@ Please provide the complete working code with explanations for each step. Use mo
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25"
                 />
               </svg>
             </div>
-          </button>
-
-          {aiPromptExpanded && (
-            <div className="px-5 pb-5">
-              <div className="bg-zinc-950/80 rounded-xl p-5 border border-zinc-700/30 max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700">
-                <pre className="text-sm text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
-                  {generatedPrompt}
-                </pre>
-              </div>
+            <div>
+              <h2 className="text-lg font-bold text-white">Your Implementation</h2>
+              <p className="text-xs text-zinc-500">Write your code — the AI tutor can review it</p>
             </div>
-          )}
+          </div>
+          <CodeEditor
+            code={userCode}
+            onChange={setUserCode}
+            language={editorLanguage}
+            height={300}
+            autoFocus={false}
+          />
+        </div>
+
+        {/* AI Tutor Section */}
+        <div className="mb-8">
+          <ExerciseTutor
+            exercise={patternToExercise(pattern, frameworkConfig.name)}
+            hasVisualization={!!pattern.demoCode}
+            userCode={userCode}
+            languageConfig={{
+              color: frameworkConfig.color,
+              bgColor: frameworkConfig.bgColor,
+              borderColor: frameworkConfig.borderColor,
+            }}
+          />
         </div>
 
         {/* Footer: External Link + Back Button */}
