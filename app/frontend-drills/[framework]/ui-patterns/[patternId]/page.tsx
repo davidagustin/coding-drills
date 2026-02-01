@@ -64,11 +64,143 @@ function getImplementationHint(concept: string, framework: string): string {
   return `Implement ${concept} using ${framework} patterns and best practices`;
 }
 
+/**
+ * Determine if a line is "setup" — structural code the user needs to see
+ * but doesn't need to write (imports, state declarations, DOM references).
+ */
+function isSkeletonSetup(t: string): boolean {
+  // Framework imports: const { useState, ... } = React
+  if (/^const\s*\{.*\}\s*=\s*(React|Vue)/.test(t)) return true;
+  // React component signature: function MyComponent() {
+  if (/^function\s+[A-Z]\w*\s*\(/.test(t)) return true;
+  // Vue createApp / setup
+  if (/^createApp\s*\(\s*\{/.test(t) || /^setup\s*\(\)\s*\{/.test(t)) return true;
+  // State hooks: const [x, setX] = useState(...)
+  if (/useState\(|useRef\(|useMemo\(/.test(t) && /^(const|let)\s/.test(t)) return true;
+  // Vue reactivity: const x = ref(...)
+  if (/\bref\(|reactive\(/.test(t) && /^(const|let)\s/.test(t)) return true;
+  // DOM references: const el = document.getElementById(...)
+  if (/document\.getElementById/.test(t) && /^(const|let|var)\s/.test(t)) return true;
+  // Simple value declarations (not arrow functions)
+  if (
+    /^(const|let|var)\s+\w+\s*=\s*('|"|`|\d|true|false|null|\[|\{)/.test(t) &&
+    !/=>\s*[{(]/.test(t)
+  )
+    return true;
+  // Destructuring with useState
+  if (/^(const|let)\s+\[/.test(t) && /useState/.test(t)) return true;
+  // Angular simulation comment
+  if (/^\/\/\s*Simulating/.test(t)) return true;
+  return false;
+}
+
+/**
+ * Build framework-specific teardown (return statement, mounting, template).
+ */
+function buildSkeletonTeardown(
+  js: string,
+  lines: string[],
+  framework: string,
+  indent: string,
+): string[] {
+  const result: string[] = [];
+
+  if (framework === 'react') {
+    const funcMatch = js.match(/function\s+([A-Z]\w*)/);
+    const name = funcMatch?.[1] || 'App';
+    result.push(
+      `${indent}return (`,
+      `${indent}  <div>`,
+      `${indent}    {/* Build your UI here */}`,
+      `${indent}  </div>`,
+      `${indent});`,
+      `}`,
+      ``,
+      `ReactDOM.createRoot(document.getElementById('app')).render(<${name} />);`,
+    );
+  } else if (framework === 'vue') {
+    // Preserve the return statement (shows what variables/functions to expose)
+    const returnLine = lines.find((l) => /^\s*return\s*\{/.test(l.trim()));
+    result.push(returnLine || `    return {};`);
+
+    // Check if there's an inline template
+    const tmplStart = lines.findIndex((l) => /template:\s*`/.test(l));
+    if (tmplStart >= 0) {
+      result.push(`  },`);
+      for (let i = tmplStart; i < lines.length; i++) {
+        result.push(lines[i]);
+        if (i > tmplStart && /`\s*$/.test(lines[i].trim())) break;
+      }
+      result.push(`}).mount('#app');`);
+    } else {
+      result.push(`  }`);
+      result.push(`}).mount('#app');`);
+    }
+  } else {
+    // Vanilla JS / Angular
+    if (js.includes('function render()') || /\nrender\(\);?\s*$/.test(js)) {
+      result.push(
+        `function render() {`,
+        `  app.innerHTML = \``,
+        `    <div>`,
+        `      <!-- Build your HTML here -->`,
+        `    </div>`,
+        `  \`;`,
+        ``,
+        `  // Wire up event listeners after rendering`,
+        `}`,
+        ``,
+        `render();`,
+      );
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Create a learning skeleton from demoCode JS: keeps the setup structure
+ * (imports, state, DOM refs) that matches the Live Demo, but replaces
+ * implementation logic with concept-based TODO steps.
+ */
+function skeletonizeDemo(js: string, concepts: string[], framework: string): string {
+  const lines = js.split('\n');
+
+  // Phase 1: Collect setup lines from the top
+  const setup: string[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const t = lines[i].trim();
+    if (!t || t.startsWith('//')) {
+      setup.push(lines[i]);
+    } else if (isSkeletonSetup(t)) {
+      setup.push(lines[i]);
+    } else {
+      break;
+    }
+  }
+  // Trim trailing empty lines from setup
+  while (setup.length > 0 && !setup[setup.length - 1].trim()) setup.pop();
+
+  // Phase 2: Build TODO steps from pattern concepts
+  const indent = framework === 'vue' ? '    ' : framework === 'react' ? '  ' : '';
+  const todos = [
+    '',
+    ...concepts.map((c, i) => `${indent}// Step ${i + 1}: ${c}`),
+    '',
+    `${indent}// Hint: Check the Live Demo JS tab for the reference implementation`,
+  ];
+
+  // Phase 3: Framework-specific teardown (return, mounting, template)
+  const teardown = buildSkeletonTeardown(js, lines, framework, indent);
+
+  return [...setup, ...todos, '', ...teardown].join('\n');
+}
+
 function generateStarterCode(pattern: UIPattern, framework: string): string {
-  // Use the pattern's actual demoCode JS when available so the starter
-  // matches the Live Demo JS tab — no confusion for the user.
+  // When demoCode exists, create a skeleton that matches the Live Demo
+  // structure but leaves core logic as TODOs for the user to implement
   if (pattern.demoCode?.js?.trim()) {
-    return pattern.demoCode.js;
+    return skeletonizeDemo(pattern.demoCode.js, pattern.concepts, framework);
   }
 
   // Fallback: generate category-based scaffold when no demoCode exists
