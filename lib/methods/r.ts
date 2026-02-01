@@ -1,0 +1,1365 @@
+import type { Method } from '../types';
+
+export const rMethods: Method[] = [
+  // ============================================================
+  // Vector Operations
+  // ============================================================
+  {
+    name: 'c',
+    category: 'Vector Operations',
+    syntax: 'c(...)',
+    description:
+      'Combines values into a vector or list. The most fundamental function for creating vectors in R.',
+    arguments: [
+      {
+        name: '...',
+        type: 'any',
+        description: 'Values to combine into a vector; coerced to a common type',
+      },
+    ],
+    returns: { type: 'vector', description: 'A vector containing the combined values' },
+    examples: [
+      { code: 'c(1, 2, 3)', output: '[1] 1 2 3' },
+      { code: 'c("a", "b", "c")', output: '[1] "a" "b" "c"' },
+      {
+        code: 'c(1, "two", 3)',
+        output: '[1] "1" "two" "3"',
+        explanation: 'Numeric values coerced to character',
+      },
+      {
+        code: 'c(c(1, 2), c(3, 4))',
+        output: '[1] 1 2 3 4',
+        explanation: 'Flattens nested vectors',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['list', 'append', 'vector'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'All elements are coerced to the most general type (logical < integer < double < character)',
+      'Use list() to combine elements of different types without coercion',
+    ],
+  },
+  {
+    name: 'length',
+    category: 'Vector Operations',
+    syntax: 'length(x)',
+    description: 'Returns the number of elements in a vector, list, or other R object.',
+    arguments: [
+      { name: 'x', type: 'any', description: 'An R object whose length is to be determined' },
+    ],
+    returns: { type: 'integer', description: 'The number of elements' },
+    examples: [
+      { code: 'length(c(1, 2, 3))', output: '[1] 3' },
+      { code: 'length("hello")', output: '[1] 1', explanation: 'A single string is length 1' },
+      { code: 'length(list(a = 1, b = 2))', output: '[1] 2' },
+      { code: 'length(NULL)', output: '[1] 0' },
+    ],
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    relatedMethods: ['nchar', 'nrow', 'ncol', 'NROW', 'NCOL'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'For strings, use nchar() to get character count; length() counts the number of strings',
+    ],
+  },
+  {
+    name: 'append',
+    category: 'Vector Operations',
+    syntax: 'append(x, values, after = length(x))',
+    description: 'Adds elements to a vector at a specified position. Returns a new vector.',
+    arguments: [
+      { name: 'x', type: 'vector', description: 'The vector to append to' },
+      { name: 'values', type: 'vector', description: 'Values to be appended' },
+      {
+        name: 'after',
+        type: 'integer',
+        description: 'Position after which to insert',
+        optional: true,
+        defaultValue: 'length(x)',
+      },
+    ],
+    returns: { type: 'vector', description: 'A new vector with the appended values' },
+    examples: [
+      { code: 'append(1:3, 4:5)', output: '[1] 1 2 3 4 5' },
+      {
+        code: 'append(1:3, 10, after = 2)',
+        output: '[1] 1 2 10 3',
+        explanation: 'Insert 10 after position 2',
+      },
+      {
+        code: 'append(c("a", "c"), "b", after = 1)',
+        output: '[1] "a" "b" "c"',
+      },
+    ],
+    timeComplexity: 'O(n + m)',
+    spaceComplexity: 'O(n + m)',
+    relatedMethods: ['c', 'rev', 'sort'],
+    sinceVersion: 'R 1.0',
+    notes: ['Does not modify the original vector; R vectors are immutable'],
+  },
+  {
+    name: 'rev',
+    category: 'Vector Operations',
+    syntax: 'rev(x)',
+    description: 'Returns a reversed version of the input vector or other object.',
+    arguments: [{ name: 'x', type: 'vector', description: 'The object to reverse' }],
+    returns: { type: 'vector', description: 'The reversed object' },
+    examples: [
+      { code: 'rev(1:5)', output: '[1] 5 4 3 2 1' },
+      { code: 'rev(c("a", "b", "c"))', output: '[1] "c" "b" "a"' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['sort', 'order'],
+    sinceVersion: 'R 1.0',
+  },
+  {
+    name: 'sort',
+    category: 'Vector Operations',
+    syntax: 'sort(x, decreasing = FALSE, na.last = NA)',
+    description: 'Sorts a vector into ascending or descending order.',
+    arguments: [
+      { name: 'x', type: 'vector', description: 'The vector to sort' },
+      {
+        name: 'decreasing',
+        type: 'logical',
+        description: 'If TRUE, sort in descending order',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+      {
+        name: 'na.last',
+        type: 'logical',
+        description: 'Where to place NA values: TRUE (last), FALSE (first), or NA (remove)',
+        optional: true,
+        defaultValue: 'NA',
+      },
+    ],
+    returns: { type: 'vector', description: 'The sorted vector' },
+    examples: [
+      { code: 'sort(c(3, 1, 2))', output: '[1] 1 2 3' },
+      { code: 'sort(c(3, 1, 2), decreasing = TRUE)', output: '[1] 3 2 1' },
+      { code: 'sort(c(3, NA, 1), na.last = TRUE)', output: '[1] 1 3 NA' },
+    ],
+    timeComplexity: 'O(n log n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['order', 'rank', 'rev', 'unique'],
+    sinceVersion: 'R 1.0',
+    notes: ['By default, NA values are removed from the result'],
+  },
+  {
+    name: 'unique',
+    category: 'Vector Operations',
+    syntax: 'unique(x)',
+    description:
+      'Returns a vector with duplicate elements removed, preserving first occurrence order.',
+    arguments: [{ name: 'x', type: 'vector', description: 'The vector to deduplicate' }],
+    returns: { type: 'vector', description: 'A vector of unique values' },
+    examples: [
+      { code: 'unique(c(1, 2, 2, 3, 1))', output: '[1] 1 2 3' },
+      { code: 'unique(c("a", "b", "a", "c"))', output: '[1] "a" "b" "c"' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['duplicated', 'table', 'sort'],
+    sinceVersion: 'R 1.0',
+  },
+  {
+    name: 'seq',
+    category: 'Vector Operations',
+    syntax: 'seq(from = 1, to, by, length.out)',
+    description:
+      'Generates regular sequences. A versatile function for creating numeric sequences with various patterns.',
+    arguments: [
+      {
+        name: 'from',
+        type: 'numeric',
+        description: 'Starting value of the sequence',
+        optional: true,
+        defaultValue: '1',
+      },
+      { name: 'to', type: 'numeric', description: 'End value of the sequence' },
+      {
+        name: 'by',
+        type: 'numeric',
+        description: 'Increment of the sequence',
+        optional: true,
+      },
+      {
+        name: 'length.out',
+        type: 'integer',
+        description: 'Desired length of the sequence',
+        optional: true,
+      },
+    ],
+    returns: { type: 'numeric vector', description: 'A numeric sequence' },
+    examples: [
+      { code: 'seq(1, 10)', output: '[1]  1  2  3  4  5  6  7  8  9 10' },
+      { code: 'seq(1, 10, by = 2)', output: '[1] 1 3 5 7 9' },
+      { code: 'seq(0, 1, length.out = 5)', output: '[1] 0.00 0.25 0.50 0.75 1.00' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['rep', 'seq_len', 'seq_along', ':'],
+    sinceVersion: 'R 1.0',
+    notes: ['The colon operator 1:10 is a shorthand for seq(1, 10, by = 1)'],
+  },
+  {
+    name: 'rep',
+    category: 'Vector Operations',
+    syntax: 'rep(x, times = 1, each = 1)',
+    description: 'Replicates elements of a vector a specified number of times.',
+    arguments: [
+      { name: 'x', type: 'vector', description: 'The vector to replicate' },
+      {
+        name: 'times',
+        type: 'integer',
+        description: 'Number of times to repeat the whole vector',
+        optional: true,
+        defaultValue: '1',
+      },
+      {
+        name: 'each',
+        type: 'integer',
+        description: 'Number of times to repeat each element',
+        optional: true,
+        defaultValue: '1',
+      },
+    ],
+    returns: { type: 'vector', description: 'A vector with replicated elements' },
+    examples: [
+      { code: 'rep(1:3, times = 2)', output: '[1] 1 2 3 1 2 3' },
+      { code: 'rep(1:3, each = 2)', output: '[1] 1 1 2 2 3 3' },
+      { code: 'rep(c("a", "b"), times = c(3, 2))', output: '[1] "a" "a" "a" "b" "b"' },
+    ],
+    timeComplexity: 'O(n * k)',
+    spaceComplexity: 'O(n * k)',
+    relatedMethods: ['seq', 'rep_len'],
+    sinceVersion: 'R 1.0',
+  },
+  {
+    name: 'which',
+    category: 'Vector Operations',
+    syntax: 'which(x, arr.ind = FALSE)',
+    description:
+      'Returns the indices of elements that are TRUE in a logical vector. Essential for conditional indexing.',
+    arguments: [
+      { name: 'x', type: 'logical', description: 'A logical vector' },
+      {
+        name: 'arr.ind',
+        type: 'logical',
+        description: 'If TRUE and x is an array, return array indices',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'integer vector', description: 'Indices where the condition is TRUE' },
+    examples: [
+      { code: 'which(c(TRUE, FALSE, TRUE, FALSE))', output: '[1] 1 3' },
+      { code: 'x <- c(5, 3, 8, 1); which(x > 4)', output: '[1] 1 3' },
+      { code: 'which.min(c(5, 3, 8, 1))', output: '[1] 4', explanation: 'Index of the minimum' },
+      { code: 'which.max(c(5, 3, 8, 1))', output: '[1] 3', explanation: 'Index of the maximum' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(k)',
+    relatedMethods: ['which.min', 'which.max', 'match', '%in%'],
+    sinceVersion: 'R 1.0',
+    notes: ['which.min() and which.max() return index of first min/max value'],
+  },
+
+  // ============================================================
+  // String Functions
+  // ============================================================
+  {
+    name: 'paste',
+    category: 'String Functions',
+    syntax: 'paste(..., sep = " ", collapse = NULL)',
+    description:
+      'Concatenates strings with a separator. One of the most commonly used string functions in R.',
+    arguments: [
+      {
+        name: '...',
+        type: 'any',
+        description: 'Objects to be concatenated (coerced to character)',
+      },
+      {
+        name: 'sep',
+        type: 'character',
+        description: 'Separator between elements',
+        optional: true,
+        defaultValue: '" "',
+      },
+      {
+        name: 'collapse',
+        type: 'character',
+        description: 'Separator to collapse vector into single string',
+        optional: true,
+        defaultValue: 'NULL',
+      },
+    ],
+    returns: { type: 'character', description: 'A character vector of concatenated strings' },
+    examples: [
+      { code: 'paste("hello", "world")', output: '[1] "hello world"' },
+      { code: 'paste("x", 1:3, sep = "")', output: '[1] "x1" "x2" "x3"' },
+      {
+        code: 'paste(c("a", "b", "c"), collapse = "-")',
+        output: '[1] "a-b-c"',
+        explanation: 'Collapse joins vector into single string',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['paste0', 'sprintf', 'cat'],
+    sinceVersion: 'R 1.0',
+    notes: ['Use paste0() as a shorthand for paste(..., sep = "")'],
+  },
+  {
+    name: 'paste0',
+    category: 'String Functions',
+    syntax: 'paste0(..., collapse = NULL)',
+    description: 'Concatenates strings without any separator. Equivalent to paste(..., sep = "").',
+    arguments: [
+      { name: '...', type: 'any', description: 'Objects to be concatenated' },
+      {
+        name: 'collapse',
+        type: 'character',
+        description: 'Separator to collapse vector into single string',
+        optional: true,
+        defaultValue: 'NULL',
+      },
+    ],
+    returns: { type: 'character', description: 'A character vector of concatenated strings' },
+    examples: [
+      { code: 'paste0("x", 1:3)', output: '[1] "x1" "x2" "x3"' },
+      { code: 'paste0("file", ".txt")', output: '[1] "file.txt"' },
+      { code: 'paste0(c("a", "b"), collapse = ",")', output: '[1] "a,b"' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['paste', 'sprintf', 'cat'],
+    sinceVersion: 'R 2.15',
+  },
+  {
+    name: 'nchar',
+    category: 'String Functions',
+    syntax: 'nchar(x, type = "chars")',
+    description: 'Returns the number of characters in each element of a character vector.',
+    arguments: [
+      { name: 'x', type: 'character', description: 'A character vector' },
+      {
+        name: 'type',
+        type: 'character',
+        description: 'Type of count: "bytes", "chars", or "width"',
+        optional: true,
+        defaultValue: '"chars"',
+      },
+    ],
+    returns: { type: 'integer vector', description: 'Number of characters in each string' },
+    examples: [
+      { code: 'nchar("hello")', output: '[1] 5' },
+      { code: 'nchar(c("hi", "hello", "hey"))', output: '[1] 2 5 3' },
+      { code: 'nchar("")', output: '[1] 0' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['length', 'substr', 'nchar'],
+    sinceVersion: 'R 1.0',
+    notes: ['For the number of elements in a vector, use length() instead'],
+  },
+  {
+    name: 'gsub',
+    category: 'String Functions',
+    syntax: 'gsub(pattern, replacement, x, fixed = FALSE)',
+    description:
+      'Replaces all occurrences of a pattern in a string. Supports regular expressions by default.',
+    arguments: [
+      { name: 'pattern', type: 'character', description: 'Pattern to search for (regex or fixed)' },
+      { name: 'replacement', type: 'character', description: 'Replacement string' },
+      { name: 'x', type: 'character', description: 'Character vector to search in' },
+      {
+        name: 'fixed',
+        type: 'logical',
+        description: 'If TRUE, treat pattern as literal string',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'character', description: 'Character vector with replacements made' },
+    examples: [
+      { code: 'gsub("o", "0", "hello world")', output: '[1] "hell0 w0rld"' },
+      { code: 'gsub("[aeiou]", "*", "hello")', output: '[1] "h*ll*"' },
+      {
+        code: 'gsub("\\\\s+", " ", "hello   world")',
+        output: '[1] "hello world"',
+        explanation: 'Collapse whitespace using regex',
+      },
+    ],
+    timeComplexity: 'O(n * m)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['sub', 'grep', 'grepl', 'regmatches'],
+    sinceVersion: 'R 1.0',
+    notes: ['sub() replaces only the first match; gsub() replaces all matches'],
+  },
+  {
+    name: 'substr',
+    category: 'String Functions',
+    syntax: 'substr(x, start, stop)',
+    description:
+      'Extracts or replaces substrings in a character vector based on start and stop positions.',
+    arguments: [
+      { name: 'x', type: 'character', description: 'A character vector' },
+      { name: 'start', type: 'integer', description: 'Starting position (1-indexed)' },
+      { name: 'stop', type: 'integer', description: 'Ending position (inclusive)' },
+    ],
+    returns: { type: 'character', description: 'The extracted substring(s)' },
+    examples: [
+      { code: 'substr("hello world", 1, 5)', output: '[1] "hello"' },
+      { code: 'substr("hello world", 7, 11)', output: '[1] "world"' },
+      { code: 'substr(c("apple", "banana"), 1, 3)', output: '[1] "app" "ban"' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['substring', 'nchar', 'strsplit', 'gsub'],
+    sinceVersion: 'R 1.0',
+    notes: ['R uses 1-based indexing for string positions'],
+  },
+  {
+    name: 'strsplit',
+    category: 'String Functions',
+    syntax: 'strsplit(x, split, fixed = FALSE)',
+    description: 'Splits the elements of a character vector by a given delimiter.',
+    arguments: [
+      { name: 'x', type: 'character', description: 'A character vector to split' },
+      { name: 'split', type: 'character', description: 'Delimiter to split on (regex or fixed)' },
+      {
+        name: 'fixed',
+        type: 'logical',
+        description: 'If TRUE, treat split as literal string',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'list', description: 'A list of character vectors' },
+    examples: [
+      { code: 'strsplit("a,b,c", ",")', output: '[[1]]\n[1] "a" "b" "c"' },
+      { code: 'strsplit("hello", "")', output: '[[1]]\n[1] "h" "e" "l" "l" "o"' },
+      {
+        code: 'strsplit(c("a.b", "c.d"), "\\\\.")',
+        output: '[[1]]\n[1] "a" "b"\n\n[[2]]\n[1] "c" "d"',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['paste', 'paste0', 'substr', 'gsub'],
+    sinceVersion: 'R 1.0',
+    notes: ['Returns a list because each element may produce different numbers of pieces'],
+  },
+  {
+    name: 'toupper',
+    category: 'String Functions',
+    syntax: 'toupper(x)',
+    description: 'Converts all characters in a string to uppercase.',
+    arguments: [{ name: 'x', type: 'character', description: 'A character vector' }],
+    returns: { type: 'character', description: 'The uppercased character vector' },
+    examples: [
+      { code: 'toupper("hello")', output: '[1] "HELLO"' },
+      { code: 'toupper(c("hello", "world"))', output: '[1] "HELLO" "WORLD"' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['tolower', 'chartr', 'casefold'],
+    sinceVersion: 'R 1.0',
+  },
+  {
+    name: 'tolower',
+    category: 'String Functions',
+    syntax: 'tolower(x)',
+    description: 'Converts all characters in a string to lowercase.',
+    arguments: [{ name: 'x', type: 'character', description: 'A character vector' }],
+    returns: { type: 'character', description: 'The lowercased character vector' },
+    examples: [
+      { code: 'tolower("HELLO")', output: '[1] "hello"' },
+      { code: 'tolower(c("Hello", "WORLD"))', output: '[1] "hello" "world"' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['toupper', 'chartr', 'casefold'],
+    sinceVersion: 'R 1.0',
+  },
+  {
+    name: 'trimws',
+    category: 'String Functions',
+    syntax: 'trimws(x, which = "both")',
+    description: 'Removes leading and/or trailing whitespace from strings.',
+    arguments: [
+      { name: 'x', type: 'character', description: 'A character vector' },
+      {
+        name: 'which',
+        type: 'character',
+        description: 'Which side to trim: "both", "left", or "right"',
+        optional: true,
+        defaultValue: '"both"',
+      },
+    ],
+    returns: { type: 'character', description: 'Trimmed character vector' },
+    examples: [
+      { code: 'trimws("  hello  ")', output: '[1] "hello"' },
+      { code: 'trimws("  hello  ", which = "left")', output: '[1] "hello  "' },
+      { code: 'trimws(c("  a ", " b  "))', output: '[1] "a" "b"' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['gsub', 'sub', 'nchar'],
+    sinceVersion: 'R 3.2',
+  },
+
+  // ============================================================
+  // Data Frame Operations
+  // ============================================================
+  {
+    name: 'data.frame',
+    category: 'Data Frame Operations',
+    syntax: 'data.frame(..., stringsAsFactors = FALSE)',
+    description:
+      'Creates a data frame from vectors, lists, or other data frames. The primary tabular data structure in R.',
+    arguments: [
+      {
+        name: '...',
+        type: 'any',
+        description: 'Columns specified as name = vector pairs',
+      },
+      {
+        name: 'stringsAsFactors',
+        type: 'logical',
+        description: 'Whether to convert strings to factors',
+        optional: true,
+        defaultValue: 'FALSE (R >= 4.0)',
+      },
+    ],
+    returns: { type: 'data.frame', description: 'A data frame object' },
+    examples: [
+      {
+        code: 'data.frame(name = c("Alice", "Bob"), age = c(25, 30))',
+        output: '   name age\n1 Alice  25\n2   Bob  30',
+      },
+      {
+        code: 'data.frame(x = 1:3, y = c("a", "b", "c"))',
+        output: '  x y\n1 1 a\n2 2 b\n3 3 c',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n * p)',
+    relatedMethods: ['tibble', 'as.data.frame', 'matrix', 'list'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'All columns must have the same length or be recyclable',
+      'stringsAsFactors defaulted to TRUE before R 4.0',
+    ],
+  },
+  {
+    name: 'rbind',
+    category: 'Data Frame Operations',
+    syntax: 'rbind(...)',
+    description:
+      'Combines data frames or matrices by rows (stacking them vertically). Columns must match.',
+    arguments: [
+      {
+        name: '...',
+        type: 'data.frame | matrix | vector',
+        description: 'Objects to combine by rows',
+      },
+    ],
+    returns: { type: 'data.frame | matrix', description: 'Combined object with rows appended' },
+    examples: [
+      {
+        code: 'rbind(c(1, 2), c(3, 4))',
+        output: '     [,1] [,2]\n[1,]    1    2\n[2,]    3    4',
+      },
+      {
+        code: 'df1 <- data.frame(x = 1:2)\ndf2 <- data.frame(x = 3:4)\nrbind(df1, df2)',
+        output: '  x\n1 1\n2 2\n3 3\n4 4',
+      },
+    ],
+    timeComplexity: 'O(n + m)',
+    spaceComplexity: 'O(n + m)',
+    relatedMethods: ['cbind', 'merge', 'bind_rows'],
+    sinceVersion: 'R 1.0',
+    notes: ['Column names must match for data frames'],
+  },
+  {
+    name: 'cbind',
+    category: 'Data Frame Operations',
+    syntax: 'cbind(...)',
+    description:
+      'Combines data frames, matrices, or vectors by columns (side by side). Rows must match.',
+    arguments: [
+      {
+        name: '...',
+        type: 'data.frame | matrix | vector',
+        description: 'Objects to combine by columns',
+      },
+    ],
+    returns: { type: 'data.frame | matrix', description: 'Combined object with columns appended' },
+    examples: [
+      {
+        code: 'cbind(c(1, 2), c(3, 4))',
+        output: '     [,1] [,2]\n[1,]    1    3\n[2,]    2    4',
+      },
+      {
+        code: 'cbind(data.frame(x = 1:2), data.frame(y = c("a", "b")))',
+        output: '  x y\n1 1 a\n2 2 b',
+      },
+    ],
+    timeComplexity: 'O(n * (p1 + p2))',
+    spaceComplexity: 'O(n * (p1 + p2))',
+    relatedMethods: ['rbind', 'merge', 'data.frame'],
+    sinceVersion: 'R 1.0',
+    notes: ['Row counts must be equal or recyclable'],
+  },
+  {
+    name: 'merge',
+    category: 'Data Frame Operations',
+    syntax: 'merge(x, y, by = NULL, all = FALSE, all.x = FALSE, all.y = FALSE)',
+    description: 'Merges two data frames by common columns (similar to SQL JOIN operations).',
+    arguments: [
+      { name: 'x', type: 'data.frame', description: 'First data frame' },
+      { name: 'y', type: 'data.frame', description: 'Second data frame' },
+      {
+        name: 'by',
+        type: 'character',
+        description: 'Column names to merge on',
+        optional: true,
+        defaultValue: 'NULL (common column names)',
+      },
+      {
+        name: 'all',
+        type: 'logical',
+        description: 'If TRUE, perform full outer join',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+      {
+        name: 'all.x',
+        type: 'logical',
+        description: 'If TRUE, include all rows from x (left join)',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+      {
+        name: 'all.y',
+        type: 'logical',
+        description: 'If TRUE, include all rows from y (right join)',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'data.frame', description: 'The merged data frame' },
+    examples: [
+      {
+        code: 'df1 <- data.frame(id = 1:3, x = c("a", "b", "c"))\ndf2 <- data.frame(id = 2:4, y = c(10, 20, 30))\nmerge(df1, df2, by = "id")',
+        output: '  id x  y\n1  2 b 10\n2  3 c 20',
+        explanation: 'Inner join by default',
+      },
+      {
+        code: 'merge(df1, df2, by = "id", all = TRUE)',
+        output: '  id    x  y\n1  1    a NA\n2  2    b 10\n3  3    c 20\n4  4 <NA> 30',
+        explanation: 'Full outer join',
+      },
+    ],
+    timeComplexity: 'O(n * m)',
+    spaceComplexity: 'O(n * m)',
+    relatedMethods: ['rbind', 'cbind', 'match'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'all = FALSE: inner join, all.x = TRUE: left join, all.y = TRUE: right join, all = TRUE: full outer join',
+    ],
+  },
+  {
+    name: 'subset',
+    category: 'Data Frame Operations',
+    syntax: 'subset(x, subset, select)',
+    description:
+      'Returns a subset of a data frame meeting conditions, optionally selecting specific columns.',
+    arguments: [
+      { name: 'x', type: 'data.frame', description: 'The data frame to subset' },
+      {
+        name: 'subset',
+        type: 'logical expression',
+        description: 'Row condition to evaluate',
+        optional: true,
+      },
+      {
+        name: 'select',
+        type: 'expression',
+        description: 'Columns to select',
+        optional: true,
+      },
+    ],
+    returns: { type: 'data.frame', description: 'The subset data frame' },
+    examples: [
+      {
+        code: 'df <- data.frame(x = 1:5, y = c("a", "b", "c", "d", "e"))\nsubset(df, x > 3)',
+        output: '  x y\n4 4 d\n5 5 e',
+      },
+      {
+        code: 'subset(df, x > 2, select = y)',
+        output: '  y\n3 c\n4 d\n5 e',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(k)',
+    relatedMethods: ['which', 'filter', '['],
+    sinceVersion: 'R 1.0',
+    notes: ['Not recommended for programming; use bracket indexing [ ] or dplyr::filter() instead'],
+  },
+  {
+    name: 'names',
+    category: 'Data Frame Operations',
+    syntax: 'names(x)',
+    description:
+      'Gets or sets the names (column names for data frames, element names for lists/vectors) of an object.',
+    arguments: [{ name: 'x', type: 'any', description: 'An R object' }],
+    returns: { type: 'character vector', description: 'The names of the object' },
+    examples: [
+      {
+        code: 'df <- data.frame(a = 1:3, b = 4:6)\nnames(df)',
+        output: '[1] "a" "b"',
+      },
+      {
+        code: 'x <- c(first = 1, second = 2)\nnames(x)',
+        output: '[1] "first" "second"',
+      },
+      {
+        code: 'x <- 1:3; names(x) <- c("a", "b", "c"); x',
+        output: 'a b c \n1 2 3',
+        explanation: 'Setting names on a vector',
+      },
+    ],
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(p)',
+    relatedMethods: ['colnames', 'rownames', 'nrow', 'ncol'],
+    sinceVersion: 'R 1.0',
+    notes: ['Can also be used as an assignment function: names(x) <- value'],
+  },
+  {
+    name: 'nrow',
+    category: 'Data Frame Operations',
+    syntax: 'nrow(x)',
+    description: 'Returns the number of rows of a data frame or matrix.',
+    arguments: [{ name: 'x', type: 'data.frame | matrix', description: 'A data frame or matrix' }],
+    returns: { type: 'integer', description: 'The number of rows' },
+    examples: [
+      {
+        code: 'df <- data.frame(x = 1:5, y = 6:10)\nnrow(df)',
+        output: '[1] 5',
+      },
+      { code: 'nrow(matrix(1:6, nrow = 2))', output: '[1] 2' },
+    ],
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    relatedMethods: ['ncol', 'dim', 'length', 'NROW'],
+    sinceVersion: 'R 1.0',
+    notes: ['Returns NULL for vectors; use NROW() which treats vectors as 1-column matrices'],
+  },
+  {
+    name: 'ncol',
+    category: 'Data Frame Operations',
+    syntax: 'ncol(x)',
+    description: 'Returns the number of columns of a data frame or matrix.',
+    arguments: [{ name: 'x', type: 'data.frame | matrix', description: 'A data frame or matrix' }],
+    returns: { type: 'integer', description: 'The number of columns' },
+    examples: [
+      {
+        code: 'df <- data.frame(a = 1:3, b = 4:6, c = 7:9)\nncol(df)',
+        output: '[1] 3',
+      },
+      { code: 'ncol(matrix(1:6, ncol = 3))', output: '[1] 3' },
+    ],
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    relatedMethods: ['nrow', 'dim', 'names', 'NCOL'],
+    sinceVersion: 'R 1.0',
+    notes: ['Returns NULL for vectors; use NCOL() which treats vectors as 1-column matrices'],
+  },
+
+  // ============================================================
+  // Apply Family
+  // ============================================================
+  {
+    name: 'sapply',
+    category: 'Apply Family',
+    syntax: 'sapply(X, FUN, ...)',
+    description:
+      'Applies a function to each element of a list or vector and simplifies the result to a vector or matrix.',
+    arguments: [
+      { name: 'X', type: 'list | vector', description: 'Object to iterate over' },
+      { name: 'FUN', type: 'function', description: 'Function to apply to each element' },
+      {
+        name: '...',
+        type: 'any',
+        description: 'Additional arguments passed to FUN',
+        optional: true,
+      },
+    ],
+    returns: {
+      type: 'vector | matrix | list',
+      description: 'Simplified result (vector if possible, otherwise matrix or list)',
+    },
+    examples: [
+      { code: 'sapply(1:5, function(x) x^2)', output: '[1]  1  4  9 16 25' },
+      { code: 'sapply(c("hello", "world"), nchar)', output: 'hello world \n    5     5' },
+      {
+        code: 'sapply(1:3, function(x) c(x, x^2))',
+        output: '     [,1] [,2] [,3]\n[1,]    1    2    3\n[2,]    1    4    9',
+        explanation: 'Returns matrix when FUN returns multiple values',
+      },
+    ],
+    timeComplexity: 'O(n * f)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['lapply', 'vapply', 'mapply', 'apply'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'vapply() is safer for programming as it enforces return type',
+      'sapply() may return unexpected types if inputs change',
+    ],
+  },
+  {
+    name: 'lapply',
+    category: 'Apply Family',
+    syntax: 'lapply(X, FUN, ...)',
+    description:
+      'Applies a function to each element of a list or vector and always returns a list.',
+    arguments: [
+      { name: 'X', type: 'list | vector', description: 'Object to iterate over' },
+      { name: 'FUN', type: 'function', description: 'Function to apply to each element' },
+      {
+        name: '...',
+        type: 'any',
+        description: 'Additional arguments passed to FUN',
+        optional: true,
+      },
+    ],
+    returns: { type: 'list', description: 'A list of results, one per element of X' },
+    examples: [
+      {
+        code: 'lapply(1:3, function(x) x^2)',
+        output: '[[1]]\n[1] 1\n\n[[2]]\n[1] 4\n\n[[3]]\n[1] 9',
+      },
+      {
+        code: 'lapply(c("hello", "world"), toupper)',
+        output: '[[1]]\n[1] "HELLO"\n\n[[2]]\n[1] "WORLD"',
+      },
+    ],
+    timeComplexity: 'O(n * f)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['sapply', 'vapply', 'mapply', 'Map'],
+    sinceVersion: 'R 1.0',
+    notes: ['Always returns a list; use sapply() to simplify the result'],
+  },
+  {
+    name: 'tapply',
+    category: 'Apply Family',
+    syntax: 'tapply(X, INDEX, FUN)',
+    description:
+      'Applies a function to groups of values, split by one or more factors. Useful for grouped summaries.',
+    arguments: [
+      { name: 'X', type: 'vector', description: 'Values to group and summarize' },
+      { name: 'INDEX', type: 'factor | list', description: 'Grouping factor(s)' },
+      { name: 'FUN', type: 'function', description: 'Function to apply per group' },
+    ],
+    returns: { type: 'array', description: 'An array of results indexed by factor levels' },
+    examples: [
+      {
+        code: 'scores <- c(90, 85, 92, 78)\ngroup <- c("A", "B", "A", "B")\ntapply(scores, group, mean)',
+        output: '   A    B \n91.0 81.5',
+      },
+      {
+        code: 'tapply(1:6, c("a", "a", "b", "b", "c", "c"), sum)',
+        output: ' a  b  c \n 3  7 11',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(g)',
+    relatedMethods: ['sapply', 'lapply', 'aggregate', 'by'],
+    sinceVersion: 'R 1.0',
+    notes: ['For data frames, consider using aggregate() or dplyr::group_by() + summarise()'],
+  },
+  {
+    name: 'apply',
+    category: 'Apply Family',
+    syntax: 'apply(X, MARGIN, FUN, ...)',
+    description: 'Applies a function over the rows or columns of a matrix or data frame.',
+    arguments: [
+      { name: 'X', type: 'matrix | data.frame', description: 'The matrix or data frame' },
+      {
+        name: 'MARGIN',
+        type: 'integer',
+        description: '1 for rows, 2 for columns, c(1, 2) for both',
+      },
+      { name: 'FUN', type: 'function', description: 'Function to apply' },
+      {
+        name: '...',
+        type: 'any',
+        description: 'Additional arguments passed to FUN',
+        optional: true,
+      },
+    ],
+    returns: { type: 'vector | matrix | list', description: 'Result of applying FUN' },
+    examples: [
+      {
+        code: 'm <- matrix(1:6, nrow = 2)\napply(m, 1, sum)',
+        output: '[1]  9 12',
+        explanation: 'Sum across each row',
+      },
+      {
+        code: 'apply(m, 2, sum)',
+        output: '[1]  3  7 11',
+        explanation: 'Sum across each column',
+      },
+      {
+        code: 'apply(m, 2, function(x) x * 2)',
+        output: '     [,1] [,2] [,3]\n[1,]    2    6   10\n[2,]    4    8   12',
+      },
+    ],
+    timeComplexity: 'O(n * m * f)',
+    spaceComplexity: 'O(n * m)',
+    relatedMethods: ['sapply', 'lapply', 'rowSums', 'colSums', 'rowMeans', 'colMeans'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'MARGIN = 1 means rows, MARGIN = 2 means columns',
+      'For simple operations, rowSums/colSums/rowMeans/colMeans are faster',
+    ],
+  },
+
+  // ============================================================
+  // Math Functions
+  // ============================================================
+  {
+    name: 'sum',
+    category: 'Math Functions',
+    syntax: 'sum(..., na.rm = FALSE)',
+    description: 'Calculates the sum of all values in the arguments.',
+    arguments: [
+      { name: '...', type: 'numeric', description: 'Numeric vectors to sum' },
+      {
+        name: 'na.rm',
+        type: 'logical',
+        description: 'If TRUE, remove NA values before calculation',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'numeric', description: 'The sum of all values' },
+    examples: [
+      { code: 'sum(1:10)', output: '[1] 55' },
+      { code: 'sum(c(1, 2, NA, 4), na.rm = TRUE)', output: '[1] 7' },
+      { code: 'sum(c(TRUE, FALSE, TRUE))', output: '[1] 2', explanation: 'TRUE counts as 1' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    relatedMethods: ['mean', 'cumsum', 'prod', 'colSums', 'rowSums'],
+    sinceVersion: 'R 1.0',
+    notes: ['sum(c(1, 2, NA)) returns NA; use na.rm = TRUE to handle missing values'],
+  },
+  {
+    name: 'mean',
+    category: 'Math Functions',
+    syntax: 'mean(x, na.rm = FALSE)',
+    description: 'Calculates the arithmetic mean of a numeric vector.',
+    arguments: [
+      { name: 'x', type: 'numeric', description: 'A numeric vector' },
+      {
+        name: 'na.rm',
+        type: 'logical',
+        description: 'If TRUE, remove NA values before calculation',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'numeric', description: 'The arithmetic mean' },
+    examples: [
+      { code: 'mean(c(1, 2, 3, 4, 5))', output: '[1] 3' },
+      { code: 'mean(c(10, 20, NA, 40), na.rm = TRUE)', output: '[1] 23.33333' },
+      { code: 'mean(1:100)', output: '[1] 50.5' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    relatedMethods: ['median', 'sum', 'sd', 'var', 'weighted.mean'],
+    sinceVersion: 'R 1.0',
+    notes: ['For trimmed mean, use the trim parameter: mean(x, trim = 0.1)'],
+  },
+  {
+    name: 'max',
+    category: 'Math Functions',
+    syntax: 'max(..., na.rm = FALSE)',
+    description: 'Returns the maximum value from the given arguments.',
+    arguments: [
+      { name: '...', type: 'numeric', description: 'Numeric vectors' },
+      {
+        name: 'na.rm',
+        type: 'logical',
+        description: 'If TRUE, remove NA values',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'numeric', description: 'The maximum value' },
+    examples: [
+      { code: 'max(c(3, 1, 4, 1, 5, 9))', output: '[1] 9' },
+      { code: 'max(1:10)', output: '[1] 10' },
+      { code: 'max(c(5, NA, 3), na.rm = TRUE)', output: '[1] 5' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    relatedMethods: ['min', 'range', 'which.max', 'pmax'],
+    sinceVersion: 'R 1.0',
+    notes: ['pmax() returns the parallel (element-wise) maxima of multiple vectors'],
+  },
+  {
+    name: 'min',
+    category: 'Math Functions',
+    syntax: 'min(..., na.rm = FALSE)',
+    description: 'Returns the minimum value from the given arguments.',
+    arguments: [
+      { name: '...', type: 'numeric', description: 'Numeric vectors' },
+      {
+        name: 'na.rm',
+        type: 'logical',
+        description: 'If TRUE, remove NA values',
+        optional: true,
+        defaultValue: 'FALSE',
+      },
+    ],
+    returns: { type: 'numeric', description: 'The minimum value' },
+    examples: [
+      { code: 'min(c(3, 1, 4, 1, 5, 9))', output: '[1] 1' },
+      { code: 'min(1:10)', output: '[1] 1' },
+      { code: 'min(c(5, NA, 3), na.rm = TRUE)', output: '[1] 3' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    relatedMethods: ['max', 'range', 'which.min', 'pmin'],
+    sinceVersion: 'R 1.0',
+    notes: ['pmin() returns the parallel (element-wise) minima of multiple vectors'],
+  },
+  {
+    name: 'abs',
+    category: 'Math Functions',
+    syntax: 'abs(x)',
+    description: 'Returns the absolute value of a numeric value or vector.',
+    arguments: [{ name: 'x', type: 'numeric', description: 'A numeric vector' }],
+    returns: { type: 'numeric', description: 'The absolute values' },
+    examples: [
+      { code: 'abs(-5)', output: '[1] 5' },
+      { code: 'abs(c(-3, -1, 0, 2, 4))', output: '[1] 3 1 0 2 4' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['sqrt', 'sign', 'ceiling', 'floor'],
+    sinceVersion: 'R 1.0',
+  },
+  {
+    name: 'sqrt',
+    category: 'Math Functions',
+    syntax: 'sqrt(x)',
+    description: 'Computes the square root of a numeric value or vector.',
+    arguments: [{ name: 'x', type: 'numeric', description: 'A non-negative numeric vector' }],
+    returns: { type: 'numeric', description: 'The square roots' },
+    examples: [
+      { code: 'sqrt(16)', output: '[1] 4' },
+      { code: 'sqrt(c(1, 4, 9, 16))', output: '[1] 1 2 3 4' },
+      {
+        code: 'sqrt(-1)',
+        output: '[1] NaN',
+        explanation: 'Returns NaN with a warning for negative inputs',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['abs', 'log', 'exp', '^'],
+    sinceVersion: 'R 1.0',
+    notes: ['Use x^(1/n) for nth root'],
+  },
+  {
+    name: 'round',
+    category: 'Math Functions',
+    syntax: 'round(x, digits = 0)',
+    description: 'Rounds values to the specified number of decimal places.',
+    arguments: [
+      { name: 'x', type: 'numeric', description: 'A numeric vector' },
+      {
+        name: 'digits',
+        type: 'integer',
+        description: 'Number of decimal places',
+        optional: true,
+        defaultValue: '0',
+      },
+    ],
+    returns: { type: 'numeric', description: 'The rounded values' },
+    examples: [
+      { code: 'round(3.14159, 2)', output: '[1] 3.14' },
+      {
+        code: 'round(2.5)',
+        output: '[1] 2',
+        explanation: "R uses banker's rounding (round half to even)",
+      },
+      { code: 'round(c(1.5, 2.5, 3.5))', output: '[1] 2 2 4' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['ceiling', 'floor', 'trunc', 'signif'],
+    sinceVersion: 'R 1.0',
+    notes: ["Uses IEC 60559 standard: round half to even (banker's rounding)"],
+  },
+  {
+    name: 'ceiling',
+    category: 'Math Functions',
+    syntax: 'ceiling(x)',
+    description: 'Rounds values up to the nearest integer (smallest integer not less than x).',
+    arguments: [{ name: 'x', type: 'numeric', description: 'A numeric vector' }],
+    returns: { type: 'numeric', description: 'The ceiling values' },
+    examples: [
+      { code: 'ceiling(2.3)', output: '[1] 3' },
+      { code: 'ceiling(-2.3)', output: '[1] -2' },
+      { code: 'ceiling(c(1.1, 2.5, 3.9))', output: '[1] 2 3 4' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['floor', 'round', 'trunc'],
+    sinceVersion: 'R 1.0',
+  },
+  {
+    name: 'floor',
+    category: 'Math Functions',
+    syntax: 'floor(x)',
+    description: 'Rounds values down to the nearest integer (largest integer not greater than x).',
+    arguments: [{ name: 'x', type: 'numeric', description: 'A numeric vector' }],
+    returns: { type: 'numeric', description: 'The floor values' },
+    examples: [
+      { code: 'floor(2.9)', output: '[1] 2' },
+      { code: 'floor(-2.1)', output: '[1] -3' },
+      { code: 'floor(c(1.1, 2.5, 3.9))', output: '[1] 1 2 3' },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['ceiling', 'round', 'trunc'],
+    sinceVersion: 'R 1.0',
+  },
+
+  // ============================================================
+  // List Operations
+  // ============================================================
+  {
+    name: 'list',
+    category: 'List Operations',
+    syntax: 'list(...)',
+    description:
+      'Creates a list, which can hold elements of different types including other lists. The most flexible data structure in R.',
+    arguments: [
+      {
+        name: '...',
+        type: 'any',
+        description: 'Elements to include, optionally named',
+      },
+    ],
+    returns: { type: 'list', description: 'A list containing the elements' },
+    examples: [
+      {
+        code: 'list(1, "hello", TRUE)',
+        output: '[[1]]\n[1] 1\n\n[[2]]\n[1] "hello"\n\n[[3]]\n[1] TRUE',
+      },
+      {
+        code: 'list(name = "Alice", age = 30, scores = c(90, 85))',
+        output: '$name\n[1] "Alice"\n\n$age\n[1] 30\n\n$scores\n[1] 90 85',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['c', 'unlist', 'vector', 'as.list'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'Unlike c(), list() preserves element types without coercion',
+      'Access elements with [[ ]] or $ for named elements',
+    ],
+  },
+  {
+    name: 'unlist',
+    category: 'List Operations',
+    syntax: 'unlist(x, recursive = TRUE, use.names = TRUE)',
+    description: 'Flattens a list into a vector by combining all elements.',
+    arguments: [
+      { name: 'x', type: 'list', description: 'A list to flatten' },
+      {
+        name: 'recursive',
+        type: 'logical',
+        description: 'If TRUE, flatten recursively',
+        optional: true,
+        defaultValue: 'TRUE',
+      },
+      {
+        name: 'use.names',
+        type: 'logical',
+        description: 'If TRUE, preserve names',
+        optional: true,
+        defaultValue: 'TRUE',
+      },
+    ],
+    returns: { type: 'vector', description: 'A flattened vector' },
+    examples: [
+      { code: 'unlist(list(1:3, 4:5))', output: '[1] 1 2 3 4 5' },
+      { code: 'unlist(list(a = 1, b = c(2, 3)))', output: ' a b1 b2 \n  1  2  3' },
+      {
+        code: 'unlist(list("hello", c("world", "!")))',
+        output: '[1] "hello" "world" "!"',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['list', 'c', 'rapply', 'as.vector'],
+    sinceVersion: 'R 1.0',
+    notes: ['Elements are coerced to a common type just like c()'],
+  },
+
+  // ============================================================
+  // Logical/Utility Functions
+  // ============================================================
+  {
+    name: 'is.na',
+    category: 'Logical/Utility',
+    syntax: 'is.na(x)',
+    description:
+      'Tests which elements of a vector are NA (missing values). Returns a logical vector.',
+    arguments: [{ name: 'x', type: 'any', description: 'An R object to test for NA' }],
+    returns: { type: 'logical vector', description: 'TRUE for each NA element, FALSE otherwise' },
+    examples: [
+      { code: 'is.na(c(1, NA, 3))', output: '[1] FALSE  TRUE FALSE' },
+      { code: 'is.na(NA)', output: '[1] TRUE' },
+      {
+        code: 'x <- c(1, NA, 3, NA, 5)\nsum(is.na(x))',
+        output: '[1] 2',
+        explanation: 'Count of NA values',
+      },
+      {
+        code: 'x <- c(1, NA, 3)\nx[!is.na(x)]',
+        output: '[1] 1 3',
+        explanation: 'Remove NA values',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['is.null', 'is.nan', 'complete.cases', 'na.omit'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'NA == NA returns NA, not TRUE; always use is.na() to test for missing values',
+      'Can also assign: is.na(x) <- 2 sets x[2] to NA',
+    ],
+  },
+  {
+    name: 'ifelse',
+    category: 'Logical/Utility',
+    syntax: 'ifelse(test, yes, no)',
+    description:
+      'Vectorized conditional: returns values from yes or no depending on the test condition for each element.',
+    arguments: [
+      { name: 'test', type: 'logical', description: 'A logical vector of conditions' },
+      { name: 'yes', type: 'any', description: 'Values to use where test is TRUE' },
+      { name: 'no', type: 'any', description: 'Values to use where test is FALSE' },
+    ],
+    returns: { type: 'vector', description: 'A vector with values chosen from yes or no' },
+    examples: [
+      { code: 'ifelse(c(TRUE, FALSE, TRUE), "yes", "no")', output: '[1] "yes" "no"  "yes"' },
+      {
+        code: 'x <- c(-2, 0, 3, -1)\nifelse(x >= 0, x, 0)',
+        output: '[1] 0 0 3 0',
+        explanation: 'Clamp negative values to zero',
+      },
+      {
+        code: 'ifelse(1:6 %% 2 == 0, "even", "odd")',
+        output: '[1] "odd"  "even" "odd"  "even" "odd"  "even"',
+      },
+    ],
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['if/else', 'switch', 'dplyr::case_when'],
+    sinceVersion: 'R 1.0',
+    notes: [
+      'This is vectorized; for scalar conditions, use regular if/else',
+      'Both yes and no are always fully evaluated (no short-circuit)',
+    ],
+  },
+  {
+    name: 'match',
+    category: 'Logical/Utility',
+    syntax: 'match(x, table, nomatch = NA_integer_)',
+    description:
+      'Returns the positions of first matches of elements of x in table. The underlying function for the %in% operator.',
+    arguments: [
+      { name: 'x', type: 'vector', description: 'Values to look up' },
+      { name: 'table', type: 'vector', description: 'Values to match against' },
+      {
+        name: 'nomatch',
+        type: 'integer',
+        description: 'Value to return for no match',
+        optional: true,
+        defaultValue: 'NA_integer_',
+      },
+    ],
+    returns: {
+      type: 'integer vector',
+      description: 'Positions in table of first matches, or nomatch value',
+    },
+    examples: [
+      { code: 'match(c("b", "d", "a"), c("a", "b", "c"))', output: '[1]  2 NA  1' },
+      {
+        code: 'match(c(2, 4, 6), c(1, 2, 3, 4, 5))',
+        output: '[1]  2  4 NA',
+      },
+      {
+        code: 'match(c(2, 4, 6), c(1, 2, 3, 4, 5), nomatch = 0)',
+        output: '[1] 2 4 0',
+        explanation: 'Return 0 instead of NA for no match',
+      },
+    ],
+    timeComplexity: 'O(n * m)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['%in%', 'which', 'pmatch', 'charmatch'],
+    sinceVersion: 'R 1.0',
+    notes: ['x %in% table is equivalent to !is.na(match(x, table))'],
+  },
+  {
+    name: '%in%',
+    category: 'Logical/Utility',
+    syntax: 'x %in% table',
+    description:
+      'Tests whether elements of x are present in table. Returns a logical vector. A binary operator shortcut for match().',
+    arguments: [
+      { name: 'x', type: 'vector', description: 'Values to check' },
+      { name: 'table', type: 'vector', description: 'Values to check against' },
+    ],
+    returns: {
+      type: 'logical vector',
+      description: 'TRUE for each element of x found in table',
+    },
+    examples: [
+      { code: 'c(1, 2, 3, 4) %in% c(2, 4, 6)', output: '[1] FALSE  TRUE FALSE  TRUE' },
+      {
+        code: 'c("a", "b", "c") %in% c("b", "c", "d")',
+        output: '[1] FALSE  TRUE  TRUE',
+      },
+      {
+        code: 'x <- 1:10\nx[x %in% c(3, 5, 7)]',
+        output: '[1] 3 5 7',
+        explanation: 'Subset using membership test',
+      },
+    ],
+    timeComplexity: 'O(n * m)',
+    spaceComplexity: 'O(n)',
+    relatedMethods: ['match', 'which', 'intersect', 'setdiff'],
+    sinceVersion: 'R 1.0',
+    notes: ['Unlike ==, %in% never returns NA; NA %in% NA returns TRUE'],
+  },
+];
+
+export default rMethods;

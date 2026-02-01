@@ -36,7 +36,7 @@ An interactive learning platform for mastering programming languages through han
 - **Drill** — Type solutions in a full Monaco Editor with real-time execution (JS/TS) or pattern validation.
 - **Quiz** — Timed multiple-choice: methods, time/space complexity, and **algorithm pattern recognition** (170 LeetCode-style problems).
 - **Method / Query Training** — Browse and solve problems by language; database languages use query training.
-- **Building Blocks** — Structured algorithm exercises (traversal, recursion, DP, data structures) with **Learn** and **Practice** modes and **interactive visualizations**.
+- **Building Blocks** — Structured algorithm exercises (traversal, recursion, DP, data structures) across **9 languages** (JavaScript, TypeScript, Python, Java, C++, C#, Go, Ruby, C) with **Learn** and **Practice** modes and **interactive visualizations**.
 - **AI Exercise Tutor** — In-browser AI (WebLLM) for explanations, hints, and visualization walkthroughs; no API keys, privacy-first.
 - **AI Mock Interview** — Algorithm and system design practice with an AI interviewer (offline WebLLM or cloud).
 - **Regex Trainer** — Regex challenges with live matching and test validation.
@@ -63,7 +63,7 @@ Browse coding challenges by language. Filter by category, difficulty, and comple
 
 ### Building Blocks
 
-Structured algorithm exercises: traversal (DFS, BFS), recursion, sorting, searching, DP, data structures. Each has:
+Structured algorithm exercises across 9 languages: traversal (DFS, BFS), recursion, sorting, searching, DP, data structures, memoization, and combinatorics. 35 exercises per language (Java, C++, C#, Go, Ruby, C) plus larger sets for JavaScript, TypeScript, and Python. Each has:
 
 - **Learn** — Explanations, steps, and an AI tutor.
 - **Practice** — Code editor and test validation.
@@ -91,7 +91,7 @@ Regex problems by category (character classes, quantifiers, anchors, groups, loo
 
 ### Reference
 
-Method reference with documentation, examples, and complexity notes (by language).
+Method reference with documentation, examples, and complexity notes for all 21 programming languages.
 
 ### Cheatsheet
 

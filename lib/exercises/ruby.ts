@@ -500,7 +500,7 @@ end`,
     starterCode: `def permutations(arr)
   result = []
 
-  def backtrack(arr, current, used, result)
+  backtrack = lambda do |current, used|
     # Base case: permutation is complete
     # TODO: implement
 
@@ -508,13 +508,13 @@ end`,
     # TODO: implement
   end
 
-  backtrack(arr, [], Array.new(arr.length, false), result)
+  backtrack.call([], Array.new(arr.length, false))
   result
 end`,
     solutionCode: `def permutations(arr)
   result = []
 
-  def backtrack(arr, current, used, result)
+  backtrack = lambda do |current, used|
     if current.length == arr.length
       result << current.dup
       return
@@ -525,13 +525,13 @@ end`,
 
       used[i] = true
       current << elem
-      backtrack(arr, current, used, result)
+      backtrack.call(current, used)
       current.pop
       used[i] = false
     end
   end
 
-  backtrack(arr, [], Array.new(arr.length, false), result)
+  backtrack.call([], Array.new(arr.length, false))
   result
 end`,
     testCases: [
@@ -561,8 +561,9 @@ end`,
       'Base case: when current.length == arr.length, save a copy of current',
       'Use a used array to track which elements are already in the permutation',
       'After recursing, undo the choice: pop from current and mark unused',
+      'Use lambda with backtrack.call() instead of nested def for proper closure',
     ],
-    concepts: ['backtracking', 'permutations', 'recursion', 'dup'],
+    concepts: ['backtracking', 'permutations', 'recursion', 'lambda', 'dup'],
   },
 
   // ========== SEARCHING ==========
