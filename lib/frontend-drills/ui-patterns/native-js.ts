@@ -31,16 +31,72 @@ export const nativeJsUIPatterns: UIPattern[] = [
   <button type="submit">Sign Up</button>
   <div id="success" class="success" style="display:none">Account created successfully!</div>
 </form>`,
-      css: `.form-group { margin-bottom: 16px; }
-label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; transition: border-color 0.2s; }
-input:focus { border-color: #3b82f6; }
-input.invalid { border-color: #ef4444; }
-input.valid { border-color: #22c55e; }
-.error { color: #ef4444; font-size: 12px; margin-top: 4px; display: block; min-height: 18px; }
-.success { color: #22c55e; text-align: center; padding: 12px; border-radius: 8px; background: rgba(34,197,94,0.1); margin-top: 16px; }
-button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-button:hover { background: #2563eb; }`,
+      css: `.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: #3b82f6;
+}
+
+input.invalid {
+  border-color: #ef4444;
+}
+
+input.valid {
+  border-color: #22c55e;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+  min-height: 18px;
+}
+
+.success {
+  color: #22c55e;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(34,197,94,0.1);
+  margin-top: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #2563eb;
+}`,
       js: `const form = document.getElementById('signup-form');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
@@ -87,6 +143,76 @@ form.addEventListener('submit', (e) => {
     description:
       'Create an autocomplete search input with debounced fetching, keyboard navigation, and accessibility features using vanilla JavaScript and the Fetch API.',
     concepts: ['Fetch API', 'Debouncing', 'ARIA', 'Keyboard navigation'],
+    demoCode: {
+      html: `<div class="autocomplete-wrapper">
+  <label for="search">Search Fruits</label>
+  <div class="input-wrapper">
+    <input type="text" id="search" placeholder="Type to search..." autocomplete="off" role="combobox" aria-expanded="false" aria-controls="suggestions" />
+    <ul id="suggestions" class="suggestions" role="listbox"></ul>
+  </div>
+  <p class="hint">Try: apple, banana, cherry, grape, mango, orange, peach, strawberry</p>
+</div>`,
+      css: `.autocomplete-wrapper { max-width: 360px; }
+label { display: block; margin-bottom: 6px; font-size: 14px; color: #94a3b8; }
+.input-wrapper { position: relative; }
+input {
+  width: 100%; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none;
+  font-size: 14px; transition: border-color 0.2s;
+}
+input:focus { border-color: #3b82f6; }
+.suggestions {
+  position: absolute; top: 100%; left: 0; right: 0; margin: 4px 0 0; padding: 4px;
+  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+  list-style: none; display: none; max-height: 180px; overflow-y: auto; z-index: 10;
+}
+.suggestions.open { display: block; }
+.suggestions li {
+  padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; color: #e2e8f0;
+}
+.suggestions li.active, .suggestions li:hover { background: #334155; }
+.suggestions li mark { background: #3b82f6; color: white; border-radius: 2px; padding: 0 2px; }
+.hint { font-size: 12px; color: #64748b; margin-top: 8px; }`,
+      js: `const fruits = ['Apple','Apricot','Banana','Blueberry','Cherry','Grape','Kiwi','Lemon','Mango','Orange','Peach','Pear','Pineapple','Strawberry','Watermelon'];
+const input = document.getElementById('search');
+const list = document.getElementById('suggestions');
+let activeIdx = -1, debounceTimer;
+
+function showSuggestions(query) {
+  list.innerHTML = '';
+  activeIdx = -1;
+  if (!query) { list.classList.remove('open'); input.setAttribute('aria-expanded','false'); return; }
+  const matches = fruits.filter(f => f.toLowerCase().includes(query.toLowerCase()));
+  if (!matches.length) { list.classList.remove('open'); input.setAttribute('aria-expanded','false'); return; }
+  matches.forEach((fruit, i) => {
+    const li = document.createElement('li');
+    li.setAttribute('role','option');
+    li.id = 'opt-'+i;
+    const regex = new RegExp('('+query.replace(/[.*+?^\${}()|[\\]\\\\]/g,'\\\\$&')+')','gi');
+    li.innerHTML = fruit.replace(regex, '<mark>$1</mark>');
+    li.addEventListener('click', () => { input.value = fruit; list.classList.remove('open'); });
+    list.appendChild(li);
+  });
+  list.classList.add('open');
+  input.setAttribute('aria-expanded','true');
+}
+
+input.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => showSuggestions(input.value), 200);
+});
+
+input.addEventListener('keydown', (e) => {
+  const items = list.querySelectorAll('li');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); }
+  else if (e.key === 'Enter' && activeIdx >= 0) { e.preventDefault(); input.value = items[activeIdx].textContent; list.classList.remove('open'); return; }
+  else if (e.key === 'Escape') { list.classList.remove('open'); return; }
+  items.forEach(li => li.classList.remove('active'));
+  if (activeIdx >= 0) { items[activeIdx].classList.add('active'); items[activeIdx].scrollIntoView({block:'nearest'}); }
+});`,
+    },
   },
   {
     id: 'js-file-upload',
@@ -140,13 +266,57 @@ form.addEventListener('submit', (e) => {
     <span id="val-max">$80</span>
   </div>
 </div>`,
-      css: `.slider-container { padding: 20px 10px; }
-label { display: block; margin-bottom: 16px; font-size: 14px; color: #94a3b8; }
-.slider-track { position: relative; height: 6px; background: #334155; border-radius: 3px; margin: 20px 0; }
-.slider-fill { position: absolute; height: 100%; background: #3b82f6; border-radius: 3px; }
-.slider-thumb { position: absolute; top: 50%; width: 22px; height: 22px; background: #3b82f6; border: 2px solid #1e293b; border-radius: 50%; transform: translate(-50%, -50%); cursor: grab; transition: box-shadow 0.2s; z-index: 2; }
-.slider-thumb:hover, .slider-thumb.active { box-shadow: 0 0 0 6px rgba(59,130,246,0.25); }
-.slider-values { display: flex; justify-content: space-between; font-size: 18px; font-weight: 600; color: #e2e8f0; }`,
+      css: `.slider-container {
+  padding: 20px 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.slider-track {
+  position: relative;
+  height: 6px;
+  background: #334155;
+  border-radius: 3px;
+  margin: 20px 0;
+}
+
+.slider-fill {
+  position: absolute;
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 3px;
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  background: #3b82f6;
+  border: 2px solid #1e293b;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  transition: box-shadow 0.2s;
+  z-index: 2;
+}
+
+.slider-thumb:hover, .slider-thumb.active {
+  box-shadow: 0 0 0 6px rgba(59,130,246,0.25);
+}
+
+.slider-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 600;
+  color: #e2e8f0;
+}`,
       js: `const slider = document.getElementById('slider');
 const thumbMin = document.getElementById('thumb-min');
 const thumbMax = document.getElementById('thumb-max');
@@ -246,21 +416,117 @@ thumbMax.addEventListener('pointerdown', () => startDrag(thumbMax, false));`,
   </div>
 </div>
 <div id="status" class="status"></div>`,
-      css: `.open-btn { padding: 12px 24px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; }
-.open-btn:hover { background: #2563eb; }
-.backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 50; }
-.backdrop.open { display: flex; animation: fadeIn 0.2s; }
-.modal { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; animation: slideUp 0.3s; }
-.modal h2 { margin-bottom: 8px; font-size: 20px; }
-.modal p { color: #94a3b8; margin-bottom: 20px; font-size: 14px; }
-.modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
-.btn-secondary { padding: 8px 16px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: #94a3b8; cursor: pointer; }
-.btn-primary { padding: 8px 16px; border-radius: 8px; border: none; background: #ef4444; color: white; cursor: pointer; font-weight: 600; }
-.btn-primary:hover { background: #dc2626; }
-.btn-secondary:hover { background: #334155; }
-.status { margin-top: 16px; padding: 12px; border-radius: 8px; text-align: center; font-size: 14px; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`,
+      css: `.open-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.open-btn:hover {
+  background: #2563eb;
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.backdrop.open {
+  display: flex;
+  animation: fadeIn 0.2s;
+}
+
+.modal {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  animation: slideUp 0.3s;
+}
+
+.modal h2 {
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+.modal p {
+  color: #94a3b8;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-secondary {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.btn-primary {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: #dc2626;
+}
+
+.btn-secondary:hover {
+  background: #334155;
+}
+
+.status {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}`,
       js: `const backdrop = document.getElementById('backdrop');
 const openBtn = document.getElementById('open-btn');
 const cancelBtn = document.getElementById('cancel-btn');

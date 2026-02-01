@@ -29,15 +29,69 @@ export const angularUIPatterns: UIPattern[] = [
   </form>
   <p class="note">Angular patterns use reactive forms. This demo simulates the behavior with vanilla JS.</p>
 </div>`,
-      css: `.form-group { margin-bottom: 16px; }
-label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; }
-input:focus { border-color: #ef4444; }
-.error { color: #ef4444; font-size: 12px; margin-top: 4px; min-height: 18px; }
-.success { color: #22c55e; text-align: center; padding: 12px; border-radius: 8px; background: rgba(34,197,94,0.1); margin-top: 16px; }
-button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #ef4444; color: white; font-weight: 600; cursor: pointer; }
-button:hover { background: #dc2626; }
-.note { margin-top: 20px; font-size: 11px; color: #64748b; text-align: center; font-style: italic; }`,
+      css: `.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+
+input:focus {
+  border-color: #ef4444;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  min-height: 18px;
+}
+
+.success {
+  color: #22c55e;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(34,197,94,0.1);
+  margin-top: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #dc2626;
+}
+
+.note {
+  margin-top: 20px;
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+  font-style: italic;
+}`,
       js: `// Simulating Angular Reactive Forms behavior
 const form = document.getElementById('ng-form');
 const nameInput = document.getElementById('name');

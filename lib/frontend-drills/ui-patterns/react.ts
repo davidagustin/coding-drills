@@ -13,15 +13,65 @@ export const reactUIPatterns: UIPattern[] = [
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/forms',
     demoCode: {
       html: `<div id="root"></div>`,
-      css: `.form-group { margin-bottom: 16px; }
-label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; }
-input:focus { border-color: #3b82f6; }
-.error { color: #ef4444; font-size: 12px; margin-top: 4px; }
-.success { color: #22c55e; text-align: center; padding: 12px; border-radius: 8px; background: rgba(34,197,94,0.1); margin-top: 16px; }
-button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; }
-button:hover { background: #2563eb; }
-button:disabled { opacity: 0.5; cursor: not-allowed; }`,
+      css: `.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+
+input:focus {
+  border-color: #3b82f6;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.success {
+  color: #22c55e;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(34,197,94,0.1);
+  margin-top: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}`,
       js: `const { useState } = React;
 
 function SignupForm() {
@@ -117,15 +167,60 @@ ReactDOM.createRoot(document.getElementById('root')).render(<SignupForm />);`,
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/password-strength',
     demoCode: {
       html: `<div id="root"></div>`,
-      css: `label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; margin-bottom: 12px; }
-input:focus { border-color: #3b82f6; }
-.meter { height: 6px; border-radius: 3px; background: #1e293b; overflow: hidden; margin-bottom: 8px; }
-.meter-fill { height: 100%; transition: all 0.3s; border-radius: 3px; }
-.rules { font-size: 12px; }
-.rule { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-.rule.pass { color: #22c55e; }
-.rule.fail { color: #64748b; }`,
+      css: `label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+input:focus {
+  border-color: #3b82f6;
+}
+
+.meter {
+  height: 6px;
+  border-radius: 3px;
+  background: #1e293b;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.meter-fill {
+  height: 100%;
+  transition: all 0.3s;
+  border-radius: 3px;
+}
+
+.rules {
+  font-size: 12px;
+}
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.rule.pass {
+  color: #22c55e;
+}
+
+.rule.fail {
+  color: #64748b;
+}`,
       js: `const { useState, useMemo } = React;
 
 function PasswordStrength() {

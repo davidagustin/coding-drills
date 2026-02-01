@@ -145,7 +145,7 @@ export function LivePreview({
         />
       ) : (
         <div className="overflow-auto" style={{ height }}>
-          <pre className="p-4 text-sm text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">
+          <pre className="p-4 text-sm text-slate-300 font-mono leading-relaxed whitespace-pre overflow-x-auto">
             <code>{codeContent[activeTab]}</code>
           </pre>
         </div>
