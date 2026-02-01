@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { LivePreview } from '@/components/LivePreview';
 import type { Exercise, ExerciseCategory, ExerciseDifficulty } from '@/lib/exercises/types';
@@ -83,6 +83,54 @@ export default function UIPatternDetail() {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Required for hydration safety
     setMounted(true);
   }, []);
+
+  // Build a preview document from the user's code
+  // Must be before early returns to satisfy rules of hooks
+  const userPreviewSrcdoc = useMemo(() => {
+    if (!userCode.trim()) return '';
+
+    const frameworkScripts: Record<string, string> = {
+      'native-js': '',
+      react: `
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>`,
+      vue: `<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>`,
+      angular: `<script src="https://unpkg.com/zone.js"></script>`,
+    };
+
+    const scriptType = framework === 'react' ? 'text/babel' : 'text/javascript';
+    const scripts = frameworkScripts[framework] || '';
+
+    // Detect if user code contains HTML tags — if so, use as body content
+    const hasHTML = /<[a-z][\s\S]*>/i.test(userCode);
+    const bodyContent = hasHTML ? userCode : `<div id="app"></div>`;
+    const scriptContent = hasHTML ? '' : userCode;
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 16px;
+      background: #0f172a;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    input, select, textarea, button { font-family: inherit; font-size: inherit; }
+  </style>
+  ${scripts}
+</head>
+<body>
+  ${bodyContent}
+  ${scriptContent ? `<script type="${scriptType}">\ntry {\n${scriptContent}\n} catch(e) { document.body.innerHTML = '<pre style="color:#ef4444;padding:16px;">' + e.message + '</pre>'; }\n</script>` : ''}
+</body>
+</html>`;
+  }, [userCode, framework]);
 
   if (!mounted) {
     return (
@@ -206,10 +254,74 @@ export default function UIPatternDetail() {
           <p className="text-zinc-400 text-base leading-relaxed max-w-3xl">{pattern.description}</p>
         </div>
 
-        {/* Two-Column Layout: Live Demo (left ~60%) + Building Blocks (right ~40%) */}
+        {/* Two-Column Layout: Code Editor (left ~60%) + Live Demo (right ~40%) */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
-          {/* Live Demo Section - Takes 3 columns (60%) */}
+          {/* Code Editor Section - Takes 3 columns (60%) */}
           <div className="lg:col-span-3">
+            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 h-full flex flex-col">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                  <svg
+                    className="w-5 h-5 text-amber-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-white">Your Implementation</h2>
+                  <p className="text-xs text-zinc-500">
+                    Write your code — the AI tutor can review it
+                  </p>
+                </div>
+              </div>
+              <div className="flex-1 min-h-0">
+                <CodeEditor
+                  code={userCode}
+                  onChange={setUserCode}
+                  language={editorLanguage}
+                  height={320}
+                  autoFocus={false}
+                />
+              </div>
+
+              {/* User's Live Preview */}
+              {userPreviewSrcdoc ? (
+                <div className="mt-4 border-t border-zinc-700/30 pt-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs font-medium text-zinc-400">Your Preview</span>
+                  </div>
+                  <div className="rounded-lg overflow-hidden border border-zinc-700/50 bg-zinc-950/50">
+                    <iframe
+                      srcDoc={userPreviewSrcdoc}
+                      sandbox="allow-scripts"
+                      title="Your implementation preview"
+                      className="w-full border-0 bg-zinc-950"
+                      style={{ height: 200 }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-4 border-t border-zinc-700/30 pt-4">
+                  <div className="flex items-center justify-center py-6 text-zinc-600 text-xs">
+                    Start typing code above to see your preview here
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Live Demo Section - Takes 2 columns (40%) */}
+          <div className="lg:col-span-2">
             {pattern.demoCode ? (
               <div className="bg-gradient-to-br from-emerald-950/40 via-zinc-900/60 to-zinc-900/80 rounded-3xl p-1.5 border border-emerald-500/20 shadow-2xl shadow-emerald-500/10 h-full">
                 <div className="bg-zinc-900/90 rounded-2xl p-6 h-full">
@@ -244,7 +356,7 @@ export default function UIPatternDetail() {
                       css={pattern.demoCode.css}
                       js={pattern.demoCode.js}
                       framework={framework as FrameworkId}
-                      height={480}
+                      height={400}
                     />
                   </div>
                 </div>
@@ -274,69 +386,14 @@ export default function UIPatternDetail() {
               </div>
             )}
           </div>
-
-          {/* Building Blocks Section - Takes 2 columns (40%) */}
-          <div className="lg:col-span-2">
-            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 backdrop-blur-sm h-full">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                  <svg
-                    className="w-5 h-5 text-blue-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
-                    />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-lg font-bold text-white">Building Blocks</h2>
-                  <p className="text-xs text-zinc-500">
-                    {pattern.concepts.length} {pattern.concepts.length === 1 ? 'step' : 'steps'} to
-                    master
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-2 scrollbar-thin scrollbar-track-zinc-800/50 scrollbar-thumb-zinc-700/50">
-                {pattern.concepts.map((concept, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-3 bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 hover:border-zinc-600/50 transition-all group"
-                  >
-                    <div
-                      className={`w-8 h-8 rounded-lg ${frameworkConfig.bgColor} ${frameworkConfig.color} flex items-center justify-center font-bold text-sm flex-shrink-0 shadow-lg`}
-                    >
-                      {index + 1}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-white font-semibold text-sm mb-1 group-hover:text-blue-300 transition-colors">
-                        {concept}
-                      </h3>
-                      <p className="text-zinc-500 text-xs leading-relaxed">
-                        {getImplementationHint(concept, frameworkConfig.name)}
-                      </p>
-                    </div>
-                    <div className="w-5 h-5 rounded-full border-2 border-zinc-600 flex-shrink-0 mt-0.5 group-hover:border-blue-500/50 transition-colors" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Code Editor Section */}
-        <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 mb-6">
+        {/* Building Blocks Section - Full width, compact horizontal */}
+        <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 backdrop-blur-sm mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+            <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
               <svg
-                className="w-5 h-5 text-amber-400"
+                className="w-5 h-5 text-blue-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -346,22 +403,41 @@ export default function UIPatternDetail() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25"
+                  d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
                 />
               </svg>
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-white">Your Implementation</h2>
-              <p className="text-xs text-zinc-500">Write your code — the AI tutor can review it</p>
+            <div className="flex-1">
+              <h2 className="text-lg font-bold text-white">Building Blocks</h2>
+              <p className="text-xs text-zinc-500">
+                {pattern.concepts.length} {pattern.concepts.length === 1 ? 'step' : 'steps'} to
+                master
+              </p>
             </div>
           </div>
-          <CodeEditor
-            code={userCode}
-            onChange={setUserCode}
-            language={editorLanguage}
-            height={300}
-            autoFocus={false}
-          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
+            {pattern.concepts.map((concept, index) => (
+              <div
+                key={index}
+                className="flex items-start gap-3 bg-zinc-900/50 rounded-lg p-3 border border-zinc-700/30 hover:border-zinc-600/50 transition-all group"
+              >
+                <div
+                  className={`w-7 h-7 rounded-lg ${frameworkConfig.bgColor} ${frameworkConfig.color} flex items-center justify-center font-bold text-xs flex-shrink-0`}
+                >
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-white font-semibold text-sm group-hover:text-blue-300 transition-colors">
+                    {concept}
+                  </h3>
+                  <p className="text-zinc-500 text-xs leading-relaxed mt-0.5">
+                    {getImplementationHint(concept, frameworkConfig.name)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* AI Tutor Section */}

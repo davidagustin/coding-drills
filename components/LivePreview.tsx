@@ -2,6 +2,24 @@
 
 import { useMemo, useState } from 'react';
 
+/** Simple CSS formatter: expands single-line rules into readable multi-line */
+function formatCSS(raw: string): string {
+  // Split on } to handle each rule block
+  return raw
+    .replace(/\{([^}]+)\}/g, (_match, body: string) => {
+      // Split properties by semicolons, trim, and indent
+      const props = body
+        .split(';')
+        .map((p: string) => p.trim())
+        .filter(Boolean)
+        .map((p: string) => `  ${p};`)
+        .join('\n');
+      return `{\n${props}\n}`;
+    })
+    .replace(/\}\s*/g, '}\n\n')
+    .trim();
+}
+
 interface LivePreviewProps {
   html: string;
   css: string;
@@ -88,9 +106,11 @@ export function LivePreview({
     },
   ];
 
+  const formattedCSS = useMemo(() => formatCSS(css), [css]);
+
   const codeContent: Record<string, string> = {
     html,
-    css,
+    css: formattedCSS,
     js,
   };
 
