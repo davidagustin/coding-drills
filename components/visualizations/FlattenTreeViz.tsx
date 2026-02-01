@@ -33,19 +33,19 @@ interface FlattenStep {
 function computeSteps(): FlattenStep[] {
   const steps: FlattenStep[] = [];
   const result: number[] = [];
-  
+
   function flatten(node: TreeNode | null, prev: TreeNode | null): TreeNode | null {
     if (!node) return prev;
-    
+
     steps.push({
       node: node.value,
       action: `Process node ${node.value}`,
       result: [...result],
     });
-    
+
     const right = node.right;
     const left = node.left;
-    
+
     if (prev) {
       prev.right = node;
       prev.left = null;
@@ -55,29 +55,29 @@ function computeSteps(): FlattenStep[] {
         result: [...result],
       });
     }
-    
+
     result.push(node.value);
-    
+
     const leftTail = flatten(left, node);
     const rightTail = flatten(right, leftTail || node);
-    
+
     return rightTail || leftTail || node;
   }
-  
+
   steps.push({
     node: null,
     action: 'Start: Flatten binary tree to linked list',
     result: [],
   });
-  
+
   flatten(TREE, null);
-  
+
   steps.push({
     node: null,
     action: 'Complete: Tree flattened',
     result: [...result],
   });
-  
+
   return steps;
 }
 
@@ -114,22 +114,8 @@ function renderTree(
 
   return (
     <g key={`node-${node.value}-${level}`}>
-      <circle
-        cx={x}
-        cy={y}
-        r={20}
-        fill={nodeColor}
-        stroke="#fff"
-        strokeWidth={2}
-      />
-      <text
-        x={x}
-        y={y + 5}
-        textAnchor="middle"
-        fill="#fff"
-        fontSize="14"
-        fontWeight="bold"
-      >
+      <circle cx={x} cy={y} r={20} fill={nodeColor} stroke="#fff" strokeWidth={2} />
+      <text x={x} y={y + 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold">
         {node.value}
       </text>
       {node.left && (
@@ -183,7 +169,13 @@ export default function FlattenTreeViz() {
       </div>
 
       <div className="mb-6 p-6 bg-zinc-950 rounded-lg border border-zinc-800">
-        <svg width="100%" height="400" viewBox="0 0 400 400" className="overflow-visible" aria-label="Binary tree visualization">
+        <svg
+          width="100%"
+          height="400"
+          viewBox="0 0 400 400"
+          className="overflow-visible"
+          aria-label="Binary tree visualization"
+        >
           <title>Binary tree visualization</title>
           {renderTree(TREE, 200, 60, 0, currentStep, visited)}
         </svg>

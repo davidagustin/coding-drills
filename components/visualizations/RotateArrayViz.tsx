@@ -21,7 +21,7 @@ function computeSteps(): RotateStep[] {
   const arr = [...ARRAY];
   const n = arr.length;
   const k = K % n;
-  
+
   steps.push({
     arr: [...arr],
     k,
@@ -29,7 +29,7 @@ function computeSteps(): RotateStep[] {
     j: -1,
     explanation: `Start: Rotate array right by ${K} positions (effective: ${k})`,
   });
-  
+
   function reverse(start: number, end: number): void {
     while (start < end) {
       steps.push({
@@ -44,7 +44,7 @@ function computeSteps(): RotateStep[] {
       end--;
     }
   }
-  
+
   steps.push({
     arr: [...arr],
     k,
@@ -53,7 +53,7 @@ function computeSteps(): RotateStep[] {
     explanation: 'Step 1: Reverse entire array',
   });
   reverse(0, n - 1);
-  
+
   steps.push({
     arr: [...arr],
     k,
@@ -62,7 +62,7 @@ function computeSteps(): RotateStep[] {
     explanation: `Step 2: Reverse first ${k} elements`,
   });
   reverse(0, k - 1);
-  
+
   steps.push({
     arr: [...arr],
     k,
@@ -71,7 +71,7 @@ function computeSteps(): RotateStep[] {
     explanation: `Step 3: Reverse remaining ${n - k} elements`,
   });
   reverse(k, n - 1);
-  
+
   steps.push({
     arr: [...arr],
     k,
@@ -79,7 +79,7 @@ function computeSteps(): RotateStep[] {
     j: -1,
     explanation: `Complete: Rotated [${arr.join(', ')}]`,
   });
-  
+
   return steps;
 }
 
@@ -112,9 +112,7 @@ export default function RotateArrayViz() {
         </p>
         <p className="text-white text-sm">{explanation}</p>
         {step === STEPS.length - 1 && (
-          <p className="text-yellow-400 font-bold text-lg mt-2">
-            Result: [{arr.join(', ')}]
-          </p>
+          <p className="text-yellow-400 font-bold text-lg mt-2">Result: [{arr.join(', ')}]</p>
         )}
       </div>
 
@@ -133,10 +131,10 @@ export default function RotateArrayViz() {
                 className="w-16 h-16 rounded-lg border-2 flex items-center justify-center font-mono font-bold text-white"
                 style={{
                   backgroundColor: bgColor,
-                  borderColor: (idx === i || idx === j) ? '#fff' : bgColor,
+                  borderColor: idx === i || idx === j ? '#fff' : bgColor,
                 }}
                 animate={{
-                  scale: (idx === i || idx === j) ? 1.2 : 1,
+                  scale: idx === i || idx === j ? 1.2 : 1,
                 }}
               >
                 {n}

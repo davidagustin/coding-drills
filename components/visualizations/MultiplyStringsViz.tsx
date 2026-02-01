@@ -20,7 +20,7 @@ interface MultiplyStep {
 function computeSteps(): MultiplyStep[] {
   const steps: MultiplyStep[] = [];
   const result = new Array(NUM1.length + NUM2.length).fill(0);
-  
+
   steps.push({
     i: -1,
     j: -1,
@@ -29,7 +29,7 @@ function computeSteps(): MultiplyStep[] {
     result: [...result],
     explanation: `Start: Multiply "${NUM1}" × "${NUM2}"`,
   });
-  
+
   for (let i = NUM1.length - 1; i >= 0; i--) {
     for (let j = NUM2.length - 1; j >= 0; j--) {
       const digit1 = parseInt(NUM1[i], 10);
@@ -38,7 +38,7 @@ function computeSteps(): MultiplyStep[] {
       const pos1 = i + j;
       const pos2 = i + j + 1;
       const sum = product + result[pos2];
-      
+
       steps.push({
         i,
         j,
@@ -47,10 +47,10 @@ function computeSteps(): MultiplyStep[] {
         result: [...result],
         explanation: `${digit1} × ${digit2} = ${product}, add to position ${pos2}`,
       });
-      
+
       result[pos2] = sum % 10;
       result[pos1] += Math.floor(sum / 10);
-      
+
       steps.push({
         i,
         j,
@@ -61,12 +61,12 @@ function computeSteps(): MultiplyStep[] {
       });
     }
   }
-  
+
   let start = 0;
   while (start < result.length && result[start] === 0) {
     start++;
   }
-  
+
   steps.push({
     i: -1,
     j: -1,
@@ -75,7 +75,7 @@ function computeSteps(): MultiplyStep[] {
     result: result.slice(start),
     explanation: `Complete: "${result.slice(start).join('')}"`,
   });
-  
+
   return steps;
 }
 
@@ -117,7 +117,9 @@ export default function MultiplyStringsViz() {
       <div className="mb-6 space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h3 className="text-lg font-semibold text-zinc-300 mb-3">Number 1: &quot;{NUM1}&quot;</h3>
+            <h3 className="text-lg font-semibold text-zinc-300 mb-3">
+              Number 1: &quot;{NUM1}&quot;
+            </h3>
             <div className="flex gap-2 justify-center">
               {NUM1.split('').map((c, idx) => {
                 const isCurrent = i === idx;
@@ -140,7 +142,9 @@ export default function MultiplyStringsViz() {
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-zinc-300 mb-3">Number 2: &quot;{NUM2}&quot;</h3>
+            <h3 className="text-lg font-semibold text-zinc-300 mb-3">
+              Number 2: &quot;{NUM2}&quot;
+            </h3>
             <div className="flex gap-2 justify-center">
               {NUM2.split('').map((c, idx) => {
                 const isCurrent = j === idx;

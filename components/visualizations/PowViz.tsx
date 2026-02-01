@@ -17,7 +17,7 @@ interface PowStep {
 
 function computeSteps(): PowStep[] {
   const steps: PowStep[] = [];
-  
+
   function power(base: number, exp: number): number {
     if (exp === 0) {
       steps.push({
@@ -28,7 +28,7 @@ function computeSteps(): PowStep[] {
       });
       return 1;
     }
-    
+
     if (exp < 0) {
       steps.push({
         base,
@@ -38,7 +38,7 @@ function computeSteps(): PowStep[] {
       });
       return 1 / power(base, -exp);
     }
-    
+
     const half = Math.floor(exp / 2);
     steps.push({
       base,
@@ -46,36 +46,36 @@ function computeSteps(): PowStep[] {
       result: 0,
       explanation: `Compute ${base}^${exp} = (${base}^${half})^2 × ${base}^${exp % 2}`,
     });
-    
+
     const halfResult = power(base, half);
     const result = halfResult * halfResult * (exp % 2 === 1 ? base : 1);
-    
+
     steps.push({
       base,
       exp,
       result,
       explanation: `${base}^${half} = ${halfResult}, ${base}^${exp} = ${halfResult}² × ${exp % 2 === 1 ? base : 1} = ${result}`,
     });
-    
+
     return result;
   }
-  
+
   steps.push({
     base: BASE,
     exp: EXP,
     result: 0,
     explanation: `Start: Compute ${BASE}^${EXP}`,
   });
-  
+
   const result = power(BASE, EXP);
-  
+
   steps.push({
     base: BASE,
     exp: EXP,
     result,
     explanation: `Complete: ${BASE}^${EXP} = ${result}`,
   });
-  
+
   return steps;
 }
 
@@ -108,9 +108,7 @@ export default function PowViz() {
         </p>
         <p className="text-white text-sm">{explanation}</p>
         {step === STEPS.length - 1 && (
-          <p className="text-yellow-400 font-bold text-lg mt-2">
-            Result: {result}
-          </p>
+          <p className="text-yellow-400 font-bold text-lg mt-2">Result: {result}</p>
         )}
       </div>
 
@@ -140,7 +138,8 @@ export default function PowViz() {
 
         <div className="p-6 bg-zinc-950 rounded-lg border border-zinc-800">
           <p className="text-white text-center text-2xl font-mono">
-            {base}<sup>{exp}</sup> = {result || '...'}
+            {base}
+            <sup>{exp}</sup> = {result || '...'}
           </p>
         </div>
       </div>

@@ -422,7 +422,8 @@ describe('validateDrillAnswer', () => {
       // The error may be about hardcoded values or not using setup variables
       expect(result.error).toBeDefined();
       expect(
-        result.error?.includes('hardcoded') || result.error?.includes('must use the provided variables'),
+        result.error?.includes('hardcoded') ||
+          result.error?.includes('must use the provided variables'),
       ).toBe(true);
     });
   });

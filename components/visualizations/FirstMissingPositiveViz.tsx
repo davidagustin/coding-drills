@@ -20,7 +20,7 @@ function computeSteps(): MissingStep[] {
   const steps: MissingStep[] = [];
   const arr = [...ARRAY];
   const n = arr.length;
-  
+
   steps.push({
     arr: [...arr],
     index: -1,
@@ -29,12 +29,12 @@ function computeSteps(): MissingStep[] {
     missing: null,
     explanation: 'Start: Find first missing positive using cyclic sort',
   });
-  
+
   for (let i = 0; i < n; i++) {
     while (arr[i] > 0 && arr[i] <= n && arr[i] !== arr[arr[i] - 1]) {
       const num = arr[i];
       const correctPos = num - 1;
-      
+
       steps.push({
         arr: [...arr],
         index: i,
@@ -43,9 +43,9 @@ function computeSteps(): MissingStep[] {
         missing: null,
         explanation: `Place ${num} at correct position ${correctPos}`,
       });
-      
+
       [arr[i], arr[correctPos]] = [arr[correctPos], arr[i]];
-      
+
       steps.push({
         arr: [...arr],
         index: correctPos,
@@ -56,7 +56,7 @@ function computeSteps(): MissingStep[] {
       });
     }
   }
-  
+
   for (let i = 0; i < n; i++) {
     if (arr[i] !== i + 1) {
       steps.push({
@@ -70,7 +70,7 @@ function computeSteps(): MissingStep[] {
       break;
     }
   }
-  
+
   const missing = arr.every((val, idx) => val === idx + 1) ? n + 1 : null;
   if (missing === null) {
     for (let i = 0; i < n; i++) {
@@ -87,7 +87,7 @@ function computeSteps(): MissingStep[] {
       }
     }
   }
-  
+
   steps.push({
     arr: [...arr],
     index: -1,
@@ -96,7 +96,7 @@ function computeSteps(): MissingStep[] {
     missing: n + 1,
     explanation: `Complete: All numbers 1..${n} present → missing = ${n + 1}`,
   });
-  
+
   return steps;
 }
 
@@ -145,7 +145,7 @@ export default function FirstMissingPositiveViz() {
               const isCorrectPos = idx === correctPos;
               const expected = idx + 1;
               const isCorrect = n === expected;
-              
+
               let bgColor: string = COLORS.default;
               if (isCurrent || isCorrectPos) {
                 bgColor = COLORS.current;
@@ -161,10 +161,10 @@ export default function FirstMissingPositiveViz() {
                     className="w-16 h-16 rounded-lg border-2 flex items-center justify-center font-mono font-bold text-white"
                     style={{
                       backgroundColor: bgColor,
-                      borderColor: (isCurrent || isCorrectPos) ? '#fff' : bgColor,
+                      borderColor: isCurrent || isCorrectPos ? '#fff' : bgColor,
                     }}
                     animate={{
-                      scale: (isCurrent || isCorrectPos) ? 1.2 : 1,
+                      scale: isCurrent || isCorrectPos ? 1.2 : 1,
                     }}
                   >
                     {n}

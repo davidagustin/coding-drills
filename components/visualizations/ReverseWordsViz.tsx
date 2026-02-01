@@ -16,13 +16,13 @@ interface ReverseStep {
 function computeSteps(): ReverseStep[] {
   const steps: ReverseStep[] = [];
   const words = STRING.trim().split(/\s+/);
-  
+
   steps.push({
     words: [...words],
     result: '',
     explanation: `Start: Reverse words in "${STRING}"`,
   });
-  
+
   const reversed: string[] = [];
   for (let i = words.length - 1; i >= 0; i--) {
     reversed.push(words[i]);
@@ -32,13 +32,13 @@ function computeSteps(): ReverseStep[] {
       explanation: `Add "${words[i]}" to result`,
     });
   }
-  
+
   steps.push({
     words: [...words],
     result: reversed.join(' '),
     explanation: `Complete: "${reversed.join(' ')}"`,
   });
-  
+
   return steps;
 }
 
@@ -72,9 +72,7 @@ export default function ReverseWordsViz() {
         </p>
         <p className="text-white text-sm">{explanation}</p>
         {step === STEPS.length - 1 && (
-          <p className="text-yellow-400 font-bold text-lg mt-2">
-            Result: &quot;{result}&quot;
-          </p>
+          <p className="text-yellow-400 font-bold text-lg mt-2">Result: &quot;{result}&quot;</p>
         )}
       </div>
 

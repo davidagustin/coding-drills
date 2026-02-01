@@ -34,28 +34,28 @@ interface LevelStep {
 function computeSteps(): LevelStep[] {
   const steps: LevelStep[] = [];
   const queue: Array<{ node: TreeNode; level: number }> = [];
-  
+
   steps.push({
     level: -1,
     nodes: [],
     current: null,
     explanation: 'Start: Level order traversal',
   });
-  
+
   queue.push({ node: TREE, level: 0 });
-  
+
   while (queue.length > 0) {
     const item = queue.shift();
     if (!item) break;
     const { node, level } = item;
-    
+
     steps.push({
       level,
       nodes: [],
       current: node.value,
       explanation: `Visit node ${node.value} at level ${level}`,
     });
-    
+
     if (node.left) {
       queue.push({ node: node.left, level: level + 1 });
     }
@@ -63,10 +63,10 @@ function computeSteps(): LevelStep[] {
       queue.push({ node: node.right, level: level + 1 });
     }
   }
-  
+
   const levelOrder: number[] = [];
   const levelMap = new Map<number, number[]>();
-  
+
   function traverse(node: TreeNode | null, level: number): void {
     if (!node) return;
     if (!levelMap.has(level)) {
@@ -76,9 +76,9 @@ function computeSteps(): LevelStep[] {
     traverse(node.left, level + 1);
     traverse(node.right, level + 1);
   }
-  
+
   traverse(TREE, 0);
-  
+
   for (let i = 0; i < levelMap.size; i++) {
     const nodes = levelMap.get(i) || [];
     levelOrder.push(...nodes);
@@ -89,14 +89,14 @@ function computeSteps(): LevelStep[] {
       explanation: `Level ${i}: [${nodes.join(', ')}]`,
     });
   }
-  
+
   steps.push({
     level: -1,
     nodes: levelOrder,
     current: null,
     explanation: `Complete: [${levelOrder.join(', ')}]`,
   });
-  
+
   return steps;
 }
 
@@ -133,22 +133,8 @@ function renderTree(
 
   return (
     <g key={`node-${node.value}-${level}`}>
-      <circle
-        cx={x}
-        cy={y}
-        r={20}
-        fill={nodeColor}
-        stroke="#fff"
-        strokeWidth={2}
-      />
-      <text
-        x={x}
-        y={y + 5}
-        textAnchor="middle"
-        fill="#fff"
-        fontSize="14"
-        fontWeight="bold"
-      >
+      <circle cx={x} cy={y} r={20} fill={nodeColor} stroke="#fff" strokeWidth={2} />
+      <text x={x} y={y + 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold">
         {node.value}
       </text>
       {node.left && (
@@ -202,7 +188,13 @@ export default function LevelOrderViz() {
       </div>
 
       <div className="mb-6 p-6 bg-zinc-950 rounded-lg border border-zinc-800">
-        <svg width="100%" height="400" viewBox="0 0 400 400" className="overflow-visible" aria-label="Binary tree visualization">
+        <svg
+          width="100%"
+          height="400"
+          viewBox="0 0 400 400"
+          className="overflow-visible"
+          aria-label="Binary tree visualization"
+        >
           <title>Binary tree visualization</title>
           {renderTree(TREE, 200, 60, 0, currentStep, visited)}
         </svg>

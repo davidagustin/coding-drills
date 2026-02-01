@@ -14,13 +14,21 @@ const TREE: TreeNode = {
   value: 5,
   left: {
     value: 4,
-    left: { value: 11, left: { value: 7, left: null, right: null }, right: { value: 2, left: null, right: null } },
+    left: {
+      value: 11,
+      left: { value: 7, left: null, right: null },
+      right: { value: 2, left: null, right: null },
+    },
     right: null,
   },
   right: {
     value: 8,
     left: { value: 13, left: null, right: null },
-    right: { value: 4, left: { value: 5, left: null, right: null }, right: { value: 1, left: null, right: null } },
+    right: {
+      value: 4,
+      left: { value: 5, left: null, right: null },
+      right: { value: 1, left: null, right: null },
+    },
   },
 };
 
@@ -37,7 +45,7 @@ interface PathSum2Step {
 function computeSteps(): PathSum2Step[] {
   const steps: PathSum2Step[] = [];
   const paths: number[][] = [];
-  
+
   function findPaths(node: TreeNode | null, currentSum: number, path: number[]): void {
     if (!node) {
       steps.push({
@@ -49,10 +57,10 @@ function computeSteps(): PathSum2Step[] {
       });
       return;
     }
-    
+
     const newPath = [...path, node.value];
     const newSum = currentSum + node.value;
-    
+
     steps.push({
       node: node.value,
       currentSum: newSum,
@@ -60,7 +68,7 @@ function computeSteps(): PathSum2Step[] {
       paths: [...paths],
       explanation: `Visit node ${node.value}, path: [${newPath.join(', ')}], sum: ${newSum}`,
     });
-    
+
     if (!node.left && !node.right) {
       if (newSum === TARGET_SUM) {
         paths.push([...newPath]);
@@ -82,11 +90,11 @@ function computeSteps(): PathSum2Step[] {
       }
       return;
     }
-    
+
     findPaths(node.left, newSum, newPath);
     findPaths(node.right, newSum, newPath);
   }
-  
+
   steps.push({
     node: null,
     currentSum: 0,
@@ -94,9 +102,9 @@ function computeSteps(): PathSum2Step[] {
     paths: [],
     explanation: `Start: Find all paths with sum = ${TARGET_SUM}`,
   });
-  
+
   findPaths(TREE, 0, []);
-  
+
   steps.push({
     node: null,
     currentSum: 0,
@@ -104,7 +112,7 @@ function computeSteps(): PathSum2Step[] {
     paths: [...paths],
     explanation: `Complete: Found ${paths.length} path(s)`,
   });
-  
+
   return steps;
 }
 
@@ -141,22 +149,8 @@ function renderTree(
 
   return (
     <g key={`node-${node.value}-${level}`}>
-      <circle
-        cx={x}
-        cy={y}
-        r={20}
-        fill={nodeColor}
-        stroke="#fff"
-        strokeWidth={2}
-      />
-      <text
-        x={x}
-        y={y + 5}
-        textAnchor="middle"
-        fill="#fff"
-        fontSize="14"
-        fontWeight="bold"
-      >
+      <circle cx={x} cy={y} r={20} fill={nodeColor} stroke="#fff" strokeWidth={2} />
+      <text x={x} y={y + 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold">
         {node.value}
       </text>
       {node.left && (
@@ -186,7 +180,7 @@ export default function PathSum2Viz() {
   const pathNodes = useMemo(() => {
     const set = new Set<number>();
     if (currentStep.path.length > 0) {
-      currentStep.path.forEach(n => set.add(n));
+      currentStep.path.forEach((n) => set.add(n));
     }
     return set;
   }, [currentStep]);
@@ -208,7 +202,13 @@ export default function PathSum2Viz() {
       </div>
 
       <div className="mb-6 p-6 bg-zinc-950 rounded-lg border border-zinc-800">
-        <svg width="100%" height="400" viewBox="0 0 400 400" className="overflow-visible" aria-label="Binary tree visualization">
+        <svg
+          width="100%"
+          height="400"
+          viewBox="0 0 400 400"
+          className="overflow-visible"
+          aria-label="Binary tree visualization"
+        >
           <title>Binary tree visualization</title>
           {renderTree(TREE, 200, 60, 0, currentStep, pathNodes)}
         </svg>

@@ -20,7 +20,7 @@ function computeSteps(): Permutation2Step[] {
   const permutations: number[][] = [];
   const used = new Array(NUMS.length).fill(false);
   const sorted = [...NUMS].sort((a, b) => a - b);
-  
+
   function backtrack(current: number[]): void {
     if (current.length === sorted.length) {
       permutations.push([...current]);
@@ -28,59 +28,59 @@ function computeSteps(): Permutation2Step[] {
         nums: [...sorted],
         current: [...current],
         used: [...used],
-        permutations: permutations.map(p => [...p]),
+        permutations: permutations.map((p) => [...p]),
         explanation: `Found permutation [${current.join(', ')}]`,
       });
       return;
     }
-    
+
     for (let i = 0; i < sorted.length; i++) {
       if (used[i]) {
         steps.push({
           nums: [...sorted],
           current: [...current],
           used: [...used],
-          permutations: permutations.map(p => [...p]),
+          permutations: permutations.map((p) => [...p]),
           explanation: `Skip index ${i} (already used)`,
         });
         continue;
       }
-      
+
       if (i > 0 && sorted[i] === sorted[i - 1] && !used[i - 1]) {
         steps.push({
           nums: [...sorted],
           current: [...current],
           used: [...used],
-          permutations: permutations.map(p => [...p]),
+          permutations: permutations.map((p) => [...p]),
           explanation: `Skip duplicate ${sorted[i]} (previous not used)`,
         });
         continue;
       }
-      
+
       used[i] = true;
       current.push(sorted[i]);
       steps.push({
         nums: [...sorted],
         current: [...current],
         used: [...used],
-        permutations: permutations.map(p => [...p]),
+        permutations: permutations.map((p) => [...p]),
         explanation: `Add ${sorted[i]} at index ${i}`,
       });
-      
+
       backtrack(current);
-      
+
       current.pop();
       used[i] = false;
       steps.push({
         nums: [...sorted],
         current: [...current],
         used: [...used],
-        permutations: permutations.map(p => [...p]),
+        permutations: permutations.map((p) => [...p]),
         explanation: `Remove ${sorted[i]}, backtrack`,
       });
     }
   }
-  
+
   steps.push({
     nums: [...sorted],
     current: [],
@@ -88,17 +88,17 @@ function computeSteps(): Permutation2Step[] {
     permutations: [],
     explanation: `Start: Find all unique permutations of [${sorted.join(', ')}]`,
   });
-  
+
   backtrack([]);
-  
+
   steps.push({
     nums: [...sorted],
     current: [],
     used: [...used],
-    permutations: permutations.map(p => [...p]),
+    permutations: permutations.map((p) => [...p]),
     explanation: `Complete: Found ${permutations.length} unique permutation(s)`,
   });
-  
+
   return steps;
 }
 
@@ -144,7 +144,7 @@ export default function Permutations2Viz() {
           <div className="flex gap-2 justify-center">
             {nums.map((n, i) => {
               const isUsed = used[i];
-              
+
               let bgColor: string = COLORS.default;
               if (isUsed) bgColor = COLORS.used;
 

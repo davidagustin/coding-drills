@@ -1362,6 +1362,123 @@ createApp({
     category: 'data-display',
     framework: 'vue',
     concepts: ['computed', 'watch', 'composables', 'VueUse'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="search-bar">
+    <input v-model="query" placeholder="Search items..." />
+    <select v-model="category">
+      <option value="">All Categories</option>
+      <option v-for="c in categories" :key="c" :value="c">{{ c }}</option>
+    </select>
+  </div>
+  <div class="results-info">{{ filtered.length }} results found</div>
+  <div class="item-list">
+    <div v-for="item in filtered" :key="item.id" class="item-card">
+      <span class="item-name">{{ item.name }}</span>
+      <span class="item-cat">{{ item.category }}</span>
+    </div>
+    <div v-if="!filtered.length" class="empty">No items match your search.</div>
+  </div>
+</div>`,
+      css: `.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+
+.search-bar input:focus {
+  border-color: #3b82f6;
+}
+
+.search-bar select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+
+.results-info {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+}
+
+.item-name {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.item-cat {
+  color: #3b82f6;
+  font-size: 12px;
+  background: rgba(59,130,246,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.empty {
+  text-align: center;
+  color: #64748b;
+  padding: 24px;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const query = ref('');
+    const category = ref('');
+    const items = [
+      { id: 1, name: 'Vue.js Guide', category: 'Docs' },
+      { id: 2, name: 'Pinia Store', category: 'State' },
+      { id: 3, name: 'Vue Router', category: 'Navigation' },
+      { id: 4, name: 'Composition API', category: 'Docs' },
+      { id: 5, name: 'Vuex Legacy', category: 'State' },
+      { id: 6, name: 'Teleport Component', category: 'UI' },
+      { id: 7, name: 'Transition Group', category: 'UI' },
+      { id: 8, name: 'Route Guards', category: 'Navigation' },
+    ];
+
+    const categories = [...new Set(items.map(i => i.category))];
+
+    const filtered = computed(() => {
+      return items.filter(item => {
+        const matchQuery = item.name.toLowerCase().includes(query.value.toLowerCase());
+        const matchCat = !category.value || item.category === category.value;
+        return matchQuery && matchCat;
+      });
+    });
+
+    return { query, category, categories, filtered };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-infinite-scroll',
@@ -1372,6 +1489,122 @@ createApp({
     category: 'data-display',
     framework: 'vue',
     concepts: ['VueUse', 'composables', 'reactive', 'async/await'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="feed" ref="feedRef" @scroll="onScroll">
+    <div v-for="item in items" :key="item.id" class="feed-item">
+      <div class="item-header">
+        <span class="item-id">#{{ item.id }}</span>
+        <span class="item-title">{{ item.title }}</span>
+      </div>
+      <p class="item-body">{{ item.body }}</p>
+    </div>
+    <div v-if="loading" class="loader">Loading more...</div>
+    <div v-if="allLoaded" class="done">All items loaded!</div>
+  </div>
+  <div class="status">{{ items.length }} / {{ totalItems }} items loaded</div>
+</div>`,
+      css: `.feed {
+  height: 300px;
+  overflow-y: auto;
+  border-radius: 8px;
+  background: #1e293b;
+}
+
+.feed-item {
+  padding: 14px;
+  border-bottom: 1px solid #0f172a;
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.item-id {
+  color: #3b82f6;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.item-title {
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.item-body {
+  color: #94a3b8;
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.loader {
+  text-align: center;
+  padding: 16px;
+  color: #3b82f6;
+  font-size: 14px;
+}
+
+.done {
+  text-align: center;
+  padding: 16px;
+  color: #22c55e;
+  font-size: 14px;
+}
+
+.status {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 8px;
+}`,
+      js: `const { createApp, ref, onMounted } = Vue;
+
+createApp({
+  setup() {
+    const items = ref([]);
+    const loading = ref(false);
+    const allLoaded = ref(false);
+    const totalItems = 50;
+    const feedRef = ref(null);
+
+    const generateItems = (start, count) => {
+      const titles = ['Vue Component', 'Reactive Data', 'Composable Hook', 'Pinia Action', 'Router Guard'];
+      return Array.from({ length: count }, (_, i) => ({
+        id: start + i + 1,
+        title: titles[(start + i) % titles.length] + ' ' + (start + i + 1),
+        body: 'This is item number ' + (start + i + 1) + '. Scroll down to load more items dynamically.',
+      }));
+    };
+
+    const loadMore = () => {
+      if (loading.value || allLoaded.value) return;
+      loading.value = true;
+      setTimeout(() => {
+        const newItems = generateItems(items.value.length, 10);
+        items.value.push(...newItems);
+        loading.value = false;
+        if (items.value.length >= totalItems) allLoaded.value = true;
+      }, 600);
+    };
+
+    const onScroll = (e) => {
+      const el = e.target;
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 20) {
+        loadMore();
+      }
+    };
+
+    onMounted(() => loadMore());
+
+    return { items, loading, allLoaded, totalItems, feedRef, onScroll };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-gallery',
@@ -1382,6 +1615,139 @@ createApp({
     category: 'data-display',
     framework: 'vue',
     concepts: ['transition', 'Teleport', 'reactive', 'slots'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="gallery-grid">
+    <div v-for="(img, i) in images" :key="i" class="thumb" @click="openViewer(i)">
+      <div class="thumb-inner" :style="{ background: img.color }">
+        <span>{{ img.label }}</span>
+      </div>
+    </div>
+  </div>
+  <div v-if="viewerOpen" class="lightbox" @click.self="closeViewer">
+    <button class="lb-nav lb-prev" @click="prevImage">&lt;</button>
+    <div class="lb-content">
+      <div class="lb-image" :style="{ background: images[currentIndex].color }">
+        <span>{{ images[currentIndex].label }}</span>
+      </div>
+      <div class="lb-caption">{{ images[currentIndex].label }} - {{ currentIndex + 1 }} / {{ images.length }}</div>
+    </div>
+    <button class="lb-nav lb-next" @click="nextImage">&gt;</button>
+    <button class="lb-close" @click="closeViewer">&times;</button>
+  </div>
+</div>`,
+      css: `.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.thumb {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+.thumb-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.thumb:hover .thumb-inner {
+  transform: scale(1.05);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.lb-content {
+  text-align: center;
+}
+
+.lb-image {
+  width: 280px;
+  height: 200px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.lb-caption {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.lb-nav {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 0 16px;
+}
+
+.lb-nav:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.lb-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}`,
+      js: `const { createApp, ref } = Vue;
+
+createApp({
+  setup() {
+    const images = [
+      { label: 'Sunset', color: '#f59e0b' },
+      { label: 'Ocean', color: '#3b82f6' },
+      { label: 'Forest', color: '#22c55e' },
+      { label: 'Mountain', color: '#8b5cf6' },
+      { label: 'Desert', color: '#ef4444' },
+      { label: 'Aurora', color: '#06b6d4' },
+    ];
+
+    const viewerOpen = ref(false);
+    const currentIndex = ref(0);
+
+    const openViewer = (i) => { currentIndex.value = i; viewerOpen.value = true; };
+    const closeViewer = () => { viewerOpen.value = false; };
+    const nextImage = () => { currentIndex.value = (currentIndex.value + 1) % images.length; };
+    const prevImage = () => { currentIndex.value = (currentIndex.value - 1 + images.length) % images.length; };
+
+    return { images, viewerOpen, currentIndex, openViewer, closeViewer, nextImage, prevImage };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-card-grid',
@@ -1392,6 +1758,132 @@ createApp({
     category: 'data-display',
     framework: 'vue',
     concepts: ['slots', 'computed', 'reactive', 'scoped slots'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="toolbar">
+    <input v-model="search" placeholder="Filter cards..." />
+    <select v-model="sortBy">
+      <option value="name">Sort by Name</option>
+      <option value="category">Sort by Category</option>
+    </select>
+  </div>
+  <div class="card-grid">
+    <div v-for="card in filtered" :key="card.id" class="card">
+      <div class="card-icon" :style="{ background: card.color }">{{ card.icon }}</div>
+      <h4>{{ card.name }}</h4>
+      <p>{{ card.description }}</p>
+      <span class="card-tag">{{ card.category }}</span>
+    </div>
+  </div>
+  <div v-if="!filtered.length" class="empty">No cards match your filter.</div>
+</div>`,
+      css: `.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.toolbar input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+
+.toolbar select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.card {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 14px;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.card h4 {
+  margin: 0 0 4px;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.card p {
+  margin: 0 0 8px;
+  color: #94a3b8;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.card-tag {
+  font-size: 11px;
+  color: #3b82f6;
+  background: rgba(59,130,246,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.empty {
+  text-align: center;
+  color: #64748b;
+  padding: 24px;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const search = ref('');
+    const sortBy = ref('name');
+    const cards = [
+      { id: 1, name: 'Dashboard', icon: '\\u{1F4CA}', color: '#3b82f6', category: 'Analytics', description: 'View your project metrics' },
+      { id: 2, name: 'Settings', icon: '\\u{2699}', color: '#8b5cf6', category: 'Config', description: 'Manage app preferences' },
+      { id: 3, name: 'Messages', icon: '\\u{1F4AC}', color: '#22c55e', category: 'Social', description: 'Chat with your team' },
+      { id: 4, name: 'Profile', icon: '\\u{1F464}', color: '#f59e0b', category: 'Config', description: 'Edit your profile info' },
+      { id: 5, name: 'Reports', icon: '\\u{1F4C4}', color: '#ef4444', category: 'Analytics', description: 'Generate detailed reports' },
+      { id: 6, name: 'Friends', icon: '\\u{1F465}', color: '#06b6d4', category: 'Social', description: 'Manage your connections' },
+    ];
+
+    const filtered = computed(() => {
+      let result = cards.filter(c =>
+        c.name.toLowerCase().includes(search.value.toLowerCase()) ||
+        c.category.toLowerCase().includes(search.value.toLowerCase())
+      );
+      result.sort((a, b) => a[sortBy.value].localeCompare(b[sortBy.value]));
+      return result;
+    });
+
+    return { search, sortBy, filtered };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-sortable-table',
@@ -1402,6 +1894,143 @@ createApp({
     category: 'data-display',
     framework: 'vue',
     concepts: ['computed', 'slots', 'reactive', 'v-model'],
+    demoCode: {
+      html: `<div id="app">
+  <input v-model="filter" placeholder="Filter table..." class="filter-input" />
+  <table>
+    <thead>
+      <tr>
+        <th v-for="col in columns" :key="col.key" @click="sort(col.key)" class="sortable">
+          {{ col.label }}
+          <span v-if="sortKey === col.key">{{ sortAsc ? '\\u25B2' : '\\u25BC' }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="row in sortedData" :key="row.id">
+        <td>{{ row.product }}</td>
+        <td>{{ row.category }}</td>
+        <td :class="{ highlight: row.price > 80 }">\${{ row.price }}</td>
+        <td><span class="stock" :class="row.stock > 50 ? 'in' : 'low'">{{ row.stock }}</span></td>
+      </tr>
+      <tr v-if="!sortedData.length"><td colspan="4" class="empty">No results</td></tr>
+    </tbody>
+  </table>
+</div>`,
+      css: `.filter-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+.filter-input:focus {
+  border-color: #3b82f6;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1e293b;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+th {
+  background: #1e293b;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  color: #3b82f6;
+}
+
+.highlight {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.stock {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.stock.in {
+  background: rgba(34,197,94,0.15);
+  color: #22c55e;
+}
+
+.stock.low {
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+}
+
+.empty {
+  text-align: center;
+  color: #64748b;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const columns = [
+      { key: 'product', label: 'Product' },
+      { key: 'category', label: 'Category' },
+      { key: 'price', label: 'Price' },
+      { key: 'stock', label: 'Stock' },
+    ];
+
+    const data = [
+      { id: 1, product: 'Keyboard', category: 'Electronics', price: 75, stock: 120 },
+      { id: 2, product: 'Mouse', category: 'Electronics', price: 45, stock: 30 },
+      { id: 3, product: 'Monitor', category: 'Electronics', price: 299, stock: 15 },
+      { id: 4, product: 'Desk Chair', category: 'Furniture', price: 189, stock: 65 },
+      { id: 5, product: 'Notebook', category: 'Stationery', price: 12, stock: 200 },
+      { id: 6, product: 'Lamp', category: 'Furniture', price: 55, stock: 42 },
+    ];
+
+    const filter = ref('');
+    const sortKey = ref('product');
+    const sortAsc = ref(true);
+
+    const sortedData = computed(() => {
+      let rows = data.filter(r =>
+        Object.values(r).some(v => String(v).toLowerCase().includes(filter.value.toLowerCase()))
+      );
+      rows.sort((a, b) => {
+        const m = sortAsc.value ? 1 : -1;
+        return a[sortKey.value] > b[sortKey.value] ? m : -m;
+      });
+      return rows;
+    });
+
+    const sort = (key) => {
+      if (sortKey.value === key) sortAsc.value = !sortAsc.value;
+      else { sortKey.value = key; sortAsc.value = true; }
+    };
+
+    return { columns, filter, sortKey, sortAsc, sortedData, sort };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-dashboard',
@@ -1412,6 +2041,127 @@ createApp({
     category: 'data-display',
     framework: 'vue',
     concepts: ['Pinia', 'custom directives', 'reactive', 'localStorage'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="dashboard">
+    <div v-for="(panel, i) in panels" :key="panel.id" class="panel"
+      :style="{ gridColumn: panel.span, background: panel.color }">
+      <div class="panel-header">
+        <span>{{ panel.title }}</span>
+        <div class="panel-actions">
+          <button @click="toggleSize(i)" class="action-btn">{{ panel.span === 'span 2' ? '\\u25A3' : '\\u25A1' }}</button>
+          <button @click="removePanel(i)" class="action-btn">\\u00D7</button>
+        </div>
+      </div>
+      <div class="panel-value">{{ panel.value }}</div>
+      <div class="panel-label">{{ panel.label }}</div>
+    </div>
+  </div>
+  <button class="add-btn" @click="addPanel">+ Add Widget</button>
+</div>`,
+      css: `.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.panel {
+  border-radius: 10px;
+  padding: 16px;
+  min-height: 100px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.panel-header span {
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.panel-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.action-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.panel-value {
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.panel-label {
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.add-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px dashed #334155;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}`,
+      js: `const { createApp, ref } = Vue;
+
+createApp({
+  setup() {
+    let nextId = 5;
+    const panels = ref([
+      { id: 1, title: 'Revenue', value: '$12,450', label: 'This month', color: '#3b82f6', span: 'span 1' },
+      { id: 2, title: 'Users', value: '1,284', label: 'Active today', color: '#8b5cf6', span: 'span 1' },
+      { id: 3, title: 'Conversion', value: '3.2%', label: 'Last 7 days', color: '#22c55e', span: 'span 2' },
+      { id: 4, title: 'Orders', value: '384', label: 'This week', color: '#f59e0b', span: 'span 1' },
+    ]);
+
+    const toggleSize = (i) => {
+      panels.value[i].span = panels.value[i].span === 'span 2' ? 'span 1' : 'span 2';
+    };
+
+    const removePanel = (i) => { panels.value.splice(i, 1); };
+
+    const addPanel = () => {
+      const colors = ['#3b82f6','#8b5cf6','#22c55e','#ef4444','#f59e0b','#06b6d4'];
+      panels.value.push({
+        id: nextId++,
+        title: 'Widget ' + nextId,
+        value: Math.floor(Math.random() * 1000),
+        label: 'New metric',
+        color: colors[Math.floor(Math.random() * colors.length)],
+        span: 'span 1',
+      });
+    };
+
+    return { panels, toggleSize, removePanel, addPanel };
+  }
+}).mount('#app');`,
+    },
   },
 
   // Navigation
@@ -1424,6 +2174,150 @@ createApp({
     category: 'navigation',
     framework: 'vue',
     concepts: ['Vue Router', 'Pinia', 'transition', 'router-link'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="layout">
+    <div class="sidebar" :class="{ collapsed: !expanded }">
+      <div class="sidebar-header">
+        <span v-if="expanded" class="logo">MyApp</span>
+        <button class="toggle-btn" @click="expanded = !expanded">{{ expanded ? '\\u00AB' : '\\u00BB' }}</button>
+      </div>
+      <nav class="nav-items">
+        <div v-for="item in navItems" :key="item.id"
+          class="nav-item" :class="{ active: activeItem === item.id }"
+          @click="activeItem = item.id">
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span v-if="expanded" class="nav-label">{{ item.label }}</span>
+        </div>
+      </nav>
+    </div>
+    <div class="main">
+      <h3>{{ currentItem.label }}</h3>
+      <p>Content area for {{ currentItem.label }} section.</p>
+    </div>
+  </div>
+</div>`,
+      css: `.layout {
+  display: flex;
+  height: 320px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.sidebar {
+  width: 180px;
+  background: #1e293b;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s;
+}
+
+.sidebar.collapsed {
+  width: 56px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 12px;
+  border-bottom: 1px solid #334155;
+}
+
+.logo {
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.toggle-btn {
+  background: #334155;
+  border: none;
+  color: #e2e8f0;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.nav-items {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.nav-item.active {
+  background: rgba(59,130,246,0.15);
+  color: #3b82f6;
+}
+
+.nav-icon {
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.nav-label {
+  font-size: 14px;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+.main h3 {
+  color: #e2e8f0;
+  margin: 0 0 8px;
+}
+
+.main p {
+  color: #94a3b8;
+  font-size: 14px;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const expanded = ref(true);
+    const activeItem = ref('home');
+
+    const navItems = [
+      { id: 'home', label: 'Home', icon: '\\u{1F3E0}' },
+      { id: 'analytics', label: 'Analytics', icon: '\\u{1F4CA}' },
+      { id: 'messages', label: 'Messages', icon: '\\u{1F4AC}' },
+      { id: 'settings', label: 'Settings', icon: '\\u{2699}' },
+      { id: 'profile', label: 'Profile', icon: '\\u{1F464}' },
+    ];
+
+    const currentItem = computed(() =>
+      navItems.find(i => i.id === activeItem.value) || navItems[0]
+    );
+
+    return { expanded, activeItem, navItems, currentItem };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-navbar',
@@ -1434,6 +2328,125 @@ createApp({
     category: 'navigation',
     framework: 'vue',
     concepts: ['Vue Router', 'Teleport', 'transition', 'VueUse'],
+    demoCode: {
+      html: `<div id="app">
+  <nav class="navbar">
+    <span class="brand">MyApp</span>
+    <div class="nav-links" :class="{ open: menuOpen }">
+      <a v-for="link in links" :key="link.id" :class="{ active: activeLink === link.id }"
+        @click="activeLink = link.id; menuOpen = false">{{ link.label }}</a>
+    </div>
+    <button class="hamburger" @click="menuOpen = !menuOpen">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="page-content">
+    <h3>{{ currentLink.label }}</h3>
+    <p>{{ currentLink.desc }}</p>
+  </div>
+</div>`,
+      css: `.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #1e293b;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.brand {
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-links a {
+  color: #94a3b8;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.nav-links a:hover {
+  color: #e2e8f0;
+  background: #334155;
+}
+
+.nav-links a.active {
+  color: #3b82f6;
+  background: rgba(59,130,246,0.1);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #e2e8f0;
+  border-radius: 1px;
+}
+
+.page-content {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.page-content h3 {
+  color: #e2e8f0;
+  margin: 0 0 8px;
+}
+
+.page-content p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: #1e293b; padding: 8px; border-radius: 0 0 10px 10px; z-index: 10; }
+  .hamburger { display: flex; }
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const menuOpen = ref(false);
+    const activeLink = ref('home');
+
+    const links = [
+      { id: 'home', label: 'Home', desc: 'Welcome to the home page with latest updates and news.' },
+      { id: 'about', label: 'About', desc: 'Learn more about our team, mission and values.' },
+      { id: 'services', label: 'Services', desc: 'Explore our wide range of professional services.' },
+      { id: 'contact', label: 'Contact', desc: 'Get in touch with us through our contact form.' },
+    ];
+
+    const currentLink = computed(() =>
+      links.find(l => l.id === activeLink.value) || links[0]
+    );
+
+    return { menuOpen, activeLink, links, currentLink };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-breadcrumbs',
@@ -1444,6 +2457,140 @@ createApp({
     category: 'navigation',
     framework: 'vue',
     concepts: ['Vue Router', 'watch', 'computed', 'composables'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="breadcrumb-bar">
+    <span v-for="(crumb, i) in breadcrumbs" :key="i" class="crumb-item">
+      <a v-if="i < breadcrumbs.length - 1" @click="navigateTo(i)" class="crumb-link">{{ crumb }}</a>
+      <span v-else class="crumb-current">{{ crumb }}</span>
+      <span v-if="i < breadcrumbs.length - 1" class="separator">/</span>
+    </span>
+  </div>
+  <div class="tree">
+    <div v-for="item in currentItems" :key="item.name" class="tree-item" @click="goInto(item)">
+      <span class="tree-icon">{{ item.children ? '\\u{1F4C1}' : '\\u{1F4C4}' }}</span>
+      <span>{{ item.name }}</span>
+      <span v-if="item.children" class="chevron">\\u203A</span>
+    </div>
+    <div v-if="!currentItems.length" class="empty-dir">This folder is empty.</div>
+  </div>
+</div>`,
+      css: `.breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 10px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.crumb-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.crumb-link {
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.crumb-link:hover {
+  text-decoration: underline;
+}
+
+.crumb-current {
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.separator {
+  color: #475569;
+  font-size: 14px;
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tree-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  color: #e2e8f0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tree-item:hover {
+  background: #334155;
+}
+
+.tree-icon {
+  font-size: 16px;
+}
+
+.chevron {
+  margin-left: auto;
+  color: #475569;
+  font-size: 18px;
+}
+
+.empty-dir {
+  text-align: center;
+  color: #64748b;
+  padding: 24px;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const fileTree = {
+      name: 'Home',
+      children: [
+        { name: 'Documents', children: [
+          { name: 'Reports', children: [{ name: 'Q1-Report.pdf' }, { name: 'Q2-Report.pdf' }] },
+          { name: 'Notes', children: [{ name: 'meeting.md' }] },
+        ]},
+        { name: 'Photos', children: [
+          { name: 'Vacation', children: [{ name: 'beach.jpg' }, { name: 'sunset.jpg' }] },
+        ]},
+        { name: 'readme.txt' },
+      ],
+    };
+
+    const path = ref([fileTree]);
+
+    const breadcrumbs = computed(() => path.value.map(p => p.name));
+
+    const currentItems = computed(() => {
+      const current = path.value[path.value.length - 1];
+      return current.children || [];
+    });
+
+    const goInto = (item) => {
+      if (item.children) {
+        path.value = [...path.value, item];
+      }
+    };
+
+    const navigateTo = (index) => {
+      path.value = path.value.slice(0, index + 1);
+    };
+
+    return { breadcrumbs, currentItems, goInto, navigateTo };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-bottom-nav',
@@ -1454,6 +2601,119 @@ createApp({
     category: 'navigation',
     framework: 'vue',
     concepts: ['Vue Router', 'computed', 'router-link', 'transition'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="phone-frame">
+    <div class="phone-content">
+      <h3>{{ currentTab.label }}</h3>
+      <p>{{ currentTab.desc }}</p>
+    </div>
+    <div class="bottom-nav">
+      <div v-for="tab in tabs" :key="tab.id" class="nav-tab"
+        :class="{ active: activeTab === tab.id }" @click="activeTab = tab.id">
+        <span class="tab-icon">{{ tab.icon }}</span>
+        <span class="tab-label">{{ tab.label }}</span>
+      </div>
+    </div>
+  </div>
+</div>`,
+      css: `.phone-frame {
+  max-width: 320px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid #334155;
+  display: flex;
+  flex-direction: column;
+  height: 340px;
+}
+
+.phone-content {
+  flex: 1;
+  padding: 20px;
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.phone-content h3 {
+  color: #e2e8f0;
+  margin: 0 0 8px;
+}
+
+.phone-content p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+}
+
+.bottom-nav {
+  display: flex;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+}
+
+.nav-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.nav-tab:hover {
+  background: #334155;
+}
+
+.nav-tab.active {
+  color: #3b82f6;
+}
+
+.tab-icon {
+  font-size: 18px;
+  color: #94a3b8;
+}
+
+.nav-tab.active .tab-icon {
+  color: #3b82f6;
+}
+
+.tab-label {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.nav-tab.active .tab-label {
+  color: #3b82f6;
+  font-weight: 600;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const activeTab = ref('home');
+    const tabs = [
+      { id: 'home', label: 'Home', icon: '\\u{1F3E0}', desc: 'Your personalized feed and latest updates.' },
+      { id: 'search', label: 'Search', icon: '\\u{1F50D}', desc: 'Find people, places, and content.' },
+      { id: 'add', label: 'Create', icon: '\\u{2795}', desc: 'Share a new post or story.' },
+      { id: 'inbox', label: 'Inbox', icon: '\\u{1F514}', desc: 'View your notifications and messages.' },
+      { id: 'profile', label: 'Profile', icon: '\\u{1F464}', desc: 'Manage your profile and settings.' },
+    ];
+
+    const currentTab = computed(() =>
+      tabs.find(t => t.id === activeTab.value) || tabs[0]
+    );
+
+    return { activeTab, tabs, currentTab };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-mega-menu',
@@ -1464,6 +2724,133 @@ createApp({
     category: 'navigation',
     framework: 'vue',
     concepts: ['Teleport', 'transition', 'reactive', 'custom directives'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="menu-bar">
+    <div v-for="menu in menus" :key="menu.label" class="menu-trigger"
+      @mouseenter="openMenu = menu.label" @mouseleave="openMenu = ''">
+      <span class="menu-label">{{ menu.label }}</span>
+      <div v-if="openMenu === menu.label" class="mega-dropdown">
+        <div v-for="section in menu.sections" :key="section.title" class="mega-section">
+          <h4>{{ section.title }}</h4>
+          <a v-for="link in section.links" :key="link" class="mega-link"
+            @click="selected = link; openMenu = ''">{{ link }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-if="selected" class="selected-page">
+    Navigated to: <strong>{{ selected }}</strong>
+  </div>
+</div>`,
+      css: `.menu-bar {
+  display: flex;
+  gap: 2px;
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 0 8px;
+  position: relative;
+}
+
+.menu-trigger {
+  position: relative;
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.menu-label {
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.menu-trigger:hover .menu-label {
+  color: #3b82f6;
+}
+
+.mega-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  gap: 24px;
+  min-width: 320px;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.mega-section h4 {
+  color: #e2e8f0;
+  font-size: 13px;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mega-link {
+  display: block;
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.mega-link:hover {
+  color: #3b82f6;
+}
+
+.selected-page {
+  margin-top: 16px;
+  padding: 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.selected-page strong {
+  color: #3b82f6;
+}`,
+      js: `const { createApp, ref } = Vue;
+
+createApp({
+  setup() {
+    const openMenu = ref('');
+    const selected = ref('');
+
+    const menus = [
+      {
+        label: 'Products',
+        sections: [
+          { title: 'Platform', links: ['API Builder', 'Dashboard', 'Analytics'] },
+          { title: 'Tools', links: ['CLI', 'SDK', 'Plugins'] },
+        ],
+      },
+      {
+        label: 'Solutions',
+        sections: [
+          { title: 'By Industry', links: ['E-Commerce', 'SaaS', 'Healthcare'] },
+          { title: 'By Size', links: ['Startup', 'Enterprise'] },
+        ],
+      },
+      {
+        label: 'Resources',
+        sections: [
+          { title: 'Learn', links: ['Docs', 'Tutorials', 'Blog'] },
+          { title: 'Community', links: ['Forum', 'Discord', 'GitHub'] },
+        ],
+      },
+    ];
+
+    return { openMenu, selected, menus };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-pagination',
@@ -1474,6 +2861,106 @@ createApp({
     category: 'navigation',
     framework: 'vue',
     concepts: ['Vue Router', 'composables', 'watch', 'computed'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="content">
+    <div v-for="item in pageItems" :key="item" class="list-item">
+      Item {{ item }}
+    </div>
+  </div>
+  <div class="pagination">
+    <button :disabled="currentPage <= 1" @click="currentPage = 1" class="pg-btn">\\u00AB</button>
+    <button :disabled="currentPage <= 1" @click="currentPage--" class="pg-btn">\\u2039</button>
+    <button v-for="p in displayedPages" :key="p" @click="currentPage = p"
+      class="pg-btn" :class="{ active: p === currentPage }">{{ p }}</button>
+    <button :disabled="currentPage >= totalPages" @click="currentPage++" class="pg-btn">\\u203A</button>
+    <button :disabled="currentPage >= totalPages" @click="currentPage = totalPages" class="pg-btn">\\u00BB</button>
+  </div>
+  <div class="pg-info">Page {{ currentPage }} of {{ totalPages }} ({{ allItems.length }} items)</div>
+</div>`,
+      css: `.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.list-item {
+  padding: 12px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.pg-btn {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.pg-btn:hover:not(:disabled) {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.pg-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.pg-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pg-info {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 8px;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const perPage = 5;
+    const currentPage = ref(1);
+    const allItems = Array.from({ length: 47 }, (_, i) => i + 1);
+
+    const totalPages = computed(() => Math.ceil(allItems.length / perPage));
+
+    const pageItems = computed(() => {
+      const start = (currentPage.value - 1) * perPage;
+      return allItems.slice(start, start + perPage);
+    });
+
+    const displayedPages = computed(() => {
+      const pages = [];
+      let start = Math.max(1, currentPage.value - 2);
+      let end = Math.min(totalPages.value, start + 4);
+      start = Math.max(1, end - 4);
+      for (let i = start; i <= end; i++) pages.push(i);
+      return pages;
+    });
+
+    return { currentPage, allItems, totalPages, pageItems, displayedPages };
+  }
+}).mount('#app');`,
+    },
   },
 
   // Advanced Features
@@ -1486,6 +2973,168 @@ createApp({
     category: 'advanced',
     framework: 'vue',
     concepts: ['composables', 'VueUse', 'provide/inject', 'lifecycle hooks'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="shortcut-panel">
+    <h3>Keyboard Shortcuts</h3>
+    <p class="hint">Press the key combos below to trigger actions</p>
+    <div class="shortcut-list">
+      <div v-for="s in shortcuts" :key="s.key" class="shortcut-item" :class="{ triggered: lastTriggered === s.key }">
+        <span class="shortcut-action">{{ s.action }}</span>
+        <kbd>{{ s.display }}</kbd>
+      </div>
+    </div>
+    <div v-if="lastTriggered" class="feedback">
+      Triggered: <strong>{{ triggeredAction }}</strong>
+    </div>
+    <div class="try-section">
+      <p>Or click to simulate:</p>
+      <div class="btn-row">
+        <button v-for="s in shortcuts" :key="s.key" @click="triggerAction(s.key)" class="sim-btn">{{ s.display }}</button>
+      </div>
+    </div>
+  </div>
+</div>`,
+      css: `.shortcut-panel {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.shortcut-panel h3 {
+  color: #e2e8f0;
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.hint {
+  color: #64748b;
+  font-size: 13px;
+  margin: 0 0 14px;
+}
+
+.shortcut-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.shortcut-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.shortcut-item.triggered {
+  border-color: #3b82f6;
+  background: rgba(59,130,246,0.1);
+}
+
+.shortcut-action {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+kbd {
+  background: #334155;
+  color: #94a3b8;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 13px;
+  border: 1px solid #475569;
+}
+
+.feedback {
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(59,130,246,0.1);
+  color: #94a3b8;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.feedback strong {
+  color: #3b82f6;
+}
+
+.try-section p {
+  color: #64748b;
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sim-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #94a3b8;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.sim-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}`,
+      js: `const { createApp, ref, computed, onMounted, onUnmounted } = Vue;
+
+createApp({
+  setup() {
+    const shortcuts = [
+      { key: 'ctrl+s', display: 'Ctrl+S', action: 'Save Document' },
+      { key: 'ctrl+n', display: 'Ctrl+N', action: 'New File' },
+      { key: 'ctrl+f', display: 'Ctrl+F', action: 'Find' },
+      { key: 'ctrl+z', display: 'Ctrl+Z', action: 'Undo' },
+      { key: 'ctrl+shift+p', display: 'Ctrl+Shift+P', action: 'Command Palette' },
+    ];
+
+    const lastTriggered = ref('');
+
+    const triggeredAction = computed(() => {
+      const s = shortcuts.find(s => s.key === lastTriggered.value);
+      return s ? s.action : '';
+    });
+
+    const triggerAction = (key) => {
+      lastTriggered.value = key;
+      setTimeout(() => { if (lastTriggered.value === key) lastTriggered.value = ''; }, 1500);
+    };
+
+    const handleKeyDown = (e) => {
+      const parts = [];
+      if (e.ctrlKey || e.metaKey) parts.push('ctrl');
+      if (e.shiftKey) parts.push('shift');
+      parts.push(e.key.toLowerCase());
+      const combo = parts.join('+');
+      const match = shortcuts.find(s => s.key === combo);
+      if (match) {
+        e.preventDefault();
+        triggerAction(match.key);
+      }
+    };
+
+    onMounted(() => document.addEventListener('keydown', handleKeyDown));
+    onUnmounted(() => document.removeEventListener('keydown', handleKeyDown));
+
+    return { shortcuts, lastTriggered, triggeredAction, triggerAction };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-settings',
@@ -1496,6 +3145,187 @@ createApp({
     category: 'advanced',
     framework: 'vue',
     concepts: ['Pinia', 'plugins', 'localStorage', 'v-model'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="settings-panel">
+    <h3>Settings</h3>
+    <div class="setting-group">
+      <label>Theme</label>
+      <div class="btn-group">
+        <button v-for="t in themes" :key="t" :class="{ active: settings.theme === t }" @click="settings.theme = t">{{ t }}</button>
+      </div>
+    </div>
+    <div class="setting-group">
+      <label>Font Size</label>
+      <div class="range-row">
+        <input type="range" v-model.number="settings.fontSize" min="12" max="24" />
+        <span>{{ settings.fontSize }}px</span>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="toggle-row">
+        <span>Notifications</span>
+        <div class="toggle" :class="{ on: settings.notifications }" @click="settings.notifications = !settings.notifications">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="toggle-row">
+        <span>Auto-save</span>
+        <div class="toggle" :class="{ on: settings.autoSave }" @click="settings.autoSave = !settings.autoSave">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <label>Language</label>
+      <select v-model="settings.language">
+        <option v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</option>
+      </select>
+    </div>
+    <div class="preview" :style="{ fontSize: settings.fontSize + 'px' }">
+      Preview text at {{ settings.fontSize }}px ({{ settings.theme }} theme, {{ settings.language }})
+    </div>
+  </div>
+</div>`,
+      css: `.settings-panel {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.settings-panel h3 {
+  color: #e2e8f0;
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+
+.setting-group {
+  margin-bottom: 16px;
+}
+
+.setting-group label {
+  display: block;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-group button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.btn-group button.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.range-row input {
+  flex: 1;
+  accent-color: #3b82f6;
+}
+
+.range-row span {
+  color: #e2e8f0;
+  font-family: monospace;
+  min-width: 40px;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: #334155;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.toggle.on {
+  background: #3b82f6;
+}
+
+.toggle-knob {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.toggle.on .toggle-knob {
+  transform: translateX(20px);
+}
+
+select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
+  outline: none;
+}
+
+.preview {
+  padding: 12px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 4px;
+}`,
+      js: `const { createApp, reactive, watch } = Vue;
+
+createApp({
+  setup() {
+    const themes = ['dark', 'light', 'auto'];
+    const languages = ['English', 'Spanish', 'French', 'German', 'Japanese'];
+
+    const defaults = { theme: 'dark', fontSize: 16, notifications: true, autoSave: false, language: 'English' };
+    const saved = localStorage.getItem('vue-settings');
+    const settings = reactive(saved ? { ...defaults, ...JSON.parse(saved) } : { ...defaults });
+
+    watch(settings, (val) => {
+      localStorage.setItem('vue-settings', JSON.stringify(val));
+    }, { deep: true });
+
+    return { settings, themes, languages };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-notifications',
@@ -1506,6 +3336,217 @@ createApp({
     category: 'advanced',
     framework: 'vue',
     concepts: ['Pinia', 'transition-group', 'composables', 'Teleport'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="header-bar">
+    <h3>Notification Center</h3>
+    <div class="badge-wrap">
+      <button class="bell-btn" @click="showPanel = !showPanel">\\u{1F514}</button>
+      <span v-if="unread > 0" class="badge">{{ unread }}</span>
+    </div>
+  </div>
+  <div class="add-row">
+    <button @click="addNotification('info')">Info</button>
+    <button @click="addNotification('success')">Success</button>
+    <button @click="addNotification('warning')">Warning</button>
+    <button @click="addNotification('error')">Error</button>
+  </div>
+  <div v-if="showPanel" class="notif-panel">
+    <div class="panel-header">
+      <span>Notifications ({{ notifications.length }})</span>
+      <button v-if="notifications.length" @click="markAllRead" class="link-btn">Mark all read</button>
+    </div>
+    <div v-for="n in notifications" :key="n.id" class="notif-item" :class="[n.type, { unread: !n.read }]" @click="n.read = true">
+      <div class="notif-dot" :class="n.type"></div>
+      <div class="notif-content">
+        <span class="notif-msg">{{ n.message }}</span>
+        <span class="notif-time">{{ n.time }}</span>
+      </div>
+      <button class="dismiss" @click.stop="dismiss(n.id)">\\u00D7</button>
+    </div>
+    <div v-if="!notifications.length" class="empty">No notifications</div>
+  </div>
+</div>`,
+      css: `.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.header-bar h3 {
+  color: #e2e8f0;
+  margin: 0;
+  font-size: 16px;
+}
+
+.badge-wrap {
+  position: relative;
+}
+
+.bell-btn {
+  background: #1e293b;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.add-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.add-row button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.add-row button:nth-child(1) { background: #3b82f6; }
+.add-row button:nth-child(2) { background: #22c55e; }
+.add-row button:nth-child(3) { background: #f59e0b; }
+.add-row button:nth-child(4) { background: #ef4444; }
+
+.notif-panel {
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid #334155;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.notif-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #0f172a;
+  cursor: pointer;
+}
+
+.notif-item.unread {
+  background: rgba(59,130,246,0.05);
+}
+
+.notif-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notif-dot.info { background: #3b82f6; }
+.notif-dot.success { background: #22c55e; }
+.notif-dot.warning { background: #f59e0b; }
+.notif-dot.error { background: #ef4444; }
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-msg {
+  color: #e2e8f0;
+  font-size: 14px;
+  display: block;
+}
+
+.notif-time {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.dismiss {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.empty {
+  text-align: center;
+  color: #64748b;
+  padding: 20px;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const notifications = ref([]);
+    const showPanel = ref(true);
+    let nextId = 0;
+
+    const messages = {
+      info: ['New update available', 'System maintenance scheduled', 'Feature request received'],
+      success: ['Deploy completed successfully', 'Tests passed', 'Backup created'],
+      warning: ['Disk space running low', 'API rate limit approaching', 'Certificate expires soon'],
+      error: ['Build failed', 'Connection lost', 'Payment declined'],
+    };
+
+    const unread = computed(() => notifications.value.filter(n => !n.read).length);
+
+    const addNotification = (type) => {
+      const msgs = messages[type];
+      notifications.value.unshift({
+        id: nextId++,
+        type,
+        message: msgs[Math.floor(Math.random() * msgs.length)],
+        time: 'Just now',
+        read: false,
+      });
+    };
+
+    const dismiss = (id) => {
+      notifications.value = notifications.value.filter(n => n.id !== id);
+    };
+
+    const markAllRead = () => {
+      notifications.value.forEach(n => n.read = true);
+    };
+
+    return { notifications, showPanel, unread, addNotification, dismiss, markAllRead };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-favorites',
@@ -1516,6 +3557,150 @@ createApp({
     category: 'advanced',
     framework: 'vue',
     concepts: ['Pinia', 'plugins', 'localStorage', 'reactive'],
+    demoCode: {
+      html: `<div id="app">
+  <h3 class="title">My Favorites <span class="fav-count">({{ favorites.length }})</span></h3>
+  <div class="item-grid">
+    <div v-for="item in items" :key="item.id" class="item-card">
+      <div class="item-icon" :style="{ background: item.color }">{{ item.icon }}</div>
+      <div class="item-info">
+        <span class="item-name">{{ item.name }}</span>
+        <span class="item-desc">{{ item.category }}</span>
+      </div>
+      <button class="fav-btn" :class="{ favorited: isFavorite(item.id) }" @click="toggleFav(item.id)">
+        {{ isFavorite(item.id) ? '\\u2665' : '\\u2661' }}
+      </button>
+    </div>
+  </div>
+  <div v-if="favorites.length" class="fav-section">
+    <h4>Favorited</h4>
+    <div class="fav-chips">
+      <span v-for="id in favorites" :key="id" class="fav-chip" @click="toggleFav(id)">
+        {{ getItem(id).name }} \\u00D7
+      </span>
+    </div>
+  </div>
+</div>`,
+      css: `.title {
+  color: #e2e8f0;
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.fav-count {
+  color: #3b82f6;
+  font-size: 14px;
+}
+
+.item-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.item-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-name {
+  display: block;
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.item-desc {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.fav-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.15s;
+}
+
+.fav-btn.favorited {
+  color: #ef4444;
+}
+
+.fav-section h4 {
+  color: #94a3b8;
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+
+.fav-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.fav-chip {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(59,130,246,0.15);
+  color: #3b82f6;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fav-chip:hover {
+  background: rgba(59,130,246,0.25);
+}`,
+      js: `const { createApp, ref } = Vue;
+
+createApp({
+  setup() {
+    const items = [
+      { id: 1, name: 'Vue.js', icon: '\\u{1F49A}', color: '#22c55e', category: 'Framework' },
+      { id: 2, name: 'TypeScript', icon: '\\u{1F4D8}', color: '#3b82f6', category: 'Language' },
+      { id: 3, name: 'Vite', icon: '\\u{26A1}', color: '#8b5cf6', category: 'Build Tool' },
+      { id: 4, name: 'Pinia', icon: '\\u{1F34D}', color: '#f59e0b', category: 'State' },
+      { id: 5, name: 'Tailwind', icon: '\\u{1F3A8}', color: '#06b6d4', category: 'CSS' },
+    ];
+
+    const stored = localStorage.getItem('vue-favorites');
+    const favorites = ref(stored ? JSON.parse(stored) : []);
+
+    const isFavorite = (id) => favorites.value.includes(id);
+
+    const toggleFav = (id) => {
+      const idx = favorites.value.indexOf(id);
+      if (idx >= 0) favorites.value.splice(idx, 1);
+      else favorites.value.push(id);
+      localStorage.setItem('vue-favorites', JSON.stringify(favorites.value));
+    };
+
+    const getItem = (id) => items.find(i => i.id === id) || items[0];
+
+    return { items, favorites, isFavorite, toggleFav, getItem };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-undo-redo',
@@ -1526,6 +3711,158 @@ createApp({
     category: 'advanced',
     framework: 'vue',
     concepts: ['Pinia', 'plugins', 'composables', 'reactive'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="toolbar">
+    <button @click="undo" :disabled="!canUndo" class="tb-btn">\\u21A9 Undo</button>
+    <button @click="redo" :disabled="!canRedo" class="tb-btn">\\u21AA Redo</button>
+    <span class="history-info">{{ historyIndex + 1 }} / {{ history.length }}</span>
+  </div>
+  <div class="canvas">
+    <div v-for="(item, i) in current" :key="i" class="canvas-item" :style="{ background: item.color }">
+      <span>{{ item.text }}</span>
+      <button class="remove-btn" @click="removeItem(i)">\\u00D7</button>
+    </div>
+  </div>
+  <div class="actions">
+    <button @click="addItem" class="action-btn">+ Add Item</button>
+    <button @click="shuffleColors" class="action-btn shuffle">Shuffle Colors</button>
+  </div>
+</div>`,
+      css: `.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tb-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.tb-btn:hover:not(:disabled) {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.tb-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.history-info {
+  margin-left: auto;
+  color: #64748b;
+  font-size: 13px;
+  font-family: monospace;
+}
+
+.canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  min-height: 80px;
+}
+
+.canvas-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.remove-btn {
+  background: rgba(0,0,0,0.2);
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.action-btn.shuffle {
+  background: #8b5cf6;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const colors = ['#3b82f6','#22c55e','#ef4444','#f59e0b','#8b5cf6','#06b6d4','#ec4899'];
+    const initialState = [
+      { text: 'Item A', color: '#3b82f6' },
+      { text: 'Item B', color: '#22c55e' },
+    ];
+
+    const history = ref([JSON.parse(JSON.stringify(initialState))]);
+    const historyIndex = ref(0);
+
+    const current = computed(() => history.value[historyIndex.value]);
+    const canUndo = computed(() => historyIndex.value > 0);
+    const canRedo = computed(() => historyIndex.value < history.value.length - 1);
+
+    const pushState = (newState) => {
+      history.value = history.value.slice(0, historyIndex.value + 1);
+      history.value.push(JSON.parse(JSON.stringify(newState)));
+      historyIndex.value = history.value.length - 1;
+    };
+
+    const undo = () => { if (canUndo.value) historyIndex.value--; };
+    const redo = () => { if (canRedo.value) historyIndex.value++; };
+
+    const addItem = () => {
+      const next = [...current.value, {
+        text: 'Item ' + String.fromCharCode(65 + current.value.length),
+        color: colors[Math.floor(Math.random() * colors.length)],
+      }];
+      pushState(next);
+    };
+
+    const removeItem = (i) => {
+      const next = current.value.filter((_, idx) => idx !== i);
+      pushState(next);
+    };
+
+    const shuffleColors = () => {
+      const next = current.value.map(item => ({
+        ...item, color: colors[Math.floor(Math.random() * colors.length)],
+      }));
+      pushState(next);
+    };
+
+    return { history, historyIndex, current, canUndo, canRedo, undo, redo, addItem, removeItem, shuffleColors };
+  }
+}).mount('#app');`,
+    },
   },
 
   // UI Components
@@ -1538,6 +3875,159 @@ createApp({
     category: 'ui-components',
     framework: 'vue',
     concepts: ['Suspense', 'transition', 'slots', 'async components'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="controls">
+    <button @click="toggleLoading" class="ctrl-btn">{{ loading ? 'Show Content' : 'Show Skeleton' }}</button>
+  </div>
+  <div v-if="loading" class="skeleton-list">
+    <div v-for="i in 3" :key="i" class="skeleton-card">
+      <div class="skeleton-avatar pulse"></div>
+      <div class="skeleton-lines">
+        <div class="skeleton-line wide pulse"></div>
+        <div class="skeleton-line medium pulse"></div>
+        <div class="skeleton-line narrow pulse"></div>
+      </div>
+    </div>
+  </div>
+  <div v-else class="content-list">
+    <div v-for="item in items" :key="item.id" class="content-card">
+      <div class="avatar" :style="{ background: item.color }">{{ item.initials }}</div>
+      <div class="card-body">
+        <span class="card-title">{{ item.name }}</span>
+        <span class="card-sub">{{ item.role }}</span>
+        <span class="card-desc">{{ item.bio }}</span>
+      </div>
+    </div>
+  </div>
+</div>`,
+      css: `.controls {
+  margin-bottom: 14px;
+}
+
+.ctrl-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.skeleton-list, .content-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.skeleton-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #334155;
+  flex-shrink: 0;
+}
+
+.skeleton-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: #334155;
+}
+
+.skeleton-line.wide { width: 80%; }
+.skeleton-line.medium { width: 60%; }
+.skeleton-line.narrow { width: 40%; }
+
+.pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.content-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.card-body {
+  flex: 1;
+}
+
+.card-title {
+  display: block;
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.card-sub {
+  display: block;
+  color: #3b82f6;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.card-desc {
+  color: #94a3b8;
+  font-size: 13px;
+}`,
+      js: `const { createApp, ref } = Vue;
+
+createApp({
+  setup() {
+    const loading = ref(true);
+
+    const items = [
+      { id: 1, name: 'Alice Chen', initials: 'AC', role: 'Frontend Dev', bio: 'Vue.js and TypeScript enthusiast.', color: '#3b82f6' },
+      { id: 2, name: 'Bob Smith', initials: 'BS', role: 'Designer', bio: 'Crafting beautiful user interfaces.', color: '#8b5cf6' },
+      { id: 3, name: 'Carol Wu', initials: 'CW', role: 'Backend Dev', bio: 'Node.js and database expert.', color: '#22c55e' },
+    ];
+
+    const toggleLoading = () => { loading.value = !loading.value; };
+
+    // Auto-reveal after 2 seconds on first load
+    setTimeout(() => { loading.value = false; }, 2000);
+
+    return { loading, items, toggleLoading };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-empty-states',
@@ -1548,6 +4038,140 @@ createApp({
     category: 'ui-components',
     framework: 'vue',
     concepts: ['slots', 'transition', 'computed', 'props'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="controls">
+    <button v-for="s in states" :key="s.id" @click="currentState = s.id"
+      :class="{ active: currentState === s.id }" class="state-btn">{{ s.label }}</button>
+  </div>
+  <div class="empty-container">
+    <div v-if="currentState === 'no-data'" class="empty-state">
+      <div class="empty-icon">\\u{1F4E6}</div>
+      <h3>No Data Yet</h3>
+      <p>Start by adding your first item. It only takes a few seconds.</p>
+      <button class="empty-action">Create First Item</button>
+    </div>
+    <div v-else-if="currentState === 'no-results'" class="empty-state">
+      <div class="empty-icon">\\u{1F50D}</div>
+      <h3>No Results Found</h3>
+      <p>We couldn't find anything matching your search. Try different keywords.</p>
+      <button class="empty-action secondary">Clear Filters</button>
+    </div>
+    <div v-else-if="currentState === 'error'" class="empty-state error">
+      <div class="empty-icon">\\u{26A0}</div>
+      <h3>Something Went Wrong</h3>
+      <p>We encountered an error loading your data. Please try again.</p>
+      <button class="empty-action danger">Retry</button>
+    </div>
+    <div v-else-if="currentState === 'success'" class="empty-state success">
+      <div class="empty-icon">\\u{2705}</div>
+      <h3>All Done!</h3>
+      <p>You've completed all tasks. Great work!</p>
+      <button class="empty-action success-btn">View Summary</button>
+    </div>
+  </div>
+</div>`,
+      css: `.controls {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.state-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.state-btn.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.empty-container {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 40px 20px;
+}
+
+.empty-state {
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-state h3 {
+  color: #e2e8f0;
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.empty-state p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0 0 20px;
+  line-height: 1.5;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-action {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.empty-action.secondary {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.empty-action.danger {
+  background: #ef4444;
+}
+
+.empty-action.success-btn {
+  background: #22c55e;
+}
+
+.empty-state.error h3 {
+  color: #ef4444;
+}
+
+.empty-state.success h3 {
+  color: #22c55e;
+}`,
+      js: `const { createApp, ref } = Vue;
+
+createApp({
+  setup() {
+    const currentState = ref('no-data');
+    const states = [
+      { id: 'no-data', label: 'No Data' },
+      { id: 'no-results', label: 'No Results' },
+      { id: 'error', label: 'Error' },
+      { id: 'success', label: 'Complete' },
+    ];
+
+    return { currentState, states };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-image-viewer',
@@ -1558,6 +4182,172 @@ createApp({
     category: 'ui-components',
     framework: 'vue',
     concepts: ['custom directives', 'reactive', 'VueUse', 'Teleport'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="viewer-container">
+    <div class="viewer" @wheel.prevent="onWheel" @mousedown="startPan" @mousemove="onPan" @mouseup="endPan" @mouseleave="endPan">
+      <div class="image-wrapper" :style="transformStyle">
+        <div class="demo-image">
+          <div class="img-grid">
+            <div v-for="i in 16" :key="i" class="img-cell" :style="{ background: cellColor(i) }"></div>
+          </div>
+          <span class="img-label">Zoomable Image</span>
+        </div>
+      </div>
+    </div>
+    <div class="viewer-controls">
+      <button @click="zoomIn" class="v-btn">+</button>
+      <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
+      <button @click="zoomOut" class="v-btn">-</button>
+      <button @click="resetView" class="v-btn reset">Reset</button>
+    </div>
+  </div>
+</div>`,
+      css: `.viewer-container {
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.viewer {
+  height: 250px;
+  overflow: hidden;
+  cursor: grab;
+  position: relative;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewer:active {
+  cursor: grabbing;
+}
+
+.image-wrapper {
+  transition: transform 0.1s;
+  transform-origin: center center;
+}
+
+.demo-image {
+  width: 180px;
+  height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #334155;
+}
+
+.img-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+.img-cell {
+  transition: background 0.2s;
+}
+
+.img-label {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(0,0,0,0.5);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.viewer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+}
+
+.v-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.v-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.v-btn.reset {
+  width: auto;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.zoom-level {
+  color: #94a3b8;
+  font-family: monospace;
+  font-size: 14px;
+  min-width: 48px;
+  text-align: center;
+}`,
+      js: `const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    const scale = ref(1);
+    const panX = ref(0);
+    const panY = ref(0);
+    const isPanning = ref(false);
+    const startX = ref(0);
+    const startY = ref(0);
+
+    const colors = ['#3b82f6','#2563eb','#1d4ed8','#60a5fa','#22c55e','#16a34a','#4ade80','#86efac',
+                    '#f59e0b','#d97706','#fbbf24','#fcd34d','#ef4444','#dc2626','#f87171','#fca5a5'];
+
+    const cellColor = (i) => colors[(i - 1) % colors.length];
+
+    const transformStyle = computed(() =>
+      'transform: scale(' + scale.value + ') translate(' + panX.value + 'px, ' + panY.value + 'px)'
+    );
+
+    const zoomIn = () => { scale.value = Math.min(scale.value + 0.25, 4); };
+    const zoomOut = () => { scale.value = Math.max(scale.value - 0.25, 0.25); };
+    const resetView = () => { scale.value = 1; panX.value = 0; panY.value = 0; };
+
+    const onWheel = (e) => {
+      if (e.deltaY < 0) zoomIn(); else zoomOut();
+    };
+
+    const startPan = (e) => {
+      isPanning.value = true;
+      startX.value = e.clientX - panX.value;
+      startY.value = e.clientY - panY.value;
+    };
+
+    const onPan = (e) => {
+      if (!isPanning.value) return;
+      panX.value = e.clientX - startX.value;
+      panY.value = e.clientY - startY.value;
+    };
+
+    const endPan = () => { isPanning.value = false; };
+
+    return { scale, transformStyle, cellColor, zoomIn, zoomOut, resetView, onWheel, startPan, onPan, endPan };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-toggle',
@@ -1568,5 +4358,165 @@ createApp({
     category: 'ui-components',
     framework: 'vue',
     concepts: ['v-model', 'transition', 'props', 'accessibility'],
+    demoCode: {
+      html: `<div id="app">
+  <div class="toggle-demo">
+    <h3>Toggle Switches</h3>
+    <div class="toggle-group">
+      <div v-for="item in toggles" :key="item.id" class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-label">{{ item.label }}</span>
+          <span class="toggle-desc">{{ item.description }}</span>
+        </div>
+        <div class="toggle-switch" :class="{ on: item.value, disabled: item.disabled }"
+          @click="!item.disabled && (item.value = !item.value)"
+          role="switch" :aria-checked="item.value" tabindex="0"
+          @keydown.space.prevent="!item.disabled && (item.value = !item.value)">
+          <div class="knob"></div>
+        </div>
+      </div>
+    </div>
+    <div class="status-box">
+      <div v-for="item in toggles" :key="item.id" class="status-item">
+        <span class="status-dot" :class="item.value ? 'on' : 'off'"></span>
+        {{ item.label }}: <strong>{{ item.value ? 'ON' : 'OFF' }}</strong>
+      </div>
+    </div>
+  </div>
+</div>`,
+      css: `.toggle-demo {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.toggle-demo h3 {
+  color: #e2e8f0;
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #0f172a;
+}
+
+.toggle-info {
+  flex: 1;
+}
+
+.toggle-label {
+  display: block;
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.toggle-desc {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.toggle-switch {
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: #334155;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.25s;
+  flex-shrink: 0;
+}
+
+.toggle-switch.on {
+  background: #3b82f6;
+}
+
+.toggle-switch.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.knob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.toggle-switch.on .knob {
+  transform: translateX(22px);
+}
+
+.toggle-switch:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.status-box {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-item {
+  color: #94a3b8;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-item strong {
+  color: #e2e8f0;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.on {
+  background: #22c55e;
+}
+
+.status-dot.off {
+  background: #475569;
+}`,
+      js: `const { createApp, reactive } = Vue;
+
+createApp({
+  setup() {
+    const toggles = reactive([
+      { id: 1, label: 'Dark Mode', description: 'Use dark color theme', value: true, disabled: false },
+      { id: 2, label: 'Notifications', description: 'Receive push notifications', value: false, disabled: false },
+      { id: 3, label: 'Auto-Save', description: 'Save changes automatically', value: true, disabled: false },
+      { id: 4, label: 'Beta Features', description: 'Access experimental features', value: false, disabled: false },
+      { id: 5, label: 'Maintenance Mode', description: 'Currently unavailable', value: false, disabled: true },
+    ]);
+
+    return { toggles };
+  }
+}).mount('#app');`,
+    },
   },
 ];

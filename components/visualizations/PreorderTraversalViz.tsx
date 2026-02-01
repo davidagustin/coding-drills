@@ -30,7 +30,7 @@ interface PreorderStep {
 function computeSteps(): PreorderStep[] {
   const steps: PreorderStep[] = [];
   const result: number[] = [];
-  
+
   function preorder(node: TreeNode | null): void {
     if (!node) {
       steps.push({
@@ -40,32 +40,32 @@ function computeSteps(): PreorderStep[] {
       });
       return;
     }
-    
+
     result.push(node.value);
     steps.push({
       node: node.value,
       result: [...result],
       explanation: `Visit ${node.value} (root)`,
     });
-    
+
     preorder(node.left);
     preorder(node.right);
   }
-  
+
   steps.push({
     node: null,
     result: [],
     explanation: 'Start: Preorder traversal (root → left → right)',
   });
-  
+
   preorder(TREE);
-  
+
   steps.push({
     node: null,
     result: [...result],
     explanation: `Complete: [${result.join(', ')}]`,
   });
-  
+
   return steps;
 }
 
@@ -102,22 +102,8 @@ function renderTree(
 
   return (
     <g key={`node-${node.value}-${level}`}>
-      <circle
-        cx={x}
-        cy={y}
-        r={20}
-        fill={nodeColor}
-        stroke="#fff"
-        strokeWidth={2}
-      />
-      <text
-        x={x}
-        y={y + 5}
-        textAnchor="middle"
-        fill="#fff"
-        fontSize="14"
-        fontWeight="bold"
-      >
+      <circle cx={x} cy={y} r={20} fill={nodeColor} stroke="#fff" strokeWidth={2} />
+      <text x={x} y={y + 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold">
         {node.value}
       </text>
       {node.left && (
@@ -171,7 +157,13 @@ export default function PreorderTraversalViz() {
       </div>
 
       <div className="mb-6 p-6 bg-zinc-950 rounded-lg border border-zinc-800">
-        <svg width="100%" height="400" viewBox="0 0 400 400" className="overflow-visible" aria-label="Binary tree visualization">
+        <svg
+          width="100%"
+          height="400"
+          viewBox="0 0 400 400"
+          className="overflow-visible"
+          aria-label="Binary tree visualization"
+        >
           <title>Binary tree visualization</title>
           {renderTree(TREE, 200, 60, 0, currentStep, visited)}
         </svg>

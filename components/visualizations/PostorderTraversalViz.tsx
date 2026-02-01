@@ -30,7 +30,7 @@ interface PostorderStep {
 function computeSteps(): PostorderStep[] {
   const steps: PostorderStep[] = [];
   const result: number[] = [];
-  
+
   function postorder(node: TreeNode | null): void {
     if (!node) {
       steps.push({
@@ -40,10 +40,10 @@ function computeSteps(): PostorderStep[] {
       });
       return;
     }
-    
+
     postorder(node.left);
     postorder(node.right);
-    
+
     result.push(node.value);
     steps.push({
       node: node.value,
@@ -51,21 +51,21 @@ function computeSteps(): PostorderStep[] {
       explanation: `Visit ${node.value} (after children)`,
     });
   }
-  
+
   steps.push({
     node: null,
     result: [],
     explanation: 'Start: Postorder traversal (left → right → root)',
   });
-  
+
   postorder(TREE);
-  
+
   steps.push({
     node: null,
     result: [...result],
     explanation: `Complete: [${result.join(', ')}]`,
   });
-  
+
   return steps;
 }
 
@@ -102,22 +102,8 @@ function renderTree(
 
   return (
     <g key={`node-${node.value}-${level}`}>
-      <circle
-        cx={x}
-        cy={y}
-        r={20}
-        fill={nodeColor}
-        stroke="#fff"
-        strokeWidth={2}
-      />
-      <text
-        x={x}
-        y={y + 5}
-        textAnchor="middle"
-        fill="#fff"
-        fontSize="14"
-        fontWeight="bold"
-      >
+      <circle cx={x} cy={y} r={20} fill={nodeColor} stroke="#fff" strokeWidth={2} />
+      <text x={x} y={y + 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold">
         {node.value}
       </text>
       {node.left && (
@@ -171,7 +157,13 @@ export default function PostorderTraversalViz() {
       </div>
 
       <div className="mb-6 p-6 bg-zinc-950 rounded-lg border border-zinc-800">
-        <svg width="100%" height="400" viewBox="0 0 400 400" className="overflow-visible" aria-label="Binary tree visualization">
+        <svg
+          width="100%"
+          height="400"
+          viewBox="0 0 400 400"
+          className="overflow-visible"
+          aria-label="Binary tree visualization"
+        >
           <title>Binary tree visualization</title>
           {renderTree(TREE, 200, 60, 0, currentStep, visited)}
         </svg>

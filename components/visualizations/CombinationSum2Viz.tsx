@@ -21,7 +21,7 @@ function computeSteps(): Combination2Step[] {
   const steps: Combination2Step[] = [];
   const combinations: number[][] = [];
   const sorted = [...CANDIDATES].sort((a, b) => a - b);
-  
+
   function backtrack(current: number[], start: number, sum: number): void {
     if (sum === TARGET) {
       combinations.push([...current]);
@@ -30,24 +30,24 @@ function computeSteps(): Combination2Step[] {
         current: [...current],
         sum,
         index: start,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Sum = ${TARGET} → Found combination [${current.join(', ')}]`,
       });
       return;
     }
-    
+
     if (sum > TARGET) {
       steps.push({
         candidates: [...sorted],
         current: [...current],
         sum,
         index: start,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Sum ${sum} > ${TARGET} → backtrack`,
       });
       return;
     }
-    
+
     for (let i = start; i < sorted.length; i++) {
       if (i > start && sorted[i] === sorted[i - 1]) {
         steps.push({
@@ -55,36 +55,36 @@ function computeSteps(): Combination2Step[] {
           current: [...current],
           sum,
           index: i,
-          combinations: combinations.map(c => [...c]),
+          combinations: combinations.map((c) => [...c]),
           explanation: `Skip duplicate ${sorted[i]}`,
         });
         continue;
       }
-      
+
       current.push(sorted[i]);
       steps.push({
         candidates: [...sorted],
         current: [...current],
         sum: sum + sorted[i],
         index: i,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Add ${sorted[i]}, current: [${current.join(', ')}], sum: ${sum + sorted[i]}`,
       });
-      
+
       backtrack(current, i + 1, sum + sorted[i]);
-      
+
       current.pop();
       steps.push({
         candidates: [...sorted],
         current: [...current],
         sum: sum,
         index: i,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Remove ${sorted[i]}, backtrack`,
       });
     }
   }
-  
+
   steps.push({
     candidates: [...sorted],
     current: [],
@@ -93,18 +93,18 @@ function computeSteps(): Combination2Step[] {
     combinations: [],
     explanation: `Start: Find unique combinations that sum to ${TARGET} (no duplicates)`,
   });
-  
+
   backtrack([], 0, 0);
-  
+
   steps.push({
     candidates: [...sorted],
     current: [],
     sum: 0,
     index: -1,
-    combinations: combinations.map(c => [...c]),
+    combinations: combinations.map((c) => [...c]),
     explanation: `Complete: Found ${combinations.length} unique combination(s)`,
   });
-  
+
   return steps;
 }
 
@@ -138,7 +138,9 @@ export default function CombinationSum2Viz() {
           Step {step + 1} of {TOTAL_STEPS}
         </p>
         <p className="text-white text-sm">{explanation}</p>
-        <p className="text-zinc-400 text-sm mt-1">Current sum: {sum} / {TARGET}</p>
+        <p className="text-zinc-400 text-sm mt-1">
+          Current sum: {sum} / {TARGET}
+        </p>
         {step === STEPS.length - 1 && (
           <p className="text-yellow-400 font-bold text-lg mt-2">
             Found {combinations.length} unique combination(s)
@@ -153,7 +155,7 @@ export default function CombinationSum2Viz() {
             {candidates.map((n, i) => {
               const isCurrent = index === i;
               const isSkipped = skipped.has(i);
-              
+
               let bgColor: string = COLORS.default;
               if (isCurrent) bgColor = COLORS.current;
               else if (isSkipped) bgColor = COLORS.skipped;

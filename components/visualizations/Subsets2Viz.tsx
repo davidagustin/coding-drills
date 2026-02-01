@@ -19,51 +19,51 @@ function computeSteps(): Subset2Step[] {
   const steps: Subset2Step[] = [];
   const subsets: number[][] = [];
   const sorted = [...NUMS].sort((a, b) => a - b);
-  
+
   function backtrack(current: number[], start: number): void {
     subsets.push([...current]);
     steps.push({
       nums: [...sorted],
       current: [...current],
       index: start,
-      subsets: subsets.map(s => [...s]),
+      subsets: subsets.map((s) => [...s]),
       explanation: `Add subset [${current.length === 0 ? 'empty' : current.join(', ')}]`,
     });
-    
+
     for (let i = start; i < sorted.length; i++) {
       if (i > start && sorted[i] === sorted[i - 1]) {
         steps.push({
           nums: [...sorted],
           current: [...current],
           index: i,
-          subsets: subsets.map(s => [...s]),
+          subsets: subsets.map((s) => [...s]),
           explanation: `Skip duplicate ${sorted[i]}`,
         });
         continue;
       }
-      
+
       current.push(sorted[i]);
       steps.push({
         nums: [...sorted],
         current: [...current],
         index: i,
-        subsets: subsets.map(s => [...s]),
+        subsets: subsets.map((s) => [...s]),
         explanation: `Add ${sorted[i]}, current: [${current.join(', ')}]`,
       });
-      
+
       backtrack(current, i + 1);
-      
+
       current.pop();
       steps.push({
         nums: [...sorted],
         current: [...current],
         index: i,
-        subsets: subsets.map(s => [...s]),
+        subsets: subsets.map((s) => [...s]),
         explanation: `Remove ${sorted[i]}, backtrack`,
       });
     }
   }
-  
+
   steps.push({
     nums: [...sorted],
     current: [],
@@ -71,17 +71,17 @@ function computeSteps(): Subset2Step[] {
     subsets: [],
     explanation: `Start: Find all unique subsets of [${sorted.join(', ')}]`,
   });
-  
+
   backtrack([], 0);
-  
+
   steps.push({
     nums: [...sorted],
     current: [],
     index: -1,
-    subsets: subsets.map(s => [...s]),
+    subsets: subsets.map((s) => [...s]),
     explanation: `Complete: Found ${subsets.length} unique subset(s)`,
   });
-  
+
   return steps;
 }
 
@@ -174,7 +174,10 @@ export default function Subsets2Viz() {
             <h3 className="text-lg font-semibold text-zinc-300 mb-3">Found Subsets</h3>
             <div className="grid grid-cols-4 gap-2">
               {subsets.map((subset, i) => (
-                <div key={i} className="flex gap-1 items-center justify-center flex-wrap p-2 bg-zinc-800 rounded">
+                <div
+                  key={i}
+                  className="flex gap-1 items-center justify-center flex-wrap p-2 bg-zinc-800 rounded"
+                >
                   {subset.length === 0 ? (
                     <span className="text-zinc-500 text-xs">∅</span>
                   ) : (

@@ -20,7 +20,7 @@ interface CombinationStep {
 function computeSteps(): CombinationStep[] {
   const steps: CombinationStep[] = [];
   const combinations: number[][] = [];
-  
+
   function backtrack(current: number[], start: number, sum: number): void {
     if (sum === TARGET) {
       combinations.push([...current]);
@@ -29,24 +29,24 @@ function computeSteps(): CombinationStep[] {
         current: [...current],
         sum,
         index: start,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Sum = ${TARGET} → Found combination [${current.join(', ')}]`,
       });
       return;
     }
-    
+
     if (sum > TARGET) {
       steps.push({
         candidates: [...CANDIDATES],
         current: [...current],
         sum,
         index: start,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Sum ${sum} > ${TARGET} → backtrack`,
       });
       return;
     }
-    
+
     for (let i = start; i < CANDIDATES.length; i++) {
       current.push(CANDIDATES[i]);
       steps.push({
@@ -54,24 +54,24 @@ function computeSteps(): CombinationStep[] {
         current: [...current],
         sum: sum + CANDIDATES[i],
         index: i,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Add ${CANDIDATES[i]}, current: [${current.join(', ')}], sum: ${sum + CANDIDATES[i]}`,
       });
-      
+
       backtrack(current, i, sum + CANDIDATES[i]);
-      
+
       current.pop();
       steps.push({
         candidates: [...CANDIDATES],
         current: [...current],
         sum: sum,
         index: i,
-        combinations: combinations.map(c => [...c]),
+        combinations: combinations.map((c) => [...c]),
         explanation: `Remove ${CANDIDATES[i]}, backtrack`,
       });
     }
   }
-  
+
   steps.push({
     candidates: [...CANDIDATES],
     current: [],
@@ -80,18 +80,18 @@ function computeSteps(): CombinationStep[] {
     combinations: [],
     explanation: `Start: Find combinations that sum to ${TARGET}`,
   });
-  
+
   backtrack([], 0, 0);
-  
+
   steps.push({
     candidates: [...CANDIDATES],
     current: [],
     sum: 0,
     index: -1,
-    combinations: combinations.map(c => [...c]),
+    combinations: combinations.map((c) => [...c]),
     explanation: `Complete: Found ${combinations.length} combination(s)`,
   });
-  
+
   return steps;
 }
 
@@ -123,7 +123,9 @@ export default function CombinationSumViz() {
           Step {step + 1} of {TOTAL_STEPS}
         </p>
         <p className="text-white text-sm">{explanation}</p>
-        <p className="text-zinc-400 text-sm mt-1">Current sum: {sum} / {TARGET}</p>
+        <p className="text-zinc-400 text-sm mt-1">
+          Current sum: {sum} / {TARGET}
+        </p>
         {step === STEPS.length - 1 && (
           <p className="text-yellow-400 font-bold text-lg mt-2">
             Found {combinations.length} combination(s)

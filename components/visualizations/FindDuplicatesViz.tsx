@@ -20,7 +20,7 @@ function computeSteps(): DuplicateStep[] {
   const steps: DuplicateStep[] = [];
   const arr = [...ARRAY];
   const duplicates: number[] = [];
-  
+
   steps.push({
     arr: [...arr],
     index: -1,
@@ -29,11 +29,11 @@ function computeSteps(): DuplicateStep[] {
     duplicates: [],
     explanation: 'Start: Find all duplicates using negative marking',
   });
-  
+
   for (let i = 0; i < arr.length; i++) {
     const num = Math.abs(arr[i]);
     const absNum = num;
-    
+
     steps.push({
       arr: [...arr],
       index: i,
@@ -42,7 +42,7 @@ function computeSteps(): DuplicateStep[] {
       duplicates: [...duplicates],
       explanation: `Check index ${i}, value = ${arr[i]}, abs = ${absNum}`,
     });
-    
+
     if (arr[absNum - 1] < 0) {
       duplicates.push(absNum);
       steps.push({
@@ -65,7 +65,7 @@ function computeSteps(): DuplicateStep[] {
       });
     }
   }
-  
+
   steps.push({
     arr: [...arr],
     index: -1,
@@ -74,7 +74,7 @@ function computeSteps(): DuplicateStep[] {
     duplicates: [...duplicates],
     explanation: `Complete: Found duplicates [${duplicates.join(', ')}]`,
   });
-  
+
   return steps;
 }
 
@@ -122,7 +122,7 @@ export default function FindDuplicatesViz() {
               const isCurrent = index === idx;
               const isMarked = n < 0;
               const isDuplicate = duplicates.includes(Math.abs(n));
-              
+
               let bgColor: string = COLORS.default;
               if (isCurrent) {
                 bgColor = COLORS.current;
