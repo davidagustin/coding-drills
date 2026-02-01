@@ -194,8 +194,31 @@ export default async function FrameworkLayout({ children, params }: LayoutProps)
               </Link>
             </div>
 
-            {/* Framework switcher dropdown */}
+            {/* Docs link + Framework switcher */}
             <div className="flex items-center gap-3">
+              <a
+                href={config.docsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-xs px-2.5 py-1 rounded-full ${config.bgColor} ${config.color} ${config.borderColor} border hover:opacity-80 transition-opacity inline-flex items-center gap-1`}
+                title="Official Documentation"
+              >
+                <svg
+                  className="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+                Docs
+              </a>
               <FrameworkSwitcher framework={framework as FrameworkId} />
             </div>
           </div>

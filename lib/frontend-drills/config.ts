@@ -16,6 +16,7 @@ export interface FrameworkConfig {
   icon: string;
   description: string;
   version: string;
+  docsUrl: string;
 }
 
 export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
@@ -31,6 +32,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     description:
       'Master the DOM API, event handling, and vanilla JavaScript patterns used in every web project.',
     version: 'ES2024',
+    docsUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
   },
   react: {
     id: 'react',
@@ -44,6 +46,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     description:
       'Practice hooks, state management, component patterns, and the React rendering model.',
     version: '19',
+    docsUrl: 'https://react.dev',
   },
   angular: {
     id: 'angular',
@@ -57,6 +60,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     description:
       'Drill Angular decorators, services, dependency injection, RxJS, and template syntax.',
     version: '19',
+    docsUrl: 'https://angular.dev',
   },
   vue: {
     id: 'vue',
@@ -70,6 +74,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     description:
       'Practice the Composition API, reactivity primitives, computed properties, and Vue directives.',
     version: '3.5',
+    docsUrl: 'https://vuejs.org',
   },
 };
 
