@@ -62,7 +62,9 @@ export function LivePreview({
   const scriptType = framework === 'react' ? 'text/babel' : 'text/javascript';
 
   const srcdoc = useMemo(() => {
-    return `<!DOCTYPE html>
+    // Use string concatenation for css/html/js to avoid breaking the
+    // template literal when code contains backticks or ${...} expressions
+    const head = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
@@ -80,17 +82,21 @@ export function LivePreview({
       font-family: inherit;
       font-size: inherit;
     }
-    ${css}
+    `;
+    const mid = `
   </style>
   ${frameworkScripts}
 </head>
 <body>
-  ${html}
+  `;
+    const script = `
   <script type="${scriptType}">
-    ${js}
+    `;
+    const tail = `
   </script>
 </body>
 </html>`;
+    return head + css + mid + html + script + js + tail;
   }, [html, css, js, frameworkScripts, scriptType]);
 
   const allCodeTabs = [

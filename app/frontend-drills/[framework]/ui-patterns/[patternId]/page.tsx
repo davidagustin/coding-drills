@@ -545,6 +545,7 @@ export default function UIPatternDetail() {
   const [mounted, setMounted] = useState(false);
   const [userCode, setUserCode] = useState('');
   const [editorTab, setEditorTab] = useState<'html' | 'css' | 'js'>('js');
+  const [previewKey, setPreviewKey] = useState(0);
 
   useEffect(() => {
     setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- hydration safety
@@ -590,7 +591,9 @@ export default function UIPatternDetail() {
       : `${patternHtml}\n<div id="app"></div>`;
     const previewCss = patternForPreview?.demoCode?.css || '';
 
-    return `<!DOCTYPE html>
+    // Use string concatenation for userCode to avoid breaking the template
+    // literal if the user's code contains backticks or ${...} expressions
+    const head = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
@@ -613,12 +616,21 @@ export default function UIPatternDetail() {
   ${previewHtml}
   <script type="${scriptType}">
 try {
-${userCode}
+`;
+    const tail = `
 } catch(e) { document.body.innerHTML = '<pre style="color:#ef4444;padding:16px;">' + e.message + '</pre>'; }
   </script>
 </body>
 </html>`;
+    return head + userCode + tail;
   }, [userCode, framework, patternForPreview]);
+
+  // Debounce iframe remount so it doesn't flicker on every keystroke
+  useEffect(() => {
+    if (!userPreviewSrcdoc) return;
+    const timer = setTimeout(() => setPreviewKey((k) => k + 1), 400);
+    return () => clearTimeout(timer);
+  }, [userPreviewSrcdoc]);
 
   if (!mounted) {
     return (
@@ -894,6 +906,7 @@ ${userCode}
               {userPreviewSrcdoc ? (
                 <div className="rounded-lg overflow-hidden border border-zinc-700/50 bg-zinc-950/50 flex-1">
                   <iframe
+                    key={previewKey}
                     srcDoc={userPreviewSrcdoc}
                     sandbox="allow-scripts"
                     title="Your implementation preview"
