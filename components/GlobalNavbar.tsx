@@ -29,7 +29,7 @@ export function GlobalNavbar() {
   const currentLanguage = pathParts[0];
   const isLanguagePage =
     currentLanguage &&
-    !['interview', 'regex', 'links', 'api', 'pattern-quiz', 'sitemap.xml', 'robots.txt'].includes(
+    !['interview', 'regex', 'links', 'api', 'pattern-quiz', 'frontend-drills', 'sitemap.xml', 'robots.txt'].includes(
       currentLanguage,
     );
 
@@ -92,6 +92,18 @@ export function GlobalNavbar() {
           <path d="M21 21l-4.35-4.35" />
           <path d="M8 9h6" />
           <path d="M8 13h4" />
+        </svg>
+      ),
+    },
+    {
+      href: '/frontend-drills',
+      label: 'Frontend Drills',
+      icon: (
+        <svg {...navIconProps}>
+          <title>Frontend Drills</title>
+          <path d="M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" />
+          <path d="M7 15l3-3-3-3" />
+          <path d="M13 15h4" />
         </svg>
       ),
     },
