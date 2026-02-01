@@ -3401,6 +3401,150 @@ render();`,
       'Implement multi-column filtering, sorting, and searching in data tables. Use custom filter predicates and combine MatTableDataSource with reactive forms.',
     concepts: ['MatTableDataSource', 'filter predicate', 'MatSort', 'reactive forms'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Advanced Table Filtering</h3>
+  <div class="filters">
+    <input id="search" placeholder="Search name..." />
+    <select id="filter-dept">
+      <option value="">All Depts</option>
+      <option value="Engineering">Engineering</option>
+      <option value="Design">Design</option>
+      <option value="Marketing">Marketing</option>
+    </select>
+    <select id="filter-level">
+      <option value="">All Levels</option>
+      <option value="junior">Junior</option>
+      <option value="mid">Mid</option>
+      <option value="senior">Senior</option>
+    </select>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" data-col="name">Name</th>
+        <th class="sortable" data-col="dept">Dept</th>
+        <th class="sortable" data-col="level">Level</th>
+        <th class="sortable" data-col="score">Score</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div id="result-count" class="count"></div>
+</div>`,
+      css: `.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.filters input, .filters select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+  font-size: 13px;
+  flex: 1;
+  min-width: 90px;
+}
+
+.filters input:focus, .filters select:focus {
+  border-color: #ef4444;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  border-bottom: 2px solid #334155;
+  cursor: pointer;
+  user-select: none;
+}
+
+th:hover { color: #ef4444; }
+
+td {
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #e2e8f0;
+  border-bottom: 1px solid #1e293b;
+}
+
+.count {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+}`,
+      js: `// Simulating Angular MatTableDataSource with custom filter predicate
+const data = [
+  {name:'Alice',dept:'Engineering',level:'senior',score:95},
+  {name:'Bob',dept:'Design',level:'mid',score:82},
+  {name:'Carol',dept:'Marketing',level:'junior',score:78},
+  {name:'Dave',dept:'Engineering',level:'mid',score:88},
+  {name:'Eve',dept:'Design',level:'senior',score:91},
+  {name:'Frank',dept:'Marketing',level:'mid',score:74},
+  {name:'Grace',dept:'Engineering',level:'junior',score:85},
+  {name:'Hank',dept:'Design',level:'junior',score:69},
+];
+
+let sortCol = null, sortDir = 'asc';
+const searchEl = document.getElementById('search');
+const deptEl = document.getElementById('filter-dept');
+const levelEl = document.getElementById('filter-level');
+
+function filtered() {
+  const q = searchEl.value.toLowerCase();
+  const dept = deptEl.value;
+  const level = levelEl.value;
+  let res = data.filter(r =>
+    (!q || r.name.toLowerCase().includes(q)) &&
+    (!dept || r.dept === dept) &&
+    (!level || r.level === level)
+  );
+  if (sortCol) {
+    res.sort((a, b) => {
+      const va = a[sortCol], vb = b[sortCol];
+      const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb));
+      return sortDir === 'asc' ? cmp : -cmp;
+    });
+  }
+  return res;
+}
+
+function render() {
+  const rows = filtered();
+  document.getElementById('tbody').innerHTML = rows.map(r =>
+    '<tr><td>' + r.name + '</td><td>' + r.dept + '</td><td>' + r.level + '</td><td>' + r.score + '</td></tr>'
+  ).join('') || '<tr><td colspan="4" style="text-align:center;color:#64748b">No results</td></tr>';
+  document.getElementById('result-count').textContent = rows.length + ' of ' + data.length + ' records';
+}
+
+searchEl.addEventListener('input', render);
+deptEl.addEventListener('change', render);
+levelEl.addEventListener('change', render);
+
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    else { sortCol = col; sortDir = 'asc'; }
+    render();
+  });
+});
+
+render();`,
+    },
   },
   {
     id: 'ng-dashboard',
@@ -3411,6 +3555,158 @@ render();`,
       'Create a customizable dashboard with draggable and resizable widget panels. Save layout preferences and support widget-specific configurations.',
     concepts: ['Angular CDK', 'DragDrop', 'local storage', 'dynamic components'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Dashboard Widgets</h3>
+  <div class="dash-toolbar">
+    <button id="add-widget" class="add-btn">+ Add Widget</button>
+    <button id="reset-btn" class="reset-btn">Reset</button>
+  </div>
+  <div class="dashboard" id="dashboard"></div>
+</div>`,
+      css: `.dash-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.add-btn, .reset-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.add-btn:hover { border-color: #ef4444; color: #ef4444; }
+.reset-btn:hover { border-color: #64748b; }
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.widget {
+  background: #1e293b;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.widget:active { cursor: grabbing; }
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #334155;
+}
+
+.widget-header .title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.widget-header .remove {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.widget-body {
+  padding: 14px;
+  text-align: center;
+}
+
+.widget-body .big-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+.widget-body .label {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.widget.dragging {
+  opacity: 0.4;
+}
+
+.widget.over {
+  border-color: #ef4444;
+}`,
+      js: `// Simulating Angular CDK DragDrop dashboard with local storage
+const widgetTypes = [
+  { title: 'Revenue', value: '$12.4K', label: 'This month' },
+  { title: 'Users', value: '1,284', label: 'Active users' },
+  { title: 'Orders', value: '356', label: 'Pending orders' },
+  { title: 'Uptime', value: '99.9%', label: 'Last 30 days' },
+];
+
+let widgets = JSON.parse(localStorage.getItem('ng-dash') || 'null') || widgetTypes.slice(0, 4).map((w, i) => ({ ...w, id: i }));
+let nextId = widgets.length;
+
+function save() { localStorage.setItem('ng-dash', JSON.stringify(widgets)); }
+
+function render() {
+  const dash = document.getElementById('dashboard');
+  dash.innerHTML = widgets.map(w =>
+    '<div class="widget" draggable="true" data-id="' + w.id + '"><div class="widget-header"><span class="title">' + w.title + '</span><button class="remove" data-id="' + w.id + '">&times;</button></div><div class="widget-body"><div class="big-num">' + w.value + '</div><div class="label">' + w.label + '</div></div></div>'
+  ).join('') || '<div style="grid-column:span 2;text-align:center;color:#64748b;padding:24px">No widgets. Click + Add Widget.</div>';
+  setupDrag();
+}
+
+function setupDrag() {
+  let dragId = null;
+  document.querySelectorAll('.widget[draggable]').forEach(el => {
+    el.addEventListener('dragstart', (e) => { dragId = parseInt(el.dataset.id); el.classList.add('dragging'); });
+    el.addEventListener('dragend', () => { el.classList.remove('dragging'); document.querySelectorAll('.widget').forEach(w => w.classList.remove('over')); });
+    el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('over'); });
+    el.addEventListener('dragleave', () => el.classList.remove('over'));
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const dropId = parseInt(el.dataset.id);
+      const fromIdx = widgets.findIndex(w => w.id === dragId);
+      const toIdx = widgets.findIndex(w => w.id === dropId);
+      if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
+        const [moved] = widgets.splice(fromIdx, 1);
+        widgets.splice(toIdx, 0, moved);
+        save(); render();
+      }
+    });
+  });
+  document.querySelectorAll('.remove').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      widgets = widgets.filter(w => w.id !== parseInt(btn.dataset.id));
+      save(); render();
+    });
+  });
+}
+
+document.getElementById('add-widget').addEventListener('click', () => {
+  const t = widgetTypes[nextId % widgetTypes.length];
+  widgets.push({ ...t, id: nextId++ });
+  save(); render();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  widgets = widgetTypes.slice(0, 4).map((w, i) => ({ ...w, id: i }));
+  nextId = 4; save(); render();
+});
+
+render();`,
+    },
   },
 
   // Navigation
@@ -3423,6 +3719,150 @@ render();`,
       'Build a responsive sidebar with collapsible menu items and route-based active state highlighting. Use Angular router and animations for smooth transitions.',
     concepts: ['router', 'routerLinkActive', 'animations', 'sidenav'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <div class="layout">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo">&#9674; App</span>
+        <button id="toggle-btn" class="toggle-btn">&#9776;</button>
+      </div>
+      <nav class="nav-list" id="nav-list">
+        <div class="nav-item active" data-route="dashboard"><span class="icon">&#9632;</span><span class="label">Dashboard</span></div>
+        <div class="nav-item" data-route="projects"><span class="icon">&#9733;</span><span class="label">Projects</span></div>
+        <div class="nav-item has-sub" data-route="settings">
+          <span class="icon">&#9881;</span><span class="label">Settings</span><span class="arrow">&#9662;</span>
+        </div>
+        <div class="sub-menu" id="sub-settings" style="display:none">
+          <div class="nav-item sub" data-route="profile"><span class="label">Profile</span></div>
+          <div class="nav-item sub" data-route="security"><span class="label">Security</span></div>
+        </div>
+        <div class="nav-item" data-route="help"><span class="icon">&#10067;</span><span class="label">Help</span></div>
+      </nav>
+    </div>
+    <div class="main" id="main-content">
+      <div class="page-title" id="page-title">Dashboard</div>
+      <p class="page-desc">Click sidebar items to navigate. Toggle collapse with the menu button.</p>
+    </div>
+  </div>
+</div>`,
+      css: `.layout {
+  display: flex;
+  height: 280px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #334155;
+}
+
+.sidebar {
+  width: 180px;
+  background: #1e293b;
+  transition: width 0.3s;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: 48px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+}
+
+.logo {
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .logo { display: none; }
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nav-list {
+  padding: 8px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-item:hover { background: rgba(239,68,68,0.05); color: #e2e8f0; }
+.nav-item.active { color: #ef4444; background: rgba(239,68,68,0.1); }
+.nav-item.sub { padding-left: 36px; font-size: 12px; }
+
+.arrow {
+  margin-left: auto;
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.arrow.open { transform: rotate(180deg); }
+
+.sidebar.collapsed .label,
+.sidebar.collapsed .arrow { display: none; }
+
+.main {
+  flex: 1;
+  padding: 16px;
+  background: #0f172a;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.page-desc {
+  font-size: 13px;
+  color: #64748b;
+}`,
+      js: `// Simulating Angular collapsible sidebar with router
+const sidebar = document.getElementById('sidebar');
+const navList = document.getElementById('nav-list');
+const subMenu = document.getElementById('sub-settings');
+const pageTitle = document.getElementById('page-title');
+
+document.getElementById('toggle-btn').addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+});
+
+navList.addEventListener('click', (e) => {
+  const item = e.target.closest('.nav-item');
+  if (!item) return;
+  const route = item.dataset.route;
+  if (item.classList.contains('has-sub')) {
+    const open = subMenu.style.display !== 'none';
+    subMenu.style.display = open ? 'none' : 'block';
+    item.querySelector('.arrow').classList.toggle('open', !open);
+    return;
+  }
+  navList.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  item.classList.add('active');
+  pageTitle.textContent = route.charAt(0).toUpperCase() + route.slice(1);
+});`,
+    },
   },
   {
     id: 'ng-navbar',
@@ -3433,6 +3873,160 @@ render();`,
       'Create a responsive navigation bar with hamburger menu for mobile. Dynamically generate menu items from route configuration and handle authentication states.',
     concepts: ['router', 'responsive design', 'ngFor', 'route guards'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <nav class="navbar">
+    <div class="brand">&#9674; MyApp</div>
+    <div class="nav-links" id="nav-links">
+      <a class="nav-link active" data-route="home">Home</a>
+      <a class="nav-link" data-route="features">Features</a>
+      <a class="nav-link" data-route="pricing">Pricing</a>
+      <a class="nav-link" data-route="contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <span class="user" id="user-badge">Guest</span>
+      <button id="login-btn" class="login-btn">Login</button>
+    </div>
+    <button class="hamburger" id="hamburger">&#9776;</button>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu" style="display:none">
+    <a class="mobile-link" data-route="home">Home</a>
+    <a class="mobile-link" data-route="features">Features</a>
+    <a class="mobile-link" data-route="pricing">Pricing</a>
+    <a class="mobile-link" data-route="contact">Contact</a>
+  </div>
+  <div class="content" id="content">
+    <div class="page-name" id="page-name">Home</div>
+  </div>
+</div>`,
+      css: `.navbar {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: #1e293b;
+  border-radius: 10px 10px 0 0;
+  gap: 12px;
+}
+
+.brand {
+  font-weight: 700;
+  color: #ef4444;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link, .mobile-link {
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-link:hover, .mobile-link:hover { background: rgba(239,68,68,0.05); color: #e2e8f0; }
+.nav-link.active { color: #ef4444; background: rgba(239,68,68,0.1); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.login-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #ef4444;
+  background: transparent;
+  color: #ef4444;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.login-btn:hover { background: #ef4444; color: white; }
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  background: #1e293b;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-link {
+  padding: 10px 12px;
+  display: block;
+}
+
+.content {
+  padding: 20px;
+  background: #0f172a;
+  border-radius: 0 0 10px 10px;
+  min-height: 80px;
+}
+
+.page-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e2e8f0;
+}`,
+      js: `// Simulating Angular responsive navbar with route guards
+let loggedIn = false;
+const links = document.getElementById('nav-links');
+const pageName = document.getElementById('page-name');
+const userBadge = document.getElementById('user-badge');
+const loginBtn = document.getElementById('login-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+const hamburger = document.getElementById('hamburger');
+
+function navigate(route, el) {
+  if (route === 'pricing' && !loggedIn) {
+    pageName.textContent = 'Access Denied - Login required for Pricing';
+    return;
+  }
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if (el) el.classList.add('active');
+  pageName.textContent = route.charAt(0).toUpperCase() + route.slice(1);
+  mobileMenu.style.display = 'none';
+}
+
+links.addEventListener('click', (e) => {
+  if (e.target.dataset.route) navigate(e.target.dataset.route, e.target);
+});
+
+mobileMenu.addEventListener('click', (e) => {
+  if (e.target.dataset.route) navigate(e.target.dataset.route);
+});
+
+hamburger.addEventListener('click', () => {
+  mobileMenu.style.display = mobileMenu.style.display === 'none' ? 'flex' : 'none';
+});
+
+loginBtn.addEventListener('click', () => {
+  loggedIn = !loggedIn;
+  loginBtn.textContent = loggedIn ? 'Logout' : 'Login';
+  userBadge.textContent = loggedIn ? 'Admin' : 'Guest';
+});`,
+    },
   },
   {
     id: 'ng-breadcrumbs',
@@ -3443,6 +4037,118 @@ render();`,
       'Generate breadcrumb navigation automatically from Angular router configuration. Use route data to customize breadcrumb labels and support dynamic segments.',
     concepts: ['router', 'ActivatedRoute', 'route data', 'navigation'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Auto-Generated Breadcrumbs</h3>
+  <div class="breadcrumbs" id="breadcrumbs"></div>
+  <div class="route-tree">
+    <div class="route-item" data-path="home">Home</div>
+    <div class="route-item" data-path="home/products">Products</div>
+    <div class="route-item" data-path="home/products/electronics">Electronics</div>
+    <div class="route-item" data-path="home/products/electronics/phones">Phones</div>
+    <div class="route-item" data-path="home/settings">Settings</div>
+    <div class="route-item" data-path="home/settings/profile">Profile</div>
+  </div>
+  <p class="hint">Click any route to see auto-generated breadcrumbs.</p>
+</div>`,
+      css: `.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  min-height: 40px;
+}
+
+.crumb {
+  font-size: 13px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.crumb:hover { color: #ef4444; }
+
+.crumb.current {
+  color: #e2e8f0;
+  font-weight: 600;
+  cursor: default;
+}
+
+.separator {
+  color: #334155;
+  font-size: 12px;
+}
+
+.route-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.route-item {
+  padding: 10px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+.route-item:hover {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.route-item.active {
+  border-left-color: #ef4444;
+  color: #ef4444;
+}
+
+.hint {
+  margin-top: 14px;
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+  font-style: italic;
+}`,
+      js: `// Simulating Angular auto-generated breadcrumbs from router config
+const crumbsEl = document.getElementById('breadcrumbs');
+let currentPath = 'home';
+
+function renderBreadcrumbs(path) {
+  const parts = path.split('/');
+  let html = '';
+  parts.forEach((part, i) => {
+    const fullPath = parts.slice(0, i + 1).join('/');
+    const isLast = i === parts.length - 1;
+    if (i > 0) html += '<span class="separator">/</span>';
+    html += '<span class="crumb' + (isLast ? ' current' : '') + '" data-path="' + fullPath + '">' + part.charAt(0).toUpperCase() + part.slice(1) + '</span>';
+  });
+  crumbsEl.innerHTML = html;
+}
+
+function navigate(path) {
+  currentPath = path;
+  renderBreadcrumbs(path);
+  document.querySelectorAll('.route-item').forEach(r => r.classList.toggle('active', r.dataset.path === path));
+}
+
+document.querySelector('.route-tree').addEventListener('click', (e) => {
+  const item = e.target.closest('.route-item');
+  if (item) navigate(item.dataset.path);
+});
+
+crumbsEl.addEventListener('click', (e) => {
+  const crumb = e.target.closest('.crumb:not(.current)');
+  if (crumb) navigate(crumb.dataset.path);
+});
+
+navigate('home');`,
+    },
   },
   {
     id: 'ng-bottom-nav',
@@ -3453,6 +4159,122 @@ render();`,
       'Implement mobile-friendly bottom navigation with route-based active states. Handle route guards and integrate with Angular Material components.',
     concepts: ['router', 'mobile UI', 'routerLinkActive', 'route guards'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <div class="phone-frame">
+    <div class="screen" id="screen">
+      <div class="screen-title" id="screen-title">Home</div>
+      <div class="screen-body" id="screen-body"></div>
+    </div>
+    <nav class="bottom-nav" id="bottom-nav">
+      <div class="bnav-item active" data-route="home"><span class="bnav-icon">&#9632;</span><span class="bnav-label">Home</span></div>
+      <div class="bnav-item" data-route="search"><span class="bnav-icon">&#128269;</span><span class="bnav-label">Search</span></div>
+      <div class="bnav-item" data-route="add"><span class="bnav-icon">&#10133;</span><span class="bnav-label">Add</span></div>
+      <div class="bnav-item" data-route="inbox"><span class="bnav-icon">&#9993;</span><span class="bnav-label">Inbox</span><span class="badge">3</span></div>
+      <div class="bnav-item" data-route="profile"><span class="bnav-icon">&#9786;</span><span class="bnav-label">Profile</span></div>
+    </nav>
+  </div>
+</div>`,
+      css: `.phone-frame {
+  width: 280px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid #334155;
+  background: #0f172a;
+}
+
+.screen {
+  min-height: 200px;
+  padding: 16px;
+}
+
+.screen-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 12px;
+}
+
+.screen-body {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.bottom-nav {
+  display: flex;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+}
+
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+  cursor: pointer;
+  position: relative;
+  gap: 2px;
+}
+
+.bnav-icon {
+  font-size: 18px;
+  color: #64748b;
+}
+
+.bnav-label {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.bnav-item.active .bnav-icon,
+.bnav-item.active .bnav-label {
+  color: #ef4444;
+}
+
+.bnav-item:hover .bnav-icon,
+.bnav-item:hover .bnav-label {
+  color: #e2e8f0;
+}
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: calc(50% - 16px);
+  background: #ef4444;
+  color: white;
+  font-size: 9px;
+  min-width: 14px;
+  height: 14px;
+  line-height: 14px;
+  border-radius: 7px;
+  text-align: center;
+  font-weight: 600;
+}`,
+      js: `// Simulating Angular mobile bottom navigation with routerLinkActive
+const nav = document.getElementById('bottom-nav');
+const title = document.getElementById('screen-title');
+const body = document.getElementById('screen-body');
+
+const screens = {
+  home: 'Welcome to the app! Browse recent activity and updates.',
+  search: 'Search for content, users, and more.',
+  add: 'Create new content or start a new project.',
+  inbox: 'You have 3 unread messages in your inbox.',
+  profile: 'View and edit your profile settings.',
+};
+
+nav.addEventListener('click', (e) => {
+  const item = e.target.closest('.bnav-item');
+  if (!item) return;
+  const route = item.dataset.route;
+  nav.querySelectorAll('.bnav-item').forEach(i => i.classList.remove('active'));
+  item.classList.add('active');
+  title.textContent = route.charAt(0).toUpperCase() + route.slice(1);
+  body.textContent = screens[route];
+});`,
+    },
   },
   {
     id: 'ng-mega-menu',
@@ -3463,6 +4285,129 @@ render();`,
       'Build complex multi-level navigation menus with lazy-loaded content. Handle keyboard navigation, hover states, and accessibility (ARIA) attributes.',
     concepts: ['nested components', 'lazy loading', 'accessibility', 'overlay'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Mega Menu</h3>
+  <nav class="menu-bar" id="menu-bar">
+    <div class="menu-trigger" data-menu="products">Products &#9662;</div>
+    <div class="menu-trigger" data-menu="solutions">Solutions &#9662;</div>
+    <div class="menu-trigger" data-menu="resources">Resources &#9662;</div>
+  </nav>
+  <div class="mega-panel" id="mega-panel" style="display:none"></div>
+</div>`,
+      css: `.menu-bar {
+  display: flex;
+  gap: 2px;
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.menu-trigger {
+  padding: 10px 16px;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.menu-trigger:hover, .menu-trigger.active {
+  color: #ef4444;
+  background: rgba(239,68,68,0.05);
+}
+
+.mega-panel {
+  background: #1e293b;
+  border-radius: 0 0 10px 10px;
+  padding: 16px;
+  border: 1px solid #334155;
+  border-top: 2px solid #ef4444;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mega-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.mega-col h4 {
+  font-size: 12px;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px 0;
+}
+
+.mega-col a {
+  display: block;
+  padding: 6px 0;
+  color: #94a3b8;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mega-col a:hover {
+  color: #e2e8f0;
+}`,
+      js: `// Simulating Angular multi-level mega menu
+const menus = {
+  products: [
+    { title: 'Analytics', items: ['Dashboard','Reports','Insights'] },
+    { title: 'Automation', items: ['Workflows','Triggers','Scheduler'] },
+    { title: 'Integrations', items: ['API','Webhooks','Plugins'] }
+  ],
+  solutions: [
+    { title: 'Enterprise', items: ['Security','Compliance','SSO'] },
+    { title: 'Startups', items: ['Free Tier','Growth Plan','Support'] },
+    { title: 'Teams', items: ['Collaboration','Shared Workspace','Chat'] }
+  ],
+  resources: [
+    { title: 'Learn', items: ['Documentation','Tutorials','Videos'] },
+    { title: 'Community', items: ['Forum','Discord','Events'] },
+    { title: 'Support', items: ['Contact Us','FAQ','Status Page'] }
+  ]
+};
+
+const bar = document.getElementById('menu-bar');
+const panel = document.getElementById('mega-panel');
+let activeMenu = null;
+
+bar.addEventListener('click', (e) => {
+  const trigger = e.target.closest('.menu-trigger');
+  if (!trigger) return;
+  const menuKey = trigger.dataset.menu;
+  if (activeMenu === menuKey) {
+    closeMenu();
+    return;
+  }
+  activeMenu = menuKey;
+  bar.querySelectorAll('.menu-trigger').forEach(t => t.classList.toggle('active', t.dataset.menu === menuKey));
+  const cols = menus[menuKey];
+  panel.innerHTML = '<div class="mega-columns">' + cols.map(col =>
+    '<div class="mega-col"><h4>' + col.title + '</h4>' + col.items.map(item => '<a>' + item + '</a>').join('') + '</div>'
+  ).join('') + '</div>';
+  panel.style.display = 'block';
+});
+
+function closeMenu() {
+  activeMenu = null;
+  panel.style.display = 'none';
+  bar.querySelectorAll('.menu-trigger').forEach(t => t.classList.remove('active'));
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#menu-bar') && !e.target.closest('#mega-panel')) closeMenu();
+});
+
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });`,
+    },
   },
   {
     id: 'ng-pagination',
@@ -3473,6 +4418,138 @@ render();`,
       'Create pagination controls with customizable page sizes and URL-based state using query parameters. Integrate with data tables or lists.',
     concepts: ['pagination', 'query params', 'router', 'MatPaginator'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Pagination</h3>
+  <div class="size-control">
+    <label>Per page:</label>
+    <select id="page-size">
+      <option value="3">3</option>
+      <option value="5" selected>5</option>
+      <option value="10">10</option>
+    </select>
+  </div>
+  <ul id="item-list" class="item-list"></ul>
+  <div class="paginator" id="paginator"></div>
+  <div class="url-bar" id="url-bar"></div>
+</div>`,
+      css: `.size-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.size-control label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.size-control select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+}
+
+.item-list li {
+  padding: 10px 12px;
+  background: #1e293b;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.paginator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.paginator button {
+  min-width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.paginator button:hover:not(:disabled) {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.paginator button.active {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+.paginator button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.url-bar {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: #1e293b;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #64748b;
+  font-family: monospace;
+  text-align: center;
+}`,
+      js: `// Simulating Angular pagination with router query params
+const allItems = Array.from({ length: 23 }, (_, i) => 'Item ' + (i + 1));
+let page = 1;
+let pageSize = 5;
+
+function totalPages() { return Math.ceil(allItems.length / pageSize); }
+
+function render() {
+  const start = (page - 1) * pageSize;
+  const items = allItems.slice(start, start + pageSize);
+  document.getElementById('item-list').innerHTML = items.map(i => '<li>' + i + '</li>').join('');
+  const tp = totalPages();
+  let html = '<button id="pg-prev">&lt;</button>';
+  for (let i = 1; i <= tp; i++) {
+    html += '<button class="pg-num' + (i === page ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
+  }
+  html += '<button id="pg-next">&gt;</button>';
+  document.getElementById('paginator').innerHTML = html;
+  document.getElementById('pg-prev').disabled = page === 1;
+  document.getElementById('pg-next').disabled = page === tp;
+  document.getElementById('url-bar').textContent = '/items?page=' + page + '&size=' + pageSize;
+}
+
+document.getElementById('paginator').addEventListener('click', (e) => {
+  if (e.target.id === 'pg-prev' && page > 1) { page--; render(); }
+  else if (e.target.id === 'pg-next' && page < totalPages()) { page++; render(); }
+  else if (e.target.dataset.page) { page = parseInt(e.target.dataset.page); render(); }
+});
+
+document.getElementById('page-size').addEventListener('change', (e) => {
+  pageSize = parseInt(e.target.value);
+  page = 1;
+  render();
+});
+
+render();`,
+    },
   },
 
   // Advanced Features
@@ -3485,6 +4562,119 @@ render();`,
       'Implement a global keyboard shortcut service using HostListener and RxJS. Support key combinations, context-aware shortcuts, and configurable bindings.',
     concepts: ['HostListener', 'services', 'RxJS', 'keyboard events'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Keyboard Shortcuts</h3>
+  <div class="shortcut-list" id="shortcut-list">
+    <div class="shortcut"><kbd>Ctrl</kbd>+<kbd>N</kbd> <span>New item</span></div>
+    <div class="shortcut"><kbd>Ctrl</kbd>+<kbd>S</kbd> <span>Save</span></div>
+    <div class="shortcut"><kbd>Ctrl</kbd>+<kbd>F</kbd> <span>Search</span></div>
+    <div class="shortcut"><kbd>Ctrl</kbd>+<kbd>D</kbd> <span>Delete</span></div>
+    <div class="shortcut"><kbd>Esc</kbd> <span>Close / Cancel</span></div>
+  </div>
+  <div id="log" class="log">Press a shortcut key combination...</div>
+  <div class="search-overlay" id="search-overlay" style="display:none">
+    <input id="search-input" placeholder="Search..." />
+  </div>
+</div>`,
+      css: `.shortcut-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #1e293b;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #e2e8f0;
+  font-family: monospace;
+}
+
+.shortcut span {
+  margin-left: auto;
+}
+
+.log {
+  padding: 12px;
+  background: #1e293b;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #22c55e;
+  text-align: center;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1e293b;
+  border: 1px solid #ef4444;
+  border-radius: 10px;
+  padding: 12px;
+  width: 80%;
+  max-width: 300px;
+  z-index: 10;
+}
+
+.search-overlay input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
+  outline: none;
+  font-size: 14px;
+}`,
+      js: `// Simulating Angular keyboard shortcut service with HostListener
+const log = document.getElementById('log');
+const overlay = document.getElementById('search-overlay');
+let itemCount = 0;
+
+const shortcuts = {
+  'n': () => { itemCount++; return 'Created new item #' + itemCount; },
+  's': () => 'Saved successfully!',
+  'f': () => { overlay.style.display = 'block'; document.getElementById('search-input').focus(); return 'Search opened'; },
+  'd': () => 'Item deleted',
+};
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    overlay.style.display = 'none';
+    log.textContent = 'Cancelled';
+    return;
+  }
+  if ((e.ctrlKey || e.metaKey) && shortcuts[e.key]) {
+    e.preventDefault();
+    const msg = shortcuts[e.key]();
+    log.textContent = msg;
+    log.style.animation = 'none';
+    void log.offsetWidth;
+    log.style.animation = '';
+  }
+});`,
+    },
   },
   {
     id: 'ng-settings-panel',
@@ -3495,6 +4685,215 @@ render();`,
       'Build a settings panel using reactive forms with localStorage or IndexedDB persistence. Support themes, user preferences, and real-time preview of changes.',
     concepts: ['reactive forms', 'localStorage', 'services', 'state management'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Settings Panel</h3>
+  <div class="settings">
+    <div class="setting-row">
+      <label>Theme</label>
+      <div class="toggle-group">
+        <button class="tg active" data-theme="dark">Dark</button>
+        <button class="tg" data-theme="light">Light</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <label>Accent Color</label>
+      <div class="color-options" id="color-options">
+        <div class="color-dot active" data-color="#ef4444" style="background:#ef4444"></div>
+        <div class="color-dot" data-color="#3b82f6" style="background:#3b82f6"></div>
+        <div class="color-dot" data-color="#22c55e" style="background:#22c55e"></div>
+        <div class="color-dot" data-color="#a855f7" style="background:#a855f7"></div>
+      </div>
+    </div>
+    <div class="setting-row">
+      <label>Font Size</label>
+      <input type="range" id="font-size" min="12" max="20" value="14" />
+      <span id="fs-value">14px</span>
+    </div>
+    <div class="setting-row">
+      <label>Notifications</label>
+      <div class="switch" id="notif-switch"><div class="switch-thumb"></div></div>
+    </div>
+  </div>
+  <div class="preview" id="preview">
+    <p>Preview text with current settings.</p>
+  </div>
+  <button id="save-btn" class="save-btn">Save Settings</button>
+  <div id="saved-msg" class="saved" style="display:none">Settings saved!</div>
+</div>`,
+      css: `.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+}
+
+.setting-row label {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.toggle-group {
+  display: flex;
+  gap: 2px;
+  background: #0f172a;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.tg {
+  padding: 4px 12px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tg.active {
+  background: #ef4444;
+  color: white;
+}
+
+.color-options {
+  display: flex;
+  gap: 6px;
+}
+
+.color-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.color-dot.active {
+  border-color: white;
+}
+
+input[type="range"] {
+  flex: 1;
+  margin: 0 10px;
+  accent-color: #ef4444;
+}
+
+.switch {
+  width: 40px;
+  height: 22px;
+  background: #334155;
+  border-radius: 11px;
+  cursor: pointer;
+  padding: 2px;
+  transition: background 0.2s;
+}
+
+.switch.on {
+  background: #ef4444;
+}
+
+.switch-thumb {
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.switch.on .switch-thumb {
+  transform: translateX(18px);
+}
+
+.preview {
+  padding: 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: all 0.3s;
+}
+
+.preview p {
+  margin: 0;
+  color: #e2e8f0;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.saved {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #22c55e;
+}`,
+      js: `// Simulating Angular settings panel with localStorage persistence
+let settings = JSON.parse(localStorage.getItem('ng-settings') || '{}');
+settings = { theme: 'dark', accent: '#ef4444', fontSize: 14, notifications: false, ...settings };
+const preview = document.getElementById('preview');
+
+function applySettings() {
+  preview.style.fontSize = settings.fontSize + 'px';
+  preview.style.borderLeft = '3px solid ' + settings.accent;
+  document.getElementById('fs-value').textContent = settings.fontSize + 'px';
+}
+
+// Theme toggle
+document.querySelector('.toggle-group').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('tg')) return;
+  settings.theme = e.target.dataset.theme;
+  document.querySelectorAll('.tg').forEach(t => t.classList.toggle('active', t.dataset.theme === settings.theme));
+});
+
+// Accent color
+document.getElementById('color-options').addEventListener('click', (e) => {
+  const dot = e.target.closest('.color-dot');
+  if (!dot) return;
+  settings.accent = dot.dataset.color;
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.toggle('active', d.dataset.color === settings.accent));
+  applySettings();
+});
+
+// Font size
+document.getElementById('font-size').addEventListener('input', (e) => {
+  settings.fontSize = parseInt(e.target.value);
+  applySettings();
+});
+
+// Notifications toggle
+document.getElementById('notif-switch').addEventListener('click', function() {
+  settings.notifications = !settings.notifications;
+  this.classList.toggle('on', settings.notifications);
+});
+
+// Save
+document.getElementById('save-btn').addEventListener('click', () => {
+  localStorage.setItem('ng-settings', JSON.stringify(settings));
+  const msg = document.getElementById('saved-msg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 2000);
+});
+
+applySettings();
+document.getElementById('notif-switch').classList.toggle('on', settings.notifications);`,
+    },
   },
   {
     id: 'ng-notifications-center',
@@ -3505,6 +4904,187 @@ render();`,
       'Create a notification center with RxJS Subject-based event system. Support read/unread states, notification filtering, and real-time updates via WebSockets.',
     concepts: ['RxJS', 'Subject', 'observables', 'WebSockets'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Notification Center</h3>
+  <div class="nc-header">
+    <button id="bell" class="bell">&#128276; <span id="badge" class="badge" style="display:none">0</span></button>
+    <div class="filter-tabs">
+      <button class="ft active" data-filter="all">All</button>
+      <button class="ft" data-filter="unread">Unread</button>
+      <button class="ft" data-filter="info">Info</button>
+      <button class="ft" data-filter="alert">Alert</button>
+    </div>
+    <button id="mark-all" class="mark-all">Mark all read</button>
+  </div>
+  <div id="notif-list" class="notif-list"></div>
+  <button id="simulate-btn" class="sim-btn">Simulate New Notification</button>
+</div>`,
+      css: `.nc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.bell {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+
+.ft {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.ft.active { color: #ef4444; background: rgba(239,68,68,0.1); }
+
+.mark-all {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #64748b;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.notif-list {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notif {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #1e293b;
+  border-radius: 8px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+.notif.unread { border-left-color: #ef4444; background: #1a2744; }
+
+.notif .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notif .dot.info { background: #3b82f6; }
+.notif .dot.alert { background: #ef4444; }
+
+.notif .text { flex: 1; font-size: 13px; color: #e2e8f0; }
+.notif .time { font-size: 10px; color: #64748b; }
+
+.sim-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.sim-btn:hover { border-color: #ef4444; color: #ef4444; }`,
+      js: `// Simulating Angular notification center with RxJS Subject
+const notifications = [
+  { id: 1, text: 'New deployment succeeded', type: 'info', read: false, time: '2m ago' },
+  { id: 2, text: 'Server CPU usage above 90%', type: 'alert', read: false, time: '5m ago' },
+  { id: 3, text: 'User John signed up', type: 'info', read: true, time: '1h ago' },
+  { id: 4, text: 'Payment failed for order #42', type: 'alert', read: true, time: '3h ago' },
+];
+let nextId = 5;
+let filter = 'all';
+const badge = document.getElementById('badge');
+
+function render() {
+  const filtered = notifications.filter(n => {
+    if (filter === 'unread') return !n.read;
+    if (filter === 'info' || filter === 'alert') return n.type === filter;
+    return true;
+  });
+  document.getElementById('notif-list').innerHTML = filtered.map(n =>
+    '<div class="notif' + (n.read ? '' : ' unread') + '" data-id="' + n.id + '"><div class="dot ' + n.type + '"></div><div class="text">' + n.text + '</div><div class="time">' + n.time + '</div></div>'
+  ).join('') || '<div style="padding:16px;text-align:center;color:#64748b;font-size:13px">No notifications</div>';
+  const unread = notifications.filter(n => !n.read).length;
+  badge.textContent = unread;
+  badge.style.display = unread > 0 ? 'inline-block' : 'none';
+}
+
+document.getElementById('notif-list').addEventListener('click', (e) => {
+  const el = e.target.closest('.notif');
+  if (!el) return;
+  const notif = notifications.find(n => n.id === parseInt(el.dataset.id));
+  if (notif) { notif.read = true; render(); }
+});
+
+document.querySelector('.filter-tabs').addEventListener('click', (e) => {
+  if (!e.target.dataset.filter) return;
+  filter = e.target.dataset.filter;
+  document.querySelectorAll('.ft').forEach(f => f.classList.toggle('active', f.dataset.filter === filter));
+  render();
+});
+
+document.getElementById('mark-all').addEventListener('click', () => {
+  notifications.forEach(n => n.read = true);
+  render();
+});
+
+document.getElementById('simulate-btn').addEventListener('click', () => {
+  const msgs = ['Build completed','New comment on PR','Alert: disk space low','User invited to team'];
+  const types = ['info','alert'];
+  notifications.unshift({
+    id: nextId++,
+    text: msgs[Math.floor(Math.random() * msgs.length)],
+    type: types[Math.floor(Math.random() * 2)],
+    read: false,
+    time: 'now'
+  });
+  render();
+});
+
+render();`,
+    },
   },
   {
     id: 'ng-favorites',
@@ -3515,6 +5095,143 @@ render();`,
       'Implement favorites/bookmarks functionality with NgRx or service-based state management. Support adding, removing, organizing, and persisting user favorites.',
     concepts: ['NgRx', 'state management', 'services', 'local storage'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Favorites Management</h3>
+  <div class="section-label">Items</div>
+  <div id="items" class="item-grid"></div>
+  <div class="section-label">Favorites <span id="fav-count" class="fav-count">0</span></div>
+  <div id="favorites" class="fav-list"></div>
+</div>`,
+      css: `.section-label {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 12px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fav-count {
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 9px;
+  text-align: center;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #1e293b;
+  border-radius: 8px;
+}
+
+.item-card .name {
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.fav-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #334155;
+  transition: color 0.2s;
+}
+
+.fav-btn.active {
+  color: #ef4444;
+}
+
+.fav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 40px;
+}
+
+.fav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(239,68,68,0.08);
+  border-radius: 6px;
+  border-left: 3px solid #ef4444;
+}
+
+.fav-item .name {
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.empty {
+  font-size: 12px;
+  color: #64748b;
+  text-align: center;
+  padding: 12px;
+}`,
+      js: `// Simulating Angular favorites with NgRx-style state management
+const items = ['Angular','React','Vue','Svelte','TypeScript','RxJS','NgRx','Tailwind'];
+let favorites = JSON.parse(localStorage.getItem('ng-favs') || '[]');
+
+function save() { localStorage.setItem('ng-favs', JSON.stringify(favorites)); }
+
+function render() {
+  document.getElementById('items').innerHTML = items.map(item =>
+    '<div class="item-card"><span class="name">' + item + '</span><button class="fav-btn' + (favorites.includes(item) ? ' active' : '') + '" data-item="' + item + '">' + (favorites.includes(item) ? '\\u2665' : '\\u2661') + '</button></div>'
+  ).join('');
+
+  document.getElementById('fav-count').textContent = favorites.length;
+  document.getElementById('favorites').innerHTML = favorites.length
+    ? favorites.map(f => '<div class="fav-item"><span class="name">' + f + '</span><button class="remove-btn" data-item="' + f + '">&times;</button></div>').join('')
+    : '<div class="empty">No favorites yet. Click a heart to add.</div>';
+}
+
+document.getElementById('items').addEventListener('click', (e) => {
+  const btn = e.target.closest('.fav-btn');
+  if (!btn) return;
+  const item = btn.dataset.item;
+  if (favorites.includes(item)) {
+    favorites = favorites.filter(f => f !== item);
+  } else {
+    favorites.push(item);
+  }
+  save(); render();
+});
+
+document.getElementById('favorites').addEventListener('click', (e) => {
+  const btn = e.target.closest('.remove-btn');
+  if (!btn) return;
+  favorites = favorites.filter(f => f !== btn.dataset.item);
+  save(); render();
+});
+
+render();`,
+    },
   },
   {
     id: 'ng-undo-redo',
@@ -3525,6 +5242,174 @@ render();`,
       'Build an undo/redo system using command pattern and RxJS. Track state changes, implement command history, and support keyboard shortcuts.',
     concepts: ['command pattern', 'RxJS', 'state management', 'memento pattern'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Undo/Redo System</h3>
+  <div class="toolbar">
+    <button id="undo-btn" class="tb" disabled>&#8592; Undo</button>
+    <button id="redo-btn" class="tb" disabled>Redo &#8594;</button>
+    <span id="history-info" class="info"></span>
+  </div>
+  <div class="canvas" id="canvas">
+    <div class="item-row" id="item-row"></div>
+    <div class="actions">
+      <button id="add-btn" class="act-btn">+ Add</button>
+      <button id="color-btn" class="act-btn">Change Color</button>
+      <button id="remove-btn" class="act-btn">Remove Last</button>
+    </div>
+  </div>
+  <div class="history" id="history-log"></div>
+</div>`,
+      css: `.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tb {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tb:not(:disabled):hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.tb:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.info {
+  margin-left: auto;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.canvas {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 16px;
+  min-height: 120px;
+}
+
+.item-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 50px;
+  margin-bottom: 12px;
+}
+
+.box {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.act-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.act-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.history {
+  margin-top: 12px;
+  max-height: 80px;
+  overflow-y: auto;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.history div {
+  padding: 2px 0;
+}`,
+      js: `// Simulating Angular undo/redo with command pattern
+const colors = ['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];
+let state = [];
+let undoStack = [];
+let redoStack = [];
+const historyLog = document.getElementById('history-log');
+
+function snapshot() { return JSON.parse(JSON.stringify(state)); }
+
+function execute(action, desc) {
+  undoStack.push({ state: snapshot(), desc: desc });
+  redoStack = [];
+  action();
+  updateUI();
+  historyLog.innerHTML += '<div>' + desc + '</div>';
+  historyLog.scrollTop = historyLog.scrollHeight;
+}
+
+document.getElementById('add-btn').addEventListener('click', () => {
+  execute(() => {
+    state.push(colors[Math.floor(Math.random() * colors.length)]);
+  }, 'Add box');
+});
+
+document.getElementById('color-btn').addEventListener('click', () => {
+  if (state.length === 0) return;
+  execute(() => {
+    const idx = state.length - 1;
+    state[idx] = colors[Math.floor(Math.random() * colors.length)];
+  }, 'Change color');
+});
+
+document.getElementById('remove-btn').addEventListener('click', () => {
+  if (state.length === 0) return;
+  execute(() => { state.pop(); }, 'Remove last');
+});
+
+document.getElementById('undo-btn').addEventListener('click', () => {
+  if (undoStack.length === 0) return;
+  const entry = undoStack.pop();
+  redoStack.push({ state: snapshot(), desc: 'Undo: ' + entry.desc });
+  state = entry.state;
+  updateUI();
+});
+
+document.getElementById('redo-btn').addEventListener('click', () => {
+  if (redoStack.length === 0) return;
+  const entry = redoStack.pop();
+  undoStack.push({ state: snapshot(), desc: 'Redo' });
+  state = entry.state;
+  updateUI();
+});
+
+function updateUI() {
+  document.getElementById('item-row').innerHTML = state.map(c =>
+    '<div class="box" style="background:' + c + '"></div>'
+  ).join('');
+  document.getElementById('undo-btn').disabled = undoStack.length === 0;
+  document.getElementById('redo-btn').disabled = redoStack.length === 0;
+  document.getElementById('history-info').textContent = 'Undo: ' + undoStack.length + ' | Redo: ' + redoStack.length;
+}
+
+updateUI();`,
+    },
   },
 
   // UI Components
@@ -3537,6 +5422,167 @@ render();`,
       'Create loading indicators and skeleton screens using structural directives. Show loading states during async operations with smooth transitions.',
     concepts: ['structural directives', 'loading states', 'async pipe', 'animations'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Loading States</h3>
+  <button id="load-btn" class="load-btn">Load Data</button>
+  <div id="content" class="content">
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-avatar"></div>
+      <div class="skeleton-text">
+        <div class="skeleton skeleton-line w-60"></div>
+        <div class="skeleton skeleton-line w-80"></div>
+        <div class="skeleton skeleton-line w-40"></div>
+      </div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-avatar"></div>
+      <div class="skeleton-text">
+        <div class="skeleton skeleton-line w-70"></div>
+        <div class="skeleton skeleton-line w-50"></div>
+        <div class="skeleton skeleton-line w-90"></div>
+      </div>
+    </div>
+  </div>
+</div>`,
+      css: `.load-btn {
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+
+.load-btn:hover { background: #dc2626; }
+.load-btn:disabled { opacity: 0.5; }
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-card {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skeleton-line {
+  height: 12px;
+}
+
+.w-40 { width: 40%; }
+.w-50 { width: 50%; }
+.w-60 { width: 60%; }
+.w-70 { width: 70%; }
+.w-80 { width: 80%; }
+.w-90 { width: 90%; }
+
+.loaded-card {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: #1e293b;
+  border-radius: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.loaded-card .name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.loaded-card .role {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.loaded-card .email {
+  font-size: 11px;
+  color: #64748b;
+}`,
+      js: `// Simulating Angular loading skeleton with structural directives
+const content = document.getElementById('content');
+const btn = document.getElementById('load-btn');
+const people = [
+  { name: 'Alice', role: 'Developer', email: 'alice@dev.io', color: '#ef4444' },
+  { name: 'Bob', role: 'Designer', email: 'bob@design.io', color: '#3b82f6' },
+];
+
+let loaded = false;
+
+btn.addEventListener('click', () => {
+  if (loaded) {
+    // Reset to skeleton
+    content.innerHTML = Array(2).fill(0).map(() =>
+      '<div class="skeleton-card"><div class="skeleton skeleton-avatar"></div><div class="skeleton-text"><div class="skeleton skeleton-line w-60"></div><div class="skeleton skeleton-line w-80"></div><div class="skeleton skeleton-line w-40"></div></div></div>'
+    ).join('');
+    loaded = false;
+    btn.textContent = 'Load Data';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Loading...';
+  setTimeout(() => {
+    content.innerHTML = people.map(p =>
+      '<div class="loaded-card"><div class="avatar" style="background:' + p.color + '">' + p.name[0] + '</div><div><div class="name">' + p.name + '</div><div class="role">' + p.role + '</div><div class="email">' + p.email + '</div></div></div>'
+    ).join('');
+    btn.disabled = false;
+    btn.textContent = 'Reset';
+    loaded = true;
+  }, 1500);
+});`,
+    },
   },
   {
     id: 'ng-empty-states',
@@ -3547,6 +5593,123 @@ render();`,
       'Design empty state components with ng-content projection for customizable messages and actions. Handle different empty scenarios (no data, no results, errors).',
     concepts: ['ng-content', 'content projection', 'component composition', 'templates'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Empty State Placeholders</h3>
+  <div class="tabs">
+    <button class="tab active" data-state="no-data">No Data</button>
+    <button class="tab" data-state="no-results">No Results</button>
+    <button class="tab" data-state="error">Error</button>
+  </div>
+  <div id="empty-state" class="empty-state"></div>
+</div>`,
+      css: `.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.tab {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #64748b;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+.empty-state {
+  padding: 32px 16px;
+  text-align: center;
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px dashed #334155;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.empty-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.empty-action {
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.empty-action:hover {
+  background: #dc2626;
+}
+
+.empty-action.secondary {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  margin-left: 8px;
+}`,
+      js: `// Simulating Angular empty state with ng-content projection
+const container = document.getElementById('empty-state');
+const states = {
+  'no-data': {
+    icon: '\\u{1F4E6}',
+    title: 'No items yet',
+    desc: 'Get started by creating your first item. It only takes a few seconds.',
+    actions: '<button class="empty-action" onclick="alert(\\'Create clicked\\')">Create First Item</button>'
+  },
+  'no-results': {
+    icon: '\\u{1F50D}',
+    title: 'No results found',
+    desc: 'Try adjusting your search or filters to find what you are looking for.',
+    actions: '<button class="empty-action" onclick="alert(\\'Filters cleared\\')">Clear Filters</button><button class="empty-action secondary" onclick="alert(\\'Help opened\\')">Get Help</button>'
+  },
+  'error': {
+    icon: '\\u{26A0}',
+    title: 'Something went wrong',
+    desc: 'We had trouble loading your data. Please check your connection and try again.',
+    actions: '<button class="empty-action" onclick="alert(\\'Retrying...\\')">Retry</button>'
+  }
+};
+
+function render(stateKey) {
+  const s = states[stateKey];
+  container.innerHTML = '<div class="empty-icon">' + s.icon + '</div><div class="empty-title">' + s.title + '</div><div class="empty-desc">' + s.desc + '</div><div>' + s.actions + '</div>';
+}
+
+document.querySelector('.tabs').addEventListener('click', (e) => {
+  if (!e.target.dataset.state) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.state === e.target.dataset.state));
+  render(e.target.dataset.state);
+});
+
+render('no-data');`,
+    },
   },
   {
     id: 'ng-image-viewer',
@@ -3557,6 +5720,169 @@ render();`,
       'Build an image viewer with zoom and pan capabilities using Angular CDK gestures or custom touch/mouse event handlers. Support pinch-to-zoom on mobile.',
     concepts: ['Angular CDK', 'touch events', 'mouse events', 'transforms'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Image Zoom & Pan</h3>
+  <div class="controls">
+    <button id="zoom-in">+ Zoom In</button>
+    <button id="zoom-out">- Zoom Out</button>
+    <button id="reset-btn">Reset</button>
+    <span id="zoom-level" class="zoom-level">100%</span>
+  </div>
+  <div class="viewer" id="viewer">
+    <div class="image-container" id="image-container">
+      <div class="placeholder-img" id="placeholder">
+        <div class="grid-pattern">
+          <div class="gp-row"><div class="gp-cell c1"></div><div class="gp-cell c2"></div><div class="gp-cell c3"></div></div>
+          <div class="gp-row"><div class="gp-cell c4"></div><div class="gp-cell c5"></div><div class="gp-cell c6"></div></div>
+          <div class="gp-row"><div class="gp-cell c7"></div><div class="gp-cell c8"></div><div class="gp-cell c9"></div></div>
+        </div>
+        <div class="img-label">Drag to pan / Scroll to zoom</div>
+      </div>
+    </div>
+  </div>
+</div>`,
+      css: `.controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.controls button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.zoom-level {
+  margin-left: auto;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.viewer {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  cursor: grab;
+  position: relative;
+}
+
+.viewer:active {
+  cursor: grabbing;
+}
+
+.image-container {
+  position: absolute;
+  transform-origin: 0 0;
+}
+
+.placeholder-img {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.grid-pattern {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gp-row {
+  display: flex;
+  gap: 4px;
+}
+
+.gp-cell {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+}
+
+.c1 { background: #ef4444; }
+.c2 { background: #f97316; }
+.c3 { background: #eab308; }
+.c4 { background: #22c55e; }
+.c5 { background: #3b82f6; }
+.c6 { background: #8b5cf6; }
+.c7 { background: #ec4899; }
+.c8 { background: #14b8a6; }
+.c9 { background: #f43f5e; }
+
+.img-label {
+  font-size: 12px;
+  color: #64748b;
+}`,
+      js: `// Simulating Angular CDK image viewer with zoom and pan
+const viewer = document.getElementById('viewer');
+const container = document.getElementById('image-container');
+let scale = 1;
+let panX = 0, panY = 0;
+let dragging = false;
+let startX, startY, startPanX, startPanY;
+
+function applyTransform() {
+  container.style.transform = 'translate(' + panX + 'px,' + panY + 'px) scale(' + scale + ')';
+  document.getElementById('zoom-level').textContent = Math.round(scale * 100) + '%';
+}
+
+viewer.addEventListener('mousedown', (e) => {
+  dragging = true;
+  startX = e.clientX; startY = e.clientY;
+  startPanX = panX; startPanY = panY;
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!dragging) return;
+  panX = startPanX + (e.clientX - startX);
+  panY = startPanY + (e.clientY - startY);
+  applyTransform();
+});
+
+document.addEventListener('mouseup', () => { dragging = false; });
+
+viewer.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -0.1 : 0.1;
+  scale = Math.max(0.5, Math.min(5, scale + delta));
+  applyTransform();
+}, { passive: false });
+
+document.getElementById('zoom-in').addEventListener('click', () => {
+  scale = Math.min(5, scale + 0.25);
+  applyTransform();
+});
+
+document.getElementById('zoom-out').addEventListener('click', () => {
+  scale = Math.max(0.5, scale - 0.25);
+  applyTransform();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  scale = 1; panX = 0; panY = 0;
+  applyTransform();
+});
+
+applyTransform();`,
+    },
   },
   {
     id: 'ng-toggle-switch',
@@ -3567,5 +5893,150 @@ render();`,
       'Create a custom toggle switch component implementing ControlValueAccessor. Support disabled states, labels, and integration with reactive forms.',
     concepts: ['ControlValueAccessor', 'custom form controls', 'accessibility', 'ARIA'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <h3>Custom Toggle Switch</h3>
+  <div class="toggle-list">
+    <div class="toggle-row">
+      <span class="toggle-label">Dark Mode</span>
+      <div class="toggle" data-key="dark" role="switch" aria-checked="false" tabindex="0">
+        <div class="track"><div class="thumb"></div></div>
+      </div>
+      <span class="status" data-key="dark">Off</span>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Notifications</span>
+      <div class="toggle" data-key="notif" role="switch" aria-checked="false" tabindex="0">
+        <div class="track"><div class="thumb"></div></div>
+      </div>
+      <span class="status" data-key="notif">Off</span>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Auto-Save</span>
+      <div class="toggle on" data-key="auto" role="switch" aria-checked="true" tabindex="0">
+        <div class="track"><div class="thumb"></div></div>
+      </div>
+      <span class="status" data-key="auto">On</span>
+    </div>
+    <div class="toggle-row disabled">
+      <span class="toggle-label">Premium Feature</span>
+      <div class="toggle disabled" data-key="premium" role="switch" aria-checked="false" aria-disabled="true" tabindex="-1">
+        <div class="track"><div class="thumb"></div></div>
+      </div>
+      <span class="status" data-key="premium">Locked</span>
+    </div>
+  </div>
+  <pre id="form-value" class="form-value"></pre>
+</div>`,
+      css: `.toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+}
+
+.toggle-row.disabled {
+  opacity: 0.5;
+}
+
+.toggle-label {
+  flex: 1;
+  font-size: 14px;
+  color: #e2e8f0;
+}
+
+.toggle {
+  cursor: pointer;
+  outline: none;
+}
+
+.toggle.disabled {
+  cursor: not-allowed;
+}
+
+.toggle:focus-visible .track {
+  box-shadow: 0 0 0 2px #ef4444;
+}
+
+.track {
+  width: 44px;
+  height: 24px;
+  background: #334155;
+  border-radius: 12px;
+  padding: 2px;
+  transition: background 0.2s;
+}
+
+.toggle.on .track {
+  background: #ef4444;
+}
+
+.thumb {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.toggle.on .thumb {
+  transform: translateX(20px);
+}
+
+.status {
+  font-size: 12px;
+  color: #64748b;
+  min-width: 30px;
+}
+
+.form-value {
+  padding: 10px 14px;
+  background: #1e293b;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #94a3b8;
+  font-family: monospace;
+}`,
+      js: `// Simulating Angular toggle switch with ControlValueAccessor
+const state = { dark: false, notif: false, auto: true, premium: false };
+
+function updateDisplay() {
+  Object.keys(state).forEach(key => {
+    const toggle = document.querySelector('.toggle[data-key="' + key + '"]');
+    const status = document.querySelector('.status[data-key="' + key + '"]');
+    if (key === 'premium') return;
+    toggle.classList.toggle('on', state[key]);
+    toggle.setAttribute('aria-checked', state[key]);
+    status.textContent = state[key] ? 'On' : 'Off';
+  });
+  document.getElementById('form-value').textContent = JSON.stringify(state, null, 2);
+}
+
+document.querySelectorAll('.toggle:not(.disabled)').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const key = toggle.dataset.key;
+    state[key] = !state[key];
+    updateDisplay();
+  });
+  toggle.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      toggle.click();
+    }
+  });
+});
+
+updateDisplay();`,
+    },
   },
 ];
