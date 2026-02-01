@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -628,9 +629,11 @@ export default function CheatsheetPage() {
   // Track collapsed sections (inverted — all expanded by default)
   const [collapsedSections, setCollapsedSections] = useState<Set<CheatsheetSectionId>>(new Set());
 
-  // Scroll spy with IntersectionObserver
+  // Scroll spy with IntersectionObserver + bottom-of-page fallback
   useEffect(() => {
     if (!cheatsheet || !mounted) return;
+
+    const lastSectionId = cheatsheet.sections[cheatsheet.sections.length - 1]?.id;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -646,6 +649,17 @@ export default function CheatsheetPage() {
       },
     );
 
+    // When scrolled near the bottom, force the last section active since
+    // the IntersectionObserver hot-zone can never reach the final section.
+    function handleScroll() {
+      if (!lastSectionId) return;
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+      if (nearBottom) {
+        setActiveSection(lastSectionId);
+      }
+    }
+
     // Observe each section element
     const timer = setTimeout(() => {
       for (const section of cheatsheet.sections) {
@@ -657,9 +671,12 @@ export default function CheatsheetPage() {
       }
     }, 100);
 
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
     return () => {
       clearTimeout(timer);
       observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
     };
   }, [cheatsheet, mounted]);
 
@@ -681,6 +698,28 @@ export default function CheatsheetPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Back link */}
+      <Link
+        href={`/frontend-drills/${framework}`}
+        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 group"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className="w-4 h-4 group-hover:-translate-x-1 transition-transform"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+          />
+        </svg>
+        Back to {config.name}
+      </Link>
+
       {/* Header */}
       <CheatsheetHeader
         config={config}
