@@ -81,6 +81,159 @@ function getImplementationHint(concept: string, framework: string): string {
     'real-time': 'Use setInterval or requestAnimationFrame for periodic updates',
     'toast notification': 'Create element, append to body, auto-remove with setTimeout',
     animations: 'Use CSS transitions/keyframes or element.animate() for smooth effects',
+
+    // Touch & gesture events
+    'touch events': 'Listen for touchstart/touchmove/touchend; use e.touches[0] for coordinates',
+    'touch gestures': 'Listen for touchstart/touchmove/touchend; track start position and delta',
+    'mobile patterns': 'Use fixed positioning, hide on scroll-down, show on scroll-up',
+    'pointer events': 'Listen for pointerdown/pointermove/pointerup; use e.clientX/Y',
+    'mouse events': 'Listen for mousedown/mousemove/mouseup; use e.clientX/Y for position',
+    'scroll events': 'Listen for scroll event; compare scrollTop to detect direction or position',
+    'event throttling': 'Use requestAnimationFrame or a flag to limit event handler frequency',
+
+    // CSS & visual
+    'css transforms':
+      'Use el.style.transform = "translateX(...)" or "scale(...)" for visual changes',
+    'css transitions': 'Add transition property in CSS; toggle classes for animated state changes',
+    'css grid': 'Use display:grid with grid-template-columns for responsive layouts',
+    'css animations': 'Use CSS @keyframes and animation property, or element.animate()',
+    transitions: 'Use CSS transitions or element.animate() for smooth state changes',
+    'grid layouts': 'Use CSS Grid or Flexbox with gap property for card/image grids',
+    styling: 'Apply conditional CSS classes based on state for visual feedback',
+
+    // Component & architecture patterns
+    'component composition': 'Break UI into smaller reusable components, pass data via props',
+    'progressive disclosure': 'Show basic info first, reveal details on user interaction',
+    'portal rendering': 'Render content outside the component DOM tree (modals, tooltips)',
+    'dynamic forms': 'Generate form fields from a schema/config array dynamically',
+    'modal dialogs': 'Create overlay + centered content, trap focus, close on Escape/backdrop',
+    accordion: 'Toggle visibility of content panels, track open/closed state per section',
+    tooltips: 'Show floating text on hover/focus, position relative to trigger element',
+
+    // Data patterns
+    'list rendering': 'Map over an array to render items; use unique keys for each element',
+    'list manipulation': 'Use splice, filter, or map to add/remove/reorder items in an array',
+    'data formatting': 'Use Intl.NumberFormat, Intl.DateTimeFormat, or template literals',
+    'data transformation': 'Use map/reduce/filter to reshape data for display',
+    'data visualization': 'Render charts/graphs using Canvas API, SVG, or computed dimensions',
+    'data management': 'Track items in state, provide CRUD operations (add, edit, delete)',
+    'data organization': 'Group/categorize items, provide sorting and filtering controls',
+    'virtual scrolling':
+      'Calculate visible range from scrollTop/itemHeight; render only visible items',
+
+    // User experience
+    'user experience': 'Provide loading states, smooth transitions, and clear feedback',
+    'user feedback': 'Show success/error messages, highlight changes, use visual indicators',
+    'user guidance': 'Add placeholder text, labels, progress indicators, and step instructions',
+    'user preferences': 'Save settings to localStorage; apply theme/language/layout preferences',
+    'progress tracking': 'Track completed steps or percentage; update a progress bar/indicator',
+    'loading states': 'Show spinner or skeleton while loading; hide on completion',
+    'empty states': 'Show helpful message with icon and call-to-action when no data exists',
+
+    // Validation & security
+    validation: 'Check input values against rules; display error messages for invalid fields',
+    'input parsing': 'Extract and transform raw input into structured data',
+    'input events': 'Listen for input, change, blur events to process user text in real-time',
+    'cursor position': 'Use input.selectionStart/End and setSelectionRange() to restore cursor',
+    'string manipulation': 'Use slice, replace, padStart, and template literals for formatting',
+    security: 'Validate and sanitize input, prevent XSS, use proper encoding',
+
+    // File & media
+    'file handling': 'Read files from input.files or e.dataTransfer.files; use FileReader API',
+    'file api': 'Use input type="file" change event; read with FileReader or URL.createObjectURL',
+    'image loading': 'Use loading="lazy" attribute or IntersectionObserver for deferred loading',
+    'image optimization': 'Use appropriate image sizes, lazy loading, and placeholder images',
+    'image preview': 'Use URL.createObjectURL(file) or FileReader to show selected images',
+    'image manipulation': 'Clone elements, scale with CSS transform, track mouse for offset',
+    'progress events':
+      'Track upload/download progress with XMLHttpRequest or simulate with setInterval',
+
+    // Timer & async patterns
+    timers:
+      'Use setTimeout for delays, setInterval for repeating, requestAnimationFrame for animation',
+    'auto-play': 'Use setInterval to advance automatically; pause on hover or interaction',
+    'context menus': 'Listen for contextmenu event; use e.preventDefault() to show custom menu',
+
+    // State & history
+    'history tracking': 'Maintain an array of states with a position index for undo/redo',
+    'command pattern':
+      'Store actions as objects with execute/undo methods; maintain a history stack',
+    'url state': 'Sync component state with URL query params using URLSearchParams',
+
+    // Layout & navigation
+    positioning: 'Use absolute/fixed positioning with top/left; clamp to viewport bounds',
+    'mobile menus': 'Toggle hamburger menu, use CSS transform for slide-in animation',
+    'component organization': 'Group related UI into sections with clear visual hierarchy',
+    routing: 'Track active view in state, render conditionally based on selection',
+
+    // Keyboard & shortcuts
+    'keyboard shortcuts': 'Listen for keydown, check e.ctrlKey/metaKey + e.key for combinations',
+    'keyboard events':
+      'Listen for keydown/keyup, handle specific keys like Enter, Escape, Arrow keys',
+    'key combinations': 'Check modifier keys (ctrlKey, shiftKey, altKey) combined with e.key',
+
+    // Canvas & SVG
+    'canvas api': 'Get context with getContext("2d"); use fillRect, beginPath, arc, fill, stroke',
+    svg: 'Create SVG elements with proper namespace; set attributes for shapes and paths',
+
+    // Framework-specific: Vue
+    'v-model': 'Bind form inputs with v-model; use .lazy/.number/.trim modifiers',
+    computed: 'Use computed() for derived state that auto-updates when dependencies change',
+    reactive: 'Use reactive() for objects/arrays, ref() for primitives; access with .value',
+    'composition api': 'Organize logic in setup(), return exposed properties and methods',
+    teleport: 'Use Teleport to render content outside the component DOM tree',
+    slots: 'Use named slots for customizable component content areas',
+    pinia: 'Define stores with defineStore(); use storeToRefs() for reactive destructuring',
+    'provide/inject': 'Use provide() in parent and inject() in child for dependency injection',
+    'transition group': 'Use TransitionGroup for list enter/leave/move animations',
+    watch: 'Use watch() or watchEffect() to react to reactive state changes',
+    'custom directives': 'Register directives with app.directive(); use mounted/updated hooks',
+    'vue router': 'Use useRouter() and useRoute() composables for navigation and route params',
+    'lifecycle hooks': 'Use onMounted(), onUnmounted(), onUpdated() in setup()',
+    'keep-alive': 'Wrap dynamic components to preserve state across toggles',
+    'async components': 'Use defineAsyncComponent() for code-splitting and lazy loading',
+    refs: 'Use ref() for reactive primitives, template refs with ref="name"',
+    'scoped slots': 'Use scoped slots to pass data from child to parent template',
+    modifiers: 'Use event modifiers (.prevent, .stop) and v-model modifiers (.lazy, .number)',
+    'dynamic components': 'Use component :is="..." for runtime component switching',
+
+    // Framework-specific: Angular
+    rxjs: 'Use RxJS operators like map, filter, switchMap, debounceTime with pipe()',
+    observables: 'Subscribe to Observables; manage subscriptions; use async pipe in templates',
+    formbuilder: 'Use FormBuilder to create FormGroup with FormControls and validators',
+    validators: 'Use Validators.required, Validators.email, or custom validator functions',
+    ngmodel: 'Use [(ngModel)] for two-way binding between template and component',
+    'angular cdk': 'Use CDK utilities like Overlay, DragDrop, ScrollingModule, Portal',
+    'dependency injection': 'Register with providedIn and inject into constructors',
+    services: 'Create @Injectable services and inject via constructor parameters',
+    pipes: 'Implement PipeTransform interface with transform() method',
+    directives: 'Use @Directive decorator; handle DOM via ElementRef and HostListener',
+    'structural directives': 'Use *ngIf, *ngFor, *ngSwitch or create custom structural directives',
+    overlay: 'Use CDK Overlay to create floating panels positioned relative to triggers',
+    'content projection': 'Use ng-content for content projection; select attribute for slots',
+    router: 'Use RouterModule with Routes array, routerLink, and ActivatedRoute',
+
+    // API patterns
+    'feature detection': 'Check if API exists: "clipboard" in navigator, "Notification" in window',
+    'permissions api': 'Use Notification.requestPermission() or navigator.permissions.query()',
+    'notification api': 'Use new Notification(title, options) after permission granted',
+    'history api': 'Use history.pushState() and popstate event for URL state sync',
+    'dialog element': 'Use native dialog element with showModal()/close() methods',
+
+    // DOM patterns
+    'template literals': 'Use backtick strings with ${expression} to build dynamic HTML',
+    'regular expressions':
+      'Use /pattern/.test(value) for validation, .replace() for transformation',
+    contenteditable: 'Set contentEditable="true"; use execCommand or Selection API',
+    'selection api': 'Use window.getSelection() and Range objects to manipulate text selections',
+    'dom recycling': 'Reuse existing DOM elements by updating content instead of recreating',
+    'array methods': 'Use filter(), sort(), slice(), map(), reduce() for data transformation',
+    'csv export': 'Build CSV string with headers + rows; create Blob and download via anchor',
+    serialization: 'Use JSON.stringify() to save and JSON.parse() to restore objects',
+    'storage events': 'Listen for window storage event for cross-tab synchronization',
+    interactivity: 'Add click, hover, and keyboard handlers for interactive behavior',
+    'auto-save': 'Debounce changes with setTimeout; save to localStorage or API',
+    'performance optimization': 'Minimize DOM operations; batch updates; use requestAnimationFrame',
   };
 
   const lower = concept.toLowerCase();
@@ -146,7 +299,7 @@ function isSkeletonSetup(t: string): boolean {
   if (/document\.getElementById/.test(t) && /^(const|let|var)\s/.test(t)) return true;
   // Simple value declarations (not arrow functions)
   if (
-    /^(const|let|var)\s+\w+\s*=\s*('|"|`|\d|true|false|null|\[|\{)/.test(t) &&
+    /^(const|let|var)\s+\w+\s*=\s*('|"|`|-?\d|true|false|null|undefined|\[|\{|new\s)/.test(t) &&
     !/=>\s*[{(]/.test(t)
   )
     return true;
@@ -154,6 +307,16 @@ function isSkeletonSetup(t: string): boolean {
   if (/^(const|let)\s+\[/.test(t) && /useState/.test(t)) return true;
   // Angular simulation comment
   if (/^\/\/\s*Simulating/.test(t)) return true;
+  // querySelector / querySelectorAll on variable declarations
+  if (/\.querySelector(All)?\s*\(/.test(t) && /^(const|let|var)\s/.test(t)) return true;
+  // Array.from expressions
+  if (/Array\.from\s*\(/.test(t) && /^(const|let|var)\s/.test(t)) return true;
+  // Math.* expressions
+  if (/Math\.\w+\s*\(/.test(t) && /^(const|let|var)\s/.test(t)) return true;
+  // JSON.parse expressions
+  if (/JSON\.parse\s*\(/.test(t) && /^(const|let|var)\s/.test(t)) return true;
+  // Uninitialized variable declarations: let x, y, z;
+  if (/^(let|var)\s+\w+(,\s*\w+)*\s*;/.test(t)) return true;
   return false;
 }
 
@@ -169,8 +332,10 @@ function buildSkeletonTeardown(
   const result: string[] = [];
 
   if (framework === 'react') {
-    const funcMatch = js.match(/function\s+([A-Z]\w*)/);
-    const name = funcMatch?.[1] || 'App';
+    // Prefer 'App' as mount target; fall back to last PascalCase function
+    const appMatch = js.match(/function\s+(App)\b/);
+    const allFuncs = [...js.matchAll(/function\s+([A-Z]\w*)/g)];
+    const name = appMatch?.[1] || allFuncs[allFuncs.length - 1]?.[1] || 'App';
     result.push(
       `${indent}return (`,
       `${indent}  <div>`,
@@ -201,7 +366,7 @@ function buildSkeletonTeardown(
     }
   } else {
     // Vanilla JS / Angular
-    if (js.includes('function render()') || /\nrender\(\);?\s*$/.test(js)) {
+    if (/function\s+render\w*\s*\(/.test(js) || /\nrender\w*\([^)]*\);?\s*$/.test(js)) {
       result.push(
         `function render() {`,
         `  app.innerHTML = \``,
@@ -231,12 +396,21 @@ function skeletonizeDemo(js: string, concepts: string[], framework: string): str
 
   // Phase 1: Collect setup lines from the top
   const setup: string[] = [];
+  let bracketDepth = 0;
   for (let i = 0; i < lines.length; i++) {
     const t = lines[i].trim();
+    // Continue consuming lines inside multi-line array/object literals
+    if (bracketDepth > 0) {
+      setup.push(lines[i]);
+      bracketDepth += (t.match(/[[{(]/g) || []).length - (t.match(/[\]})]/g) || []).length;
+      continue;
+    }
     if (!t || t.startsWith('//')) {
       setup.push(lines[i]);
     } else if (isSkeletonSetup(t)) {
       setup.push(lines[i]);
+      // Track if this line opens a multi-line array/object
+      bracketDepth += (t.match(/[[{(]/g) || []).length - (t.match(/[\]})]/g) || []).length;
     } else {
       break;
     }
