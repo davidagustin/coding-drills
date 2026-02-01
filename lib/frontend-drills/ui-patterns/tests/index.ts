@@ -53,6 +53,7 @@ window.__tests = [
     ${testDefs}
 ];
 window.__runTests = async function() {
+  var snapshot = document.body.innerHTML;
   var results = [];
   for (var i = 0; i < window.__tests.length; i++) {
     var t = window.__tests[i];
@@ -66,6 +67,7 @@ window.__runTests = async function() {
       results.push({ name: t.name, id: t.id, pass: false, error: e.message });
     }
   }
+  document.body.innerHTML = snapshot;
   window.parent.postMessage({ type: 'pattern-test-results', results: results }, '*');
 };`;
 }
