@@ -582,7 +582,11 @@ std::vector<int> flattenNested(const std::vector<std::vector<int>>& nested) {
         expected: [1, 2, 3, 4, 5, 6],
         description: 'Three inner vectors',
       },
-      { input: [[[1], [2], [3]]], expected: [1, 2, 3], description: 'Single-element inner vectors' },
+      {
+        input: [[[1], [2], [3]]],
+        expected: [1, 2, 3],
+        description: 'Single-element inner vectors',
+      },
       { input: [[[], [1, 2], []]], expected: [1, 2], description: 'Empty inner vectors' },
       { input: [[]], expected: [], description: 'Empty outer vector' },
     ],
@@ -1091,7 +1095,7 @@ std::vector<int> testMinStack(const std::vector<std::vector<int>>& ops) {
     difficulty: 'beginner',
     description:
       'Use std::unordered_map to count character frequencies in a string. Hash maps provide O(1) average-case lookup and insertion.',
-    explanation: `std::unordered_map is C++\'s hash map implementation. It stores key-value pairs with O(1) average-case insert, lookup, and delete operations. Access elements with operator[] (creates default if missing) or .at() (throws if missing).\n\nCounting frequencies is the most common hash map pattern: iterate through elements, using each element as a key and incrementing its count. operator[] automatically initializes missing keys to 0 for integer values.\n\nThis pattern appears in anagram detection, duplicate finding, and many interview problems.`,
+    explanation: `std::unordered_map is C++'s hash map implementation. It stores key-value pairs with O(1) average-case insert, lookup, and delete operations. Access elements with operator[] (creates default if missing) or .at() (throws if missing).\n\nCounting frequencies is the most common hash map pattern: iterate through elements, using each element as a key and incrementing its count. operator[] automatically initializes missing keys to 0 for integer values.\n\nThis pattern appears in anagram detection, duplicate finding, and many interview problems.`,
     instructions: [
       'Given a string, return the frequency count of each character',
       'Use std::unordered_map<char, int> to store counts',
@@ -1145,7 +1149,7 @@ std::unordered_map<char, int> charFrequency(const std::string& s) {
     difficulty: 'intermediate',
     description:
       'Reverse a singly linked list iteratively. This is one of the most commonly asked interview questions and teaches pointer manipulation.',
-    explanation: `Reversing a linked list requires redirecting each node\'s next pointer to point to the previous node instead of the next. Use three pointers: prev (initially null), curr (initially head), and next (to temporarily store curr->next).\n\nAt each step: save next = curr->next, reverse the link curr->next = prev, advance prev = curr and curr = next. When curr becomes null, prev is the new head.\n\nThis runs in O(n) time with O(1) space. Understanding this pattern is crucial for many linked list problems.`,
+    explanation: `Reversing a linked list requires redirecting each node's next pointer to point to the previous node instead of the next. Use three pointers: prev (initially null), curr (initially head), and next (to temporarily store curr->next).\n\nAt each step: save next = curr->next, reverse the link curr->next = prev, advance prev = curr and curr = next. When curr becomes null, prev is the new head.\n\nThis runs in O(n) time with O(1) space. Understanding this pattern is crucial for many linked list problems.`,
     instructions: [
       'Reverse a singly linked list represented as a vector (for simplicity)',
       'Simulate the pointer reversal algorithm',
@@ -1192,7 +1196,7 @@ std::vector<int> reverseLinkedList(const std::vector<int>& list) {
     category: 'data-structures',
     difficulty: 'advanced',
     description:
-      'Use std::priority_queue to implement a min-heap that extracts the k smallest elements. Priority queues are essential for scheduling, Dijkstra\'s algorithm, and top-k problems.',
+      "Use std::priority_queue to implement a min-heap that extracts the k smallest elements. Priority queues are essential for scheduling, Dijkstra's algorithm, and top-k problems.",
     explanation: `std::priority_queue is a max-heap by default. To create a min-heap, use std::greater<int> as the comparator:\npriority_queue<int, vector<int>, greater<int>>.\n\nThe min-heap supports O(log n) insertion and O(log n) extraction of the minimum element. To find the k smallest elements, push all elements into the min-heap and extract k times.\n\nAlternatively, use a max-heap of size k: push each element, and if the heap exceeds size k, pop the maximum. The remaining k elements are the smallest. This uses O(k) space instead of O(n).`,
     instructions: [
       'Given a vector of integers and k, return the k smallest elements in sorted order',
@@ -1239,12 +1243,7 @@ std::vector<int> kSmallest(const std::vector<int>& nums, int k) {
       'Push all elements, then pop k times',
       'top() gives the minimum, pop() removes it',
     ],
-    concepts: [
-      'std::priority_queue',
-      'min-heap',
-      'std::greater',
-      'top-k elements',
-    ],
+    concepts: ['std::priority_queue', 'min-heap', 'std::greater', 'top-k elements'],
   },
 
   // ========== TRAVERSAL ==========
@@ -1493,10 +1492,7 @@ std::vector<int> graphBFS(const std::unordered_map<int, std::vector<int>>& graph
 }`,
     testCases: [
       {
-        input: [
-          { 0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2] },
-          0,
-        ],
+        input: [{ 0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2] }, 0],
         expected: [0, 1, 2, 3],
         description: 'Simple connected graph',
       },
@@ -1516,13 +1512,7 @@ std::vector<int> graphBFS(const std::unordered_map<int, std::vector<int>>& graph
       'For each dequeued node, iterate its neighbors in the adjacency list',
       'Only enqueue neighbors that have not been visited',
     ],
-    concepts: [
-      'graph BFS',
-      'adjacency list',
-      'std::unordered_set',
-      'std::queue',
-      'O(V+E)',
-    ],
+    concepts: ['graph BFS', 'adjacency list', 'std::unordered_set', 'std::queue', 'O(V+E)'],
   },
   {
     id: 'cpp-level-order-traversal',
@@ -1592,7 +1582,11 @@ std::vector<std::vector<int>> levelOrder(const std::vector<int>& tree) {
         expected: [[3], [9, 20], [15, 7]],
         description: 'Three levels',
       },
-      { input: [1, 2, 3, 4, 5, 6, 7], expected: [[1], [2, 3], [4, 5, 6, 7]], description: 'Complete binary tree' },
+      {
+        input: [1, 2, 3, 4, 5, 6, 7],
+        expected: [[1], [2, 3], [4, 5, 6, 7]],
+        description: 'Complete binary tree',
+      },
       { input: [1], expected: [[1]], description: 'Single node' },
     ],
     hints: [
@@ -1804,10 +1798,7 @@ std::vector<std::pair<int, int>> cartesianProduct(
         description: '2x2 Cartesian product',
       },
       {
-        input: [
-          [1],
-          [2, 3, 4],
-        ],
+        input: [[1], [2, 3, 4]],
         expected: [
           [1, 2],
           [1, 3],

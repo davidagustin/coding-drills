@@ -101,11 +101,7 @@ public class Solution
       { input: [42], expected: [42], description: 'Single element' },
       { input: [], expected: [], description: 'Empty list' },
     ],
-    hints: [
-      'Start i at items.Count - 1',
-      'Loop while i >= 0',
-      'Decrement i each iteration: i--',
-    ],
+    hints: ['Start i at items.Count - 1', 'Loop while i >= 0', 'Decrement i each iteration: i--'],
     concepts: ['reverse iteration', 'for loop', 'list indices'],
   },
   {
@@ -153,12 +149,19 @@ public class Solution
 }`,
     testCases: [
       {
-        input: [[1, 2, 3], [4, 5, 6]],
+        input: [
+          [1, 2, 3],
+          [4, 5, 6],
+        ],
         expected: [1, 2, 3, 4, 5, 6],
         description: '2x3 matrix',
       },
       {
-        input: [[1, 2], [3, 4], [5, 6]],
+        input: [
+          [1, 2],
+          [3, 4],
+          [5, 6],
+        ],
         expected: [1, 2, 3, 4, 5, 6],
         description: '3x2 matrix',
       },
@@ -571,12 +574,22 @@ public class Solution
     testCases: [
       {
         input: [1, 2, 3],
-        expected: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 2, 1], [3, 1, 2]],
+        expected: [
+          [1, 2, 3],
+          [1, 3, 2],
+          [2, 1, 3],
+          [2, 3, 1],
+          [3, 2, 1],
+          [3, 1, 2],
+        ],
         description: 'Three elements: 6 permutations',
       },
       {
         input: [1, 2],
-        expected: [[1, 2], [2, 1]],
+        expected: [
+          [1, 2],
+          [2, 1],
+        ],
         description: 'Two elements: 2 permutations',
       },
       {
@@ -647,7 +660,10 @@ public class Solution
         description: 'Mixed nesting',
       },
       {
-        input: [[1, 2], [3, 4]],
+        input: [
+          [1, 2],
+          [3, 4],
+        ],
         expected: [1, 2, 3, 4],
         description: 'One level of nesting',
       },
@@ -1325,7 +1341,7 @@ public class Solution
     category: 'data-structures',
     difficulty: 'advanced',
     description:
-      'Use C# PriorityQueue<TElement, TPriority> to find the k largest elements in an array. Priority queues are essential for scheduling, Dijkstra\'s algorithm, and top-k problems.',
+      "Use C# PriorityQueue<TElement, TPriority> to find the k largest elements in an array. Priority queues are essential for scheduling, Dijkstra's algorithm, and top-k problems.",
     explanation: `C# .NET 6+ provides PriorityQueue<TElement, TPriority> which is a min-heap by default. To find the k largest elements, maintain a min-heap of size k: for each element, if the heap has fewer than k elements, enqueue it; otherwise, if the element is larger than the minimum, dequeue the minimum and enqueue the new element.\n\nAfter processing all elements, the heap contains the k largest. This runs in O(n log k) time, which is better than sorting O(n log n) when k is small.`,
     instructions: [
       'Given an array of integers and k, return the k largest elements in descending order',
@@ -1458,12 +1474,20 @@ public class Solution
 }`,
     testCases: [
       {
-        input: { value: 1, left: { value: 2, left: null, right: null }, right: { value: 3, left: null, right: null } },
+        input: {
+          value: 1,
+          left: { value: 2, left: null, right: null },
+          right: { value: 3, left: null, right: null },
+        },
         expected: [1, 2, 3],
         description: 'Simple tree',
       },
       {
-        input: { value: 1, left: { value: 2, left: { value: 4, left: null, right: null }, right: null }, right: { value: 3, left: null, right: null } },
+        input: {
+          value: 1,
+          left: { value: 2, left: { value: 4, left: null, right: null }, right: null },
+          right: { value: 3, left: null, right: null },
+        },
         expected: [1, 2, 4, 3],
         description: 'Left-heavy tree',
       },
@@ -1550,14 +1574,22 @@ public class Solution
 }`,
     testCases: [
       {
-        input: { value: 1, left: { value: 2, left: null, right: null }, right: { value: 3, left: null, right: null } },
+        input: {
+          value: 1,
+          left: { value: 2, left: null, right: null },
+          right: { value: 3, left: null, right: null },
+        },
         expected: [1, 2, 3],
         description: 'Simple tree',
       },
       {
         input: {
           value: 1,
-          left: { value: 2, left: { value: 4, left: null, right: null }, right: { value: 5, left: null, right: null } },
+          left: {
+            value: 2,
+            left: { value: 4, left: null, right: null },
+            right: { value: 5, left: null, right: null },
+          },
           right: { value: 3, left: null, right: null },
         },
         expected: [1, 2, 3, 4, 5],
@@ -1640,8 +1672,16 @@ public class Solution
       {
         input: {
           value: 4,
-          left: { value: 2, left: { value: 1, left: null, right: null }, right: { value: 3, left: null, right: null } },
-          right: { value: 6, left: { value: 5, left: null, right: null }, right: { value: 7, left: null, right: null } },
+          left: {
+            value: 2,
+            left: { value: 1, left: null, right: null },
+            right: { value: 3, left: null, right: null },
+          },
+          right: {
+            value: 6,
+            left: { value: 5, left: null, right: null },
+            right: { value: 7, left: null, right: null },
+          },
         },
         expected: [1, 2, 3, 4, 5, 6, 7],
         description: 'BST produces sorted order',
@@ -1827,7 +1867,11 @@ public class Solution
         input: {
           value: 3,
           left: { value: 9, left: null, right: null },
-          right: { value: 20, left: { value: 15, left: null, right: null }, right: { value: 7, left: null, right: null } },
+          right: {
+            value: 20,
+            left: { value: 15, left: null, right: null },
+            right: { value: 7, left: null, right: null },
+          },
         },
         expected: [[3], [9, 20], [15, 7]],
         description: 'Three-level tree',
@@ -1983,7 +2027,14 @@ public class Solution
     testCases: [
       {
         input: [4, 2],
-        expected: [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]],
+        expected: [
+          [1, 2],
+          [1, 3],
+          [1, 4],
+          [2, 3],
+          [2, 4],
+          [3, 4],
+        ],
         description: '4 choose 2 = 6 combinations',
       },
       {
@@ -2059,8 +2110,16 @@ public class Solution
 }`,
     testCases: [
       {
-        input: [[1, 2], [3, 4]],
-        expected: [[1, 3], [1, 4], [2, 3], [2, 4]],
+        input: [
+          [1, 2],
+          [3, 4],
+        ],
+        expected: [
+          [1, 3],
+          [1, 4],
+          [2, 3],
+          [2, 4],
+        ],
         description: 'Two lists of two elements',
       },
       {
@@ -2070,7 +2129,12 @@ public class Solution
       },
       {
         input: [[1, 2], [3, 4], [5]],
-        expected: [[1, 3, 5], [1, 4, 5], [2, 3, 5], [2, 4, 5]],
+        expected: [
+          [1, 3, 5],
+          [1, 4, 5],
+          [2, 3, 5],
+          [2, 4, 5],
+        ],
         description: 'Three lists',
       },
     ],
@@ -2323,7 +2387,10 @@ public class Solution
       },
       {
         input: [[1, 2, 3, 4], 2],
-        expected: [[1, 2], [3, 4]],
+        expected: [
+          [1, 2],
+          [3, 4],
+        ],
         description: 'Even chunks',
       },
       {
@@ -2411,12 +2478,18 @@ public class Solution
 }`,
     testCases: [
       {
-        input: [[1, 3, 5], [2, 4, 6]],
+        input: [
+          [1, 3, 5],
+          [2, 4, 6],
+        ],
         expected: [1, 2, 3, 4, 5, 6],
         description: 'Interleaved merge',
       },
       {
-        input: [[1, 2, 3], [4, 5, 6]],
+        input: [
+          [1, 2, 3],
+          [4, 5, 6],
+        ],
         expected: [1, 2, 3, 4, 5, 6],
         description: 'Non-overlapping',
       },
@@ -2426,7 +2499,10 @@ public class Solution
         description: 'First array empty',
       },
       {
-        input: [[1, 1, 1], [1, 1, 1]],
+        input: [
+          [1, 1, 1],
+          [1, 1, 1],
+        ],
         expected: [1, 1, 1, 1, 1, 1],
         description: 'All duplicates',
       },
