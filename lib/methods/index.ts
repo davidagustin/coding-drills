@@ -7,6 +7,7 @@ import { cMethods } from './c';
 import { clojureMethods } from './clojure';
 import { cppMethods } from './cpp';
 import { csharpMethods } from './csharp';
+import { dartMethods } from './dart';
 import { elixirMethods } from './elixir';
 import { goMethods } from './go';
 import { haskellMethods } from './haskell';
@@ -29,6 +30,7 @@ export { cMethods } from './c';
 export { clojureMethods } from './clojure';
 export { cppMethods } from './cpp';
 export { csharpMethods } from './csharp';
+export { dartMethods } from './dart';
 export { elixirMethods } from './elixir';
 export { goMethods } from './go';
 export { haskellMethods } from './haskell';
@@ -71,6 +73,7 @@ export const methodsByLanguage: Partial<Record<LanguageId, Method[]>> = {
   haskell: haskellMethods,
   scala: scalaMethods,
   clojure: clojureMethods,
+  dart: dartMethods,
 };
 
 // Get methods for a specific language
