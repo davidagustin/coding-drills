@@ -35,6 +35,10 @@ export function getPatternTests(
  * Generates the JavaScript test runner code to inject into the sandbox iframe.
  * The runner defines window.__runTests() which executes all tests and posts
  * results back to the parent page via postMessage.
+ *
+ * Tests can be synchronous (return boolean) or async (return Promise<boolean>).
+ * Async tests are useful for dispatching events, waiting for framework re-renders,
+ * then checking DOM state — e.g. clicking a button and verifying the modal opens.
  */
 export function buildTestRunnerScript(tests: PatternTestCase[]): string {
   const testDefs = tests
@@ -48,14 +52,20 @@ export function buildTestRunnerScript(tests: PatternTestCase[]): string {
 window.__tests = [
     ${testDefs}
 ];
-window.__runTests = function() {
-  var results = window.__tests.map(function(t) {
+window.__runTests = async function() {
+  var results = [];
+  for (var i = 0; i < window.__tests.length; i++) {
+    var t = window.__tests[i];
     try {
-      return { name: t.name, id: t.id, pass: !!t.test() };
+      var result = t.test();
+      if (result && typeof result.then === 'function') {
+        result = await result;
+      }
+      results.push({ name: t.name, id: t.id, pass: !!result });
     } catch (e) {
-      return { name: t.name, id: t.id, pass: false, error: e.message };
+      results.push({ name: t.name, id: t.id, pass: false, error: e.message });
     }
-  });
+  }
   window.parent.postMessage({ type: 'pattern-test-results', results: results }, '*');
 };`;
 }

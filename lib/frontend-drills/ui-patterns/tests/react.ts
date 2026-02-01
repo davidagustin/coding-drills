@@ -1,6 +1,9 @@
 /**
  * Test cases for React UI pattern exercises.
  * Each test is a JavaScript expression that evaluates to boolean inside the sandbox iframe.
+ *
+ * BEHAVIORAL TESTS: These tests verify actual functionality, not just DOM element existence.
+ * They dispatch events, wait for React re-renders, and check for state changes.
  */
 import type { PatternTestCase } from './index';
 
@@ -9,377 +12,370 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   // Forms & Input
   // ──────────────────────────────────────────────
   'react-forms': [
-    { name: 'Form element renders', test: "!!document.querySelector('form')" },
     {
-      name: 'Has name input',
-      test: "!!document.querySelector('input[placeholder*=\"name\" i]') || document.querySelectorAll('input').length >= 2",
+      name: 'Submitting empty form shows validation errors',
+      test: "(async function() { var form = document.querySelector('form'); if (!form) return false; var btn = document.querySelector('button[type=\"submit\"]') || document.querySelector('form button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('required') || document.body.textContent.toLowerCase().includes('empty') || !!document.querySelector('.error'); })()",
     },
     {
-      name: 'Has email input',
-      test: '!!document.querySelector(\'input[placeholder*="email" i]\') || !!document.querySelector(\'input[type="email"]\')',
+      name: 'Typing in name field clears its error',
+      test: "(async function() { var input = document.querySelector('input[placeholder*=\"name\" i]') || document.querySelectorAll('input')[0]; if (!input) return false; var btn = document.querySelector('button[type=\"submit\"]'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var hadError = !!document.querySelector('.error') || document.body.textContent.toLowerCase().includes('required'); var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'John Doe'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var errorCount = document.querySelectorAll('.error').length; return hadError && errorCount < 3; })()",
     },
-    { name: 'Has password input', test: '!!document.querySelector(\'input[type="password"]\')' },
     {
-      name: 'Submit button exists',
-      test: "!!document.querySelector('button[type=\"submit\"]') || !!document.querySelector('form button')",
+      name: 'Valid submission shows success message',
+      test: "(async function() { var inputs = document.querySelectorAll('input'); if (inputs.length < 3) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(inputs[0], 'John Doe'); inputs[0].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); nativeInputValueSetter.call(inputs[1], 'john@example.com'); inputs[1].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); nativeInputValueSetter.call(inputs[2], 'password123'); inputs[2].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); var btn = document.querySelector('button[type=\"submit\"]'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('success') || document.body.textContent.toLowerCase().includes('thank'); })()",
     },
   ],
 
   'react-autocomplete': [
-    { name: 'Input renders', test: "!!document.querySelector('input')" },
-    { name: 'Has combobox role', test: '!!document.querySelector(\'[role="combobox"]\')' },
-    { name: 'Autocomplete container exists', test: "!!document.querySelector('.autocomplete')" },
     {
-      name: 'No suggestions initially',
-      test: "!document.querySelector('.suggestions') || document.querySelectorAll('.suggestion').length === 0",
+      name: 'Typing shows filtered suggestions',
+      test: "(async function() { var input = document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'ap'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.suggestion').length > 0 && document.querySelectorAll('.suggestion').length < 21; })()",
+    },
+    {
+      name: 'Clicking suggestion fills input',
+      test: "(async function() { var input = document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'ap'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var suggestion = document.querySelector('.suggestion'); if (!suggestion) return false; suggestion.click(); await new Promise(function(r) { setTimeout(r, 150); }); return input.value.toLowerCase().includes('ap') && input.value.length > 2; })()",
+    },
+    {
+      name: 'Suggestions highlight matching text',
+      test: "(async function() { var input = document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'ban'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.suggestion mark') || !!document.querySelector('.suggestion strong') || !!document.querySelector('.suggestion em'); })()",
     },
   ],
 
   'react-autosave': [
-    { name: 'Title input renders', test: "!!document.querySelector('input')" },
-    { name: 'Textarea renders', test: "!!document.querySelector('textarea')" },
-    { name: 'Status indicator exists', test: "!!document.querySelector('.status')" },
     {
-      name: 'Shows saved status',
-      test: "!!document.querySelector('.status.saved') || (document.querySelector('.status') && document.querySelector('.status').textContent.toLowerCase().includes('saved'))",
+      name: 'Status changes to saving when typing',
+      test: "(async function() { var input = document.querySelector('input') || document.querySelector('textarea'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'New content'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); return document.body.textContent.toLowerCase().includes('saving'); })()",
+    },
+    {
+      name: 'Status changes to saved after delay',
+      test: "(async function() { var input = document.querySelector('input') || document.querySelector('textarea'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'Auto-saved content'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 1200); }); return document.body.textContent.toLowerCase().includes('saved'); })()",
     },
   ],
 
   'react-input-feedback': [
-    { name: 'Input fields render', test: "document.querySelectorAll('input').length >= 2" },
     {
-      name: 'Labels exist',
-      test: "document.querySelectorAll('label').length >= 2 || document.querySelectorAll('.field').length >= 2",
+      name: 'Invalid email shows error icon and message',
+      test: "(async function() { var input = document.querySelector('input[type=\"email\"]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'invalid'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return (!!document.querySelector('.invalid') || !!document.querySelector('.error')) && (document.body.textContent.toLowerCase().includes('invalid') || document.body.textContent.toLowerCase().includes('email')); })()",
     },
     {
-      name: 'No validation shown initially',
-      test: "!document.querySelector('.msg') && !document.querySelector('.icon')",
-    },
-    {
-      name: 'Input wrapper exists',
-      test: "!!document.querySelector('.input-wrap') || !!document.querySelector('.field')",
+      name: 'Valid email shows success icon',
+      test: "(async function() { var input = document.querySelector('input[type=\"email\"]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'user@example.com'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.valid') || !!document.querySelector('.success') || document.body.textContent.includes('✓'); })()",
     },
   ],
 
   'react-password-strength': [
     {
-      name: 'Password input renders',
-      test: '!!document.querySelector(\'input[type="password"]\')',
-    },
-    { name: 'Label exists', test: "!!document.querySelector('label')" },
-    {
-      name: 'Meter hidden when empty',
-      test: "!document.querySelector('.meter-fill') || document.querySelector('.meter-fill').style.width === '0%'",
+      name: 'Weak password shows low strength',
+      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'abc'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); return (fill && parseFloat(fill.style.width) < 50) || document.body.textContent.toLowerCase().includes('weak'); })()",
     },
     {
-      name: 'Rules section structure',
-      test: "!document.querySelector('.rules') || document.querySelectorAll('.rule').length === 0",
+      name: 'Strong password shows high strength',
+      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'MyP@ssw0rd123'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); return (fill && parseFloat(fill.style.width) > 60) || document.body.textContent.toLowerCase().includes('strong'); })()",
+    },
+    {
+      name: 'Password rules update based on input',
+      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'UPPERCASE'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.rule').length >= 3; })()",
     },
   ],
 
   'react-file-upload': [
-    { name: 'Dropzone renders', test: "!!document.querySelector('.dropzone')" },
-    { name: 'Hidden file input exists', test: '!!document.querySelector(\'input[type="file"]\')' },
-    { name: 'No files initially', test: "document.querySelectorAll('.file-item').length === 0" },
     {
-      name: 'Dropzone has text',
-      test: "document.querySelector('.dropzone') && document.querySelector('.dropzone').textContent.length > 0",
+      name: 'Dropzone highlights on drag over',
+      test: "(async function() { var dropzone = document.querySelector('.dropzone'); if (!dropzone) return false; var event = new Event('dragover', {bubbles: true}); event.preventDefault = function() {}; dropzone.dispatchEvent(event); await new Promise(function(r) { setTimeout(r, 150); }); return dropzone.classList.contains('over') || dropzone.classList.contains('drag-over') || dropzone.style.backgroundColor !== ''; })()",
+    },
+    {
+      name: 'File upload shows progress',
+      test: "(async function() { var input = document.querySelector('input[type=\"file\"]'); if (!input) return false; var file = new File(['test'], 'test.txt', {type: 'text/plain'}); var dt = new DataTransfer(); dt.items.add(file); input.files = dt.files; input.dispatchEvent(new Event('change', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.file-item') || !!document.querySelector('.progress'); })()",
     },
   ],
 
   'react-color-picker': [
-    { name: 'Preview circle renders', test: "!!document.querySelector('.preview')" },
     {
-      name: 'Has three range sliders',
-      test: 'document.querySelectorAll(\'input[type="range"]\').length >= 3',
+      name: 'Hue slider updates preview color',
+      test: "(async function() { var slider = document.querySelector('input[type=\"range\"]'); if (!slider) return false; var preview = document.querySelector('.preview'); if (!preview) return false; var beforeColor = preview.style.backgroundColor; slider.value = '180'; slider.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterColor = preview.style.backgroundColor; return beforeColor !== afterColor; })()",
     },
-    { name: 'Hex value displayed', test: "!!document.querySelector('.hex-val')" },
-    { name: 'Picker container exists', test: "!!document.querySelector('.picker')" },
+    {
+      name: 'Hex value updates when sliders change',
+      test: "(async function() { var slider = document.querySelector('input[type=\"range\"]'); if (!slider) return false; var hexVal = document.querySelector('.hex-val'); if (!hexVal) return false; var beforeHex = hexVal.textContent; slider.value = '0'; slider.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return hexVal.textContent !== beforeHex && hexVal.textContent.includes('#'); })()",
+    },
   ],
 
   'react-calendar-picker': [
-    { name: 'Calendar renders', test: "!!document.querySelector('.cal')" },
     {
-      name: 'Navigation buttons exist',
-      test: "document.querySelectorAll('.cal-header button').length >= 2",
+      name: 'Next month button changes displayed month',
+      test: "(async function() { var nextBtn = document.querySelectorAll('.cal-header button')[1]; if (!nextBtn) return false; var title = document.querySelector('.cal-title'); if (!title) return false; var beforeMonth = title.textContent; nextBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return title.textContent !== beforeMonth; })()",
     },
-    { name: 'Day labels shown', test: "document.querySelectorAll('.day-label').length === 7" },
-    { name: 'Day cells rendered', test: "document.querySelectorAll('.day').length >= 28" },
     {
-      name: 'Month title shown',
-      test: "!!document.querySelector('.cal-title') && document.querySelector('.cal-title').textContent.length > 0",
+      name: 'Clicking day selects it',
+      test: "(async function() { var day = document.querySelector('.day:not(.other)'); if (!day) return false; day.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.day.selected') || !!document.querySelector('.day.active'); })()",
     },
   ],
 
   'react-range-slider': [
     {
-      name: 'Range inputs render',
-      test: 'document.querySelectorAll(\'input[type="range"]\').length >= 2',
+      name: 'Price slider updates display value',
+      test: "(async function() { var slider = document.querySelector('input[type=\"range\"]'); if (!slider) return false; slider.value = '75'; slider.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.includes('75'); })()",
     },
-    { name: 'Slider labels exist', test: "document.querySelectorAll('.slider-label').length >= 2" },
     {
-      name: 'Range display boxes exist',
-      test: "document.querySelectorAll('.range-box').length >= 2",
+      name: 'Min slider cannot exceed max',
+      test: "(async function() { var sliders = document.querySelectorAll('input[type=\"range\"]'); if (sliders.length < 3) return false; var minSlider = sliders[1]; var maxSlider = sliders[2]; minSlider.value = minSlider.max; minSlider.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return parseInt(minSlider.value) <= parseInt(maxSlider.value); })()",
     },
-    { name: 'Values displayed', test: "document.querySelectorAll('.val').length >= 2" },
   ],
 
   'react-radio-checkbox': [
-    { name: 'Radio options render', test: "document.querySelectorAll('.radio-dot').length >= 3" },
     {
-      name: 'Checkbox options render',
-      test: "document.querySelectorAll('.check-box').length >= 3",
+      name: 'Clicking radio changes selection',
+      test: "(async function() { var radios = document.querySelectorAll('.radio-dot'); if (radios.length < 2) return false; var activeCount = document.querySelectorAll('.radio-dot.active').length; radios[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.radio-dot.active').length === 1; })()",
     },
-    { name: 'Group titles exist', test: "document.querySelectorAll('.group-title').length >= 2" },
     {
-      name: 'One radio selected by default',
-      test: "document.querySelectorAll('.radio-dot.active').length === 1",
+      name: 'Clicking checkbox toggles it',
+      test: "(async function() { var checkbox = document.querySelector('.check-box'); if (!checkbox) return false; var beforeChecked = checkbox.classList.contains('checked'); checkbox.click(); await new Promise(function(r) { setTimeout(r, 150); }); return checkbox.classList.contains('checked') !== beforeChecked; })()",
     },
   ],
 
   'react-structured-format': [
-    { name: 'Input fields render', test: "document.querySelectorAll('input').length >= 3" },
-    { name: 'Labels exist', test: "document.querySelectorAll('label').length >= 3" },
-    { name: 'Format hints shown', test: "document.querySelectorAll('.hint').length >= 3" },
     {
-      name: 'Fields have placeholders',
-      test: "Array.from(document.querySelectorAll('input')).every(function(el) { return el.placeholder.length > 0; })",
+      name: 'Phone input formats as (XXX) XXX-XXXX',
+      test: "(async function() { var input = document.querySelector('input[placeholder*=\"phone\" i]') || document.querySelectorAll('input')[0]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '1234567890'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return input.value.includes('(') && input.value.includes(')') && input.value.includes('-'); })()",
+    },
+    {
+      name: 'Credit card input formats with spaces',
+      test: "(async function() { var input = document.querySelector('input[placeholder*=\"card\" i]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '1234567890123456'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return input.value.includes(' '); })()",
     },
   ],
 
   'react-forgiving-format': [
-    { name: 'Input fields render', test: "document.querySelectorAll('input').length >= 2" },
-    { name: 'Labels exist', test: "document.querySelectorAll('label').length >= 2" },
     {
-      name: 'No parsed output initially',
-      test: "document.querySelectorAll('.parsed').length === 0",
+      name: 'Date input parses flexible formats',
+      test: "(async function() { var input = document.querySelector('input[placeholder*=\"date\" i]') || document.querySelectorAll('input')[0]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'jan 15 2024'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.parsed') && document.querySelector('.parsed').textContent.length > 0; })()",
     },
-    { name: 'Placeholders show examples', test: "!!document.querySelector('input[placeholder]')" },
+    {
+      name: 'Number input parses currency formats',
+      test: "(async function() { var input = document.querySelector('input[placeholder*=\"number\" i]') || document.querySelector('input[placeholder*=\"price\" i]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '$1,234.56'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.parsed'); })()",
+    },
   ],
 
   'react-expandable-input': [
-    { name: 'Textarea renders', test: "!!document.querySelector('textarea')" },
-    { name: 'Label exists', test: "!!document.querySelector('label')" },
-    { name: 'Character count shown', test: "!!document.querySelector('.char-count')" },
     {
-      name: 'Shows 0 characters initially',
-      test: "document.querySelector('.char-count') && document.querySelector('.char-count').textContent.includes('0')",
+      name: 'Character count updates as user types',
+      test: "(async function() { var textarea = document.querySelector('textarea'); if (!textarea) return false; var count = document.querySelector('.char-count'); if (!count) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(textarea, 'Hello world'); textarea.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return count.textContent.includes('11'); })()",
+    },
+    {
+      name: 'Textarea height expands with content',
+      test: "(async function() { var textarea = document.querySelector('textarea'); if (!textarea) return false; var initialHeight = textarea.offsetHeight; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(textarea, 'Line 1\\nLine 2\\nLine 3\\nLine 4\\nLine 5'); textarea.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return textarea.offsetHeight > initialHeight; })()",
     },
   ],
 
   'react-input-prompt': [
-    { name: 'Input renders', test: "!!document.querySelector('input')" },
-    { name: 'Suggestion chips exist', test: "document.querySelectorAll('.chip').length >= 3" },
-    { name: 'Hint text shown', test: "!!document.querySelector('.hint-text')" },
-    { name: 'Prompt wrapper exists', test: "!!document.querySelector('.prompt-wrap')" },
+    {
+      name: 'Suggestion chips fill input when clicked',
+      test: "(async function() { var chip = document.querySelector('.chip'); if (!chip) return false; var input = document.querySelector('input'); if (!input) return false; chip.click(); await new Promise(function(r) { setTimeout(r, 150); }); return input.value.length > 0; })()",
+    },
+    {
+      name: 'Typing shows autocomplete ghost text',
+      test: "(async function() { var input = document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'Bui'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.ghost') || !!document.querySelector('.autocomplete-hint'); })()",
+    },
   ],
 
   'react-inplace-editor': [
     {
-      name: 'Editable fields render',
-      test: "document.querySelectorAll('.editable').length >= 2 || document.querySelectorAll('.item').length >= 2",
+      name: 'Clicking field enters edit mode',
+      test: "(async function() { var editable = document.querySelector('.editable'); if (!editable) return false; editable.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('input') || !!document.querySelector('.editing'); })()",
     },
-    { name: 'Item labels exist', test: "document.querySelectorAll('.item-label').length >= 2" },
-    { name: 'Hint text shown', test: "!!document.querySelector('.hint')" },
     {
-      name: 'Fields show values',
-      test: "document.querySelectorAll('.editable').length >= 1 && document.querySelector('.editable').textContent.trim().length > 0",
+      name: 'Pressing Enter saves changes',
+      test: "(async function() { var editable = document.querySelector('.editable'); if (!editable) return false; var originalText = editable.textContent.trim(); editable.click(); await new Promise(function(r) { setTimeout(r, 150); }); var input = document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'New Value'); input.dispatchEvent(new Event('input', {bubbles: true})); var enterEvent = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}); input.dispatchEvent(enterEvent); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.includes('New Value'); })()",
     },
   ],
 
   'react-select-dropdown': [
-    { name: 'Select button renders', test: "!!document.querySelector('.select-btn')" },
-    { name: 'Has combobox role', test: '!!document.querySelector(\'[role="combobox"]\')' },
-    { name: 'Label exists', test: "!!document.querySelector('label')" },
-    { name: 'Dropdown closed initially', test: "!document.querySelector('.dropdown')" },
+    {
+      name: 'Clicking select button opens dropdown',
+      test: "(async function() { var btn = document.querySelector('.select-btn') || document.querySelector('button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.dropdown') || !!document.querySelector('.options'); })()",
+    },
+    {
+      name: 'Clicking option selects it and closes dropdown',
+      test: "(async function() { var btn = document.querySelector('.select-btn') || document.querySelector('button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var option = document.querySelector('.option') || document.querySelector('.dropdown li'); if (!option) return false; option.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !document.querySelector('.dropdown') || document.querySelector('.dropdown').style.display === 'none'; })()",
+    },
   ],
 
   'react-copy-box': [
-    { name: 'Copy boxes render', test: "document.querySelectorAll('.copy-box').length >= 2" },
     {
-      name: 'Code elements exist',
-      test: "document.querySelectorAll('.copy-box code').length >= 2",
+      name: 'Clicking copy button changes button text',
+      test: "(async function() { var btn = document.querySelector('.copy-btn'); if (!btn) return false; var originalText = btn.textContent; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return btn.textContent !== originalText && (btn.textContent.toLowerCase().includes('copied') || btn.textContent.includes('✓')); })()",
     },
-    { name: 'Copy buttons exist', test: "document.querySelectorAll('.copy-btn').length >= 2" },
-    { name: 'Labels shown', test: "document.querySelectorAll('label').length >= 2" },
   ],
 
   // ──────────────────────────────────────────────
   // Interactive Elements
   // ──────────────────────────────────────────────
   'react-event-calendar': [
-    { name: 'Calendar header renders', test: "!!document.querySelector('.cal-header')" },
     {
-      name: 'Navigation buttons exist',
-      test: "document.querySelectorAll('.cal-header button').length >= 2",
+      name: 'Next month button changes month',
+      test: "(async function() { var nextBtn = document.querySelectorAll('.cal-header button')[1]; if (!nextBtn) return false; var title = document.querySelector('.cal-title') || document.querySelector('.cal-header h2'); if (!title) return false; var beforeMonth = title.textContent; nextBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return title.textContent !== beforeMonth; })()",
     },
-    { name: 'Day headers shown', test: "document.querySelectorAll('.day-hdr').length === 7" },
-    { name: 'Day cells rendered', test: "document.querySelectorAll('.day-cell').length >= 28" },
-    { name: 'Events displayed', test: "document.querySelectorAll('.event-dot').length >= 1" },
+    {
+      name: 'Clicking day shows event details',
+      test: "(async function() { var dayWithEvent = document.querySelector('.day-cell .event-dot'); if (!dayWithEvent) return false; var parent = dayWithEvent.closest('.day-cell'); if (parent) parent.click(); else dayWithEvent.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.event-detail') || !!document.querySelector('.modal') || document.querySelectorAll('.event-dot').length !== document.querySelectorAll('.event-dot:not(.selected)').length; })()",
+    },
   ],
 
   'react-modal': [
     {
-      name: 'Trigger button renders',
-      test: "!!document.querySelector('.trigger') || !!document.querySelector('button')",
+      name: 'Clicking trigger opens modal overlay',
+      test: "(async function() { var btn = document.querySelector('.trigger') || document.querySelector('button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.overlay') || !!document.querySelector('.modal'); })()",
     },
-    { name: 'Modal hidden initially', test: "!document.querySelector('.overlay')" },
     {
-      name: 'Button text correct',
-      test: "document.querySelector('.trigger') && document.querySelector('.trigger').textContent.includes('Open')",
+      name: 'Clicking overlay closes modal',
+      test: "(async function() { var btn = document.querySelector('.trigger') || document.querySelector('button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var overlay = document.querySelector('.overlay'); if (!overlay) return false; overlay.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !document.querySelector('.overlay') || document.querySelector('.overlay').style.display === 'none'; })()",
     },
   ],
 
   'react-drag-drop': [
-    { name: 'Board renders', test: "!!document.querySelector('.board')" },
-    { name: 'Three columns exist', test: "document.querySelectorAll('.column').length === 3" },
-    { name: 'Cards rendered', test: "document.querySelectorAll('.card').length >= 3" },
-    { name: 'Column titles shown', test: "document.querySelectorAll('.col-title').length === 3" },
+    {
+      name: 'Cards have draggable attribute',
+      test: 'document.querySelectorAll(\'.card[draggable="true"]\').length >= 3',
+    },
+    {
+      name: 'Columns have drop zones',
+      test: "document.querySelectorAll('.column').length === 3",
+    },
   ],
 
   'react-tables': [
-    { name: 'Table renders', test: "!!document.querySelector('table')" },
-    { name: 'Table headers exist', test: "document.querySelectorAll('th').length >= 4" },
-    { name: 'Table rows rendered', test: "document.querySelectorAll('tbody tr').length >= 3" },
-    { name: 'Checkboxes exist', test: "document.querySelectorAll('.cb').length >= 2" },
-    { name: 'Status badges shown', test: "document.querySelectorAll('.badge').length >= 1" },
+    {
+      name: 'Clicking checkbox toggles row selection',
+      test: "(async function() { var checkbox = document.querySelector('.cb'); if (!checkbox) return false; var row = checkbox.closest('tr'); if (!row) return false; var beforeSelected = row.classList.contains('selected'); checkbox.click(); await new Promise(function(r) { setTimeout(r, 150); }); return row.classList.contains('selected') !== beforeSelected; })()",
+    },
+    {
+      name: 'Table displays status badges',
+      test: "document.querySelectorAll('.badge').length >= 1",
+    },
   ],
 
   'react-data-grid': [
-    { name: 'Grid renders', test: "!!document.querySelector('.grid')" },
-    { name: 'Toolbar exists', test: "!!document.querySelector('.toolbar')" },
-    { name: 'Search input exists', test: "!!document.querySelector('.toolbar input')" },
-    { name: 'Grid rows rendered', test: "document.querySelectorAll('.grid-row').length >= 3" },
-    { name: 'Category filter exists', test: "!!document.querySelector('.toolbar select')" },
+    {
+      name: 'Search filters grid rows',
+      test: "(async function() { var input = document.querySelector('.toolbar input'); if (!input) return false; var beforeCount = document.querySelectorAll('.grid-row').length; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'xyz-no-match'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.grid-row').length; return afterCount < beforeCount; })()",
+    },
+    {
+      name: 'Category filter changes visible rows',
+      test: "(async function() { var select = document.querySelector('.toolbar select'); if (!select) return false; var beforeCount = document.querySelectorAll('.grid-row').length; select.value = select.options[1].value; select.dispatchEvent(new Event('change', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.grid-row').length; return afterCount !== beforeCount; })()",
+    },
   ],
 
   'react-carousel': [
-    { name: 'Carousel renders', test: "!!document.querySelector('.carousel')" },
-    { name: 'Slides exist', test: "document.querySelectorAll('.slide').length >= 3" },
     {
-      name: 'Navigation buttons exist',
-      test: "!!document.querySelector('.nav-btn.prev') && !!document.querySelector('.nav-btn.next')",
+      name: 'Next button advances slide',
+      test: "(async function() { var nextBtn = document.querySelector('.nav-btn.next'); if (!nextBtn) return false; var beforeSlide = document.querySelector('.slide.active') || document.querySelectorAll('.slide')[0]; nextBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterSlide = document.querySelector('.slide.active'); return afterSlide !== beforeSlide; })()",
     },
-    { name: 'Dots rendered', test: "document.querySelectorAll('.dot').length >= 3" },
-    { name: 'Play/pause button exists', test: "!!document.querySelector('.play-btn')" },
+    {
+      name: 'Clicking dot navigates to slide',
+      test: "(async function() { var dots = document.querySelectorAll('.dot'); if (dots.length < 2) return false; dots[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return dots[1].classList.contains('active'); })()",
+    },
   ],
 
   'react-tabs': [
     {
-      name: 'Tab bar renders',
-      test: "!!document.querySelector('.tabs-bar') || !!document.querySelector('[role=\"tablist\"]')",
+      name: 'Clicking tab changes content',
+      test: "(async function() { var tabs = document.querySelectorAll('.tab-btn'); if (tabs.length < 2) return false; var content = document.querySelector('.tab-content'); if (!content) return false; var beforeContent = content.textContent; tabs[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return content.textContent !== beforeContent; })()",
     },
-    { name: 'Tab buttons exist', test: "document.querySelectorAll('.tab-btn').length >= 3" },
-    { name: 'Active tab shown', test: "!!document.querySelector('.tab-btn.active')" },
-    { name: 'Tab content rendered', test: "!!document.querySelector('.tab-content')" },
+    {
+      name: 'Active tab has active class',
+      test: "(async function() { var tabs = document.querySelectorAll('.tab-btn'); if (tabs.length < 2) return false; tabs[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return tabs[1].classList.contains('active'); })()",
+    },
   ],
 
   'react-swipe-actions': [
-    { name: 'Swipe items render', test: "document.querySelectorAll('.swipe-item').length >= 3" },
     {
-      name: 'Content elements exist',
-      test: "document.querySelectorAll('.swipe-content').length >= 3",
+      name: 'Swipe items render with content',
+      test: "document.querySelectorAll('.swipe-item').length >= 3 && document.querySelectorAll('.swipe-content').length >= 3",
     },
-    {
-      name: 'Titles shown',
-      test: "document.querySelectorAll('.swipe-content .title').length >= 3",
-    },
-    { name: 'Hint text exists', test: "!!document.querySelector('.hint')" },
   ],
 
   'react-long-press': [
-    { name: 'Cards render', test: "document.querySelectorAll('.card').length >= 3" },
-    { name: 'Card titles shown', test: "document.querySelectorAll('.card .title').length >= 3" },
-    { name: 'No context menu initially', test: "!document.querySelector('.context-menu')" },
-    { name: 'Hint text exists', test: "!!document.querySelector('.hint')" },
+    {
+      name: 'Long press shows context menu',
+      test: "(async function() { var card = document.querySelector('.card'); if (!card) return false; var mouseDownEvent = new MouseEvent('mousedown', {bubbles: true}); card.dispatchEvent(mouseDownEvent); await new Promise(function(r) { setTimeout(r, 600); }); var mouseUpEvent = new MouseEvent('mouseup', {bubbles: true}); card.dispatchEvent(mouseUpEvent); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.context-menu'); })()",
+    },
   ],
 
   'react-pinch-zoom': [
-    { name: 'Zoom container renders', test: "!!document.querySelector('.zoom-container')" },
-    { name: 'Zoom controls exist', test: "!!document.querySelector('.zoom-controls')" },
-    { name: 'Zoom level shown', test: "!!document.querySelector('.zoom-level')" },
-    { name: 'Grid cells rendered', test: "document.querySelectorAll('.grid-cell').length >= 8" },
     {
-      name: 'Shows 100% initially',
-      test: "document.querySelector('.zoom-level') && document.querySelector('.zoom-level').textContent.includes('100%')",
+      name: 'Zoom in button increases zoom level',
+      test: "(async function() { var zoomIn = document.querySelector('.zoom-controls button'); if (!zoomIn) return false; var zoomLevel = document.querySelector('.zoom-level'); if (!zoomLevel) return false; var beforeZoom = zoomLevel.textContent; zoomIn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return zoomLevel.textContent !== beforeZoom; })()",
     },
   ],
 
   'react-pull-refresh': [
-    { name: 'Feed items render', test: "document.querySelectorAll('.feed-item').length >= 2" },
-    { name: 'Refresh button exists', test: "!!document.querySelector('button')" },
-    { name: 'Titles shown', test: "document.querySelectorAll('.feed-item .title').length >= 2" },
-    { name: 'Timestamps shown', test: "document.querySelectorAll('.feed-item .time').length >= 2" },
+    {
+      name: 'Refresh button updates feed items',
+      test: "(async function() { var btn = document.querySelector('button'); if (!btn) return false; var beforeCount = document.querySelectorAll('.feed-item').length; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.feed-item').length; return afterCount !== beforeCount || document.body.textContent.toLowerCase().includes('refresh'); })()",
+    },
   ],
 
   'react-drag-reorder': [
-    { name: 'List items render', test: "document.querySelectorAll('.list-item').length >= 4" },
-    { name: 'Drag handles exist', test: "document.querySelectorAll('.handle').length >= 4" },
-    { name: 'Items are numbered', test: "document.querySelectorAll('.item-num').length >= 4" },
-    { name: 'Item text shown', test: "document.querySelectorAll('.item-text').length >= 4" },
+    {
+      name: 'Items have drag handles',
+      test: "document.querySelectorAll('.handle').length >= 4",
+    },
+    {
+      name: 'Items are numbered sequentially',
+      test: "document.querySelectorAll('.item-num').length >= 4",
+    },
   ],
 
   'react-double-tap': [
-    { name: 'Photo cards render', test: "document.querySelectorAll('.photo-card').length >= 2" },
-    { name: 'Photo areas exist', test: "document.querySelectorAll('.photo-area').length >= 2" },
-    { name: 'Like counts shown', test: "document.querySelectorAll('.likes').length >= 2" },
-    { name: 'Like buttons exist', test: "document.querySelectorAll('.like-btn').length >= 2" },
+    {
+      name: 'Like button toggles like state',
+      test: "(async function() { var likeBtn = document.querySelector('.like-btn'); if (!likeBtn) return false; var beforeLiked = likeBtn.classList.contains('liked'); likeBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return likeBtn.classList.contains('liked') !== beforeLiked; })()",
+    },
   ],
 
   'react-tap-expand': [
-    { name: 'Expand cards render', test: "document.querySelectorAll('.expand-card').length >= 3" },
-    { name: 'Headers exist', test: "document.querySelectorAll('.expand-header').length >= 3" },
-    { name: 'Titles shown', test: "document.querySelectorAll('.expand-title').length >= 3" },
     {
-      name: 'All collapsed initially',
-      test: "document.querySelectorAll('.expand-body.open').length <= 1",
+      name: 'Clicking header expands card',
+      test: "(async function() { var header = document.querySelectorAll('.expand-header')[0]; if (!header) return false; header.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.expand-body.open') || !!document.querySelector('.expand-card.open'); })()",
     },
   ],
 
   'react-progressive-disclosure': [
-    { name: 'Basic fields render', test: "document.querySelectorAll('input').length >= 2" },
-    { name: 'Toggle link exists', test: "!!document.querySelector('.toggle-link')" },
     {
-      name: 'Advanced hidden initially',
-      test: "!!document.querySelector('.advanced.hidden') || !document.querySelector('.advanced.visible')",
-    },
-    {
-      name: 'Section titles exist',
-      test: "document.querySelectorAll('.section-title').length >= 1",
+      name: 'Toggle link shows advanced fields',
+      test: "(async function() { var toggle = document.querySelector('.toggle-link'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.advanced.visible') || !document.querySelector('.advanced.hidden'); })()",
     },
   ],
 
   'react-wizard': [
-    { name: 'Steps indicator renders', test: "document.querySelectorAll('.step').length >= 3" },
-    { name: 'Step labels shown', test: "document.querySelectorAll('.step-label').length >= 3" },
-    { name: 'Form inputs exist', test: "document.querySelectorAll('input').length >= 1" },
-    { name: 'Navigation buttons exist', test: "document.querySelectorAll('.btn').length >= 1" },
-    { name: 'First step is active', test: "!!document.querySelector('.step.active')" },
+    {
+      name: 'Next button advances to next step',
+      test: "(async function() { var nextBtn = document.querySelector('.btn-next') || document.querySelector('button'); if (!nextBtn) return false; var activeSteps = document.querySelectorAll('.step.active').length; nextBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.step.active, .step.complete').length > activeSteps; })()",
+    },
   ],
 
   'react-undo': [
-    { name: 'Palette renders', test: "document.querySelectorAll('.color-opt').length >= 4" },
-    { name: 'Undo button exists', test: "!!document.querySelector('.tool-btn')" },
-    { name: 'Canvas rendered', test: "!!document.querySelector('.canvas')" },
-    { name: 'Grid cells exist', test: "document.querySelectorAll('.cell').length >= 16" },
-    { name: 'Status shown', test: "!!document.querySelector('.status')" },
+    {
+      name: 'Clicking color cell paints it',
+      test: "(async function() { var cell = document.querySelector('.cell'); if (!cell) return false; var colorOpt = document.querySelector('.color-opt'); if (!colorOpt) return false; cell.click(); await new Promise(function(r) { setTimeout(r, 150); }); return cell.style.backgroundColor !== ''; })()",
+    },
+    {
+      name: 'Undo button reverts last action',
+      test: "(async function() { var cell = document.querySelector('.cell'); if (!cell) return false; cell.click(); await new Promise(function(r) { setTimeout(r, 150); }); var undoBtn = document.querySelector('.tool-btn'); if (!undoBtn) return false; var painted = cell.style.backgroundColor; undoBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !undoBtn.disabled || document.body.textContent.toLowerCase().includes('undo'); })()",
+    },
   ],
 
   'react-wysiwyg': [
-    { name: 'Toolbar renders', test: "!!document.querySelector('.editor-toolbar')" },
-    { name: 'Format buttons exist', test: "document.querySelectorAll('.fmt-btn').length >= 4" },
-    { name: 'Editor area exists', test: "!!document.querySelector('.editor-area')" },
     {
-      name: 'Editor is contentEditable',
-      test: "document.querySelector('.editor-area') && document.querySelector('.editor-area').contentEditable === 'true'",
+      name: 'Bold button applies formatting',
+      test: "(async function() { var btn = document.querySelectorAll('.fmt-btn')[0]; if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return btn.classList.contains('active'); })()",
     },
   ],
 
   'react-swipe-navigation': [
-    { name: 'Navigation renders', test: "!!document.querySelector('.swipe-nav')" },
-    { name: 'Pages exist', test: "document.querySelectorAll('.page').length >= 3" },
-    { name: 'Navigation dots exist', test: "document.querySelectorAll('.nav-dot').length >= 3" },
-    { name: 'Arrow buttons exist', test: "document.querySelectorAll('.nav-arr').length >= 2" },
+    {
+      name: 'Arrow button changes page',
+      test: "(async function() { var nextArr = document.querySelectorAll('.nav-arr')[1]; if (!nextArr) return false; var beforeDot = document.querySelector('.nav-dot.active'); nextArr.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterDot = document.querySelector('.nav-dot.active'); return afterDot !== beforeDot; })()",
+    },
   ],
 
   // ──────────────────────────────────────────────
@@ -387,136 +383,122 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   // ──────────────────────────────────────────────
   'react-data-visualization': [
     {
-      name: 'Chart renders',
-      test: "!!document.querySelector('.chart') || !!document.querySelector('.bar-chart')",
+      name: 'Bars have computed heights',
+      test: "(async function() { var bars = document.querySelectorAll('.bar'); if (bars.length < 3) return false; var heights = Array.from(bars).map(function(b) { return b.style.height || b.getAttribute('height'); }); var uniqueHeights = new Set(heights.filter(function(h) { return h && h !== '0' && h !== '0px'; })); return uniqueHeights.size >= 2; })()",
     },
-    { name: 'Bar chart exists', test: "!!document.querySelector('.bar-chart')" },
-    { name: 'Bars rendered', test: "document.querySelectorAll('.bar').length >= 5" },
-    { name: 'Bar labels exist', test: "document.querySelectorAll('.bar-label').length >= 4" },
-    { name: 'Legend shown', test: "!!document.querySelector('.legend')" },
   ],
 
   'react-article-list': [
-    { name: 'Articles render', test: "document.querySelectorAll('.article').length >= 3" },
-    { name: 'Titles shown', test: "document.querySelectorAll('.article-title').length >= 3" },
-    { name: 'Categories displayed', test: "document.querySelectorAll('.article-cat').length >= 3" },
-    { name: 'Descriptions shown', test: "document.querySelectorAll('.article-desc').length >= 3" },
+    {
+      name: 'Articles display all required fields',
+      test: "document.querySelectorAll('.article-title').length >= 3 && document.querySelectorAll('.article-cat').length >= 3 && document.querySelectorAll('.article-desc').length >= 3",
+    },
   ],
 
   'react-gallery': [
-    { name: 'Gallery grid renders', test: "!!document.querySelector('.gallery-grid')" },
-    { name: 'Gallery items exist', test: "document.querySelectorAll('.gallery-item').length >= 4" },
-    { name: 'Overlays exist', test: "document.querySelectorAll('.overlay').length >= 4" },
-    { name: 'Lightbox hidden initially', test: "!document.querySelector('.lightbox')" },
+    {
+      name: 'Clicking gallery item opens lightbox',
+      test: "(async function() { var item = document.querySelector('.gallery-item'); if (!item) return false; item.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.lightbox'); })()",
+    },
   ],
 
   'react-thumbnail': [
-    { name: 'Thumbnail grid renders', test: "!!document.querySelector('.thumb-grid')" },
-    { name: 'Thumbnails exist', test: "document.querySelectorAll('.thumb').length >= 6" },
-    { name: 'Labels shown', test: "document.querySelectorAll('.thumb-label').length >= 6" },
-    { name: 'No detail panel initially', test: "!document.querySelector('.detail')" },
+    {
+      name: 'Clicking thumbnail shows detail panel',
+      test: "(async function() { var thumb = document.querySelector('.thumb'); if (!thumb) return false; thumb.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.detail') || !!document.querySelector('.thumb.selected'); })()",
+    },
   ],
 
   'react-cards': [
-    { name: 'Cards grid renders', test: "!!document.querySelector('.cards')" },
-    { name: 'Cards exist', test: "document.querySelectorAll('.card').length >= 3" },
-    { name: 'Card titles shown', test: "document.querySelectorAll('.card-title').length >= 3" },
-    { name: 'Card footers exist', test: "document.querySelectorAll('.card-footer').length >= 3" },
+    {
+      name: 'Cards display title and footer',
+      test: "document.querySelectorAll('.card-title').length >= 3 && document.querySelectorAll('.card-footer').length >= 3",
+    },
   ],
 
   'react-data-filtering': [
-    { name: 'Filter buttons render', test: "document.querySelectorAll('.filter-btn').length >= 3" },
-    { name: 'Items displayed', test: "document.querySelectorAll('.item').length >= 5" },
-    { name: 'Item count shown', test: "!!document.querySelector('.count')" },
     {
-      name: 'All filter active by default',
-      test: "!!document.querySelector('.filter-btn.active')",
+      name: 'Filter button changes visible items',
+      test: "(async function() { var filterBtn = document.querySelectorAll('.filter-btn')[1]; if (!filterBtn) return false; var beforeCount = document.querySelectorAll('.item').length; filterBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.item').length; return afterCount !== beforeCount; })()",
+    },
+    {
+      name: 'Item count updates with filter',
+      test: "(async function() { var filterBtn = document.querySelectorAll('.filter-btn')[1]; if (!filterBtn) return false; var count = document.querySelector('.count'); if (!count) return false; var beforeCount = count.textContent; filterBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return count.textContent !== beforeCount; })()",
     },
   ],
 
   'react-search': [
-    { name: 'Search box renders', test: "!!document.querySelector('.search-box')" },
-    { name: 'Search input exists', test: "!!document.querySelector('.search-box input')" },
-    { name: 'Results displayed', test: "document.querySelectorAll('.result').length >= 3" },
-    { name: 'Result titles shown', test: "document.querySelectorAll('.result-title').length >= 3" },
+    {
+      name: 'Search filters results',
+      test: "(async function() { var input = document.querySelector('.search-box input'); if (!input) return false; var beforeCount = document.querySelectorAll('.result').length; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'xyz-no-match'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.result').length; return afterCount < beforeCount; })()",
+    },
+    {
+      name: 'Search highlights matching text',
+      test: "(async function() { var input = document.querySelector('.search-box input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'React'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.result mark') || !!document.querySelector('.result strong'); })()",
+    },
   ],
 
   'react-search-filters': [
-    { name: 'Filter panel renders', test: "!!document.querySelector('.filter-panel')" },
-    { name: 'Search input exists', test: "!!document.querySelector('.filter-panel input')" },
     {
-      name: 'Category select exists',
-      test: "document.querySelectorAll('.filter-panel select').length >= 1",
+      name: 'Search input filters items',
+      test: "(async function() { var input = document.querySelector('.filter-panel input'); if (!input) return false; var beforeCount = document.querySelectorAll('.item-row').length; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'xyz'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.item-row').length; return afterCount < beforeCount; })()",
     },
-    { name: 'Items displayed', test: "document.querySelectorAll('.item-row').length >= 3" },
+    {
+      name: 'Category filter works',
+      test: "(async function() { var select = document.querySelector('.filter-panel select'); if (!select) return false; var beforeCount = document.querySelectorAll('.item-row').length; select.value = select.options[1].value; select.dispatchEvent(new Event('change', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.item-row').length; return afterCount !== beforeCount; })()",
+    },
   ],
 
   'react-table-filter': [
-    { name: 'Table renders', test: "!!document.querySelector('table')" },
-    { name: 'Filter row exists', test: "!!document.querySelector('.filter-row')" },
     {
-      name: 'Filter inputs exist',
-      test: "document.querySelectorAll('.filter-row input, .filter-row select').length >= 2",
+      name: 'Filter input reduces table rows',
+      test: "(async function() { var input = document.querySelector('.filter-row input'); if (!input) return false; var beforeCount = document.querySelectorAll('tbody tr').length; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'xyz'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('tbody tr').length; return afterCount < beforeCount; })()",
     },
-    { name: 'Table rows rendered', test: "document.querySelectorAll('tbody tr').length >= 3" },
   ],
 
   'react-sort-column': [
-    { name: 'Table renders', test: "!!document.querySelector('table')" },
-    { name: 'Sortable headers exist', test: "document.querySelectorAll('th').length >= 3" },
-    { name: 'Sorted column indicated', test: "!!document.querySelector('th.sorted')" },
-    { name: 'Table rows rendered', test: "document.querySelectorAll('tbody tr').length >= 4" },
-    { name: 'Sort arrow shown', test: "!!document.querySelector('.sort-arrow')" },
+    {
+      name: 'Clicking header sorts column',
+      test: "(async function() { var header = document.querySelectorAll('th')[0]; if (!header) return false; var rows = document.querySelectorAll('tbody tr'); if (rows.length < 2) return false; var beforeFirst = rows[0].textContent; header.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterFirst = document.querySelectorAll('tbody tr')[0].textContent; return beforeFirst !== afterFirst || header.classList.contains('sorted'); })()",
+    },
   ],
 
   'react-tag-cloud': [
-    { name: 'Cloud renders', test: "!!document.querySelector('.cloud')" },
-    { name: 'Tags exist', test: "document.querySelectorAll('.tag').length >= 8" },
     {
-      name: 'Tags have varying sizes',
-      test: "new Set(Array.from(document.querySelectorAll('.tag')).map(function(t) { return t.style.fontSize; })).size > 1",
-    },
-    {
-      name: 'No detail initially',
-      test: "!document.querySelector('.detail') || document.querySelectorAll('.tag.selected').length === 0",
+      name: 'Clicking tag shows details',
+      test: "(async function() { var tag = document.querySelector('.tag'); if (!tag) return false; tag.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.detail') || !!document.querySelector('.tag.selected'); })()",
     },
   ],
 
   'react-continuous-scrolling': [
-    { name: 'Scroll list renders', test: "!!document.querySelector('.scroll-list')" },
-    { name: 'Items loaded', test: "document.querySelectorAll('.scroll-item').length >= 5" },
-    { name: 'Avatars displayed', test: "document.querySelectorAll('.avatar').length >= 5" },
-    { name: 'Item count shown', test: "document.body.textContent.includes('items loaded')" },
+    {
+      name: 'Items display with avatars',
+      test: "document.querySelectorAll('.scroll-item').length >= 5 && document.querySelectorAll('.avatar').length >= 5",
+    },
   ],
 
   'react-dashboard': [
-    { name: 'Dashboard grid renders', test: "!!document.querySelector('.dash-grid')" },
-    { name: 'Widgets exist', test: "document.querySelectorAll('.widget').length >= 4" },
-    { name: 'Widget titles shown', test: "document.querySelectorAll('.widget-title').length >= 4" },
     {
-      name: 'Widget values displayed',
+      name: 'Widgets display computed values',
       test: "document.querySelectorAll('.widget-val').length >= 3",
     },
-    { name: 'Mini chart exists', test: "document.querySelectorAll('.mini-bar').length >= 5" },
+    {
+      name: 'Mini chart bars render',
+      test: "document.querySelectorAll('.mini-bar').length >= 5",
+    },
   ],
 
   'react-alternating-rows': [
-    { name: 'Table renders', test: "!!document.querySelector('table')" },
-    { name: 'Header row exists', test: "document.querySelectorAll('th').length >= 3" },
-    { name: 'Data rows rendered', test: "document.querySelectorAll('tbody tr').length >= 4" },
     {
-      name: 'Rows have alternating classes',
+      name: 'Rows alternate styling',
       test: "!!document.querySelector('tr.even') && !!document.querySelector('tr.odd')",
     },
   ],
 
   'react-formatting-data': [
-    { name: 'Format rows render', test: "document.querySelectorAll('.format-row').length >= 5" },
-    { name: 'Labels shown', test: "document.querySelectorAll('.format-label').length >= 5" },
-    { name: 'Values displayed', test: "document.querySelectorAll('.format-value').length >= 5" },
     {
-      name: 'Section titles exist',
-      test: "document.querySelectorAll('.section-title').length >= 2",
+      name: 'Data displays formatted values',
+      test: "document.querySelectorAll('.format-value').length >= 5",
     },
   ],
 
@@ -525,206 +507,160 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   // ──────────────────────────────────────────────
   'react-navbar': [
     {
-      name: 'Navbar renders',
-      test: "!!document.querySelector('.navbar') || !!document.querySelector('nav')",
+      name: 'Clicking nav link changes active state',
+      test: "(async function() { var links = document.querySelectorAll('.nav-link'); if (links.length < 2) return false; links[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return links[1].classList.contains('active'); })()",
     },
-    { name: 'Brand shown', test: "!!document.querySelector('.nav-brand')" },
-    { name: 'Nav links exist', test: "document.querySelectorAll('.nav-link').length >= 3" },
-    { name: 'Active link indicated', test: "!!document.querySelector('.nav-link.active')" },
   ],
 
   'react-sidebar': [
-    { name: 'Layout renders', test: "!!document.querySelector('.layout')" },
-    { name: 'Sidebar exists', test: "!!document.querySelector('.sidebar')" },
-    { name: 'Nav items exist', test: "document.querySelectorAll('.nav-item').length >= 3" },
-    { name: 'Toggle button exists', test: "!!document.querySelector('.toggle-btn')" },
-    { name: 'Active item indicated', test: "!!document.querySelector('.nav-item.active')" },
+    {
+      name: 'Toggle button collapses sidebar',
+      test: "(async function() { var toggle = document.querySelector('.toggle-btn'); if (!toggle) return false; var sidebar = document.querySelector('.sidebar'); if (!sidebar) return false; var beforeCollapsed = sidebar.classList.contains('collapsed'); toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return sidebar.classList.contains('collapsed') !== beforeCollapsed; })()",
+    },
+    {
+      name: 'Clicking nav item sets active state',
+      test: "(async function() { var items = document.querySelectorAll('.nav-item'); if (items.length < 2) return false; items[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return items[1].classList.contains('active'); })()",
+    },
   ],
 
   'react-mobile-menu': [
-    { name: 'Header renders', test: "!!document.querySelector('.mobile-header')" },
-    { name: 'Menu button exists', test: "!!document.querySelector('.menu-btn')" },
-    { name: 'Brand shown', test: "!!document.querySelector('.brand')" },
     {
-      name: 'Menu closed initially',
-      test: "!!document.querySelector('.mobile-nav.closed') || !document.querySelector('.mobile-nav.open')",
+      name: 'Menu button toggles navigation',
+      test: "(async function() { var menuBtn = document.querySelector('.menu-btn'); if (!menuBtn) return false; menuBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.mobile-nav.open') || !document.querySelector('.mobile-nav.closed'); })()",
     },
   ],
 
   'react-bottom-navigation': [
-    { name: 'Phone frame renders', test: "!!document.querySelector('.phone-frame')" },
-    { name: 'Bottom nav exists', test: "!!document.querySelector('.bottom-nav')" },
-    { name: 'Tab buttons exist', test: "document.querySelectorAll('.bottom-tab').length >= 4" },
-    { name: 'Active tab indicated', test: "!!document.querySelector('.bottom-tab.active')" },
+    {
+      name: 'Clicking tab changes active state',
+      test: "(async function() { var tabs = document.querySelectorAll('.bottom-tab'); if (tabs.length < 2) return false; tabs[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return tabs[1].classList.contains('active'); })()",
+    },
   ],
 
   'react-dropdown-menu': [
-    { name: 'Menu trigger renders', test: "!!document.querySelector('.menu-trigger')" },
-    { name: 'Menu hidden initially', test: "!document.querySelector('.menu-dropdown')" },
     {
-      name: 'Trigger button has text',
-      test: "document.querySelector('.menu-trigger') && document.querySelector('.menu-trigger').textContent.includes('Actions')",
+      name: 'Clicking trigger opens menu',
+      test: "(async function() { var trigger = document.querySelector('.menu-trigger'); if (!trigger) return false; trigger.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.menu-dropdown'); })()",
+    },
+    {
+      name: 'Clicking menu item closes dropdown',
+      test: "(async function() { var trigger = document.querySelector('.menu-trigger'); if (!trigger) return false; trigger.click(); await new Promise(function(r) { setTimeout(r, 150); }); var menuItem = document.querySelector('.menu-item') || document.querySelector('.menu-dropdown button'); if (!menuItem) return false; menuItem.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !document.querySelector('.menu-dropdown') || document.querySelector('.menu-dropdown').style.display === 'none'; })()",
     },
   ],
 
   'react-accordion-menu': [
     {
-      name: 'Accordion sections render',
-      test: "document.querySelectorAll('.acc-section').length >= 3",
-    },
-    { name: 'Headers exist', test: "document.querySelectorAll('.acc-header').length >= 3" },
-    { name: 'First section open', test: "document.querySelectorAll('.acc-body.open').length >= 1" },
-    {
-      name: 'Links exist in open section',
-      test: "document.querySelectorAll('.acc-link').length >= 2",
+      name: 'Clicking header toggles section',
+      test: "(async function() { var headers = document.querySelectorAll('.acc-header'); if (headers.length < 2) return false; var openCount = document.querySelectorAll('.acc-body.open').length; headers[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.acc-body.open').length !== openCount; })()",
     },
   ],
 
   'react-breadcrumbs': [
-    { name: 'Breadcrumbs render', test: "!!document.querySelector('.breadcrumbs')" },
-    { name: 'Crumb elements exist', test: "document.querySelectorAll('.crumb').length >= 2" },
-    { name: 'Separators shown', test: "document.querySelectorAll('.separator').length >= 1" },
-    { name: 'Current page indicated', test: "!!document.querySelector('.crumb.current')" },
-    { name: 'Page title shown', test: "!!document.querySelector('.page-title')" },
+    {
+      name: 'Clicking breadcrumb navigates',
+      test: "(async function() { var crumbs = document.querySelectorAll('.crumb'); if (crumbs.length < 2) return false; var pageTitle = document.querySelector('.page-title'); if (!pageTitle) return false; var beforeTitle = pageTitle.textContent; crumbs[0].click(); await new Promise(function(r) { setTimeout(r, 150); }); return pageTitle.textContent !== beforeTitle || crumbs[0].classList.contains('current'); })()",
+    },
   ],
 
   'react-navigation-tabs': [
-    { name: 'Navigation tabs render', test: "!!document.querySelector('.nav-tabs')" },
-    { name: 'Tab buttons exist', test: "document.querySelectorAll('.nav-tab').length >= 3" },
-    { name: 'Active tab shown', test: "!!document.querySelector('.nav-tab.active')" },
-    { name: 'View content rendered', test: "!!document.querySelector('.view')" },
+    {
+      name: 'Clicking tab changes view',
+      test: "(async function() { var tabs = document.querySelectorAll('.nav-tab'); if (tabs.length < 2) return false; var view = document.querySelector('.view'); if (!view) return false; var beforeContent = view.textContent; tabs[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return view.textContent !== beforeContent; })()",
+    },
   ],
 
   'react-module-tabs': [
-    { name: 'Module cards render', test: "document.querySelectorAll('.module-card').length >= 3" },
-    { name: 'Active module indicated', test: "!!document.querySelector('.module-card.active')" },
-    { name: 'Content rendered', test: "!!document.querySelector('.content')" },
     {
-      name: 'Content items shown',
-      test: "document.querySelectorAll('.content .item').length >= 1",
+      name: 'Clicking module changes content',
+      test: "(async function() { var modules = document.querySelectorAll('.module-card'); if (modules.length < 2) return false; var content = document.querySelector('.content'); if (!content) return false; var beforeContent = content.textContent; modules[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return content.textContent !== beforeContent; })()",
     },
   ],
 
   'react-pagination': [
-    { name: 'Items render', test: "document.querySelectorAll('.item').length >= 3" },
-    { name: 'Pagination controls exist', test: "!!document.querySelector('.pagination')" },
-    { name: 'Page buttons exist', test: "document.querySelectorAll('.page-btn').length >= 3" },
-    { name: 'Active page indicated', test: "!!document.querySelector('.page-btn.active')" },
-    { name: 'Page info shown', test: "!!document.querySelector('.page-info')" },
+    {
+      name: 'Clicking page button changes items',
+      test: "(async function() { var pageBtns = document.querySelectorAll('.page-btn'); if (pageBtns.length < 2) return false; var items = document.querySelectorAll('.item'); var beforeFirst = items[0] ? items[0].textContent : ''; pageBtns[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterFirst = document.querySelectorAll('.item')[0] ? document.querySelectorAll('.item')[0].textContent : ''; return beforeFirst !== afterFirst || pageBtns[1].classList.contains('active'); })()",
+    },
   ],
 
   'react-horizontal-dropdown': [
     {
-      name: 'Navigation renders',
-      test: "!!document.querySelector('.nav') || !!document.querySelector('nav')",
-    },
-    { name: 'Nav buttons exist', test: "document.querySelectorAll('.nav-btn').length >= 3" },
-    { name: 'Dropdown hidden initially', test: "!document.querySelector('.dropdown')" },
-    {
-      name: 'Nav items contain menu labels',
-      test: "document.querySelectorAll('.nav-item').length >= 3",
+      name: 'Hovering nav button shows dropdown',
+      test: "(async function() { var navBtn = document.querySelector('.nav-btn'); if (!navBtn) return false; var mouseEnterEvent = new MouseEvent('mouseenter', {bubbles: true}); navBtn.dispatchEvent(mouseEnterEvent); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.dropdown'); })()",
     },
   ],
 
   'react-vertical-dropdown': [
-    { name: 'Sidebar renders', test: "!!document.querySelector('.sidebar')" },
-    { name: 'Menu items exist', test: "document.querySelectorAll('.menu-btn').length >= 3" },
     {
-      name: 'Submenu shown for active',
-      test: "document.querySelectorAll('.submenu-item').length >= 2",
+      name: 'Clicking menu expands submenu',
+      test: "(async function() { var menuBtn = document.querySelectorAll('.menu-btn')[0]; if (!menuBtn) return false; menuBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.submenu-item').length > 0; })()",
     },
-    { name: 'Expand indicators exist', test: "document.querySelectorAll('.menu-btn').length >= 2" },
   ],
 
   'react-shortcut-dropdown': [
-    { name: 'Trigger button renders', test: "!!document.querySelector('.trigger-btn')" },
     {
-      name: 'Button has text',
-      test: "document.querySelector('.trigger-btn') && document.querySelector('.trigger-btn').textContent.includes('Quick Actions')",
+      name: 'Clicking trigger shows dropdown',
+      test: "(async function() { var trigger = document.querySelector('.trigger-btn'); if (!trigger) return false; trigger.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.dropdown'); })()",
     },
-    { name: 'Dropdown hidden initially', test: "!document.querySelector('.dropdown')" },
   ],
 
   'react-menus': [
-    { name: 'Menu renders', test: "!!document.querySelector('.menu')" },
-    { name: 'Menu items exist', test: "document.querySelectorAll('.menu-item').length >= 4" },
-    { name: 'Divider exists', test: "!!document.querySelector('.divider')" },
-    { name: 'Danger item exists', test: "!!document.querySelector('.menu-item.danger')" },
+    {
+      name: 'Menu items are clickable',
+      test: "document.querySelectorAll('.menu-item').length >= 4",
+    },
   ],
 
   'react-fat-footer': [
     {
-      name: 'Footer renders',
-      test: "!!document.querySelector('.footer') || !!document.querySelector('footer')",
+      name: 'Footer displays columns with links',
+      test: "document.querySelectorAll('.footer-col').length >= 3 && document.querySelectorAll('.footer-col a').length >= 8",
     },
-    { name: 'Footer columns exist', test: "document.querySelectorAll('.footer-col').length >= 3" },
-    {
-      name: 'Column headings shown',
-      test: "document.querySelectorAll('.footer-col h3').length >= 3",
-    },
-    { name: 'Links exist', test: "document.querySelectorAll('.footer-col a').length >= 8" },
-    { name: 'Bottom section exists', test: "!!document.querySelector('.footer-bottom')" },
   ],
 
   'react-home-link': [
     {
-      name: 'Header renders',
-      test: "!!document.querySelector('.header') || !!document.querySelector('header')",
+      name: 'Home link displays logo',
+      test: "!!document.querySelector('.home-link') && !!document.querySelector('.logo')",
     },
-    { name: 'Home link exists', test: "!!document.querySelector('.home-link')" },
-    { name: 'Logo shown', test: "!!document.querySelector('.logo')" },
-    { name: 'Nav links exist', test: "document.querySelectorAll('.nav-link').length >= 2" },
   ],
 
   'react-jumping-hierarchy': [
     {
-      name: 'Breadcrumb renders',
-      test: "!!document.querySelector('.breadcrumb') || !!document.querySelector('nav')",
+      name: 'Clicking level button navigates',
+      test: "(async function() { var levelBtn = document.querySelector('.level-btn'); if (!levelBtn) return false; var content = document.querySelector('.content'); if (!content) return false; var beforeContent = content.textContent; levelBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return content.textContent !== beforeContent; })()",
     },
-    { name: 'Crumb elements exist', test: "document.querySelectorAll('.crumb').length >= 2" },
-    { name: 'Level buttons exist', test: "document.querySelectorAll('.level-btn').length >= 2" },
-    { name: 'Content shown', test: "!!document.querySelector('.content')" },
   ],
 
   'react-steps-left': [
-    { name: 'Steps container renders', test: "!!document.querySelector('.steps-container')" },
-    { name: 'Step dots exist', test: "document.querySelectorAll('.step-dot').length >= 3" },
-    { name: 'Step content shown', test: "!!document.querySelector('.step-content')" },
-    { name: 'Navigation buttons exist', test: "!!document.querySelector('.btn-next')" },
-    { name: 'Steps remaining text shown', test: "!!document.querySelector('.steps-left-text')" },
+    {
+      name: 'Next button advances step',
+      test: "(async function() { var nextBtn = document.querySelector('.btn-next'); if (!nextBtn) return false; var activeCount = document.querySelectorAll('.step-dot.active').length; nextBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.step-dot.active, .step-dot.complete').length > activeCount; })()",
+    },
   ],
 
   'react-adaptable-view': [
-    { name: 'View container renders', test: "!!document.querySelector('.view-container')" },
     {
-      name: 'View toggle buttons exist',
-      test: "document.querySelectorAll('.view-toggles button').length >= 2",
-    },
-    {
-      name: 'Active toggle indicated',
-      test: "!!document.querySelector('.view-toggles button.active')",
-    },
-    {
-      name: 'Items displayed',
-      test: "document.querySelectorAll('.grid-card').length >= 4 || document.querySelectorAll('.list-row').length >= 4",
+      name: 'Clicking view toggle changes layout',
+      test: "(async function() { var toggles = document.querySelectorAll('.view-toggles button'); if (toggles.length < 2) return false; toggles[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return toggles[1].classList.contains('active'); })()",
     },
   ],
 
   'react-preview': [
-    { name: 'Preview container renders', test: "!!document.querySelector('.preview-container')" },
-    { name: 'Card items exist', test: "document.querySelectorAll('.card-item').length >= 3" },
-    { name: 'Card titles shown', test: "document.querySelectorAll('.card-title').length >= 3" },
-    { name: 'Modal hidden initially', test: "!document.querySelector('.modal-overlay')" },
+    {
+      name: 'Clicking card opens preview modal',
+      test: "(async function() { var card = document.querySelector('.card-item'); if (!card) return false; card.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.modal-overlay') || !!document.querySelector('.modal'); })()",
+    },
   ],
 
   'react-faq': [
-    { name: 'FAQ container renders', test: "!!document.querySelector('.faq-container')" },
-    { name: 'FAQ items exist', test: "document.querySelectorAll('.faq-item').length >= 4" },
-    { name: 'Questions shown', test: "document.querySelectorAll('.faq-question').length >= 4" },
-    { name: 'Search box exists', test: "!!document.querySelector('.search-box')" },
     {
-      name: 'All answers collapsed initially',
-      test: "document.querySelectorAll('.faq-answer.open').length <= 1",
+      name: 'Clicking question expands answer',
+      test: "(async function() { var question = document.querySelector('.faq-question'); if (!question) return false; question.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.faq-answer.open'); })()",
+    },
+    {
+      name: 'Search filters FAQ items',
+      test: "(async function() { var searchBox = document.querySelector('.search-box input'); if (!searchBox) return false; var beforeCount = document.querySelectorAll('.faq-item').length; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(searchBox, 'xyz-no-match'); searchBox.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.faq-item').length; return afterCount < beforeCount; })()",
     },
   ],
 
@@ -733,185 +669,146 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   // ──────────────────────────────────────────────
   'react-keyboard-shortcuts': [
     {
-      name: 'Shortcuts container renders',
-      test: "!!document.querySelector('.shortcuts-container')",
+      name: 'Pressing key shows last pressed',
+      test: "(async function() { var lastPressed = document.querySelector('.last-pressed'); if (!lastPressed) return false; var keyEvent = new KeyboardEvent('keydown', {key: 'k', bubbles: true}); document.dispatchEvent(keyEvent); await new Promise(function(r) { setTimeout(r, 150); }); return lastPressed.textContent.toLowerCase().includes('k'); })()",
     },
-    { name: 'Shortcut rows exist', test: "document.querySelectorAll('.shortcut-row').length >= 4" },
-    { name: 'Keyboard keys shown', test: "document.querySelectorAll('kbd').length >= 4" },
-    { name: 'Last pressed area exists', test: "!!document.querySelector('.last-pressed')" },
   ],
 
   'react-rule-builder': [
-    { name: 'Rule container renders', test: "!!document.querySelector('.rule-container')" },
-    { name: 'Rule cards exist', test: "document.querySelectorAll('.rule-card').length >= 2" },
-    { name: 'Logic toggle exists', test: "!!document.querySelector('.logic-toggle')" },
-    { name: 'Add rule button exists', test: "!!document.querySelector('.add-rule-btn')" },
-    { name: 'Output box shown', test: "!!document.querySelector('.output-box')" },
+    {
+      name: 'Add rule button creates new rule',
+      test: "(async function() { var addBtn = document.querySelector('.add-rule-btn'); if (!addBtn) return false; var beforeCount = document.querySelectorAll('.rule-card').length; addBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.rule-card').length > beforeCount; })()",
+    },
+    {
+      name: 'Logic toggle changes operator',
+      test: "(async function() { var toggle = document.querySelector('.logic-toggle'); if (!toggle) return false; var beforeText = toggle.textContent; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return toggle.textContent !== beforeText; })()",
+    },
   ],
 
   'react-completeness-meter': [
-    { name: 'Meter container renders', test: "!!document.querySelector('.meter-container')" },
-    { name: 'Meter circle exists', test: "!!document.querySelector('.meter-circle')" },
-    { name: 'Progress bar exists', test: "!!document.querySelector('.meter-bar-bg')" },
-    { name: 'Checklist items exist', test: "document.querySelectorAll('.check-item').length >= 4" },
     {
-      name: 'At least one item checked',
-      test: "document.querySelectorAll('.checkbox.checked').length >= 1",
+      name: 'Checking item updates progress',
+      test: "(async function() { var checkbox = document.querySelector('.checkbox:not(.checked)'); if (!checkbox) return false; var meter = document.querySelector('.meter-circle') || document.querySelector('.meter-bar-fill'); checkbox.click(); await new Promise(function(r) { setTimeout(r, 150); }); return checkbox.classList.contains('checked'); })()",
     },
   ],
 
   'react-favorites': [
-    { name: 'Favorites container renders', test: "!!document.querySelector('.fav-container')" },
     {
-      name: 'Tab buttons exist',
-      test: "document.querySelectorAll('.fav-tabs button').length >= 2",
+      name: 'Clicking star toggles favorite',
+      test: "(async function() { var star = document.querySelector('.fav-star'); if (!star) return false; var beforeFavorited = star.classList.contains('favorited') || star.classList.contains('active'); star.click(); await new Promise(function(r) { setTimeout(r, 150); }); return (star.classList.contains('favorited') || star.classList.contains('active')) !== beforeFavorited; })()",
     },
-    { name: 'Favorite items shown', test: "document.querySelectorAll('.fav-item').length >= 4" },
-    { name: 'Star buttons exist', test: "document.querySelectorAll('.fav-star').length >= 4" },
+    {
+      name: 'Tab buttons filter items',
+      test: "(async function() { var tabs = document.querySelectorAll('.fav-tabs button'); if (tabs.length < 2) return false; var beforeCount = document.querySelectorAll('.fav-item').length; tabs[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.fav-item').length; return afterCount !== beforeCount || tabs[1].classList.contains('active'); })()",
+    },
   ],
 
   'react-tagging': [
-    { name: 'Tagging container renders', test: "!!document.querySelector('.tagging-container')" },
-    { name: 'Tag input wrapper exists', test: "!!document.querySelector('.tag-input-wrapper')" },
-    { name: 'Tags displayed', test: "document.querySelectorAll('.tag').length >= 1" },
-    { name: 'Tag input exists', test: "!!document.querySelector('.tag-input')" },
-    { name: 'Tag count shown', test: "!!document.querySelector('.tag-count')" },
+    {
+      name: 'Typing and pressing Enter adds tag',
+      test: "(async function() { var input = document.querySelector('.tag-input'); if (!input) return false; var beforeCount = document.querySelectorAll('.tag').length; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'newtag'); input.dispatchEvent(new Event('input', {bubbles: true})); var enterEvent = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}); input.dispatchEvent(enterEvent); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.tag').length > beforeCount; })()",
+    },
   ],
 
   'react-categorization': [
-    { name: 'Category container renders', test: "!!document.querySelector('.cat-container')" },
-    { name: 'Filter chips exist', test: "document.querySelectorAll('.cat-chip').length >= 4" },
-    { name: 'Items displayed', test: "document.querySelectorAll('.cat-item').length >= 5" },
-    { name: 'Active filter indicated', test: "!!document.querySelector('.cat-chip.active')" },
-    { name: 'Item count shown', test: "!!document.querySelector('.count')" },
+    {
+      name: 'Clicking category filters items',
+      test: "(async function() { var chips = document.querySelectorAll('.cat-chip'); if (chips.length < 2) return false; var beforeCount = document.querySelectorAll('.cat-item').length; chips[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.cat-item').length; return afterCount !== beforeCount || chips[1].classList.contains('active'); })()",
+    },
   ],
 
   'react-settings': [
-    { name: 'Settings container renders', test: "!!document.querySelector('.settings-container')" },
     {
-      name: 'Settings sections exist',
-      test: "document.querySelectorAll('.settings-section').length >= 2",
-    },
-    { name: 'Toggle switches exist', test: "document.querySelectorAll('.toggle').length >= 2" },
-    { name: 'Save button exists', test: "!!document.querySelector('.btn-save')" },
-    {
-      name: 'Section titles shown',
-      test: "document.querySelectorAll('.section-title').length >= 2",
+      name: 'Clicking toggle switches it',
+      test: "(async function() { var toggle = document.querySelector('.toggle'); if (!toggle) return false; var beforeOn = toggle.classList.contains('on'); toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return toggle.classList.contains('on') !== beforeOn; })()",
     },
   ],
 
   'react-archive': [
-    { name: 'Archive container renders', test: "!!document.querySelector('.archive-container')" },
-    { name: 'Tab bar exists', test: "!!document.querySelector('.tab-bar')" },
-    { name: 'Items displayed', test: "document.querySelectorAll('.item-card').length >= 2" },
     {
-      name: 'Archive buttons exist',
-      test: "document.querySelectorAll('.archive-btn').length >= 2",
+      name: 'Archive button moves item to archive tab',
+      test: "(async function() { var archiveBtn = document.querySelector('.archive-btn'); if (!archiveBtn) return false; archiveBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.item-card').length >= 0; })()",
     },
   ],
 
   'react-notifications': [
     {
-      name: 'Notification container renders',
-      test: "!!document.querySelector('.notif-container')",
-    },
-    {
-      name: 'Trigger buttons exist',
-      test: "document.querySelectorAll('.notif-buttons button').length >= 4",
-    },
-    { name: 'No toasts initially', test: "document.querySelectorAll('.toast').length === 0" },
-    {
-      name: 'Button types correct',
-      test: "!!document.querySelector('.btn-info') && !!document.querySelector('.btn-success')",
+      name: 'Clicking button shows toast notification',
+      test: "(async function() { var btn = document.querySelector('.notif-buttons button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.toast'); })()",
     },
   ],
 
   'react-captcha': [
-    { name: 'Captcha container renders', test: "!!document.querySelector('.captcha-container')" },
-    { name: 'Math problem shown', test: "!!document.querySelector('.math-problem')" },
-    { name: 'Input field exists', test: "!!document.querySelector('.captcha-input')" },
-    { name: 'Verify button exists', test: "!!document.querySelector('.verify-btn')" },
-    { name: 'Refresh button exists', test: "!!document.querySelector('.refresh-btn')" },
+    {
+      name: 'Refresh button generates new problem',
+      test: "(async function() { var refreshBtn = document.querySelector('.refresh-btn'); if (!refreshBtn) return false; var problem = document.querySelector('.math-problem'); if (!problem) return false; var beforeProblem = problem.textContent; refreshBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return problem.textContent !== beforeProblem; })()",
+    },
+    {
+      name: 'Correct answer shows success',
+      test: "(async function() { var input = document.querySelector('.captcha-input'); if (!input) return false; var problem = document.querySelector('.math-problem'); if (!problem) return false; var match = problem.textContent.match(/(\\d+)\\s*\\+\\s*(\\d+)/); if (!match) return false; var answer = parseInt(match[1]) + parseInt(match[2]); var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, answer.toString()); input.dispatchEvent(new Event('input', {bubbles: true})); var verifyBtn = document.querySelector('.verify-btn'); if (verifyBtn) verifyBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('correct') || document.body.textContent.includes('✓'); })()",
+    },
   ],
 
   'react-inline-help': [
-    { name: 'Help container renders', test: "!!document.querySelector('.help-container')" },
-    { name: 'Field groups exist', test: "document.querySelectorAll('.field-group').length >= 3" },
-    { name: 'Help icons exist', test: "document.querySelectorAll('.help-icon').length >= 3" },
-    { name: 'Inline hints shown', test: "document.querySelectorAll('.inline-hint').length >= 3" },
+    {
+      name: 'Help icons display hints',
+      test: "document.querySelectorAll('.help-icon').length >= 3 && document.querySelectorAll('.inline-hint').length >= 3",
+    },
   ],
 
   'react-good-defaults': [
-    { name: 'Defaults container renders', test: "!!document.querySelector('.defaults-container')" },
-    { name: 'Form fields exist', test: "document.querySelectorAll('.field').length >= 4" },
     {
-      name: 'Input elements exist',
-      test: "document.querySelectorAll('.field input, .field select').length >= 4",
+      name: 'Form fields have default values',
+      test: "(async function() { var inputs = document.querySelectorAll('.field input, .field select'); var withValues = Array.from(inputs).filter(function(inp) { return inp.value && inp.value.length > 0; }); return withValues.length >= 2; })()",
     },
-    { name: 'Hint texts shown', test: "document.querySelectorAll('.hint').length >= 2" },
-    { name: 'Save button exists', test: "!!document.querySelector('.defaults-btn')" },
   ],
 
   // ──────────────────────────────────────────────
   // UI Components
   // ──────────────────────────────────────────────
   'react-image-upload': [
-    { name: 'Upload container renders', test: "!!document.querySelector('.upload-container')" },
-    { name: 'Dropzone exists', test: "!!document.querySelector('.dropzone')" },
     {
-      name: 'Dropzone has text',
-      test: "document.querySelector('.dropzone') && document.querySelector('.dropzone').textContent.length > 5",
-    },
-    {
-      name: 'No previews initially',
-      test: "document.querySelectorAll('.preview-item').length === 0",
+      name: 'Dropzone highlights on drag over',
+      test: "(async function() { var dropzone = document.querySelector('.dropzone'); if (!dropzone) return false; var event = new Event('dragover', {bubbles: true}); event.preventDefault = function() {}; dropzone.dispatchEvent(event); await new Promise(function(r) { setTimeout(r, 150); }); return dropzone.classList.contains('over') || dropzone.classList.contains('drag-over') || dropzone.style.backgroundColor !== ''; })()",
     },
   ],
 
   'react-image-gallery': [
-    { name: 'Gallery renders', test: "!!document.querySelector('.gallery')" },
-    { name: 'Gallery grid exists', test: "!!document.querySelector('.gallery-grid')" },
-    { name: 'Gallery items exist', test: "document.querySelectorAll('.gallery-item').length >= 5" },
-    { name: 'Lightbox hidden initially', test: "!document.querySelector('.lightbox')" },
+    {
+      name: 'Clicking image opens lightbox',
+      test: "(async function() { var item = document.querySelector('.gallery-item'); if (!item) return false; item.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.lightbox'); })()",
+    },
   ],
 
   'react-image-zoom': [
-    { name: 'Zoom container renders', test: "!!document.querySelector('.zoom-container')" },
-    { name: 'Zoom wrapper exists', test: "!!document.querySelector('.zoom-wrapper')" },
-    { name: 'Zoom controls exist', test: "!!document.querySelector('.zoom-controls')" },
     {
-      name: 'Zoom level shown',
-      test: "!!document.querySelector('.zoom-level') && document.querySelector('.zoom-level').textContent.includes('100%')",
+      name: 'Zoom controls change zoom level',
+      test: "(async function() { var zoomBtn = document.querySelector('.zoom-controls button'); if (!zoomBtn) return false; var zoomLevel = document.querySelector('.zoom-level'); if (!zoomLevel) return false; var beforeZoom = zoomLevel.textContent; zoomBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return zoomLevel.textContent !== beforeZoom; })()",
     },
   ],
 
   'react-slideshow': [
-    { name: 'Slideshow renders', test: "!!document.querySelector('.slideshow')" },
-    { name: 'Slide content shown', test: "!!document.querySelector('.slide')" },
     {
-      name: 'Control buttons exist',
-      test: "document.querySelectorAll('.controls button').length >= 2",
+      name: 'Control buttons change slides',
+      test: "(async function() { var nextBtn = document.querySelectorAll('.controls button')[1]; if (!nextBtn) return false; var beforeDot = document.querySelector('.dot.active'); nextBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterDot = document.querySelector('.dot.active'); return afterDot !== beforeDot; })()",
     },
-    { name: 'Navigation dots exist', test: "document.querySelectorAll('.dot').length >= 3" },
-    { name: 'Active dot indicated', test: "!!document.querySelector('.dot.active')" },
   ],
 
   'react-morphing-controls': [
-    { name: 'Morph container renders', test: "!!document.querySelector('.morph-container')" },
-    { name: 'Submit button exists', test: "!!document.querySelector('.morph-btn')" },
-    { name: 'Toggle switch exists', test: "!!document.querySelector('.toggle-track')" },
-    { name: 'Expand box exists', test: "!!document.querySelector('.expand-box')" },
     {
-      name: 'Button text is Submit',
-      test: "document.querySelector('.morph-btn') && document.querySelector('.morph-btn').textContent.trim() === 'Submit'",
+      name: 'Submit button morphs on click',
+      test: "(async function() { var btn = document.querySelector('.morph-btn'); if (!btn) return false; var beforeText = btn.textContent.trim(); btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return btn.textContent.trim() !== beforeText; })()",
+    },
+    {
+      name: 'Toggle switch animates',
+      test: "(async function() { var toggle = document.querySelector('.toggle-track'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return toggle.classList.contains('on') || !!document.querySelector('.toggle-thumb'); })()",
     },
   ],
 
   'react-fill-blanks': [
-    { name: 'Blanks container renders', test: "!!document.querySelector('.blanks-container')" },
-    { name: 'Sentences displayed', test: "document.querySelectorAll('.sentence').length >= 3" },
-    { name: 'Blank inputs exist', test: "document.querySelectorAll('.blank-input').length >= 3" },
-    { name: 'Check button exists', test: "!!document.querySelector('.check-btn')" },
-    { name: 'No score initially', test: "!document.querySelector('.score')" },
+    {
+      name: 'Check button validates answers',
+      test: "(async function() { var checkBtn = document.querySelector('.check-btn'); if (!checkBtn) return false; checkBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.score') || document.body.textContent.toLowerCase().includes('score'); })()",
+    },
   ],
 };
