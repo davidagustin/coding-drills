@@ -15,6 +15,7 @@ export interface FrameworkConfig {
   hoverBg: string;
   icon: string;
   description: string;
+  version: string;
 }
 
 export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
@@ -29,6 +30,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     icon: 'JS',
     description:
       'Master the DOM API, event handling, and vanilla JavaScript patterns used in every web project.',
+    version: 'ES2024',
   },
   react: {
     id: 'react',
@@ -41,6 +43,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     icon: '⚛',
     description:
       'Practice hooks, state management, component patterns, and the React rendering model.',
+    version: '19',
   },
   angular: {
     id: 'angular',
@@ -53,6 +56,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     icon: 'Ng',
     description:
       'Drill Angular decorators, services, dependency injection, RxJS, and template syntax.',
+    version: '19',
   },
   vue: {
     id: 'vue',
@@ -65,6 +69,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     icon: 'V',
     description:
       'Practice the Composition API, reactivity primitives, computed properties, and Vue directives.',
+    version: '3.5',
   },
 };
 

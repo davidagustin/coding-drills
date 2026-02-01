@@ -2,7 +2,61 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { LANGUAGE_CONFIG, type SupportedLanguage } from '@/app/[language]/config';
 import { FRAMEWORK_CONFIG, FRAMEWORK_IDS, type FrameworkId } from '@/lib/frontend-drills';
+
+const PROGRAMMING_LANGUAGES: SupportedLanguage[] = [
+  'javascript',
+  'typescript',
+  'python',
+  'java',
+  'cpp',
+  'csharp',
+  'go',
+  'ruby',
+  'c',
+  'php',
+  'kotlin',
+  'rust',
+  'swift',
+  'scala',
+  'r',
+  'perl',
+  'lua',
+  'haskell',
+  'elixir',
+  'dart',
+  'clojure',
+];
+
+const DATABASE_LANGUAGES: SupportedLanguage[] = ['postgresql', 'mysql', 'mongodb'];
+
+const LANG_SHORT: Partial<Record<SupportedLanguage, string>> = {
+  javascript: 'JS',
+  typescript: 'TS',
+  python: 'Py',
+  java: 'Jv',
+  cpp: 'C+',
+  csharp: 'C#',
+  go: 'Go',
+  ruby: 'Rb',
+  c: 'C',
+  php: 'PH',
+  kotlin: 'Kt',
+  rust: 'Rs',
+  swift: 'Sw',
+  scala: 'Sc',
+  r: 'R',
+  perl: 'Pl',
+  lua: 'Lu',
+  haskell: 'Hs',
+  elixir: 'Ex',
+  dart: 'Da',
+  clojure: 'Cl',
+  postgresql: 'PG',
+  mysql: 'My',
+  mongodb: 'Mg',
+};
 
 export function FrameworkSwitcher({ framework }: { framework: FrameworkId }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +94,7 @@ export function FrameworkSwitcher({ framework }: { framework: FrameworkId }) {
     };
   }, [isOpen]);
 
-  const handleSelect = useCallback(
+  const handleSelectFramework = useCallback(
     (target: FrameworkId) => {
       if (target === framework) {
         setIsOpen(false);
@@ -58,6 +112,15 @@ export function FrameworkSwitcher({ framework }: { framework: FrameworkId }) {
     [framework, pathname, router],
   );
 
+  const handleSelectLanguage = useCallback(
+    (language: SupportedLanguage) => {
+      // Navigate to top-level language route
+      setIsOpen(false);
+      router.push(`/${language}`);
+    },
+    [router],
+  );
+
   return (
     <div className="relative">
       <button
@@ -67,10 +130,11 @@ export function FrameworkSwitcher({ framework }: { framework: FrameworkId }) {
         className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${config.bgColor} ${config.borderColor} border cursor-pointer hover:opacity-80 transition-opacity`}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-label="Switch framework"
+        aria-label="Switch framework or language"
       >
         <span className={`text-sm font-bold ${config.color}`}>{config.icon}</span>
         <span className={`text-sm font-medium ${config.color}`}>{config.name}</span>
+        <span className={`text-xs opacity-70 ${config.color}`}>{config.version}</span>
         {/* Chevron */}
         <svg
           className={`w-3 h-3 ${config.color} opacity-70 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -87,10 +151,14 @@ export function FrameworkSwitcher({ framework }: { framework: FrameworkId }) {
         <div
           ref={menuRef}
           role="listbox"
-          aria-label="Select framework"
-          className="absolute right-0 mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-50"
+          aria-label="Select framework or language"
+          className="absolute right-0 mt-2 w-72 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto"
         >
           <div className="py-1">
+            {/* Frontend Frameworks Section */}
+            <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Frontend Frameworks
+            </div>
             {FRAMEWORK_IDS.map((fwId) => {
               const fwConfig = FRAMEWORK_CONFIG[fwId];
               const isActive = fwId === framework;
@@ -100,15 +168,20 @@ export function FrameworkSwitcher({ framework }: { framework: FrameworkId }) {
                   type="button"
                   role="option"
                   aria-selected={isActive}
-                  onClick={() => handleSelect(fwId)}
+                  onClick={() => handleSelectFramework(fwId)}
                   className={`w-full px-3 py-2 text-left text-sm flex items-center gap-3 transition-colors cursor-pointer ${
                     isActive
                       ? 'bg-zinc-800 text-white'
                       : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
                   }`}
                 >
-                  <span className={`font-bold ${fwConfig.color}`}>{fwConfig.icon}</span>
+                  <span
+                    className={`flex items-center justify-center w-6 h-6 rounded text-xs font-bold ${fwConfig.bgColor} ${fwConfig.color}`}
+                  >
+                    {fwConfig.icon}
+                  </span>
                   <span className="flex-1 font-medium">{fwConfig.name}</span>
+                  <span className="text-xs opacity-60">{fwConfig.version}</span>
                   {isActive && (
                     <svg
                       className="w-4 h-4 text-emerald-400"
@@ -125,6 +198,66 @@ export function FrameworkSwitcher({ framework }: { framework: FrameworkId }) {
                       />
                     </svg>
                   )}
+                </button>
+              );
+            })}
+
+            {/* Divider */}
+            <div className="border-t border-zinc-800 my-1" />
+
+            {/* Programming Languages Section */}
+            <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Languages
+            </div>
+            {PROGRAMMING_LANGUAGES.map((lang) => {
+              const langConfig = LANGUAGE_CONFIG[lang];
+              const shortName = LANG_SHORT[lang] || lang.slice(0, 2).toUpperCase();
+              return (
+                <button
+                  key={lang}
+                  type="button"
+                  role="option"
+                  aria-selected={false}
+                  onClick={() => handleSelectLanguage(lang)}
+                  className="w-full px-3 py-2 text-left text-sm flex items-center gap-3 transition-colors cursor-pointer text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                >
+                  <span
+                    className={`flex items-center justify-center w-6 h-6 rounded text-xs font-bold ${langConfig.bgColor} ${langConfig.color}`}
+                  >
+                    {shortName}
+                  </span>
+                  <span className="flex-1 font-medium">{langConfig.name}</span>
+                  <span className="text-xs opacity-60">{langConfig.version}</span>
+                </button>
+              );
+            })}
+
+            {/* Divider */}
+            <div className="border-t border-zinc-800 my-1" />
+
+            {/* Database Languages Section */}
+            <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Databases
+            </div>
+            {DATABASE_LANGUAGES.map((lang) => {
+              const langConfig = LANGUAGE_CONFIG[lang];
+              const shortName = LANG_SHORT[lang] || lang.slice(0, 2).toUpperCase();
+              return (
+                <button
+                  key={lang}
+                  type="button"
+                  role="option"
+                  aria-selected={false}
+                  onClick={() => handleSelectLanguage(lang)}
+                  className="w-full px-3 py-2 text-left text-sm flex items-center gap-3 transition-colors cursor-pointer text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                >
+                  <span
+                    className={`flex items-center justify-center w-6 h-6 rounded text-xs font-bold ${langConfig.bgColor} ${langConfig.color}`}
+                  >
+                    {shortName}
+                  </span>
+                  <span className="flex-1 font-medium">{langConfig.name}</span>
+                  <span className="text-xs opacity-60">{langConfig.version}</span>
                 </button>
               );
             })}
