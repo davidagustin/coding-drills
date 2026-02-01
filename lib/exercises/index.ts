@@ -1,5 +1,6 @@
 // Exercise data index - exports all language exercises
 
+import { cExercises } from './c';
 import { cppExercises } from './cpp';
 import { csharpExercises } from './csharp';
 import { goExercises } from './go';
@@ -31,7 +32,7 @@ export const exercisesByLanguage: Record<string, Exercise[]> = {
   csharp: csharpExercises,
   go: goExercises,
   ruby: rubyExercises,
-  c: [],
+  c: cExercises,
 };
 
 // Get exercises for a specific language
