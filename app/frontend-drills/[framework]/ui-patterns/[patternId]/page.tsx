@@ -40,21 +40,47 @@ function formatCSSForDisplay(raw: string): string {
 
 function getImplementationHint(concept: string, framework: string): string {
   const hints: Record<string, string> = {
-    'form validation': 'Set up validation rules and error display logic',
+    'form validation':
+      'Use input event listeners + error display; check .value, .length, and regex patterns',
+    'constraint validation':
+      'Use el.setCustomValidity(), el.checkValidity(), and el.validity properties',
     'state management': 'Design the component state structure and update flows',
-    'error handling': 'Add error boundaries and user-friendly error messages',
-    accessibility: 'Implement ARIA attributes, keyboard navigation, and screen reader support',
-    'keyboard navigation': 'Handle arrow keys, Enter, Escape, and Tab for full keyboard control',
-    debouncing: 'Add debounced handlers to prevent excessive API calls or re-renders',
-    'focus management': 'Control focus flow between interactive elements',
-    'aria attributes': 'Add proper roles, labels, and live regions for assistive technology',
-    'visual feedback': 'Show loading states, success/error indicators, and transitions',
-    'async operations': 'Handle promises, loading states, and error recovery',
-    'drag and drop': 'Implement drag handlers, drop zones, and visual drag indicators',
-    animation: 'Add smooth transitions and micro-interactions',
-    'responsive design': 'Ensure the component works across all screen sizes',
-    'event delegation': 'Use event bubbling to efficiently handle dynamic elements',
-    'dom manipulation': 'Create, update, and remove DOM elements programmatically',
+    'error handling': 'Add try/catch, error boundaries, and user-friendly error messages',
+    accessibility: 'Add aria-label, aria-expanded, aria-selected, role attributes',
+    'keyboard navigation': 'Listen for keydown — handle ArrowUp/Down, Enter, Escape, Tab',
+    debouncing:
+      'Use clearTimeout + setTimeout pattern: clearTimeout(timer); timer = setTimeout(fn, delay)',
+    'focus management': 'Use el.focus(), tabIndex, and track which element should receive focus',
+    'aria attributes': 'Add role, aria-label, aria-live, aria-expanded, aria-selected as needed',
+    'visual feedback': 'Toggle CSS classes for states: .loading, .success, .error, .active',
+    'async operations': 'Use async/await with try/catch, show loading state, handle errors',
+    'drag and drop': 'Listen for dragstart, dragover, dragend, drop events; use e.dataTransfer',
+    animation: 'Use CSS transitions/keyframes or element.animate() for smooth effects',
+    'responsive design': 'Use CSS media queries or container queries for breakpoints',
+    'event delegation':
+      'Attach listener to parent, use e.target.closest(selector) to find the element',
+    'dom manipulation': 'Use createElement, appendChild, remove(), insertBefore, innerHTML',
+    navigation: 'Track active tab/view in state, render conditionally based on selection',
+    'state persistence': 'Use localStorage.setItem/getItem with JSON.stringify/parse',
+    filtering: 'Use array.filter() to match items against search input',
+    sorting: 'Use array.sort() with a compare function, track sort direction in state',
+    pagination: 'Slice the array with .slice(start, end), track currentPage and pageSize',
+    'search/filter': 'Filter items with .filter(item => item.toLowerCase().includes(query))',
+    'input masking': 'Intercept input events, format the value, and set it back on the input',
+    'date parsing': 'Use new Date(), toLocaleDateString(), or manual string parsing',
+    'clipboard api': 'Use navigator.clipboard.writeText(text) with async/await',
+    'form events': 'Listen for submit, input, change, focus, blur events on form elements',
+    'inline editing': 'Toggle between display and edit mode, save on blur or Enter',
+    'lazy loading': 'Use IntersectionObserver to detect when elements enter the viewport',
+    'infinite scroll':
+      'Detect scroll near bottom with scrollTop + clientHeight >= scrollHeight - threshold',
+    'file upload': 'Use input type="file" change event, read files from e.target.files',
+    'custom select': 'Build a button + dropdown list, manage open/close state and selection',
+    'password strength':
+      'Test against regex patterns for length, uppercase, lowercase, numbers, symbols',
+    'real-time': 'Use setInterval or requestAnimationFrame for periodic updates',
+    'toast notification': 'Create element, append to body, auto-remove with setTimeout',
+    animations: 'Use CSS transitions/keyframes or element.animate() for smooth effects',
   };
 
   const lower = concept.toLowerCase();
@@ -62,6 +88,43 @@ function getImplementationHint(concept: string, framework: string): string {
     if (lower.includes(key) || key.includes(lower)) return hint;
   }
   return `Implement ${concept} using ${framework} patterns and best practices`;
+}
+
+/** Extract regex patterns and key APIs from demo code as hints for the starter */
+function extractDemoHints(js: string): string[] {
+  const hints: string[] = [];
+
+  // Extract regex literals (skip simple ones like /g or /i flags alone)
+  const regexMatches = js.match(/\/[^/\n]{2,}\/[gimsuy]*/g);
+  if (regexMatches) {
+    const unique = [...new Set(regexMatches)];
+    if (unique.length > 0) {
+      hints.push(`Useful regex: ${unique.join('  ')}`);
+    }
+  }
+
+  // Extract key DOM/JS APIs used
+  const apis: string[] = [];
+  if (js.includes('.setCustomValidity') || js.includes('.checkValidity'))
+    apis.push('Constraint Validation API (setCustomValidity, checkValidity)');
+  if (js.includes('.closest(')) apis.push('el.closest(selector)');
+  if (js.includes('.matches(')) apis.push('el.matches(selector)');
+  if (js.includes('.dataset')) apis.push('el.dataset');
+  if (js.includes('localStorage')) apis.push('localStorage');
+  if (js.includes('.animate(')) apis.push('el.animate()');
+  if (js.includes('IntersectionObserver')) apis.push('IntersectionObserver');
+  if (js.includes('MutationObserver')) apis.push('MutationObserver');
+  if (js.includes('navigator.clipboard')) apis.push('navigator.clipboard');
+  if (js.includes('URL.createObjectURL')) apis.push('URL.createObjectURL');
+  if (js.includes('FileReader')) apis.push('FileReader');
+  if (js.includes('requestAnimationFrame')) apis.push('requestAnimationFrame');
+  if (js.includes('AbortController')) apis.push('AbortController');
+
+  if (apis.length > 0) {
+    hints.push(`Key APIs: ${apis.join(', ')}`);
+  }
+
+  return hints;
 }
 
 /**
@@ -181,14 +244,31 @@ function skeletonizeDemo(js: string, concepts: string[], framework: string): str
   // Trim trailing empty lines from setup
   while (setup.length > 0 && !setup[setup.length - 1].trim()) setup.pop();
 
-  // Phase 2: Build TODO steps from pattern concepts
+  // Phase 2: Build TODO steps from pattern concepts with specific hints
   const indent = framework === 'vue' ? '    ' : framework === 'react' ? '  ' : '';
-  const todos = [
-    '',
-    ...concepts.map((c, i) => `${indent}// Step ${i + 1}: ${c}`),
-    '',
-    `${indent}// Hint: Check the Live Demo JS tab for the reference implementation`,
-  ];
+  const frameworkName =
+    framework === 'react'
+      ? 'React'
+      : framework === 'vue'
+        ? 'Vue'
+        : framework === 'angular'
+          ? 'Angular'
+          : 'Native JavaScript';
+  const stepLines: string[] = [''];
+  for (let i = 0; i < concepts.length; i++) {
+    const hint = getImplementationHint(concepts[i], frameworkName);
+    stepLines.push(`${indent}// Step ${i + 1}: ${concepts[i]}`);
+    stepLines.push(`${indent}// ${hint}`);
+    if (i < concepts.length - 1) stepLines.push('');
+  }
+
+  // Phase 2b: Extract regex patterns and key APIs from the demo as bonus hints
+  const demoHints = extractDemoHints(js);
+  stepLines.push('');
+  for (const h of demoHints) {
+    stepLines.push(`${indent}// ${h}`);
+  }
+  const todos = stepLines;
 
   // Phase 3: Framework-specific teardown (return, mounting, template)
   const teardown = buildSkeletonTeardown(js, lines, framework, indent);
