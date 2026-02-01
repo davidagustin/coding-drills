@@ -7,6 +7,7 @@ import { javaExercises } from './java';
 import { javascriptExercises } from './javascript';
 import { javascriptExtraExercises } from './javascript-extra';
 import { pythonExercises } from './python';
+import { rubyExercises } from './ruby';
 import {
   DIFFICULTY_CONFIG,
   EXERCISE_CATEGORIES,
@@ -29,7 +30,7 @@ export const exercisesByLanguage: Record<string, Exercise[]> = {
   cpp: cppExercises,
   csharp: csharpExercises,
   go: goExercises,
-  ruby: [],
+  ruby: rubyExercises,
   c: [],
 };
 
