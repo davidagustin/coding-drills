@@ -1,5 +1,9 @@
 // Exercise data index - exports all language exercises
 
+import { cppExercises } from './cpp';
+import { csharpExercises } from './csharp';
+import { goExercises } from './go';
+import { javaExercises } from './java';
 import { javascriptExercises } from './javascript';
 import { javascriptExtraExercises } from './javascript-extra';
 import { pythonExercises } from './python';
@@ -21,10 +25,10 @@ export const exercisesByLanguage: Record<string, Exercise[]> = {
   typescript: [...typescriptExercises, ...typescriptExtraExercises],
   python: pythonExercises,
   // Other languages will use pattern-matching based exercises
-  java: [], // TODO: Add Java-specific exercises
-  cpp: [],
-  csharp: [],
-  go: [],
+  java: javaExercises,
+  cpp: cppExercises,
+  csharp: csharpExercises,
+  go: goExercises,
   ruby: [],
   c: [],
 };
