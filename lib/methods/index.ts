@@ -4,27 +4,47 @@
 
 import type { LanguageId, Method } from '../types';
 import { cMethods } from './c';
+import { clojureMethods } from './clojure';
 import { cppMethods } from './cpp';
 import { csharpMethods } from './csharp';
+import { elixirMethods } from './elixir';
 import { goMethods } from './go';
+import { haskellMethods } from './haskell';
 import { javaMethods } from './java';
 // Import language-specific methods
 import { javascriptMethods } from './javascript';
+import { kotlinMethods } from './kotlin';
+import { luaMethods } from './lua';
+import { perlMethods } from './perl';
 import { phpMethods } from './php';
 import { pythonMethods } from './python';
+import { rMethods } from './r';
 import { rubyMethods } from './ruby';
+import { rustMethods } from './rust';
+import { scalaMethods } from './scala';
+import { swiftMethods } from './swift';
 import { typescriptMethods } from './typescript';
 
 export { cMethods } from './c';
+export { clojureMethods } from './clojure';
 export { cppMethods } from './cpp';
 export { csharpMethods } from './csharp';
+export { elixirMethods } from './elixir';
 export { goMethods } from './go';
+export { haskellMethods } from './haskell';
 export { javaMethods } from './java';
 // Export individual method sets
 export { javascriptMethods } from './javascript';
+export { kotlinMethods } from './kotlin';
+export { luaMethods } from './lua';
+export { perlMethods } from './perl';
 export { phpMethods } from './php';
 export { pythonMethods } from './python';
+export { rMethods } from './r';
 export { rubyMethods } from './ruby';
+export { rustMethods } from './rust';
+export { scalaMethods } from './scala';
+export { swiftMethods } from './swift';
 // Export types
 export * from './types';
 export { typescriptMethods } from './typescript';
@@ -40,7 +60,17 @@ export const methodsByLanguage: Partial<Record<LanguageId, Method[]>> = {
   go: goMethods,
   ruby: rubyMethods,
   c: cMethods,
+  perl: perlMethods,
   php: phpMethods,
+  rust: rustMethods,
+  swift: swiftMethods,
+  kotlin: kotlinMethods,
+  lua: luaMethods,
+  r: rMethods,
+  elixir: elixirMethods,
+  haskell: haskellMethods,
+  scala: scalaMethods,
+  clojure: clojureMethods,
 };
 
 // Get methods for a specific language
