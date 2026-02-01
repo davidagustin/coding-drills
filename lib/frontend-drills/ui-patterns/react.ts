@@ -5012,6 +5012,193 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['progress tracking', 'visual feedback', 'accessibility', 'user guidance'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/steps-left',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.steps-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  background: #334155;
+  border: 2px solid #334155;
+  flex-shrink: 0;
+  transition: all 0.3s;
+  z-index: 1;
+}
+
+.step-dot.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.step-dot.done {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.step-line {
+  flex: 1;
+  height: 3px;
+  background: #334155;
+  transition: background 0.3s;
+}
+
+.step-line.done {
+  background: #22c55e;
+}
+
+.step-content {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.step-title {
+  color: #e2e8f0;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.step-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.step-input:focus {
+  border-color: #3b82f6;
+}
+
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.step-nav button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-back {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.btn-next {
+  background: #3b82f6;
+  color: white;
+}
+
+.steps-left-text {
+  color: #94a3b8;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 12px;
+}`,
+      js: `const { useState } = React;
+
+const steps = [
+  { title: 'Account Info', desc: 'Enter your basic details', placeholder: 'Your name' },
+  { title: 'Contact', desc: 'How can we reach you?', placeholder: 'Email address' },
+  { title: 'Preferences', desc: 'Customize your experience', placeholder: 'Favorite color' },
+  { title: 'Confirm', desc: 'Review and submit', placeholder: '' },
+];
+
+function App() {
+  const [current, setCurrent] = useState(0);
+  const [values, setValues] = useState(Array(steps.length).fill(''));
+
+  const next = () => { if (current < steps.length - 1) setCurrent(c => c + 1); };
+  const back = () => { if (current > 0) setCurrent(c => c - 1); };
+
+  const remaining = steps.length - 1 - current;
+
+  return (
+    <div className="steps-container">
+      <h2>Steps Left</h2>
+      <div className="progress-bar">
+        {steps.map((_, i) => (
+          <React.Fragment key={i}>
+            <div className={\\\`step-dot \\\${i < current ? 'done' : i === current ? 'active' : ''}\\\`}>
+              {i < current ? '\u2713' : i + 1}
+            </div>
+            {i < steps.length - 1 && <div className={\\\`step-line \\\${i < current ? 'done' : ''}\\\`} />}
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="step-content">
+        <div className="step-title">{steps[current].title}</div>
+        <div className="step-desc">{steps[current].desc}</div>
+        {steps[current].placeholder && (
+          <input
+            className="step-input"
+            placeholder={steps[current].placeholder}
+            value={values[current]}
+            onChange={e => { const v = [...values]; v[current] = e.target.value; setValues(v); }}
+          />
+        )}
+        {current === steps.length - 1 && (
+          <div style={{ color: '#94a3b8', fontSize: 14 }}>
+            {values.filter(v => v.trim()).length} of {steps.length - 1} fields completed
+          </div>
+        )}
+      </div>
+      <div className="step-nav">
+        <button className="btn-back" onClick={back} disabled={current === 0}>Back</button>
+        <button className="btn-next" onClick={next}>
+          {current === steps.length - 1 ? 'Submit' : 'Next'}
+        </button>
+      </div>
+      <div className="steps-left-text">
+        {remaining > 0 ? \\\`\\\${remaining} step\\\${remaining > 1 ? 's' : ''} remaining\\\` : 'Final step!'}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-adaptable-view',
@@ -5022,6 +5209,163 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['responsive design', 'state management', 'user preferences', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/adaptable-view',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.view-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.view-header h2 {
+  color: #e2e8f0;
+  margin: 0;
+  font-size: 18px;
+}
+
+.view-toggles {
+  display: flex;
+  gap: 4px;
+  background: #1e293b;
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid #334155;
+}
+
+.view-toggles button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.view-toggles button.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.grid-view {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.grid-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.grid-card .icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.grid-card .name {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.grid-card .meta {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.list-row .icon {
+  font-size: 22px;
+}
+
+.list-row .info { flex: 1; }
+
+.list-row .name {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.list-row .meta {
+  color: #64748b;
+  font-size: 12px;
+}`,
+      js: `const { useState } = React;
+
+const items = [
+  { icon: '\uD83D\uDCC1', name: 'Documents', meta: '24 files' },
+  { icon: '\uD83D\uDDBC\uFE0F', name: 'Images', meta: '136 files' },
+  { icon: '\uD83C\uDFB5', name: 'Music', meta: '48 files' },
+  { icon: '\uD83C\uDFAC', name: 'Videos', meta: '12 files' },
+  { icon: '\uD83D\uDCE6', name: 'Archives', meta: '8 files' },
+  { icon: '\u2B50', name: 'Favorites', meta: '15 files' },
+];
+
+function App() {
+  const [view, setView] = useState('grid');
+
+  return (
+    <div className="view-container">
+      <div className="view-header">
+        <h2>Files</h2>
+        <div className="view-toggles">
+          <button className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')} title="Grid">\u25A6</button>
+          <button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')} title="List">\u2630</button>
+        </div>
+      </div>
+      {view === 'grid' ? (
+        <div className="grid-view">
+          {items.map(it => (
+            <div key={it.name} className="grid-card">
+              <div className="icon">{it.icon}</div>
+              <div className="name">{it.name}</div>
+              <div className="meta">{it.meta}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="list-view">
+          {items.map(it => (
+            <div key={it.name} className="list-row">
+              <span className="icon">{it.icon}</span>
+              <div className="info">
+                <div className="name">{it.name}</div>
+                <div className="meta">{it.meta}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-preview',
@@ -5032,6 +5376,179 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['modal dialogs', 'lazy loading', 'user experience', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/preview',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.preview-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.card-item:hover {
+  border-color: #3b82f6;
+}
+
+.card-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-title {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.card-desc {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  color: #e2e8f0;
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-icon {
+  font-size: 60px;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.modal-desc {
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.modal-tag {
+  padding: 3px 10px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border-radius: 4px;
+  font-size: 12px;
+}`,
+      js: `const { useState } = React;
+
+const items = [
+  { icon: '\uD83D\uDCDD', title: 'Blog Post', desc: 'A draft article about React hooks', full: 'This article covers useState, useEffect, and custom hooks with practical examples and best practices for production apps.', tags: ['react', 'hooks'] },
+  { icon: '\uD83D\uDDBC\uFE0F', title: 'Design Mockup', desc: 'Landing page wireframe v2', full: 'Updated wireframe with improved hero section, social proof, and call-to-action placement based on A/B test results.', tags: ['design', 'ui'] },
+  { icon: '\uD83D\uDCC4', title: 'API Docs', desc: 'REST endpoints reference', full: 'Complete documentation for all CRUD endpoints including authentication, pagination, and error handling conventions.', tags: ['api', 'docs'] },
+  { icon: '\uD83D\uDCCA', title: 'Analytics Report', desc: 'Q4 performance data', full: 'Quarterly metrics showing 23% growth in active users and 15% improvement in page load times after optimization.', tags: ['data', 'report'] },
+];
+
+function App() {
+  const [selected, setSelected] = useState(null);
+
+  return (
+    <div className="preview-container">
+      <h2>Preview</h2>
+      <div className="card-list">
+        {items.map((item, i) => (
+          <div key={i} className="card-item" onClick={() => setSelected(item)}>
+            <div className="card-thumb">{item.icon}</div>
+            <div className="card-info">
+              <div className="card-title">{item.title}</div>
+              <div className="card-desc">{item.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {selected && (
+        <div className="modal-overlay" onClick={() => setSelected(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{selected.title}</h3>
+              <button className="modal-close" onClick={() => setSelected(null)}>\u2715</button>
+            </div>
+            <div className="modal-icon">{selected.icon}</div>
+            <div className="modal-desc">{selected.full}</div>
+            <div className="modal-tags">
+              {selected.tags.map(t => <span key={t} className="modal-tag">{t}</span>)}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-faq',
@@ -5042,6 +5559,127 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['accordion', 'state management', 'accessibility', 'progressive disclosure'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/faq',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.faq-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.faq-item {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  cursor: pointer;
+  color: #e2e8f0;
+  font-size: 14px;
+  user-select: none;
+}
+
+.faq-question:hover {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.faq-arrow {
+  color: #94a3b8;
+  transition: transform 0.3s;
+  font-size: 12px;
+}
+
+.faq-arrow.open {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 0 16px;
+}
+
+.faq-answer.open {
+  max-height: 200px;
+  padding: 0 16px 14px;
+}
+
+.search-box {
+  width: 100%;
+  padding: 10px 14px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.search-box:focus {
+  border-color: #3b82f6;
+}`,
+      js: `const { useState } = React;
+
+const faqs = [
+  { q: 'How do I reset my password?', a: 'Go to Settings > Security > Reset Password and follow the prompts to create a new password.' },
+  { q: 'Can I change my username?', a: 'Yes, navigate to Settings > Profile and click on your username to edit it. Changes take effect immediately.' },
+  { q: 'How do I cancel my subscription?', a: 'Visit Settings > Billing > Cancel Plan. Your access will continue until the end of the billing period.' },
+  { q: 'Is my data encrypted?', a: 'Yes, all data is encrypted at rest using AES-256 and in transit using TLS 1.3.' },
+  { q: 'How do I export my data?', a: 'Go to Settings > Data > Export. You can download your data in JSON or CSV format.' },
+];
+
+function App() {
+  const [openId, setOpenId] = useState(null);
+  const [search, setSearch] = useState('');
+
+  const filtered = faqs.filter(f =>
+    f.q.toLowerCase().includes(search.toLowerCase()) ||
+    f.a.toLowerCase().includes(search.toLowerCase()));
+
+  return (
+    <div className="faq-container">
+      <h2>Frequently Asked Questions</h2>
+      <input
+        className="search-box"
+        placeholder="Search questions..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+      {filtered.map((f, i) => (
+        <div key={i} className="faq-item">
+          <div className="faq-question" onClick={() => setOpenId(openId === i ? null : i)}>
+            <span>{f.q}</span>
+            <span className={\\\`faq-arrow \\\${openId === i ? 'open' : ''}\\\`}>\u25BC</span>
+          </div>
+          <div className={\\\`faq-answer \\\${openId === i ? 'open' : ''}\\\`}>{f.a}</div>
+        </div>
+      ))}
+      {filtered.length === 0 && <div style={{ color: '#64748b', textAlign: 'center', padding: 24 }}>No matching questions</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
 
   // Advanced Features
@@ -5054,6 +5692,151 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['keyboard events', 'event delegation', 'accessibility', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/keyboard-shortcuts',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.shortcuts-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.shortcut-list {
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  overflow: hidden;
+}
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+
+.shortcut-row + .shortcut-row {
+  border-top: 1px solid #334155;
+}
+
+.shortcut-action {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.key-combo {
+  display: flex;
+  gap: 4px;
+}
+
+kbd {
+  padding: 4px 8px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-family: monospace;
+  min-width: 24px;
+  text-align: center;
+}
+
+.last-pressed {
+  margin-top: 16px;
+  padding: 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.last-pressed-label {
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.last-pressed-key {
+  color: #3b82f6;
+  font-size: 20px;
+  font-family: monospace;
+}
+
+.hint {
+  color: #64748b;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 12px;
+}`,
+      js: `const { useState, useEffect } = React;
+
+const shortcuts = [
+  { keys: ['Ctrl', 'S'], action: 'Save' },
+  { keys: ['Ctrl', 'Z'], action: 'Undo' },
+  { keys: ['Ctrl', 'F'], action: 'Find' },
+  { keys: ['Ctrl', 'N'], action: 'New' },
+  { keys: ['Esc'], action: 'Close' },
+];
+
+function App() {
+  const [lastKey, setLastKey] = useState('');
+  const [triggered, setTriggered] = useState('');
+
+  useEffect(() => {
+    const handler = (e) => {
+      const parts = [];
+      if (e.ctrlKey || e.metaKey) parts.push('Ctrl');
+      if (e.shiftKey) parts.push('Shift');
+      if (e.altKey) parts.push('Alt');
+      if (e.key !== 'Control' && e.key !== 'Meta' && e.key !== 'Shift' && e.key !== 'Alt') {
+        parts.push(e.key.length === 1 ? e.key.toUpperCase() : e.key);
+      }
+      const combo = parts.join(' + ');
+      setLastKey(combo);
+
+      const match = shortcuts.find(s => {
+        const sk = s.keys.join(' + ').toUpperCase();
+        return combo.toUpperCase() === sk;
+      });
+      if (match) {
+        e.preventDefault();
+        setTriggered(match.action);
+        setTimeout(() => setTriggered(''), 1500);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  return (
+    <div className="shortcuts-container">
+      <h2>Keyboard Shortcuts</h2>
+      <div className="shortcut-list">
+        {shortcuts.map(s => (
+          <div key={s.action} className="shortcut-row" style={triggered === s.action ? { background: 'rgba(59,130,246,0.15)' } : {}}>
+            <span className="shortcut-action">{s.action}</span>
+            <div className="key-combo">
+              {s.keys.map(k => <kbd key={k}>{k}</kbd>)}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="last-pressed">
+        <div className="last-pressed-label">Last key pressed</div>
+        <div className="last-pressed-key">{lastKey || 'Press any key...'}</div>
+      </div>
+      <div className="hint">Try pressing the keyboard shortcuts above</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-rule-builder',
@@ -5064,6 +5847,159 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['complex state', 'dynamic forms', 'validation', 'component composition'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/rule-builder',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.rule-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.rule-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rule-card select, .rule-card input {
+  padding: 6px 10px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 13px;
+  outline: none;
+}
+
+.rule-card select:focus, .rule-card input:focus {
+  border-color: #3b82f6;
+}
+
+.rule-card input {
+  width: 100px;
+}
+
+.remove-rule {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: auto;
+}
+
+.add-rule-btn {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px dashed #334155;
+  border-radius: 8px;
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 13px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.add-rule-btn:hover {
+  border-color: #3b82f6;
+}
+
+.logic-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.logic-toggle button {
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.logic-toggle button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.output-box {
+  margin-top: 16px;
+  padding: 12px;
+  background: #0f172a;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-family: monospace;
+  white-space: pre-wrap;
+}`,
+      js: `const { useState } = React;
+
+const fields = ['name', 'email', 'age', 'country', 'role'];
+const operators = ['equals', 'contains', 'greater than', 'less than'];
+
+let ruleId = 3;
+
+function App() {
+  const [rules, setRules] = useState([
+    { id: 1, field: 'age', operator: 'greater than', value: '18' },
+    { id: 2, field: 'role', operator: 'equals', value: 'admin' },
+  ]);
+  const [logic, setLogic] = useState('AND');
+
+  const addRule = () => {
+    setRules(prev => [...prev, { id: ++ruleId, field: 'name', operator: 'equals', value: '' }]);
+  };
+
+  const updateRule = (id, key, val) => setRules(prev =>
+    prev.map(r => r.id === id ? { ...r, [key]: val } : r));
+
+  const removeRule = (id) => setRules(prev => prev.filter(r => r.id !== id));
+
+  const summary = rules.map(r => \\\`\\\${r.field} \\\${r.operator} "\\\${r.value}"\\\`).join(\\\` \\\${logic} \\\`);
+
+  return (
+    <div className="rule-container">
+      <h2>Rule Builder</h2>
+      <div className="logic-toggle">
+        <button className={logic === 'AND' ? 'active' : ''} onClick={() => setLogic('AND')}>AND</button>
+        <button className={logic === 'OR' ? 'active' : ''} onClick={() => setLogic('OR')}>OR</button>
+      </div>
+      {rules.map(r => (
+        <div key={r.id} className="rule-card">
+          <select value={r.field} onChange={e => updateRule(r.id, 'field', e.target.value)}>
+            {fields.map(f => <option key={f} value={f}>{f}</option>)}
+          </select>
+          <select value={r.operator} onChange={e => updateRule(r.id, 'operator', e.target.value)}>
+            {operators.map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+          <input value={r.value} onChange={e => updateRule(r.id, 'value', e.target.value)} placeholder="value" />
+          <button className="remove-rule" onClick={() => removeRule(r.id)}>\u2715</button>
+        </div>
+      ))}
+      <button className="add-rule-btn" onClick={addRule}>+ Add Rule</button>
+      <div className="output-box">WHERE {summary || '...'}</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-completeness-meter',
@@ -5074,6 +6010,161 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['progress tracking', 'visual feedback', 'state management', 'user guidance'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/completeness-meter',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.meter-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.meter-card {
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  padding: 24px;
+}
+
+.meter-visual {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.meter-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #e2e8f0;
+  position: relative;
+}
+
+.meter-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: #334155;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.meter-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.meter-label {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.checkbox.checked {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.check-text {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.check-text.done {
+  color: #64748b;
+  text-decoration: line-through;
+}`,
+      js: `const { useState } = React;
+
+const steps = [
+  { id: 'name', label: 'Add your name' },
+  { id: 'avatar', label: 'Upload a photo' },
+  { id: 'bio', label: 'Write a short bio' },
+  { id: 'email', label: 'Verify your email' },
+  { id: 'prefs', label: 'Set your preferences' },
+];
+
+function App() {
+  const [completed, setCompleted] = useState(['name']);
+
+  const toggle = (id) => setCompleted(prev =>
+    prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
+
+  const pct = Math.round((completed.length / steps.length) * 100);
+  const color = pct < 40 ? '#ef4444' : pct < 70 ? '#f59e0b' : '#22c55e';
+
+  return (
+    <div className="meter-container">
+      <h2>Completeness Meter</h2>
+      <div className="meter-card">
+        <div className="meter-visual">
+          <div className="meter-circle" style={{ border: \\\`4px solid \\\${color}\\\` }}>
+            {pct}%
+          </div>
+          <div style={{ flex: 1 }}>
+            <div className="meter-label">Profile completion</div>
+            <div className="meter-bar-bg">
+              <div className="meter-bar-fill" style={{ width: \\\`\\\${pct}%\\\`, background: color }} />
+            </div>
+          </div>
+        </div>
+        <div className="checklist">
+          {steps.map(s => (
+            <div key={s.id} className="check-item" onClick={() => toggle(s.id)}>
+              <div className={\\\`checkbox \\\${completed.includes(s.id) ? 'checked' : ''}\\\`}>
+                {completed.includes(s.id) ? '\u2713' : ''}
+              </div>
+              <span className={\\\`check-text \\\${completed.includes(s.id) ? 'done' : ''}\\\`}>{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-favorites',
@@ -5084,6 +6175,144 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'local storage', 'user preferences', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/favorites',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.fav-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.fav-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.fav-tabs button {
+  padding: 6px 14px;
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.fav-tabs button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.fav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.fav-icon {
+  font-size: 24px;
+}
+
+.fav-info {
+  flex: 1;
+}
+
+.fav-name {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.fav-desc {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.fav-star {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.fav-star:hover {
+  transform: scale(1.2);
+}
+
+.empty-msg {
+  color: #64748b;
+  text-align: center;
+  padding: 32px;
+  font-size: 14px;
+}`,
+      js: `const { useState } = React;
+
+const allItems = [
+  { id: 1, name: 'Dashboard', desc: 'Main overview', icon: '\uD83D\uDCCA' },
+  { id: 2, name: 'Settings', desc: 'App configuration', icon: '\u2699\uFE0F' },
+  { id: 3, name: 'Profile', desc: 'Your account', icon: '\uD83D\uDC64' },
+  { id: 4, name: 'Reports', desc: 'Analytics data', icon: '\uD83D\uDCC8' },
+  { id: 5, name: 'Messages', desc: 'Inbox and chats', icon: '\uD83D\uDCE8' },
+  { id: 6, name: 'Calendar', desc: 'Schedule view', icon: '\uD83D\uDCC5' },
+];
+
+function App() {
+  const [favorites, setFavorites] = useState([1, 4]);
+  const [tab, setTab] = useState('all');
+
+  const toggleFav = (id) => setFavorites(prev =>
+    prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
+
+  const items = tab === 'all' ? allItems : allItems.filter(it => favorites.includes(it.id));
+
+  return (
+    <div className="fav-container">
+      <h2>Favorites</h2>
+      <div className="fav-tabs">
+        <button className={tab === 'all' ? 'active' : ''} onClick={() => setTab('all')}>All</button>
+        <button className={tab === 'favorites' ? 'active' : ''} onClick={() => setTab('favorites')}>
+          Favorites ({favorites.length})
+        </button>
+      </div>
+      <div className="fav-list">
+        {items.length === 0 && <div className="empty-msg">No favorites yet. Star items to add them.</div>}
+        {items.map(it => (
+          <div key={it.id} className="fav-item">
+            <span className="fav-icon">{it.icon}</span>
+            <div className="fav-info">
+              <div className="fav-name">{it.name}</div>
+              <div className="fav-desc">{it.desc}</div>
+            </div>
+            <button className="fav-star" onClick={() => toggleFav(it.id)}>
+              {favorites.includes(it.id) ? '\u2B50' : '\u2606'}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-tagging',
@@ -5094,6 +6323,158 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'autocomplete', 'data management', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/tagging',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.tagging-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.tag-input-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  min-height: 44px;
+  align-items: center;
+  cursor: text;
+}
+
+.tag-input-wrapper:focus-within {
+  border-color: #3b82f6;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.tag button {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+}
+
+.tag-input {
+  flex: 1;
+  min-width: 80px;
+  padding: 4px 0;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 14px;
+  outline: none;
+}
+
+.suggestions {
+  margin-top: 4px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.suggestion {
+  padding: 8px 12px;
+  color: #e2e8f0;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background: #334155;
+}
+
+.tag-hint {
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.tag-count {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 8px;
+}`,
+      js: `const { useState, useRef } = React;
+
+const allSuggestions = ['react', 'javascript', 'typescript', 'css', 'html', 'nodejs', 'python', 'design', 'ux', 'api'];
+
+function App() {
+  const [tags, setTags] = useState(['react', 'javascript']);
+  const [input, setInput] = useState('');
+  const inputRef = useRef(null);
+
+  const addTag = (tag) => {
+    const t = tag.toLowerCase().trim();
+    if (t && !tags.includes(t)) {
+      setTags(prev => [...prev, t]);
+    }
+    setInput('');
+  };
+
+  const removeTag = (tag) => setTags(prev => prev.filter(t => t !== tag));
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && input.trim()) { e.preventDefault(); addTag(input); }
+    if (e.key === 'Backspace' && !input && tags.length) { removeTag(tags[tags.length - 1]); }
+  };
+
+  const suggestions = input.length > 0
+    ? allSuggestions.filter(s => s.startsWith(input.toLowerCase()) && !tags.includes(s))
+    : [];
+
+  return (
+    <div className="tagging-container">
+      <h2>Tagging</h2>
+      <div className="tag-input-wrapper" onClick={() => inputRef.current?.focus()}>
+        {tags.map(t => (
+          <span key={t} className="tag">{t}<button onClick={() => removeTag(t)}>\u2715</button></span>
+        ))}
+        <input
+          ref={inputRef}
+          className="tag-input"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={tags.length === 0 ? 'Add tags...' : ''}
+        />
+      </div>
+      {suggestions.length > 0 && (
+        <div className="suggestions">
+          {suggestions.map(s => (
+            <div key={s} className="suggestion" onClick={() => addTag(s)}>{s}</div>
+          ))}
+        </div>
+      )}
+      <div className="tag-hint">Press Enter to add, Backspace to remove last</div>
+      <div className="tag-count">{tags.length} tag{tags.length !== 1 ? 's' : ''}</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-categorization',
@@ -5104,6 +6485,139 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'data organization', 'filtering', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/categorization',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.cat-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.cat-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.cat-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.cat-chip.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.cat-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.cat-icon {
+  font-size: 24px;
+}
+
+.cat-item-info {
+  flex: 1;
+}
+
+.cat-item-name {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.cat-item-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.tag-work { background: rgba(59,130,246,0.2); color: #60a5fa; }
+.tag-personal { background: rgba(168,85,247,0.2); color: #c084fc; }
+.tag-health { background: rgba(34,197,94,0.2); color: #4ade80; }
+.tag-finance { background: rgba(245,158,11,0.2); color: #fbbf24; }
+
+.count {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 8px;
+}`,
+      js: `const { useState } = React;
+
+const items = [
+  { id: 1, name: 'Quarterly Review', icon: '\uD83D\uDCCA', category: 'work' },
+  { id: 2, name: 'Grocery Shopping', icon: '\uD83D\uDED2', category: 'personal' },
+  { id: 3, name: 'Morning Run', icon: '\uD83C\uDFC3', category: 'health' },
+  { id: 4, name: 'Tax Filing', icon: '\uD83D\uDCB0', category: 'finance' },
+  { id: 5, name: 'Team Standup', icon: '\uD83D\uDCAC', category: 'work' },
+  { id: 6, name: 'Dentist Appt', icon: '\uD83E\uDE7A', category: 'health' },
+  { id: 7, name: 'Book Club', icon: '\uD83D\uDCDA', category: 'personal' },
+  { id: 8, name: 'Budget Review', icon: '\uD83D\uDCC8', category: 'finance' },
+];
+
+const categories = ['all', 'work', 'personal', 'health', 'finance'];
+
+function App() {
+  const [active, setActive] = useState('all');
+
+  const filtered = active === 'all' ? items : items.filter(it => it.category === active);
+
+  return (
+    <div className="cat-container">
+      <h2>Categorization</h2>
+      <div className="cat-filters">
+        {categories.map(c => (
+          <button key={c} className={\\\`cat-chip \\\${active === c ? 'active' : ''}\\\`} onClick={() => setActive(c)}>
+            {c.charAt(0).toUpperCase() + c.slice(1)}
+          </button>
+        ))}
+      </div>
+      <div className="cat-items">
+        {filtered.map(it => (
+          <div key={it.id} className="cat-item">
+            <span className="cat-icon">{it.icon}</span>
+            <div className="cat-item-info">
+              <div className="cat-item-name">{it.name}</div>
+              <span className={\\\`cat-item-tag tag-\\\${it.category}\\\`}>{it.category}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="count">Showing {filtered.length} of {items.length} items</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-settings',
@@ -5114,6 +6628,185 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['form management', 'state persistence', 'validation', 'user preferences'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/settings',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.settings-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.settings-section {
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  color: #94a3b8;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.setting-row + .setting-row {
+  border-top: 1px solid #334155;
+}
+
+.setting-label {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.setting-desc {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: #334155;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle.on {
+  background: #3b82f6;
+}
+
+.toggle-knob {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+
+.toggle.on .toggle-knob {
+  transform: translateX(20px);
+}
+
+.select-input {
+  padding: 6px 10px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 13px;
+  outline: none;
+}
+
+.save-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.save-bar button {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-save {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-cancel {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.saved-msg {
+  color: #22c55e;
+  font-size: 13px;
+  text-align: right;
+  margin-top: 8px;
+}`,
+      js: `const { useState } = React;
+
+const defaults = { darkMode: true, emailNotif: true, smsNotif: false, language: 'en', fontSize: 'medium' };
+
+function App() {
+  const [settings, setSettings] = useState({ ...defaults });
+  const [saved, setSaved] = useState(false);
+
+  const toggle = (key) => { setSettings(prev => ({ ...prev, [key]: !prev[key] })); setSaved(false); };
+  const change = (key, val) => { setSettings(prev => ({ ...prev, [key]: val })); setSaved(false); };
+
+  return (
+    <div className="settings-container">
+      <h2>Settings</h2>
+      <div className="settings-section">
+        <div className="section-title">Appearance</div>
+        <div className="setting-row">
+          <div><div className="setting-label">Dark Mode</div><div className="setting-desc">Use dark theme</div></div>
+          <div className={\\\`toggle \\\${settings.darkMode ? 'on' : ''}\\\`} onClick={() => toggle('darkMode')}><div className="toggle-knob" /></div>
+        </div>
+        <div className="setting-row">
+          <div className="setting-label">Font Size</div>
+          <select className="select-input" value={settings.fontSize} onChange={e => change('fontSize', e.target.value)}>
+            <option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option>
+          </select>
+        </div>
+      </div>
+      <div className="settings-section">
+        <div className="section-title">Notifications</div>
+        <div className="setting-row">
+          <div><div className="setting-label">Email</div><div className="setting-desc">Receive email alerts</div></div>
+          <div className={\\\`toggle \\\${settings.emailNotif ? 'on' : ''}\\\`} onClick={() => toggle('emailNotif')}><div className="toggle-knob" /></div>
+        </div>
+        <div className="setting-row">
+          <div><div className="setting-label">SMS</div><div className="setting-desc">Receive text alerts</div></div>
+          <div className={\\\`toggle \\\${settings.smsNotif ? 'on' : ''}\\\`} onClick={() => toggle('smsNotif')}><div className="toggle-knob" /></div>
+        </div>
+      </div>
+      <div className="settings-section">
+        <div className="section-title">Language</div>
+        <div className="setting-row">
+          <div className="setting-label">Language</div>
+          <select className="select-input" value={settings.language} onChange={e => change('language', e.target.value)}>
+            <option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option>
+          </select>
+        </div>
+      </div>
+      <div className="save-bar">
+        <button className="btn-cancel" onClick={() => { setSettings({ ...defaults }); setSaved(false); }}>Reset</button>
+        <button className="btn-save" onClick={() => setSaved(true)}>Save</button>
+      </div>
+      {saved && <div className="saved-msg">Settings saved!</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-archive',
@@ -5124,6 +6817,148 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'data filtering', 'user experience', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/archive',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.archive-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.tab-bar button {
+  padding: 8px 16px;
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.tab-bar button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.item-card.archived {
+  opacity: 0.6;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-title {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.item-date {
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.archive-btn {
+  padding: 6px 12px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.archive-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.empty {
+  text-align: center;
+  color: #64748b;
+  padding: 32px;
+  font-size: 14px;
+}`,
+      js: `const { useState } = React;
+
+const initial = [
+  { id: 1, title: 'Project Proposal', date: 'Jan 15', archived: false },
+  { id: 2, title: 'Meeting Notes', date: 'Jan 12', archived: false },
+  { id: 3, title: 'Q4 Report', date: 'Dec 30', archived: true },
+  { id: 4, title: 'Budget Draft', date: 'Dec 20', archived: false },
+  { id: 5, title: 'Old Roadmap', date: 'Nov 10', archived: true },
+];
+
+function App() {
+  const [items, setItems] = useState(initial);
+  const [tab, setTab] = useState('active');
+
+  const toggle = (id) => setItems(prev =>
+    prev.map(it => it.id === id ? { ...it, archived: !it.archived } : it));
+
+  const shown = items.filter(it => tab === 'active' ? !it.archived : it.archived);
+
+  return (
+    <div className="archive-container">
+      <h2>Archive</h2>
+      <div className="tab-bar">
+        <button className={tab === 'active' ? 'active' : ''} onClick={() => setTab('active')}>
+          Active ({items.filter(i => !i.archived).length})
+        </button>
+        <button className={tab === 'archived' ? 'active' : ''} onClick={() => setTab('archived')}>
+          Archived ({items.filter(i => i.archived).length})
+        </button>
+      </div>
+      <div className="item-list">
+        {shown.length === 0 && <div className="empty">No items here</div>}
+        {shown.map(it => (
+          <div key={it.id} className={\\\`item-card \\\${it.archived ? 'archived' : ''}\\\`}>
+            <div className="item-info">
+              <div className="item-title">{it.title}</div>
+              <div className="item-date">{it.date}</div>
+            </div>
+            <button className="archive-btn" onClick={() => toggle(it.id)}>
+              {it.archived ? 'Restore' : 'Archive'}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-notifications',
@@ -5134,6 +6969,123 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['portal rendering', 'animations', 'state management', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/notifications',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.notif-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.notif-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.notif-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: white;
+}
+
+.btn-info { background: #3b82f6; }
+.btn-success { background: #22c55e; }
+.btn-warning { background: #f59e0b; }
+.btn-error { background: #ef4444; }
+
+.toast-stack {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+.toast {
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.toast.info { background: #1e40af; }
+.toast.success { background: #166534; }
+.toast.warning { background: #92400e; }
+.toast.error { background: #991b1b; }
+
+.toast-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}`,
+      js: `const { useState, useEffect, useRef } = React;
+
+let idCounter = 0;
+
+function App() {
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = (type, message) => {
+    const id = ++idCounter;
+    setToasts(prev => [...prev, { id, type, message }]);
+    setTimeout(() => removeToast(id), 4000);
+  };
+
+  const removeToast = (id) => setToasts(prev => prev.filter(t => t.id !== id));
+
+  const icons = { info: '\u2139\uFE0F', success: '\u2705', warning: '\u26A0\uFE0F', error: '\u274C' };
+
+  return (
+    <div className="notif-container">
+      <h2>Notifications</h2>
+      <div className="notif-buttons">
+        <button className="btn-info" onClick={() => addToast('info', 'New update available')}>Info</button>
+        <button className="btn-success" onClick={() => addToast('success', 'Changes saved!')}>Success</button>
+        <button className="btn-warning" onClick={() => addToast('warning', 'Storage almost full')}>Warning</button>
+        <button className="btn-error" onClick={() => addToast('error', 'Connection lost')}>Error</button>
+      </div>
+      <div className="toast-stack">
+        {toasts.map(t => (
+          <div key={t.id} className={\\\`toast \\\${t.type}\\\`}>
+            <span>{icons[t.type]}</span>
+            <span>{t.message}</span>
+            <button className="toast-close" onClick={() => removeToast(t.id)}>\u2715</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-captcha',
@@ -5144,6 +7096,149 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['security', 'validation', 'accessibility', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/captcha',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.captcha-container {
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.captcha-card {
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  padding: 24px;
+  text-align: center;
+}
+
+.math-problem {
+  font-size: 32px;
+  color: #e2e8f0;
+  margin: 16px 0;
+  font-family: monospace;
+  letter-spacing: 4px;
+  background: #0f172a;
+  padding: 16px;
+  border-radius: 8px;
+  user-select: none;
+}
+
+.captcha-input {
+  width: 120px;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e2e8f0;
+  outline: none;
+}
+
+.captcha-input:focus {
+  border-color: #3b82f6;
+}
+
+.captcha-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.captcha-actions button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.verify-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.refresh-btn {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.captcha-result {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.captcha-result.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.captcha-result.fail {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}`,
+      js: `const { useState, useCallback } = React;
+
+function genProblem() {
+  const a = Math.floor(Math.random() * 20) + 1;
+  const b = Math.floor(Math.random() * 20) + 1;
+  return { a, b, answer: a + b };
+}
+
+function App() {
+  const [problem, setProblem] = useState(genProblem);
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState(null);
+
+  const refresh = () => { setProblem(genProblem()); setInput(''); setResult(null); };
+
+  const verify = () => {
+    if (parseInt(input, 10) === problem.answer) {
+      setResult('success');
+    } else {
+      setResult('fail');
+    }
+  };
+
+  return (
+    <div className="captcha-container">
+      <h2>CAPTCHA Verification</h2>
+      <div className="captcha-card">
+        <div style={{ color: '#94a3b8', fontSize: 13 }}>Solve to continue</div>
+        <div className="math-problem">{problem.a} + {problem.b} = ?</div>
+        <input
+          className="captcha-input"
+          value={input}
+          onChange={e => { setInput(e.target.value); setResult(null); }}
+          placeholder="?"
+          onKeyDown={e => e.key === 'Enter' && verify()}
+        />
+        <div className="captcha-actions">
+          <button className="refresh-btn" onClick={refresh}>\u21BB Refresh</button>
+          <button className="verify-btn" onClick={verify}>Verify</button>
+        </div>
+        {result && (
+          <div className={\\\`captcha-result \\\${result}\\\`}>
+            {result === 'success' ? '\u2705 Verified! You are human.' : '\u274C Incorrect, try again.'}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-inline-help',
@@ -5154,6 +7249,136 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['tooltips', 'accessibility', 'user guidance', 'positioning'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/inline-help',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.help-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.field-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.help-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #334155;
+  color: #94a3b8;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid #334155;
+  z-index: 10;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #334155;
+}
+
+.field-group input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.field-group input:focus {
+  border-color: #3b82f6;
+}
+
+.inline-hint {
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 4px;
+}`,
+      js: `const { useState } = React;
+
+const fields = [
+  { id: 'api', label: 'API Key', tooltip: 'Found in your dashboard settings', hint: 'Starts with sk_', placeholder: 'sk_...' },
+  { id: 'webhook', label: 'Webhook URL', tooltip: 'We send POST requests to this URL', hint: 'Must use HTTPS', placeholder: 'https://...' },
+  { id: 'limit', label: 'Rate Limit', tooltip: 'Max requests per minute', hint: 'Default: 60', placeholder: '60' },
+];
+
+function App() {
+  const [values, setValues] = useState({});
+  const [activeTooltip, setActiveTooltip] = useState(null);
+
+  return (
+    <div className="help-container">
+      <h2>Inline Help</h2>
+      {fields.map(f => (
+        <div key={f.id} className="field-group">
+          <div className="field-label">
+            {f.label}
+            <span
+              className="help-icon"
+              onMouseEnter={() => setActiveTooltip(f.id)}
+              onMouseLeave={() => setActiveTooltip(null)}
+            >
+              ?
+              {activeTooltip === f.id && <span className="tooltip">{f.tooltip}</span>}
+            </span>
+          </div>
+          <input
+            placeholder={f.placeholder}
+            value={values[f.id] || ''}
+            onChange={e => setValues(prev => ({ ...prev, [f.id]: e.target.value }))}
+          />
+          <div className="inline-hint">{f.hint}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-good-defaults',
@@ -5164,6 +7389,145 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['user experience', 'state management', 'accessibility', 'progressive enhancement'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/good-defaults',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.defaults-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.form-card {
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  padding: 20px;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.field input, .field select {
+  width: 100%;
+  padding: 10px 12px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.field input:focus, .field select:focus {
+  border-color: #3b82f6;
+}
+
+.hint {
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.defaults-btn {
+  width: 100%;
+  padding: 10px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.reset-link {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.reset-link button {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}`,
+      js: `const { useState } = React;
+
+const smartDefaults = {
+  name: '',
+  email: '',
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+  language: navigator.language?.slice(0, 2) || 'en',
+  theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+};
+
+function App() {
+  const [form, setForm] = useState({ ...smartDefaults });
+
+  const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
+  const reset = () => setForm({ ...smartDefaults });
+
+  return (
+    <div className="defaults-container">
+      <h2>Good Defaults</h2>
+      <div className="form-card">
+        <div className="field">
+          <label>Name</label>
+          <input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Your name" />
+        </div>
+        <div className="field">
+          <label>Email</label>
+          <input value={form.email} onChange={e => update('email', e.target.value)} placeholder="you@example.com" />
+        </div>
+        <div className="field">
+          <label>Timezone</label>
+          <input value={form.timezone} onChange={e => update('timezone', e.target.value)} />
+          <div className="hint">Auto-detected from your browser</div>
+        </div>
+        <div className="field">
+          <label>Language</label>
+          <select value={form.language} onChange={e => update('language', e.target.value)}>
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+          </select>
+          <div className="hint">Defaults to your browser language</div>
+        </div>
+        <div className="field">
+          <label>Theme</label>
+          <select value={form.theme} onChange={e => update('theme', e.target.value)}>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
+          <div className="hint">Matches your OS preference</div>
+        </div>
+        <button className="defaults-btn">Save Preferences</button>
+        <div className="reset-link"><button onClick={reset}>Reset to smart defaults</button></div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
 
   // UI Components
@@ -5176,6 +7540,152 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['file handling', 'image preview', 'drag and drop', 'validation'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/image-upload',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.upload-container {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.dropzone {
+  border: 2px dashed #334155;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #1e293b;
+}
+
+.dropzone.dragover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.dropzone-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.dropzone-text {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.dropzone-text span {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.preview-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.preview-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.preview-info {
+  flex: 1;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+
+.preview-size {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.preview-remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 16px;
+}`,
+      js: `const { useState, useRef } = React;
+
+function App() {
+  const [files, setFiles] = useState([]);
+  const [dragover, setDragover] = useState(false);
+  const inputRef = useRef(null);
+
+  const addFiles = (newFiles) => {
+    const items = Array.from(newFiles).map(f => ({
+      name: f.name || \\\`image_\\\${Date.now()}.png\\\`,
+      size: f.size || Math.floor(Math.random() * 5000) + 500,
+      id: Math.random().toString(36).slice(2),
+    }));
+    setFiles(prev => [...prev, ...items]);
+  };
+
+  const simulateAdd = () => {
+    const names = ['photo.jpg', 'screenshot.png', 'avatar.webp', 'banner.gif'];
+    addFiles([{ name: names[Math.floor(Math.random() * names.length)], size: Math.floor(Math.random() * 5000000) }]);
+  };
+
+  const removeFile = (id) => setFiles(prev => prev.filter(f => f.id !== id));
+
+  const formatSize = (bytes) => bytes > 1000000 ? (bytes / 1000000).toFixed(1) + ' MB' : (bytes / 1000).toFixed(1) + ' KB';
+
+  return (
+    <div className="upload-container">
+      <h2>Image Upload</h2>
+      <div
+        className={\\\`dropzone \\\${dragover ? 'dragover' : ''}\\\`}
+        onClick={simulateAdd}
+        onDragOver={e => { e.preventDefault(); setDragover(true); }}
+        onDragLeave={() => setDragover(false)}
+        onDrop={e => { e.preventDefault(); setDragover(false); simulateAdd(); }}
+      >
+        <div className="dropzone-icon">\u2601\uFE0F</div>
+        <div className="dropzone-text">Click to upload or drag & drop<br /><span>Browse files</span></div>
+      </div>
+      <div className="preview-list">
+        {files.map(f => (
+          <div key={f.id} className="preview-item">
+            <div className="preview-thumb">\uD83D\uDDBC\uFE0F</div>
+            <div className="preview-info">
+              {f.name}
+              <div className="preview-size">{formatSize(f.size)}</div>
+            </div>
+            <button className="preview-remove" onClick={() => removeFile(f.id)}>\u2715</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-image-gallery',
@@ -5186,6 +7696,140 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['image loading', 'modal dialogs', 'keyboard navigation', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/image-gallery',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.gallery {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.gallery-item {
+  aspect-ratio: 1;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+  border-color: #3b82f6;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.lightbox-content {
+  text-align: center;
+}
+
+.lightbox-content .emoji {
+  font-size: 120px;
+}
+
+.lightbox-content .caption {
+  color: #e2e8f0;
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.lightbox-nav {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.lightbox-nav button {
+  padding: 8px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  font-size: 24px;
+  cursor: pointer;
+}`,
+      js: `const { useState } = React;
+
+const images = [
+  { emoji: '\uD83C\uDF05', caption: 'Sunrise' },
+  { emoji: '\uD83C\uDFD4\uFE0F', caption: 'Mountain' },
+  { emoji: '\uD83C\uDF0A', caption: 'Ocean' },
+  { emoji: '\uD83C\uDF3B', caption: 'Sunflower' },
+  { emoji: '\uD83C\uDF04', caption: 'Sunset' },
+  { emoji: '\uD83C\uDF32', caption: 'Evergreen' },
+];
+
+function App() {
+  const [selected, setSelected] = useState(null);
+
+  const prev = () => setSelected(s => (s - 1 + images.length) % images.length);
+  const next = () => setSelected(s => (s + 1) % images.length);
+
+  return (
+    <div className="gallery">
+      <h2>Image Gallery</h2>
+      <div className="gallery-grid">
+        {images.map((img, i) => (
+          <div key={i} className="gallery-item" onClick={() => setSelected(i)}>
+            {img.emoji}
+          </div>
+        ))}
+      </div>
+      {selected !== null && (
+        <div className="lightbox" onClick={() => setSelected(null)}>
+          <button className="lightbox-close">\u2715</button>
+          <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+            <div className="emoji">{images[selected].emoji}</div>
+            <div className="caption">{images[selected].caption}</div>
+            <div className="lightbox-nav">
+              <button onClick={prev}>\u25C0 Prev</button>
+              <button onClick={next}>Next \u25B6</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-image-zoom',
@@ -5196,6 +7840,109 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['transformations', 'mouse events', 'touch gestures', 'animations'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/image-zoom',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.zoom-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.zoom-wrapper {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.zoom-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  transition: transform 0.1s ease-out;
+  transform-origin: center;
+  user-select: none;
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.zoom-controls button {
+  padding: 8px 16px;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.zoom-controls button:hover {
+  border-color: #3b82f6;
+}
+
+.zoom-level {
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 8px;
+  font-size: 13px;
+}`,
+      js: `const { useState, useRef } = React;
+
+function App() {
+  const [scale, setScale] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const wrapperRef = useRef(null);
+
+  const zoomIn = () => setScale(s => Math.min(s + 0.5, 5));
+  const zoomOut = () => { setScale(s => Math.max(s - 0.5, 1)); if (scale <= 1.5) setOffset({ x: 0, y: 0 }); };
+  const reset = () => { setScale(1); setOffset({ x: 0, y: 0 }); };
+
+  const handleMouseMove = (e) => {
+    if (scale <= 1) return;
+    const rect = wrapperRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * -50 * (scale - 1);
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -50 * (scale - 1);
+    setOffset({ x, y });
+  };
+
+  return (
+    <div className="zoom-container">
+      <h2>Image Zoom</h2>
+      <div className="zoom-wrapper" ref={wrapperRef} onMouseMove={handleMouseMove} onMouseLeave={() => { if (scale > 1) setOffset({ x: 0, y: 0 }); }}>
+        <div className="zoom-image" style={{ transform: \\\`scale(\\\${scale}) translate(\\\${offset.x}px, \\\${offset.y}px)\\\` }}>
+          \uD83C\uDF04
+        </div>
+      </div>
+      <div className="zoom-controls">
+        <button onClick={zoomOut}>\u2212</button>
+        <button onClick={reset}>Reset</button>
+        <button onClick={zoomIn}>+</button>
+      </div>
+      <div className="zoom-level">Zoom: {Math.round(scale * 100)}%</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-slideshow',
@@ -5206,6 +7953,126 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['animations', 'timers', 'keyboard navigation', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/slideshow',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.slideshow {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  overflow: hidden;
+}
+
+.slide {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #e2e8f0;
+  transition: opacity 0.5s ease;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+.controls button {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.controls button:hover {
+  background: #2563eb;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding-bottom: 16px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #334155;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.dot.active {
+  background: #3b82f6;
+}
+
+.play-btn {
+  padding: 8px 16px;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}`,
+      js: `const { useState, useEffect, useRef } = React;
+
+const slides = [
+  { bg: '#1e3a5f', text: 'Welcome to the App' },
+  { bg: '#1e3a2f', text: 'Fast & Reliable' },
+  { bg: '#3a1e3f', text: 'Built with React' },
+  { bg: '#3f2a1e', text: 'Get Started Today' },
+];
+
+function App() {
+  const [current, setCurrent] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const timer = useRef(null);
+
+  useEffect(() => {
+    if (playing) {
+      timer.current = setInterval(() => {
+        setCurrent(c => (c + 1) % slides.length);
+      }, 2500);
+    }
+    return () => clearInterval(timer.current);
+  }, [playing]);
+
+  const go = (i) => { setCurrent(i); setPlaying(false); };
+
+  return (
+    <div className="slideshow">
+      <div className="slide" style={{ background: slides[current].bg }}>
+        {slides[current].text}
+      </div>
+      <div className="controls">
+        <button onClick={() => go((current - 1 + slides.length) % slides.length)}>\u25C0 Prev</button>
+        <button className="play-btn" onClick={() => setPlaying(!playing)}>
+          {playing ? 'Pause' : 'Play'}
+        </button>
+        <button onClick={() => go((current + 1) % slides.length)}>Next \u25B6</button>
+      </div>
+      <div className="dots">
+        {slides.map((_, i) => (
+          <div key={i} className={\\\`dot \\\${i === current ? 'active' : ''}\\\`} onClick={() => go(i)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-morphing-controls',
@@ -5216,6 +8083,166 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['animations', 'state management', 'transitions', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/morphing-controls',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.morph-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.morph-btn {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  min-width: 160px;
+}
+
+.morph-btn.loading {
+  border-radius: 50%;
+  min-width: 48px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  font-size: 0;
+  background: #3b82f6;
+  border: 4px solid transparent;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+.morph-btn.success {
+  background: #22c55e;
+  border-radius: 8px;
+  min-width: 160px;
+  width: auto;
+  height: auto;
+  padding: 12px 32px;
+  font-size: 16px;
+  animation: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #e2e8f0;
+}
+
+.toggle-track {
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: #334155;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-track.on {
+  background: #3b82f6;
+}
+
+.toggle-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+
+.toggle-track.on .toggle-thumb {
+  transform: translateX(22px);
+}
+
+.expand-box {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  cursor: pointer;
+}
+
+.expand-header {
+  padding: 12px 16px;
+  color: #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.expand-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  color: #94a3b8;
+  padding: 0 16px;
+}
+
+.expand-body.open {
+  max-height: 200px;
+  padding: 0 16px 12px;
+}`,
+      js: `const { useState, useEffect } = React;
+
+function App() {
+  const [btnState, setBtnState] = useState('idle');
+  const [toggled, setToggled] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleClick = () => {
+    setBtnState('loading');
+    setTimeout(() => setBtnState('success'), 1500);
+    setTimeout(() => setBtnState('idle'), 3000);
+  };
+
+  const btnText = btnState === 'idle' ? 'Submit' : btnState === 'success' ? 'Done!' : '';
+
+  return (
+    <div className="morph-container">
+      <button className={\\\`morph-btn \\\${btnState}\\\`} onClick={handleClick} disabled={btnState !== 'idle'}>
+        {btnText}
+      </button>
+
+      <div className="toggle-row">
+        <span>Notifications</span>
+        <div className={\\\`toggle-track \\\${toggled ? 'on' : ''}\\\`} onClick={() => setToggled(!toggled)}>
+          <div className="toggle-thumb" />
+        </div>
+        <span>{toggled ? 'On' : 'Off'}</span>
+      </div>
+
+      <div className="expand-box" onClick={() => setExpanded(!expanded)}>
+        <div className="expand-header">
+          <span>More Details</span>
+          <span>{expanded ? '\u25B2' : '\u25BC'}</span>
+        </div>
+        <div className={\\\`expand-body \\\${expanded ? 'open' : ''}\\\`}>
+          Controls morph between states using CSS transitions and animations for smooth UX.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-fill-blanks',
@@ -5226,5 +8253,118 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['form management', 'validation', 'user guidance', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/fill-blanks',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.blanks-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+
+h2 {
+  color: #e2e8f0;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.sentence {
+  color: #cbd5e1;
+  font-size: 16px;
+  line-height: 2.2;
+}
+
+.blank-input {
+  width: 100px;
+  padding: 4px 8px;
+  border: none;
+  border-bottom: 2px solid #3b82f6;
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  margin: 0 4px;
+}
+
+.blank-input:focus {
+  border-bottom-color: #60a5fa;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.blank-input.correct {
+  border-bottom-color: #22c55e;
+  color: #22c55e;
+}
+
+.blank-input.incorrect {
+  border-bottom-color: #ef4444;
+  color: #ef4444;
+}
+
+.check-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.score {
+  margin-top: 12px;
+  color: #94a3b8;
+  font-size: 14px;
+}`,
+      js: `const { useState } = React;
+
+const quiz = [
+  { before: 'React uses a ', answer: 'virtual', after: ' DOM for efficient updates.' },
+  { before: 'Components receive data via ', answer: 'props', after: ' from parents.' },
+  { before: 'The ', answer: 'useState', after: ' hook manages local state.' },
+];
+
+function App() {
+  const [answers, setAnswers] = useState(Array(quiz.length).fill(''));
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = (i, val) => {
+    const next = [...answers];
+    next[i] = val;
+    setAnswers(next);
+    setChecked(false);
+  };
+
+  const score = quiz.reduce((s, q, i) =>
+    s + (answers[i].toLowerCase().trim() === q.answer ? 1 : 0), 0);
+
+  return (
+    <div className="blanks-container">
+      <h2>Fill in the Blanks</h2>
+      {quiz.map((q, i) => {
+        let cls = 'blank-input';
+        if (checked) cls += answers[i].toLowerCase().trim() === q.answer ? ' correct' : ' incorrect';
+        return (
+          <div className="sentence" key={i}>
+            {q.before}
+            <input className={cls} value={answers[i]}
+              onChange={e => handleChange(i, e.target.value)}
+              placeholder="..." />
+            {q.after}
+          </div>
+        );
+      })}
+      <button className="check-btn" onClick={() => setChecked(true)}>Check Answers</button>
+      {checked && <div className="score">Score: {score}/{quiz.length}</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
 ];

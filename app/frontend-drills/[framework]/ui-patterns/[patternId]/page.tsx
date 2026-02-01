@@ -98,13 +98,74 @@ function reactStarter(pattern: UIPattern, name: string, steps: string): string {
       .map((l) => l.replace(/^\s+/, '  '));
   }
   if (stateLines.length === 0) {
-    stateLines = [`  const [value, setValue] = useState('');`];
+    if (pattern.category === 'interactive') {
+      stateLines = [`  const [isOpen, setIsOpen] = useState(false);`];
+    } else if (pattern.category === 'data-display') {
+      stateLines = [`  const [items, setItems] = useState([]);`];
+    } else {
+      stateLines = [`  const [value, setValue] = useState('');`];
+    }
   }
 
   let funcName = name;
   if (pattern.demoCode?.js) {
     const match = pattern.demoCode.js.match(/function\s+([A-Z]\w*)/);
     if (match) funcName = match[1];
+  }
+
+  // Category-specific JSX for a real rendered preview
+  let jsx: string;
+  switch (pattern.category) {
+    case 'forms-input':
+      jsx = `    <form onSubmit={e => { e.preventDefault(); }}>
+      <div style={{marginBottom: 16}}>
+        <label style={{display:'block', marginBottom: 4, fontSize: 14, color: '#94a3b8'}}>Input</label>
+        <input
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          placeholder="Type here..."
+          style={{width:'100%', padding:'10px 12px', borderRadius: 8, border:'1px solid #334155', background:'#1e293b', color:'#e2e8f0', outline:'none'}}
+        />
+      </div>
+      <button type="submit" style={{width:'100%', padding: 12, borderRadius: 8, border:'none', background:'#3b82f6', color:'white', fontWeight: 600, cursor:'pointer'}}>
+        Submit
+      </button>
+    </form>`;
+      break;
+    case 'interactive':
+      jsx = `    <div>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        style={{padding:'10px 20px', borderRadius: 8, border:'1px solid #334155', background: isOpen ? '#3b82f6' : '#1e293b', color:'white', cursor:'pointer', fontWeight: 600}}
+      >
+        {isOpen ? 'Close' : 'Open'}
+      </button>
+      {isOpen && (
+        <div style={{marginTop: 12, padding: 16, borderRadius: 8, border:'1px solid #334155', background:'#1e293b'}}>
+          <p style={{color:'#e2e8f0'}}>Interactive content here</p>
+        </div>
+      )}
+    </div>`;
+      break;
+    case 'data-display':
+      jsx = `    <div>
+      <h3 style={{color:'white', marginBottom: 12}}>${pattern.title}</h3>
+      <div style={{display:'grid', gap: 8}}>
+        {items.length === 0
+          ? <p style={{color:'#64748b', textAlign:'center', padding: 24}}>No items yet</p>
+          : items.map((item, i) => (
+            <div key={i} style={{padding: 12, borderRadius: 8, border:'1px solid #334155', background:'#1e293b', color:'#e2e8f0'}}>{item}</div>
+          ))}
+      </div>
+    </div>`;
+      break;
+    default:
+      jsx = `    <div>
+      <h3 style={{color:'white', marginBottom: 12}}>${pattern.title}</h3>
+      <div style={{padding: 16, borderRadius: 8, border:'1px solid #334155', background:'#1e293b', color:'#e2e8f0'}}>
+        {/* Build your implementation here */}
+      </div>
+    </div>`;
   }
 
   return `const { ${Array.from(hooks).join(', ')} } = React;
@@ -115,10 +176,7 @@ ${stateLines.join('\n')}
 ${steps}
 
   return (
-    <div>
-      <h3>${pattern.title}</h3>
-      {/* Build your implementation here */}
-    </div>
+${jsx}
   );
 }
 
@@ -140,7 +198,13 @@ function vueStarter(pattern: UIPattern, name: string, steps: string): string {
       .map((l) => '    ' + l.trim());
   }
   if (stateLines.length === 0) {
-    stateLines = [`    const value = ref('');`];
+    if (pattern.category === 'interactive') {
+      stateLines = [`    const isOpen = ref(false);`];
+    } else if (pattern.category === 'data-display') {
+      stateLines = [`    const items = ref([]);`];
+    } else {
+      stateLines = [`    const value = ref('');`];
+    }
   }
 
   const varNames = stateLines
@@ -149,21 +213,56 @@ function vueStarter(pattern: UIPattern, name: string, steps: string): string {
 
   const indentedSteps = steps.replace(/^ {2}/gm, '    ');
 
+  // Category-specific Vue templates
+  let tmpl: string;
+  switch (pattern.category) {
+    case 'forms-input':
+      varNames.push('handleSubmit');
+      tmpl = `    <form @submit.prevent="handleSubmit">
+      <div style="margin-bottom: 16px">
+        <label style="display:block; margin-bottom: 4px; font-size: 14px; color: #94a3b8">Input</label>
+        <input v-model="value" placeholder="Type here..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #334155; background:#1e293b; color:#e2e8f0; outline:none" />
+      </div>
+      <button type="submit" style="width:100%; padding:12px; border-radius:8px; border:none; background:#3b82f6; color:white; font-weight:600; cursor:pointer">Submit</button>
+    </form>`;
+      break;
+    case 'interactive':
+      tmpl = `    <div>
+      <button @click="isOpen = !isOpen" :style="{padding:'10px 20px', borderRadius:'8px', border:'1px solid #334155', background: isOpen ? '#3b82f6' : '#1e293b', color:'white', cursor:'pointer', fontWeight:'600'}">
+        {{ isOpen ? 'Close' : 'Open' }}
+      </button>
+      <div v-if="isOpen" style="margin-top:12px; padding:16px; border-radius:8px; border:1px solid #334155; background:#1e293b">
+        <p style="color:#e2e8f0">Interactive content here</p>
+      </div>
+    </div>`;
+      break;
+    default:
+      tmpl = `    <div>
+      <h3 style="color:white; margin-bottom:12px">${pattern.title}</h3>
+      <div style="padding:16px; border-radius:8px; border:1px solid #334155; background:#1e293b; color:#e2e8f0">
+        <!-- Build your implementation here -->
+      </div>
+    </div>`;
+  }
+
+  // Add handler stubs
+  let handlers = '';
+  if (pattern.category === 'forms-input') {
+    handlers = `\n    const handleSubmit = () => {\n      // TODO: Handle form submission\n    };\n`;
+  }
+
   return `const { ${Array.from(imports).join(', ')} } = Vue;
 
 createApp({
   setup() {
 ${stateLines.join('\n')}
-
+${handlers}
 ${indentedSteps}
 
     return { ${varNames.join(', ')} };
   },
   template: \`
-    <div>
-      <h3>${pattern.title}</h3>
-      <!-- Build your implementation here -->
-    </div>
+${tmpl}
   \`
 }).mount('#app');`;
 }
@@ -198,6 +297,68 @@ function vanillaStarter(
 
   const unindentedSteps = steps.replace(/^ {2}/gm, '');
 
+  // Category-specific HTML and event wiring for vanilla JS
+  let htmlBlock: string;
+  let eventBlock: string;
+  switch (pattern.category) {
+    case 'forms-input':
+      htmlBlock = `    <form id="main-form">
+      <div style="margin-bottom:16px">
+        <label style="display:block;margin-bottom:4px;font-size:14px;color:#94a3b8">Input</label>
+        <input id="main-input" placeholder="Type here..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;outline:none" />
+      </div>
+      <button type="submit" style="width:100%;padding:12px;border-radius:8px;border:none;background:#3b82f6;color:white;font-weight:600;cursor:pointer">Submit</button>
+    </form>`;
+      eventBlock = `  // Wire up events
+  const form = document.getElementById('main-form');
+  const input = document.getElementById('main-input');
+  input.value = value;
+  input.addEventListener('input', e => { value = e.target.value; });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    // TODO: Handle form submission
+  });`;
+      break;
+    case 'interactive':
+      if (!stateLines.some((l) => /isOpen/.test(l))) {
+        stateLines.push(`let isOpen = false;`);
+      }
+      htmlBlock = `    <div>
+      <button id="toggle-btn" style="padding:10px 20px;border-radius:8px;border:1px solid #334155;background:\${isOpen ? '#3b82f6' : '#1e293b'};color:white;cursor:pointer;font-weight:600">
+        \${isOpen ? 'Close' : 'Open'}
+      </button>
+      \${isOpen ? '<div style="margin-top:12px;padding:16px;border-radius:8px;border:1px solid #334155;background:#1e293b"><p style="color:#e2e8f0">Interactive content here</p></div>' : ''}
+    </div>`;
+      eventBlock = `  // Wire up events
+  document.getElementById('toggle-btn').addEventListener('click', () => {
+    isOpen = !isOpen;
+    render();
+  });`;
+      break;
+    case 'data-display':
+      if (!stateLines.some((l) => /items/.test(l))) {
+        stateLines.push(`let items = [];`);
+      }
+      htmlBlock = `    <div>
+      <h3 style="color:white;margin-bottom:12px">${pattern.title}</h3>
+      <div style="display:grid;gap:8px">
+        \${items.length === 0
+          ? '<p style="color:#64748b;text-align:center;padding:24px">No items yet</p>'
+          : items.map(item => '<div style="padding:12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#e2e8f0">' + item + '</div>').join('')}
+      </div>
+    </div>`;
+      eventBlock = `  // TODO: Add event listeners for data actions`;
+      break;
+    default:
+      htmlBlock = `    <div>
+      <h3 style="color:white;margin-bottom:12px">${pattern.title}</h3>
+      <div style="padding:16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#e2e8f0">
+        <!-- Build your implementation here -->
+      </div>
+    </div>`;
+      eventBlock = `  // TODO: Add event listeners`;
+  }
+
   return `${prefix}const app = document.getElementById('app');
 
 // State
@@ -208,13 +369,10 @@ ${unindentedSteps}
 // Render
 function render() {
   app.innerHTML = \`
-    <div>
-      <h3>${pattern.title}</h3>
-      <!-- Build your implementation here -->
-    </div>
+${htmlBlock}
   \`;
 
-  // TODO: Add event listeners
+${eventBlock}
 }
 
 render();`;
@@ -286,7 +444,11 @@ export default function UIPatternDetail() {
 
     const scriptType = framework === 'react' ? 'text/babel' : 'text/javascript';
     const scripts = frameworkScripts[framework] || '';
-    const previewHtml = patternForPreview?.demoCode?.html || '<div id="app"></div>';
+    const patternHtml = patternForPreview?.demoCode?.html || '';
+    // Always include #app div for user code to mount into
+    const previewHtml = patternHtml.includes('id="app"')
+      ? patternHtml
+      : `${patternHtml}\n<div id="app"></div>`;
     const previewCss = patternForPreview?.demoCode?.css || '';
 
     return `<!DOCTYPE html>
