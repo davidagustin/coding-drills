@@ -1663,6 +1663,82 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['virtual scrolling', 'data filtering', 'complex state', 'performance optimization'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/data-grid',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.toolbar { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.toolbar input, .toolbar select {
+  padding: 8px 10px; border-radius: 6px; border: 1px solid #334155;
+  background: #1e293b; color: #e2e8f0; font-size: 13px; outline: none;
+}
+.toolbar input:focus { border-color: #3b82f6; }
+.grid { border: 1px solid #334155; border-radius: 8px; overflow: hidden; }
+.grid-header, .grid-row { display: grid; grid-template-columns: 40px 1fr 100px 80px 80px; }
+.grid-header { background: #1e293b; }
+.grid-header div { padding: 10px 8px; font-size: 11px; color: #64748b; text-transform: uppercase; cursor: pointer; }
+.grid-row { border-top: 1px solid #1e293b; }
+.grid-row:hover { background: #1e293b; }
+.grid-row div { padding: 8px; font-size: 13px; color: #e2e8f0; display: flex; align-items: center; }
+.badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+.cb { accent-color: #3b82f6; }`,
+      js: `const { useState, useMemo } = React;
+
+const rows = Array.from({length: 20}, (_, i) => ({
+  id: i+1, name: ['Widget','Gadget','Doohickey','Thingamajig','Gizmo'][i%5] + ' ' + (i+1),
+  category: ['Electronics','Hardware','Software','Services'][i%4],
+  price: Math.round(10 + Math.random()*490), stock: Math.floor(Math.random()*200)
+}));
+
+function App() {
+  const [search, setSearch] = useState('');
+  const [catFilter, setCatFilter] = useState('All');
+  const [sortKey, setSortKey] = useState('id');
+  const [asc, setAsc] = useState(true);
+
+  const cats = ['All', ...new Set(rows.map(r => r.category))];
+
+  const filtered = useMemo(() => {
+    let d = rows;
+    if (catFilter !== 'All') d = d.filter(r => r.category === catFilter);
+    if (search) d = d.filter(r => r.name.toLowerCase().includes(search.toLowerCase()));
+    d = [...d].sort((a,b) => { const v = a[sortKey] > b[sortKey] ? 1 : -1; return asc ? v : -v; });
+    return d;
+  }, [search, catFilter, sortKey, asc]);
+
+  const sort = (k) => { if (sortKey === k) setAsc(!asc); else { setSortKey(k); setAsc(true); } };
+
+  return (
+    <div>
+      <div className="toolbar">
+        <input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} style={{flex:1}} />
+        <select value={catFilter} onChange={e => setCatFilter(e.target.value)}>
+          {cats.map(c => <option key={c}>{c}</option>)}
+        </select>
+      </div>
+      <div className="grid">
+        <div className="grid-header">
+          <div onClick={() => sort('id')}>#</div>
+          <div onClick={() => sort('name')}>Name</div>
+          <div onClick={() => sort('category')}>Category</div>
+          <div onClick={() => sort('price')}>Price</div>
+          <div onClick={() => sort('stock')}>Stock</div>
+        </div>
+        {filtered.slice(0,8).map(r => (
+          <div key={r.id} className="grid-row">
+            <div style={{color:'#64748b'}}>{r.id}</div>
+            <div>{r.name}</div>
+            <div><span className="badge" style={{background:'#334155'}}>{r.category}</span></div>
+            <div>{'$'+r.price}</div>
+            <div style={{color: r.stock < 50 ? '#ef4444' : '#22c55e'}}>{r.stock}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{fontSize:12,color:'#64748b',marginTop:8}}>{filtered.length} items</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-carousel',
@@ -1673,6 +1749,74 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['animations', 'touch gestures', 'auto-play', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/carousel',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.carousel { position: relative; overflow: hidden; border-radius: 12px; }
+.slides { display: flex; transition: transform 0.4s ease; }
+.slide {
+  min-width: 100%; aspect-ratio: 16/9; display: flex; align-items: center;
+  justify-content: center; font-size: 24px; font-weight: 700; color: white;
+}
+.nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.5); border: none; color: white; width: 36px; height: 36px;
+  border-radius: 50%; cursor: pointer; font-size: 16px; z-index: 2;
+}
+.nav-btn:hover { background: rgba(0,0,0,0.8); }
+.nav-btn.prev { left: 8px; }
+.nav-btn.next { right: 8px; }
+.dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+.dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #475569;
+  border: none; cursor: pointer; padding: 0;
+}
+.dot.active { background: #3b82f6; width: 20px; border-radius: 4px; }
+.controls { display: flex; justify-content: center; margin-top: 8px; }
+.play-btn { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; }`,
+      js: `const { useState, useEffect, useRef } = React;
+
+const slides = [
+  { bg: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', label: 'Slide 1' },
+  { bg: 'linear-gradient(135deg, #22c55e, #15803d)', label: 'Slide 2' },
+  { bg: 'linear-gradient(135deg, #a855f7, #7c3aed)', label: 'Slide 3' },
+  { bg: 'linear-gradient(135deg, #ef4444, #dc2626)', label: 'Slide 4' },
+];
+
+function App() {
+  const [idx, setIdx] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    if (playing) timerRef.current = setInterval(() => setIdx(i => (i + 1) % slides.length), 3000);
+    return () => clearInterval(timerRef.current);
+  }, [playing]);
+
+  const go = (i) => setIdx(((i % slides.length) + slides.length) % slides.length);
+
+  return (
+    <div>
+      <div className="carousel">
+        <div className="slides" style={{transform: 'translateX(-' + (idx * 100) + '%)'}}>
+          {slides.map((s, i) => (
+            <div key={i} className="slide" style={{background: s.bg}}>{s.label}</div>
+          ))}
+        </div>
+        <button className="nav-btn prev" onClick={() => go(idx - 1)}>\\u25C0</button>
+        <button className="nav-btn next" onClick={() => go(idx + 1)}>\\u25B6</button>
+      </div>
+      <div className="dots">
+        {slides.map((_, i) => <button key={i} className={'dot' + (i === idx ? ' active' : '')} onClick={() => setIdx(i)} />)}
+      </div>
+      <div className="controls">
+        <button className="play-btn" onClick={() => setPlaying(!playing)}>{playing ? '\\u23F8 Pause' : '\\u25B6 Play'}</button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-tabs',
@@ -1683,6 +1827,55 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'animations', 'keyboard navigation', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/tabs',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.tabs-bar {
+  display: flex; border-bottom: 1px solid #334155; margin-bottom: 16px;
+}
+.tab-btn {
+  padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent;
+  color: #64748b; cursor: pointer; font-size: 14px; transition: all 0.2s;
+}
+.tab-btn:hover { color: #94a3b8; }
+.tab-btn.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+.tab-content {
+  animation: fadeIn 0.3s ease;
+  color: #e2e8f0; font-size: 14px; line-height: 1.6;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.tab-content h3 { margin: 0 0 8px; font-size: 16px; }
+.tab-content p { color: #94a3b8; margin: 0; }`,
+      js: `const { useState } = React;
+
+const tabs = [
+  { id: 'overview', label: 'Overview', content: { title: 'Project Overview', text: 'This dashboard provides a comprehensive view of your project metrics, team activity, and upcoming milestones.' } },
+  { id: 'activity', label: 'Activity', content: { title: 'Recent Activity', text: '3 new commits pushed to main branch. Code review completed for PR #42. Deployment scheduled for Friday.' } },
+  { id: 'settings', label: 'Settings', content: { title: 'Project Settings', text: 'Configure notifications, team permissions, and integration settings for your project workspace.' } },
+];
+
+function App() {
+  const [active, setActive] = useState('overview');
+  const tab = tabs.find(t => t.id === active);
+
+  return (
+    <div>
+      <div className="tabs-bar" role="tablist">
+        {tabs.map(t => (
+          <button key={t.id} role="tab" aria-selected={t.id === active}
+            className={'tab-btn' + (t.id === active ? ' active' : '')}
+            onClick={() => setActive(t.id)}>{t.label}</button>
+        ))}
+      </div>
+      <div className="tab-content" key={active} role="tabpanel">
+        <h3>{tab.content.title}</h3>
+        <p>{tab.content.text}</p>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-swipe-actions',
@@ -1693,6 +1886,74 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['touch gestures', 'animations', 'mobile patterns', 'event handling'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/swipe-actions',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.swipe-item {
+  position: relative; overflow: hidden; margin-bottom: 8px; border-radius: 8px;
+}
+.swipe-bg {
+  position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: flex-end; padding-right: 16px; font-size: 13px; font-weight: 600;
+}
+.swipe-bg.delete { background: #ef4444; color: white; }
+.swipe-bg.archive { background: #3b82f6; color: white; justify-content: flex-start; padding-left: 16px; }
+.swipe-content {
+  background: #1e293b; padding: 14px 16px; position: relative;
+  transition: transform 0.2s; cursor: grab; border: 1px solid #334155; border-radius: 8px;
+}
+.swipe-content .title { color: #e2e8f0; font-size: 14px; }
+.swipe-content .sub { color: #64748b; font-size: 12px; margin-top: 2px; }
+.hint { text-align: center; color: #475569; font-size: 12px; margin-top: 12px; }`,
+      js: `const { useState, useRef } = React;
+
+const initItems = [
+  { id: 1, title: 'Meeting with team', sub: 'Tomorrow at 10am' },
+  { id: 2, title: 'Review PR #42', sub: 'From Alice' },
+  { id: 3, title: 'Deploy to staging', sub: 'Scheduled today' },
+  { id: 4, title: 'Update documentation', sub: 'Due this week' },
+];
+
+function SwipeItem({ item, onDelete }) {
+  const [offset, setOffset] = useState(0);
+  const startX = useRef(0);
+  const dragging = useRef(false);
+
+  const onMouseDown = (e) => { startX.current = e.clientX; dragging.current = true; };
+  const onMouseMove = (e) => { if (!dragging.current) return; setOffset(e.clientX - startX.current); };
+  const onMouseUp = () => {
+    dragging.current = false;
+    if (offset < -80) { onDelete(item.id); }
+    setOffset(0);
+  };
+
+  return (
+    <div className="swipe-item">
+      <div className={'swipe-bg' + (offset < 0 ? ' delete' : ' archive')}>
+        {offset < 0 ? 'Delete' : 'Archive'}
+      </div>
+      <div className="swipe-content" style={{transform: 'translateX(' + offset + 'px)'}}
+        onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
+        <div className="title">{item.title}</div>
+        <div className="sub">{item.sub}</div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [items, setItems] = useState(initItems);
+  const onDelete = (id) => setItems(i => i.filter(x => x.id !== id));
+  return (
+    <div>
+      {items.map(item => <SwipeItem key={item.id} item={item} onDelete={onDelete} />)}
+      {items.length === 0 && <div style={{textAlign:'center',color:'#64748b',padding:20}}>All cleared!</div>}
+      <div className="hint">Drag items left to delete</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-long-press',
@@ -1703,6 +1964,78 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['touch gestures', 'timers', 'context menus', 'mobile patterns'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/long-press',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.card {
+  background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px;
+  margin-bottom: 8px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+.card:hover { border-color: #475569; }
+.card.pressed { transform: scale(0.98); border-color: #3b82f6; }
+.card .title { color: #e2e8f0; font-size: 14px; }
+.card .sub { color: #64748b; font-size: 12px; margin-top: 2px; }
+.context-menu {
+  position: fixed; background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+  padding: 4px; z-index: 100; min-width: 150px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.ctx-item {
+  padding: 8px 12px; font-size: 13px; color: #e2e8f0; cursor: pointer; border-radius: 4px;
+}
+.ctx-item:hover { background: #334155; }
+.hint { text-align: center; color: #475569; font-size: 12px; margin-top: 12px; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+function App() {
+  const [menu, setMenu] = useState(null);
+  const timerRef = useRef(null);
+  const [pressed, setPressed] = useState(null);
+
+  const items = [
+    { id: 1, title: 'Project Alpha', sub: '3 tasks remaining' },
+    { id: 2, title: 'Project Beta', sub: '7 tasks remaining' },
+    { id: 3, title: 'Project Gamma', sub: 'Completed' },
+  ];
+
+  const startPress = (id, e) => {
+    setPressed(id);
+    timerRef.current = setTimeout(() => {
+      setMenu({ id, x: e.clientX, y: e.clientY });
+      setPressed(null);
+    }, 600);
+  };
+
+  const endPress = () => { clearTimeout(timerRef.current); setPressed(null); };
+
+  useEffect(() => {
+    const close = () => setMenu(null);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, []);
+
+  return (
+    <div>
+      {items.map(item => (
+        <div key={item.id} className={'card' + (pressed === item.id ? ' pressed' : '')}
+          onMouseDown={(e) => startPress(item.id, e)} onMouseUp={endPress} onMouseLeave={endPress}>
+          <div className="title">{item.title}</div>
+          <div className="sub">{item.sub}</div>
+        </div>
+      ))}
+      {menu && (
+        <div className="context-menu" style={{left: menu.x, top: menu.y}} onClick={e => e.stopPropagation()}>
+          <div className="ctx-item" onClick={() => setMenu(null)}>\\u270F Edit</div>
+          <div className="ctx-item" onClick={() => setMenu(null)}>\\u{1F4CB} Duplicate</div>
+          <div className="ctx-item" onClick={() => setMenu(null)}>\\u{1F4E6} Archive</div>
+          <div className="ctx-item" style={{color:'#ef4444'}} onClick={() => setMenu(null)}>\\u{1F5D1} Delete</div>
+        </div>
+      )}
+      <div className="hint">Long press (hold) on an item for context menu</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-pinch-zoom',
@@ -1713,6 +2046,69 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['touch gestures', 'transformations', 'mobile patterns', 'state management'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/pinch-zoom',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.zoom-container {
+  position: relative; overflow: hidden; border-radius: 12px;
+  background: #1e293b; border: 1px solid #334155; height: 250px;
+  cursor: grab; display: flex; align-items: center; justify-content: center;
+}
+.zoom-content { transition: transform 0.15s ease; user-select: none; }
+.zoom-controls {
+  display: flex; justify-content: center; gap: 8px; margin-top: 12px;
+}
+.zoom-btn {
+  padding: 8px 16px; border-radius: 6px; border: none;
+  background: #334155; color: #e2e8f0; cursor: pointer; font-size: 16px;
+}
+.zoom-btn:hover { background: #475569; }
+.zoom-level { color: #94a3b8; font-size: 13px; padding: 8px; }
+.grid-pattern {
+  display: grid; grid-template-columns: repeat(4, 50px); gap: 8px;
+}
+.grid-cell {
+  width: 50px; height: 50px; border-radius: 6px; display: flex;
+  align-items: center; justify-content: center; font-size: 20px;
+}`,
+      js: `const { useState } = React;
+
+const emojis = ['\\u{1F680}','\\u{2B50}','\\u{1F525}','\\u{1F48E}','\\u{1F30D}','\\u{1F308}','\\u{26A1}','\\u{1F3AF}',
+  '\\u{1F4A1}','\\u{1F33F}','\\u{1F3B5}','\\u{2764}','\\u{1F680}','\\u{1F31F}','\\u{1F30A}','\\u{1F33B}'];
+const colors = ['#3b82f6','#22c55e','#eab308','#ef4444','#a855f7','#ec4899','#06b6d4','#f97316'];
+
+function App() {
+  const [scale, setScale] = useState(1);
+
+  const zoomIn = () => setScale(s => Math.min(s + 0.25, 3));
+  const zoomOut = () => setScale(s => Math.max(s - 0.25, 0.5));
+  const reset = () => setScale(1);
+  const onWheel = (e) => { e.preventDefault(); e.deltaY < 0 ? zoomIn() : zoomOut(); };
+
+  return (
+    <div>
+      <div className="zoom-container" onWheel={onWheel}>
+        <div className="zoom-content" style={{transform: 'scale(' + scale + ')'}}>
+          <div className="grid-pattern">
+            {emojis.map((e, i) => (
+              <div key={i} className="grid-cell" style={{background: colors[i % colors.length] + '22'}}>
+                {e}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="zoom-controls">
+        <button className="zoom-btn" onClick={zoomOut}>\\u2212</button>
+        <span className="zoom-level">{Math.round(scale * 100)}%</span>
+        <button className="zoom-btn" onClick={zoomIn}>+</button>
+        <button className="zoom-btn" onClick={reset}>Reset</button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-pull-refresh',
@@ -1723,6 +2119,65 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['touch gestures', 'animations', 'async operations', 'mobile patterns'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/pull-refresh',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.pull-area {
+  text-align: center; overflow: hidden; transition: height 0.3s; color: #64748b; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.pull-area.refreshing { color: #3b82f6; }
+.feed-item {
+  padding: 12px 16px; background: #1e293b; border-radius: 8px; margin-bottom: 6px;
+  border: 1px solid #334155;
+}
+.feed-item .title { color: #e2e8f0; font-size: 14px; }
+.feed-item .time { color: #64748b; font-size: 12px; margin-top: 2px; }
+.spinner { animation: spin 1s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hint { text-align: center; color: #475569; font-size: 12px; margin-top: 12px; }`,
+      js: `const { useState, useCallback } = React;
+
+function App() {
+  const [items, setItems] = useState([
+    { id: 1, title: 'Server deployment complete', time: '2 min ago' },
+    { id: 2, title: 'New user registered', time: '5 min ago' },
+    { id: 3, title: 'Database backup finished', time: '12 min ago' },
+  ]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setItems(prev => [{
+        id: Date.now(),
+        title: ['Build passed','PR merged','Test suite green','Cache cleared'][Math.floor(Math.random()*4)],
+        time: 'Just now'
+      }, ...prev]);
+      setRefreshing(false);
+    }, 1500);
+  }, []);
+
+  return (
+    <div>
+      <div className={'pull-area' + (refreshing ? ' refreshing' : '')} style={{height: refreshing ? 40 : 0}}>
+        {refreshing && <span><span className="spinner">\\u21BB</span> Refreshing...</span>}
+      </div>
+      <button onClick={refresh} disabled={refreshing}
+        style={{width:'100%',padding:'10px',borderRadius:8,border:'1px dashed #334155',background:'none',color:'#64748b',cursor:'pointer',marginBottom:12}}>
+        {refreshing ? 'Refreshing...' : '\\u2193 Pull to refresh (click to simulate)'}
+      </button>
+      {items.map(item => (
+        <div key={item.id} className="feed-item">
+          <div className="title">{item.title}</div>
+          <div className="time">{item.time}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-drag-reorder',
@@ -1733,6 +2188,58 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['drag and drop', 'list manipulation', 'state management', 'animations'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/drag-reorder',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.list-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+  margin-bottom: 4px; cursor: grab; user-select: none; transition: all 0.15s;
+}
+.list-item:hover { border-color: #475569; }
+.list-item.dragging { opacity: 0.5; border-color: #3b82f6; }
+.list-item.over { border-top: 2px solid #3b82f6; }
+.handle { color: #475569; font-size: 16px; }
+.item-text { flex: 1; color: #e2e8f0; font-size: 14px; }
+.item-num { color: #64748b; font-size: 12px; min-width: 24px; }`,
+      js: `const { useState } = React;
+
+const init = ['Learn React hooks','Build a todo app','Write unit tests','Deploy to production','Set up CI/CD'];
+
+function App() {
+  const [items, setItems] = useState(init);
+  const [dragIdx, setDragIdx] = useState(null);
+  const [overIdx, setOverIdx] = useState(null);
+
+  const onDragStart = (i) => setDragIdx(i);
+  const onDragOver = (e, i) => { e.preventDefault(); setOverIdx(i); };
+  const onDrop = (i) => {
+    if (dragIdx === null) return;
+    const newItems = [...items];
+    const [moved] = newItems.splice(dragIdx, 1);
+    newItems.splice(i, 0, moved);
+    setItems(newItems);
+    setDragIdx(null); setOverIdx(null);
+  };
+  const onDragEnd = () => { setDragIdx(null); setOverIdx(null); };
+
+  return (
+    <div>
+      {items.map((item, i) => (
+        <div key={item}
+          className={'list-item' + (dragIdx === i ? ' dragging' : '') + (overIdx === i ? ' over' : '')}
+          draggable onDragStart={() => onDragStart(i)} onDragOver={e => onDragOver(e, i)}
+          onDrop={() => onDrop(i)} onDragEnd={onDragEnd}>
+          <span className="handle">\\u2630</span>
+          <span className="item-num">{i + 1}.</span>
+          <span className="item-text">{item}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-double-tap',
@@ -1743,6 +2250,78 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['touch gestures', 'timers', 'event handling', 'mobile patterns'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/double-tap',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.photo-card {
+  position: relative; background: #1e293b; border-radius: 12px; overflow: hidden;
+  margin-bottom: 12px; user-select: none; border: 1px solid #334155;
+}
+.photo-area {
+  height: 150px; display: flex; align-items: center; justify-content: center;
+  font-size: 48px; cursor: pointer;
+}
+.heart-anim {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+  font-size: 60px; pointer-events: none; animation: heartPop 0.6s ease forwards;
+}
+@keyframes heartPop {
+  0% { transform: translate(-50%,-50%) scale(0); opacity: 1; }
+  50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
+}
+.card-footer {
+  padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;
+}
+.likes { font-size: 14px; color: #e2e8f0; }
+.like-btn { background: none; border: none; font-size: 20px; cursor: pointer; }`,
+      js: `const { useState, useRef } = React;
+
+const photos = [
+  { id: 1, bg: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', emoji: '\\u{1F3DE}' },
+  { id: 2, bg: 'linear-gradient(135deg, #22c55e, #06b6d4)', emoji: '\\u{1F305}' },
+];
+
+function PhotoCard({ photo }) {
+  const [likes, setLikes] = useState(Math.floor(Math.random() * 50));
+  const [liked, setLiked] = useState(false);
+  const [anim, setAnim] = useState(false);
+  const lastTap = useRef(0);
+
+  const handleClick = () => {
+    const now = Date.now();
+    if (now - lastTap.current < 300) {
+      if (!liked) { setLikes(l => l + 1); setLiked(true); }
+      setAnim(true);
+      setTimeout(() => setAnim(false), 600);
+    }
+    lastTap.current = now;
+  };
+
+  const toggleLike = () => {
+    setLiked(!liked);
+    setLikes(l => liked ? l - 1 : l + 1);
+  };
+
+  return (
+    <div className="photo-card">
+      <div className="photo-area" style={{background: photo.bg}} onClick={handleClick}>
+        {photo.emoji}
+        {anim && <span className="heart-anim">\\u2764\\uFE0F</span>}
+      </div>
+      <div className="card-footer">
+        <span className="likes">{likes} likes</span>
+        <button className="like-btn" onClick={toggleLike}>{liked ? '\\u2764\\uFE0F' : '\\u{1F90D}'}</button>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return <div>{photos.map(p => <PhotoCard key={p.id} photo={p} />)}</div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-tap-expand',
@@ -1753,6 +2332,55 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['animations', 'state management', 'accessibility', 'progressive disclosure'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/tap-expand',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.expand-card {
+  background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+  margin-bottom: 8px; overflow: hidden; transition: all 0.3s;
+}
+.expand-header {
+  padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center;
+}
+.expand-header:hover { background: rgba(255,255,255,0.02); }
+.expand-title { color: #e2e8f0; font-size: 14px; font-weight: 500; }
+.expand-icon { color: #64748b; transition: transform 0.3s; font-size: 12px; }
+.expand-icon.open { transform: rotate(180deg); }
+.expand-body {
+  max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s;
+}
+.expand-body.open { max-height: 200px; }
+.expand-body-inner { padding: 0 16px 14px; color: #94a3b8; font-size: 13px; line-height: 1.5; }`,
+      js: `const { useState } = React;
+
+const items = [
+  { title: 'What is React?', body: 'React is a JavaScript library for building user interfaces. It lets you compose complex UIs from small, isolated pieces of code called components.' },
+  { title: 'What are hooks?', body: 'Hooks let you use state and other React features without writing a class. useState and useEffect are the most commonly used hooks.' },
+  { title: 'What is JSX?', body: 'JSX is a syntax extension for JavaScript that lets you write HTML-like markup inside a JavaScript file. It gets compiled to React.createElement calls.' },
+];
+
+function App() {
+  const [openIdx, setOpenIdx] = useState(null);
+
+  return (
+    <div>
+      {items.map((item, i) => (
+        <div key={i} className="expand-card">
+          <div className="expand-header" onClick={() => setOpenIdx(openIdx === i ? null : i)}>
+            <span className="expand-title">{item.title}</span>
+            <span className={'expand-icon' + (openIdx === i ? ' open' : '')}>\\u25BC</span>
+          </div>
+          <div className={'expand-body' + (openIdx === i ? ' open' : '')}>
+            <div className="expand-body-inner">{item.body}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-progressive-disclosure',
@@ -1763,6 +2391,62 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['animations', 'state management', 'user experience', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/progressive-disclosure',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.section { margin-bottom: 16px; }
+.section-title { font-size: 14px; color: #e2e8f0; margin-bottom: 8px; }
+.basic-fields, .advanced-fields { display: flex; flex-direction: column; gap: 8px; }
+input, select {
+  width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155;
+  background: #1e293b; color: #e2e8f0; outline: none; font-size: 14px;
+}
+input:focus, select:focus { border-color: #3b82f6; }
+label { font-size: 13px; color: #94a3b8; }
+.toggle-link {
+  background: none; border: none; color: #3b82f6; cursor: pointer;
+  font-size: 13px; padding: 8px 0; text-align: left;
+}
+.toggle-link:hover { text-decoration: underline; }
+.advanced { overflow: hidden; transition: max-height 0.3s ease; }
+.advanced.hidden { max-height: 0; }
+.advanced.visible { max-height: 300px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  return (
+    <div>
+      <div className="section">
+        <div className="section-title">Basic Settings</div>
+        <div className="basic-fields">
+          <div><label>Display Name</label><input placeholder="John Doe" /></div>
+          <div><label>Email</label><input type="email" placeholder="john@example.com" /></div>
+        </div>
+      </div>
+      <button className="toggle-link" onClick={() => setShowAdvanced(!showAdvanced)}>
+        {showAdvanced ? '\\u25B2 Hide' : '\\u25BC Show'} advanced options
+      </button>
+      <div className={'advanced' + (showAdvanced ? ' visible' : ' hidden')}>
+        <div className="section" style={{marginTop: 8}}>
+          <div className="section-title">Advanced Settings</div>
+          <div className="advanced-fields">
+            <div><label>Timezone</label>
+              <select><option>UTC</option><option>EST</option><option>PST</option></select>
+            </div>
+            <div><label>Language</label>
+              <select><option>English</option><option>Spanish</option><option>French</option></select>
+            </div>
+            <div><label>API Key</label><input placeholder="sk-..." /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-wizard',
@@ -1773,6 +2457,82 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'validation', 'navigation', 'user guidance'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/wizard',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.steps { display: flex; margin-bottom: 24px; }
+.step {
+  flex: 1; text-align: center; position: relative; padding-bottom: 12px;
+}
+.step::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: #334155; border-radius: 2px;
+}
+.step.active::after { background: #3b82f6; }
+.step.done::after { background: #22c55e; }
+.step-num { font-size: 12px; color: #64748b; }
+.step.active .step-num { color: #3b82f6; }
+.step.done .step-num { color: #22c55e; }
+.step-label { font-size: 11px; color: #475569; margin-top: 2px; }
+input {
+  width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155;
+  background: #1e293b; color: #e2e8f0; outline: none; margin-bottom: 10px;
+}
+input:focus { border-color: #3b82f6; }
+label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 4px; }
+.actions { display: flex; gap: 8px; margin-top: 16px; }
+.btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; }
+.btn-primary { background: #3b82f6; color: white; }
+.btn-secondary { background: #334155; color: #94a3b8; }
+.success { text-align: center; padding: 24px; color: #22c55e; }`,
+      js: `const { useState } = React;
+
+const stepLabels = ['Account', 'Profile', 'Confirm'];
+
+function App() {
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState({ email: '', password: '', name: '', bio: '' });
+  const [done, setDone] = useState(false);
+
+  const update = (k) => (e) => setData(d => ({...d, [k]: e.target.value}));
+
+  const pages = [
+    <div key="0"><label>Email</label><input value={data.email} onChange={update('email')} placeholder="you@example.com" />
+      <label>Password</label><input type="password" value={data.password} onChange={update('password')} placeholder="Min 6 chars" /></div>,
+    <div key="1"><label>Full Name</label><input value={data.name} onChange={update('name')} placeholder="John Doe" />
+      <label>Bio</label><input value={data.bio} onChange={update('bio')} placeholder="Tell us about yourself" /></div>,
+    <div key="2" style={{color:'#94a3b8',fontSize:14}}>
+      <p><strong style={{color:'#e2e8f0'}}>Email:</strong> {data.email || '(empty)'}</p>
+      <p><strong style={{color:'#e2e8f0'}}>Name:</strong> {data.name || '(empty)'}</p>
+      <p><strong style={{color:'#e2e8f0'}}>Bio:</strong> {data.bio || '(empty)'}</p>
+    </div>
+  ];
+
+  if (done) return <div className="success"><div style={{fontSize:32}}>\\u2713</div><div style={{fontSize:18,marginTop:8}}>Account Created!</div></div>;
+
+  return (
+    <div>
+      <div className="steps">
+        {stepLabels.map((l, i) => (
+          <div key={i} className={'step' + (i === step ? ' active' : '') + (i < step ? ' done' : '')}>
+            <div className="step-num">{i < step ? '\\u2713' : i + 1}</div>
+            <div className="step-label">{l}</div>
+          </div>
+        ))}
+      </div>
+      {pages[step]}
+      <div className="actions">
+        {step > 0 && <button className="btn btn-secondary" onClick={() => setStep(step-1)}>Back</button>}
+        <button className="btn btn-primary" style={{marginLeft:'auto'}}
+          onClick={() => step < 2 ? setStep(step+1) : setDone(true)}>
+          {step === 2 ? 'Create Account' : 'Next'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-undo',
@@ -1783,6 +2543,88 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'history tracking', 'keyboard shortcuts', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/undo',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.toolbar { display: flex; gap: 6px; margin-bottom: 12px; }
+.tool-btn {
+  padding: 6px 14px; border-radius: 6px; border: none; background: #334155;
+  color: #94a3b8; cursor: pointer; font-size: 13px;
+}
+.tool-btn:hover:not(:disabled) { background: #475569; color: #e2e8f0; }
+.tool-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.canvas {
+  display: flex; flex-wrap: wrap; gap: 4px; padding: 12px;
+  background: #1e293b; border-radius: 10px; border: 1px solid #334155;
+}
+.cell {
+  width: 28px; height: 28px; border-radius: 4px; cursor: pointer;
+  border: 1px solid #334155; transition: all 0.1s;
+}
+.cell:hover { border-color: #475569; }
+.palette { display: flex; gap: 6px; margin-bottom: 12px; }
+.color-opt {
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent;
+}
+.color-opt.active { border-color: white; }
+.status { font-size: 12px; color: #64748b; margin-top: 8px; }`,
+      js: `const { useState, useEffect, useCallback } = React;
+
+const SIZE = 8;
+const COLORS = ['#3b82f6','#22c55e','#ef4444','#eab308','#a855f7','#334155'];
+
+function App() {
+  const [color, setColor] = useState(COLORS[0]);
+  const [grid, setGrid] = useState(Array(SIZE*SIZE).fill('#1e293b'));
+  const [history, setHistory] = useState([Array(SIZE*SIZE).fill('#1e293b')]);
+  const [histIdx, setHistIdx] = useState(0);
+
+  const paint = (i) => {
+    const newGrid = [...grid];
+    newGrid[i] = color;
+    setGrid(newGrid);
+    const newHist = history.slice(0, histIdx + 1);
+    newHist.push(newGrid);
+    setHistory(newHist);
+    setHistIdx(newHist.length - 1);
+  };
+
+  const undo = useCallback(() => {
+    if (histIdx > 0) { setHistIdx(histIdx - 1); setGrid(history[histIdx - 1]); }
+  }, [histIdx, history]);
+
+  const redo = useCallback(() => {
+    if (histIdx < history.length - 1) { setHistIdx(histIdx + 1); setGrid(history[histIdx + 1]); }
+  }, [histIdx, history]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [undo, redo]);
+
+  return (
+    <div>
+      <div className="palette">
+        {COLORS.map(c => <div key={c} className={'color-opt' + (c === color ? ' active' : '')}
+          style={{background: c}} onClick={() => setColor(c)} />)}
+      </div>
+      <div className="toolbar">
+        <button className="tool-btn" disabled={histIdx <= 0} onClick={undo}>\\u21A9 Undo</button>
+        <button className="tool-btn" disabled={histIdx >= history.length-1} onClick={redo}>Redo \\u21AA</button>
+      </div>
+      <div className="canvas">
+        {grid.map((c, i) => <div key={i} className="cell" style={{background: c}} onClick={() => paint(i)} />)}
+      </div>
+      <div className="status">Step {histIdx} of {history.length - 1} | Ctrl+Z / Ctrl+Shift+Z</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-wysiwyg',
@@ -1793,6 +2635,74 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['contenteditable', 'selection API', 'complex state', 'keyboard shortcuts'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/wysiwyg',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.editor-toolbar {
+  display: flex; gap: 4px; padding: 8px; background: #1e293b;
+  border: 1px solid #334155; border-radius: 8px 8px 0 0; flex-wrap: wrap;
+}
+.fmt-btn {
+  padding: 6px 10px; border-radius: 4px; border: none; background: #334155;
+  color: #94a3b8; cursor: pointer; font-size: 13px; min-width: 32px;
+}
+.fmt-btn:hover { background: #475569; color: #e2e8f0; }
+.fmt-btn.active { background: #3b82f6; color: white; }
+.editor-area {
+  min-height: 150px; padding: 16px; background: #0f172a;
+  border: 1px solid #334155; border-top: none; border-radius: 0 0 8px 8px;
+  color: #e2e8f0; font-size: 14px; line-height: 1.6; outline: none;
+}
+.editor-area:focus { border-color: #3b82f6; }`,
+      js: `const { useRef, useState } = React;
+
+function App() {
+  const editorRef = useRef(null);
+  const [active, setActive] = useState({});
+
+  const exec = (cmd, value) => {
+    document.execCommand(cmd, false, value);
+    editorRef.current.focus();
+    updateActive();
+  };
+
+  const updateActive = () => {
+    setActive({
+      bold: document.queryCommandState('bold'),
+      italic: document.queryCommandState('italic'),
+      underline: document.queryCommandState('underline'),
+    });
+  };
+
+  const btns = [
+    { cmd: 'bold', label: 'B', style: {fontWeight:700} },
+    { cmd: 'italic', label: 'I', style: {fontStyle:'italic'} },
+    { cmd: 'underline', label: 'U', style: {textDecoration:'underline'} },
+    { cmd: 'insertUnorderedList', label: '\\u2022 List' },
+    { cmd: 'insertOrderedList', label: '1. List' },
+  ];
+
+  return (
+    <div>
+      <div className="editor-toolbar">
+        {btns.map(b => (
+          <button key={b.cmd} className={'fmt-btn' + (active[b.cmd] ? ' active' : '')}
+            style={b.style} onMouseDown={e => { e.preventDefault(); exec(b.cmd); }}>
+            {b.label}
+          </button>
+        ))}
+        <button className="fmt-btn" onMouseDown={e => { e.preventDefault(); exec('formatBlock', 'h2'); }}>H2</button>
+        <button className="fmt-btn" onMouseDown={e => { e.preventDefault(); exec('formatBlock', 'blockquote'); }}>\\u201C</button>
+      </div>
+      <div ref={editorRef} className="editor-area" contentEditable
+        onKeyUp={updateActive} onMouseUp={updateActive}
+        suppressContentEditableWarning
+        dangerouslySetInnerHTML={{__html: '<p>Start writing your <strong>rich text</strong> content here...</p>'}} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-swipe-navigation',
@@ -1803,6 +2713,63 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['touch gestures', 'animations', 'navigation', 'mobile patterns'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/swipe-navigation',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.swipe-nav { overflow: hidden; border-radius: 12px; border: 1px solid #334155; }
+.pages { display: flex; transition: transform 0.3s ease; }
+.page {
+  min-width: 100%; padding: 40px 20px; text-align: center;
+  min-height: 200px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.page-icon { font-size: 48px; margin-bottom: 12px; }
+.page-title { font-size: 18px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px; }
+.page-desc { font-size: 14px; color: #94a3b8; }
+.nav-dots { display: flex; justify-content: center; gap: 8px; padding: 12px; }
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #475569;
+  border: none; cursor: pointer;
+}
+.nav-dot.active { background: #3b82f6; width: 20px; border-radius: 4px; }
+.nav-arrows { display: flex; justify-content: space-between; padding: 0 12px 12px; }
+.nav-arr { background: none; border: none; color: #64748b; cursor: pointer; font-size: 14px; }
+.nav-arr:hover { color: #e2e8f0; }`,
+      js: `const { useState } = React;
+
+const pages = [
+  { icon: '\\u{1F680}', title: 'Welcome', desc: 'Swipe or use arrows to navigate', bg: 'linear-gradient(180deg, rgba(59,130,246,0.1), transparent)' },
+  { icon: '\\u{2B50}', title: 'Features', desc: 'Discover powerful tools at your fingertips', bg: 'linear-gradient(180deg, rgba(234,179,8,0.1), transparent)' },
+  { icon: '\\u{1F3AF}', title: 'Get Started', desc: 'Begin your journey today', bg: 'linear-gradient(180deg, rgba(34,197,94,0.1), transparent)' },
+];
+
+function App() {
+  const [idx, setIdx] = useState(0);
+  const go = (i) => setIdx(Math.max(0, Math.min(pages.length - 1, i)));
+
+  return (
+    <div className="swipe-nav">
+      <div className="pages" style={{transform: 'translateX(-' + (idx * 100) + '%)'}}>
+        {pages.map((p, i) => (
+          <div key={i} className="page" style={{background: p.bg}}>
+            <div className="page-icon">{p.icon}</div>
+            <div className="page-title">{p.title}</div>
+            <div className="page-desc">{p.desc}</div>
+          </div>
+        ))}
+      </div>
+      <div className="nav-dots">
+        {pages.map((_, i) => <button key={i} className={'nav-dot' + (i === idx ? ' active' : '')} onClick={() => setIdx(i)} />)}
+      </div>
+      <div className="nav-arrows">
+        <button className="nav-arr" onClick={() => go(idx-1)} disabled={idx===0}>\\u25C0 Previous</button>
+        <button className="nav-arr" onClick={() => go(idx+1)} disabled={idx===pages.length-1}>Next \\u25B6</button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
 
   // Data Display
@@ -1815,6 +2782,60 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['SVG', 'data transformation', 'animations', 'interactivity'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/data-visualization',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.chart { text-align: center; }
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 180px; padding: 12px; background: #1e293b; border-radius: 10px; }
+.bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.bar {
+  width: 100%; border-radius: 4px 4px 0 0; transition: height 0.5s ease;
+  min-width: 20px; position: relative; cursor: pointer;
+}
+.bar:hover { opacity: 0.8; }
+.bar-label { font-size: 11px; color: #64748b; margin-top: 6px; }
+.bar-val { font-size: 11px; color: #e2e8f0; margin-bottom: 4px; }
+.legend { display: flex; justify-content: center; gap: 16px; margin-top: 12px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #94a3b8; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; }`,
+      js: `const { useState } = React;
+
+const data = [
+  { label: 'Mon', a: 40, b: 24 },
+  { label: 'Tue', a: 65, b: 45 },
+  { label: 'Wed', a: 50, b: 35 },
+  { label: 'Thu', a: 80, b: 55 },
+  { label: 'Fri', a: 55, b: 40 },
+];
+const max = Math.max(...data.flatMap(d => [d.a, d.b]));
+
+function App() {
+  const [hover, setHover] = useState(null);
+
+  return (
+    <div className="chart">
+      <div style={{fontSize:14,color:'#e2e8f0',marginBottom:12,fontWeight:600}}>Weekly Metrics</div>
+      <div className="bar-chart">
+        {data.map((d, i) => (
+          <div key={i} className="bar-group" onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
+            {hover === i && <div className="bar-val">{d.a} / {d.b}</div>}
+            <div style={{display:'flex',gap:3,alignItems:'flex-end',width:'100%',height:'100%'}}>
+              <div className="bar" style={{height:(d.a/max*100)+'%',background:'#3b82f6'}} />
+              <div className="bar" style={{height:(d.b/max*100)+'%',background:'#22c55e'}} />
+            </div>
+            <div className="bar-label">{d.label}</div>
+          </div>
+        ))}
+      </div>
+      <div className="legend">
+        <div className="legend-item"><div className="legend-dot" style={{background:'#3b82f6'}} />Views</div>
+        <div className="legend-item"><div className="legend-dot" style={{background:'#22c55e'}} />Clicks</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-article-list',
@@ -1825,6 +2846,50 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['list rendering', 'responsive design', 'data formatting', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/article-list',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.article {
+  padding: 16px; background: #1e293b; border-radius: 10px; margin-bottom: 8px;
+  border: 1px solid #334155; cursor: pointer; transition: border-color 0.15s;
+}
+.article:hover { border-color: #475569; }
+.article-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+.article-cat { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #3b82f633; color: #3b82f6; }
+.article-date { font-size: 12px; color: #64748b; }
+.article-title { font-size: 16px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px; }
+.article-desc { font-size: 13px; color: #94a3b8; line-height: 1.4; }
+.article-footer { display: flex; gap: 12px; margin-top: 8px; font-size: 12px; color: #64748b; }`,
+      js: `const { useState } = React;
+
+const articles = [
+  { id: 1, title: 'Getting Started with React Hooks', desc: 'Learn the fundamentals of useState, useEffect, and custom hooks for modern React development.', cat: 'Tutorial', date: 'Jan 15', reads: '2.4k', mins: 5 },
+  { id: 2, title: 'Building Accessible Components', desc: 'A practical guide to ARIA attributes, keyboard navigation, and screen reader support.', cat: 'Guide', date: 'Jan 12', reads: '1.8k', mins: 8 },
+  { id: 3, title: 'State Management Patterns', desc: 'Compare Context API, Redux, Zustand, and other state management solutions for React apps.', cat: 'Deep Dive', date: 'Jan 10', reads: '3.1k', mins: 12 },
+];
+
+function App() {
+  return (
+    <div>
+      {articles.map(a => (
+        <div key={a.id} className="article">
+          <div className="article-meta">
+            <span className="article-cat">{a.cat}</span>
+            <span className="article-date">{a.date}</span>
+          </div>
+          <div className="article-title">{a.title}</div>
+          <div className="article-desc">{a.desc}</div>
+          <div className="article-footer">
+            <span>\\u{1F4D6} {a.mins} min read</span>
+            <span>\\u{1F441} {a.reads} reads</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-gallery',
@@ -1835,6 +2900,72 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['responsive design', 'lazy loading', 'grid layouts', 'image optimization'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/gallery',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.gallery-item {
+  aspect-ratio: 1; border-radius: 8px; cursor: pointer; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; transition: transform 0.2s; position: relative;
+}
+.gallery-item:hover { transform: scale(1.03); }
+.gallery-item:hover .overlay { opacity: 1; }
+.overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.4); opacity: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.2s; font-size: 14px; color: white;
+}
+.lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+.lightbox-content {
+  background: #1e293b; border-radius: 12px; padding: 24px;
+  text-align: center; font-size: 64px; min-width: 200px;
+}
+.lightbox-close {
+  position: absolute; top: 16px; right: 16px; background: none;
+  border: none; color: white; font-size: 24px; cursor: pointer;
+}`,
+      js: `const { useState } = React;
+
+const items = [
+  { emoji: '\\u{1F3DE}', label: 'Landscape', bg: '#1e3a5f' },
+  { emoji: '\\u{1F305}', label: 'Sunset', bg: '#5f1e1e' },
+  { emoji: '\\u{1F30A}', label: 'Ocean', bg: '#1e3a5f' },
+  { emoji: '\\u{1F3D4}', label: 'Mountain', bg: '#2d3a1e' },
+  { emoji: '\\u{1F33B}', label: 'Flower', bg: '#3a2d1e' },
+  { emoji: '\\u{1F308}', label: 'Rainbow', bg: '#2d1e3a' },
+];
+
+function App() {
+  const [selected, setSelected] = useState(null);
+
+  return (
+    <div>
+      <div className="gallery-grid">
+        {items.map((item, i) => (
+          <div key={i} className="gallery-item" style={{background: item.bg}} onClick={() => setSelected(item)}>
+            {item.emoji}
+            <div className="overlay">{item.label}</div>
+          </div>
+        ))}
+      </div>
+      {selected && (
+        <div className="lightbox" onClick={() => setSelected(null)}>
+          <button className="lightbox-close">\\u00D7</button>
+          <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+            <div>{selected.emoji}</div>
+            <div style={{fontSize:16,color:'#e2e8f0',marginTop:12}}>{selected.label}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-thumbnail',
@@ -1845,6 +2976,59 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['grid layouts', 'image loading', 'responsive design', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/thumbnail',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.thumb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.thumb {
+  aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; cursor: pointer;
+  border: 2px solid transparent; transition: all 0.15s;
+}
+.thumb:hover { border-color: #475569; transform: translateY(-2px); }
+.thumb.selected { border-color: #3b82f6; }
+.thumb-icon { font-size: 28px; margin-bottom: 4px; }
+.thumb-label { font-size: 11px; color: #94a3b8; }
+.detail { margin-top: 12px; padding: 14px; background: #1e293b; border-radius: 8px; border: 1px solid #334155; text-align: center; }
+.detail-icon { font-size: 48px; }
+.detail-name { font-size: 16px; color: #e2e8f0; margin-top: 8px; font-weight: 600; }`,
+      js: `const { useState } = React;
+
+const thumbs = [
+  { icon: '\\u{1F4C1}', label: 'Documents', bg: '#1e3a5f' },
+  { icon: '\\u{1F3B5}', label: 'Music', bg: '#3a1e3a' },
+  { icon: '\\u{1F3AC}', label: 'Videos', bg: '#3a2d1e' },
+  { icon: '\\u{1F5BC}', label: 'Photos', bg: '#1e3a2d' },
+  { icon: '\\u{1F4E6}', label: 'Packages', bg: '#3a3a1e' },
+  { icon: '\\u{2699}', label: 'Settings', bg: '#2d2d3a' },
+  { icon: '\\u{1F512}', label: 'Secure', bg: '#3a1e1e' },
+  { icon: '\\u{2B50}', label: 'Favorites', bg: '#3a351e' },
+];
+
+function App() {
+  const [sel, setSel] = useState(null);
+  return (
+    <div>
+      <div className="thumb-grid">
+        {thumbs.map((t, i) => (
+          <div key={i} className={'thumb' + (sel === i ? ' selected' : '')}
+            style={{background: t.bg}} onClick={() => setSel(i)}>
+            <div className="thumb-icon">{t.icon}</div>
+            <div className="thumb-label">{t.label}</div>
+          </div>
+        ))}
+      </div>
+      {sel !== null && (
+        <div className="detail">
+          <div className="detail-icon">{thumbs[sel].icon}</div>
+          <div className="detail-name">{thumbs[sel].label}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-cards',
@@ -1855,6 +3039,56 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['component composition', 'responsive design', 'styling', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/cards',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.card {
+  background: #1e293b; border-radius: 10px; overflow: hidden;
+  border: 1px solid #334155; transition: all 0.2s;
+}
+.card:hover { border-color: #475569; transform: translateY(-2px); }
+.card-img {
+  height: 80px; display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+}
+.card-body { padding: 12px; }
+.card-title { font-size: 14px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+.card-footer {
+  padding: 8px 12px; border-top: 1px solid #334155;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.card-tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+.card-btn { background: none; border: none; color: #3b82f6; font-size: 12px; cursor: pointer; }`,
+      js: `function App() {
+  const cards = [
+    { icon: '\\u{1F680}', title: 'Performance', desc: 'Optimize your app with code splitting and lazy loading.', tag: 'Core', color: '#3b82f6', bg: 'linear-gradient(135deg,#1e3a5f,#1e293b)' },
+    { icon: '\\u{1F3A8}', title: 'Theming', desc: 'Dark mode, custom palettes, and CSS variables.', tag: 'UI', color: '#a855f7', bg: 'linear-gradient(135deg,#2d1e3a,#1e293b)' },
+    { icon: '\\u{1F512}', title: 'Security', desc: 'Authentication, authorization, and input sanitization.', tag: 'Auth', color: '#ef4444', bg: 'linear-gradient(135deg,#3a1e1e,#1e293b)' },
+    { icon: '\\u{1F4CA}', title: 'Analytics', desc: 'Track events, user flows, and conversion metrics.', tag: 'Data', color: '#22c55e', bg: 'linear-gradient(135deg,#1e3a2d,#1e293b)' },
+  ];
+
+  return (
+    <div className="cards">
+      {cards.map((c, i) => (
+        <div key={i} className="card">
+          <div className="card-img" style={{background: c.bg}}>{c.icon}</div>
+          <div className="card-body">
+            <div className="card-title">{c.title}</div>
+            <div className="card-desc">{c.desc}</div>
+          </div>
+          <div className="card-footer">
+            <span className="card-tag" style={{background: c.color+'22',color: c.color}}>{c.tag}</span>
+            <button className="card-btn">Learn more \\u2192</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-data-filtering',
@@ -1865,6 +3099,65 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'data filtering', 'form controls', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/data-filtering',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.filters { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.filter-btn {
+  padding: 6px 14px; border-radius: 20px; border: 1px solid #334155;
+  background: none; color: #94a3b8; cursor: pointer; font-size: 12px;
+}
+.filter-btn:hover { border-color: #475569; }
+.filter-btn.active { background: #3b82f6; border-color: #3b82f6; color: white; }
+.item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: #1e293b; border-radius: 8px; margin-bottom: 4px; border: 1px solid #334155;
+}
+.item-icon { font-size: 20px; }
+.item-name { flex: 1; color: #e2e8f0; font-size: 14px; }
+.item-cat { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+.count { font-size: 12px; color: #64748b; margin-top: 8px; }`,
+      js: `const { useState, useMemo } = React;
+
+const items = [
+  { name: 'React Guide', cat: 'Tutorial', icon: '\\u{1F4D8}' },
+  { name: 'Auth System', cat: 'Project', icon: '\\u{1F512}' },
+  { name: 'CSS Grid Intro', cat: 'Tutorial', icon: '\\u{1F4D8}' },
+  { name: 'E-commerce App', cat: 'Project', icon: '\\u{1F6D2}' },
+  { name: 'Testing Basics', cat: 'Tutorial', icon: '\\u{1F4D8}' },
+  { name: 'Chat App', cat: 'Project', icon: '\\u{1F4AC}' },
+  { name: 'TypeScript Tips', cat: 'Article', icon: '\\u{1F4DD}' },
+  { name: 'Performance Guide', cat: 'Article', icon: '\\u{1F4DD}' },
+];
+
+const catColors = { Tutorial: '#3b82f6', Project: '#22c55e', Article: '#eab308' };
+
+function App() {
+  const [filter, setFilter] = useState('All');
+  const cats = ['All', ...new Set(items.map(i => i.cat))];
+  const filtered = useMemo(() => filter === 'All' ? items : items.filter(i => i.cat === filter), [filter]);
+
+  return (
+    <div>
+      <div className="filters">
+        {cats.map(c => (
+          <button key={c} className={'filter-btn' + (filter === c ? ' active' : '')}
+            onClick={() => setFilter(c)}>{c}</button>
+        ))}
+      </div>
+      {filtered.map((item, i) => (
+        <div key={i} className="item">
+          <span className="item-icon">{item.icon}</span>
+          <span className="item-name">{item.name}</span>
+          <span className="item-cat" style={{background: catColors[item.cat]+'22', color: catColors[item.cat]}}>{item.cat}</span>
+        </div>
+      ))}
+      <div className="count">Showing {filtered.length} of {items.length} items</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-search',
@@ -1875,6 +3168,72 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['debouncing', 'async operations', 'filtering', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/search',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.search-box {
+  position: relative; margin-bottom: 12px;
+}
+.search-box input {
+  width: 100%; padding: 10px 12px 10px 36px; border-radius: 8px;
+  border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none;
+}
+.search-box input:focus { border-color: #3b82f6; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; }
+.result {
+  padding: 10px 12px; background: #1e293b; border-radius: 8px; margin-bottom: 4px;
+  border: 1px solid #334155; cursor: pointer;
+}
+.result:hover { border-color: #475569; }
+.result-title { color: #e2e8f0; font-size: 14px; }
+.result-title mark { background: none; color: #3b82f6; font-weight: 600; }
+.result-desc { color: #64748b; font-size: 12px; margin-top: 2px; }
+.no-results { text-align: center; color: #64748b; padding: 20px; }`,
+      js: `const { useState, useMemo } = React;
+
+const data = [
+  { title: 'React Hooks Guide', desc: 'Learn useState, useEffect, and custom hooks' },
+  { title: 'CSS Grid Layout', desc: 'Master two-dimensional layouts with CSS Grid' },
+  { title: 'TypeScript Basics', desc: 'Type safety for JavaScript applications' },
+  { title: 'Node.js API Design', desc: 'RESTful API patterns with Express' },
+  { title: 'Testing with Jest', desc: 'Unit and integration testing strategies' },
+];
+
+function App() {
+  const [query, setQuery] = useState('');
+
+  const results = useMemo(() => {
+    if (!query) return data;
+    const q = query.toLowerCase();
+    return data.filter(d => d.title.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q));
+  }, [query]);
+
+  const highlight = (text) => {
+    if (!query) return text;
+    const i = text.toLowerCase().indexOf(query.toLowerCase());
+    if (i === -1) return text;
+    return <>{text.slice(0,i)}<mark>{text.slice(i,i+query.length)}</mark>{text.slice(i+query.length)}</>;
+  };
+
+  return (
+    <div>
+      <div className="search-box">
+        <span className="search-icon">\\u{1F50D}</span>
+        <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search resources..." />
+      </div>
+      {results.length === 0 ? (
+        <div className="no-results">No results for "{query}"</div>
+      ) : results.map((r, i) => (
+        <div key={i} className="result">
+          <div className="result-title">{highlight(r.title)}</div>
+          <div className="result-desc">{r.desc}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-search-filters',
@@ -1885,6 +3244,86 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['state management', 'data filtering', 'form controls', 'URL state'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/search-filters',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.filter-panel { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+.filter-panel input {
+  flex: 1; min-width: 120px; padding: 8px 10px; border-radius: 6px;
+  border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; font-size: 13px;
+}
+.filter-panel select {
+  padding: 8px 10px; border-radius: 6px; border: 1px solid #334155;
+  background: #1e293b; color: #e2e8f0; outline: none; font-size: 13px;
+}
+.clear-btn {
+  padding: 8px 12px; border-radius: 6px; border: none; background: #334155;
+  color: #94a3b8; cursor: pointer; font-size: 12px;
+}
+.item-row {
+  display: flex; justify-content: space-between; padding: 10px 12px;
+  background: #1e293b; border-radius: 6px; margin-bottom: 4px; border: 1px solid #334155;
+}
+.item-name { color: #e2e8f0; font-size: 14px; }
+.item-detail { color: #64748b; font-size: 12px; }
+.active-filters { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+.filter-chip {
+  padding: 4px 10px; border-radius: 12px; font-size: 11px;
+  background: #3b82f622; color: #3b82f6; display: flex; align-items: center; gap: 4px;
+}
+.filter-chip button { background: none; border: none; color: #3b82f6; cursor: pointer; }`,
+      js: `const { useState, useMemo } = React;
+
+const products = [
+  { name: 'Laptop Pro', cat: 'Electronics', price: 1299, rating: 4.8 },
+  { name: 'Wireless Mouse', cat: 'Electronics', price: 29, rating: 4.2 },
+  { name: 'Standing Desk', cat: 'Furniture', price: 499, rating: 4.5 },
+  { name: 'Monitor 27"', cat: 'Electronics', price: 399, rating: 4.6 },
+  { name: 'Office Chair', cat: 'Furniture', price: 299, rating: 4.3 },
+];
+
+function App() {
+  const [search, setSearch] = useState('');
+  const [cat, setCat] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+
+  const filtered = useMemo(() => {
+    let r = products;
+    if (search) r = r.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+    if (cat) r = r.filter(p => p.cat === cat);
+    if (maxPrice) r = r.filter(p => p.price <= +maxPrice);
+    return r;
+  }, [search, cat, maxPrice]);
+
+  const clear = () => { setSearch(''); setCat(''); setMaxPrice(''); };
+  const hasFilters = search || cat || maxPrice;
+
+  return (
+    <div>
+      <div className="filter-panel">
+        <input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
+        <select value={cat} onChange={e => setCat(e.target.value)}>
+          <option value="">All Categories</option>
+          <option>Electronics</option><option>Furniture</option>
+        </select>
+        <select value={maxPrice} onChange={e => setMaxPrice(e.target.value)}>
+          <option value="">Any Price</option>
+          <option value="100">Under $100</option><option value="500">Under $500</option><option value="1000">Under $1000</option>
+        </select>
+        {hasFilters && <button className="clear-btn" onClick={clear}>Clear All</button>}
+      </div>
+      {filtered.map((p, i) => (
+        <div key={i} className="item-row">
+          <span className="item-name">{p.name}</span>
+          <span className="item-detail">{p.cat} \\u00B7 \${p.price} \\u00B7 \\u2605 {p.rating}</span>
+        </div>
+      ))}
+      <div style={{fontSize:12,color:'#64748b',marginTop:8}}>{filtered.length} results</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-table-filter',
@@ -1895,6 +3334,73 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['data filtering', 'table management', 'state management', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/table-filter',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.filter-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.filter-row input, .filter-row select {
+  padding: 8px 10px; border-radius: 6px; border: 1px solid #334155;
+  background: #1e293b; color: #e2e8f0; outline: none; font-size: 13px;
+}
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 8px; font-size: 12px; color: #64748b; border-bottom: 1px solid #334155; }
+td { padding: 8px; font-size: 13px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
+tr:hover td { background: #1e293b; }
+.badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; }`,
+      js: `const { useState, useMemo } = React;
+
+const rows = [
+  { name: 'Alice', dept: 'Engineering', status: 'Active' },
+  { name: 'Bob', dept: 'Design', status: 'Active' },
+  { name: 'Carol', dept: 'Engineering', status: 'Away' },
+  { name: 'Dan', dept: 'Marketing', status: 'Active' },
+  { name: 'Eve', dept: 'Design', status: 'Away' },
+];
+
+const statusColor = { Active: '#22c55e', Away: '#eab308' };
+
+function App() {
+  const [nameFilter, setNameFilter] = useState('');
+  const [deptFilter, setDeptFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+
+  const filtered = useMemo(() => {
+    let r = rows;
+    if (nameFilter) r = r.filter(x => x.name.toLowerCase().includes(nameFilter.toLowerCase()));
+    if (deptFilter) r = r.filter(x => x.dept === deptFilter);
+    if (statusFilter) r = r.filter(x => x.status === statusFilter);
+    return r;
+  }, [nameFilter, deptFilter, statusFilter]);
+
+  return (
+    <div>
+      <div className="filter-row">
+        <input placeholder="Filter by name..." value={nameFilter} onChange={e => setNameFilter(e.target.value)} style={{flex:1}} />
+        <select value={deptFilter} onChange={e => setDeptFilter(e.target.value)}>
+          <option value="">All Depts</option>
+          <option>Engineering</option><option>Design</option><option>Marketing</option>
+        </select>
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+          <option value="">All Status</option>
+          <option>Active</option><option>Away</option>
+        </select>
+      </div>
+      <table>
+        <thead><tr><th>Name</th><th>Department</th><th>Status</th></tr></thead>
+        <tbody>
+          {filtered.map((r, i) => (
+            <tr key={i}>
+              <td>{r.name}</td><td>{r.dept}</td>
+              <td><span className="badge" style={{background: statusColor[r.status]+'22', color: statusColor[r.status]}}>{r.status}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-sort-column',
@@ -1905,6 +3411,74 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['data sorting', 'table management', 'state management', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/sort-column',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 10px 8px; font-size: 12px; color: #64748b;
+  border-bottom: 2px solid #334155; cursor: pointer; user-select: none;
+}
+th:hover { color: #94a3b8; }
+th.sorted { color: #3b82f6; border-bottom-color: #3b82f6; }
+td { padding: 10px 8px; font-size: 13px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
+tr:hover td { background: #1e293b; }
+.sort-arrow { margin-left: 4px; font-size: 10px; }`,
+      js: `const { useState, useMemo } = React;
+
+const data = [
+  { name: 'React', stars: 220, issues: 890, license: 'MIT' },
+  { name: 'Vue', stars: 210, issues: 450, license: 'MIT' },
+  { name: 'Angular', stars: 95, issues: 1200, license: 'MIT' },
+  { name: 'Svelte', stars: 78, issues: 320, license: 'MIT' },
+  { name: 'Solid', stars: 32, issues: 98, license: 'MIT' },
+];
+
+function App() {
+  const [sortKey, setSortKey] = useState('name');
+  const [asc, setAsc] = useState(true);
+
+  const sorted = useMemo(() => [...data].sort((a, b) => {
+    const va = a[sortKey], vb = b[sortKey];
+    const cmp = typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+    return asc ? cmp : -cmp;
+  }), [sortKey, asc]);
+
+  const toggle = (key) => {
+    if (sortKey === key) setAsc(!asc);
+    else { setSortKey(key); setAsc(true); }
+  };
+
+  const cols = [
+    { key: 'name', label: 'Framework' },
+    { key: 'stars', label: 'Stars (k)' },
+    { key: 'issues', label: 'Issues' },
+    { key: 'license', label: 'License' },
+  ];
+
+  return (
+    <table>
+      <thead><tr>
+        {cols.map(c => (
+          <th key={c.key} className={sortKey === c.key ? 'sorted' : ''} onClick={() => toggle(c.key)}>
+            {c.label}
+            {sortKey === c.key && <span className="sort-arrow">{asc ? '\\u25B2' : '\\u25BC'}</span>}
+          </th>
+        ))}
+      </tr></thead>
+      <tbody>
+        {sorted.map(r => (
+          <tr key={r.name}>
+            <td style={{fontWeight:500}}>{r.name}</td>
+            <td>{r.stars}k</td><td>{r.issues}</td><td>{r.license}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-tag-cloud',
@@ -1915,6 +3489,66 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['data visualization', 'dynamic sizing', 'interactivity', 'responsive design'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/tag-cloud',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.cloud { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 12px; }
+.tag {
+  padding: 6px 14px; border-radius: 20px; cursor: pointer;
+  transition: all 0.15s; border: 1px solid transparent;
+}
+.tag:hover { border-color: #475569; transform: scale(1.05); }
+.tag.selected { border-color: #3b82f6; }
+.detail {
+  margin-top: 16px; padding: 12px; background: #1e293b; border-radius: 8px;
+  border: 1px solid #334155; text-align: center;
+}
+.detail-tag { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.detail-count { font-size: 13px; color: #64748b; }`,
+      js: `const { useState } = React;
+
+const tags = [
+  { name: 'JavaScript', count: 95 },{ name: 'React', count: 88 },
+  { name: 'TypeScript', count: 72 },{ name: 'CSS', count: 65 },
+  { name: 'Node.js', count: 60 },{ name: 'Python', count: 55 },
+  { name: 'HTML', count: 50 },{ name: 'Git', count: 45 },
+  { name: 'Docker', count: 38 },{ name: 'GraphQL', count: 30 },
+  { name: 'REST', count: 42 },{ name: 'SQL', count: 35 },
+];
+
+const colors = ['#3b82f6','#22c55e','#a855f7','#ef4444','#eab308','#ec4899'];
+
+function App() {
+  const [selected, setSelected] = useState(null);
+  const maxCount = Math.max(...tags.map(t => t.count));
+
+  return (
+    <div>
+      <div className="cloud">
+        {tags.map((t, i) => {
+          const ratio = t.count / maxCount;
+          const size = 12 + ratio * 14;
+          const color = colors[i % colors.length];
+          return (
+            <div key={t.name} className={'tag' + (selected === t.name ? ' selected' : '')}
+              style={{fontSize: size, background: color + '15', color}}
+              onClick={() => setSelected(selected === t.name ? null : t.name)}>
+              {t.name}
+            </div>
+          );
+        })}
+      </div>
+      {selected && (
+        <div className="detail">
+          <div className="detail-tag" style={{color: colors[tags.findIndex(t => t.name === selected) % colors.length]}}>{selected}</div>
+          <div className="detail-count">{tags.find(t => t.name === selected).count} mentions</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-continuous-scrolling',
@@ -1925,6 +3559,72 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['lazy loading', 'scroll events', 'performance optimization', 'async operations'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/continuous-scrolling',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.scroll-list { max-height: 300px; overflow-y: auto; border: 1px solid #334155; border-radius: 10px; }
+.scroll-item {
+  padding: 12px 14px; border-bottom: 1px solid #1e293b;
+  display: flex; align-items: center; gap: 10px;
+}
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.item-info { flex: 1; }
+.item-info .name { color: #e2e8f0; font-size: 14px; }
+.item-info .sub { color: #64748b; font-size: 12px; }
+.loader { text-align: center; padding: 16px; color: #64748b; font-size: 13px; }
+.spinner { animation: spin 1s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }`,
+      js: `const { useState, useRef, useCallback } = React;
+
+const colors = ['#3b82f6','#22c55e','#a855f7','#ef4444','#eab308'];
+const names = ['Alice','Bob','Carol','Dan','Eve','Frank','Grace','Hank','Ivy','Jack'];
+
+function genItems(start, count) {
+  return Array.from({length: count}, (_, i) => ({
+    id: start + i, name: names[(start+i) % names.length] + ' #' + (start+i+1),
+    color: colors[(start+i) % colors.length]
+  }));
+}
+
+function App() {
+  const [items, setItems] = useState(genItems(0, 10));
+  const [loading, setLoading] = useState(false);
+  const listRef = useRef(null);
+
+  const loadMore = useCallback(() => {
+    if (loading || items.length >= 50) return;
+    setLoading(true);
+    setTimeout(() => {
+      setItems(prev => [...prev, ...genItems(prev.length, 10)]);
+      setLoading(false);
+    }, 800);
+  }, [loading, items.length]);
+
+  const onScroll = () => {
+    const el = listRef.current;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 20) loadMore();
+  };
+
+  return (
+    <div>
+      <div className="scroll-list" ref={listRef} onScroll={onScroll}>
+        {items.map(item => (
+          <div key={item.id} className="scroll-item">
+            <div className="avatar" style={{background: item.color + '33', color: item.color}}>{item.name[0]}</div>
+            <div className="item-info">
+              <div className="name">{item.name}</div>
+              <div className="sub">Loaded item</div>
+            </div>
+          </div>
+        ))}
+        {loading && <div className="loader"><span className="spinner">\\u21BB</span> Loading more...</div>}
+      </div>
+      <div style={{fontSize:12,color:'#64748b',marginTop:8}}>{items.length} items loaded</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-dashboard',
@@ -1940,6 +3640,73 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     ],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/dashboard',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.widget {
+  background: #1e293b; border-radius: 10px; padding: 14px;
+  border: 1px solid #334155;
+}
+.widget-title { font-size: 12px; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+.widget-val { font-size: 24px; font-weight: 700; }
+.widget-change { font-size: 12px; margin-top: 4px; }
+.wide { grid-column: span 2; }
+.mini-chart { display: flex; align-items: flex-end; gap: 3px; height: 40px; margin-top: 8px; }
+.mini-bar { flex: 1; border-radius: 2px; transition: height 0.3s; }
+.activity-item { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid #1e293b; font-size: 13px; }
+.activity-item:last-child { border: none; }
+.dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const stats = [
+    { label: 'Revenue', value: '$12,450', change: '+12.5%', up: true, color: '#22c55e' },
+    { label: 'Users', value: '1,234', change: '+8.2%', up: true, color: '#3b82f6' },
+    { label: 'Orders', value: '356', change: '-2.1%', up: false, color: '#ef4444' },
+    { label: 'Conversion', value: '3.24%', change: '+0.5%', up: true, color: '#a855f7' },
+  ];
+  const chartData = [30,45,35,60,50,70,55,80,65,75,85,60];
+  const activity = [
+    { text: 'New order #1234', time: '2m ago', color: '#22c55e' },
+    { text: 'User signup', time: '5m ago', color: '#3b82f6' },
+    { text: 'Payment received', time: '12m ago', color: '#a855f7' },
+  ];
+
+  return (
+    <div className="dash-grid">
+      {stats.map((s, i) => (
+        <div key={i} className="widget">
+          <div className="widget-title">{s.label}</div>
+          <div className="widget-val" style={{color: s.color}}>{s.value}</div>
+          <div className="widget-change" style={{color: s.up ? '#22c55e' : '#ef4444'}}>
+            {s.up ? '\\u25B2' : '\\u25BC'} {s.change}
+          </div>
+        </div>
+      ))}
+      <div className="widget wide">
+        <div className="widget-title">Traffic Overview</div>
+        <div className="mini-chart">
+          {chartData.map((v, i) => (
+            <div key={i} className="mini-bar" style={{height: v+'%', background: '#3b82f6'}} />
+          ))}
+        </div>
+      </div>
+      <div className="widget wide">
+        <div className="widget-title">Recent Activity</div>
+        {activity.map((a, i) => (
+          <div key={i} className="activity-item">
+            <div className="dot" style={{background: a.color}} />
+            <div style={{flex:1,color:'#e2e8f0'}}>{a.text}</div>
+            <div style={{color:'#64748b',fontSize:11}}>{a.time}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-alternating-rows',
@@ -1950,6 +3717,39 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['styling', 'list rendering', 'accessibility', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/alternating-rows',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 10px 12px; font-size: 12px; color: #64748b; border-bottom: 2px solid #334155; }
+td { padding: 10px 12px; font-size: 13px; color: #e2e8f0; }
+tr.even { background: #1e293b; }
+tr.odd { background: #0f172a; }
+tr:hover td { background: rgba(59,130,246,0.05); }`,
+      js: `function App() {
+  const data = [
+    { id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'Engineer' },
+    { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'Designer' },
+    { id: 3, name: 'Carol White', email: 'carol@example.com', role: 'Manager' },
+    { id: 4, name: 'Dan Brown', email: 'dan@example.com', role: 'Engineer' },
+    { id: 5, name: 'Eve Davis', email: 'eve@example.com', role: 'Designer' },
+  ];
+
+  return (
+    <table>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+      <tbody>
+        {data.map((r, i) => (
+          <tr key={r.id} className={i % 2 === 0 ? 'even' : 'odd'}>
+            <td style={{color:'#64748b'}}>{r.id}</td><td>{r.name}</td><td style={{color:'#94a3b8'}}>{r.email}</td><td>{r.role}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-formatting-data',
@@ -1960,6 +3760,65 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['data formatting', 'internationalization', 'accessibility', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/formatting-data',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.format-row {
+  display: flex; justify-content: space-between; padding: 10px 12px;
+  background: #1e293b; border-radius: 8px; margin-bottom: 6px; border: 1px solid #334155;
+}
+.format-label { font-size: 13px; color: #94a3b8; }
+.format-value { font-size: 13px; color: #e2e8f0; font-family: monospace; }
+.section-title { font-size: 14px; font-weight: 600; color: #e2e8f0; margin: 14px 0 8px; }`,
+      js: `function App() {
+  const num = 1234567.89;
+  const date = new Date();
+  const bytes = 1536000;
+
+  const fmtBytes = (b) => {
+    if (b < 1024) return b + ' B';
+    if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+    return (b/1048576).toFixed(1) + ' MB';
+  };
+
+  const fmtRelative = (d) => {
+    const diff = Date.now() - d.getTime();
+    const mins = Math.floor(diff/60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return mins + 'm ago';
+    return Math.floor(mins/60) + 'h ago';
+  };
+
+  const Row = ({label, value}) => (
+    <div className="format-row">
+      <span className="format-label">{label}</span>
+      <span className="format-value">{value}</span>
+    </div>
+  );
+
+  return (
+    <div>
+      <div className="section-title">Numbers</div>
+      <Row label="Default" value={num.toLocaleString()} />
+      <Row label="Currency (USD)" value={num.toLocaleString('en-US',{style:'currency',currency:'USD'})} />
+      <Row label="Currency (EUR)" value={num.toLocaleString('de-DE',{style:'currency',currency:'EUR'})} />
+      <Row label="Compact" value={Intl.NumberFormat('en',{notation:'compact'}).format(num)} />
+      <Row label="Percent" value={(0.1234).toLocaleString('en',{style:'percent',minimumFractionDigits:1})} />
+
+      <div className="section-title">Dates</div>
+      <Row label="Full" value={date.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} />
+      <Row label="Short" value={date.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} />
+      <Row label="ISO" value={date.toISOString().split('T')[0]} />
+      <Row label="Relative" value={fmtRelative(new Date(Date.now()-300000))} />
+
+      <div className="section-title">Other</div>
+      <Row label="File size" value={fmtBytes(bytes)} />
+      <Row label="Phone" value="+1 (555) 123-4567" />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
 
   // Navigation
@@ -1972,6 +3831,54 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['responsive design', 'mobile menus', 'accessibility', 'state management'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/navbar',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.navbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: #1e293b; border-radius: 10px; border: 1px solid #334155;
+}
+.nav-brand { font-weight: 700; font-size: 16px; color: #e2e8f0; }
+.nav-links { display: flex; gap: 4px; }
+.nav-link {
+  padding: 6px 14px; border-radius: 6px; border: none; background: none;
+  color: #94a3b8; cursor: pointer; font-size: 13px;
+}
+.nav-link:hover { color: #e2e8f0; background: #334155; }
+.nav-link.active { color: #3b82f6; background: rgba(59,130,246,0.1); }
+.hamburger {
+  display: none; background: none; border: none; color: #e2e8f0;
+  font-size: 20px; cursor: pointer;
+}
+.page { padding: 20px; text-align: center; color: #94a3b8; margin-top: 12px; }`,
+      js: `const { useState } = React;
+
+const links = ['Home','Features','Pricing','About'];
+
+function App() {
+  const [active, setActive] = useState('Home');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <div>
+      <nav className="navbar">
+        <div className="nav-brand">\\u{1F680} AppName</div>
+        <div className="nav-links">
+          {links.map(l => (
+            <button key={l} className={'nav-link' + (active === l ? ' active' : '')}
+              onClick={() => setActive(l)}>{l}</button>
+          ))}
+        </div>
+      </nav>
+      <div className="page">
+        <div style={{fontSize:24,marginBottom:8}}>{active}</div>
+        <div>Content for the {active} page</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-sidebar',
@@ -1982,6 +3889,61 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['animations', 'state management', 'responsive design', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/sidebar',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.layout { display: flex; gap: 0; min-height: 250px; }
+.sidebar {
+  background: #1e293b; border-radius: 10px 0 0 10px; border: 1px solid #334155;
+  padding: 12px 0; transition: width 0.3s; overflow: hidden; flex-shrink: 0;
+}
+.sidebar.open { width: 180px; }
+.sidebar.closed { width: 50px; }
+.toggle-btn {
+  width: 100%; padding: 8px; background: none; border: none; color: #94a3b8;
+  cursor: pointer; text-align: center; font-size: 16px; margin-bottom: 8px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  color: #94a3b8; cursor: pointer; white-space: nowrap; font-size: 13px; border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: #334155; color: #e2e8f0; }
+.nav-item.active { color: #3b82f6; background: rgba(59,130,246,0.1); }
+.content { flex: 1; padding: 16px; background: #0f172a; border-radius: 0 10px 10px 0; }`,
+      js: `const { useState } = React;
+
+const items = [
+  { icon: '\\u{1F3E0}', label: 'Dashboard' },
+  { icon: '\\u{1F4CA}', label: 'Analytics' },
+  { icon: '\\u{1F465}', label: 'Users' },
+  { icon: '\\u2699', label: 'Settings' },
+];
+
+function App() {
+  const [open, setOpen] = useState(true);
+  const [active, setActive] = useState('Dashboard');
+
+  return (
+    <div className="layout">
+      <div className={'sidebar' + (open ? ' open' : ' closed')}>
+        <button className="toggle-btn" onClick={() => setOpen(!open)}>{open ? '\\u25C0' : '\\u25B6'}</button>
+        {items.map(item => (
+          <button key={item.label} className={'nav-item' + (active === item.label ? ' active' : '')}
+            onClick={() => setActive(item.label)}>
+            <span>{item.icon}</span>
+            {open && <span>{item.label}</span>}
+          </button>
+        ))}
+      </div>
+      <div className="content">
+        <div style={{color:'#e2e8f0',fontSize:18,fontWeight:600}}>{active}</div>
+        <div style={{color:'#64748b',fontSize:14,marginTop:8}}>Content area for {active}</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-mobile-menu',
@@ -1992,6 +3954,55 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['mobile patterns', 'touch gestures', 'animations', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/mobile-menu',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.mobile-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: #1e293b; border-radius: 10px 10px 0 0; border: 1px solid #334155;
+}
+.brand { font-weight: 700; color: #e2e8f0; }
+.menu-btn { background: none; border: none; color: #e2e8f0; font-size: 22px; cursor: pointer; }
+.mobile-nav {
+  overflow: hidden; transition: max-height 0.3s ease; background: #1e293b;
+  border: 1px solid #334155; border-top: none; border-radius: 0 0 10px 10px;
+}
+.mobile-nav.open { max-height: 300px; }
+.mobile-nav.closed { max-height: 0; border: none; }
+.mobile-link {
+  display: block; padding: 14px 16px; color: #94a3b8; font-size: 14px;
+  border-bottom: 1px solid #334155; cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+}
+.mobile-link:last-child { border-bottom: none; }
+.mobile-link:hover { background: #334155; color: #e2e8f0; }
+.mobile-link.active { color: #3b82f6; }`,
+      js: `const { useState } = React;
+
+const links = ['Home','Features','Pricing','Blog','Contact'];
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState('Home');
+
+  return (
+    <div>
+      <div className="mobile-header">
+        <span className="brand">\\u{1F4F1} MyApp</span>
+        <button className="menu-btn" onClick={() => setOpen(!open)}>
+          {open ? '\\u2715' : '\\u2630'}
+        </button>
+      </div>
+      <nav className={'mobile-nav' + (open ? ' open' : ' closed')}>
+        {links.map(l => (
+          <button key={l} className={'mobile-link' + (active === l ? ' active' : '')}
+            onClick={() => { setActive(l); setOpen(false); }}>{l}</button>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-bottom-navigation',
@@ -2002,6 +4013,61 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['mobile patterns', 'navigation', 'accessibility', 'state management'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/bottom-navigation',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.phone-frame {
+  border: 1px solid #334155; border-radius: 12px; overflow: hidden;
+  display: flex; flex-direction: column; height: 300px;
+}
+.phone-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.bottom-nav {
+  display: flex; background: #1e293b; border-top: 1px solid #334155;
+}
+.bottom-tab {
+  flex: 1; padding: 10px 0; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; background: none; border: none; cursor: pointer; color: #64748b; font-size: 11px;
+}
+.bottom-tab:hover { color: #94a3b8; }
+.bottom-tab.active { color: #3b82f6; }
+.tab-icon { font-size: 18px; }`,
+      js: `const { useState } = React;
+
+const tabs = [
+  { id: 'home', icon: '\\u{1F3E0}', label: 'Home' },
+  { id: 'search', icon: '\\u{1F50D}', label: 'Search' },
+  { id: 'add', icon: '\\u2795', label: 'Create' },
+  { id: 'notif', icon: '\\u{1F514}', label: 'Alerts' },
+  { id: 'profile', icon: '\\u{1F464}', label: 'Profile' },
+];
+
+function App() {
+  const [active, setActive] = useState('home');
+  const tab = tabs.find(t => t.id === active);
+
+  return (
+    <div className="phone-frame">
+      <div className="phone-content">
+        <div style={{textAlign:'center'}}>
+          <div style={{fontSize:48}}>{tab.icon}</div>
+          <div style={{color:'#e2e8f0',fontSize:18,fontWeight:600,marginTop:8}}>{tab.label}</div>
+          <div style={{color:'#64748b',fontSize:13,marginTop:4}}>Tap the bottom tabs to navigate</div>
+        </div>
+      </div>
+      <nav className="bottom-nav">
+        {tabs.map(t => (
+          <button key={t.id} className={'bottom-tab' + (active === t.id ? ' active' : '')}
+            onClick={() => setActive(t.id)}>
+            <span className="tab-icon">{t.icon}</span>
+            <span>{t.label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-dropdown-menu',
@@ -2012,6 +4078,70 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['dropdown menus', 'keyboard navigation', 'accessibility', 'positioning'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/dropdown-menu',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.menu-wrap { position: relative; display: inline-block; }
+.menu-trigger {
+  padding: 8px 16px; border-radius: 8px; border: 1px solid #334155;
+  background: #1e293b; color: #e2e8f0; cursor: pointer; font-size: 14px;
+}
+.menu-trigger:hover { border-color: #475569; }
+.menu-dropdown {
+  position: absolute; top: 100%; left: 0; margin-top: 4px;
+  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+  min-width: 180px; padding: 4px; z-index: 20; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.menu-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 4px;
+  color: #e2e8f0; cursor: pointer; font-size: 13px; border: none; background: none; width: 100%; text-align: left;
+}
+.menu-item:hover { background: #334155; }
+.menu-item.danger { color: #ef4444; }
+.divider { height: 1px; background: #334155; margin: 4px 0; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const items = [
+    { icon: '\\u270F', label: 'Edit' },
+    { icon: '\\u{1F4CB}', label: 'Duplicate' },
+    { icon: '\\u{1F4E6}', label: 'Archive' },
+    'divider',
+    { icon: '\\u{1F5D1}', label: 'Delete', danger: true },
+  ];
+
+  return (
+    <div ref={ref} className="menu-wrap">
+      <button className="menu-trigger" onClick={() => setOpen(!open)}>
+        Actions \\u25BC
+      </button>
+      {open && (
+        <div className="menu-dropdown">
+          {items.map((item, i) =>
+            item === 'divider' ? <div key={i} className="divider" /> : (
+              <button key={i} className={'menu-item' + (item.danger ? ' danger' : '')}
+                onClick={() => setOpen(false)}>
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            )
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-accordion-menu',
@@ -2022,6 +4152,56 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['animations', 'state management', 'accessibility', 'progressive disclosure'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/accordion-menu',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.acc-section { border: 1px solid #334155; border-radius: 8px; margin-bottom: 4px; overflow: hidden; }
+.acc-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 14px; background: #1e293b; cursor: pointer; border: none; width: 100%;
+  color: #e2e8f0; font-size: 14px; font-weight: 500;
+}
+.acc-header:hover { background: #334155; }
+.acc-icon { font-size: 12px; transition: transform 0.3s; color: #64748b; }
+.acc-icon.open { transform: rotate(180deg); }
+.acc-body { max-height: 0; overflow: hidden; transition: max-height 0.3s; }
+.acc-body.open { max-height: 200px; }
+.acc-link {
+  display: block; padding: 8px 14px 8px 28px; color: #94a3b8; font-size: 13px;
+  cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+}
+.acc-link:hover { color: #e2e8f0; background: rgba(255,255,255,0.02); }`,
+      js: `const { useState } = React;
+
+const sections = [
+  { title: 'Getting Started', items: ['Introduction','Installation','Quick Start'] },
+  { title: 'Components', items: ['Buttons','Forms','Modals','Tables'] },
+  { title: 'Advanced', items: ['Hooks','Context','Performance'] },
+];
+
+function App() {
+  const [openIdx, setOpenIdx] = useState(0);
+
+  return (
+    <div>
+      {sections.map((sec, i) => (
+        <div key={i} className="acc-section">
+          <button className="acc-header" onClick={() => setOpenIdx(openIdx === i ? -1 : i)}>
+            <span>{sec.title}</span>
+            <span className={'acc-icon' + (openIdx === i ? ' open' : '')}>\\u25BC</span>
+          </button>
+          <div className={'acc-body' + (openIdx === i ? ' open' : '')}>
+            {sec.items.map(item => (
+              <button key={item} className="acc-link">{item}</button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-breadcrumbs',
@@ -2032,6 +4212,51 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['navigation', 'accessibility', 'responsive design', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/breadcrumbs',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.breadcrumbs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-bottom: 16px; }
+.crumb { color: #3b82f6; font-size: 13px; cursor: pointer; background: none; border: none; padding: 4px 2px; }
+.crumb:hover { text-decoration: underline; }
+.crumb.current { color: #e2e8f0; cursor: default; }
+.crumb.current:hover { text-decoration: none; }
+.separator { color: #475569; font-size: 12px; }
+.page-title { font-size: 20px; font-weight: 700; color: #e2e8f0; margin-bottom: 8px; }
+.page-desc { color: #94a3b8; font-size: 14px; }`,
+      js: `const { useState } = React;
+
+const paths = [
+  ['Home'],
+  ['Home','Products'],
+  ['Home','Products','Electronics'],
+  ['Home','Products','Electronics','Laptops'],
+];
+
+function App() {
+  const [depth, setDepth] = useState(3);
+  const crumbs = paths[depth];
+
+  return (
+    <div>
+      <nav className="breadcrumbs" aria-label="Breadcrumb">
+        {crumbs.map((c, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <span className="separator">/</span>}
+            <button className={'crumb' + (i === crumbs.length-1 ? ' current' : '')}
+              onClick={() => i < crumbs.length-1 && setDepth(i)}
+              aria-current={i === crumbs.length-1 ? 'page' : undefined}>
+              {c}
+            </button>
+          </React.Fragment>
+        ))}
+      </nav>
+      <div className="page-title">{crumbs[crumbs.length - 1]}</div>
+      <div className="page-desc">You are viewing the {crumbs[crumbs.length - 1]} page. Click a breadcrumb to navigate back.</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-navigation-tabs',

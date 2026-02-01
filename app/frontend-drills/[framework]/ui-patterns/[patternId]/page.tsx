@@ -23,6 +23,21 @@ const CodeEditor = dynamic(
 );
 const ExerciseTutor = dynamic(() => import('@/components/ExerciseTutor'), { ssr: false });
 
+function formatCSSForDisplay(raw: string): string {
+  return raw
+    .replace(/\{([^}]+)\}/g, (_match, body: string) => {
+      const props = body
+        .split(';')
+        .map((p: string) => p.trim())
+        .filter(Boolean)
+        .map((p: string) => `  ${p};`)
+        .join('\n');
+      return `{\n${props}\n}`;
+    })
+    .replace(/\}\s*/g, '}\n\n')
+    .trim();
+}
+
 function getImplementationHint(concept: string, framework: string): string {
   const hints: Record<string, string> = {
     'form validation': 'Set up validation rules and error display logic',
@@ -232,6 +247,7 @@ export default function UIPatternDetail() {
   const patternId = params.patternId as string;
   const [mounted, setMounted] = useState(false);
   const [userCode, setUserCode] = useState('');
+  const [editorTab, setEditorTab] = useState<'html' | 'css' | 'js'>('js');
 
   useEffect(() => {
     setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- hydration safety
@@ -247,8 +263,14 @@ export default function UIPatternDetail() {
     }
   }, [mounted, framework, patternId]);
 
-  // Build a preview document from the user's code
+  // Build a preview document from the user's code + pattern HTML/CSS
   // Must be before early returns to satisfy rules of hooks
+  const patternForPreview = useMemo(
+    () =>
+      isValidFramework(framework) ? getUIPatternById(framework as FrameworkId, patternId) : null,
+    [framework, patternId],
+  );
+
   const userPreviewSrcdoc = useMemo(() => {
     if (!userCode.trim()) return '';
 
@@ -264,11 +286,8 @@ export default function UIPatternDetail() {
 
     const scriptType = framework === 'react' ? 'text/babel' : 'text/javascript';
     const scripts = frameworkScripts[framework] || '';
-
-    // Detect if user code contains HTML tags — if so, use as body content
-    const hasHTML = /<[a-z][\s\S]*>/i.test(userCode);
-    const bodyContent = hasHTML ? userCode : `<div id="app"></div>`;
-    const scriptContent = hasHTML ? '' : userCode;
+    const previewHtml = patternForPreview?.demoCode?.html || '<div id="app"></div>';
+    const previewCss = patternForPreview?.demoCode?.css || '';
 
     return `<!DOCTYPE html>
 <html>
@@ -285,15 +304,20 @@ export default function UIPatternDetail() {
       line-height: 1.6;
     }
     input, select, textarea, button { font-family: inherit; font-size: inherit; }
+    ${previewCss}
   </style>
   ${scripts}
 </head>
 <body>
-  ${bodyContent}
-  ${scriptContent ? `<script type="${scriptType}">\ntry {\n${scriptContent}\n} catch(e) { document.body.innerHTML = '<pre style="color:#ef4444;padding:16px;">' + e.message + '</pre>'; }\n</script>` : ''}
+  ${previewHtml}
+  <script type="${scriptType}">
+try {
+${userCode}
+} catch(e) { document.body.innerHTML = '<pre style="color:#ef4444;padding:16px;">' + e.message + '</pre>'; }
+  </script>
 </body>
 </html>`;
-  }, [userCode, framework]);
+  }, [userCode, framework, patternForPreview]);
 
   if (!mounted) {
     return (
@@ -441,19 +465,65 @@ export default function UIPatternDetail() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-white">Your Implementation</h2>
-                  <p className="text-xs text-zinc-500">
-                    Write your code — the AI tutor can review it
-                  </p>
+                  <p className="text-xs text-zinc-500">Write your JS — HTML & CSS are provided</p>
                 </div>
               </div>
+
+              {/* Editor Tabs */}
+              {pattern.demoCode && (
+                <div className="flex items-center gap-1 mb-3 border-b border-zinc-700/30 pb-2">
+                  {(['html', 'css', 'js'] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setEditorTab(tab)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer ${
+                        editorTab === tab
+                          ? 'bg-zinc-700 text-white'
+                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                      }`}
+                    >
+                      {tab === 'js'
+                        ? framework === 'react'
+                          ? 'JSX'
+                          : framework === 'vue'
+                            ? 'Vue'
+                            : framework === 'angular'
+                              ? 'TS'
+                              : 'JS'
+                        : tab.toUpperCase()}
+                      {tab !== 'js' && (
+                        <span className="ml-1.5 text-[10px] text-zinc-500">(read-only)</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Tab Content */}
               <div className="flex-1 min-h-0">
-                <CodeEditor
-                  code={userCode}
-                  onChange={setUserCode}
-                  language={editorLanguage}
-                  height={320}
-                  autoFocus={false}
-                />
+                {editorTab === 'js' ? (
+                  <CodeEditor
+                    code={userCode}
+                    onChange={setUserCode}
+                    language={editorLanguage}
+                    height={320}
+                    autoFocus={false}
+                  />
+                ) : (
+                  <div
+                    className="rounded-lg overflow-auto bg-zinc-900/50 border border-zinc-700/30"
+                    style={{ height: 320 }}
+                  >
+                    <pre className="p-4 text-sm text-zinc-300 font-mono leading-relaxed whitespace-pre overflow-x-auto">
+                      <code>
+                        {editorTab === 'html'
+                          ? pattern.demoCode?.html || '<!-- No HTML -->'
+                          : formatCSSForDisplay(pattern.demoCode?.css || '/* No CSS */')}
+                      </code>
+                    </pre>
+                  </div>
+                )}
               </div>
 
               {/* User's Live Preview */}
