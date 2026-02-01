@@ -194,8 +194,9 @@ export default async function FrameworkLayout({ children, params }: LayoutProps)
               </Link>
             </div>
 
-            {/* Docs link + Framework switcher */}
+            {/* Framework switcher + Docs link */}
             <div className="flex items-center gap-3">
+              <FrameworkSwitcher framework={framework as FrameworkId} />
               <a
                 href={config.docsUrl}
                 target="_blank"
@@ -219,7 +220,6 @@ export default async function FrameworkLayout({ children, params }: LayoutProps)
                 </svg>
                 Docs
               </a>
-              <FrameworkSwitcher framework={framework as FrameworkId} />
             </div>
           </div>
         </div>
