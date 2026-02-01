@@ -215,7 +215,7 @@ export default function FrameworkPage() {
           href={`/frontend-drills/${framework}/drill`}
           icon={<KeyboardIcon className="w-8 h-8" />}
           title="Drill Mode"
-          description={`Write code solutions to ${config.name} challenges. Build muscle memory for ${config.name} patterns.`}
+          description={`Practice ${config.name} coding challenges and build muscle memory for common patterns.`}
           buttonText="Start Drilling"
           config={config}
           badge={problemCount > 0 ? `${problemCount} problems` : undefined}
