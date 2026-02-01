@@ -626,6 +626,7 @@ export default function UIPatternDetail() {
   const [userCode, setUserCode] = useState('');
   const [editorTab, setEditorTab] = useState<'html' | 'css' | 'js'>('js');
   const [previewKey, setPreviewKey] = useState(0);
+  const [hintsOpen, setHintsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- hydration safety
@@ -939,6 +940,70 @@ try {
                   </svg>
                   Reset
                 </button>
+              </div>
+
+              {/* Expandable Hints */}
+              <div className="mb-3">
+                <button
+                  type="button"
+                  onClick={() => setHintsOpen((prev) => !prev)}
+                  className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg bg-zinc-900/50 border border-zinc-700/30 hover:border-zinc-600/50 transition-all cursor-pointer group"
+                >
+                  <svg
+                    className={`w-3.5 h-3.5 text-amber-400 transition-transform duration-200 ${hintsOpen ? 'rotate-90' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                  <svg
+                    className="w-4 h-4 text-amber-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+                    />
+                  </svg>
+                  <span className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
+                    Hints
+                  </span>
+                  <span className="text-xs text-zinc-500">
+                    ({pattern.concepts.length} {pattern.concepts.length === 1 ? 'hint' : 'hints'})
+                  </span>
+                </button>
+                {hintsOpen && (
+                  <div className="mt-2 space-y-2 pl-2 border-l-2 border-amber-500/30 ml-[7px]">
+                    {pattern.concepts.map((concept, index) => (
+                      <div key={index} className="pl-3 py-1.5">
+                        <p className="text-xs font-medium text-amber-300/90">
+                          Step {index + 1}: {concept}
+                        </p>
+                        <p className="text-xs text-zinc-400 mt-0.5">
+                          {getImplementationHint(concept, frameworkConfig.name)}
+                        </p>
+                      </div>
+                    ))}
+                    {pattern.demoCode?.js &&
+                      extractDemoHints(pattern.demoCode.js).map((hint, i) => (
+                        <div key={`demo-${i}`} className="pl-3 py-1.5">
+                          <p className="text-xs text-amber-400/70 font-mono">{hint}</p>
+                        </div>
+                      ))}
+                  </div>
+                )}
               </div>
 
               {/* Editor Tabs */}
