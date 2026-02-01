@@ -2,8 +2,35 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { LANGUAGE_CONFIG, SUPPORTED_LANGUAGES, type SupportedLanguage } from './config';
+import { FRAMEWORK_CONFIG, FRAMEWORK_IDS, type FrameworkId } from '@/lib/frontend-drills';
+import { LANGUAGE_CONFIG, type SupportedLanguage } from './config';
 import { LanguageIcon } from './LanguageIcon';
+
+const PROGRAMMING_LANGUAGES: SupportedLanguage[] = [
+  'javascript',
+  'typescript',
+  'python',
+  'java',
+  'cpp',
+  'csharp',
+  'go',
+  'ruby',
+  'c',
+  'php',
+  'kotlin',
+  'rust',
+  'swift',
+  'scala',
+  'r',
+  'perl',
+  'lua',
+  'haskell',
+  'elixir',
+  'dart',
+  'clojure',
+];
+
+const DATABASE_LANGUAGES: SupportedLanguage[] = ['postgresql', 'mysql', 'mongodb'];
 
 export function LanguageSwitcher({ language }: { language: SupportedLanguage }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,19 +68,26 @@ export function LanguageSwitcher({ language }: { language: SupportedLanguage }) 
     };
   }, [isOpen]);
 
-  const handleSelect = useCallback(
+  const handleSelectLanguage = useCallback(
     (target: SupportedLanguage) => {
       if (target === language) {
         setIsOpen(false);
         return;
       }
       // Replace current language segment in the path
-      // pathname is e.g. "/typescript/drill" → "/javascript/drill"
       const newPath = pathname.replace(`/${language}`, `/${target}`);
       setIsOpen(false);
       router.push(newPath);
     },
     [language, pathname, router],
+  );
+
+  const handleSelectFramework = useCallback(
+    (fw: FrameworkId) => {
+      setIsOpen(false);
+      router.push(`/frontend-drills/${fw}`);
+    },
+    [router],
   );
 
   return (
@@ -86,11 +120,44 @@ export function LanguageSwitcher({ language }: { language: SupportedLanguage }) 
         <div
           ref={menuRef}
           role="listbox"
-          aria-label="Select language"
-          className="absolute right-0 mt-2 w-64 max-h-80 overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-50"
+          aria-label="Select language or framework"
+          className="absolute right-0 mt-2 w-72 max-h-96 overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-50"
         >
           <div className="py-1">
-            {SUPPORTED_LANGUAGES.map((lang) => {
+            {/* Frontend Frameworks Section */}
+            <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Frontend Frameworks
+            </div>
+            {FRAMEWORK_IDS.map((fwId) => {
+              const fwConfig = FRAMEWORK_CONFIG[fwId];
+              return (
+                <button
+                  key={fwId}
+                  type="button"
+                  role="option"
+                  aria-selected={false}
+                  onClick={() => handleSelectFramework(fwId)}
+                  className="w-full px-3 py-2 text-left text-sm flex items-center gap-3 transition-colors cursor-pointer text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                >
+                  <span
+                    className={`flex items-center justify-center w-6 h-6 rounded text-xs font-bold ${fwConfig.bgColor} ${fwConfig.color}`}
+                  >
+                    {fwConfig.icon}
+                  </span>
+                  <span className="flex-1 font-medium">{fwConfig.name}</span>
+                  <span className="text-xs opacity-60">{fwConfig.version}</span>
+                </button>
+              );
+            })}
+
+            {/* Divider */}
+            <div className="border-t border-zinc-800 my-1" />
+
+            {/* Programming Languages Section */}
+            <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Languages
+            </div>
+            {PROGRAMMING_LANGUAGES.map((lang) => {
               const langConfig = LANGUAGE_CONFIG[lang];
               const isActive = lang === language;
               return (
@@ -99,7 +166,7 @@ export function LanguageSwitcher({ language }: { language: SupportedLanguage }) 
                   type="button"
                   role="option"
                   aria-selected={isActive}
-                  onClick={() => handleSelect(lang)}
+                  onClick={() => handleSelectLanguage(lang)}
                   className={`w-full px-3 py-2 text-left text-sm flex items-center gap-3 transition-colors cursor-pointer ${
                     isActive
                       ? 'bg-zinc-800 text-white'
@@ -108,7 +175,53 @@ export function LanguageSwitcher({ language }: { language: SupportedLanguage }) 
                 >
                   <LanguageIcon language={lang} className="w-4 h-4" />
                   <span className="flex-1 font-medium">{langConfig.name}</span>
-                  <span className={`text-xs opacity-60`}>{langConfig.version}</span>
+                  <span className="text-xs opacity-60">{langConfig.version}</span>
+                  {isActive && (
+                    <svg
+                      className="w-4 h-4 text-emerald-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </button>
+              );
+            })}
+
+            {/* Divider */}
+            <div className="border-t border-zinc-800 my-1" />
+
+            {/* Database Languages Section */}
+            <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Databases
+            </div>
+            {DATABASE_LANGUAGES.map((lang) => {
+              const langConfig = LANGUAGE_CONFIG[lang];
+              const isActive = lang === language;
+              return (
+                <button
+                  key={lang}
+                  type="button"
+                  role="option"
+                  aria-selected={isActive}
+                  onClick={() => handleSelectLanguage(lang)}
+                  className={`w-full px-3 py-2 text-left text-sm flex items-center gap-3 transition-colors cursor-pointer ${
+                    isActive
+                      ? 'bg-zinc-800 text-white'
+                      : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                  }`}
+                >
+                  <LanguageIcon language={lang} className="w-4 h-4" />
+                  <span className="flex-1 font-medium">{langConfig.name}</span>
+                  <span className="text-xs opacity-60">{langConfig.version}</span>
                   {isActive && (
                     <svg
                       className="w-4 h-4 text-emerald-400"
