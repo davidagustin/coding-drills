@@ -28,6 +28,12 @@ export interface UIPattern {
   promptDescription?: string;
   /** URL to the live demo or reference implementation. */
   externalUrl?: string;
+  /** Embedded demo code rendered in a sandboxed iframe preview. */
+  demoCode?: {
+    html: string;
+    css: string;
+    js: string;
+  };
 }
 
 /** Display configuration for each UI pattern category. */

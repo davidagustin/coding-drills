@@ -45,6 +45,11 @@ export function GlobalNavbar() {
     return null;
   }
 
+  // Don't render on frontend-drills framework pages - they have their own layout
+  if (currentLanguage === 'frontend-drills' && pathParts.length >= 2) {
+    return null;
+  }
+
   const navIconProps = {
     viewBox: '0 0 24 24',
     className: 'w-4 h-4',

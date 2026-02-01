@@ -90,21 +90,6 @@ function BookIcon({ className = 'w-8 h-8' }: { className?: string }) {
   );
 }
 
-function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      className={className}
-      aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-    </svg>
-  );
-}
-
 function ArrowRightIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
     <svg
@@ -213,15 +198,6 @@ export default function FrameworkPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Back to frontend-drills link */}
-      <Link
-        href="/frontend-drills"
-        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 group"
-      >
-        <ArrowLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        Back to Frontend Drills
-      </Link>
-
       {/* Framework header */}
       <div className="text-center mb-12">
         <div

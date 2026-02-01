@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -28,21 +27,6 @@ const CodeEditor = dynamic(() => import('@/components/CodeEditor'), {
 });
 
 // ─── Icon Components ─────────────────────────────────────────
-
-function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      className={className}
-      aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-    </svg>
-  );
-}
 
 function ChevronIcon({ className = 'w-4 h-4', open }: { className?: string; open: boolean }) {
   return (
@@ -97,6 +81,120 @@ function MenuIcon({ className = 'w-5 h-5' }: { className?: string }) {
   );
 }
 
+function SectionIcon({
+  id,
+  className = 'w-5 h-5',
+}: {
+  id: CheatsheetSectionId;
+  className?: string;
+}) {
+  switch (id) {
+    case 'overview':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className={className}
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
+          />
+          <rect x="9" y="3" width="6" height="4" rx="1" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 14h6" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 18h4" />
+        </svg>
+      );
+    case 'core-concepts':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className={className}
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="2" />
+          <ellipse cx="12" cy="12" rx="9" ry="4" />
+          <ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(60 12 12)" />
+          <ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(120 12 12)" />
+        </svg>
+      );
+    case 'key-apis':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className={className}
+          aria-hidden="true"
+        >
+          <circle cx="8" cy="15" r="5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.5 11.5L21 2" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7l2-2" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M18 5l2 2" />
+        </svg>
+      );
+    case 'common-patterns':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className={className}
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+      );
+    case 'code-examples':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className={className}
+          aria-hidden="true"
+        >
+          <rect x="2" y="3" width="20" height="18" rx="2" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 8l4 4-4 4" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h4" />
+        </svg>
+      );
+    case 'ecosystem':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className={className}
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="5" r="2.5" />
+          <circle cx="5" cy="19" r="2.5" />
+          <circle cx="19" cy="19" r="2.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5v4" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 17.5l3.5-6" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 17.5l-3.5-6" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 // ─── Content Block Components ────────────────────────────────
 
 function TextBlock({ content }: { content: string }) {
@@ -117,7 +215,7 @@ function StaticCodeBlock({
   language: string;
 }) {
   return (
-    <div className="rounded-lg border border-zinc-700/50 overflow-hidden">
+    <div className="rounded-lg border border-zinc-700/40 overflow-hidden shadow-sm shadow-black/10">
       {title && (
         <div className="flex items-center justify-between px-4 py-2 bg-zinc-800/80 border-b border-zinc-700/50">
           <span className="text-xs font-medium text-zinc-400">{title}</span>
@@ -156,7 +254,7 @@ function InteractiveCodeExample({
     language === 'html' ? 'html' : language === 'typescript' ? 'typescript' : undefined;
 
   return (
-    <div className="rounded-lg border border-zinc-700/50 overflow-hidden">
+    <div className="rounded-lg border border-zinc-700/40 overflow-hidden shadow-md shadow-black/20">
       <div className="flex items-center justify-between px-4 py-2 bg-zinc-800/80 border-b border-zinc-700/50">
         <div>
           <span className="text-sm font-medium text-white">{title}</span>
@@ -202,10 +300,10 @@ function ListBlock({ style, items }: { style: 'bullet' | 'numbered'; items: stri
 
 function TableBlock({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-zinc-700/50">
+    <div className="overflow-x-auto rounded-lg border border-zinc-700/40 shadow-sm shadow-black/10">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-zinc-800/80 border-b border-zinc-700/50">
+          <tr className="bg-zinc-800/90 border-b border-zinc-700/40">
             {headers.map((h, i) => (
               <th
                 key={i}
@@ -239,7 +337,7 @@ function TableBlock({ headers, rows }: { headers: string[]; rows: string[][] }) 
 
 function TipBlock({ content }: { content: string }) {
   return (
-    <div className="flex gap-3 p-4 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
+    <div className="flex gap-3 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 shadow-sm shadow-emerald-900/10">
       <span className="text-emerald-400 text-lg flex-shrink-0" aria-hidden="true">
         💡
       </span>
@@ -250,7 +348,7 @@ function TipBlock({ content }: { content: string }) {
 
 function WarningBlock({ content }: { content: string }) {
   return (
-    <div className="flex gap-3 p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+    <div className="flex gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 shadow-sm shadow-amber-900/10">
       <span className="text-amber-400 text-lg flex-shrink-0" aria-hidden="true">
         ⚠️
       </span>
@@ -319,15 +417,16 @@ function CheatsheetSectionComponent({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center gap-3 p-4 rounded-xl bg-zinc-900/50 border border-zinc-700/50 hover:bg-zinc-800/50 transition-colors group text-left"
+        className="w-full flex items-center gap-3 p-4 rounded-xl bg-zinc-900/60 border border-zinc-700/40 hover:bg-zinc-800/60 hover:border-zinc-600/50 hover:shadow-lg hover:shadow-black/20 transition-all duration-200 group text-left"
       >
         <ChevronIcon
           className="w-5 h-5 text-zinc-500 group-hover:text-zinc-300 flex-shrink-0"
           open={isExpanded}
         />
-        <span className="text-xl flex-shrink-0" aria-hidden="true">
-          {section.icon}
-        </span>
+        <SectionIcon
+          id={section.id}
+          className="w-5 h-5 text-zinc-400 group-hover:text-zinc-200 transition-colors flex-shrink-0"
+        />
         <div className="min-w-0">
           <h3 className="text-lg font-semibold text-white">{section.title}</h3>
           <p className="text-sm text-zinc-400">{section.description}</p>
@@ -335,7 +434,7 @@ function CheatsheetSectionComponent({
       </button>
 
       {isExpanded && (
-        <div className={`mt-3 ml-2 pl-6 border-l-2 ${config.borderColor} space-y-4 pb-2`}>
+        <div className={`mt-3 ml-4 pl-6 border-l-2 ${config.borderColor} space-y-5 pb-4`}>
           {section.content.map((block, i) => (
             <ContentBlockRenderer key={i} block={block} isExpanded={isExpanded} />
           ))}
@@ -364,7 +463,10 @@ function TableOfContents({
   }, []);
 
   return (
-    <nav aria-label="Table of contents">
+    <nav
+      aria-label="Table of contents"
+      className="rounded-xl bg-zinc-900/40 border border-zinc-800/60 p-4"
+    >
       <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
         Contents
       </h2>
@@ -382,9 +484,7 @@ function TableOfContents({
                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
                 }`}
               >
-                <span className="text-base" aria-hidden="true">
-                  {section.icon}
-                </span>
+                <SectionIcon id={section.id} className="w-4 h-4 flex-shrink-0" />
                 {section.title}
               </button>
             </li>
@@ -427,15 +527,14 @@ function MobileTOC({
       >
         <div className="flex items-center gap-2">
           <MenuIcon className="w-5 h-5 text-zinc-400" />
-          <span className="text-sm text-zinc-300">
-            {current ? `${current.icon} ${current.title}` : 'Contents'}
-          </span>
+          {current && <SectionIcon id={current.id} className="w-4 h-4 text-zinc-300" />}
+          <span className="text-sm text-zinc-300">{current ? current.title : 'Contents'}</span>
         </div>
         <ChevronIcon className={`w-4 h-4 text-zinc-400 ${open ? 'rotate-90' : ''}`} open={open} />
       </button>
 
       {open && (
-        <div className="mt-2 p-2 rounded-xl bg-zinc-900/90 border border-zinc-700/50 backdrop-blur-sm">
+        <div className="mt-2 p-2 rounded-xl bg-zinc-900/95 border border-zinc-700/40 backdrop-blur-md shadow-xl shadow-black/30">
           <ul className="space-y-1">
             {sections.map((section) => {
               const isActive = activeSection === section.id;
@@ -450,9 +549,7 @@ function MobileTOC({
                         : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
                     }`}
                   >
-                    <span className="text-base" aria-hidden="true">
-                      {section.icon}
-                    </span>
+                    <SectionIcon id={section.id} className="w-4 h-4 flex-shrink-0" />
                     {section.title}
                   </button>
                 </li>
@@ -477,7 +574,7 @@ function CheatsheetHeader({
   lastUpdated: string;
 }) {
   return (
-    <div className="mb-8">
+    <div className="mb-8 pb-6 border-b border-zinc-800/60">
       <div className="flex items-center gap-4 mb-4">
         <div
           className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${config.bgColor} ${config.borderColor} border`}
@@ -584,15 +681,6 @@ export default function CheatsheetPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Back link */}
-      <Link
-        href={`/frontend-drills/${framework}`}
-        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 group"
-      >
-        <ArrowLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        Back to {config.name}
-      </Link>
-
       {/* Header */}
       <CheatsheetHeader
         config={config}

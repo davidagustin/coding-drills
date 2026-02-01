@@ -11,6 +11,72 @@ export const nativeJsUIPatterns: UIPattern[] = [
     description:
       'Build a form with client-side validation using the Constraint Validation API. Handle custom validation rules, display error messages, and prevent submission of invalid forms.',
     concepts: ['Constraint Validation API', 'DOM API', 'Event delegation', 'Form events'],
+    demoCode: {
+      html: `<form id="signup-form" novalidate>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="you@example.com" required />
+    <span class="error" id="email-error"></span>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Min 8 characters" required minlength="8" />
+    <span class="error" id="password-error"></span>
+  </div>
+  <div class="form-group">
+    <label for="confirm">Confirm Password</label>
+    <input type="password" id="confirm" placeholder="Re-enter password" required />
+    <span class="error" id="confirm-error"></span>
+  </div>
+  <button type="submit">Sign Up</button>
+  <div id="success" class="success" style="display:none">Account created successfully!</div>
+</form>`,
+      css: `.form-group { margin-bottom: 16px; }
+label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
+input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; transition: border-color 0.2s; }
+input:focus { border-color: #3b82f6; }
+input.invalid { border-color: #ef4444; }
+input.valid { border-color: #22c55e; }
+.error { color: #ef4444; font-size: 12px; margin-top: 4px; display: block; min-height: 18px; }
+.success { color: #22c55e; text-align: center; padding: 12px; border-radius: 8px; background: rgba(34,197,94,0.1); margin-top: 16px; }
+button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+button:hover { background: #2563eb; }`,
+      js: `const form = document.getElementById('signup-form');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const confirmInput = document.getElementById('confirm');
+
+function validate(input, errorId, check) {
+  const errorEl = document.getElementById(errorId);
+  const msg = check(input.value);
+  errorEl.textContent = msg || '';
+  input.className = msg ? 'invalid' : input.value ? 'valid' : '';
+  return !msg;
+}
+
+emailInput.addEventListener('input', () => validate(emailInput, 'email-error', v => {
+  if (!v) return 'Email is required';
+  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v)) return 'Enter a valid email';
+}));
+
+passwordInput.addEventListener('input', () => validate(passwordInput, 'password-error', v => {
+  if (!v) return 'Password is required';
+  if (v.length < 8) return 'Must be at least 8 characters';
+}));
+
+confirmInput.addEventListener('input', () => validate(confirmInput, 'confirm-error', v => {
+  if (!v) return 'Please confirm your password';
+  if (v !== passwordInput.value) return 'Passwords do not match';
+}));
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const v1 = validate(emailInput, 'email-error', v => !v ? 'Email is required' : !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v) ? 'Enter a valid email' : '');
+  const v2 = validate(passwordInput, 'password-error', v => !v ? 'Password is required' : v.length < 8 ? 'Must be at least 8 characters' : '');
+  const v3 = validate(confirmInput, 'confirm-error', v => !v ? 'Please confirm' : v !== passwordInput.value ? 'Passwords do not match' : '');
+  if (v1 && v2 && v3) document.getElementById('success').style.display = 'block';
+});`,
+    },
   },
   {
     id: 'js-autocomplete',
@@ -61,6 +127,60 @@ export const nativeJsUIPatterns: UIPattern[] = [
     description:
       'Build a custom range slider with dual handles, tooltips, and smooth dragging using pointer events and CSS transforms.',
     concepts: ['Pointer events', 'CSS transforms', 'Event listeners', 'DOM manipulation'],
+    demoCode: {
+      html: `<div class="slider-container">
+  <label>Price Range</label>
+  <div class="slider-track" id="slider">
+    <div class="slider-fill" id="fill"></div>
+    <div class="slider-thumb" id="thumb-min" data-value="20"></div>
+    <div class="slider-thumb" id="thumb-max" data-value="80"></div>
+  </div>
+  <div class="slider-values">
+    <span id="val-min">$20</span>
+    <span id="val-max">$80</span>
+  </div>
+</div>`,
+      css: `.slider-container { padding: 20px 10px; }
+label { display: block; margin-bottom: 16px; font-size: 14px; color: #94a3b8; }
+.slider-track { position: relative; height: 6px; background: #334155; border-radius: 3px; margin: 20px 0; }
+.slider-fill { position: absolute; height: 100%; background: #3b82f6; border-radius: 3px; }
+.slider-thumb { position: absolute; top: 50%; width: 22px; height: 22px; background: #3b82f6; border: 2px solid #1e293b; border-radius: 50%; transform: translate(-50%, -50%); cursor: grab; transition: box-shadow 0.2s; z-index: 2; }
+.slider-thumb:hover, .slider-thumb.active { box-shadow: 0 0 0 6px rgba(59,130,246,0.25); }
+.slider-values { display: flex; justify-content: space-between; font-size: 18px; font-weight: 600; color: #e2e8f0; }`,
+      js: `const slider = document.getElementById('slider');
+const thumbMin = document.getElementById('thumb-min');
+const thumbMax = document.getElementById('thumb-max');
+const fill = document.getElementById('fill');
+let minVal = 20, maxVal = 80;
+
+function updateUI() {
+  thumbMin.style.left = minVal + '%';
+  thumbMax.style.left = maxVal + '%';
+  fill.style.left = minVal + '%';
+  fill.style.width = (maxVal - minVal) + '%';
+  document.getElementById('val-min').textContent = '$' + minVal;
+  document.getElementById('val-max').textContent = '$' + maxVal;
+}
+updateUI();
+
+function startDrag(thumb, isMin) {
+  thumb.classList.add('active');
+  const onMove = (e) => {
+    const rect = slider.getBoundingClientRect();
+    let pct = Math.round(((e.clientX - rect.left) / rect.width) * 100);
+    pct = Math.max(0, Math.min(100, pct));
+    if (isMin) { minVal = Math.min(pct, maxVal - 5); }
+    else { maxVal = Math.max(pct, minVal + 5); }
+    updateUI();
+  };
+  const onUp = () => { thumb.classList.remove('active'); document.removeEventListener('pointermove', onMove); document.removeEventListener('pointerup', onUp); };
+  document.addEventListener('pointermove', onMove);
+  document.addEventListener('pointerup', onUp);
+}
+
+thumbMin.addEventListener('pointerdown', () => startDrag(thumbMin, true));
+thumbMax.addEventListener('pointerdown', () => startDrag(thumbMax, false));`,
+    },
   },
   {
     id: 'js-inline-edit',
@@ -113,6 +233,49 @@ export const nativeJsUIPatterns: UIPattern[] = [
     description:
       'Create an accessible modal dialog with focus trap, ESC key handling, and backdrop click-to-close using the dialog element or custom implementation.',
     concepts: ['Dialog element', 'Focus trap', 'ARIA', 'Keyboard events'],
+    demoCode: {
+      html: `<button id="open-btn" class="open-btn">Open Modal</button>
+<div id="backdrop" class="backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <h2 id="modal-title">Confirm Action</h2>
+    <p>Are you sure you want to proceed? This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button id="cancel-btn" class="btn-secondary">Cancel</button>
+      <button id="confirm-btn" class="btn-primary">Confirm</button>
+    </div>
+  </div>
+</div>
+<div id="status" class="status"></div>`,
+      css: `.open-btn { padding: 12px 24px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; }
+.open-btn:hover { background: #2563eb; }
+.backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 50; }
+.backdrop.open { display: flex; animation: fadeIn 0.2s; }
+.modal { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; animation: slideUp 0.3s; }
+.modal h2 { margin-bottom: 8px; font-size: 20px; }
+.modal p { color: #94a3b8; margin-bottom: 20px; font-size: 14px; }
+.modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+.btn-secondary { padding: 8px 16px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: #94a3b8; cursor: pointer; }
+.btn-primary { padding: 8px 16px; border-radius: 8px; border: none; background: #ef4444; color: white; cursor: pointer; font-weight: 600; }
+.btn-primary:hover { background: #dc2626; }
+.btn-secondary:hover { background: #334155; }
+.status { margin-top: 16px; padding: 12px; border-radius: 8px; text-align: center; font-size: 14px; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`,
+      js: `const backdrop = document.getElementById('backdrop');
+const openBtn = document.getElementById('open-btn');
+const cancelBtn = document.getElementById('cancel-btn');
+const confirmBtn = document.getElementById('confirm-btn');
+const status = document.getElementById('status');
+
+function openModal() { backdrop.classList.add('open'); confirmBtn.focus(); }
+function closeModal() { backdrop.classList.remove('open'); openBtn.focus(); }
+
+openBtn.addEventListener('click', openModal);
+cancelBtn.addEventListener('click', () => { closeModal(); status.textContent = 'Cancelled'; status.style.background = 'rgba(100,116,139,0.2)'; status.style.color = '#94a3b8'; });
+confirmBtn.addEventListener('click', () => { closeModal(); status.textContent = 'Action confirmed!'; status.style.background = 'rgba(34,197,94,0.15)'; status.style.color = '#22c55e'; });
+backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });`,
+    },
   },
   {
     id: 'js-drag-drop',

@@ -11,6 +11,70 @@ export const reactUIPatterns: UIPattern[] = [
     concepts: ['form validation', 'state management', 'error handling', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/forms',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.form-group { margin-bottom: 16px; }
+label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
+input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; }
+input:focus { border-color: #3b82f6; }
+.error { color: #ef4444; font-size: 12px; margin-top: 4px; }
+.success { color: #22c55e; text-align: center; padding: 12px; border-radius: 8px; background: rgba(34,197,94,0.1); margin-top: 16px; }
+button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; }
+button:hover { background: #2563eb; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }`,
+      js: `const { useState } = React;
+
+function SignupForm() {
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = 'Name is required';
+    if (!form.email.includes('@')) e.email = 'Valid email required';
+    if (form.password.length < 6) e.password = 'Min 6 characters';
+    return e;
+  };
+
+  const handleChange = (field) => (e) => {
+    setForm(prev => ({ ...prev, [field]: e.target.value }));
+    setErrors(prev => ({ ...prev, [field]: undefined }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setSubmitted(true);
+  };
+
+  if (submitted) return <div className="success">Welcome, {form.name}!</div>;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label>Name</label>
+        <input value={form.name} onChange={handleChange('name')} placeholder="Your name" />
+        {errors.name && <div className="error">{errors.name}</div>}
+      </div>
+      <div className="form-group">
+        <label>Email</label>
+        <input value={form.email} onChange={handleChange('email')} placeholder="you@example.com" />
+        {errors.email && <div className="error">{errors.email}</div>}
+      </div>
+      <div className="form-group">
+        <label>Password</label>
+        <input type="password" value={form.password} onChange={handleChange('password')} placeholder="Min 6 chars" />
+        {errors.password && <div className="error">{errors.password}</div>}
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<SignupForm />);`,
+    },
   },
   {
     id: 'react-autocomplete',
@@ -51,6 +115,61 @@ export const reactUIPatterns: UIPattern[] = [
     concepts: ['validation logic', 'visual feedback', 'security patterns', 'state management'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/password-strength',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
+input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; margin-bottom: 12px; }
+input:focus { border-color: #3b82f6; }
+.meter { height: 6px; border-radius: 3px; background: #1e293b; overflow: hidden; margin-bottom: 8px; }
+.meter-fill { height: 100%; transition: all 0.3s; border-radius: 3px; }
+.rules { font-size: 12px; }
+.rule { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.rule.pass { color: #22c55e; }
+.rule.fail { color: #64748b; }`,
+      js: `const { useState, useMemo } = React;
+
+function PasswordStrength() {
+  const [password, setPassword] = useState('');
+
+  const rules = useMemo(() => [
+    { label: 'At least 8 characters', test: password.length >= 8 },
+    { label: 'Contains uppercase', test: /[A-Z]/.test(password) },
+    { label: 'Contains lowercase', test: /[a-z]/.test(password) },
+    { label: 'Contains number', test: /[0-9]/.test(password) },
+    { label: 'Contains special char', test: /[^A-Za-z0-9]/.test(password) },
+  ], [password]);
+
+  const strength = rules.filter(r => r.test).length;
+  const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
+  const labels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
+
+  return (
+    <div>
+      <label>Create Password</label>
+      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" />
+      {password && (
+        <>
+          <div className="meter">
+            <div className="meter-fill" style={{ width: (strength / 5 * 100) + '%', background: colors[strength - 1] || '#334155' }} />
+          </div>
+          <div style={{ fontSize: 13, color: colors[strength - 1] || '#64748b', marginBottom: 12 }}>
+            {strength > 0 ? labels[strength - 1] : ''}
+          </div>
+          <div className="rules">
+            {rules.map((r, i) => (
+              <div key={i} className={'rule ' + (r.test ? 'pass' : 'fail')}>
+                {r.test ? '\\u2713' : '\\u25CB'} {r.label}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<PasswordStrength />);`,
+    },
   },
   {
     id: 'react-file-upload',

@@ -99,12 +99,12 @@ Language cheatsheets: syntax, data structures, common patterns, and best practic
 
 ### Frontend Drills
 
-Framework-specific training for **React**, **Angular**, **Vue**, and **Native JavaScript**. Each framework offers four modes:
+Framework-specific training for **React**, **Angular**, **Vue**, and **Native JavaScript**. A persistent navigation bar (breadcrumbs + mode tabs) appears on all framework pages for easy switching between modes. Each framework offers four modes:
 
 - **Drill Mode** — Write code solutions to framework-specific challenges in a Monaco Editor.
 - **Quiz Mode** — Multiple-choice questions testing framework concepts and API knowledge.
 - **UI Patterns** — Catalog of common UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, and key concepts.
-- **Cheatsheet** — Comprehensive quick-reference with 6 sections: Overview, Core Concepts, Key APIs, Common Patterns, Code Examples (interactive Monaco editors), and Ecosystem & Tools. Two-column layout with scroll spy and collapsible sections.
+- **Cheatsheet** — Comprehensive quick-reference with 6 sections: Overview, Core Concepts, Key APIs, Common Patterns, Code Examples (interactive Monaco editors), and Ecosystem & Tools. Two-column layout with scroll spy, collapsible sections, SVG section icons, and material-inspired visual polish.
 
 ---
 
@@ -213,10 +213,11 @@ coding-drills/
 │   ├── interview/            # Standalone interview landing
 │   ├── frontend-drills/        # Frontend framework drills
 │   │   └── [framework]/        # Per-framework routes (react, angular, vue, native-js)
+│   │       ├── layout.tsx       # Shared nav bar (breadcrumbs + mode tabs)
 │   │       ├── drill/          # Drill mode
 │   │       ├── quiz/           # Quiz mode
 │   │       ├── ui-patterns/    # UI patterns catalog
-│   │       └── cheatsheet/     # Interactive cheatsheet
+│   │       └── cheatsheet/     # Interactive cheatsheet (SVG icons, material polish)
 │   ├── regex/                # Regex trainer
 │   ├── links/                # Other projects
 │   ├── api/transpile/        # TypeScript transpilation API

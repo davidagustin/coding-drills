@@ -11,6 +11,57 @@ export const vueUIPatterns: UIPattern[] = [
     category: 'forms-input',
     framework: 'vue',
     concepts: ['v-model', 'computed', 'reactive', 'Composition API'],
+    demoCode: {
+      html: `<div id="app">
+  <form @submit.prevent="handleSubmit">
+    <div class="form-group">
+      <label>Name</label>
+      <input v-model="form.name" @blur="touched.name = true" placeholder="Your name" />
+      <div v-if="touched.name && errors.name" class="error">{{ errors.name }}</div>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input v-model="form.email" @blur="touched.email = true" placeholder="you@example.com" />
+      <div v-if="touched.email && errors.email" class="error">{{ errors.email }}</div>
+    </div>
+    <button type="submit" :disabled="hasErrors">Submit</button>
+    <div v-if="submitted" class="success">Welcome, {{ form.name }}!</div>
+  </form>
+</div>`,
+      css: `.form-group { margin-bottom: 16px; }
+label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
+input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; }
+input:focus { border-color: #3b82f6; }
+.error { color: #ef4444; font-size: 12px; margin-top: 4px; }
+.success { color: #22c55e; text-align: center; padding: 12px; border-radius: 8px; background: rgba(34,197,94,0.1); margin-top: 16px; }
+button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; }
+button:hover { background: #2563eb; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }`,
+      js: `const { createApp, reactive, computed, ref } = Vue;
+
+createApp({
+  setup() {
+    const form = reactive({ name: '', email: '' });
+    const touched = reactive({ name: false, email: false });
+    const submitted = ref(false);
+
+    const errors = computed(() => ({
+      name: !form.name.trim() ? 'Name is required' : '',
+      email: !form.email.includes('@') ? 'Valid email required' : '',
+    }));
+
+    const hasErrors = computed(() => Object.values(errors.value).some(e => e));
+
+    const handleSubmit = () => {
+      touched.name = true;
+      touched.email = true;
+      if (!hasErrors.value) submitted.value = true;
+    };
+
+    return { form, touched, errors, hasErrors, submitted, handleSubmit };
+  }
+}).mount('#app');`,
+    },
   },
   {
     id: 'vue-vee-validate',

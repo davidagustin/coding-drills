@@ -11,6 +11,68 @@ export const angularUIPatterns: UIPattern[] = [
       'Build type-safe reactive forms using FormBuilder, FormGroup, and FormControl with built-in and custom validators. Learn proper form state management and validation feedback.',
     concepts: ['Reactive Forms', 'FormBuilder', 'validators', 'form state'],
     framework: 'angular',
+    demoCode: {
+      html: `<div id="app">
+  <form id="ng-form">
+    <div class="form-group">
+      <label>Name</label>
+      <input id="name" placeholder="Your name" />
+      <div class="error" id="name-error"></div>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input id="email" placeholder="you@example.com" />
+      <div class="error" id="email-error"></div>
+    </div>
+    <button type="submit">Submit</button>
+    <div id="result" class="success" style="display:none"></div>
+  </form>
+  <p class="note">Angular patterns use reactive forms. This demo simulates the behavior with vanilla JS.</p>
+</div>`,
+      css: `.form-group { margin-bottom: 16px; }
+label { display: block; margin-bottom: 4px; font-size: 14px; color: #94a3b8; }
+input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; outline: none; }
+input:focus { border-color: #ef4444; }
+.error { color: #ef4444; font-size: 12px; margin-top: 4px; min-height: 18px; }
+.success { color: #22c55e; text-align: center; padding: 12px; border-radius: 8px; background: rgba(34,197,94,0.1); margin-top: 16px; }
+button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #ef4444; color: white; font-weight: 600; cursor: pointer; }
+button:hover { background: #dc2626; }
+.note { margin-top: 20px; font-size: 11px; color: #64748b; text-align: center; font-style: italic; }`,
+      js: `// Simulating Angular Reactive Forms behavior
+const form = document.getElementById('ng-form');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+
+function validate(input, errorId, rules) {
+  const el = document.getElementById(errorId);
+  const val = input.value;
+  for (const rule of rules) {
+    if (!rule.test(val)) { el.textContent = rule.msg; return false; }
+  }
+  el.textContent = '';
+  return true;
+}
+
+const nameRules = [{ test: v => v.trim().length > 0, msg: 'Name is required' }];
+const emailRules = [
+  { test: v => v.length > 0, msg: 'Email is required' },
+  { test: v => v.includes('@'), msg: 'Must be a valid email' }
+];
+
+nameInput.addEventListener('input', () => validate(nameInput, 'name-error', nameRules));
+emailInput.addEventListener('input', () => validate(emailInput, 'email-error', emailRules));
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const v1 = validate(nameInput, 'name-error', nameRules);
+  const v2 = validate(emailInput, 'email-error', emailRules);
+  if (v1 && v2) {
+    const result = document.getElementById('result');
+    result.style.display = 'block';
+    result.textContent = 'Welcome, ' + nameInput.value + '!';
+  }
+});`,
+    },
   },
   {
     id: 'ng-template-forms',
