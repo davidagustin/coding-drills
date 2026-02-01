@@ -51,6 +51,7 @@ export type {
 // UI Patterns
 export {
   getTotalUIPatternCount,
+  getUIPatternById,
   getUIPatternCategories,
   getUIPatternCategoryCounts,
   getUIPatternCount,

@@ -17,7 +17,7 @@
 <br />
 
 An interactive learning platform for mastering programming languages through hands-on practice.
-**Thousands of problems** across **24 languages**, with real-time code execution, algorithm visualizations, AI mock interviews, regex training, and an algorithm pattern quiz.
+**Thousands of problems** across **24 languages** and **4 frontend frameworks**, with real-time code execution, algorithm visualizations, AI mock interviews, regex training, frontend framework drills, and an algorithm pattern quiz.
 
 <br />
 
@@ -41,6 +41,7 @@ An interactive learning platform for mastering programming languages through han
 - **AI Mock Interview** — Algorithm and system design practice with an AI interviewer (offline WebLLM or cloud).
 - **Regex Trainer** — Regex challenges with live matching and test validation.
 - **Reference & Cheatsheets** — Method docs and language cheatsheets for quick lookup.
+- **Frontend Drills** — Framework-specific practice for React, Angular, Vue, and Native JavaScript. Drill mode, quiz mode, UI patterns catalog, and cheatsheets with interactive code examples.
 
 ---
 
@@ -95,6 +96,15 @@ Method reference with documentation, examples, and complexity notes (by language
 ### Cheatsheet
 
 Language cheatsheets: syntax, data structures, common patterns, and best practices (24 languages).
+
+### Frontend Drills
+
+Framework-specific training for **React**, **Angular**, **Vue**, and **Native JavaScript**. Each framework offers four modes:
+
+- **Drill Mode** — Write code solutions to framework-specific challenges in a Monaco Editor.
+- **Quiz Mode** — Multiple-choice questions testing framework concepts and API knowledge.
+- **UI Patterns** — Catalog of common UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, and key concepts.
+- **Cheatsheet** — Comprehensive quick-reference with 6 sections: Overview, Core Concepts, Key APIs, Common Patterns, Code Examples (interactive Monaco editors), and Ecosystem & Tools. Two-column layout with scroll spy and collapsible sections.
 
 ---
 
@@ -201,6 +211,12 @@ coding-drills/
 │   │   ├── reference/        # Method reference
 │   │   └── cheatsheet/       # Language cheatsheet
 │   ├── interview/            # Standalone interview landing
+│   ├── frontend-drills/        # Frontend framework drills
+│   │   └── [framework]/        # Per-framework routes (react, angular, vue, native-js)
+│   │       ├── drill/          # Drill mode
+│   │       ├── quiz/           # Quiz mode
+│   │       ├── ui-patterns/    # UI patterns catalog
+│   │       └── cheatsheet/     # Interactive cheatsheet
 │   ├── regex/                # Regex trainer
 │   ├── links/                # Other projects
 │   ├── api/transpile/        # TypeScript transpilation API
@@ -217,6 +233,11 @@ coding-drills/
 │   ├── interview/             # Algorithm + system design problems, prompts
 │   ├── methods/              # Method reference data
 │   ├── cheatsheets/          # Cheatsheet data
+│   ├── frontend-drills/        # Frontend framework data
+│   │   ├── cheatsheet/         # Cheatsheet data (react, angular, vue, native-js)
+│   │   ├── ui-patterns/        # UI pattern definitions per framework
+│   │   ├── problems/           # Drill problems per framework
+│   │   └── quiz/               # Quiz questions per framework
 │   ├── regexTrainer/         # Regex problems and matcher
 │   ├── quizGenerator.ts      # Quiz generation
 │   ├── codeRunner.ts, codeValidator.ts

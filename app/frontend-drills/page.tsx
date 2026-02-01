@@ -158,7 +158,7 @@ export default function FrontendDrillsPage() {
           What You&apos;ll Practice
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {[
             {
               icon: (
@@ -177,8 +177,9 @@ export default function FrontendDrillsPage() {
                   <path d="M13 16h4" />
                 </svg>
               ),
-              title: 'Component Building',
-              description: 'Build real-world UI components from scratch with guided exercises',
+              title: 'Code Drills',
+              description:
+                'Write code solutions to framework challenges in a Monaco Editor with real-time feedback',
               color: 'text-cyan-400',
               bgColor: 'bg-cyan-400/10',
               borderColor: 'border-cyan-400/30',
@@ -200,9 +201,9 @@ export default function FrontendDrillsPage() {
                   <path d="M2 12l10 5 10-5" />
                 </svg>
               ),
-              title: 'Framework Patterns',
+              title: 'Framework Quizzes',
               description:
-                'Master state management, lifecycle methods, and framework-specific APIs',
+                'Test your knowledge with multiple choice questions on framework concepts and APIs',
               color: 'text-purple-400',
               bgColor: 'bg-purple-400/10',
               borderColor: 'border-purple-400/30',
@@ -219,14 +220,40 @@ export default function FrontendDrillsPage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
               ),
-              title: 'Quiz Challenges',
-              description: 'Test your knowledge with multiple choice questions and timed quizzes',
+              title: 'UI Patterns',
+              description:
+                'Browse 40+ common UI patterns: forms, navigation, data display, and interactive elements',
               color: 'text-amber-400',
               bgColor: 'bg-amber-400/10',
               borderColor: 'border-amber-400/30',
+            },
+            {
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-8 h-8"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 6.25a8.25 8.25 0 00-6-2.5c-1 0-2 .17-3 .5v14.5a8.25 8.25 0 013-.5c2.25 0 4.5.88 6 2.5m0-14.5a8.25 8.25 0 016-2.5c1 0 2 .17 3 .5v14.5a8.25 8.25 0 00-3-.5c-2.25 0-4.5.88-6 2.5m0-14.5v14.5" />
+                </svg>
+              ),
+              title: 'Cheatsheets',
+              description:
+                'Quick reference with interactive code examples, syntax guides, and ecosystem overviews',
+              color: 'text-emerald-400',
+              bgColor: 'bg-emerald-400/10',
+              borderColor: 'border-emerald-400/30',
             },
           ].map((feature) => (
             <div

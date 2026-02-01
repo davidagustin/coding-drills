@@ -53,6 +53,10 @@ export function getUIPatternsByCategory(
   return byCategory;
 }
 
+export function getUIPatternById(framework: FrameworkId, patternId: string): UIPattern | undefined {
+  return getUIPatterns(framework).find((p) => p.id === patternId);
+}
+
 export function getUIPatternCategoryCounts(framework: FrameworkId): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const p of getUIPatterns(framework)) {
