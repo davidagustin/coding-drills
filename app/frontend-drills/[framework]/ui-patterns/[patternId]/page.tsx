@@ -65,6 +65,13 @@ function getImplementationHint(concept: string, framework: string): string {
 }
 
 function generateStarterCode(pattern: UIPattern, framework: string): string {
+  // Use the pattern's actual demoCode JS when available so the starter
+  // matches the Live Demo JS tab — no confusion for the user.
+  if (pattern.demoCode?.js?.trim()) {
+    return pattern.demoCode.js;
+  }
+
+  // Fallback: generate category-based scaffold when no demoCode exists
   const frameworkName = FRAMEWORK_CONFIG[framework as FrameworkId]?.name || framework;
   const componentName = pattern.title
     .replace(/[^a-zA-Z0-9\s]/g, '')
