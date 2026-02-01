@@ -27,6 +27,10 @@ const LANGUAGE_NAMES: Record<string, string> = {
   go: 'Go',
   ruby: 'Ruby',
   c: 'C',
+  'native-js': 'Native JavaScript',
+  react: 'React',
+  angular: 'Angular',
+  vue: 'Vue',
 };
 
 // Mode display names mapping
@@ -34,6 +38,13 @@ const MODE_NAMES: Record<string, string> = {
   drill: 'Drill Mode',
   quiz: 'Quiz Mode',
   reference: 'Reference',
+  'ui-patterns': 'UI Patterns',
+  cheatsheet: 'Cheatsheet',
+  problems: 'Problems',
+  exercises: 'Exercises',
+  interview: 'Interview',
+  'frontend-drills': 'Frontend Drills',
+  'pattern-quiz': 'Pattern Quiz',
 };
 
 function formatSegment(segment: string): string {
@@ -46,10 +57,17 @@ function formatSegment(segment: string): string {
   }
 
   // Default: capitalize and replace hyphens with spaces
-  return segment
+  let formatted = segment
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+
+  // Fix common abbreviations
+  formatted = formatted.replace(/\bJs\b/g, 'JS');
+  formatted = formatted.replace(/\bTs\b/g, 'TS');
+  formatted = formatted.replace(/^Ui\b/g, 'UI');
+
+  return formatted;
 }
 
 export function Breadcrumb({

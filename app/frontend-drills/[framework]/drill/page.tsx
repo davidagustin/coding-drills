@@ -148,14 +148,14 @@ function Chip({ label, selected, onClick, count }: ChipProps) {
       className={`px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer flex items-center gap-2 ${
         selected
           ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-          : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+          : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
       }`}
     >
       {label}
       {count !== undefined && (
         <span
           className={`text-xs px-1.5 py-0.5 rounded-full ${
-            selected ? 'bg-blue-400/30 text-blue-100' : 'bg-slate-600 text-slate-400'
+            selected ? 'bg-blue-400/30 text-blue-100' : 'bg-zinc-600 text-zinc-400'
           }`}
         >
           {count}
@@ -172,7 +172,7 @@ interface DifficultyFilterProps {
 
 function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
   const options: { value: Difficulty | 'all'; label: string; color: string }[] = [
-    { value: 'all', label: 'All', color: 'bg-slate-500' },
+    { value: 'all', label: 'All', color: 'bg-zinc-500' },
     { value: 'easy', label: 'Easy', color: 'bg-green-500' },
     { value: 'medium', label: 'Medium', color: 'bg-yellow-500' },
     { value: 'hard', label: 'Hard', color: 'bg-red-500' },
@@ -188,7 +188,7 @@ function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${
             value === option.value
               ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-              : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+              : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
           }`}
         >
           <span className={`w-2 h-2 rounded-full ${option.color}`} />
@@ -201,7 +201,7 @@ function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
 
 function CodeDisplay({ code }: { code: string }) {
   return (
-    <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg font-mono text-sm leading-relaxed border border-slate-700/50 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+    <pre className="bg-zinc-900 text-zinc-100 p-4 rounded-lg font-mono text-sm leading-relaxed border border-zinc-700/50 whitespace-pre-wrap break-words overflow-wrap-anywhere">
       <code className="block">{code}</code>
     </pre>
   );
@@ -262,7 +262,7 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
@@ -277,7 +277,7 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
           />
           <Link
             href={`/frontend-drills/${framework}`}
-            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+            className="flex items-center gap-2 px-4 py-2 text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50"
           >
             <svg
               className="w-4 h-4"
@@ -299,16 +299,16 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Drill Mode
           </h1>
-          <p className="text-slate-400 text-lg">{fwConfig.description}</p>
+          <p className="text-zinc-400 text-lg">{fwConfig.description}</p>
         </div>
 
         {/* Category Selection */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">
               Categories
               {selectedCategories.length > 0 && (
-                <span className="text-sm font-normal text-slate-400 ml-2">
+                <span className="text-sm font-normal text-zinc-400 ml-2">
                   ({selectedCategories.length} selected)
                 </span>
               )}
@@ -321,11 +321,11 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
               >
                 Select All
               </button>
-              <span className="text-slate-600">|</span>
+              <span className="text-zinc-600">|</span>
               <button
                 type="button"
                 onClick={() => setSelectedCategories([])}
-                className="text-sm text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
+                className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors cursor-pointer"
               >
                 Clear
               </button>
@@ -351,7 +351,7 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
                 ))}
               </div>
               {selectedCategories.length === 0 && (
-                <p className="text-slate-500 text-sm mt-3">
+                <p className="text-zinc-500 text-sm mt-3">
                   No categories selected - all categories will be included
                 </p>
               )}
@@ -360,10 +360,10 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
         </div>
 
         {/* Question Count */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Number of Questions</h2>
-            <span className="text-sm text-slate-400">{availableCount} questions available</span>
+            <span className="text-sm text-zinc-400">{availableCount} questions available</span>
           </div>
           <QuestionCountSlider
             value={questionCount}
@@ -375,7 +375,7 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
         </div>
 
         {/* Difficulty */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-8 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-2xl p-6 mb-8 border border-zinc-700/50">
           <h2 className="text-xl font-semibold mb-4">Difficulty</h2>
           <DifficultyFilter value={difficulty} onChange={setDifficulty} />
         </div>
@@ -389,7 +389,7 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
                      hover:from-blue-600 hover:to-purple-700 transition-all duration-200
                      shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40
                      transform hover:scale-[1.02] active:scale-[0.98]
-                     disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none"
+                     disabled:from-zinc-700 disabled:to-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none"
         >
           Start Drilling
         </button>
@@ -451,7 +451,7 @@ function DrillPhaseComponent({
   // Scroll to top when question changes or component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [state.currentIndex]);
+  }, []);
 
   const handleSubmit = useCallback(() => {
     if (userAnswer.trim()) {
@@ -468,7 +468,7 @@ function DrillPhaseComponent({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-6">
@@ -485,7 +485,7 @@ function DrillPhaseComponent({
           <button
             type="button"
             onClick={onEnd}
-            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+            className="flex items-center gap-2 px-4 py-2 text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50"
           >
             <svg
               className="w-4 h-4"
@@ -507,7 +507,7 @@ function DrillPhaseComponent({
           <div
             className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-lg shadow-2xl border px-6 py-4 min-w-[320px] max-w-md animate-in slide-in-from-top-5 fade-in-0 duration-300 ${
               currentAnswer.skipped
-                ? 'bg-slate-800 border-slate-700'
+                ? 'bg-zinc-800 border-zinc-700'
                 : currentAnswer.isCorrect
                   ? 'bg-green-500/20 border-green-500/30 backdrop-blur-sm'
                   : 'bg-red-500/20 border-red-500/30 backdrop-blur-sm'
@@ -518,7 +518,7 @@ function DrillPhaseComponent({
                 <div
                   className={`text-2xl font-bold ${
                     currentAnswer.skipped
-                      ? 'text-slate-400'
+                      ? 'text-zinc-400'
                       : currentAnswer.isCorrect
                         ? 'text-green-400'
                         : 'text-red-400'
@@ -548,7 +548,7 @@ function DrillPhaseComponent({
                   <div
                     className={`text-lg font-semibold ${
                       currentAnswer.skipped
-                        ? 'text-slate-300'
+                        ? 'text-zinc-300'
                         : currentAnswer.isCorrect
                           ? 'text-green-400'
                           : 'text-red-400'
@@ -566,7 +566,7 @@ function DrillPhaseComponent({
                         +{currentAnswer.pointsEarned} pts
                       </span>
                     )}
-                    <span className="text-slate-500">
+                    <span className="text-zinc-500">
                       {(currentAnswer.timeTaken / 1000).toFixed(1)}s
                     </span>
                   </div>
@@ -578,7 +578,7 @@ function DrillPhaseComponent({
               <button
                 type="button"
                 onClick={() => {}}
-                className="text-slate-400 hover:text-slate-300 transition-colors opacity-50"
+                className="text-zinc-400 hover:text-zinc-300 transition-colors opacity-50"
                 aria-label="Dismiss"
                 disabled
               >
@@ -603,25 +603,25 @@ function DrillPhaseComponent({
         )}
 
         {/* Header Stats */}
-        <div className="flex items-center justify-between bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
+        <div className="flex items-center justify-between bg-zinc-800/50 rounded-2xl p-4 border border-zinc-700/50">
           <div className="flex items-center gap-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-slate-100">
+              <div className="text-2xl font-bold text-zinc-100">
                 {state.currentIndex + 1} / {problems.length}
               </div>
-              <div className="text-xs text-slate-500">Progress</div>
+              <div className="text-xs text-zinc-500">Progress</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-slate-100 font-mono">
+              <div className="text-2xl font-bold text-zinc-100 font-mono">
                 {formatTime(elapsedTime)}
               </div>
-              <div className="text-xs text-slate-500">Total Time</div>
+              <div className="text-xs text-zinc-500">Total Time</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-500">
                 {state.totalScore.toLocaleString()}
               </div>
-              <div className="text-xs text-slate-500">Score</div>
+              <div className="text-xs text-zinc-500">Score</div>
             </div>
           </div>
           <div className="flex items-center gap-6">
@@ -629,28 +629,28 @@ function DrillPhaseComponent({
               <div className="text-2xl font-bold text-purple-400 font-mono">
                 {(questionTime / 1000).toFixed(1)}s
               </div>
-              <div className="text-xs text-slate-500">Question</div>
+              <div className="text-xs text-zinc-500">Question</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-500">{state.streak}</div>
-              <div className="text-xs text-slate-500">Streak</div>
+              <div className="text-xs text-zinc-500">Streak</div>
             </div>
           </div>
         </div>
 
         {/* Problem Card */}
-        <div className="bg-slate-800/50 rounded-2xl border border-slate-700/50 overflow-hidden mt-6">
+        <div className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 overflow-hidden mt-6">
           {/* Problem Header */}
-          <div className="border-b border-slate-700/50 p-4">
+          <div className="border-b border-zinc-700/50 p-4">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-semibold text-slate-100">{currentProblem.title}</h2>
+              <h2 className="text-lg font-semibold text-zinc-100">{currentProblem.title}</h2>
               <div className="flex items-center gap-2">
                 <span
                   className={`text-xs px-2 py-1 rounded border ${fwConfig.bgColor} ${fwConfig.color} ${fwConfig.borderColor}`}
                 >
                   {fwConfig.shortName}
                 </span>
-                <span className="text-xs px-2 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
                   {currentProblem.category}
                 </span>
                 <span
@@ -660,26 +660,26 @@ function DrillPhaseComponent({
                 </span>
               </div>
             </div>
-            <p className="text-slate-400">{currentProblem.text}</p>
+            <p className="text-zinc-400">{currentProblem.text}</p>
           </div>
 
           {/* Setup Code */}
-          <div className="p-4 border-b border-slate-700/50">
-            <span className="block text-sm font-medium text-slate-300 mb-2">Setup Code</span>
+          <div className="p-4 border-b border-zinc-700/50">
+            <span className="block text-sm font-medium text-zinc-300 mb-2">Setup Code</span>
             <CodeDisplay code={currentProblem.setupCode} />
           </div>
 
           {/* Expected Output */}
-          <div className="p-4 border-b border-slate-700/50">
-            <span className="block text-sm font-medium text-slate-300 mb-2">Expected Output</span>
-            <div className="bg-slate-800 p-3 rounded-lg font-mono text-sm text-green-400 border border-slate-700">
+          <div className="p-4 border-b border-zinc-700/50">
+            <span className="block text-sm font-medium text-zinc-300 mb-2">Expected Output</span>
+            <div className="bg-zinc-800 p-3 rounded-lg font-mono text-sm text-green-400 border border-zinc-700">
               {formatOutput(currentProblem.expected)}
             </div>
           </div>
 
           {/* Answer Input */}
           <div className="p-4">
-            <span className="block text-sm font-medium text-slate-300 mb-2">Your Answer</span>
+            <span className="block text-sm font-medium text-zinc-300 mb-2">Your Answer</span>
             <CodeEditor
               key={`${state.currentIndex}-${currentProblem.id}`}
               code={userAnswer}
@@ -691,26 +691,26 @@ function DrillPhaseComponent({
               lineNumbers={true}
               autoFocus
               onSubmitShortcut={handleSubmit}
-              className="border-slate-700"
+              className="border-zinc-700"
               setupCode={currentProblem.setupCode}
             />
-            <p className="text-xs text-slate-500 mt-2">Press Cmd/Ctrl + Enter to submit</p>
+            <p className="text-xs text-zinc-500 mt-2">Press Cmd/Ctrl + Enter to submit</p>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 p-4 bg-slate-800/50 border-t border-slate-700/50">
+          <div className="flex gap-3 p-4 bg-zinc-800/50 border-t border-zinc-700/50">
             <button
               type="button"
               onClick={handleSubmit}
               disabled={!userAnswer.trim()}
-              className="flex-1 py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors cursor-pointer"
+              className="flex-1 py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors cursor-pointer"
             >
               Submit
             </button>
             <button
               type="button"
               onClick={onSkip}
-              className="py-3 px-6 bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium rounded-lg transition-colors cursor-pointer"
+              className="py-3 px-6 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 font-medium rounded-lg transition-colors cursor-pointer"
             >
               Skip
             </button>
@@ -742,13 +742,13 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
   const { problem, userAnswer, isCorrect, error, userOutput, skipped } = answerRecord;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         {/* Result Banner */}
         <div
           className={`rounded-2xl p-6 text-center border ${
             skipped
-              ? 'bg-slate-800 border-slate-700'
+              ? 'bg-zinc-800 border-zinc-700'
               : isCorrect
                 ? 'bg-green-500/20 border-green-500/30'
                 : 'bg-red-500/20 border-red-500/30'
@@ -756,7 +756,7 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
         >
           <div
             className={`text-4xl mb-2 font-bold ${
-              skipped ? 'text-slate-400' : isCorrect ? 'text-green-400' : 'text-red-400'
+              skipped ? 'text-zinc-400' : isCorrect ? 'text-green-400' : 'text-red-400'
             }`}
           >
             {skipped ? 'Skipped' : isCorrect ? 'Correct!' : 'Incorrect'}
@@ -767,25 +767,25 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
             </div>
           )}
           {!skipped && !isCorrect && error && <p className="text-sm text-red-400">{error}</p>}
-          <p className="text-sm text-slate-500 mt-2">
+          <p className="text-sm text-zinc-500 mt-2">
             Answered in {(answerRecord.timeTaken / 1000).toFixed(1)}s
           </p>
         </div>
 
         {/* Comparison */}
-        <div className="bg-slate-800/50 rounded-2xl border border-slate-700/50 overflow-hidden mt-6">
+        <div className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 overflow-hidden mt-6">
           {/* Your Answer */}
-          <div className="p-4 border-b border-slate-700/50">
-            <span className="block text-sm font-medium text-slate-300 mb-2">Your Answer</span>
-            <div className="bg-slate-800 text-slate-100 p-4 rounded-lg font-mono text-sm border border-slate-700">
-              {skipped ? <span className="text-slate-500">(skipped)</span> : userAnswer}
+          <div className="p-4 border-b border-zinc-700/50">
+            <span className="block text-sm font-medium text-zinc-300 mb-2">Your Answer</span>
+            <div className="bg-zinc-800 text-zinc-100 p-4 rounded-lg font-mono text-sm border border-zinc-700">
+              {skipped ? <span className="text-zinc-500">(skipped)</span> : userAnswer}
             </div>
           </div>
 
           {/* Your Output */}
           {!skipped && userOutput !== undefined && (
-            <div className="p-4 border-b border-slate-700/50">
-              <span className="block text-sm font-medium text-slate-300 mb-2">Your Output</span>
+            <div className="p-4 border-b border-zinc-700/50">
+              <span className="block text-sm font-medium text-zinc-300 mb-2">Your Output</span>
               <div
                 className={`p-3 rounded-lg font-mono text-sm border ${
                   isCorrect
@@ -799,8 +799,8 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
           )}
 
           {/* Expected Output */}
-          <div className="p-4 border-b border-slate-700/50">
-            <span className="block text-sm font-medium text-slate-300 mb-2">Expected Output</span>
+          <div className="p-4 border-b border-zinc-700/50">
+            <span className="block text-sm font-medium text-zinc-300 mb-2">Expected Output</span>
             <div className="bg-green-500/10 border border-green-500/30 p-3 rounded-lg font-mono text-sm text-green-400">
               {formatOutput(problem.expected)}
             </div>
@@ -809,7 +809,7 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
           {/* Sample Solution (shown when incorrect or skipped) */}
           {(!isCorrect || skipped) && (
             <div className="p-4">
-              <span className="block text-sm font-medium text-slate-300 mb-2">Sample Solution</span>
+              <span className="block text-sm font-medium text-zinc-300 mb-2">Sample Solution</span>
               <CodeDisplay code={problem.sample} />
             </div>
           )}
@@ -862,7 +862,7 @@ function ResultsPhase({
   const missedQuestions = state.answers.filter((a) => !a.isCorrect || a.skipped);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
@@ -878,7 +878,7 @@ function ResultsPhase({
           />
           <Link
             href={`/frontend-drills/${framework}`}
-            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+            className="flex items-center gap-2 px-4 py-2 text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50"
           >
             <svg
               className="w-4 h-4"
@@ -897,72 +897,72 @@ function ResultsPhase({
 
         {/* Results Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-100 mb-2">Drill Complete!</h1>
-          <p className="text-slate-400">
+          <h1 className="text-4xl font-bold text-zinc-100 mb-2">Drill Complete!</h1>
+          <p className="text-zinc-400">
             <span className={fwConfig.color}>{fwConfig.name}</span> — Here&apos;s how you did
           </p>
         </div>
 
         {/* Total Score Highlight */}
-        <div className="bg-slate-800/50 rounded-2xl p-8 text-center border border-slate-700/50 mb-6">
+        <div className="bg-zinc-800/50 rounded-2xl p-8 text-center border border-zinc-700/50 mb-6">
           <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
             {state.totalScore.toLocaleString()}
           </div>
-          <div className="text-sm text-slate-400 mt-1 uppercase tracking-wider">Total Points</div>
+          <div className="text-sm text-zinc-400 mt-1 uppercase tracking-wider">Total Points</div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-slate-800/50 rounded-xl p-6 text-center border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-6 text-center border border-zinc-700/50">
             <div className="text-3xl font-bold text-green-500">
               {correctAnswers} / {totalQuestions}
             </div>
-            <div className="text-sm text-slate-500 mt-1">Correct</div>
+            <div className="text-sm text-zinc-500 mt-1">Correct</div>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-6 text-center border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-6 text-center border border-zinc-700/50">
             <div className="text-3xl font-bold text-blue-500">{accuracy}%</div>
-            <div className="text-sm text-slate-500 mt-1">Accuracy</div>
+            <div className="text-sm text-zinc-500 mt-1">Accuracy</div>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-6 text-center border border-slate-700/50">
-            <div className="text-3xl font-bold text-slate-100 font-mono">
+          <div className="bg-zinc-800/50 rounded-xl p-6 text-center border border-zinc-700/50">
+            <div className="text-3xl font-bold text-zinc-100 font-mono">
               {formatTime(totalTime)}
             </div>
-            <div className="text-sm text-slate-500 mt-1">Time</div>
+            <div className="text-sm text-zinc-500 mt-1">Time</div>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-6 text-center border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-6 text-center border border-zinc-700/50">
             <div className="text-3xl font-bold text-orange-500">{state.maxStreak}</div>
-            <div className="text-sm text-slate-500 mt-1">Max Streak</div>
+            <div className="text-sm text-zinc-500 mt-1">Max Streak</div>
           </div>
         </div>
 
         {/* Breakdown */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50 mb-6">
-          <h3 className="text-lg font-semibold text-slate-100 mb-4">Breakdown</h3>
+        <div className="bg-zinc-800/50 rounded-2xl p-6 border border-zinc-700/50 mb-6">
+          <h3 className="text-lg font-semibold text-zinc-100 mb-4">Breakdown</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-slate-300">Correct</span>
+                <span className="text-zinc-300">Correct</span>
               </span>
-              <span className="font-medium text-slate-100">{correctAnswers}</span>
+              <span className="font-medium text-zinc-100">{correctAnswers}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-red-500" />
-                <span className="text-slate-300">Incorrect</span>
+                <span className="text-zinc-300">Incorrect</span>
               </span>
-              <span className="font-medium text-slate-100">{incorrectAnswers}</span>
+              <span className="font-medium text-zinc-100">{incorrectAnswers}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-slate-500" />
-                <span className="text-slate-300">Skipped</span>
+                <span className="w-3 h-3 rounded-full bg-zinc-500" />
+                <span className="text-zinc-300">Skipped</span>
               </span>
-              <span className="font-medium text-slate-100">{skippedAnswers}</span>
+              <span className="font-medium text-zinc-100">{skippedAnswers}</span>
             </div>
           </div>
           {/* Progress Bar */}
-          <div className="mt-4 h-3 rounded-full overflow-hidden bg-slate-800 flex">
+          <div className="mt-4 h-3 rounded-full overflow-hidden bg-zinc-800 flex">
             <div
               className="bg-green-500 h-full"
               style={{ width: `${(correctAnswers / totalQuestions) * 100}%` }}
@@ -972,7 +972,7 @@ function ResultsPhase({
               style={{ width: `${(incorrectAnswers / totalQuestions) * 100}%` }}
             />
             <div
-              className="bg-slate-500 h-full"
+              className="bg-zinc-500 h-full"
               style={{ width: `${(skippedAnswers / totalQuestions) * 100}%` }}
             />
           </div>
@@ -980,37 +980,37 @@ function ResultsPhase({
 
         {/* Missed Questions Review */}
         {missedQuestions.length > 0 && (
-          <div className="bg-slate-800/50 rounded-2xl border border-slate-700/50 overflow-hidden mb-6">
+          <div className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 overflow-hidden mb-6">
             <button
               type="button"
               onClick={() => setShowMissed(!showMissed)}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-700/50 transition-colors cursor-pointer"
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-zinc-700/50 transition-colors cursor-pointer"
             >
-              <span className="font-semibold text-slate-100">
+              <span className="font-semibold text-zinc-100">
                 Review Missed Questions ({missedQuestions.length})
               </span>
-              <span className="text-slate-500">{showMissed ? '-' : '+'}</span>
+              <span className="text-zinc-500">{showMissed ? '-' : '+'}</span>
             </button>
             {showMissed && (
-              <div className="border-t border-slate-700/50">
+              <div className="border-t border-zinc-700/50">
                 {missedQuestions.map((record, index) => (
-                  <div key={index} className="p-4 border-b last:border-b-0 border-slate-700/50">
+                  <div key={index} className="p-4 border-b last:border-b-0 border-zinc-700/50">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium text-slate-100">{record.problem.title}</h4>
+                      <h4 className="font-medium text-zinc-100">{record.problem.title}</h4>
                       <span
                         className={`text-xs px-2 py-1 rounded border ${
                           record.skipped
-                            ? 'bg-slate-800 border-slate-700 text-slate-400'
+                            ? 'bg-zinc-800 border-zinc-700 text-zinc-400'
                             : 'bg-red-500/20 border-red-500/30 text-red-400'
                         }`}
                       >
                         {record.skipped ? 'Skipped' : 'Incorrect'}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-400 mb-3">{record.problem.text}</p>
+                    <p className="text-sm text-zinc-400 mb-3">{record.problem.text}</p>
                     <div className="text-sm">
-                      <span className="text-slate-500 block mb-1">Solution:</span>
-                      <code className="block bg-slate-800 px-2 py-1 rounded text-blue-400 border border-slate-700 whitespace-pre-wrap break-words">
+                      <span className="text-zinc-500 block mb-1">Solution:</span>
+                      <code className="block bg-zinc-800 px-2 py-1 rounded text-blue-400 border border-zinc-700 whitespace-pre-wrap break-words">
                         {record.problem.sample}
                       </code>
                     </div>
@@ -1023,8 +1023,8 @@ function ResultsPhase({
 
         {/* Actions */}
         <div className="flex flex-col gap-4">
-          <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-            <h3 className="text-sm font-semibold text-slate-300 mb-3">Retry Options</h3>
+          <div className="bg-zinc-800/50 rounded-2xl p-4 border border-zinc-700/50">
+            <h3 className="text-sm font-semibold text-zinc-300 mb-3">Retry Options</h3>
             <div className="flex gap-4">
               <button
                 type="button"
@@ -1043,7 +1043,7 @@ function ResultsPhase({
                 <span className="text-xs font-normal opacity-90">New Questions</span>
               </button>
             </div>
-            <div className="mt-3 text-xs text-slate-500 space-y-1">
+            <div className="mt-3 text-xs text-zinc-500 space-y-1">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-blue-500" />
                 <span>Practice the exact same questions again</span>
@@ -1057,9 +1057,9 @@ function ResultsPhase({
           <button
             type="button"
             onClick={onBackToMenu}
-            className="w-full py-4 px-6 bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 font-semibold rounded-xl transition-colors border border-slate-700 cursor-pointer"
+            className="w-full py-4 px-6 bg-zinc-800/50 hover:bg-zinc-700/50 text-zinc-300 font-semibold rounded-xl transition-colors border border-zinc-700 cursor-pointer"
           >
-            Back to Menu
+            Back to {fwConfig.name}
           </button>
         </div>
       </div>

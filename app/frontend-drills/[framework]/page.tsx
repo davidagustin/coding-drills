@@ -71,6 +71,25 @@ function LayoutGridIcon({ className = 'w-8 h-8' }: { className?: string }) {
   );
 }
 
+function ClipboardCheckIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+      />
+    </svg>
+  );
+}
+
 function BookIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg
@@ -229,6 +248,16 @@ export default function FrameworkPage() {
           buttonText="Start Quiz"
           config={config}
           badge={quizQuestionCount > 0 ? `${quizQuestionCount} questions` : undefined}
+        />
+
+        <ModeCard
+          href={`/frontend-drills/${framework}/training`}
+          icon={<ClipboardCheckIcon className="w-8 h-8" />}
+          title="Frontend Training"
+          description={`Select individual ${config.name} problems to practice. Build muscle memory for ${config.name} patterns and methods.`}
+          buttonText="Start Training"
+          config={config}
+          badge={problemCount > 0 ? `${problemCount} exercises` : undefined}
         />
 
         <ModeCard

@@ -379,7 +379,7 @@ export default function UIPatterns() {
   }
 
   if (!isValidFramework(framework)) {
-    router.push('/not-found');
+    router.replace('/not-found');
     return null;
   }
 

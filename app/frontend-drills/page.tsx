@@ -16,7 +16,7 @@ export default function FrontendDrillsPage() {
         {/* Back to Home Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-gray-200 transition-colors mb-8 group"
+          className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-200 transition-colors mb-8 group"
         >
           <svg
             className="w-5 h-5 transition-transform group-hover:-translate-x-1"
@@ -40,10 +40,10 @@ export default function FrontendDrillsPage() {
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
             <span className="gradient-text">Frontend Drills</span>
           </h1>
-          <p className="text-xl text-gray-300 font-light max-w-2xl mx-auto">
+          <p className="text-xl text-zinc-300 font-light max-w-2xl mx-auto">
             Master frontend frameworks with hands-on practice
           </p>
-          <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
+          <p className="text-zinc-500 max-w-xl mx-auto leading-relaxed">
             Build real-world components, practice framework patterns, and test your knowledge with
             interactive challenges.
           </p>
@@ -87,12 +87,12 @@ export default function FrontendDrillsPage() {
                     </div>
 
                     {/* Framework Name */}
-                    <h3 className="text-2xl font-bold text-gray-100 mb-3 group-hover:text-white transition-colors">
+                    <h3 className="text-2xl font-bold text-zinc-100 mb-3 group-hover:text-white transition-colors">
                       {fw.name}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">
+                    <p className="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-2">
                       {fw.description}
                     </p>
 
@@ -154,7 +154,7 @@ export default function FrontendDrillsPage() {
 
       {/* Features Preview */}
       <section className="max-w-5xl mx-auto px-6 pb-16">
-        <h2 className="text-2xl font-semibold text-center mb-8 text-gray-100">
+        <h2 className="text-2xl font-semibold text-center mb-8 text-zinc-100">
           What You&apos;ll Practice
         </h2>
 
@@ -179,7 +179,7 @@ export default function FrontendDrillsPage() {
               ),
               title: 'Code Drills',
               description:
-                'Write code solutions to framework challenges in a Monaco Editor with real-time feedback',
+                'Write code solutions to framework challenges in a code editor with real-time feedback',
               color: 'text-cyan-400',
               bgColor: 'bg-cyan-400/10',
               borderColor: 'border-cyan-400/30',
@@ -265,8 +265,8 @@ export default function FrontendDrillsPage() {
               `}
             >
               <div className={`${feature.color} mb-3`}>{feature.icon}</div>
-              <h3 className="text-lg font-semibold text-gray-100 mb-2">{feature.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
+              <h3 className="text-lg font-semibold text-zinc-100 mb-2">{feature.title}</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">{feature.description}</p>
 
               {/* Decorative corner glow */}
               <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-white/5 rounded-full blur-2xl" />

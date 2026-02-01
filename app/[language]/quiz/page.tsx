@@ -197,7 +197,7 @@ function SetupPhase({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
@@ -211,7 +211,7 @@ function SetupPhase({
           />
           <Link
             href={`/${language}`}
-            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+            className="flex items-center gap-2 px-4 py-2 text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50"
           >
             <svg
               className="w-4 h-4"
@@ -233,7 +233,7 @@ function SetupPhase({
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Quiz Mode
           </h1>
-          <p className="text-slate-400 text-lg">
+          <p className="text-zinc-400 text-lg">
             {config.quizType === 'methods'
               ? `Test your knowledge of ${config.language} methods`
               : config.quizType === 'time-complexity'
@@ -245,7 +245,7 @@ function SetupPhase({
         </div>
 
         {/* Quiz Type Selection */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
           <h2 className="text-xl font-semibold mb-4">Quiz Type</h2>
           <div className="grid grid-cols-4 gap-2">
             {[
@@ -263,7 +263,7 @@ function SetupPhase({
                 className={`py-3 px-3 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${
                   config.quizType === type
                     ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                    : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
                 }`}
               >
                 <span className="mr-1.5">{icon}</span>
@@ -275,11 +275,11 @@ function SetupPhase({
 
         {/* Pattern Quiz: View Guide before starting (quiz is timed) - show right after quiz type */}
         {isPatternQuiz && onShowPatternGuide && (
-          <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-semibold">Pattern Recognition Guide</h2>
-                <p className="text-slate-400 text-sm">
+                <p className="text-zinc-400 text-sm">
                   Review the framework before the timed quiz starts
                 </p>
               </div>
@@ -310,12 +310,12 @@ function SetupPhase({
 
         {/* Category Selection - Skip for pattern quiz */}
         {!isPatternQuiz && (
-          <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">
                 Categories
                 {config.categories.length > 0 && (
-                  <span className="text-sm font-normal text-slate-400 ml-2">
+                  <span className="text-sm font-normal text-zinc-400 ml-2">
                     ({config.categories.length} selected)
                   </span>
                 )}
@@ -328,11 +328,11 @@ function SetupPhase({
                 >
                   Select All
                 </button>
-                <span className="text-slate-600">|</span>
+                <span className="text-zinc-600">|</span>
                 <button
                   type="button"
                   onClick={clearAllCategories}
-                  className="text-sm text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
+                  className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors cursor-pointer"
                 >
                   Clear
                 </button>
@@ -347,7 +347,7 @@ function SetupPhase({
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer flex items-center gap-2 ${
                     config.categories.includes(category)
                       ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                      : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                      : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
                   }`}
                 >
                   {isComplexity
@@ -359,7 +359,7 @@ function SetupPhase({
                     className={`text-xs px-1.5 py-0.5 rounded-full ${
                       config.categories.includes(category)
                         ? 'bg-blue-400/30 text-blue-100'
-                        : 'bg-slate-600 text-slate-400'
+                        : 'bg-zinc-600 text-zinc-400'
                     }`}
                   >
                     {categoryCounts[category] || 0}
@@ -368,7 +368,7 @@ function SetupPhase({
               ))}
             </div>
             {config.categories.length === 0 && (
-              <p className="text-slate-500 text-sm mt-3">
+              <p className="text-zinc-500 text-sm mt-3">
                 No categories selected - all categories will be included
               </p>
             )}
@@ -376,10 +376,10 @@ function SetupPhase({
         )}
 
         {/* Question Count */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Number of Questions</h2>
-            <span className="text-sm text-slate-400">
+            <span className="text-sm text-zinc-400">
               {availableMethodsCount}{' '}
               {isPatternQuiz ? 'problems' : isComplexity ? 'questions' : 'methods'} available
             </span>
@@ -394,7 +394,7 @@ function SetupPhase({
         </div>
 
         {/* Time Per Question */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
           <h2 className="text-xl font-semibold mb-4">Time Per Question</h2>
           {/* Quick Select Buttons */}
           <div className="flex gap-3 mb-4">
@@ -406,7 +406,7 @@ function SetupPhase({
                 className={`flex-1 py-3 rounded-lg font-semibold transition-all duration-200 cursor-pointer ${
                   config.timePerQuestion === time
                     ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
-                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                    : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
                 }`}
               >
                 {time === 0 ? '∞' : `${time}s`}
@@ -415,10 +415,10 @@ function SetupPhase({
           </div>
           {/* Custom Slider */}
           {config.timePerQuestion !== 0 && (
-            <div className="pt-2 border-t border-slate-700/50">
-              <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
+            <div className="pt-2 border-t border-zinc-700/50">
+              <div className="flex items-center justify-between text-sm text-zinc-400 mb-2">
                 <span>Custom time</span>
-                <span className="font-mono bg-slate-700/50 px-2 py-1 rounded">
+                <span className="font-mono bg-zinc-700/50 px-2 py-1 rounded">
                   {config.timePerQuestion}s
                 </span>
               </div>
@@ -431,17 +431,17 @@ function SetupPhase({
                 onChange={(e) =>
                   onConfigChange({ ...config, timePerQuestion: Number(e.target.value) })
                 }
-                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />
-              <div className="flex justify-between text-xs text-slate-500 mt-1">
+              <div className="flex justify-between text-xs text-zinc-500 mt-1">
                 <span>5s</span>
                 <span>60s</span>
               </div>
             </div>
           )}
           {config.timePerQuestion === 0 && (
-            <div className="pt-2 border-t border-slate-700/50">
-              <p className="text-sm text-slate-400 text-center py-2">
+            <div className="pt-2 border-t border-zinc-700/50">
+              <p className="text-sm text-zinc-400 text-center py-2">
                 No time limit - take as long as you need
               </p>
             </div>
@@ -449,17 +449,17 @@ function SetupPhase({
         </div>
 
         {/* Sound Toggle */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 mb-8 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-2xl p-6 mb-8 border border-zinc-700/50">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">Sound Effects</h2>
-              <p className="text-slate-400 text-sm">Audio feedback for answers and timer</p>
+              <p className="text-zinc-400 text-sm">Audio feedback for answers and timer</p>
             </div>
             <button
               type="button"
               onClick={() => setSoundEnabled(!soundEnabled)}
               className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
-                soundEnabled ? 'bg-blue-500' : 'bg-slate-600'
+                soundEnabled ? 'bg-blue-500' : 'bg-zinc-600'
               }`}
             >
               <div
@@ -528,7 +528,7 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
           stroke="currentColor"
           strokeWidth="6"
           fill="none"
-          className="text-slate-700"
+          className="text-zinc-700"
         />
         <circle
           cx="48"
@@ -583,13 +583,13 @@ function ProgressBar({ current, total }: ProgressBarProps) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between text-sm text-slate-400 mb-2">
+      <div className="flex justify-between text-sm text-zinc-400 mb-2">
         <span>
           Question {current + 1} of {total}
         </span>
         <span>{Math.round(percentage)}% Complete</span>
       </div>
-      <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+      <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out"
           style={{ width: `${percentage}%` }}
@@ -615,13 +615,13 @@ function ScoreDisplay({ score, streak }: ScoreDisplayProps) {
     <div className="flex items-center gap-6">
       <div className="text-center">
         <div className="text-3xl font-bold text-white">{score}</div>
-        <div className="text-xs text-slate-400 uppercase tracking-wider">Score</div>
+        <div className="text-xs text-zinc-400 uppercase tracking-wider">Score</div>
       </div>
       <div className="text-center">
-        <div className={`text-3xl font-bold ${streak > 0 ? 'text-orange-400' : 'text-slate-500'}`}>
+        <div className={`text-3xl font-bold ${streak > 0 ? 'text-orange-400' : 'text-zinc-500'}`}>
           {streak}
         </div>
-        <div className="text-xs text-slate-400 uppercase tracking-wider">Streak</div>
+        <div className="text-xs text-zinc-400 uppercase tracking-wider">Streak</div>
       </div>
       {multiplier > 1 && (
         <div className="px-3 py-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-full text-sm font-bold animate-pulse">
@@ -671,12 +671,12 @@ function MethodCard({
     } else if (isSelected) {
       cardClasses += ' bg-red-500/20 border-red-500 shadow-lg shadow-red-500/25';
     } else {
-      cardClasses += ' bg-slate-800/50 border-slate-600 opacity-50';
+      cardClasses += ' bg-zinc-800/50 border-zinc-600 opacity-50';
     }
   } else if (isSelected) {
     cardClasses += ' bg-blue-500/20 border-blue-500 shadow-lg shadow-blue-500/25';
   } else {
-    cardClasses += ' bg-slate-800/50 border-slate-700 hover:border-slate-500 hover:bg-slate-700/50';
+    cardClasses += ' bg-zinc-800/50 border-zinc-700 hover:border-zinc-500 hover:bg-zinc-700/50';
   }
 
   if (disabled && !isRevealed) {
@@ -725,7 +725,7 @@ function MethodCard({
 
       {/* Tooltip on hover */}
       {isHovered && !isRevealed && methodInfo && (
-        <div className="absolute left-0 right-0 -bottom-2 transform translate-y-full z-50 p-3 bg-slate-900 rounded-lg border border-slate-600 shadow-xl text-sm text-slate-300 text-left pointer-events-none">
+        <div className="absolute left-0 right-0 -bottom-2 transform translate-y-full z-50 p-3 bg-zinc-900 rounded-lg border border-zinc-600 shadow-xl text-sm text-zinc-300 text-left pointer-events-none">
           {methodInfo.description.length > 100
             ? `${methodInfo.description.slice(0, 100)}...`
             : methodInfo.description}
@@ -748,9 +748,9 @@ function QuestionDisplay({ question, quizType }: QuestionDisplayProps) {
   const isComplexity = quizType === 'time-complexity' || quizType === 'space-complexity';
 
   return (
-    <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
+    <div className="bg-zinc-800/50 rounded-2xl p-6 border border-zinc-700/50">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-slate-400 text-sm uppercase tracking-wider">
+        <h3 className="text-zinc-400 text-sm uppercase tracking-wider">
           {isComplexity
             ? `What is the ${quizType === 'time-complexity' ? 'time' : 'space'} complexity?`
             : 'Which method produces this output?'}
@@ -767,13 +767,13 @@ function QuestionDisplay({ question, quizType }: QuestionDisplayProps) {
         <>
           {/* Algorithm title */}
           <div className="mb-4">
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Algorithm</div>
+            <div className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Algorithm</div>
             <div className="text-lg font-semibold text-white">{question.output}</div>
           </div>
           {/* Code snippet */}
           <div>
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Code</div>
-            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere overflow-x-auto max-h-64 overflow-y-auto">
+            <div className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Code</div>
+            <pre className="bg-zinc-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere overflow-x-auto max-h-64 overflow-y-auto">
               <code className="block">{question.input}</code>
             </pre>
           </div>
@@ -782,8 +782,8 @@ function QuestionDisplay({ question, quizType }: QuestionDisplayProps) {
         <>
           {/* Code snippet */}
           <div className="mb-4">
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Input</div>
-            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+            <div className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Input</div>
+            <pre className="bg-zinc-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
               <code className="block">{question.input}</code>
             </pre>
           </div>
@@ -791,10 +791,10 @@ function QuestionDisplay({ question, quizType }: QuestionDisplayProps) {
           {/* Method Arguments */}
           {question.methodArgs && (
             <div className="mb-4">
-              <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
+              <div className="text-xs text-zinc-500 uppercase tracking-wider mb-2">
                 Method Arguments
               </div>
-              <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-purple-300 border border-purple-500/20 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+              <pre className="bg-zinc-900 rounded-lg p-4 font-mono text-sm text-purple-300 border border-purple-500/20 whitespace-pre-wrap break-words overflow-wrap-anywhere">
                 <code className="block">({question.methodArgs})</code>
               </pre>
             </div>
@@ -802,8 +802,8 @@ function QuestionDisplay({ question, quizType }: QuestionDisplayProps) {
 
           {/* Output */}
           <div>
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Output</div>
-            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-emerald-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+            <div className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Output</div>
+            <pre className="bg-zinc-900 rounded-lg p-4 font-mono text-sm text-emerald-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
               <code className="block">{question.output}</code>
             </pre>
           </div>
@@ -901,7 +901,7 @@ function PlayingPhase({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-6">
@@ -925,7 +925,7 @@ function PlayingPhase({
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               showExitConfirm
                 ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
             }`}
           >
             <svg
@@ -988,7 +988,7 @@ function PlayingPhase({
                 <span className="text-emerald-400 font-mono">{currentQuestion.correctMethod}</span>
               </div>
             )}
-            <p className="text-slate-400 mt-2 text-sm">{currentQuestion.explanation}</p>
+            <p className="text-zinc-400 mt-2 text-sm">{currentQuestion.explanation}</p>
           </div>
         )}
       </div>
@@ -1077,7 +1077,7 @@ Try it yourself!`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
@@ -1092,7 +1092,7 @@ Try it yourself!`;
           />
           <Link
             href={`/${language}/quiz`}
-            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+            className="flex items-center gap-2 px-4 py-2 text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50"
           >
             <svg
               className="w-4 h-4"
@@ -1118,20 +1118,20 @@ Try it yourself!`;
         </div>
 
         {/* Score Card */}
-        <div className="bg-slate-800/50 rounded-2xl p-8 mb-6 border border-slate-700/50 text-center">
+        <div className="bg-zinc-800/50 rounded-2xl p-8 mb-6 border border-zinc-700/50 text-center">
           <div className="text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2">
             {result.totalScore}
           </div>
-          <div className="text-slate-400 uppercase tracking-wider text-sm">Total Points</div>
+          <div className="text-zinc-400 uppercase tracking-wider text-sm">Total Points</div>
 
           {/* Score Breakdown */}
           <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
-            <div className="bg-slate-700/30 rounded-lg p-3">
-              <div className="text-slate-300">Base Points</div>
+            <div className="bg-zinc-700/30 rounded-lg p-3">
+              <div className="text-zinc-300">Base Points</div>
               <div className="text-xl font-semibold">{result.basePoints}</div>
             </div>
-            <div className="bg-slate-700/30 rounded-lg p-3">
-              <div className="text-slate-300">Bonus Points</div>
+            <div className="bg-zinc-700/30 rounded-lg p-3">
+              <div className="text-zinc-300">Bonus Points</div>
               <div className="text-xl font-semibold text-yellow-400">+{result.bonusPoints}</div>
             </div>
           </div>
@@ -1139,39 +1139,39 @@ Try it yourself!`;
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-4 text-center border border-zinc-700/50">
             <div className="text-2xl font-bold text-emerald-400">
               {result.correctAnswers}/{result.totalQuestions}
             </div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider">Correct</div>
+            <div className="text-xs text-zinc-400 uppercase tracking-wider">Correct</div>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-4 text-center border border-zinc-700/50">
             <div className="text-2xl font-bold text-blue-400">{result.accuracy}%</div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider">Accuracy</div>
+            <div className="text-xs text-zinc-400 uppercase tracking-wider">Accuracy</div>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-4 text-center border border-zinc-700/50">
             <div className="text-2xl font-bold text-orange-400">{result.maxStreak}</div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider">Max Streak</div>
+            <div className="text-xs text-zinc-400 uppercase tracking-wider">Max Streak</div>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-4 text-center border border-zinc-700/50">
             <div className="text-2xl font-bold text-purple-400">{result.averageTime}s</div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider">Avg Time</div>
+            <div className="text-xs text-zinc-400 uppercase tracking-wider">Avg Time</div>
           </div>
         </div>
 
         {/* Time Stats */}
-        <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-xl p-4 mb-6 border border-zinc-700/50">
           <div className="flex justify-between text-sm">
             <div>
-              <span className="text-slate-400">Total Time:</span>
+              <span className="text-zinc-400">Total Time:</span>
               <span className="ml-2 font-semibold">{result.totalTime}s</span>
             </div>
             <div>
-              <span className="text-slate-400">Fastest:</span>
+              <span className="text-zinc-400">Fastest:</span>
               <span className="ml-2 font-semibold text-emerald-400">{result.fastestAnswer}s</span>
             </div>
             <div>
-              <span className="text-slate-400">Slowest:</span>
+              <span className="text-zinc-400">Slowest:</span>
               <span className="ml-2 font-semibold text-orange-400">{result.slowestAnswer}s</span>
             </div>
           </div>
@@ -1179,8 +1179,8 @@ Try it yourself!`;
 
         {/* Save to Leaderboard */}
         {!savedToLeaderboard && (
-          <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700/50">
-            <div className="text-sm text-slate-400 mb-2">Save your score to the leaderboard</div>
+          <div className="bg-zinc-800/50 rounded-xl p-4 mb-6 border border-zinc-700/50">
+            <div className="text-sm text-zinc-400 mb-2">Save your score to the leaderboard</div>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -1188,13 +1188,13 @@ Try it yourself!`;
                 onChange={(e) => setPlayerName(e.target.value)}
                 placeholder="Enter your name"
                 maxLength={20}
-                className="flex-1 px-4 py-2 bg-slate-700 rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none text-white placeholder-slate-500"
+                className="flex-1 px-4 py-2 bg-zinc-700 rounded-lg border border-zinc-600 focus:border-blue-500 focus:outline-none text-white placeholder-zinc-500"
               />
               <button
                 type="button"
                 onClick={handleSaveScore}
                 disabled={!playerName.trim()}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors cursor-pointer"
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-zinc-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors cursor-pointer"
               >
                 Save
               </button>
@@ -1206,7 +1206,7 @@ Try it yourself!`;
         {savedToLeaderboard && (
           <div className="bg-emerald-500/20 rounded-xl p-4 mb-6 border border-emerald-500/50 text-center">
             <div className="text-emerald-400 font-semibold">Score saved!</div>
-            <div className="text-slate-300">
+            <div className="text-zinc-300">
               You ranked #{leaderboardPosition} on the leaderboard
             </div>
           </div>
@@ -1214,26 +1214,26 @@ Try it yourself!`;
 
         {/* Mini Leaderboard */}
         {leaderboard.length > 0 && (
-          <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700/50">
+          <div className="bg-zinc-800/50 rounded-xl p-4 mb-6 border border-zinc-700/50">
             <h3 className="text-lg font-semibold mb-3">Top Scores</h3>
             <div className="space-y-2">
               {leaderboard.slice(0, 5).map((entry, index) => (
                 <div
                   key={entry.id}
                   className={`flex items-center justify-between p-2 rounded-lg ${
-                    index === 0 ? 'bg-yellow-500/10' : 'bg-slate-700/30'
+                    index === 0 ? 'bg-yellow-500/10' : 'bg-zinc-700/30'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span
-                      className={`font-bold ${index === 0 ? 'text-yellow-400' : 'text-slate-400'}`}
+                      className={`font-bold ${index === 0 ? 'text-yellow-400' : 'text-zinc-400'}`}
                     >
                       #{index + 1}
                     </span>
                     <span className="font-medium">{entry.playerName}</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm">
-                    <span className="text-slate-400">{entry.accuracy}%</span>
+                    <span className="text-zinc-400">{entry.accuracy}%</span>
                     <span className="font-bold">{entry.score}</span>
                   </div>
                 </div>
@@ -1243,17 +1243,17 @@ Try it yourself!`;
         )}
 
         {/* Question Review */}
-        <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700/50">
+        <div className="bg-zinc-800/50 rounded-xl p-4 mb-6 border border-zinc-700/50">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold">Question Review</h3>
-            <div className="flex items-center bg-slate-700/50 rounded-lg p-0.5 text-xs">
+            <div className="flex items-center bg-zinc-700/50 rounded-lg p-0.5 text-xs">
               <button
                 type="button"
                 onClick={() => setReviewFilter('missed')}
                 className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                   reviewFilter === 'missed'
-                    ? 'bg-slate-600 text-white'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-zinc-600 text-white'
+                    : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
                 Missed ({answers.filter((a) => !a.isCorrect).length})
@@ -1263,8 +1263,8 @@ Try it yourself!`;
                 onClick={() => setReviewFilter('all')}
                 className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                   reviewFilter === 'all'
-                    ? 'bg-slate-600 text-white'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-zinc-600 text-white'
+                    : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
                 All ({questions.length})
@@ -1285,7 +1285,7 @@ Try it yourself!`;
                   {/* Compact row */}
                   <div className="flex items-center justify-between p-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500 w-5 text-right">{index + 1}.</span>
+                      <span className="text-xs text-zinc-500 w-5 text-right">{index + 1}.</span>
                       {answer?.isCorrect ? (
                         <svg
                           className="w-4 h-4 text-emerald-400 flex-shrink-0"
@@ -1319,19 +1319,19 @@ Try it yourself!`;
                       )}
                       <span className="font-mono text-sm">{question.correctMethod}</span>
                     </div>
-                    <div className="text-sm text-slate-400">{answer?.timeSpent.toFixed(1)}s</div>
+                    <div className="text-sm text-zinc-400">{answer?.timeSpent.toFixed(1)}s</div>
                   </div>
 
                   {/* Expanded details for wrong/timed-out answers */}
                   {!answer?.isCorrect && (
                     <div className="px-3 pb-3 pt-0 border-t border-red-500/10">
                       {/* Question context */}
-                      <div className="mt-2 bg-slate-900/50 rounded-lg p-3 font-mono text-xs">
-                        <div className="text-slate-400 mb-1">
-                          <span className="text-slate-500">Input:</span> {question.input}
+                      <div className="mt-2 bg-zinc-900/50 rounded-lg p-3 font-mono text-xs">
+                        <div className="text-zinc-400 mb-1">
+                          <span className="text-zinc-500">Input:</span> {question.input}
                         </div>
-                        <div className="text-slate-400">
-                          <span className="text-slate-500">Output:</span> {question.output}
+                        <div className="text-zinc-400">
+                          <span className="text-zinc-500">Output:</span> {question.output}
                         </div>
                       </div>
 
@@ -1357,7 +1357,7 @@ Try it yourself!`;
 
                       {/* Explanation */}
                       {question.explanation && (
-                        <div className="mt-2 text-sm text-slate-300 bg-slate-800/60 rounded-lg p-3 border-l-2 border-blue-500/50">
+                        <div className="mt-2 text-sm text-zinc-300 bg-zinc-800/60 rounded-lg p-3 border-l-2 border-blue-500/50">
                           {question.explanation}
                         </div>
                       )}
@@ -1368,7 +1368,7 @@ Try it yourself!`;
 
             {/* Empty state for missed filter */}
             {reviewFilter === 'missed' && answers.every((a) => a.isCorrect) && (
-              <div className="text-center py-6 text-slate-400">
+              <div className="text-center py-6 text-zinc-400">
                 <svg
                   className="w-8 h-8 mx-auto mb-2 text-emerald-400"
                   fill="none"
@@ -1394,7 +1394,7 @@ Try it yourself!`;
           <button
             type="button"
             onClick={onChangeSettings}
-            className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-colors cursor-pointer"
+            className="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-xl font-semibold transition-colors cursor-pointer"
           >
             Change Settings
           </button>
@@ -1411,7 +1411,7 @@ Try it yourself!`;
         <button
           type="button"
           onClick={handleShare}
-          className="w-full mt-4 py-3 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full mt-4 py-3 bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <svg
             className="w-5 h-5"
@@ -1697,10 +1697,10 @@ export default function QuizPage() {
   // Render error message for database languages
   if (isDatabaseLanguage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
         <div className="text-center max-w-md px-4">
           <h1 className="text-3xl font-bold mb-4">Quiz Mode Not Available</h1>
-          <p className="text-slate-400 mb-6">
+          <p className="text-zinc-400 mb-6">
             Quiz mode is not available for database languages. Please use Drill Mode or Problems
             instead.
           </p>
