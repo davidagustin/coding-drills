@@ -388,70 +388,75 @@ export default function UIPatternDetail() {
           </div>
         </div>
 
-        {/* Building Blocks Section - Full width, compact horizontal */}
-        <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 backdrop-blur-sm mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-              <svg
-                className="w-5 h-5 text-blue-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
-                />
-              </svg>
-            </div>
-            <div className="flex-1">
-              <h2 className="text-lg font-bold text-white">Building Blocks</h2>
-              <p className="text-xs text-zinc-500">
-                {pattern.concepts.length} {pattern.concepts.length === 1 ? 'step' : 'steps'} to
-                master
-              </p>
-            </div>
+        {/* AI Tutor + Building Blocks Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+          {/* AI Tutor Section - Left (60%) */}
+          <div className="lg:col-span-3">
+            <ExerciseTutor
+              exercise={patternToExercise(pattern, frameworkConfig.name)}
+              hasVisualization={!!pattern.demoCode}
+              userCode={userCode}
+              languageConfig={{
+                color: frameworkConfig.color,
+                bgColor: frameworkConfig.bgColor,
+                borderColor: frameworkConfig.borderColor,
+              }}
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
-            {pattern.concepts.map((concept, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3 bg-zinc-900/50 rounded-lg p-3 border border-zinc-700/30 hover:border-zinc-600/50 transition-all group"
-              >
-                <div
-                  className={`w-7 h-7 rounded-lg ${frameworkConfig.bgColor} ${frameworkConfig.color} flex items-center justify-center font-bold text-xs flex-shrink-0`}
-                >
-                  {index + 1}
+          {/* Building Blocks Section - Right (40%) */}
+          <div className="lg:col-span-2">
+            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 backdrop-blur-sm h-full">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                  <svg
+                    className="w-5 h-5 text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
+                    />
+                  </svg>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-semibold text-sm group-hover:text-blue-300 transition-colors">
-                    {concept}
-                  </h3>
-                  <p className="text-zinc-500 text-xs leading-relaxed mt-0.5">
-                    {getImplementationHint(concept, frameworkConfig.name)}
+                <div className="flex-1">
+                  <h2 className="text-lg font-bold text-white">Building Blocks</h2>
+                  <p className="text-xs text-zinc-500">
+                    {pattern.concepts.length} {pattern.concepts.length === 1 ? 'step' : 'steps'} to
+                    master
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* AI Tutor Section */}
-        <div className="mb-8">
-          <ExerciseTutor
-            exercise={patternToExercise(pattern, frameworkConfig.name)}
-            hasVisualization={!!pattern.demoCode}
-            userCode={userCode}
-            languageConfig={{
-              color: frameworkConfig.color,
-              bgColor: frameworkConfig.bgColor,
-              borderColor: frameworkConfig.borderColor,
-            }}
-          />
+              <div className="space-y-2.5 max-h-[500px] overflow-y-auto pr-1 scrollbar-thin scrollbar-track-zinc-800/50 scrollbar-thumb-zinc-700/50">
+                {pattern.concepts.map((concept, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 bg-zinc-900/50 rounded-lg p-3 border border-zinc-700/30 hover:border-zinc-600/50 transition-all group"
+                  >
+                    <div
+                      className={`w-7 h-7 rounded-lg ${frameworkConfig.bgColor} ${frameworkConfig.color} flex items-center justify-center font-bold text-xs flex-shrink-0`}
+                    >
+                      {index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-semibold text-sm group-hover:text-blue-300 transition-colors">
+                        {concept}
+                      </h3>
+                      <p className="text-zinc-500 text-xs leading-relaxed mt-0.5">
+                        {getImplementationHint(concept, frameworkConfig.name)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Footer: External Link + Back Button */}
