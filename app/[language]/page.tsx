@@ -5,6 +5,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { complexityQuestions } from '@/lib/complexityProblems';
 import { getExerciseCount } from '@/lib/exercises/index';
+import {
+  getTotalProblemCount as getFrontendDrillCount,
+  getTotalQuizQuestionCount as getFrontendQuizCount,
+} from '@/lib/frontend-drills';
 import { algorithmProblems } from '@/lib/interview/problems';
 import { getSystemDesignProblemCount } from '@/lib/interview/system-design-problems';
 import { getMethodCountByLanguage } from '@/lib/methods/index';
@@ -151,6 +155,34 @@ function ChatBubbleIcon({ className = 'w-8 h-8' }: { className?: string }) {
         strokeLinejoin="round"
         d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 21.192a5.974 5.974 0 01-2.217.348 6.01 6.01 0 01-.672-.038 6.052 6.052 0 01.206-4.248A8.224 8.224 0 013 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
       />
+    </svg>
+  );
+}
+
+function BrowserIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 9h18" />
+      <circle cx="7" cy="6" r="0.5" fill="currentColor" />
+      <circle cx="10" cy="6" r="0.5" fill="currentColor" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M7 14l3 3-3 3" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13 17h4" />
     </svg>
   );
 }
@@ -507,6 +539,18 @@ export default function LanguagePage() {
               badge={methodCount > 0 ? `${methodCount} methods` : undefined}
             />
           </>
+        )}
+
+        {(language === 'javascript' || language === 'typescript') && (
+          <ModeCard
+            href="/frontend-drills"
+            icon={<BrowserIcon className="w-8 h-8" />}
+            title="Frontend Drills"
+            description="Practice React, Vue, Angular, and vanilla JS patterns. Build muscle memory for real frontend development."
+            buttonText="Start Frontend Drills"
+            config={config}
+            badge={`${getFrontendDrillCount() + getFrontendQuizCount()} challenges`}
+          />
         )}
 
         <ModeCard

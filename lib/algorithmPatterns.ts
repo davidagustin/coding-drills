@@ -371,7 +371,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of integers',
       outputFormat: 'Single number (max sum)',
       keywords: ['maximum', 'subarray', 'contiguous', 'largest sum'],
-      bigO: "N ≤ 10⁶ → Target: O(N). Kadane's algorithm (DP) tracks max ending at each position.",
+      bigO: 'N ≤ 10⁶ → Target: O(N). One pass; track a running value and global best.',
       pattern:
         'Keywords: "Maximum", "Subarray", "Optimal" → Dynamic Programming. Track max sum ending at each index.',
     },
@@ -3203,15 +3203,14 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     correctPattern: 'Two Pointers',
     patterns: ['Two Pointers', 'Hash Map', 'Linked List', 'Floyd Cycle Detection'],
     hints: {
-      constraints: 'nodes ≤ 10⁴ suggests Floyd cycle detection',
+      constraints: 'nodes ≤ 10⁴; O(1) space rules out hash set',
       inputFormat: 'Linked list head',
       outputFormat: 'Boolean',
       keywords: ['cycle', 'linked list', 'fast and slow'],
-      bigO: 'N ≤ 10⁶ → Target: O(N). Floyd Cycle Detection: fast pointer moves 2x, slow moves 1x.',
+      bigO: 'N ≤ 10⁶ → Target: O(N). Two pointers at different speeds.',
       pattern:
-        'Input-Based Strategy: Linked List → Fast & Slow Pointers. If fast meets slow, cycle exists.',
-      advancedLogic:
-        'Floyd Cycle Detection: Two pointers at different speeds will meet if cycle exists.',
+        'Linked list + cycle: use two pointers moving at different speeds; if they meet, cycle exists.',
+      advancedLogic: 'Two pointers at different speeds will meet inside the cycle.',
     },
     difficulty: 'easy',
     category: 'Linked List',
@@ -4442,9 +4441,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Number of courses, prerequisites',
       outputFormat: 'Array of course order',
       keywords: ['course schedule', 'topological sort', 'ordering'],
-      bigO: "N ≤ 5,000 → Target: O(V+E). Topological Sort: Kahn's algorithm (BFS) or DFS.",
+      bigO: 'N ≤ 5,000 → Target: O(V+E). Topological sort (BFS with in-degrees or DFS).',
       pattern:
-        "Input-Based Strategy: Graph → Topological Sort. Dependencies → use Kahn's algorithm (BFS with in-degree tracking).",
+        'Graph with dependencies: topological ordering. BFS: process nodes with in-degree 0; or DFS and record by finish time.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -4472,10 +4471,10 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     correctPattern: 'BFS',
     patterns: ['BFS', 'Dijkstra', 'Graph', 'Heap / Priority Queue'],
     hints: {
-      constraints: 'n ≤ 100 suggests Dijkstra or BFS',
+      constraints: 'n ≤ 100 suggests shortest-path or BFS',
       inputFormat: 'Times array, n nodes, source k',
       outputFormat: 'Single number (min time)',
-      keywords: ['network delay', 'shortest path', 'Dijkstra'],
+      keywords: ['network delay', 'shortest path', 'single source'],
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -4862,7 +4861,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       keywords: ['duplicate', 'constant space', 'cycle'],
       bigO: 'O(N) time, O(1) space. Treat index → value as next pointer; find cycle entry.',
       pattern:
-        'Array as linked list: index i → value nums[i]. Duplicate creates cycle. Floyd finds cycle then entry point.',
+        'Array as linked list: index i → value nums[i]. Duplicate creates cycle. Find cycle with two pointers, then find its entry point.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -4906,8 +4905,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       {
         input: 'points = [[0,0],[2,2],[3,10],[5,2],[7,0]]',
         output: '20',
-        explanation:
-          'Minimum spanning tree (Prim or Kruskal) over complete graph of Manhattan distances.',
+        explanation: 'Minimum spanning tree over complete graph of Manhattan distances.',
       },
     ],
     constraints: [
@@ -4922,7 +4920,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       inputFormat: 'Array of 2D points',
       outputFormat: 'Minimum total cost (integer)',
       keywords: ['connect all', 'minimum cost', 'Manhattan distance'],
-      pattern: 'VisuAlgo Min Spanning Tree: Kruskal (sort edges, Union-Find) or Prim (heap).',
+      pattern:
+        'MST: sort edges by weight and add without creating a cycle, or grow from one node with a heap.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5155,7 +5154,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
         input: 'n = 4, connections = [[0,1],[1,2],[2,0],[1,3]]',
         output: '[[1,3]]',
         explanation:
-          '[1,3] is the only bridge. Tarjan or DFS with discovery/low link finds bridges.',
+          '[1,3] is the only bridge. DFS with discovery time and low-link value finds bridges.',
       },
     ],
     constraints: ['2 ≤ n ≤ 10⁵', 'n - 1 ≤ connections.length ≤ 10⁵', 'No duplicate connections'],
@@ -5259,7 +5258,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'max-subarray-named',
     title: 'Maximum Subarray',
     description:
-      'Find the contiguous subarray with the largest sum. One pass, O(n) time, O(1) space. Track max ending here and global max.',
+      'Find the contiguous subarray with the largest sum. Must run in O(n) time and O(1) extra space.',
     examples: [
       {
         input: 'nums = [-2,1,-3,4,-1,2,1,-5,4]',
@@ -5273,7 +5272,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['maximum sum subarray', 'contiguous', 'one pass'],
       bigO: 'O(n) time, O(1) space.',
-      pattern: '"Maximum sum subarray" → Kadane\'s: max_ending_here = max(x, max_ending_here + x).',
+      pattern: 'One pass over the array; maintain a running value and a global best.',
     },
     difficulty: 'easy',
     category: 'Array',
@@ -5282,7 +5281,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'majority-element-named',
     title: 'Majority Element',
     description:
-      'Find the majority element that appears more than ⌊n/2⌋ times. O(n) time and O(1) space. One candidate, count; cancel opposite votes.',
+      'Find the majority element that appears more than ⌊n/2⌋ times. Must run in O(n) time and O(1) extra space (no hash map).',
     examples: [
       { input: 'nums = [2,2,1,1,1,2,2]', output: '2', explanation: '2 appears 4 times, majority.' },
     ],
@@ -5292,7 +5291,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['majority', 'more than half', 'O(1) space'],
       bigO: 'O(n) time, O(1) space.',
-      pattern: '"Majority element" → Moore\'s Voting: candidate + count; same +1, different -1.',
+      pattern: 'Maintain one candidate and a count; pairing opposite elements cancels them out.',
     },
     difficulty: 'easy',
     category: 'Array',
@@ -5301,7 +5300,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'sort-colors-dutch',
     title: 'Sort Colors / 3-Way Partition',
     description:
-      'Array of 0s, 1s, and 2s. Sort in-place in one pass. Three pointers: low, mid, high; swap so 0s left, 1s middle, 2s right.',
+      'Array of 0s, 1s, and 2s. Sort in-place in a single pass. No counting array; only swap operations.',
     examples: [
       { input: 'nums = [2,0,2,1,1,0]', output: '[0,0,1,1,2,2]', explanation: 'In-place one pass.' },
     ],
@@ -5312,7 +5311,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
       keywords: ['sort 0s 1s 2s', 'in-place', 'one pass', 'three-way partition'],
       bigO: 'O(n) one pass.',
       pattern:
-        '"Sort colors" / "3-way partition" → Dutch National Flag (Dijkstra\'s partitioning).',
+        'Three-way partitioning: keep 0s on the left, 2s on the right, 1s in the middle using pointers.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -5321,12 +5320,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'shortest-path-negative-weights',
     title: 'Shortest Path with Negative Weights',
     description:
-      'Single-source shortest path in a weighted directed graph that may have negative edge weights. Relax all edges repeatedly (V-1 times); detect negative cycle if round V still relaxes.',
+      'Single-source shortest path in a weighted directed graph that may have negative edge weights. Must also detect whether a negative-weight cycle is reachable from the source.',
     examples: [
       {
         input: 'n=4, edges with negative weights from source 0',
         output: 'Distances or "negative cycle"',
-        explanation: 'Bellman-Ford relaxes all edges V-1 times.',
+        explanation: 'Repeated relaxation over all edges; one more round detects negative cycle.',
       },
     ],
     constraints: ['1 ≤ n ≤ 100', 'Edges may have negative weight'],
@@ -5334,8 +5333,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     patterns: ['Bellman-Ford', 'Dijkstra', 'BFS', 'Floyd-Warshall'],
     hints: {
       keywords: ['shortest path', 'negative weights', 'negative cycle'],
-      bigO: 'O(VE). Use when graph has negative edges; Dijkstra fails.',
-      pattern: '"Shortest path with negative weights" → Bellman-Ford.',
+      bigO: 'O(VE).',
+      pattern:
+        'Repeatedly relax every edge; after V-1 rounds, distances are correct unless one more round still improves something.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5344,12 +5344,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'all-pairs-shortest-path',
     title: 'All Pairs Shortest Path',
     description:
-      'Compute shortest path between every pair of vertices in a weighted graph. DP: for each intermediate vertex k, relax i→j via k. O(V³).',
+      'Compute shortest path between every pair of vertices in a weighted graph. Target is O(V³). Graph may have negative edges.',
     examples: [
       {
         input: 'n nodes, weighted adjacency',
         output: 'n×n distance matrix',
-        explanation: 'Floyd-Warshall: dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]).',
+        explanation: 'For each intermediate vertex, try improving each pair distance through it.',
       },
     ],
     constraints: ['Vertices 0..n-1', 'Handles negative edges, detects negative cycles'],
@@ -5357,8 +5357,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     patterns: ['Floyd-Warshall', 'Dijkstra', 'Bellman-Ford', 'BFS'],
     hints: {
       keywords: ['all pairs', 'shortest path', 'every pair', 'O(V³)'],
-      bigO: 'O(V³). Use when you need every pair; Dijkstra V times is O(V² E log V).',
-      pattern: '"All pairs shortest path" → Floyd-Warshall.',
+      bigO: 'O(V³).',
+      pattern:
+        'Dynamic programming: for each vertex k, consider improving dist(i,j) by going through k.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5367,12 +5368,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'topological-sort-bfs',
     title: 'Topological Sort BFS-Based',
     description:
-      'Linear ordering of vertices in a DAG such that for every edge (u,v), u comes before v. BFS: enqueue nodes with in-degree 0, reduce neighbor in-degrees.',
+      'Produce a linear ordering of vertices in a DAG such that for every edge (u,v), u comes before v. Use a BFS-style approach over the graph.',
     examples: [
       {
         input: 'DAG with edges (prerequisites)',
         output: 'Valid topological order',
-        explanation: "Kahn's: in-degree count, queue zeros, process.",
+        explanation: 'Process nodes with no remaining dependencies first.',
       },
     ],
     constraints: ['Directed acyclic graph', '1 ≤ V ≤ 10⁴'],
@@ -5381,7 +5382,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['topological order', 'DAG', 'in-degree', 'BFS'],
       bigO: 'O(V+E).',
-      pattern: '"Topological sort" (BFS style, in-degrees) → Kahn\'s.',
+      pattern: 'Count in-degrees; repeatedly process nodes with in-degree 0 and update neighbors.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5390,12 +5391,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'mst-union-find',
     title: 'Minimum Spanning Tree via Edge Sorting',
     description:
-      'Connect all vertices with minimum total edge weight. Sort edges by weight; add edge if it does not form a cycle (use disjoint set).',
+      'Connect all vertices with minimum total edge weight. Greedily add edges in increasing order of weight without creating a cycle.',
     examples: [
       {
         input: 'Weighted undirected graph',
         output: 'MST total weight or edges',
-        explanation: "Kruskal's: sort edges, Union-Find to avoid cycles.",
+        explanation: 'Sort edges by weight; add an edge only if it does not form a cycle.',
       },
     ],
     constraints: ['1 ≤ V ≤ 10⁴', 'Undirected, connected'],
@@ -5403,8 +5404,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     patterns: ["Kruskal's", "Prim's", 'Union-Find', 'Greedy'],
     hints: {
       keywords: ['minimum spanning tree', 'sort edges', 'no cycle'],
-      bigO: 'O(E log E). Union-Find for cycle detection.',
-      pattern: '"MST by adding smallest non-cycle edge" → Kruskal\'s.',
+      bigO: 'O(E log E).',
+      pattern:
+        'Sort edges; add smallest edge that does not connect two already-connected components.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5413,12 +5415,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'mst-heap',
     title: 'Minimum Spanning Tree via Growing from a Node',
     description:
-      'Start from one vertex; repeatedly add the minimum-weight edge that connects the current tree to a new vertex. Use a min-heap of edges from tree frontier.',
+      'Build a minimum spanning tree by starting at one vertex and repeatedly adding the cheapest edge that connects the current tree to a vertex not yet in the tree.',
     examples: [
       {
         input: 'Weighted undirected graph',
         output: 'MST total weight or edges',
-        explanation: "Prim's: heap of (weight, node), expand cheapest.",
+        explanation: 'Grow a single tree by always adding the minimum-weight frontier edge.',
       },
     ],
     constraints: ['1 ≤ V ≤ 10⁴', 'Undirected, connected'],
@@ -5427,7 +5429,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['MST', 'grow from one node', 'min edge from tree'],
       bigO: 'O(E log V) with binary heap.',
-      pattern: '"MST by growing from a node" → Prim\'s.',
+      pattern:
+        'Maintain a set of vertices in the tree and a priority queue of edges from that set to the rest.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5436,12 +5439,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'strongly-connected-components',
     title: 'Strongly Connected Components',
     description:
-      'Decompose a directed graph into strongly connected components (every pair reachable within each). One classic approach: two DFS passes; second on reversed graph by finishing times.',
+      'Decompose a directed graph into strongly connected components: maximal sets of vertices where every pair is mutually reachable.',
     examples: [
       {
         input: 'Directed graph',
         output: 'List of SCCs',
-        explanation: "Tarjan's (one DFS, low-link) or Kosaraju's (two DFS).",
+        explanation: 'Each SCC is a maximal strongly connected subgraph.',
       },
     ],
     constraints: ['1 ≤ V ≤ 10⁴', 'Directed graph'],
@@ -5449,8 +5452,9 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     patterns: ["Tarjan's", 'DFS', 'BFS', 'Topological Sort'],
     hints: {
       keywords: ['strongly connected', 'SCC', 'low-link', 'finishing time'],
-      bigO: 'O(V+E). Tarjan uses one DFS; Kosaraju uses two.',
-      pattern: '"Strongly connected components" → Tarjan\'s or Kosaraju\'s.',
+      bigO: 'O(V+E).',
+      pattern:
+        'DFS-based; use discovery time and low-link value, or two passes over original and reversed graph.',
     },
     difficulty: 'hard',
     category: 'Graph',
@@ -5459,21 +5463,22 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'pattern-matching-prefix-table',
     title: 'Pattern Matching with Prefix Table',
     description:
-      'Find all occurrences of pattern string in text. Precompute longest proper prefix that is also suffix (LPS) for pattern; on mismatch, shift pattern by LPS instead of restarting.',
+      'Find all occurrences of a pattern string in text in O(n + m). When a mismatch occurs, reuse information from the pattern to avoid backing up in the text.',
     examples: [
       {
         input: 'text = "ABABDABACDABABC", pattern = "ABABC"',
         output: 'Indices of matches',
-        explanation: 'KMP: build LPS, then scan text with smart shift.',
+        explanation: 'Precompute a table from the pattern to know how far to shift on mismatch.',
       },
     ],
     constraints: ['1 ≤ text.length, pattern.length ≤ 10⁴'],
     correctPattern: 'KMP',
     patterns: ['KMP', 'Rabin-Karp', 'Brute Force', 'String'],
     hints: {
-      keywords: ['pattern matching', 'prefix', 'LPS', 'no backtrack'],
+      keywords: ['pattern matching', 'prefix', 'no backtrack'],
       bigO: 'O(n + m).',
-      pattern: '"Pattern matching with prefix table / no backtrack" → KMP.',
+      pattern:
+        'Build a failure table (longest border) for the pattern; on mismatch, shift by that amount without moving text index back.',
     },
     difficulty: 'medium',
     category: 'String',
@@ -5482,12 +5487,13 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'pattern-matching-rolling-hash',
     title: 'Pattern Matching with Rolling Hash',
     description:
-      'Find pattern in text using hash. Compute hash of pattern and hash of each length-m window in text; roll hash in O(1) when sliding. Good for multiple patterns.',
+      'Find pattern(s) in text using hashing. Update the hash of the current window in O(1) when sliding by one character. Well-suited to multiple patterns.',
     examples: [
       {
         input: 'text, pattern(s)',
         output: 'Indices where pattern(s) match',
-        explanation: 'Rabin-Karp: rolling hash, check on collision.',
+        explanation:
+          'Hash the pattern and each window; when hashes match, verify to handle collisions.',
       },
     ],
     constraints: ['1 ≤ text.length, pattern.length ≤ 10⁴'],
@@ -5496,7 +5502,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['rolling hash', 'multiple patterns', 'hash match'],
       bigO: 'O(n + m) average.',
-      pattern: '"Pattern matching with rolling hash" / "multiple patterns" → Rabin-Karp.',
+      pattern: 'Compute window hash in O(1) from the previous window using a rolling formula.',
     },
     difficulty: 'medium',
     category: 'String',
@@ -5505,7 +5511,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'count-primes-sieve',
     title: 'Count Primes / Generate Primes',
     description:
-      'Count the number of prime numbers less than n (or list them). Mark multiples of each prime starting from 2; remaining unmarked are prime.',
+      'Count the number of prime numbers less than n (or list them). Target O(n log log n). No trial division per number; use a boolean array and cross off multiples.',
     examples: [{ input: 'n = 10', output: '4', explanation: 'Primes < 10: 2, 3, 5, 7.' }],
     constraints: ['0 ≤ n ≤ 5 * 10⁶'],
     correctPattern: 'Sieve of Eratosthenes',
@@ -5513,7 +5519,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['prime', 'count primes', 'generate primes'],
       bigO: 'O(n log log n).',
-      pattern: '"Generate primes up to n" → Sieve of Eratosthenes.',
+      pattern:
+        'Iterate from 2; for each unmarked number, mark all its multiples. Unmarked numbers are prime.',
     },
     difficulty: 'medium',
     category: 'Math',
@@ -5522,12 +5529,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'random-pick-stream',
     title: 'Random Pick from Stream',
     description:
-      'Process a stream of elements one by one; at each step, each element seen so far should have equal probability of being chosen. O(1) space.',
+      'Process a stream of elements one by one. At each step, maintain one candidate so that every element seen so far has equal probability of being the chosen one. Single pass, O(1) extra space.',
     examples: [
       {
         input: 'Stream: 1, 2, 3, ...',
         output: 'One random element from stream so far',
-        explanation: 'Reservoir sampling: replace with prob 1/i.',
+        explanation: 'Update the candidate with a probability that depends on position.',
       },
     ],
     constraints: ['Single pass', 'O(1) extra space'],
@@ -5536,7 +5543,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['stream', 'random pick', 'equal probability', 'single pass'],
       bigO: 'O(n) time, O(1) space.',
-      pattern: '"Random sample from stream" → Reservoir Sampling.',
+      pattern:
+        'Keep one slot; when seeing the i-th element, replace the current value with probability 1/i.',
     },
     difficulty: 'medium',
     category: 'Math',
@@ -5545,12 +5553,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'shuffle-array-unbiased',
     title: 'Shuffle Array Unbiased',
     description:
-      'Uniformly random permutation of an array in place. For i from n-1 down to 1, swap element at i with a random index in [0, i] (inclusive).',
+      'Produce a uniformly random permutation of an array in place. Each of the n! permutations should be equally likely. O(n) time.',
     examples: [
       {
         input: 'nums = [1,2,3,4,5]',
         output: 'One of 5! equally likely permutations',
-        explanation: 'Fisher-Yates: each permutation equally likely.',
+        explanation: 'Each permutation should have probability 1/n!.',
       },
     ],
     constraints: ['In-place', 'Each permutation equally likely'],
@@ -5559,7 +5567,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['shuffle', 'random permutation', 'unbiased'],
       bigO: 'O(n).',
-      pattern: '"Unbiased shuffle" → Fisher-Yates.',
+      pattern:
+        'For each position from end to start, swap with a random position in the prefix (inclusive).',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -5568,12 +5577,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'inorder-traversal-o1-space',
     title: 'Inorder Traversal in O(1) Space',
     description:
-      'Inorder traversal of a binary tree without recursion and without stack. Use threaded links: temporarily point right of rightmost of left subtree to current, then restore.',
+      'Inorder traversal of a binary tree in O(n) time using only O(1) extra space. No recursion and no explicit stack allowed.',
     examples: [
       {
         input: 'Binary tree root',
         output: 'Inorder sequence',
-        explanation: 'Morris: use right pointers of leaves as temporary link back.',
+        explanation: 'Visit left, then node, then right using only pointers.',
       },
     ],
     constraints: ['1 ≤ nodes ≤ 10⁴', 'O(1) extra space'],
@@ -5582,7 +5591,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['inorder', 'O(1) space', 'no stack', 'no recursion'],
       bigO: 'O(n) time, O(1) space.',
-      pattern: '"Inorder without stack/recursion" → Morris Traversal.',
+      pattern:
+        'Use existing null right pointers to temporarily link back to the node that needs to be visited next.',
     },
     difficulty: 'medium',
     category: 'Tree',
@@ -5591,12 +5601,13 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'shortest-path-nonnegative-named',
     title: 'Single-Source Shortest Path, Non-Negative Weights',
     description:
-      'Shortest path from one source to all other nodes in a weighted graph with non-negative edge weights. Repeatedly extract the unvisited node with smallest tentative distance and relax its outgoing edges.',
+      'Single-source shortest path: from one source to all other nodes in a weighted graph. All edge weights are non-negative. Target O((V+E) log V) with a priority queue.',
     examples: [
       {
         input: 'n nodes, weighted edges, source node',
         output: 'Shortest distance from source to each node',
-        explanation: 'Dijkstra: priority queue of (distance, node), relax neighbors.',
+        explanation:
+          'Repeatedly take the unvisited node with smallest tentative distance and relax its edges.',
       },
     ],
     constraints: ['All edge weights ≥ 0', '1 ≤ V ≤ 10⁴'],
@@ -5605,7 +5616,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['shortest path', 'non-negative', 'single source', 'priority queue'],
       bigO: 'O((V+E) log V) with binary heap.',
-      pattern: '"Shortest path, non-negative weights" → Dijkstra\'s.',
+      pattern: 'Greedily expand the node with smallest known distance; update neighbors.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5614,12 +5625,13 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'cycle-detection-linked-list-named',
     title: 'Detect Cycle in Linked List O(1) Space',
     description:
-      'Determine if a linked list has a cycle. Use two pointers: one moves one step, the other two steps. If they meet, there is a cycle. O(n) time, O(1) space.',
+      'Determine if a linked list has a cycle. Must use O(1) extra space (no hash set). O(n) time.',
     examples: [
       {
         input: 'head = [3,2,0,-4], tail connects to node 1',
         output: 'true',
-        explanation: 'Tortoise and hare: fast and slow pointers meet inside cycle.',
+        explanation:
+          'If there is a cycle, two pointers moving at different speeds will eventually meet.',
       },
     ],
     constraints: ['0 ≤ nodes ≤ 10⁴', 'O(1) extra space required'],
@@ -5628,7 +5640,7 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['cycle', 'linked list', 'O(1) space', 'two pointers'],
       bigO: 'O(n) time, O(1) space.',
-      pattern: '"Detect cycle in linked list" / "O(1) space" → Floyd\'s Tortoise and Hare.',
+      pattern: 'Use two pointers that move at different speeds along the list.',
     },
     difficulty: 'easy',
     category: 'Linked List',
@@ -5637,12 +5649,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'eulerian-path-reconstruct-named',
     title: 'Reconstruct Itinerary / Visit Every Edge Once',
     description:
-      'Find a path that uses every directed edge exactly once (Eulerian path). Start from designated vertex; DFS, post-order record vertices when backtracking; reverse to get path. Handles lexicographic order with sorted adjacency.',
+      'Find a path that uses every directed edge exactly once (Eulerian path). Start from a given vertex; when you get stuck, backtrack and record vertices; the path is the reverse of that order. Lexicographic order can be enforced via sorted adjacency.',
     examples: [
       {
         input: 'tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]',
         output: '["JFK","MUC","LHR","SFO","SJC",...]',
-        explanation: "Hierholzer's: DFS, pop and record when stuck, reverse result.",
+        explanation: 'Visit every edge once; record vertices when backtracking and reverse.',
       },
     ],
     constraints: ['Directed graph', 'Exactly one Eulerian path possible'],
@@ -5651,7 +5663,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['use every edge once', 'itinerary', 'Eulerian path'],
       bigO: 'O(E log E) with sorted adjacency.',
-      pattern: '"Visit every edge exactly once" → Hierholzer\'s (Eulerian path).',
+      pattern:
+        'DFS; when a node has no outgoing edges left, add it to the path. Reverse the path at the end.',
     },
     difficulty: 'hard',
     category: 'Graph',
@@ -5660,12 +5673,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'longest-palindromic-substring-on-named',
     title: 'Longest Palindromic Substring in O(n)',
     description:
-      'Find the longest palindromic substring in O(n) time. Expand around centers (or use transformed string with delimiters); maintain center and right boundary; use previously computed lengths to skip work.',
+      'Find the longest palindromic substring in O(n) time. No O(n²) expand-around-center; reuse information from already-computed palindromes.',
     examples: [
       {
         input: 's = "babad"',
         output: '"bab" or "aba"',
-        explanation: "Manacher's: palindromic radii array, linear scan.",
+        explanation: 'Longest palindromic substring in linear time.',
       },
     ],
     constraints: ['1 ≤ s.length ≤ 1000', 'O(n) time required'],
@@ -5674,7 +5687,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['longest palindrome', 'O(n)', 'substring'],
       bigO: 'O(n).',
-      pattern: '"Longest palindromic substring in O(n)" → Manacher\'s.',
+      pattern:
+        'Use a transformed string and maintain a center plus right boundary; reuse symmetric lengths when possible.',
     },
     difficulty: 'medium',
     category: 'String',
@@ -5683,21 +5697,22 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'count-set-bits-named',
     title: 'Count Set Bits in Integer',
     description:
-      'Count the number of 1 bits in the binary representation of an integer. Repeatedly clear the lowest set bit using n & (n-1) until zero. Number of iterations = number of set bits.',
+      'Count the number of 1 bits in the binary representation of an integer. Target O(k) time where k is the number of set bits (better than O(32) or O(log n) when k is small).',
     examples: [
       {
         input: 'n = 11 (binary 1011)',
         output: '3',
-        explanation: "Brian Kernighan's: 11 & 10 = 10, 10 & 9 = 8, 8 & 7 = 0 → 3 iterations.",
+        explanation: '11 has three 1 bits.',
       },
     ],
     constraints: ['0 ≤ n ≤ 2³¹ - 1', 'O(set bits) time'],
     correctPattern: 'Brian Kernighan',
     patterns: ['Brian Kernighan', 'Bit Manipulation', 'Math', 'XOR'],
     hints: {
-      keywords: ['count 1 bits', 'population count', 'n & (n-1)'],
+      keywords: ['count 1 bits', 'population count'],
       bigO: 'O(number of set bits).',
-      pattern: '"Count set bits" / "n & (n-1)" → Brian Kernighan\'s.',
+      pattern:
+        'There is a bit trick that clears the lowest set bit in one operation; repeat until zero.',
     },
     difficulty: 'easy',
     category: 'Bit Manipulation',
@@ -5706,12 +5721,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'kth-largest-without-full-sort-named',
     title: 'Kth Largest / Smallest Without Full Sort',
     description:
-      'Find the kth largest (or smallest) element in an unsorted array in O(n) average time. Partition around a pivot (like quicksort); recurse on the side that contains the kth element. No need to sort the whole array.',
+      'Find the kth largest (or smallest) element in an unsorted array in O(n) average time. Do not sort the entire array; use partitioning and recurse on one side.',
     examples: [
       {
         input: 'nums = [3,2,1,5,6,4], k = 2',
         output: '5',
-        explanation: 'Quickselect: partition until pivot is at index n-k.',
+        explanation: 'Partition around a pivot; recurse on the side that contains the kth element.',
       },
     ],
     constraints: ['1 ≤ k ≤ nums.length ≤ 10⁵', 'O(n) average'],
@@ -5719,8 +5734,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     patterns: ['Quickselect', 'Heap / Priority Queue', 'Sorting', 'Binary Search'],
     hints: {
       keywords: ['kth largest', 'kth smallest', 'without full sort', 'O(n) average'],
-      bigO: "O(n) average, O(n²) worst. Hoare's selection.",
-      pattern: '"Kth largest without full sort" → Quickselect (Hoare\'s).',
+      bigO: 'O(n) average, O(n²) worst.',
+      pattern: 'Partition like quicksort; only recurse on the half that contains the kth index.',
     },
     difficulty: 'medium',
     category: 'Array',
@@ -5729,21 +5744,27 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'connected-components-dsu-named',
     title: 'Group Connected Elements / Cycle in Undirected Graph',
     description:
-      'Merge sets by connection; answer "are u and v in the same set?" or "how many connected components?" in near-constant time. Maintain parent and rank; path compression and union by rank.',
+      'Support merging sets by connection and answering "are u and v in the same set?" or "how many connected components?" in near-constant time per operation.',
     examples: [
       {
         input: 'Edges (u,v); queries: same component? or count components',
         output: 'true/false or component count',
-        explanation: 'Union-Find (DSU): find with path compression, union by rank.',
+        explanation: 'Each find/union runs in amortized near-constant time.',
       },
     ],
     constraints: ['1 ≤ V ≤ 10⁵', 'O(α(n)) ≈ O(1) per operation'],
     correctPattern: 'Union-Find',
     patterns: ['Union-Find', 'DFS', 'BFS', 'Graph'],
     hints: {
-      keywords: ['connected components', 'disjoint set', 'union find', 'cycle in undirected graph'],
+      keywords: [
+        'connected components',
+        'disjoint set',
+        'same component',
+        'cycle in undirected graph',
+      ],
       bigO: 'O(α(n)) ≈ O(1) per find/union.',
-      pattern: '"Group connected" / "same component?" → Union-Find (DSU).',
+      pattern:
+        'Maintain a forest of trees; find the root with path compression; when merging, link by rank or size.',
     },
     difficulty: 'medium',
     category: 'Graph',
@@ -5752,12 +5773,12 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     id: 'square-root-newton-named',
     title: 'Integer Square Root / Find Root Numerically',
     description:
-      "Compute integer square root of x (or find root of f). Iteratively improve guess: next = (guess + x/guess) / 2 for sqrt, or next = guess - f(guess)/f'(guess) in general. Converges quickly.",
+      'Compute integer square root of x without using a built-in. Iteratively improve a guess so that it converges to the answer in very few iterations.',
     examples: [
       {
         input: 'x = 8',
         output: '2',
-        explanation: 'Newton-Raphson: 8/2=4, (2+4)/2=3; 8/3≈2.67, (3+2.67)/2≈2.83; ... → 2.',
+        explanation: 'Integer sqrt(8) = 2.',
       },
     ],
     constraints: ['0 ≤ x ≤ 2³¹ - 1', 'Integer sqrt, no built-in'],
@@ -5766,7 +5787,8 @@ export const PATTERN_PROBLEMS: AlgorithmPatternProblem[] = [
     hints: {
       keywords: ['square root', 'integer sqrt', 'find root', 'numerical'],
       bigO: 'Converges quadratically.',
-      pattern: '"Integer square root" / "find root" → Newton-Raphson.',
+      pattern:
+        'Update guess using the average of the guess and x/guess (for sqrt), or a derivative-based step for general roots.',
     },
     difficulty: 'easy',
     category: 'Math',

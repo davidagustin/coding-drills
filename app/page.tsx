@@ -1,5 +1,9 @@
 import Link from 'next/link';
 import { LanguageGrid } from '@/components/LanguageGrid';
+import {
+  getTotalProblemCount as getFrontendDrillCount,
+  getTotalQuizQuestionCount as getFrontendQuizCount,
+} from '@/lib/frontend-drills';
 import { getProblemCountByLanguage } from '@/lib/problems/index';
 import { getRegexProblemCount } from '@/lib/regexTrainer';
 
@@ -587,6 +591,79 @@ export default function Home() {
                              shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 cursor-pointer"
                 >
                   <span>Start Training</span>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Frontend Drills Quick Access */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-yellow-500/10 p-8 md:p-12">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl" />
+
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Left: Icon and Title */}
+              <div className="text-center md:text-left flex-1">
+                <div className="text-amber-400 mb-4">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-16 h-16"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M3 9h18" />
+                    <circle cx="7" cy="6" r="0.5" fill="currentColor" />
+                    <circle cx="10" cy="6" r="0.5" fill="currentColor" />
+                    <path d="M7 14l3 3-3 3" />
+                    <path d="M13 17h4" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">
+                  Frontend Drills
+                </h2>
+                <p className="text-gray-400 max-w-lg mb-2">
+                  Practice React hooks, Vue Composition API, Angular decorators, and vanilla
+                  JavaScript DOM patterns. Build muscle memory for real frontend development.
+                </p>
+                <p className="text-gray-500 text-sm">
+                  {getFrontendDrillCount() + getFrontendQuizCount()} challenges &middot; 4
+                  frameworks &middot; Code drills &amp; quizzes
+                </p>
+              </div>
+
+              {/* Right: Start Button */}
+              <div className="flex-shrink-0">
+                <Link
+                  href="/frontend-drills"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-amber-600 hover:bg-amber-500
+                             text-white font-semibold text-lg transition-all duration-200
+                             shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-105 cursor-pointer"
+                >
+                  <span>Start Drilling</span>
                   <svg
                     className="w-5 h-5"
                     fill="none"
