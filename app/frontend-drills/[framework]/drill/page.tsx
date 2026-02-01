@@ -1,47 +1,31 @@
 'use client';
 
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
-import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
-import { problemsByLanguage } from '@/lib/problems/index';
+import { formatOutput } from '@/lib/codeValidator';
+import type { FrameworkId, FrontendCategory, FrontendDrillProblem } from '@/lib/frontend-drills';
 import {
-  getInterviewRecommendedCount,
-  getInterviewRecommendedIds,
-  hasInterviewRecommended,
-} from '@/lib/problems/interview-recommended';
-import type { Difficulty, LanguageId, Problem } from '@/lib/types';
-import { LANGUAGE_CONFIG } from '../config';
-
-// Static problems reference for synchronous access (fallback for lazy loading)
-const PROBLEMS_BY_LANGUAGE: Partial<Record<LanguageId, Problem[]>> = problemsByLanguage;
+  FRAMEWORK_CONFIG,
+  getCategories,
+  getCategoryCounts,
+  getProblems,
+  isValidFramework,
+  validateFrontendDrillAnswer,
+} from '@/lib/frontend-drills';
+import type { Difficulty } from '@/lib/types';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type DrillPhase = 'setup' | 'loading' | 'drilling' | 'feedback' | 'results';
+type DrillPhase = 'setup' | 'drilling' | 'feedback' | 'results';
 
 interface DrillConfig {
-  categories: string[];
+  categories: FrontendCategory[];
   questionCount: number;
   difficulty: Difficulty | 'all';
-  selectedQuestionIds?: string[];
-  includeSiblingLanguage?: boolean;
-  interviewOnly?: boolean;
-}
-
-// Define sibling language pairs
-const SIBLING_LANGUAGES: Partial<Record<LanguageId, LanguageId>> = {
-  javascript: 'typescript',
-  typescript: 'javascript',
-};
-
-// Extended problem type that tracks source language
-interface ProblemWithLanguage extends Problem {
-  sourceLanguage: LanguageId;
 }
 
 interface DrillState {
@@ -55,7 +39,7 @@ interface DrillState {
 }
 
 interface AnswerRecord {
-  problem: ProblemWithLanguage;
+  problem: FrontendDrillProblem;
   userAnswer: string;
   isCorrect: boolean;
   error?: string;
@@ -70,8 +54,8 @@ interface AnswerRecord {
 // ============================================================================
 
 /**
- * Calculate points for an answer based on correctness and speed
- * - Base points: 100 for correct, 0 for incorrect/skipped
+ * Calculate points for an answer based on correctness and speed.
+ * - Base points: 100 easy, 150 medium, 200 hard
  * - Speed bonus: Up to 50 extra points for fast answers
  * - Streak bonus: Multiplier for consecutive correct answers
  */
@@ -83,119 +67,26 @@ function calculatePoints(
 ): number {
   if (!isCorrect) return 0;
 
-  // Base points by difficulty
   const basePoints: Record<Difficulty, number> = {
     easy: 100,
     medium: 150,
     hard: 200,
   };
 
-  // Speed bonus thresholds (in ms)
-  const FAST_THRESHOLD = 5000; // Under 5 seconds = max bonus
-  const MEDIUM_THRESHOLD = 15000; // Under 15 seconds = partial bonus
+  const FAST_THRESHOLD = 5000;
+  const MEDIUM_THRESHOLD = 15000;
   const MAX_SPEED_BONUS = 50;
 
   let speedBonus = 0;
   if (timeTaken <= FAST_THRESHOLD) {
     speedBonus = MAX_SPEED_BONUS;
   } else if (timeTaken <= MEDIUM_THRESHOLD) {
-    // Linear interpolation between fast and medium thresholds
     const ratio = 1 - (timeTaken - FAST_THRESHOLD) / (MEDIUM_THRESHOLD - FAST_THRESHOLD);
     speedBonus = Math.round(MAX_SPEED_BONUS * ratio);
   }
 
-  // Streak multiplier: 1.0 base, +0.1 per streak up to 2.0 max
   const streakMultiplier = Math.min(1 + streak * 0.1, 2.0);
-
-  const totalPoints = Math.round((basePoints[difficulty] + speedBonus) * streakMultiplier);
-  return totalPoints;
-}
-
-// ============================================================================
-// Lazy-loaded Problem Data by Language (Code Splitting)
-// ============================================================================
-
-// Problem loaders - dynamically imported only when needed
-const problemLoaders: Record<
-  LanguageId,
-  () => Promise<{ default: Problem[] } | { [key: string]: Problem[] }>
-> = {
-  javascript: () => import('@/lib/problems/javascript'),
-  typescript: () => import('@/lib/problems/typescript'),
-  python: () => import('@/lib/problems/python'),
-  java: () => import('@/lib/problems/java'),
-  cpp: () => import('@/lib/problems/cpp'),
-  csharp: () => import('@/lib/problems/csharp'),
-  ruby: () => import('@/lib/problems/ruby'),
-  go: () => import('@/lib/problems/go'),
-  c: () => import('@/lib/problems/c'),
-  php: () => import('@/lib/problems/php'),
-  kotlin: () => import('@/lib/problems/kotlin'),
-  // New languages
-  rust: () => import('@/lib/problems/rust'),
-  swift: () => import('@/lib/problems/swift'),
-  scala: () => import('@/lib/problems/scala'),
-  r: () => import('@/lib/problems/r'),
-  perl: () => import('@/lib/problems/perl'),
-  lua: () => import('@/lib/problems/lua'),
-  haskell: () => import('@/lib/problems/haskell'),
-  elixir: () => import('@/lib/problems/elixir'),
-  dart: () => import('@/lib/problems/dart'),
-  clojure: () => import('@/lib/problems/clojure'),
-  // Database languages
-  postgresql: () => import('@/lib/problems/postgresql'),
-  mysql: () => import('@/lib/problems/mysql'),
-  mongodb: () => Promise.resolve({ default: [] }), // MongoDB problems can be added later
-};
-
-// Extract problems from module based on naming convention
-function extractProblems(
-  mod: { default?: Problem[]; [key: string]: Problem[] | undefined },
-  language: LanguageId,
-): Problem[] {
-  // Try default export first
-  if (mod.default && Array.isArray(mod.default)) {
-    return mod.default;
-  }
-  // Try named export matching pattern
-  const namedKey = `${language}Problems`;
-  if (mod[namedKey] && Array.isArray(mod[namedKey])) {
-    return mod[namedKey] as Problem[];
-  }
-  // Fallback: find first array export
-  for (const value of Object.values(mod)) {
-    if (Array.isArray(value)) {
-      return value;
-    }
-  }
-  return [];
-}
-
-// Cache for loaded problems to avoid re-fetching
-const problemsCache = new Map<LanguageId, Problem[]>();
-
-async function _loadProblems(language: LanguageId): Promise<Problem[]> {
-  // Check cache first
-  const cached = problemsCache.get(language);
-  if (cached) {
-    return cached;
-  }
-
-  const loader = problemLoaders[language];
-  if (!loader) return [];
-
-  try {
-    const mod = await loader();
-    const problems = extractProblems(
-      mod as { default?: Problem[]; [key: string]: Problem[] | undefined },
-      language,
-    );
-    problemsCache.set(language, problems);
-    return problems;
-  } catch (error) {
-    console.error(`Failed to load problems for ${language}:`, error);
-    return [];
-  }
+  return Math.round((basePoints[difficulty] + speedBonus) * streakMultiplier);
 }
 
 // ============================================================================
@@ -218,44 +109,8 @@ function formatTime(ms: number): string {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-function selectProblems(language: LanguageId, config: DrillConfig): ProblemWithLanguage[] {
-  // Tag problems with their source language
-  const baseProblems: ProblemWithLanguage[] = (PROBLEMS_BY_LANGUAGE[language] || []).map((p) => ({
-    ...p,
-    sourceLanguage: language,
-  }));
-
-  let problems: ProblemWithLanguage[] = baseProblems;
-
-  // Include sibling language problems if requested
-  if (config.includeSiblingLanguage) {
-    const siblingLang = SIBLING_LANGUAGES[language];
-    if (siblingLang) {
-      const siblingProblems: ProblemWithLanguage[] = (PROBLEMS_BY_LANGUAGE[siblingLang] || []).map(
-        (p) => ({
-          ...p,
-          sourceLanguage: siblingLang,
-        }),
-      );
-      problems = [...problems, ...siblingProblems];
-    }
-  }
-
-  // If specific questions are selected, use only those
-  if (config.selectedQuestionIds && config.selectedQuestionIds.length > 0) {
-    const selectedSet = new Set(config.selectedQuestionIds);
-    problems = problems.filter((p) => selectedSet.has(p.id));
-    // Shuffle the selected problems
-    return shuffleArray(problems);
-  }
-
-  // Filter by interview-recommended
-  if (config.interviewOnly) {
-    problems = problems.filter((p) => {
-      const ids = getInterviewRecommendedIds(p.sourceLanguage);
-      return ids.has(p.id);
-    });
-  }
+function selectProblems(framework: FrameworkId, config: DrillConfig): FrontendDrillProblem[] {
+  let problems = getProblems(framework);
 
   // Filter by categories
   if (config.categories.length > 0) {
@@ -270,37 +125,6 @@ function selectProblems(language: LanguageId, config: DrillConfig): ProblemWithL
   // Shuffle and select
   const shuffled = shuffleArray(problems);
   return shuffled.slice(0, config.questionCount);
-}
-
-function isValidLanguage(lang: string): lang is LanguageId {
-  // Use SUPPORTED_LANGUAGES from config to ensure all languages are included
-  const SUPPORTED_LANGUAGES: LanguageId[] = [
-    'javascript',
-    'typescript',
-    'python',
-    'java',
-    'cpp',
-    'csharp',
-    'go',
-    'ruby',
-    'c',
-    'php',
-    'kotlin',
-    'rust',
-    'swift',
-    'scala',
-    'r',
-    'perl',
-    'lua',
-    'haskell',
-    'elixir',
-    'dart',
-    'clojure',
-    'postgresql',
-    'mysql',
-    'mongodb',
-  ];
-  return SUPPORTED_LANGUAGES.includes(lang as LanguageId);
 }
 
 // ============================================================================
@@ -379,59 +203,47 @@ function CodeDisplay({ code }: { code: string }) {
   );
 }
 
+// ============================================================================
+// Setup Phase
+// ============================================================================
+
 interface SetupPhaseProps {
-  language: LanguageId;
+  framework: FrameworkId;
   onStart: (config: DrillConfig) => void;
 }
 
-function SetupPhase({ language, onStart }: SetupPhaseProps) {
-  const siblingLanguage = SIBLING_LANGUAGES[language];
-  const [includeSibling, setIncludeSibling] = useState(false);
-
-  // Get categories based on whether sibling is included
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+function SetupPhase({ framework, onStart }: SetupPhaseProps) {
+  const [selectedCategories, setSelectedCategories] = useState<FrontendCategory[]>([]);
   const [questionCount, setQuestionCount] = useState(10);
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
-  const [interviewOnly, setInterviewOnly] = useState(false);
-  const [showQuestionBrowser, setShowQuestionBrowser] = useState(false);
-  const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState('');
 
-  // Build the pool of problems respecting sibling + interview filters
-  const problemPool = (() => {
-    let problems: Problem[] = PROBLEMS_BY_LANGUAGE[language] || [];
+  const fwConfig = FRAMEWORK_CONFIG[framework];
+  const categories = getCategories(framework);
+  const categoryCounts = getCategoryCounts(framework);
 
-    if (includeSibling && siblingLanguage) {
-      problems = [...problems, ...(PROBLEMS_BY_LANGUAGE[siblingLanguage] || [])];
+  // Build the pool of problems respecting filters for count
+  const availableCount = (() => {
+    let problems = getProblems(framework);
+    if (selectedCategories.length > 0) {
+      problems = problems.filter((p) => selectedCategories.includes(p.category));
     }
-
-    if (interviewOnly) {
-      const langIds = getInterviewRecommendedIds(language);
-      const siblingIds =
-        includeSibling && siblingLanguage
-          ? getInterviewRecommendedIds(siblingLanguage)
-          : new Set<string>();
-      problems = problems.filter((p) => langIds.has(p.id) || siblingIds.has(p.id));
+    if (difficulty !== 'all') {
+      problems = problems.filter((p) => p.difficulty === difficulty);
     }
-
-    return problems;
+    return problems.length;
   })();
 
-  // Derive categories and counts from the filtered pool
-  const categories = (() => {
-    const cats = new Set(problemPool.map((p) => p.category));
-    return Array.from(cats).sort();
-  })();
-
-  const categoryCounts = (() => {
-    const counts: Record<string, number> = {};
-    for (const p of problemPool) {
-      counts[p.category] = (counts[p.category] || 0) + 1;
+  // Clamp questionCount when availableCount decreases
+  useEffect(() => {
+    const maxQuestions = Math.min(50, availableCount || 50);
+    if (questionCount > maxQuestions) {
+      setTimeout(() => {
+        setQuestionCount(maxQuestions);
+      }, 0);
     }
-    return counts;
-  })();
+  }, [availableCount, questionCount]);
 
-  const toggleCategory = (category: string) => {
+  const toggleCategory = (category: FrontendCategory) => {
     setSelectedCategories((prev) =>
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],
     );
@@ -440,158 +252,26 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const handleStart = () => {
     onStart({
       categories: selectedCategories,
-      questionCount: selectedQuestionIds.size > 0 ? selectedQuestionIds.size : questionCount,
+      questionCount,
       difficulty,
-      selectedQuestionIds:
-        selectedQuestionIds.size > 0 ? Array.from(selectedQuestionIds) : undefined,
-      includeSiblingLanguage: includeSibling,
-      interviewOnly,
     });
-  };
-
-  // Get all problems for browsing (without the random selection limit)
-  // Starts from problemPool which already has sibling + interview filters applied
-  const allFilteredProblems = (() => {
-    let problems = [...problemPool];
-
-    // Filter by categories
-    if (selectedCategories.length > 0) {
-      problems = problems.filter((p) => selectedCategories.includes(p.category));
-    }
-
-    // Filter by difficulty
-    if (difficulty !== 'all') {
-      problems = problems.filter((p) => p.difficulty === difficulty);
-    }
-
-    return problems;
-  })();
-
-  // Further filter by search query for display
-  const displayedProblems = searchQuery.trim()
-    ? allFilteredProblems.filter(
-        (p) =>
-          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.text.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    : allFilteredProblems;
-
-  const availableCount = allFilteredProblems.length;
-
-  // Clamp questionCount when availableCount decreases
-  useEffect(() => {
-    const maxQuestions = Math.min(50, availableCount || 50);
-    if (questionCount > maxQuestions) {
-      // Use setTimeout to avoid setState in effect
-      setTimeout(() => {
-        setQuestionCount(maxQuestions);
-      }, 0);
-    }
-  }, [availableCount, questionCount]);
-
-  const toggleQuestion = (id: string) => {
-    setSelectedQuestionIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
-  };
-
-  const selectAllVisible = () => {
-    setSelectedQuestionIds((prev) => {
-      const newSet = new Set(prev);
-      for (const p of displayedProblems) {
-        newSet.add(p.id);
-      }
-      return newSet;
-    });
-  };
-
-  const clearSelectedQuestions = () => {
-    setSelectedQuestionIds(new Set());
-  };
-
-  // Get proper language name from config
-  const languageName =
-    LANGUAGE_CONFIG[language]?.name || language.charAt(0).toUpperCase() + language.slice(1);
-
-  const difficultyColors: Record<Difficulty, string> = {
-    easy: 'bg-green-500/20 text-green-400 border-green-500/30',
-    medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    hard: 'bg-red-500/20 text-red-400 border-red-500/30',
   };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-zinc-100 mb-2">{languageName} Drill Mode</h1>
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <span
+            className={`text-sm font-bold px-2 py-1 rounded ${fwConfig.bgColor} ${fwConfig.color} border ${fwConfig.borderColor}`}
+          >
+            {fwConfig.icon}
+          </span>
+          <h1 className="text-3xl font-bold text-zinc-100">{fwConfig.name} Drill Mode</h1>
+        </div>
         <p className="text-zinc-400">Configure your practice session</p>
       </div>
 
       <div className="bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-800 space-y-6">
-        {/* Sibling Language Toggle (only for JS/TS) */}
-        {siblingLanguage && (
-          <div className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg border border-zinc-700">
-            <div>
-              <span className="block text-sm font-medium text-zinc-300">
-                Include {siblingLanguage.charAt(0).toUpperCase() + siblingLanguage.slice(1)}{' '}
-                Questions
-              </span>
-              <span className="text-xs text-zinc-500">
-                Practice both languages together since they share similar syntax
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIncludeSibling(!includeSibling)}
-              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
-                includeSibling ? 'bg-blue-500' : 'bg-zinc-600'
-              }`}
-            >
-              <div
-                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
-                  includeSibling ? 'translate-x-7' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        )}
-
-        {/* Interview Recommended Filter */}
-        {hasInterviewRecommended(language) && (
-          <div className="flex items-center justify-between p-4 bg-amber-500/5 rounded-lg border border-amber-500/20">
-            <div>
-              <span className="block text-sm font-medium text-zinc-300">Interview Recommended</span>
-              <span className="text-xs text-zinc-500">
-                Curated problems commonly tested in technical interviews (
-                {getInterviewRecommendedCount(
-                  language,
-                  includeSibling && siblingLanguage ? siblingLanguage : undefined,
-                )}
-                )
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setInterviewOnly(!interviewOnly)}
-              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
-                interviewOnly ? 'bg-amber-500' : 'bg-zinc-600'
-              }`}
-            >
-              <div
-                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
-                  interviewOnly ? 'translate-x-7' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        )}
-
         {/* Categories */}
         <div>
           <span className="block text-sm font-medium text-zinc-300 mb-3">
@@ -600,7 +280,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
           {categories.length === 0 ? (
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
               <p className="text-yellow-400 text-sm">
-                No problems available for {languageName} yet. Problems are being added regularly!
+                No problems available for {fwConfig.name} yet. Problems are being added regularly!
               </p>
             </div>
           ) : (
@@ -642,212 +322,9 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
           <DifficultyFilter value={difficulty} onChange={setDifficulty} />
         </div>
 
-        {/* Question Browser Toggle */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-zinc-300">
-              Questions ({availableCount} available)
-              {selectedQuestionIds.size > 0 && (
-                <span className="ml-2 text-blue-400">({selectedQuestionIds.size} selected)</span>
-              )}
-            </span>
-            <button
-              type="button"
-              onClick={() => setShowQuestionBrowser(!showQuestionBrowser)}
-              className="text-sm text-blue-400 hover:text-blue-300 cursor-pointer"
-            >
-              {showQuestionBrowser ? 'Hide List' : 'Browse Questions'}
-            </button>
-          </div>
-
-          {/* Question Browser Panel */}
-          {showQuestionBrowser && (
-            <div className="bg-zinc-800 rounded-lg border border-zinc-700 overflow-hidden">
-              {/* Search and Actions */}
-              <div className="p-3 border-b border-zinc-700 space-y-3">
-                {/* Search Input */}
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search by title, category, or description..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-4 py-2 pl-10 bg-zinc-900 border border-zinc-700 rounded-lg text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <svg
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 cursor-pointer"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={selectAllVisible}
-                    className="px-3 py-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 text-zinc-300 rounded-lg transition-colors cursor-pointer"
-                  >
-                    Select All Visible ({displayedProblems.length})
-                  </button>
-                  {selectedQuestionIds.size > 0 && (
-                    <button
-                      type="button"
-                      onClick={clearSelectedQuestions}
-                      className="px-3 py-1.5 text-xs bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors cursor-pointer"
-                    >
-                      Clear Selection
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Question List */}
-              <div className="max-h-64 overflow-y-auto">
-                {displayedProblems.length === 0 ? (
-                  <div className="p-4 text-center text-zinc-500 text-sm">
-                    {searchQuery ? 'No questions match your search' : 'No questions available'}
-                  </div>
-                ) : (
-                  displayedProblems.map((problem) => (
-                    <div
-                      key={problem.id}
-                      className={`flex items-center border-b border-zinc-700 last:border-b-0 transition-colors ${
-                        selectedQuestionIds.has(problem.id)
-                          ? 'bg-blue-500/20'
-                          : 'hover:bg-zinc-700/50'
-                      }`}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => toggleQuestion(problem.id)}
-                        className="flex-1 p-3 flex items-center justify-between text-left cursor-pointer"
-                      >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          {/* Checkbox */}
-                          <div
-                            className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
-                              selectedQuestionIds.has(problem.id)
-                                ? 'bg-blue-500 border-blue-500'
-                                : 'border-zinc-600'
-                            }`}
-                          >
-                            {selectedQuestionIds.has(problem.id) && (
-                              <svg
-                                className="w-3 h-3 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={3}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                          {/* Title and Category */}
-                          <div className="min-w-0">
-                            <div className="text-sm font-medium text-zinc-100 truncate">
-                              {problem.title}
-                            </div>
-                            <div className="text-xs text-zinc-500">{problem.category}</div>
-                          </div>
-                        </div>
-                        {/* Difficulty Badge */}
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded border flex-shrink-0 ${difficultyColors[problem.difficulty]}`}
-                        >
-                          {problem.difficulty}
-                        </span>
-                      </button>
-                      {/* Practice individually link */}
-                      <Link
-                        href={`/${language}/problems/${problem.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-3 text-zinc-500 hover:text-blue-400 transition-colors flex-shrink-0"
-                        title="Practice this problem individually"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* Footer with count */}
-              {displayedProblems.length > 0 && (
-                <div className="p-2 border-t border-zinc-700 bg-zinc-900/50 text-xs text-zinc-500 text-center">
-                  Showing {displayedProblems.length} of {availableCount} questions
-                  {searchQuery && ` matching "${searchQuery}"`}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Selected Questions Summary (when browser is hidden but questions are selected) */}
-          {!showQuestionBrowser && selectedQuestionIds.size > 0 && (
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 flex items-center justify-between">
-              <span className="text-sm text-blue-400">
-                {selectedQuestionIds.size} specific question
-                {selectedQuestionIds.size !== 1 ? 's' : ''} selected
-              </span>
-              <button
-                type="button"
-                onClick={clearSelectedQuestions}
-                className="text-xs text-red-400 hover:text-red-300 cursor-pointer"
-              >
-                Clear
-              </button>
-            </div>
-          )}
+        {/* Available count info */}
+        <div className="text-sm text-zinc-500">
+          {availableCount} question{availableCount !== 1 ? 's' : ''} available with current filters
         </div>
       </div>
 
@@ -855,41 +332,34 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
       <button
         type="button"
         onClick={handleStart}
-        disabled={availableCount === 0 && selectedQuestionIds.size === 0}
+        disabled={availableCount === 0}
         className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-lg cursor-pointer"
       >
-        {selectedQuestionIds.size > 0
-          ? `Start Drilling (${selectedQuestionIds.size} questions)`
-          : 'Start Drilling'}
+        Start Drilling
       </button>
     </div>
   );
 }
 
-interface DrillPhaseProps {
-  problems: ProblemWithLanguage[];
-  state: DrillState;
-  language: LanguageId;
-  onAnswer: (answer: string) => void;
-  onSkip: () => void;
-  questionStartTime: number;
-}
+// ============================================================================
+// Drilling Phase
+// ============================================================================
 
 interface DrillPhaseProps {
-  problems: ProblemWithLanguage[];
+  problems: FrontendDrillProblem[];
   state: DrillState;
-  language: LanguageId;
+  framework: FrameworkId;
   onAnswer: (answer: string) => void;
   onSkip: () => void;
   onEnd: () => void;
   questionStartTime: number;
-  currentAnswer: AnswerRecord | null; // Add current answer for snackbar
+  currentAnswer: AnswerRecord | null;
 }
 
 function DrillPhaseComponent({
   problems,
   state,
-  language,
+  framework,
   onAnswer,
   onSkip,
   onEnd,
@@ -900,6 +370,7 @@ function DrillPhaseComponent({
   const [elapsedTime, setElapsedTime] = useState(0);
   const [questionTime, setQuestionTime] = useState(0);
   const currentProblem = problems[state.currentIndex];
+  const fwConfig = FRAMEWORK_CONFIG[framework];
 
   // Total time timer effect
   useEffect(() => {
@@ -913,10 +384,10 @@ function DrillPhaseComponent({
   // biome-ignore lint/correctness/useExhaustiveDependencies: currentIndex needed to reset timer on question change
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer reset is intentional on question change
-    setQuestionTime(0); // Reset when question changes
+    setQuestionTime(0);
     const interval = setInterval(() => {
       setQuestionTime(Date.now() - questionStartTime);
-    }, 100); // Update more frequently for smoother display
+    }, 100);
     return () => clearInterval(interval);
   }, [questionStartTime, state.currentIndex]);
 
@@ -928,7 +399,7 @@ function DrillPhaseComponent({
   const handleSubmit = useCallback(() => {
     if (userAnswer.trim()) {
       const answerToSubmit = userAnswer.trim();
-      setUserAnswer(''); // Clear immediately for better UX
+      setUserAnswer('');
       onAnswer(answerToSubmit);
     }
   }, [userAnswer, onAnswer]);
@@ -1016,10 +487,7 @@ function DrillPhaseComponent({
             </div>
             <button
               type="button"
-              onClick={() => {
-                // Snackbar will auto-dismiss when currentAnswer is cleared
-                // This is just for visual feedback - auto-advance will handle dismissal
-              }}
+              onClick={() => {}}
               className="text-zinc-400 hover:text-zinc-300 transition-colors opacity-50"
               aria-label="Dismiss"
               disabled
@@ -1067,7 +535,6 @@ function DrillPhaseComponent({
           </div>
         </div>
         <div className="flex items-center gap-6">
-          {/* Per-question stopwatch */}
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-400 font-mono">
               {(questionTime / 1000).toFixed(1)}s
@@ -1088,6 +555,11 @@ function DrillPhaseComponent({
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-lg font-semibold text-zinc-100">{currentProblem.title}</h2>
             <div className="flex items-center gap-2">
+              <span
+                className={`text-xs px-2 py-1 rounded border ${fwConfig.bgColor} ${fwConfig.color} ${fwConfig.borderColor}`}
+              >
+                {fwConfig.shortName}
+              </span>
               <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
                 {currentProblem.category}
               </span>
@@ -1117,25 +589,13 @@ function DrillPhaseComponent({
 
         {/* Answer Input */}
         <div className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-zinc-300">Your Answer</span>
-            {currentProblem.sourceLanguage !== language && (
-              <span
-                className={`text-xs px-2 py-0.5 rounded ${
-                  currentProblem.sourceLanguage === 'typescript'
-                    ? 'bg-blue-500/20 text-blue-400'
-                    : 'bg-yellow-500/20 text-yellow-400'
-                }`}
-              >
-                {currentProblem.sourceLanguage === 'typescript' ? 'TypeScript' : 'JavaScript'}
-              </span>
-            )}
-          </div>
+          <span className="block text-sm font-medium text-zinc-300 mb-2">Your Answer</span>
           <CodeEditor
             key={`${state.currentIndex}-${currentProblem.id}`}
             code={userAnswer}
             onChange={setUserAnswer}
-            language={currentProblem.sourceLanguage}
+            language="javascript"
+            monacoLanguageOverride={currentProblem.editorLanguage}
             height={120}
             minHeight={120}
             lineNumbers={true}
@@ -1178,6 +638,10 @@ function DrillPhaseComponent({
   );
 }
 
+// ============================================================================
+// Feedback Phase
+// ============================================================================
+
 interface FeedbackPhaseProps {
   answerRecord: AnswerRecord;
   onNext: () => void;
@@ -1211,7 +675,6 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
           </div>
         )}
         {!skipped && !isCorrect && error && <p className="text-sm text-red-400">{error}</p>}
-        {/* Time taken */}
         <p className="text-sm text-zinc-500 mt-2">
           Answered in {(answerRecord.timeTaken / 1000).toFixed(1)}s
         </p>
@@ -1272,8 +735,13 @@ function FeedbackPhase({ answerRecord, onNext }: FeedbackPhaseProps) {
   );
 }
 
+// ============================================================================
+// Results Phase
+// ============================================================================
+
 interface ResultsPhaseProps {
   state: DrillState;
+  framework: FrameworkId;
   onTryAgain: () => void;
   onTryAgainSameQuestions: () => void;
   onBackToMenu: () => void;
@@ -1281,13 +749,14 @@ interface ResultsPhaseProps {
 
 function ResultsPhase({
   state,
+  framework,
   onTryAgain,
   onTryAgainSameQuestions,
   onBackToMenu,
 }: ResultsPhaseProps) {
   const [showMissed, setShowMissed] = useState(false);
-  // Use lazy initializer to capture time only once (on first render)
   const [capturedTime] = useState(() => Date.now());
+  const fwConfig = FRAMEWORK_CONFIG[framework];
 
   const totalQuestions = state.answers.length;
   const correctAnswers = state.answers.filter((a) => a.isCorrect && !a.skipped).length;
@@ -1302,7 +771,9 @@ function ResultsPhase({
       {/* Results Header */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-zinc-100 mb-2">Drill Complete!</h1>
-        <p className="text-zinc-400">Here is how you did</p>
+        <p className="text-zinc-400">
+          <span className={fwConfig.color}>{fwConfig.name}</span> — Here&apos;s how you did
+        </p>
       </div>
 
       {/* Total Score Highlight */}
@@ -1470,17 +941,17 @@ function ResultsPhase({
 // Main Page Component
 // ============================================================================
 
-export default function DrillPage() {
+export default function FrontendDrillPage() {
   const params = useParams();
   const router = useRouter();
-  const languageParam = params.language as string;
+  const frameworkParam = params.framework as string;
 
-  // Validate language parameter
-  const language: LanguageId = isValidLanguage(languageParam) ? languageParam : 'javascript';
+  // Validate framework parameter
+  const framework: FrameworkId = isValidFramework(frameworkParam) ? frameworkParam : 'native-js';
 
   const [phase, setPhase] = useState<DrillPhase>('setup');
   const [config, setConfig] = useState<DrillConfig | null>(null);
-  const [problems, setProblems] = useState<ProblemWithLanguage[]>([]);
+  const [problems, setProblems] = useState<FrontendDrillProblem[]>([]);
   const [drillState, setDrillState] = useState<DrillState>({
     currentIndex: 0,
     answers: [],
@@ -1494,7 +965,7 @@ export default function DrillPage() {
 
   const handleStart = useCallback(
     (newConfig: DrillConfig) => {
-      const selectedProblems = selectProblems(language, newConfig);
+      const selectedProblems = selectProblems(framework, newConfig);
 
       if (selectedProblems.length === 0) {
         alert('No problems available with the selected filters. Please adjust your selection.');
@@ -1515,24 +986,21 @@ export default function DrillPage() {
       setQuestionStartTime(now);
       setPhase('drilling');
     },
-    [language],
+    [framework],
   );
 
   const handleNext = useCallback(() => {
     const nextIndex = drillState.currentIndex + 1;
 
-    // Clear current answer when moving to next question
     setCurrentAnswer(null);
 
     if (nextIndex >= problems.length) {
-      // Drill complete
       setDrillState((prev) => ({
         ...prev,
         endTime: Date.now(),
       }));
       setPhase('results');
     } else {
-      // Move to next question
       setDrillState((prev) => ({
         ...prev,
         currentIndex: nextIndex,
@@ -1545,10 +1013,9 @@ export default function DrillPage() {
   const handleAnswer = useCallback(
     (userAnswer: string) => {
       const currentProblem = problems[drillState.currentIndex];
-      const result = validateProblemAnswer(currentProblem, userAnswer, language);
+      const result = validateFrontendDrillAnswer(currentProblem, userAnswer);
       const timeTaken = Date.now() - questionStartTime;
 
-      // Calculate points (use current streak before updating)
       const pointsEarned = calculatePoints(
         result.success,
         timeTaken,
@@ -1569,7 +1036,6 @@ export default function DrillPage() {
 
       setCurrentAnswer(answerRecord);
 
-      // Update state with answer and score
       setDrillState((prev) => {
         const newStreak = result.success ? prev.streak + 1 : 0;
         return {
@@ -1584,7 +1050,7 @@ export default function DrillPage() {
       // Instant advance to next question
       handleNext();
     },
-    [problems, drillState.currentIndex, drillState.streak, questionStartTime, language, handleNext],
+    [problems, drillState.currentIndex, drillState.streak, questionStartTime, handleNext],
   );
 
   const handleSkip = useCallback(() => {
@@ -1614,7 +1080,6 @@ export default function DrillPage() {
   }, [problems, drillState.currentIndex, questionStartTime, handleNext]);
 
   const handleEnd = useCallback(() => {
-    // Mark current question as skipped if not already answered
     if (drillState.currentIndex < problems.length) {
       const currentProblem = problems[drillState.currentIndex];
       const timeTaken = Date.now() - questionStartTime;
@@ -1635,7 +1100,6 @@ export default function DrillPage() {
         endTime: Date.now(),
       }));
     } else {
-      // Just set end time if we're already past all questions
       setDrillState((prev) => ({
         ...prev,
         endTime: Date.now(),
@@ -1646,7 +1110,6 @@ export default function DrillPage() {
   }, [problems, drillState.currentIndex, questionStartTime]);
 
   const handleTryAgainSameQuestions = useCallback(() => {
-    // Restart with the same problems array (same exact questions)
     if (problems.length > 0) {
       const now = Date.now();
       setDrillState({
@@ -1664,15 +1127,14 @@ export default function DrillPage() {
   }, [problems]);
 
   const handleTryAgain = useCallback(() => {
-    // Generate new questions with the same config
     if (config) {
       handleStart(config);
     }
   }, [config, handleStart]);
 
   const handleBackToMenu = useCallback(() => {
-    router.push(`/${language}`);
-  }, [router, language]);
+    router.push(`/frontend-drills/${framework}`);
+  }, [router, framework]);
 
   // Scroll to top when drill phase starts
   useEffect(() => {
@@ -1683,13 +1145,13 @@ export default function DrillPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 py-8 px-4">
-      {phase === 'setup' && <SetupPhase language={language} onStart={handleStart} />}
+      {phase === 'setup' && <SetupPhase framework={framework} onStart={handleStart} />}
 
       {phase === 'drilling' && problems.length > 0 && (
         <DrillPhaseComponent
           problems={problems}
           state={drillState}
-          language={language}
+          framework={framework}
           onAnswer={handleAnswer}
           onSkip={handleSkip}
           onEnd={handleEnd}
@@ -1705,6 +1167,7 @@ export default function DrillPage() {
       {phase === 'results' && (
         <ResultsPhase
           state={drillState}
+          framework={framework}
           onTryAgain={handleTryAgain}
           onTryAgainSameQuestions={handleTryAgainSameQuestions}
           onBackToMenu={handleBackToMenu}

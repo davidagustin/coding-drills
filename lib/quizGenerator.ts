@@ -6,7 +6,7 @@ import {
 import { getMethodsByLanguage } from './problems';
 import type { Difficulty, LanguageId, Method, QuizQuestion } from './types';
 
-export type QuizType = 'methods' | 'time-complexity' | 'space-complexity';
+export type QuizType = 'methods' | 'time-complexity' | 'space-complexity' | 'pattern-recognition';
 
 export interface QuizConfig {
   language: LanguageId;

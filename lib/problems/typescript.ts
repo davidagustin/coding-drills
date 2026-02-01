@@ -25,7 +25,7 @@ export const typescriptProblems: Problem[] = [
     ],
     validPatterns: [
       /\.filter\s*\(\s*\([^)]*\)\s*:\s*\w+\s+is\s+string/,
-      /!=\s*null|!==\s*null\s*&&[^)]*!==\s*undefined/,
+      /!==?\s*null|!==\s*null\s*&&[^)]*!==\s*undefined/,
     ],
     tags: ['filter', 'type-guard', 'nullish'],
   },

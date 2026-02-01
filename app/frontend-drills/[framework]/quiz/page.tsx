@@ -4,31 +4,25 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Breadcrumb } from '@/components/Breadcrumb';
-import { PatternRecognitionGuide } from '@/components/PatternRecognitionGuide';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
-import { getPatternCategories } from '@/lib/algorithmPatterns';
 import {
-  COMPLEXITY_CATEGORY_CONFIG,
-  getComplexityCategories,
-  getComplexityCategoryCounts,
-} from '@/lib/complexityProblems';
-import { getCategoriesForLanguage, getCategoryCountsForLanguage } from '@/lib/problems';
-import {
-  addToLeaderboard,
-  calculateQuizResults,
-  calculateScore,
-  generateQuiz,
-  getLeaderboard,
-  getLeaderboardPosition,
-  getMethodInfo,
-  type LeaderboardEntry,
-  type QuizAnswer,
-  type QuizConfig,
-  type QuizResult,
-  type QuizType,
-  type ScoreResult,
-} from '@/lib/quizGenerator';
-import type { LanguageId, QuizQuestion } from '@/lib/types';
+  addToFrontendLeaderboard,
+  calculateFrontendQuizResults,
+  calculateFrontendQuizScore,
+  FRAMEWORK_CONFIG,
+  type FrameworkId,
+  type FrontendCategory,
+  type FrontendLeaderboardEntry,
+  type FrontendQuizAnswer,
+  type FrontendQuizConfig,
+  type FrontendQuizQuestion,
+  type FrontendQuizResult,
+  generateFrontendQuiz,
+  getFrontendLeaderboard,
+  getFrontendLeaderboardPosition,
+  getQuizQuestions,
+  isValidFramework,
+} from '@/lib/frontend-drills';
 
 // ============================================================================
 // Types
@@ -38,13 +32,13 @@ type Phase = 'setup' | 'playing' | 'results';
 
 interface QuizState {
   phase: Phase;
-  config: QuizConfig;
-  questions: QuizQuestion[];
+  config: FrontendQuizConfig;
+  questions: FrontendQuizQuestion[];
   currentQuestionIndex: number;
   score: number;
   streak: number;
   maxStreak: number;
-  answers: QuizAnswer[];
+  answers: FrontendQuizAnswer[];
   startTime: number | null;
   endTime: number | null;
   selectedOption: string | null;
@@ -119,58 +113,58 @@ function useSoundEffects(enabled: boolean) {
 }
 
 // ============================================================================
+// Helper: extract unique categories from quiz questions with counts
+// ============================================================================
+
+function getCategoriesWithCounts(framework: FrameworkId): {
+  categories: FrontendCategory[];
+  counts: Record<string, number>;
+} {
+  const questions = getQuizQuestions(framework);
+  const counts: Record<string, number> = {};
+  for (const q of questions) {
+    counts[q.category] = (counts[q.category] || 0) + 1;
+  }
+  const categories = Object.keys(counts) as FrontendCategory[];
+  return { categories, counts };
+}
+
+// ============================================================================
 // Setup Phase Component
 // ============================================================================
 
 interface SetupPhaseProps {
-  config: QuizConfig;
-  onConfigChange: (config: QuizConfig) => void;
+  config: FrontendQuizConfig;
+  onConfigChange: (config: FrontendQuizConfig) => void;
   onStart: () => void;
-  methodCategories: string[];
-  methodCategoryCounts: Record<string, number>;
-  language: LanguageId;
-  onShowPatternGuide?: () => void;
+  framework: FrameworkId;
+  soundEnabled: boolean;
+  onSoundToggle: () => void;
 }
 
 function SetupPhase({
   config,
   onConfigChange,
   onStart,
-  methodCategories,
-  methodCategoryCounts,
-  language,
-  onShowPatternGuide,
+  framework,
+  soundEnabled,
+  onSoundToggle,
 }: SetupPhaseProps) {
-  const [soundEnabled, setSoundEnabled] = useState(false);
+  const frameworkConfig = FRAMEWORK_CONFIG[framework];
+  const { categories: availableCategories, counts: categoryCounts } =
+    getCategoriesWithCounts(framework);
 
   const timeOptions = [10, 15, 20, 30, 0] as const; // 0 = unlimited
 
-  // Get categories/counts based on quiz type
-  const isComplexity =
-    config.quizType === 'time-complexity' || config.quizType === 'space-complexity';
-  const isPatternQuiz = config.quizType === 'pattern-recognition';
-  const availableCategories = isComplexity
-    ? getComplexityCategories()
-    : isPatternQuiz
-      ? getPatternCategories()
-      : methodCategories;
-  const categoryCounts = isComplexity
-    ? getComplexityCategoryCounts()
-    : isPatternQuiz
-      ? {} // Pattern quiz doesn't use category counts the same way
-      : methodCategoryCounts;
-
   // Calculate available questions based on selected categories
-  const availableMethodsCount = isPatternQuiz
-    ? 170 // Pattern quiz has 170 problems
-    : config.categories.length === 0
+  const availableQuestionCount =
+    config.categories.length === 0
       ? Object.values(categoryCounts).reduce((a, b) => a + b, 0) // All categories
       : config.categories.reduce((sum, cat) => sum + (categoryCounts[cat] || 0), 0);
 
-  // Max questions equals available methods (minimum 1)
-  const maxQuestions = Math.max(1, availableMethodsCount);
+  const maxQuestions = Math.max(1, availableQuestionCount);
 
-  const toggleCategory = (category: string) => {
+  const toggleCategory = (category: FrontendCategory) => {
     const newCategories = config.categories.includes(category)
       ? config.categories.filter((c) => c !== category)
       : [...config.categories, category];
@@ -204,13 +198,14 @@ function SetupPhase({
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
-              { label: language.charAt(0).toUpperCase() + language.slice(1), href: `/${language}` },
-              { label: 'Quiz Mode' },
+              { label: 'Frontend Drills', href: '/frontend-drills' },
+              { label: frameworkConfig.name, href: `/frontend-drills/${framework}` },
+              { label: 'Quiz' },
             ]}
             className="text-sm"
           />
           <Link
-            href={`/${language}`}
+            href={`/frontend-drills/${framework}`}
             className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
           >
             <svg
@@ -233,155 +228,76 @@ function SetupPhase({
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Quiz Mode
           </h1>
-          <p className="text-slate-400 text-lg">
-            {config.quizType === 'methods'
-              ? `Test your knowledge of ${config.language} methods`
-              : config.quizType === 'time-complexity'
-                ? 'Identify the time complexity of algorithms'
-                : config.quizType === 'space-complexity'
-                  ? 'Identify the space complexity of algorithms'
-                  : 'Recognize algorithm patterns from LeetCode-style problems'}
-          </p>
+          <p className="text-slate-400 text-lg">{frameworkConfig.description}</p>
         </div>
 
-        {/* Quiz Type Selection */}
+        {/* Category Selection */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
-          <h2 className="text-xl font-semibold mb-4">Quiz Type</h2>
-          <div className="grid grid-cols-4 gap-2">
-            {[
-              { type: 'methods' as QuizType, label: 'Methods', icon: '📝' },
-              { type: 'time-complexity' as QuizType, label: 'Time Complexity', icon: '⏱' },
-              { type: 'space-complexity' as QuizType, label: 'Space Complexity', icon: '💾' },
-              { type: 'pattern-recognition' as QuizType, label: 'Pattern Quiz', icon: '🧩' },
-            ].map(({ type, label, icon }) => (
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">
+              Categories
+              {config.categories.length > 0 && (
+                <span className="text-sm font-normal text-slate-400 ml-2">
+                  ({config.categories.length} selected)
+                </span>
+              )}
+            </h2>
+            <div className="flex gap-2">
               <button
                 type="button"
-                key={type}
-                onClick={() => {
-                  onConfigChange({ ...config, quizType: type, categories: [] });
-                }}
-                className={`py-3 px-3 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${
-                  config.quizType === type
+                onClick={selectAllCategories}
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+              >
+                Select All
+              </button>
+              <span className="text-slate-600">|</span>
+              <button
+                type="button"
+                onClick={clearAllCategories}
+                className="text-sm text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {availableCategories.map((category) => (
+              <button
+                type="button"
+                key={category}
+                onClick={() => toggleCategory(category)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+                  config.categories.includes(category)
                     ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
                     : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                 }`}
               >
-                <span className="mr-1.5">{icon}</span>
-                {label}
+                {category}
+                <span
+                  className={`text-xs px-1.5 py-0.5 rounded-full ${
+                    config.categories.includes(category)
+                      ? 'bg-blue-400/30 text-blue-100'
+                      : 'bg-slate-600 text-slate-400'
+                  }`}
+                >
+                  {categoryCounts[category] || 0}
+                </span>
               </button>
             ))}
           </div>
+          {config.categories.length === 0 && (
+            <p className="text-slate-500 text-sm mt-3">
+              No categories selected - all categories will be included
+            </p>
+          )}
         </div>
-
-        {/* Pattern Quiz: View Guide before starting (quiz is timed) - show right after quiz type */}
-        {isPatternQuiz && onShowPatternGuide && (
-          <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">Pattern Recognition Guide</h2>
-                <p className="text-slate-400 text-sm">
-                  Review the framework before the timed quiz starts
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={onShowPatternGuide}
-                className="flex items-center gap-2 px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-colors cursor-pointer"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-                View Guide
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Category Selection - Skip for pattern quiz */}
-        {!isPatternQuiz && (
-          <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">
-                Categories
-                {config.categories.length > 0 && (
-                  <span className="text-sm font-normal text-slate-400 ml-2">
-                    ({config.categories.length} selected)
-                  </span>
-                )}
-              </h2>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={selectAllCategories}
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
-                >
-                  Select All
-                </button>
-                <span className="text-slate-600">|</span>
-                <button
-                  type="button"
-                  onClick={clearAllCategories}
-                  className="text-sm text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
-                >
-                  Clear
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {availableCategories.map((category) => (
-                <button
-                  type="button"
-                  key={category}
-                  onClick={() => toggleCategory(category)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer flex items-center gap-2 ${
-                    config.categories.includes(category)
-                      ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                      : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
-                  }`}
-                >
-                  {isComplexity
-                    ? COMPLEXITY_CATEGORY_CONFIG[
-                        category as keyof typeof COMPLEXITY_CATEGORY_CONFIG
-                      ]?.name || category
-                    : category}
-                  <span
-                    className={`text-xs px-1.5 py-0.5 rounded-full ${
-                      config.categories.includes(category)
-                        ? 'bg-blue-400/30 text-blue-100'
-                        : 'bg-slate-600 text-slate-400'
-                    }`}
-                  >
-                    {categoryCounts[category] || 0}
-                  </span>
-                </button>
-              ))}
-            </div>
-            {config.categories.length === 0 && (
-              <p className="text-slate-500 text-sm mt-3">
-                No categories selected - all categories will be included
-              </p>
-            )}
-          </div>
-        )}
 
         {/* Question Count */}
         <div className="bg-slate-800/50 rounded-2xl p-6 mb-6 border border-slate-700/50">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Number of Questions</h2>
             <span className="text-sm text-slate-400">
-              {availableMethodsCount}{' '}
-              {isPatternQuiz ? 'problems' : isComplexity ? 'questions' : 'methods'} available
+              {availableQuestionCount} questions available
             </span>
           </div>
           <QuestionCountSlider
@@ -409,7 +325,7 @@ function SetupPhase({
                     : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                 }`}
               >
-                {time === 0 ? '∞' : `${time}s`}
+                {time === 0 ? '\u221E' : `${time}s`}
               </button>
             ))}
           </div>
@@ -457,7 +373,7 @@ function SetupPhase({
             </div>
             <button
               type="button"
-              onClick={() => setSoundEnabled(!soundEnabled)}
+              onClick={onSoundToggle}
               className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
                 soundEnabled ? 'bg-blue-500' : 'bg-slate-600'
               }`}
@@ -563,7 +479,7 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
                 : 'text-white text-lg'
         }`}
       >
-        {isUnlimited ? '∞' : formatTime(timeLeft)}
+        {isUnlimited ? '\u221E' : formatTime(timeLeft)}
       </div>
     </div>
   );
@@ -633,36 +549,29 @@ function ScoreDisplay({ score, streak }: ScoreDisplayProps) {
 }
 
 // ============================================================================
-// Method Card Component
+// Option Card Component
 // ============================================================================
 
-interface MethodCardProps {
-  method: string;
-  description?: string;
+interface OptionCardProps {
+  option: string;
   isSelected: boolean;
   isCorrect?: boolean;
   isRevealed: boolean;
   onClick: () => void;
   disabled: boolean;
-  language: LanguageId;
 }
 
-function MethodCard({
-  method,
+function OptionCard({
+  option,
   isSelected,
   isCorrect,
   isRevealed,
   onClick,
   disabled,
-  language,
-}: MethodCardProps) {
-  const methodInfo = getMethodInfo(method, language);
-  const [isHovered, setIsHovered] = useState(false);
-
+}: OptionCardProps) {
   let cardClasses = `
-    relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
+    relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer text-left
     transform hover:scale-[1.02] active:scale-[0.98]
-    ${isHovered ? 'z-20' : 'z-0'}
   `;
 
   if (isRevealed) {
@@ -684,19 +593,12 @@ function MethodCard({
   }
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={cardClasses}
-    >
-      <div className="flex items-center justify-between">
-        <span className="font-mono font-semibold text-lg">{method}</span>
+    <button type="button" onClick={onClick} disabled={disabled} className={cardClasses}>
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm font-medium leading-snug">{option}</span>
         {isRevealed && isCorrect && (
           <svg
-            className="w-6 h-6 text-emerald-400"
+            className="w-6 h-6 text-emerald-400 flex-shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -707,7 +609,7 @@ function MethodCard({
         )}
         {isRevealed && isSelected && !isCorrect && (
           <svg
-            className="w-6 h-6 text-red-400"
+            className="w-6 h-6 text-red-400 flex-shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -722,15 +624,6 @@ function MethodCard({
           </svg>
         )}
       </div>
-
-      {/* Tooltip on hover */}
-      {isHovered && !isRevealed && methodInfo && (
-        <div className="absolute left-0 right-0 -bottom-2 transform translate-y-full z-50 p-3 bg-slate-900 rounded-lg border border-slate-600 shadow-xl text-sm text-slate-300 text-left pointer-events-none">
-          {methodInfo.description.length > 100
-            ? `${methodInfo.description.slice(0, 100)}...`
-            : methodInfo.description}
-        </div>
-      )}
     </button>
   );
 }
@@ -740,74 +633,38 @@ function MethodCard({
 // ============================================================================
 
 interface QuestionDisplayProps {
-  question: QuizQuestion;
-  quizType: QuizType;
+  question: FrontendQuizQuestion;
 }
 
-function QuestionDisplay({ question, quizType }: QuestionDisplayProps) {
-  const isComplexity = quizType === 'time-complexity' || quizType === 'space-complexity';
-
+function QuestionDisplay({ question }: QuestionDisplayProps) {
   return (
     <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-slate-400 text-sm uppercase tracking-wider">
-          {isComplexity
-            ? `What is the ${quizType === 'time-complexity' ? 'time' : 'space'} complexity?`
-            : 'Which method produces this output?'}
-        </h3>
-        {/* Hint badge */}
-        {question.methodHint && (
-          <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-full border border-blue-500/30">
-            {question.methodHint}
-          </span>
-        )}
+        <h3 className="text-slate-400 text-sm uppercase tracking-wider">{question.category}</h3>
+        <span
+          className={`px-3 py-1 text-xs font-medium rounded-full border ${
+            question.difficulty === 'easy'
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+              : question.difficulty === 'medium'
+                ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+                : 'bg-red-500/20 text-red-300 border-red-500/30'
+          }`}
+        >
+          {question.difficulty}
+        </span>
       </div>
 
-      {isComplexity ? (
-        <>
-          {/* Algorithm title */}
-          <div className="mb-4">
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Algorithm</div>
-            <div className="text-lg font-semibold text-white">{question.output}</div>
-          </div>
-          {/* Code snippet */}
-          <div>
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Code</div>
-            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere overflow-x-auto max-h-64 overflow-y-auto">
-              <code className="block">{question.input}</code>
-            </pre>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Code snippet */}
-          <div className="mb-4">
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Input</div>
-            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-              <code className="block">{question.input}</code>
-            </pre>
-          </div>
+      {/* Question text */}
+      <div className="text-lg font-semibold text-white mb-4">{question.question}</div>
 
-          {/* Method Arguments */}
-          {question.methodArgs && (
-            <div className="mb-4">
-              <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
-                Method Arguments
-              </div>
-              <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-purple-300 border border-purple-500/20 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-                <code className="block">({question.methodArgs})</code>
-              </pre>
-            </div>
-          )}
-
-          {/* Output */}
-          <div>
-            <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Output</div>
-            <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-emerald-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-              <code className="block">{question.output}</code>
-            </pre>
-          </div>
-        </>
+      {/* Optional code snippet */}
+      {question.codeSnippet && (
+        <div>
+          <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">Code</div>
+          <pre className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-blue-300 whitespace-pre-wrap break-words overflow-wrap-anywhere overflow-x-auto max-h-64 overflow-y-auto">
+            <code className="block">{question.codeSnippet}</code>
+          </pre>
+        </div>
       )}
     </div>
   );
@@ -822,7 +679,7 @@ interface PlayingPhaseProps {
   onSelectOption: (option: string) => void;
   onTimeout: () => void;
   soundEnabled: boolean;
-  language: LanguageId;
+  framework: FrameworkId;
   onExit: () => void;
 }
 
@@ -831,18 +688,18 @@ function PlayingPhase({
   onSelectOption,
   onTimeout,
   soundEnabled,
-  language,
+  framework,
   onExit,
 }: PlayingPhaseProps) {
   const [timeLeft, setTimeLeft] = useState<number>(state.config.timePerQuestion * 1000);
   const { playTick } = useSoundEffects(soundEnabled);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const frameworkConfig = FRAMEWORK_CONFIG[framework];
 
   const currentQuestion = state.questions[state.currentQuestionIndex];
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: currentQuestionIndex needed to reset timer on question change
   useEffect(() => {
-    // Reset timer when question changes (convert seconds to milliseconds)
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Timer reset is intentional on question change
     setTimeLeft(state.config.timePerQuestion * 1000);
   }, [state.config.timePerQuestion, state.currentQuestionIndex]);
@@ -908,11 +765,12 @@ function PlayingPhase({
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
+              { label: 'Frontend Drills', href: '/frontend-drills' },
               {
-                label: language.charAt(0).toUpperCase() + language.slice(1),
-                href: `/${language}`,
+                label: frameworkConfig.name,
+                href: `/frontend-drills/${framework}`,
               },
-              { label: 'Quiz Mode', href: `/${language}/quiz` },
+              { label: 'Quiz', href: `/frontend-drills/${framework}/quiz` },
               {
                 label: `Question ${state.currentQuestionIndex + 1} of ${state.questions.length}`,
               },
@@ -956,21 +814,20 @@ function PlayingPhase({
 
         {/* Question */}
         <div className="mb-8">
-          <QuestionDisplay question={currentQuestion} quizType={state.config.quizType} />
+          <QuestionDisplay question={currentQuestion} />
         </div>
 
-        {/* Method Cards */}
+        {/* Option Cards - 2x2 grid */}
         <div className="grid grid-cols-2 gap-4">
           {currentQuestion.options.map((option) => (
-            <MethodCard
+            <OptionCard
               key={option}
-              method={option}
+              option={option}
               isSelected={state.selectedOption === option}
-              isCorrect={option === currentQuestion.correctMethod}
+              isCorrect={option === currentQuestion.correctAnswer}
               isRevealed={state.showingAnswer}
               onClick={() => onSelectOption(option)}
               disabled={state.showingAnswer}
-              language={state.config.language}
             />
           ))}
         </div>
@@ -978,17 +835,18 @@ function PlayingPhase({
         {/* Feedback after answer */}
         {state.showingAnswer && (
           <div className="mt-6 text-center">
-            {state.selectedOption === currentQuestion.correctMethod ? (
+            {state.selectedOption === currentQuestion.correctAnswer ? (
               <div className="text-emerald-400 text-xl font-semibold animate-bounce">
                 Correct! +{state.answers[state.answers.length - 1]?.points || 0} points
               </div>
             ) : (
               <div className="text-red-400 text-xl font-semibold">
-                {state.selectedOption === null ? "Time's up!" : 'Incorrect!'} The answer was{' '}
-                <span className="text-emerald-400 font-mono">{currentQuestion.correctMethod}</span>
+                {state.selectedOption === null ? "Time's up!" : 'Incorrect!'}
               </div>
             )}
-            <p className="text-slate-400 mt-2 text-sm">{currentQuestion.explanation}</p>
+            <p className="text-slate-400 mt-2 text-sm max-w-xl mx-auto">
+              {currentQuestion.explanation}
+            </p>
           </div>
         )}
       </div>
@@ -1001,13 +859,13 @@ function PlayingPhase({
 // ============================================================================
 
 interface ResultsPhaseProps {
-  result: QuizResult;
-  config: QuizConfig;
+  result: FrontendQuizResult;
+  config: FrontendQuizConfig;
   onPlayAgain: () => void;
   onChangeSettings: () => void;
-  answers: QuizAnswer[];
-  questions: QuizQuestion[];
-  language: LanguageId;
+  answers: FrontendQuizAnswer[];
+  questions: FrontendQuizQuestion[];
+  framework: FrameworkId;
 }
 
 function ResultsPhase({
@@ -1017,37 +875,38 @@ function ResultsPhase({
   onChangeSettings,
   answers,
   questions,
-  language,
+  framework,
 }: ResultsPhaseProps) {
+  const frameworkConfig = FRAMEWORK_CONFIG[framework];
   const [playerName, setPlayerName] = useState('');
   const [savedToLeaderboard, setSavedToLeaderboard] = useState(false);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [leaderboard, setLeaderboard] = useState<FrontendLeaderboardEntry[]>([]);
   const [leaderboardPosition, setLeaderboardPosition] = useState<number>(0);
   const [reviewFilter, setReviewFilter] = useState<'all' | 'missed'>('missed');
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- Initial data load */
-    setLeaderboard(getLeaderboard().slice(0, 10));
-    setLeaderboardPosition(getLeaderboardPosition(result.totalScore));
+    setLeaderboard(getFrontendLeaderboard().slice(0, 10));
+    setLeaderboardPosition(getFrontendLeaderboardPosition(result.totalScore));
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [result.totalScore]);
 
   const handleSaveScore = () => {
     if (playerName.trim()) {
-      addToLeaderboard({
+      addToFrontendLeaderboard({
         playerName: playerName.trim(),
         score: result.totalScore,
         accuracy: result.accuracy,
-        language: config.language,
+        framework: config.framework,
         questionCount: config.questionCount,
       });
       setSavedToLeaderboard(true);
-      setLeaderboard(getLeaderboard().slice(0, 10));
+      setLeaderboard(getFrontendLeaderboard().slice(0, 10));
     }
   };
 
   const handleShare = async () => {
-    const shareText = `I scored ${result.totalScore} points on the ${config.language} coding quiz!
+    const shareText = `I scored ${result.totalScore} points on the ${frameworkConfig.name} frontend quiz!
 Accuracy: ${result.accuracy}%
 Streak: ${result.maxStreak}
 Try it yourself!`;
@@ -1055,7 +914,7 @@ Try it yourself!`;
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Coding Drills Quiz Score',
+          title: 'Frontend Drills Quiz Score',
           text: shareText,
         });
       } catch {
@@ -1068,7 +927,7 @@ Try it yourself!`;
     }
   };
 
-  const getGradeEmoji = (accuracy: number) => {
+  const getGrade = (accuracy: number) => {
     if (accuracy >= 90) return 'S';
     if (accuracy >= 80) return 'A';
     if (accuracy >= 70) return 'B';
@@ -1084,14 +943,15 @@ Try it yourself!`;
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
-              { label: language.charAt(0).toUpperCase() + language.slice(1), href: `/${language}` },
-              { label: 'Quiz Mode', href: `/${language}/quiz` },
+              { label: 'Frontend Drills', href: '/frontend-drills' },
+              { label: frameworkConfig.name, href: `/frontend-drills/${framework}` },
+              { label: 'Quiz', href: `/frontend-drills/${framework}/quiz` },
               { label: 'Results' },
             ]}
             className="text-sm"
           />
           <Link
-            href={`/${language}/quiz`}
+            href={`/frontend-drills/${framework}`}
             className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
           >
             <svg
@@ -1113,7 +973,7 @@ Try it yourself!`;
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">Quiz Complete!</h1>
           <div className="inline-block px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-sm font-semibold">
-            Grade: {getGradeEmoji(result.accuracy)}
+            Grade: {getGrade(result.accuracy)}
           </div>
         </div>
 
@@ -1284,8 +1144,10 @@ Try it yourself!`;
                 >
                   {/* Compact row */}
                   <div className="flex items-center justify-between p-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500 w-5 text-right">{index + 1}.</span>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-xs text-slate-500 w-5 text-right flex-shrink-0">
+                        {index + 1}.
+                      </span>
                       {answer?.isCorrect ? (
                         <svg
                           className="w-4 h-4 text-emerald-400 flex-shrink-0"
@@ -1317,41 +1179,40 @@ Try it yourself!`;
                           />
                         </svg>
                       )}
-                      <span className="font-mono text-sm">{question.correctMethod}</span>
+                      <span className="text-sm truncate">{question.question}</span>
                     </div>
-                    <div className="text-sm text-slate-400">{answer?.timeSpent.toFixed(1)}s</div>
+                    <div className="text-sm text-slate-400 flex-shrink-0 ml-2">
+                      {answer?.timeSpent.toFixed(1)}s
+                    </div>
                   </div>
 
                   {/* Expanded details for wrong/timed-out answers */}
                   {!answer?.isCorrect && (
                     <div className="px-3 pb-3 pt-0 border-t border-red-500/10">
-                      {/* Question context */}
-                      <div className="mt-2 bg-slate-900/50 rounded-lg p-3 font-mono text-xs">
-                        <div className="text-slate-400 mb-1">
-                          <span className="text-slate-500">Input:</span> {question.input}
+                      {/* Code snippet context if present */}
+                      {question.codeSnippet && (
+                        <div className="mt-2 bg-slate-900/50 rounded-lg p-3 font-mono text-xs overflow-x-auto">
+                          <pre className="text-blue-300 whitespace-pre-wrap">
+                            {question.codeSnippet}
+                          </pre>
                         </div>
-                        <div className="text-slate-400">
-                          <span className="text-slate-500">Output:</span> {question.output}
-                        </div>
-                      </div>
+                      )}
 
                       {/* What you answered vs correct */}
                       <div className="mt-2 flex flex-col gap-1 text-sm">
-                        <div className="flex items-center gap-2">
-                          <span className="text-red-400 text-xs w-20 flex-shrink-0">
+                        <div className="flex items-start gap-2">
+                          <span className="text-red-400 text-xs w-20 flex-shrink-0 pt-0.5">
                             Your answer:
                           </span>
-                          <span className="font-mono text-red-300">
+                          <span className="text-red-300 text-sm">
                             {answer?.selectedOption ?? 'Timed out'}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-emerald-400 text-xs w-20 flex-shrink-0">
+                        <div className="flex items-start gap-2">
+                          <span className="text-emerald-400 text-xs w-20 flex-shrink-0 pt-0.5">
                             Correct:
                           </span>
-                          <span className="font-mono text-emerald-300">
-                            {question.correctMethod}
-                          </span>
+                          <span className="text-emerald-300 text-sm">{question.correctAnswer}</span>
                         </div>
                       </div>
 
@@ -1438,30 +1299,50 @@ Try it yourself!`;
 // Main Quiz Page Component
 // ============================================================================
 
-export default function QuizPage() {
+export default function FrontendQuizPage() {
   const params = useParams();
-  const language = (params?.language as LanguageId) || 'javascript';
-  const searchParams =
-    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const initialQuizType = (searchParams?.get('type') as QuizType) || 'methods';
+  const framework = (params?.framework as string) || 'react';
 
-  // Database languages don't support quiz mode (no method reference data)
-  const isDatabaseLanguage = ['postgresql', 'mysql', 'mongodb'].includes(language);
+  // Validate framework
+  if (!isValidFramework(framework)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <h1 className="text-3xl font-bold mb-4">Invalid Framework</h1>
+          <p className="text-slate-400 mb-6">
+            The framework &quot;{framework}&quot; is not available. Please choose a valid framework.
+          </p>
+          <Link
+            href="/frontend-drills"
+            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+          >
+            Back to Frontend Drills
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-  const availableCategories = getCategoriesForLanguage(language);
-  const categoryCounts = getCategoryCountsForLanguage(language);
+  const validFramework = framework as FrameworkId;
 
-  const [soundEnabled] = useState(false);
+  return <FrontendQuizPageInner framework={validFramework} />;
+}
+
+// ============================================================================
+// Inner component (after framework validation)
+// ============================================================================
+
+function FrontendQuizPageInner({ framework }: { framework: FrameworkId }) {
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const { playCorrect, playIncorrect, playComplete } = useSoundEffects(soundEnabled);
 
   const [state, setState] = useState<QuizState>({
     phase: 'setup',
     config: {
-      language,
+      framework,
       categories: [],
       questionCount: 10,
       timePerQuestion: 15,
-      quizType: initialQuizType === 'pattern-recognition' ? 'pattern-recognition' : 'methods',
     },
     questions: [],
     currentQuestionIndex: 0,
@@ -1476,28 +1357,17 @@ export default function QuizPage() {
     questionStartTime: null,
   });
 
-  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
-  const [showPatternGuide, setShowPatternGuide] = useState(false);
+  const [quizResult, setQuizResult] = useState<FrontendQuizResult | null>(null);
   const autoAdvanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Update config
-  const handleConfigChange = (config: QuizConfig) => {
-    setState((prev) => ({ ...prev, config: { ...config, language } }));
+  const handleConfigChange = (config: FrontendQuizConfig) => {
+    setState((prev) => ({ ...prev, config: { ...config, framework } }));
   };
 
   // Start quiz
   const handleStartQuiz = () => {
-    if (state.config.quizType === 'pattern-recognition') {
-      // For pattern quiz, redirect to pattern-quiz page with configuration
-      const params = new URLSearchParams({
-        questionCount: state.config.questionCount.toString(),
-        timePerQuestion: state.config.timePerQuestion.toString(),
-        autoStart: 'true',
-      });
-      window.location.href = `/${language}/pattern-quiz?${params.toString()}`;
-      return;
-    }
-    const questions = generateQuiz(state.config);
+    const questions = generateFrontendQuiz(state.config);
     setState((prev) => ({
       ...prev,
       phase: 'playing',
@@ -1515,7 +1385,7 @@ export default function QuizPage() {
     }));
   };
 
-  // Advance to next question - defined first as it's used by handlers below
+  // Advance to next question
   const advanceToNextQuestion = useCallback(() => {
     if (autoAdvanceTimeoutRef.current) {
       clearTimeout(autoAdvanceTimeoutRef.current);
@@ -1527,7 +1397,7 @@ export default function QuizPage() {
       if (nextIndex >= prev.questions.length) {
         // Quiz complete
         const endTime = Date.now();
-        const result = calculateQuizResults(
+        const result = calculateFrontendQuizResults(
           prev.answers,
           prev.maxStreak,
           prev.startTime || endTime,
@@ -1554,18 +1424,18 @@ export default function QuizPage() {
     });
   }, [playComplete]);
 
-  // Handle option selection - using functional setState to avoid stale closure issues
+  // Handle option selection
   const handleSelectOption = useCallback(
     (option: string) => {
       setState((prev) => {
         if (prev.showingAnswer || prev.selectedOption !== null) return prev;
 
         const currentQuestion = prev.questions[prev.currentQuestionIndex];
-        const isCorrect = option === currentQuestion.correctMethod;
+        const isCorrect = option === currentQuestion.correctAnswer;
         const timeSpent = prev.questionStartTime ? (Date.now() - prev.questionStartTime) / 1000 : 0;
 
         // Calculate score
-        const scoreResult: ScoreResult = calculateScore(
+        const scoreResult = calculateFrontendQuizScore(
           isCorrect,
           timeSpent,
           prev.config.timePerQuestion,
@@ -1580,7 +1450,7 @@ export default function QuizPage() {
         }
 
         // Create answer record
-        const answer: QuizAnswer = {
+        const answer: FrontendQuizAnswer = {
           questionId: currentQuestion.id,
           selectedOption: option,
           isCorrect,
@@ -1611,7 +1481,7 @@ export default function QuizPage() {
     [playCorrect, playIncorrect, advanceToNextQuestion],
   );
 
-  // Handle timeout - using functional setState to avoid stale closure issues
+  // Handle timeout
   const handleTimeout = useCallback(() => {
     setState((prev) => {
       if (prev.showingAnswer) return prev;
@@ -1621,7 +1491,7 @@ export default function QuizPage() {
 
       playIncorrect();
 
-      const answer: QuizAnswer = {
+      const answer: FrontendQuizAnswer = {
         questionId: currentQuestion.id,
         selectedOption: null,
         isCorrect: false,
@@ -1646,7 +1516,7 @@ export default function QuizPage() {
 
   // Play again with same settings
   const handlePlayAgain = () => {
-    const questions = generateQuiz(state.config);
+    const questions = generateFrontendQuiz(state.config);
     setState((prev) => ({
       ...prev,
       phase: 'playing',
@@ -1694,46 +1564,18 @@ export default function QuizPage() {
     };
   }, []);
 
-  // Render error message for database languages
-  if (isDatabaseLanguage) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-center">
-        <div className="text-center max-w-md px-4">
-          <h1 className="text-3xl font-bold mb-4">Quiz Mode Not Available</h1>
-          <p className="text-slate-400 mb-6">
-            Quiz mode is not available for database languages. Please use Drill Mode or Problems
-            instead.
-          </p>
-          <a
-            href={`/${language}`}
-            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-          >
-            Back to {language.charAt(0).toUpperCase() + language.slice(1)}
-          </a>
-        </div>
-      </div>
-    );
-  }
-
   // Render based on phase
   switch (state.phase) {
     case 'setup':
       return (
-        <>
-          <SetupPhase
-            config={state.config}
-            onConfigChange={handleConfigChange}
-            onStart={handleStartQuiz}
-            methodCategories={availableCategories}
-            methodCategoryCounts={categoryCounts}
-            language={language}
-            onShowPatternGuide={() => setShowPatternGuide(true)}
-          />
-          <PatternRecognitionGuide
-            isOpen={showPatternGuide}
-            onClose={() => setShowPatternGuide(false)}
-          />
-        </>
+        <SetupPhase
+          config={state.config}
+          onConfigChange={handleConfigChange}
+          onStart={handleStartQuiz}
+          framework={framework}
+          soundEnabled={soundEnabled}
+          onSoundToggle={() => setSoundEnabled(!soundEnabled)}
+        />
       );
 
     case 'playing':
@@ -1743,7 +1585,7 @@ export default function QuizPage() {
           onSelectOption={handleSelectOption}
           onTimeout={handleTimeout}
           soundEnabled={soundEnabled}
-          language={language}
+          framework={framework}
           onExit={handleChangeSettings}
         />
       );
@@ -1758,7 +1600,7 @@ export default function QuizPage() {
           onChangeSettings={handleChangeSettings}
           answers={state.answers}
           questions={state.questions}
-          language={language}
+          framework={framework}
         />
       );
 

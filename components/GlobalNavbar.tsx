@@ -29,7 +29,16 @@ export function GlobalNavbar() {
   const currentLanguage = pathParts[0];
   const isLanguagePage =
     currentLanguage &&
-    !['interview', 'regex', 'api', 'sitemap.xml', 'robots.txt'].includes(currentLanguage);
+    ![
+      'interview',
+      'regex',
+      'links',
+      'api',
+      'pattern-quiz',
+      'frontend-drills',
+      'sitemap.xml',
+      'robots.txt',
+    ].includes(currentLanguage);
 
   // Don't render GlobalNavbar on language pages - they have their own layout with header
   if (isLanguagePage) {
@@ -69,6 +78,18 @@ export function GlobalNavbar() {
       ),
     },
     {
+      href: '/pattern-quiz',
+      label: 'Pattern Quiz',
+      icon: (
+        <svg {...navIconProps}>
+          <title>Pattern Quiz</title>
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      ),
+    },
+    {
       href: '/regex',
       label: 'Regex Trainer',
       icon: (
@@ -78,6 +99,29 @@ export function GlobalNavbar() {
           <path d="M21 21l-4.35-4.35" />
           <path d="M8 9h6" />
           <path d="M8 13h4" />
+        </svg>
+      ),
+    },
+    {
+      href: '/frontend-drills',
+      label: 'Frontend Drills',
+      icon: (
+        <svg {...navIconProps}>
+          <title>Frontend Drills</title>
+          <path d="M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" />
+          <path d="M7 15l3-3-3-3" />
+          <path d="M13 15h4" />
+        </svg>
+      ),
+    },
+    {
+      href: '/links',
+      label: 'Other Projects',
+      icon: (
+        <svg {...navIconProps}>
+          <title>Other Projects</title>
+          <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" />
+          <path d="M14 4h6m0 0v6m0-6L10 14" />
         </svg>
       ),
     },
