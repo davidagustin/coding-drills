@@ -595,6 +595,7 @@ function DrillPhaseComponent({
             code={userAnswer}
             onChange={setUserAnswer}
             language="javascript"
+            monacoLanguageOverride={currentProblem.editorLanguage}
             height={120}
             minHeight={120}
             lineNumbers={true}

@@ -97,6 +97,8 @@ interface CodeEditorProps {
   autoFocus?: boolean;
   /** Setup code context for TypeScript/JavaScript validation (optional) */
   setupCode?: string;
+  /** Override the Monaco language (e.g. 'html' for Angular templates) */
+  monacoLanguageOverride?: string;
 }
 
 /**
@@ -126,6 +128,7 @@ export default function CodeEditor({
   onSubmitShortcut,
   autoFocus = false,
   setupCode,
+  monacoLanguageOverride,
 }: CodeEditorProps) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const isSettingValueRef = useRef(false);
@@ -141,9 +144,10 @@ export default function CodeEditor({
     onSubmitShortcutRef.current = onSubmitShortcut;
   }, [onSubmitShortcut]);
 
-  // Get Monaco language from our language ID
-  const monacoLanguage = LANGUAGE_TO_MONACO[language] || 'plaintext';
-  const fileExtension = LANGUAGE_EXTENSIONS[language] || '.txt';
+  // Get Monaco language from our language ID (allow override for e.g. Angular HTML templates)
+  const monacoLanguage = monacoLanguageOverride || LANGUAGE_TO_MONACO[language] || 'plaintext';
+  const fileExtension =
+    monacoLanguageOverride === 'html' ? '.html' : LANGUAGE_EXTENSIONS[language] || '.txt';
 
   const handleEditorDidMount: OnMount = useCallback(
     (editor, monaco) => {

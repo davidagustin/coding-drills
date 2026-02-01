@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { LanguageGrid } from '@/components/LanguageGrid';
 import {
+  FRAMEWORK_CONFIG,
+  FRAMEWORK_IDS,
   getTotalProblemCount as getFrontendDrillCount,
   getTotalQuizQuestionCount as getFrontendQuizCount,
 } from '@/lib/frontend-drills';
@@ -655,8 +657,8 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Right: Start Button */}
-              <div className="flex-shrink-0">
+              {/* Right: Start Button + Framework Links */}
+              <div className="flex-shrink-0 flex flex-col items-center gap-4">
                 <Link
                   href="/frontend-drills"
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-amber-600 hover:bg-amber-500
@@ -679,6 +681,25 @@ export default function Home() {
                     />
                   </svg>
                 </Link>
+
+                {/* Framework quick-links */}
+                <div className="flex flex-wrap justify-center gap-2">
+                  {FRAMEWORK_IDS.map((fwId) => {
+                    const fw = FRAMEWORK_CONFIG[fwId];
+                    return (
+                      <Link
+                        key={fwId}
+                        href={`/frontend-drills/${fwId}`}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium
+                          border ${fw.borderColor} ${fw.bgColor} ${fw.color}
+                          hover:brightness-125 transition-all cursor-pointer`}
+                      >
+                        <span className="font-bold">{fw.icon}</span>
+                        <span>{fw.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>

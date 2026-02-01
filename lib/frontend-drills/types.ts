@@ -38,6 +38,8 @@ export interface FrontendDrillProblem {
   hints?: string[];
   /** Regex patterns for pattern-based validation (Angular decorator syntax, etc.). */
   validPatterns?: RegExp[];
+  /** Override the editor language (e.g. 'html' for Angular template problems). */
+  editorLanguage?: string;
   tags?: string[];
 }
 
