@@ -4711,6 +4711,65 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['navigation', 'accessibility', 'keyboard navigation', 'state management'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/menus',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.menu {
+  background: #1e293b; border-radius: 8px; border: 1px solid #334155; padding: 8px; min-width: 200px;
+}
+.menu-item {
+  padding: 10px 12px; background: transparent; border: none; color: #e2e8f0;
+  cursor: pointer; width: 100%; text-align: left; font-size: 14px; border-radius: 6px;
+  transition: background 0.15s; display: flex; align-items: center; gap: 10px;
+}
+.menu-item:hover { background: #334155; }
+.menu-item.danger { color: #ef4444; }
+.menu-item.danger:hover { background: #7f1d1d; }
+.divider {
+  height: 1px; background: #334155; margin: 6px 0;
+}
+.icon {
+  width: 16px; height: 16px; display: inline-block;
+}`,
+      js: `const { useState } = React;
+
+function App() {
+  const [selected, setSelected] = useState('');
+
+  const menuItems = [
+    { id: 'edit', label: 'Edit', icon: '✏️' },
+    { id: 'duplicate', label: 'Duplicate', icon: '📋' },
+    { id: 'share', label: 'Share', icon: '🔗' },
+    { id: 'divider' },
+    { id: 'archive', label: 'Archive', icon: '📦' },
+    { id: 'delete', label: 'Delete', icon: '🗑️', danger: true },
+  ];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+      <div className="menu">
+        {menuItems.map(item => {
+          if (item.id === 'divider') return <div key={item.id} className="divider" />;
+          return (
+            <button key={item.id}
+              className={'menu-item' + (item.danger ? ' danger' : '')}
+              onClick={() => setSelected(item.label)}>
+              <span className="icon">{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+      {selected && (
+        <div style={{ color: '#94a3b8', fontSize: '14px' }}>
+          Selected: {selected}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-fat-footer',
@@ -4721,6 +4780,69 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['responsive design', 'navigation', 'accessibility', 'component composition'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/fat-footer',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.footer {
+  background: #0f172a; border-top: 1px solid #334155; padding: 32px 20px 16px;
+}
+.footer-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px;
+  margin-bottom: 24px;
+}
+.footer-col h3 {
+  margin: 0 0 12px; color: #e2e8f0; font-size: 14px; font-weight: 600;
+}
+.footer-col ul {
+  list-style: none; padding: 0; margin: 0;
+}
+.footer-col li {
+  margin-bottom: 8px;
+}
+.footer-col a {
+  color: #94a3b8; font-size: 13px; text-decoration: none; transition: color 0.15s;
+}
+.footer-col a:hover {
+  color: #3b82f6;
+}
+.footer-bottom {
+  text-align: center; padding-top: 16px; border-top: 1px solid #334155;
+  color: #64748b; font-size: 12px;
+}`,
+      js: `const { useState } = React;
+
+function App() {
+  const sections = [
+    { title: 'Product', links: ['Features', 'Pricing', 'Security', 'Roadmap'] },
+    { title: 'Company', links: ['About', 'Blog', 'Careers', 'Press'] },
+    { title: 'Resources', links: ['Documentation', 'Guides', 'API Reference', 'Support'] },
+    { title: 'Legal', links: ['Privacy', 'Terms', 'Cookie Policy', 'Licenses'] },
+  ];
+
+  return (
+    <footer className="footer">
+      <div className="footer-grid">
+        {sections.map(section => (
+          <div key={section.title} className="footer-col">
+            <h3>{section.title}</h3>
+            <ul>
+              {section.links.map(link => (
+                <li key={link}>
+                  <a href="#" onClick={(e) => e.preventDefault()}>{link}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="footer-bottom">
+        © 2026 Your Company. All rights reserved.
+      </div>
+    </footer>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-home-link',
@@ -4731,6 +4853,66 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['navigation', 'accessibility', 'user experience', 'routing'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/home-link',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.header {
+  background: #1e293b; padding: 16px 20px; border-bottom: 1px solid #334155;
+  display: flex; align-items: center; gap: 20px;
+}
+.home-link {
+  display: flex; align-items: center; gap: 8px; text-decoration: none;
+  color: #e2e8f0; font-weight: 600; font-size: 16px; transition: color 0.2s;
+}
+.home-link:hover {
+  color: #3b82f6;
+}
+.logo {
+  width: 28px; height: 28px; background: #3b82f6; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.nav-links {
+  display: flex; gap: 16px; margin-left: auto;
+}
+.nav-link {
+  color: #94a3b8; text-decoration: none; font-size: 14px; transition: color 0.2s;
+}
+.nav-link:hover {
+  color: #e2e8f0;
+}
+.content {
+  padding: 24px 20px; color: #e2e8f0;
+}`,
+      js: `const { useState } = React;
+
+function App() {
+  const [page, setPage] = useState('home');
+
+  return (
+    <div>
+      <header className="header">
+        <a href="#" className="home-link" onClick={(e) => { e.preventDefault(); setPage('home'); }}>
+          <span className="logo">🏠</span>
+          <span>MyApp</span>
+        </a>
+        <nav className="nav-links">
+          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setPage('about'); }}>About</a>
+          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setPage('contact'); }}>Contact</a>
+        </nav>
+      </header>
+      <div className="content">
+        {page === 'home' && <h2>Welcome Home</h2>}
+        {page === 'about' && <h2>About Us</h2>}
+        {page === 'contact' && <h2>Contact</h2>}
+        <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+          Click the logo to return home from anywhere.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-jumping-hierarchy',
@@ -4741,6 +4923,85 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['navigation', 'state management', 'accessibility', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/jumping-hierarchy',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.breadcrumb {
+  display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+  background: #1e293b; border-radius: 8px; border: 1px solid #334155; margin-bottom: 20px;
+}
+.crumb {
+  color: #94a3b8; font-size: 13px; text-decoration: none; transition: color 0.15s;
+}
+.crumb:hover {
+  color: #3b82f6;
+}
+.crumb.current {
+  color: #e2e8f0; font-weight: 500;
+}
+.separator {
+  color: #475569; font-size: 12px;
+}
+.level-nav {
+  display: flex; gap: 12px; margin-bottom: 16px;
+}
+.level-btn {
+  padding: 8px 14px; background: #1e293b; border: 1px solid #334155; border-radius: 6px;
+  color: #e2e8f0; cursor: pointer; font-size: 13px; transition: all 0.2s;
+}
+.level-btn:hover {
+  background: #334155;
+}
+.content {
+  background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155;
+}
+.content h2 {
+  margin: 0 0 8px; color: #3b82f6; font-size: 18px;
+}
+.content p {
+  margin: 0; color: #94a3b8; font-size: 14px;
+}`,
+      js: `const { useState } = React;
+
+function App() {
+  const [path, setPath] = useState(['Dashboard', 'Projects', 'Web App']);
+
+  const navigate = (index) => {
+    setPath(path.slice(0, index + 1));
+  };
+
+  const addLevel = (name) => {
+    setPath([...path, name]);
+  };
+
+  return (
+    <div>
+      <nav className="breadcrumb">
+        {path.map((crumb, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <span className="separator">/</span>}
+            <a href="#"
+              className={'crumb' + (i === path.length - 1 ? ' current' : '')}
+              onClick={(e) => { e.preventDefault(); navigate(i); }}>
+              {crumb}
+            </a>
+          </React.Fragment>
+        ))}
+      </nav>
+      <div className="level-nav">
+        <button className="level-btn" onClick={() => addLevel('Backend')}>Backend</button>
+        <button className="level-btn" onClick={() => addLevel('Frontend')}>Frontend</button>
+        <button className="level-btn" onClick={() => addLevel('Database')}>Database</button>
+      </div>
+      <div className="content">
+        <h2>{path[path.length - 1]}</h2>
+        <p>Click breadcrumbs to jump up the hierarchy, or buttons to go deeper.</p>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-steps-left',
