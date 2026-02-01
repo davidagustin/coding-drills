@@ -38,7 +38,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     bgColor: 'bg-cyan-400/10',
     borderColor: 'border-cyan-400/30',
     hoverBg: 'hover:bg-cyan-400/20',
-    icon: 'Re',
+    icon: '⚛',
     description:
       'Practice hooks, state management, component patterns, and the React rendering model.',
   },
@@ -62,7 +62,7 @@ export const FRAMEWORK_CONFIG: Record<FrameworkId, FrameworkConfig> = {
     bgColor: 'bg-emerald-500/10',
     borderColor: 'border-emerald-500/30',
     hoverBg: 'hover:bg-emerald-500/20',
-    icon: 'Vu',
+    icon: 'V',
     description:
       'Practice the Composition API, reactivity primitives, computed properties, and Vue directives.',
   },

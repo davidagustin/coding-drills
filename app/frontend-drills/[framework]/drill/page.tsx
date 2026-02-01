@@ -771,7 +771,7 @@ function ResultsPhase({
       <div className="text-center">
         <h1 className="text-3xl font-bold text-zinc-100 mb-2">Drill Complete!</h1>
         <p className="text-zinc-400">
-          <span className={fwConfig.color}>{fwConfig.name}</span> - Here is how you did
+          <span className={fwConfig.color}>{fwConfig.name}</span> — Here&apos;s how you did
         </p>
       </div>
 
