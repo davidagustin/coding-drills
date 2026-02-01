@@ -552,6 +552,8 @@ ${userCode}
   const categoryConfig = UI_PATTERN_CATEGORIES[pattern.category];
   const editorLanguage =
     framework === 'angular' || framework === 'react' ? 'typescript' : 'javascript';
+  // React needs 'typescriptreact' so Monaco understands JSX syntax
+  const monacoLanguage = framework === 'react' ? 'typescriptreact' : undefined;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -730,6 +732,7 @@ ${userCode}
                     language={editorLanguage}
                     height={320}
                     autoFocus={false}
+                    monacoLanguageOverride={monacoLanguage}
                   />
                 ) : (
                   <div
