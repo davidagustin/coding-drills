@@ -26,6 +26,8 @@ interface LivePreviewProps {
   js: string;
   framework?: 'native-js' | 'react' | 'angular' | 'vue';
   height?: number;
+  /** When provided, only these code tabs (plus Preview) are shown. Omit to show all tabs. */
+  showCodeTabs?: ('html' | 'css' | 'js')[];
 }
 
 export function LivePreview({
@@ -34,6 +36,7 @@ export function LivePreview({
   js,
   framework = 'native-js',
   height = 400,
+  showCodeTabs,
 }: LivePreviewProps) {
   const [activeTab, setActiveTab] = useState<'preview' | 'html' | 'css' | 'js'>('preview');
 
@@ -89,8 +92,7 @@ export function LivePreview({
 </html>`;
   }, [html, css, js, frameworkScripts, scriptType]);
 
-  const tabs = [
-    { id: 'preview' as const, label: 'Preview' },
+  const allCodeTabs = [
     { id: 'html' as const, label: 'HTML' },
     { id: 'css' as const, label: 'CSS' },
     {
@@ -105,6 +107,12 @@ export function LivePreview({
               : 'JS',
     },
   ];
+
+  const filteredCodeTabs = showCodeTabs
+    ? allCodeTabs.filter((t) => showCodeTabs.includes(t.id))
+    : allCodeTabs;
+
+  const tabs = [{ id: 'preview' as const, label: 'Preview' }, ...filteredCodeTabs];
 
   const formattedCSS = useMemo(() => formatCSS(css), [css]);
 

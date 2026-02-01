@@ -4267,6 +4267,58 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['navigation', 'state management', 'accessibility', 'animations'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/navigation-tabs',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.nav-tabs {
+  display: flex; gap: 4px; background: #0f172a; padding: 4px; border-radius: 10px; margin-bottom: 20px;
+}
+.nav-tab {
+  flex: 1; padding: 8px 16px; background: transparent; border: none; border-radius: 6px;
+  color: #64748b; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s;
+}
+.nav-tab:hover:not(.active) { background: #1e293b; color: #94a3b8; }
+.nav-tab.active { background: #3b82f6; color: white; }
+.view {
+  animation: slideIn 0.25s ease;
+  background: #1e293b; padding: 20px; border-radius: 10px; border: 1px solid #334155;
+}
+@keyframes slideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+.view h3 { margin: 0 0 8px; color: #e2e8f0; font-size: 16px; }
+.view p { margin: 0; color: #94a3b8; font-size: 14px; line-height: 1.5; }`,
+      js: `const { useState } = React;
+
+const views = [
+  { id: 'home', label: 'Home', title: 'Welcome Home', text: 'Your personalized dashboard with recent activity and updates.' },
+  { id: 'explore', label: 'Explore', title: 'Discover Content', text: 'Browse trending topics, featured articles, and recommended resources.' },
+  { id: 'profile', label: 'Profile', title: 'Your Profile', text: 'Manage your account settings, preferences, and personal information.' },
+];
+
+function App() {
+  const [view, setView] = useState('home');
+  const current = views.find(v => v.id === view);
+
+  return (
+    <div>
+      <nav className="nav-tabs" role="navigation">
+        {views.map(v => (
+          <button key={v.id}
+            className={'nav-tab' + (v.id === view ? ' active' : '')}
+            onClick={() => setView(v.id)}
+            aria-current={v.id === view ? 'page' : undefined}>
+            {v.label}
+          </button>
+        ))}
+      </nav>
+      <div className="view" key={view}>
+        <h3>{current.title}</h3>
+        <p>{current.text}</p>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-module-tabs',
@@ -4277,6 +4329,67 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['navigation', 'component organization', 'state management', 'accessibility'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/module-tabs',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.modules {
+  display: flex; gap: 12px; margin-bottom: 24px;
+}
+.module-card {
+  flex: 1; padding: 16px; background: #1e293b; border: 2px solid #334155; border-radius: 8px;
+  cursor: pointer; transition: all 0.2s;
+}
+.module-card:hover { border-color: #475569; }
+.module-card.active { border-color: #3b82f6; background: #1e3a5f; }
+.module-card h3 { margin: 0 0 4px; color: #e2e8f0; font-size: 14px; }
+.module-card p { margin: 0; color: #64748b; font-size: 12px; }
+.content {
+  background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.content h2 { margin: 0 0 12px; color: #3b82f6; font-size: 18px; }
+.content .item { padding: 8px; background: #0f172a; border-radius: 4px; margin-bottom: 8px; }
+.content .item h4 { margin: 0 0 4px; color: #e2e8f0; font-size: 14px; }
+.content .item p { margin: 0; color: #94a3b8; font-size: 13px; }`,
+      js: `const { useState } = React;
+
+const modules = [
+  { id: 'users', label: 'Users', desc: 'Manage users', content: { title: 'User Management', items: [{ name: 'Active Users', val: '1,234' }, { name: 'New Today', val: '42' }] } },
+  { id: 'analytics', label: 'Analytics', desc: 'View metrics', content: { title: 'Analytics Dashboard', items: [{ name: 'Page Views', val: '45.2K' }, { name: 'Bounce Rate', val: '23%' }] } },
+  { id: 'settings', label: 'Settings', desc: 'Configuration', content: { title: 'System Settings', items: [{ name: 'Auto-save', val: 'Enabled' }, { name: 'Timezone', val: 'UTC' }] } },
+];
+
+function App() {
+  const [active, setActive] = useState('users');
+  const mod = modules.find(m => m.id === active);
+
+  return (
+    <div>
+      <div className="modules">
+        {modules.map(m => (
+          <div key={m.id}
+            className={'module-card' + (m.id === active ? ' active' : '')}
+            onClick={() => setActive(m.id)}>
+            <h3>{m.label}</h3>
+            <p>{m.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div className="content" key={active}>
+        <h2>{mod.content.title}</h2>
+        {mod.content.items.map((item, i) => (
+          <div key={i} className="item">
+            <h4>{item.name}</h4>
+            <p>{item.val}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-pagination',
@@ -4287,6 +4400,73 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['navigation', 'state management', 'accessibility', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/pagination',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.items {
+  margin-bottom: 16px;
+}
+.item {
+  padding: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 6px;
+  margin-bottom: 8px; color: #e2e8f0; font-size: 14px;
+}
+.pagination {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.page-btn {
+  padding: 6px 12px; background: #1e293b; border: 1px solid #334155; border-radius: 4px;
+  color: #e2e8f0; cursor: pointer; font-size: 13px; transition: all 0.2s;
+}
+.page-btn:hover:not(:disabled):not(.active) { background: #334155; }
+.page-btn.active { background: #3b82f6; border-color: #3b82f6; color: white; }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-info { color: #64748b; font-size: 13px; margin: 0 8px; }`,
+      js: `const { useState } = React;
+
+const allItems = Array.from({ length: 25 }, (_, i) => \`Item \${i + 1}: Sample content for item number \${i + 1}\`);
+const perPage = 5;
+
+function App() {
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(allItems.length / perPage);
+  const start = (page - 1) * perPage;
+  const items = allItems.slice(start, start + perPage);
+
+  return (
+    <div>
+      <div className="items">
+        {items.map((item, i) => (
+          <div key={start + i} className="item">{item}</div>
+        ))}
+      </div>
+      <div className="pagination">
+        <button className="page-btn" onClick={() => setPage(page - 1)} disabled={page === 1}>
+          Previous
+        </button>
+        <span className="page-info">Page {page} of {totalPages}</span>
+        {[...Array(totalPages)].map((_, i) => {
+          const p = i + 1;
+          if (p === 1 || p === totalPages || Math.abs(p - page) <= 1) {
+            return (
+              <button key={p}
+                className={'page-btn' + (p === page ? ' active' : '')}
+                onClick={() => setPage(p)}>
+                {p}
+              </button>
+            );
+          }
+          if (Math.abs(p - page) === 2) return <span key={p} style={{ color: '#64748b' }}>...</span>;
+          return null;
+        })}
+        <button className="page-btn" onClick={() => setPage(page + 1)} disabled={page === totalPages}>
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-horizontal-dropdown',
@@ -4297,6 +4477,74 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['dropdown menus', 'positioning', 'accessibility', 'responsive design'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/horizontal-dropdown',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.nav {
+  display: flex; gap: 0; background: #1e293b; padding: 0; border-radius: 8px; border: 1px solid #334155;
+}
+.nav-item {
+  position: relative;
+}
+.nav-btn {
+  padding: 12px 20px; background: transparent; border: none; color: #e2e8f0;
+  cursor: pointer; font-size: 14px; transition: background 0.2s;
+}
+.nav-btn:hover { background: #334155; }
+.dropdown {
+  position: absolute; top: 100%; left: 0; background: #1e293b; border: 1px solid #334155;
+  border-radius: 6px; margin-top: 4px; min-width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: slideDown 0.15s ease;
+}
+@keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.dropdown-item {
+  padding: 10px 16px; border: none; background: transparent; color: #e2e8f0;
+  cursor: pointer; width: 100%; text-align: left; font-size: 13px; transition: background 0.15s;
+}
+.dropdown-item:hover { background: #334155; }
+.dropdown-item:first-child { border-radius: 6px 6px 0 0; }
+.dropdown-item:last-child { border-radius: 0 0 6px 6px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [open, setOpen] = useState(null);
+
+  const menus = [
+    { id: 'products', label: 'Products', items: ['Laptops', 'Phones', 'Tablets'] },
+    { id: 'services', label: 'Services', items: ['Support', 'Training', 'Consulting'] },
+    { id: 'company', label: 'Company', items: ['About', 'Careers', 'Contact'] },
+  ];
+
+  return (
+    <nav className="nav">
+      {menus.map(menu => (
+        <div key={menu.id} className="nav-item">
+          <button className="nav-btn"
+            onClick={() => setOpen(open === menu.id ? null : menu.id)}
+            onBlur={(e) => {
+              if (!e.currentTarget.parentElement.contains(e.relatedTarget)) {
+                setOpen(null);
+              }
+            }}>
+            {menu.label}
+          </button>
+          {open === menu.id && (
+            <div className="dropdown">
+              {menu.items.map(item => (
+                <button key={item} className="dropdown-item"
+                  onClick={() => setOpen(null)}>
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </nav>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-vertical-dropdown',
@@ -4307,6 +4555,70 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['dropdown menus', 'positioning', 'accessibility', 'keyboard navigation'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/vertical-dropdown',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.sidebar {
+  width: 220px; background: #1e293b; border-radius: 8px; border: 1px solid #334155; padding: 8px;
+}
+.menu-item {
+  margin-bottom: 4px;
+}
+.menu-btn {
+  width: 100%; padding: 10px 12px; background: transparent; border: none;
+  color: #e2e8f0; cursor: pointer; font-size: 14px; text-align: left;
+  border-radius: 6px; transition: background 0.15s; display: flex; justify-content: space-between; align-items: center;
+}
+.menu-btn:hover { background: #334155; }
+.menu-btn.active { background: #334155; }
+.submenu {
+  margin: 4px 0 0 12px; padding-left: 12px; border-left: 2px solid #334155;
+  animation: expand 0.2s ease;
+}
+@keyframes expand { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 200px; } }
+.submenu-item {
+  padding: 8px 12px; background: transparent; border: none; color: #94a3b8;
+  cursor: pointer; font-size: 13px; text-align: left; width: 100%; border-radius: 4px;
+  transition: all 0.15s;
+}
+.submenu-item:hover { background: #334155; color: #e2e8f0; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [open, setOpen] = useState('dashboard');
+
+  const menus = [
+    { id: 'dashboard', label: 'Dashboard', items: null },
+    { id: 'products', label: 'Products', items: ['All Products', 'Categories', 'Inventory'] },
+    { id: 'users', label: 'Users', items: ['All Users', 'Roles', 'Permissions'] },
+    { id: 'settings', label: 'Settings', items: ['General', 'Security', 'Integrations'] },
+  ];
+
+  return (
+    <div className="sidebar">
+      {menus.map(menu => (
+        <div key={menu.id} className="menu-item">
+          <button className={'menu-btn' + (open === menu.id && menu.items ? ' active' : '')}
+            onClick={() => setOpen(open === menu.id ? null : menu.id)}>
+            <span>{menu.label}</span>
+            {menu.items && <span>{open === menu.id ? '▼' : '▶'}</span>}
+          </button>
+          {menu.items && open === menu.id && (
+            <div className="submenu">
+              {menu.items.map(item => (
+                <button key={item} className="submenu-item">
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-shortcut-dropdown',
@@ -4317,6 +4629,78 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     concepts: ['dropdown menus', 'keyboard shortcuts', 'accessibility', 'user experience'],
     framework: 'react',
     externalUrl: 'https://ui-patterns-react.vercel.app/patterns/shortcut-dropdown',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.trigger-btn {
+  padding: 10px 16px; background: #3b82f6; border: none; border-radius: 6px;
+  color: white; cursor: pointer; font-size: 14px; font-weight: 500;
+}
+.dropdown-wrap {
+  position: relative; display: inline-block;
+}
+.dropdown {
+  position: absolute; top: calc(100% + 4px); right: 0; background: #1e293b;
+  border: 1px solid #334155; border-radius: 8px; min-width: 240px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: slideDown 0.15s ease;
+}
+@keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.dropdown-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; border: none; background: transparent; color: #e2e8f0;
+  cursor: pointer; width: 100%; text-align: left; font-size: 13px; transition: background 0.15s;
+}
+.dropdown-item:hover { background: #334155; }
+.dropdown-item:first-child { border-radius: 8px 8px 0 0; }
+.dropdown-item:last-child { border-radius: 0 0 8px 8px; }
+.shortcut {
+  font-size: 11px; color: #64748b; background: #0f172a; padding: 2px 6px; border-radius: 3px;
+}`,
+      js: `const { useState, useEffect } = React;
+
+function App() {
+  const [open, setOpen] = useState(false);
+
+  const actions = [
+    { id: 'new', label: 'New Document', shortcut: 'Ctrl+N' },
+    { id: 'open', label: 'Open File', shortcut: 'Ctrl+O' },
+    { id: 'save', label: 'Save', shortcut: 'Ctrl+S' },
+    { id: 'search', label: 'Search', shortcut: 'Ctrl+F' },
+  ];
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        setOpen(!open);
+      }
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [open]);
+
+  return (
+    <div className="dropdown-wrap">
+      <button className="trigger-btn" onClick={() => setOpen(!open)}>
+        Quick Actions
+      </button>
+      {open && (
+        <div className="dropdown">
+          {actions.map(action => (
+            <button key={action.id} className="dropdown-item"
+              onClick={() => setOpen(false)}>
+              <span>{action.label}</span>
+              <span className="shortcut">{action.shortcut}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
   },
   {
     id: 'react-menus',

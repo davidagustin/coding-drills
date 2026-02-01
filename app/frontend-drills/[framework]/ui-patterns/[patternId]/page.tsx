@@ -445,7 +445,7 @@ ${userCode}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
           {/* Code Editor Section - Takes 3 columns (60%) */}
           <div className="lg:col-span-3">
-            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 h-full flex flex-col">
+            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 flex flex-col">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
                   <svg
@@ -566,6 +566,7 @@ ${userCode}
                       js={pattern.demoCode.js}
                       framework={framework as FrameworkId}
                       height={300}
+                      showCodeTabs={['js']}
                     />
                   </div>
                 </div>
