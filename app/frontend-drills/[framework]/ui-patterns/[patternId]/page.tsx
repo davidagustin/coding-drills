@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { LivePreview } from '@/components/LivePreview';
 import type { Exercise, ExerciseCategory, ExerciseDifficulty } from '@/lib/exercises/types';
@@ -16,6 +16,8 @@ import {
   UI_PATTERN_DIFFICULTY_CONFIG,
   type UIPattern,
 } from '@/lib/frontend-drills';
+import { getStarterCode } from '@/lib/frontend-drills/ui-patterns/starters';
+import { buildTestRunnerScript, getPatternTests } from '@/lib/frontend-drills/ui-patterns/tests';
 
 const CodeEditor = dynamic(
   () => import('@/components/CodeEditor').then((mod) => mod.default || mod),
@@ -409,8 +411,12 @@ function skeletonizeDemo(js: string, concepts: string[], framework: string): str
       setup.push(lines[i]);
     } else if (isSkeletonSetup(t)) {
       setup.push(lines[i]);
-      // Track if this line opens a multi-line array/object
-      bracketDepth += (t.match(/[[{(]/g) || []).length - (t.match(/[\]})]/g) || []).length;
+      // Only track bracket depth for value declarations (const/let/var name = ...)
+      // to handle multi-line arrays/objects. Don't track for function declarations
+      // or framework constructs (createApp, setup) which would consume entire blocks.
+      if (/^(const|let|var)\s+\w+\s*=/.test(t)) {
+        bracketDepth += (t.match(/[[{(]/g) || []).length - (t.match(/[\]})]/g) || []).length;
+      }
     } else {
       break;
     }
@@ -451,8 +457,11 @@ function skeletonizeDemo(js: string, concepts: string[], framework: string): str
 }
 
 function generateStarterCode(pattern: UIPattern, framework: string): string {
-  // When demoCode exists, create a skeleton that matches the Live Demo
-  // structure but leaves core logic as TODOs for the user to implement
+  // Use hand-crafted starter code when available (preferred)
+  const handCrafted = getStarterCode(framework as FrameworkId, pattern.id);
+  if (handCrafted) return handCrafted;
+
+  // Fallback: auto-generate skeleton from demoCode
   if (pattern.demoCode?.js?.trim()) {
     return skeletonizeDemo(pattern.demoCode.js, pattern.concepts, framework);
   }
@@ -801,9 +810,43 @@ export default function UIPatternDetail() {
   const [editorTab, setEditorTab] = useState<'html' | 'css' | 'js'>('js');
   const [previewKey, setPreviewKey] = useState(0);
   const [hintsOpen, setHintsOpen] = useState(false);
+  const [testResults, setTestResults] = useState<Array<{
+    name: string;
+    id: number;
+    pass: boolean;
+    error?: string;
+  }> | null>(null);
+  const [testsRunning, setTestsRunning] = useState(false);
+  const previewIframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- hydration safety
+  }, []);
+
+  // Listen for test results from sandbox iframe
+  useEffect(() => {
+    const handler = (e: MessageEvent) => {
+      if (e.data?.type === 'pattern-test-results') {
+        setTestResults(e.data.results);  
+        setTestsRunning(false);  
+      }
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  // Reset test results when user code changes
+  useEffect(() => {
+    setTestResults(null); // eslint-disable-line react-hooks/set-state-in-effect -- Reset tests on code change
+  }, [userCode]);
+
+  const handleRunTests = useCallback(() => {
+    if (previewIframeRef.current?.contentWindow) {
+      setTestsRunning(true);
+      setTestResults(null);
+      // Give the iframe a moment to finish rendering, then run tests
+      previewIframeRef.current.contentWindow.postMessage({ type: 'run-pattern-tests' }, '*');
+    }
   }, []);
 
   // Initialize editor with framework-specific starter code
@@ -872,13 +915,21 @@ export default function UIPatternDetail() {
   <script type="${scriptType}">
 try {
 `;
+    // Build test runner script if test cases exist for this pattern
+    const tests = isValidFramework(framework)
+      ? getPatternTests(framework as FrameworkId, patternId)
+      : undefined;
+    const testRunnerHtml = tests?.length
+      ? `\n  <script type="text/javascript">\n${buildTestRunnerScript(tests)}\nwindow.addEventListener('message', function(e) { if (e.data && e.data.type === 'run-pattern-tests' && window.__runTests) { setTimeout(window.__runTests, 300); } });\n  </script>`
+      : '';
+
     const tail = `
 } catch(e) { document.body.innerHTML = '<pre style="color:#ef4444;padding:16px;">' + e.message + '</pre>'; }
-  </script>
+  </script>${testRunnerHtml}
 </body>
 </html>`;
     return head + userCode + tail;
-  }, [userCode, framework, patternForPreview]);
+  }, [userCode, framework, patternForPreview, patternId]);
 
   // Debounce iframe remount so it doesn't flicker on every keystroke
   useEffect(() => {
@@ -1250,6 +1301,7 @@ try {
               {userPreviewSrcdoc ? (
                 <div className="rounded-lg overflow-hidden border border-zinc-700/50 bg-zinc-950/50 flex-1">
                   <iframe
+                    ref={previewIframeRef}
                     key={previewKey}
                     srcDoc={userPreviewSrcdoc}
                     sandbox="allow-scripts"
@@ -1262,6 +1314,49 @@ try {
                   Start typing code to see your preview here
                 </div>
               )}
+
+              {/* Test Runner */}
+              {isValidFramework(framework) &&
+              getPatternTests(framework as FrameworkId, patternId)?.length ? (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={handleRunTests}
+                    disabled={testsRunning || !userPreviewSrcdoc}
+                    className="w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {testsRunning ? 'Running Tests...' : 'Run Tests'}
+                  </button>
+                  {testResults && (
+                    <div className="mt-2 rounded-lg bg-zinc-900/60 border border-zinc-700/30 p-3 space-y-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-zinc-400">
+                          {testResults.filter((r) => r.pass).length}/{testResults.length} passing
+                        </span>
+                        {testResults.every((r) => r.pass) && (
+                          <span className="text-xs text-emerald-400 font-medium">
+                            All tests pass!
+                          </span>
+                        )}
+                      </div>
+                      {testResults.map((r) => (
+                        <div
+                          key={r.id}
+                          className={`flex items-start gap-2 text-xs py-1 ${r.pass ? 'text-emerald-400' : 'text-red-400'}`}
+                        >
+                          <span className="mt-0.5 flex-shrink-0">
+                            {r.pass ? '\u2713' : '\u2717'}
+                          </span>
+                          <span>
+                            {r.name}
+                            {r.error && <span className="text-red-500/70 ml-1">({r.error})</span>}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
