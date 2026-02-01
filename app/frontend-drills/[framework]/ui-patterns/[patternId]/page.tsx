@@ -690,25 +690,24 @@ ${userCode}
             </div>
           </div>
 
-          {/* Your Preview - directly to the right */}
+          {/* Your Preview - directly to the right, stretches to match editor height */}
           <div className="lg:col-span-2">
-            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30">
+            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 h-full flex flex-col">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
                 <span className="text-sm font-medium text-zinc-300">Your Preview</span>
               </div>
               {userPreviewSrcdoc ? (
-                <div className="rounded-lg overflow-hidden border border-zinc-700/50 bg-zinc-950/50">
+                <div className="rounded-lg overflow-hidden border border-zinc-700/50 bg-zinc-950/50 flex-1">
                   <iframe
                     srcDoc={userPreviewSrcdoc}
                     sandbox="allow-scripts"
                     title="Your implementation preview"
-                    className="w-full border-0 bg-zinc-950"
-                    style={{ height: 350 }}
+                    className="w-full h-full border-0 bg-zinc-950"
                   />
                 </div>
               ) : (
-                <div className="flex items-center justify-center py-8 text-zinc-600 text-xs rounded-lg border border-dashed border-zinc-700/40">
+                <div className="flex items-center justify-center flex-1 text-zinc-600 text-xs rounded-lg border border-dashed border-zinc-700/40">
                   Start typing code to see your preview here
                 </div>
               )}
@@ -717,7 +716,7 @@ ${userCode}
         </div>
 
         {/* Row 2: AI Tutor (left) + Live Demo & Building Blocks (right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8 lg:items-start">
           {/* AI Tutor Section - Left (60%) */}
           <div className="lg:col-span-3">
             <ExerciseTutor
