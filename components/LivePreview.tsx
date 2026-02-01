@@ -39,6 +39,7 @@ export function LivePreview({
   showCodeTabs,
 }: LivePreviewProps) {
   const [activeTab, setActiveTab] = useState<'preview' | 'html' | 'css' | 'js'>('preview');
+  const [copied, setCopied] = useState(false);
 
   const frameworkScripts = useMemo(() => {
     switch (framework) {
@@ -152,7 +153,18 @@ export function LivePreview({
           style={{ height }}
         />
       ) : (
-        <div className="overflow-auto" style={{ height }}>
+        <div className="relative overflow-auto" style={{ height }}>
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(codeContent[activeTab]);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="absolute top-2 right-2 px-2.5 py-1 text-xs font-medium rounded-md bg-slate-700/80 hover:bg-slate-600 text-slate-300 hover:text-white transition-colors cursor-pointer z-10"
+          >
+            {copied ? 'Copied!' : 'Copy'}
+          </button>
           <pre className="p-4 text-sm text-slate-300 font-mono leading-relaxed whitespace-pre overflow-x-auto">
             <code>{codeContent[activeTab]}</code>
           </pre>
