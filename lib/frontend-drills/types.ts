@@ -61,3 +61,96 @@ export interface FrontendQuizQuestion {
   /** Explanation shown after answering. */
   explanation: string;
 }
+
+// ─── Cheatsheet Types ─────────────────────────────────────────
+
+export type CheatsheetSectionId =
+  | 'overview'
+  | 'core-concepts'
+  | 'key-apis'
+  | 'common-patterns'
+  | 'code-examples'
+  | 'ecosystem';
+
+/** Plain text paragraph. */
+export interface CheatsheetTextBlock {
+  type: 'text';
+  content: string;
+}
+
+/** Static syntax-highlighted code block (rendered with <pre><code>). */
+export interface CheatsheetCodeBlock {
+  type: 'code';
+  language: string;
+  code: string;
+  title?: string;
+}
+
+/** Interactive Monaco editor example with local state + reset. */
+export interface CheatsheetInteractiveCodeBlock {
+  type: 'interactive-code';
+  language: string;
+  defaultCode: string;
+  title: string;
+  description?: string;
+}
+
+/** Bulleted or numbered list. */
+export interface CheatsheetListBlock {
+  type: 'list';
+  style: 'bullet' | 'numbered';
+  items: string[];
+}
+
+/** Simple table with header row + data rows. */
+export interface CheatsheetTableBlock {
+  type: 'table';
+  headers: string[];
+  rows: string[][];
+}
+
+/** Highlighted tip callout. */
+export interface CheatsheetTipBlock {
+  type: 'tip';
+  content: string;
+}
+
+/** Warning callout. */
+export interface CheatsheetWarningBlock {
+  type: 'warning';
+  content: string;
+}
+
+/** Sub-heading within a section. */
+export interface CheatsheetSubheadingBlock {
+  type: 'subheading';
+  text: string;
+}
+
+/** Discriminated union of all content block types. */
+export type CheatsheetContentBlock =
+  | CheatsheetTextBlock
+  | CheatsheetCodeBlock
+  | CheatsheetInteractiveCodeBlock
+  | CheatsheetListBlock
+  | CheatsheetTableBlock
+  | CheatsheetTipBlock
+  | CheatsheetWarningBlock
+  | CheatsheetSubheadingBlock;
+
+/** A single section within a cheatsheet. */
+export interface CheatsheetSection {
+  id: CheatsheetSectionId;
+  title: string;
+  icon: string;
+  description: string;
+  content: CheatsheetContentBlock[];
+}
+
+/** Top-level cheatsheet data for one framework. */
+export interface CheatsheetData {
+  framework: FrameworkId;
+  title: string;
+  lastUpdated: string;
+  sections: CheatsheetSection[];
+}

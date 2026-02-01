@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 import {
   FRAMEWORK_CONFIG,
   type FrameworkId,
+  getCheatsheetSectionCount,
   getProblemCount,
   getQuizQuestionCount,
+  getUIPatternCount,
   isValidFramework,
 } from '@/lib/frontend-drills';
 
@@ -45,6 +47,44 @@ function LightbulbIcon({ className = 'w-8 h-8' }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+      />
+    </svg>
+  );
+}
+
+function LayoutGridIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
+      />
+    </svg>
+  );
+}
+
+function BookIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
       />
     </svg>
   );
@@ -168,6 +208,8 @@ export default function FrameworkPage() {
   const config = FRAMEWORK_CONFIG[framework];
   const problemCount = getProblemCount(framework);
   const quizQuestionCount = getQuizQuestionCount(framework);
+  const cheatsheetSectionCount = getCheatsheetSectionCount(framework);
+  const uiPatternCount = getUIPatternCount(framework);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -211,6 +253,26 @@ export default function FrameworkPage() {
           buttonText="Start Quiz"
           config={config}
           badge={quizQuestionCount > 0 ? `${quizQuestionCount} questions` : undefined}
+        />
+
+        <ModeCard
+          href={`/frontend-drills/${framework}/ui-patterns`}
+          icon={<LayoutGridIcon className="w-8 h-8" />}
+          title="UI Patterns"
+          description={`Explore common UI patterns for ${config.name}: forms, navigation, data display, interactive elements, and more.`}
+          buttonText="Browse Patterns"
+          config={config}
+          badge={uiPatternCount > 0 ? `${uiPatternCount} patterns` : undefined}
+        />
+
+        <ModeCard
+          href={`/frontend-drills/${framework}/cheatsheet`}
+          icon={<BookIcon className="w-8 h-8" />}
+          title="Cheatsheet"
+          description={`Quick reference for ${config.name} syntax, APIs, patterns, and ecosystem tools.`}
+          buttonText="View Cheatsheet"
+          config={config}
+          badge={cheatsheetSectionCount > 0 ? `${cheatsheetSectionCount} topics` : undefined}
         />
       </div>
 
