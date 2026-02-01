@@ -2441,6 +2441,44 @@ render();`,
     description:
       'Create an image gallery with lightbox viewer, thumbnail grid, keyboard navigation, and zoom functionality using dialog element and CSS transforms.',
     concepts: ['Dialog element', 'CSS transforms', 'Keyboard navigation', 'Image loading'],
+    demoCode: {
+      html: `<div class="gallery-grid" id="gallery"></div>
+<div class="lightbox" id="lightbox" style="display:none">
+  <button class="lb-close" id="lb-close">&times;</button>
+  <button class="lb-nav lb-prev" id="lb-prev">&larr;</button>
+  <div class="lb-content" id="lb-content"></div>
+  <button class="lb-nav lb-next" id="lb-next">&rarr;</button>
+  <div class="lb-caption" id="lb-caption"></div>
+</div>`,
+      css: `.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.gallery-thumb {
+  aspect-ratio: 1; border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 700; color: white; transition: transform 0.2s;
+}
+.gallery-thumb:hover { transform: scale(1.05); }
+.lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.lb-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: white; font-size: 28px; cursor: pointer; z-index: 10; }
+.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: white; font-size: 24px; padding: 12px 16px; cursor: pointer; border-radius: 8px; }
+.lb-nav:hover { background: rgba(255,255,255,0.2); }
+.lb-prev { left: 16px; }
+.lb-next { right: 16px; }
+.lb-content { width: 280px; height: 280px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; color: white; }
+.lb-caption { position: absolute; bottom: 24px; text-align: center; width: 100%; color: #94a3b8; font-size: 14px; }`,
+      js: `const images = [{bg:'#1e3a5f',label:'Ocean',letter:'A'},{bg:'#3b1f5e',label:'Cosmos',letter:'B'},{bg:'#1f4a3b',label:'Forest',letter:'C'},{bg:'#5e3b1f',label:'Desert',letter:'D'},{bg:'#1f3b5e',label:'Mountain',letter:'E'},{bg:'#4a1f3b',label:'Sunset',letter:'F'}];
+const gallery=document.getElementById('gallery'),lightbox=document.getElementById('lightbox'),lbContent=document.getElementById('lb-content'),lbCaption=document.getElementById('lb-caption');
+let ci=0;
+images.forEach((img,i)=>{const d=document.createElement('div');d.className='gallery-thumb';d.style.background=img.bg;d.textContent=img.letter;d.addEventListener('click',()=>{ci=i;upd();lightbox.style.display='flex';});gallery.appendChild(d);});
+function upd(){const img=images[ci];lbContent.style.background=img.bg;lbContent.textContent=img.letter;lbCaption.textContent=img.label+' ('+(ci+1)+'/'+images.length+')';}
+document.getElementById('lb-close').addEventListener('click',()=>lightbox.style.display='none');
+document.getElementById('lb-prev').addEventListener('click',()=>{ci=(ci-1+images.length)%images.length;upd();});
+document.getElementById('lb-next').addEventListener('click',()=>{ci=(ci+1)%images.length;upd();});
+lightbox.addEventListener('click',(e)=>{if(e.target===lightbox)lightbox.style.display='none';});
+document.addEventListener('keydown',(e)=>{if(lightbox.style.display==='none')return;if(e.key==='Escape')lightbox.style.display='none';if(e.key==='ArrowLeft'){ci=(ci-1+images.length)%images.length;upd();}if(e.key==='ArrowRight'){ci=(ci+1)%images.length;upd();}});`,
+    },
   },
   {
     id: 'js-cards-grid',
@@ -2451,6 +2489,22 @@ render();`,
     description:
       'Build a responsive card grid layout using CSS Grid and template literals to generate cards from data with hover effects and loading states.',
     concepts: ['CSS Grid', 'Template literals', 'DOM manipulation', 'Responsive design'],
+    demoCode: {
+      html: `<div class="card-grid" id="card-grid"></div>`,
+      css: `.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 16px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); border-color: #3b82f6; }
+.card-icon { font-size: 32px; margin-bottom: 10px; }
+.card-title { font-size: 14px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+.card-tag { display: inline-block; margin-top: 10px; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+.tag-blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.tag-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+.tag-orange { background: rgba(249,115,22,0.15); color: #f97316; }`,
+      js: `const cards=[{icon:'&#9889;',title:'Performance',desc:'Optimize load times',tag:'Core',tc:'tag-blue'},{icon:'&#128274;',title:'Security',desc:'Protect against threats',tag:'Critical',tc:'tag-orange'},{icon:'&#9834;',title:'Accessibility',desc:'Build inclusive UIs',tag:'UX',tc:'tag-green'},{icon:'&#128295;',title:'Testing',desc:'Write reliable tests',tag:'Core',tc:'tag-blue'},{icon:'&#127912;',title:'Design System',desc:'Consistent components',tag:'UX',tc:'tag-green'},{icon:'&#128640;',title:'Deployment',desc:'Automate CI/CD',tag:'DevOps',tc:'tag-orange'}];
+const grid=document.getElementById('card-grid');
+cards.forEach(c=>{const d=document.createElement('div');d.className='card';d.innerHTML='<div class="card-icon">'+c.icon+'</div><div class="card-title">'+c.title+'</div><div class="card-desc">'+c.desc+'</div><span class="card-tag '+c.tc+'">'+c.tag+'</span>';grid.appendChild(d);});`,
+    },
   },
   {
     id: 'js-table-sort-filter',
@@ -2461,6 +2515,21 @@ render();`,
     description:
       'Build a feature-rich data table with sorting, filtering, pagination, column visibility, and export functionality using vanilla JavaScript.',
     concepts: ['DOM manipulation', 'Event delegation', 'Array methods', 'CSV export'],
+    demoCode: {
+      html: `<div class="tc"><input type="text" id="tf" placeholder="Filter..." /><button id="te" class="tb">Export CSV</button></div>
+<table class="at"><thead><tr><th data-col="name" class="sc">Name</th><th data-col="dept" class="sc">Dept</th><th data-col="salary" data-type="number" class="sc">Salary</th></tr></thead><tbody id="tb"></tbody></table>
+<div class="tf"><span id="trc"></span><div id="tp"></div></div>`,
+      css: `.tc{display:flex;gap:8px;margin-bottom:10px}.tc input{flex:1;padding:8px 10px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;outline:none;font-size:13px}.tc input:focus{border-color:#3b82f6}.tb{padding:8px 12px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:12px}.tb:hover{background:#334155}.at{width:100%;border-collapse:collapse}.at th{background:#1e293b;color:#94a3b8;font-size:12px;padding:8px;cursor:pointer;text-align:left;border-bottom:2px solid #334155;user-select:none}.at th:hover{color:#e2e8f0}.at th.asc::after{content:' \u2191';color:#3b82f6}.at th.desc::after{content:' \u2193';color:#3b82f6}.at td{padding:8px;font-size:13px;color:#e2e8f0;border-bottom:1px solid #1e293b}.at tr:hover td{background:rgba(59,130,246,0.05)}.tf{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:#64748b}#tp{display:flex;gap:4px}.pg{padding:4px 10px;border-radius:4px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px}.pg:hover,.pg.active{background:#3b82f6;color:white;border-color:#3b82f6}`,
+      js: `const data=[{name:'Alice',dept:'Eng',salary:95000},{name:'Bob',dept:'Design',salary:82000},{name:'Carol',dept:'Marketing',salary:78000},{name:'Dave',dept:'Eng',salary:105000},{name:'Eve',dept:'Design',salary:88000},{name:'Frank',dept:'Marketing',salary:72000},{name:'Grace',dept:'Eng',salary:98000}];
+const tb=document.getElementById('tb'),fi=document.getElementById('tf'),rc=document.getElementById('trc'),pp=document.getElementById('tp');
+let sc=null,sd='asc',fv='',pg=0,ps=4;
+function gr(){let r=[...data];if(fv)r=r.filter(x=>x.name.toLowerCase().includes(fv));if(sc)r.sort((a,b)=>{let va=a[sc],vb=b[sc];if(typeof va==='number')return sd==='asc'?va-vb:vb-va;return sd==='asc'?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va));});return r;}
+function render(){const rows=gr(),tp=Math.ceil(rows.length/ps);pg=Math.min(pg,Math.max(0,tp-1));tb.innerHTML=rows.slice(pg*ps,(pg+1)*ps).map(r=>'<tr><td>'+r.name+'</td><td>'+r.dept+'</td><td>$'+r.salary.toLocaleString()+'</td></tr>').join('');rc.textContent=rows.length+' of '+data.length;pp.innerHTML='';for(let i=0;i<tp;i++){const b=document.createElement('button');b.className='pg'+(i===pg?' active':'');b.textContent=i+1;b.addEventListener('click',()=>{pg=i;render();});pp.appendChild(b);}}
+document.querySelectorAll('.sc').forEach(th=>th.addEventListener('click',()=>{const c=th.dataset.col;if(sc===c)sd=sd==='asc'?'desc':'asc';else{sc=c;sd='asc';}document.querySelectorAll('.sc').forEach(h=>h.classList.remove('asc','desc'));th.classList.add(sd);render();}));
+fi.addEventListener('input',()=>{fv=fi.value.toLowerCase();pg=0;render();});
+document.getElementById('te').addEventListener('click',()=>{const csv='Name,Dept,Salary\n'+gr().map(r=>r.name+','+r.dept+','+r.salary).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='data.csv';a.click();});
+render();`,
+    },
   },
   {
     id: 'js-lazy-images',
@@ -2476,6 +2545,15 @@ render();`,
       'CSS transitions',
       'Performance optimization',
     ],
+    demoCode: {
+      html: `<div class="lazy-grid" id="lazy-grid"></div>`,
+      css: `.lazy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.lazy-item{aspect-ratio:4/3;border-radius:10px;overflow:hidden;position:relative;background:#1e293b;border:1px solid #334155}.lazy-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(110deg,#1e293b 30%,#334155 50%,#1e293b 70%);background-size:200% 100%;animation:shimmer 1.5s infinite;color:#475569;font-size:12px}.lazy-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:700;color:white;opacity:0;transition:opacity .5s}.lazy-img.loaded{opacity:1}@keyframes shimmer{to{background-position:-200% 0}}`,
+      js: `const colors=['#1e3a5f','#3b1f5e','#1f4a3b','#5e3b1f','#1f3b5e','#4a1f3b','#2d3a1f','#3a1f2d'];
+const grid=document.getElementById('lazy-grid');
+colors.forEach((c,i)=>{const item=document.createElement('div');item.className='lazy-item';item.innerHTML='<div class="lazy-placeholder">Loading...</div><div class="lazy-img" style="background:'+c+'">'+(i+1)+'</div>';grid.appendChild(item);});
+const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){const img=entry.target.querySelector('.lazy-img');setTimeout(()=>{img.classList.add('loaded');const p=entry.target.querySelector('.lazy-placeholder');if(p)p.remove();},300+Math.random()*700);observer.unobserve(entry.target);}});},{threshold:0.1});
+document.querySelectorAll('.lazy-item').forEach(item=>observer.observe(item));`,
+    },
   },
   {
     id: 'js-data-chart',
@@ -2486,6 +2564,17 @@ render();`,
     description:
       'Create interactive data visualizations using Canvas API with tooltips, animations, and responsive sizing for charts like bar, line, and pie.',
     concepts: ['Canvas API', 'Animation', 'Mouse events', 'Responsive canvas'],
+    demoCode: {
+      html: `<div class="cw"><h4>Monthly Revenue</h4><canvas id="chart" width="360" height="200"></canvas><div class="ct" id="tooltip" style="display:none"></div></div>`,
+      css: `.cw{position:relative;max-width:380px}h4{font-size:14px;color:#94a3b8;margin-bottom:12px}canvas{background:#1e293b;border-radius:10px;display:block;width:100%}.ct{position:absolute;padding:6px 10px;background:#334155;border-radius:6px;font-size:12px;color:#e2e8f0;pointer-events:none;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.3)}`,
+      js: `const canvas=document.getElementById('chart'),ctx=canvas.getContext('2d'),tooltip=document.getElementById('tooltip');
+const data=[{l:'Jan',v:42},{l:'Feb',v:58},{l:'Mar',v:35},{l:'Apr',v:72},{l:'May',v:65},{l:'Jun',v:88}];
+const mv=Math.max(...data.map(d=>d.v)),p={t:20,r:20,b:30,l:40},cW=canvas.width-p.l-p.r,cH=canvas.height-p.t-p.b,bW=cW/data.length-8,rects=[];
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#334155';ctx.lineWidth=0.5;for(let i=0;i<=4;i++){const y=p.t+(cH/4)*i;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(canvas.width-p.r,y);ctx.stroke();ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.textAlign='right';ctx.fillText(Math.round(mv-(mv/4)*i),p.l-6,y+4);}data.forEach((d,i)=>{const bH=(d.v/mv)*cH,x=p.l+i*(cW/data.length)+4,y=p.t+cH-bH;ctx.fillStyle='#3b82f6';ctx.beginPath();ctx.roundRect(x,y,bW,bH,[4,4,0,0]);ctx.fill();rects[i]={x,y,w:bW,h:bH,l:d.l,v:d.v};ctx.fillStyle='#94a3b8';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.fillText(d.l,x+bW/2,canvas.height-8);});}
+draw();
+canvas.addEventListener('mousemove',(e)=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)*(canvas.width/r.width),my=(e.clientY-r.top)*(canvas.height/r.height);let f=false;rects.forEach(b=>{if(mx>=b.x&&mx<=b.x+b.w&&my>=b.y&&my<=b.y+b.h){tooltip.style.display='block';tooltip.style.left=(e.clientX-canvas.parentElement.getBoundingClientRect().left+12)+'px';tooltip.style.top=(e.clientY-canvas.parentElement.getBoundingClientRect().top-30)+'px';tooltip.textContent=b.l+': $'+b.v+'k';f=true;}});if(!f)tooltip.style.display='none';});
+canvas.addEventListener('mouseleave',()=>tooltip.style.display='none');`,
+    },
   },
   {
     id: 'js-virtual-scroll',
@@ -2496,6 +2585,14 @@ render();`,
     description:
       'Implement virtual scrolling for rendering large datasets efficiently by only rendering visible items using scroll events and DOM recycling.',
     concepts: ['Virtual scrolling', 'Performance optimization', 'Scroll events', 'DOM recycling'],
+    demoCode: {
+      html: `<div class="vsi">Rendering 10,000 items virtually</div><div class="vsc" id="vsc"><div class="vsp" id="vsp"></div><div class="vsn" id="vsn"></div></div>`,
+      css: `.vsi{font-size:12px;color:#64748b;margin-bottom:8px}.vsc{height:300px;overflow-y:auto;border:1px solid #334155;border-radius:10px;position:relative}.vsp{width:100%}.vsn{position:absolute;top:0;left:0;right:0}.vsr{padding:10px 14px;border-bottom:1px solid #1e293b;font-size:13px;color:#e2e8f0;display:flex;justify-content:space-between}.vsr:hover{background:rgba(59,130,246,0.05)}.vsr .idx{color:#64748b;font-family:monospace;font-size:12px}`,
+      js: `const T=10000,RH=40,c=document.getElementById('vsc'),sp=document.getElementById('vsp'),cn=document.getElementById('vsn');
+sp.style.height=(T*RH)+'px';
+function render(){const st=c.scrollTop,vc=Math.ceil(c.clientHeight/RH)+2,si=Math.floor(st/RH),ei=Math.min(si+vc,T);cn.style.top=(si*RH)+'px';cn.innerHTML='';for(let i=si;i<ei;i++){const r=document.createElement('div');r.className='vsr';r.innerHTML='<span>Item #'+(i+1)+'</span><span class="idx">'+String(i+1).padStart(5,'0')+'</span>';cn.appendChild(r);}}
+c.addEventListener('scroll',render);render();`,
+    },
   },
 
   // Navigation
@@ -2508,6 +2605,13 @@ render();`,
     description:
       'Build a responsive navigation bar with hamburger menu, dropdown submenus, and active link highlighting using media queries and event listeners.',
     concepts: ['Responsive design', 'Event delegation', 'CSS transitions', 'Mobile menu'],
+    demoCode: {
+      html: `<nav class="nb"><div class="nb-brand">MyApp</div><button class="hb" id="hb" aria-label="Toggle menu"><span></span><span></span><span></span></button><ul class="nl" id="nl"><li><a href="#" class="nk active" data-page="home">Home</a></li><li><a href="#" class="nk" data-page="about">About</a></li><li><a href="#" class="nk" data-page="services">Services</a></li><li><a href="#" class="nk" data-page="contact">Contact</a></li></ul></nav><div id="pd" class="pd">Home Page</div>`,
+      css: `.nb{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#1e293b;border-radius:10px;border:1px solid #334155}.nb-brand{font-weight:700;font-size:18px;color:#3b82f6}.hb{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:4px}.hb span{display:block;width:22px;height:2px;background:#e2e8f0;border-radius:2px}.nl{display:flex;list-style:none;gap:4px;padding:0;margin:0}.nk{display:block;padding:8px 14px;border-radius:6px;color:#94a3b8;text-decoration:none;font-size:14px;transition:all .2s}.nk:hover{color:#e2e8f0;background:#334155}.nk.active{color:#3b82f6;background:rgba(59,130,246,0.1)}.pd{margin-top:16px;padding:20px;text-align:center;color:#64748b;font-size:14px;background:#1e293b;border-radius:8px}`,
+      js: `const hb=document.getElementById('hb'),nl=document.getElementById('nl'),pd=document.getElementById('pd'),links=document.querySelectorAll('.nk');
+hb.addEventListener('click',()=>nl.classList.toggle('open'));
+links.forEach(l=>l.addEventListener('click',(e)=>{e.preventDefault();links.forEach(x=>x.classList.remove('active'));l.classList.add('active');pd.textContent=l.dataset.page.charAt(0).toUpperCase()+l.dataset.page.slice(1)+' Page';nl.classList.remove('open');}));`,
+    },
   },
   {
     id: 'js-sidebar',
@@ -2518,6 +2622,16 @@ render();`,
     description:
       'Create an off-canvas sidebar that slides in/out with overlay backdrop, touch swipe support, and focus trap using CSS transforms.',
     concepts: ['CSS transforms', 'Touch events', 'Focus trap', 'Event delegation'],
+    demoCode: {
+      html: `<button id="os" class="ob">Open Sidebar</button><div class="so" id="ov"></div><aside class="sb" id="sb"><div class="sh"><span class="st">Menu</span><button class="cb" id="cs">&times;</button></div><nav class="sn"><a href="#" class="sl active">Dashboard</a><a href="#" class="sl">Analytics</a><a href="#" class="sl">Settings</a><a href="#" class="sl">Profile</a></nav></aside>`,
+      css: `.ob{padding:10px 20px;border-radius:8px;border:none;background:#3b82f6;color:white;font-weight:600;cursor:pointer}.ob:hover{background:#2563eb}.so{position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:all .3s;z-index:40}.so.open{opacity:1;visibility:visible}.sb{position:fixed;top:0;left:0;bottom:0;width:240px;background:#1e293b;border-right:1px solid #334155;transform:translateX(-100%);transition:transform .3s ease;z-index:50}.sb.open{transform:translateX(0)}.sh{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #334155}.st{font-weight:600;font-size:16px;color:#e2e8f0}.cb{background:none;border:none;color:#94a3b8;font-size:24px;cursor:pointer}.sn{padding:8px}.sl{display:block;padding:10px 12px;border-radius:6px;color:#94a3b8;text-decoration:none;font-size:14px;transition:all .2s;margin-bottom:2px}.sl:hover{background:#334155;color:#e2e8f0}.sl.active{background:rgba(59,130,246,0.1);color:#3b82f6}`,
+      js: `const sb=document.getElementById('sb'),ov=document.getElementById('ov'),os=document.getElementById('os'),cs=document.getElementById('cs');
+function oSB(){sb.classList.add('open');ov.classList.add('open');}
+function cSB(){sb.classList.remove('open');ov.classList.remove('open');}
+os.addEventListener('click',oSB);cs.addEventListener('click',cSB);ov.addEventListener('click',cSB);
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&sb.classList.contains('open'))cSB();});
+document.querySelectorAll('.sl').forEach(l=>l.addEventListener('click',(e)=>{e.preventDefault();document.querySelectorAll('.sl').forEach(x=>x.classList.remove('active'));l.classList.add('active');}));`,
+    },
   },
   {
     id: 'js-breadcrumbs',
@@ -2528,6 +2642,13 @@ render();`,
     description:
       'Generate breadcrumb navigation dynamically from URL path or page hierarchy with proper ARIA markup and separators.',
     concepts: ['URL parsing', 'DOM manipulation', 'ARIA', 'Navigation'],
+    demoCode: {
+      html: `<nav aria-label="Breadcrumb"><ol class="bc" id="bc"></ol></nav><div class="pb"><button class="pbtn" data-path="/">Home</button><button class="pbtn" data-path="/products">Products</button><button class="pbtn" data-path="/products/electronics">Electronics</button><button class="pbtn" data-path="/products/electronics/laptops">Laptops</button></div><div class="cp" id="cp">/</div>`,
+      css: `.bc{display:flex;flex-wrap:wrap;list-style:none;padding:10px 14px;margin:0 0 12px;background:#1e293b;border-radius:8px;border:1px solid #334155}.bc li{display:flex;align-items:center;font-size:13px}.bc li+li::before{content:'/';color:#475569;margin:0 8px}.bc a{color:#3b82f6;text-decoration:none}.bc a:hover{text-decoration:underline}.bc .cur{color:#e2e8f0;font-weight:500}.pb{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.pbtn{padding:6px 12px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:12px}.pbtn:hover{background:#334155;color:#e2e8f0}.cp{font-family:monospace;font-size:13px;color:#64748b;padding:8px;background:#1e293b;border-radius:6px}`,
+      js: `const bc=document.getElementById('bc'),cp=document.getElementById('cp');
+function upd(path){const segs=path.split('/').filter(Boolean);bc.innerHTML='';const h=document.createElement('li');if(!segs.length)h.innerHTML='<span class="cur" aria-current="page">Home</span>';else{h.innerHTML='<a href="#">Home</a>';h.querySelector('a').addEventListener('click',(e)=>{e.preventDefault();upd('/');});}bc.appendChild(h);segs.forEach((s,i)=>{const li=document.createElement('li');const lbl=s.charAt(0).toUpperCase()+s.slice(1);if(i===segs.length-1)li.innerHTML='<span class="cur" aria-current="page">'+lbl+'</span>';else{const sp='/'+segs.slice(0,i+1).join('/');li.innerHTML='<a href="#">'+lbl+'</a>';li.querySelector('a').addEventListener('click',(e)=>{e.preventDefault();upd(sp);});}bc.appendChild(li);});cp.textContent=path;}
+document.querySelectorAll('.pbtn').forEach(b=>b.addEventListener('click',()=>upd(b.dataset.path)));upd('/');`,
+    },
   },
   {
     id: 'js-bottom-nav',
@@ -2538,6 +2659,13 @@ render();`,
     description:
       'Build a mobile-style bottom navigation bar that shows/hides based on scroll direction using scroll events and CSS transforms.',
     concepts: ['Scroll events', 'CSS transforms', 'Event throttling', 'Mobile patterns'],
+    demoCode: {
+      html: `<div class="sa" id="sa"><p>Scroll up/down to show/hide bottom nav</p><div class="fl"></div><div class="fl"></div><div class="fl"></div><div class="fl"></div></div><nav class="bn" id="bn"><button class="bi active" data-tab="home"><span class="bic">&#8962;</span><span class="bil">Home</span></button><button class="bi" data-tab="search"><span class="bic">&#128269;</span><span class="bil">Search</span></button><button class="bi" data-tab="add"><span class="bic">&#10010;</span><span class="bil">Add</span></button><button class="bi" data-tab="profile"><span class="bic">&#9787;</span><span class="bil">Profile</span></button></nav>`,
+      css: `.sa{height:250px;overflow-y:auto;padding:16px;border:1px solid #334155;border-radius:10px}.sa p{color:#94a3b8;font-size:14px;margin-bottom:16px}.fl{height:120px;background:#1e293b;border:1px solid #334155;border-radius:8px;margin-bottom:10px}.bn{display:flex;justify-content:space-around;padding:8px 0;background:#1e293b;border:1px solid #334155;border-radius:10px;margin-top:8px;transition:transform .3s,opacity .3s}.bn.hidden{transform:translateY(10px);opacity:0;pointer-events:none}.bi{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:#64748b;cursor:pointer;padding:6px 12px;border-radius:8px}.bi:hover{color:#94a3b8}.bi.active{color:#3b82f6}.bic{font-size:20px}.bil{font-size:10px;font-weight:600}`,
+      js: `const sa=document.getElementById('sa'),bn=document.getElementById('bn');let ls=0;
+sa.addEventListener('scroll',()=>{const c=sa.scrollTop;if(c>ls&&c>40)bn.classList.add('hidden');else bn.classList.remove('hidden');ls=c;});
+document.querySelectorAll('.bi').forEach(i=>i.addEventListener('click',()=>{document.querySelectorAll('.bi').forEach(x=>x.classList.remove('active'));i.classList.add('active');}));`,
+    },
   },
   {
     id: 'js-dropdown-menu',
@@ -2548,6 +2676,19 @@ render();`,
     description:
       'Create fully accessible dropdown menus with keyboard navigation, ARIA roles, and hover/click interactions using event delegation.',
     concepts: ['ARIA roles', 'Keyboard navigation', 'Event delegation', 'Focus management'],
+    demoCode: {
+      html: `<div class="mb"><div class="dd" id="ddf"><button class="mt" aria-haspopup="true" aria-expanded="false">File</button><ul class="dl" role="menu"><li role="menuitem" tabindex="-1">New File</li><li role="menuitem" tabindex="-1">Open</li><li role="menuitem" tabindex="-1">Save</li><li class="dv" role="separator"></li><li role="menuitem" tabindex="-1">Exit</li></ul></div><div class="dd" id="dde"><button class="mt" aria-haspopup="true" aria-expanded="false">Edit</button><ul class="dl" role="menu"><li role="menuitem" tabindex="-1">Undo</li><li role="menuitem" tabindex="-1">Redo</li><li class="dv" role="separator"></li><li role="menuitem" tabindex="-1">Cut</li><li role="menuitem" tabindex="-1">Copy</li><li role="menuitem" tabindex="-1">Paste</li></ul></div></div><div id="ds" class="ds"></div>`,
+      css: `.mb{display:flex;gap:2px;background:#1e293b;padding:4px;border-radius:8px;border:1px solid #334155}.dd{position:relative}.mt{padding:8px 16px;background:none;border:none;color:#e2e8f0;font-size:13px;cursor:pointer;border-radius:6px}.mt:hover,.mt[aria-expanded="true"]{background:#334155}.dl{display:none;position:absolute;top:100%;left:0;min-width:160px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:4px;margin-top:4px;list-style:none;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,0.3)}.dl.open{display:block}.dl li[role="menuitem"]{padding:8px 12px;border-radius:6px;font-size:13px;color:#e2e8f0;cursor:pointer}.dl li[role="menuitem"]:hover,.dl li.foc{background:#334155}.dv{height:1px;background:#334155;margin:4px 0}.ds{margin-top:12px;font-size:13px;color:#94a3b8;text-align:center}`,
+      js: `const ds=document.getElementById('ds');
+document.querySelectorAll('.dd').forEach(dd=>{const tr=dd.querySelector('.mt'),li=dd.querySelector('.dl'),its=li.querySelectorAll('[role="menuitem"]');let fi=-1;
+function op(){document.querySelectorAll('.dl').forEach(l=>{l.classList.remove('open');l.closest('.dd').querySelector('.mt').setAttribute('aria-expanded','false');});li.classList.add('open');tr.setAttribute('aria-expanded','true');fi=-1;}
+function cl(){li.classList.remove('open');tr.setAttribute('aria-expanded','false');fi=-1;its.forEach(i=>i.classList.remove('foc'));}
+tr.addEventListener('click',()=>li.classList.contains('open')?cl():op());
+its.forEach(it=>it.addEventListener('click',()=>{ds.textContent='Selected: '+it.textContent;cl();}));
+tr.addEventListener('keydown',(e)=>{if(e.key==='ArrowDown'||e.key==='Enter'){e.preventDefault();op();fi=0;its[0].classList.add('foc');its[0].focus();}});
+li.addEventListener('keydown',(e)=>{if(e.key==='ArrowDown'){e.preventDefault();its[fi]?.classList.remove('foc');fi=Math.min(fi+1,its.length-1);its[fi].classList.add('foc');its[fi].focus();}else if(e.key==='ArrowUp'){e.preventDefault();its[fi]?.classList.remove('foc');fi=Math.max(fi-1,0);its[fi].classList.add('foc');its[fi].focus();}else if(e.key==='Enter')its[fi]?.click();else if(e.key==='Escape'){cl();tr.focus();}});});
+document.addEventListener('click',(e)=>{if(!e.target.closest('.dd'))document.querySelectorAll('.dl').forEach(l=>l.classList.remove('open'));});`,
+    },
   },
   {
     id: 'js-pagination',
@@ -2558,6 +2699,17 @@ render();`,
     description:
       'Implement client-side pagination with page numbers, previous/next buttons, and URL state synchronization using history API.',
     concepts: ['History API', 'Event delegation', 'State management', 'URL parameters'],
+    demoCode: {
+      html: `<div id="pi" class="pi"></div><div class="pg" id="pg"></div>`,
+      css: `.pi{margin-bottom:12px}.pit{padding:10px 14px;border-bottom:1px solid #1e293b;font-size:14px;color:#e2e8f0}.pit:hover{background:rgba(59,130,246,0.05)}.pg{display:flex;justify-content:center;gap:4px}.pb{min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:13px;transition:all .2s}.pb:hover{border-color:#3b82f6;color:#e2e8f0}.pb.active{background:#3b82f6;border-color:#3b82f6;color:white}.pb:disabled{opacity:0.3;cursor:default}`,
+      js: `const all=Array.from({length:30},(_,i)=>'Item #'+(i+1));const pp=5;let cp=1;const tp=Math.ceil(all.length/pp);
+const pi=document.getElementById('pi'),pg=document.getElementById('pg');
+function render(){const s=(cp-1)*pp;pi.innerHTML=all.slice(s,s+pp).map(i=>'<div class="pit">'+i+'</div>').join('');pg.innerHTML='';
+const pv=document.createElement('button');pv.className='pb';pv.textContent='\u2190';pv.disabled=cp===1;pv.addEventListener('click',()=>{cp--;render();});pg.appendChild(pv);
+for(let i=1;i<=tp;i++){const b=document.createElement('button');b.className='pb'+(i===cp?' active':'');b.textContent=i;b.addEventListener('click',()=>{cp=i;render();});pg.appendChild(b);}
+const nx=document.createElement('button');nx.className='pb';nx.textContent='\u2192';nx.disabled=cp===tp;nx.addEventListener('click',()=>{cp++;render();});pg.appendChild(nx);}
+render();`,
+    },
   },
 
   // Advanced Features
@@ -2570,6 +2722,13 @@ render();`,
     description:
       'Build a global keyboard shortcut system supporting key combinations, context awareness, and customizable bindings using keydown events.',
     concepts: ['Keyboard events', 'Event handling', 'Key combinations', 'Command pattern'],
+    demoCode: {
+      html: `<div class="sp"><h4>Keyboard Shortcuts</h4><div class="sl"><div class="sr"><kbd>Ctrl</kbd>+<kbd>B</kbd> <span>Bold</span></div><div class="sr"><kbd>Ctrl</kbd>+<kbd>I</kbd> <span>Italic</span></div><div class="sr"><kbd>Ctrl</kbd>+<kbd>S</kbd> <span>Save</span></div><div class="sr"><kbd>Ctrl</kbd>+<kbd>D</kbd> <span>Delete</span></div><div class="sr"><kbd>Esc</kbd> <span>Clear</span></div></div><div class="so" id="so">Press a shortcut...</div><div class="kd" id="kd"></div></div>`,
+      css: `.sp{max-width:340px}h4{font-size:16px;color:#e2e8f0;margin-bottom:12px}.sr{display:flex;align-items:center;gap:6px;padding:6px 0;font-size:13px;color:#94a3b8}.sr span{margin-left:auto;color:#64748b}kbd{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;background:#334155;border:1px solid #475569;color:#e2e8f0;font-family:monospace}.so{padding:16px;background:#1e293b;border-radius:8px;text-align:center;font-size:16px;font-weight:600;color:#3b82f6;min-height:56px;display:flex;align-items:center;justify-content:center;border:1px solid #334155;transition:all .2s}.so.act{border-color:#3b82f6;background:rgba(59,130,246,0.08)}.kd{margin-top:8px;text-align:center;font-size:11px;color:#475569;font-family:monospace}`,
+      js: `const so=document.getElementById('so'),kd=document.getElementById('kd');
+const sc={'ctrl+b':'Bold applied','ctrl+i':'Italic applied','ctrl+s':'Document saved','ctrl+d':'Item deleted','escape':'Cleared'};
+document.addEventListener('keydown',(e)=>{const p=[];if(e.ctrlKey||e.metaKey)p.push('ctrl');if(e.shiftKey)p.push('shift');if(e.altKey)p.push('alt');const k=e.key.toLowerCase();if(!['control','shift','alt','meta'].includes(k))p.push(k);const c=p.join('+');kd.textContent='Keys: '+c;if(sc[c]){e.preventDefault();so.textContent=sc[c];so.classList.add('act');setTimeout(()=>so.classList.remove('act'),600);}});`,
+    },
   },
   {
     id: 'js-notifications',
@@ -2580,6 +2739,16 @@ render();`,
     description:
       'Implement browser push notifications with permission handling, notification actions, and fallback to in-app notifications using Notification API.',
     concepts: ['Notification API', 'Permissions API', 'Event handling', 'Feature detection'],
+    demoCode: {
+      html: `<div class="nd"><h4>Notification Center</h4><div class="nc"><button id="sn" class="nb primary">Send Notification</button><button id="cn" class="nb secondary">Clear All</button></div><div class="nli" id="nli"><div class="ne" id="ne">No notifications yet</div></div></div>`,
+      css: `.nd{max-width:360px}h4{font-size:16px;color:#e2e8f0;margin-bottom:12px}.nc{display:flex;gap:8px;margin-bottom:12px}.nb{padding:8px 16px;border-radius:8px;border:none;font-size:13px;cursor:pointer;font-weight:500}.nb.primary{background:#3b82f6;color:white}.nb.primary:hover{background:#2563eb}.nb.secondary{background:#334155;color:#94a3b8}.nb.secondary:hover{background:#475569}.nli{max-height:250px;overflow-y:auto;border:1px solid #334155;border-radius:10px}.ne{padding:24px;text-align:center;color:#64748b;font-size:14px}.ni{padding:12px 14px;border-bottom:1px solid #1e293b;animation:nsIn .3s;display:flex;gap:10px;align-items:flex-start}.ndt{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}.ndt.info{background:#3b82f6}.ndt.success{background:#22c55e}.ndt.warning{background:#eab308}.nbd{flex:1}.ntt{font-size:13px;font-weight:600;color:#e2e8f0}.ntx{font-size:12px;color:#94a3b8;margin-top:2px}.ntm{font-size:10px;color:#475569;margin-top:4px}@keyframes nsIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}`,
+      js: `const nli=document.getElementById('nli'),ne=document.getElementById('ne');
+const ns=[{t:'info',title:'New message',text:'You have a new message from Alice'},{t:'success',title:'Deploy complete',text:'Production deployment succeeded'},{t:'warning',title:'Storage warning',text:'Storage usage is above 80%'},{t:'info',title:'Update available',text:'Version 2.1.0 ready'}];
+let ni=0;
+function add(){ne.style.display='none';const n=ns[ni%ns.length];ni++;const d=document.createElement('div');d.className='ni';d.innerHTML='<div class="ndt '+n.t+'"></div><div class="nbd"><div class="ntt">'+n.title+'</div><div class="ntx">'+n.text+'</div><div class="ntm">'+new Date().toLocaleTimeString()+'</div></div>';nli.insertBefore(d,nli.firstChild);}
+document.getElementById('sn').addEventListener('click',add);
+document.getElementById('cn').addEventListener('click',()=>{nli.querySelectorAll('.ni').forEach(i=>i.remove());ne.style.display='block';});`,
+    },
   },
   {
     id: 'js-undo-redo',
@@ -2590,6 +2759,21 @@ render();`,
     description:
       'Build an undo/redo system using the command pattern with keyboard shortcuts (Ctrl+Z/Ctrl+Y) and state history management.',
     concepts: ['Command pattern', 'State management', 'Keyboard events', 'History stack'],
+    demoCode: {
+      html: `<div class="ud"><div class="ub"><button id="ub" class="tb" disabled>&#8630; Undo</button><button id="rb" class="tb" disabled>&#8631; Redo</button><button id="ab" class="tb ad">+ Add</button></div><div class="uc" id="uc"></div><div class="ui" id="ui">History: 0</div></div>`,
+      css: `.ud{max-width:360px}.ub{display:flex;gap:6px;margin-bottom:10px}.tb{padding:6px 14px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:12px}.tb:hover:not(:disabled){background:#334155;color:#e2e8f0}.tb:disabled{opacity:.3;cursor:default}.tb.ad{border-color:#3b82f6;color:#3b82f6}.tb.ad:hover{background:rgba(59,130,246,0.1)}.uc{min-height:140px;padding:12px;background:#1e293b;border:1px solid #334155;border-radius:10px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}.ci{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:white;cursor:pointer;transition:transform .15s}.ci:hover{transform:scale(1.1)}.ui{margin-top:8px;font-size:11px;color:#475569;text-align:center}`,
+      js: `const uc=document.getElementById('uc'),ub=document.getElementById('ub'),rb=document.getElementById('rb'),ui=document.getElementById('ui');
+const cols=['#3b82f6','#22c55e','#ef4444','#eab308','#a855f7','#ec4899'];
+let its=[],hist=[[]],hi=0,cnt=0;
+function push(){hist=hist.slice(0,hi+1);hist.push(JSON.parse(JSON.stringify(its)));hi=hist.length-1;upd();}
+function upd(){uc.innerHTML='';its.forEach((it,i)=>{const d=document.createElement('div');d.className='ci';d.style.background=it.c;d.textContent=it.id;d.addEventListener('click',()=>{its.splice(i,1);push();});uc.appendChild(d);});ub.disabled=hi<=0;rb.disabled=hi>=hist.length-1;ui.textContent='History: '+hist.length+' (pos '+(hi+1)+')';}
+function undo(){if(hi>0){hi--;its=JSON.parse(JSON.stringify(hist[hi]));upd();}}
+function redo(){if(hi<hist.length-1){hi++;its=JSON.parse(JSON.stringify(hist[hi]));upd();}}
+document.getElementById('ab').addEventListener('click',()=>{cnt++;its.push({id:cnt,c:cols[(cnt-1)%cols.length]});push();});
+ub.addEventListener('click',undo);rb.addEventListener('click',redo);
+document.addEventListener('keydown',(e)=>{if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo();}});
+upd();`,
+    },
   },
   {
     id: 'js-clipboard',
@@ -2600,6 +2784,16 @@ render();`,
     description:
       'Implement copy/paste functionality with rich content support using the Clipboard API with fallback for older browsers.',
     concepts: ['Clipboard API', 'Permissions API', 'Event handling', 'Feature detection'],
+    demoCode: {
+      html: `<div class="cd"><div class="cs"><label>Text to copy</label><div class="cr"><input type="text" id="ci" value="Hello, clipboard!" /><button id="cb" class="ab">Copy</button></div></div><div class="cs"><label>Paste area</label><div class="cr"><input type="text" id="pi" placeholder="Click paste or Ctrl+V" readonly /><button id="pb" class="ab">Paste</button></div></div><div class="sn"><p class="snl">Quick copy:</p><button class="snb" data-text="npm install">npm install</button><button class="snb" data-text="git commit">git commit</button><button class="snb" data-text="console.log()">console.log</button></div><div id="cst" class="cst"></div></div>`,
+      css: `.cd{max-width:360px}label{display:block;font-size:13px;color:#94a3b8;margin-bottom:4px}.cs{margin-bottom:14px}.cr{display:flex;gap:6px}.cr input{flex:1;padding:8px 10px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;outline:none;font-size:13px}.cr input:focus{border-color:#3b82f6}.ab{padding:8px 14px;border-radius:6px;border:none;background:#3b82f6;color:white;cursor:pointer;font-size:12px;font-weight:600}.ab:hover{background:#2563eb}.snl{font-size:12px;color:#64748b;margin-bottom:6px}.snb{padding:4px 10px;border-radius:4px;border:1px solid #334155;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:11px;font-family:monospace;margin-right:4px}.snb:hover{border-color:#3b82f6;color:#e2e8f0}.cst{margin-top:10px;font-size:12px;text-align:center;padding:6px;border-radius:6px}.cst.ok{background:rgba(34,197,94,0.1);color:#22c55e}.cst.er{background:rgba(239,68,68,0.1);color:#ef4444}`,
+      js: `const ci=document.getElementById('ci'),pi=document.getElementById('pi'),cst=document.getElementById('cst');
+function show(m,ok){cst.textContent=m;cst.className='cst '+(ok?'ok':'er');setTimeout(()=>{cst.textContent='';cst.className='cst';},2000);}
+async function cp(t){try{await navigator.clipboard.writeText(t);show('Copied: "'+t+'"',true);}catch{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);show('Copied (fallback)',true);}}
+document.getElementById('cb').addEventListener('click',()=>cp(ci.value));
+document.getElementById('pb').addEventListener('click',async()=>{try{pi.value=await navigator.clipboard.readText();show('Pasted!',true);}catch{show('Paste denied - use Ctrl+V',false);}});
+document.querySelectorAll('.snb').forEach(b=>b.addEventListener('click',()=>cp(b.dataset.text)));`,
+    },
   },
   {
     id: 'js-local-storage',
@@ -2610,6 +2804,18 @@ render();`,
     description:
       'Implement state persistence with localStorage including cross-tab synchronization using storage events and automatic serialization.',
     concepts: ['localStorage', 'Storage events', 'Serialization', 'State management'],
+    demoCode: {
+      html: `<div class="sd"><h4>Persistent Notes</h4><div class="nr"><input type="text" id="ni" placeholder="Add a note..." /><button id="an" class="adb">Add</button></div><ul id="nl" class="nl"></ul><div class="sf"><span id="si"></span><button id="ca" class="clb">Clear All</button></div></div>`,
+      css: `.sd{max-width:340px}h4{font-size:16px;color:#e2e8f0;margin-bottom:12px}.nr{display:flex;gap:6px;margin-bottom:12px}.nr input{flex:1;padding:8px 10px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;outline:none;font-size:13px}.nr input:focus{border-color:#3b82f6}.adb{padding:8px 14px;border-radius:6px;border:none;background:#3b82f6;color:white;font-weight:600;cursor:pointer;font-size:13px}.nl{list-style:none;padding:0}.nit{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#1e293b;border:1px solid #334155;border-radius:8px;margin-bottom:6px}.nit .tx{flex:1;font-size:13px;color:#e2e8f0}.nit .tm{font-size:10px;color:#475569}.nit .dl{background:none;border:none;color:#64748b;cursor:pointer;font-size:16px}.nit .dl:hover{color:#ef4444}.sf{display:flex;justify-content:space-between;align-items:center;margin-top:8px}#si{font-size:11px;color:#475569}.clb{padding:4px 10px;border-radius:4px;border:1px solid #334155;background:transparent;color:#64748b;cursor:pointer;font-size:11px}.clb:hover{color:#ef4444;border-color:#ef4444}`,
+      js: `const K='demo-notes',ni=document.getElementById('ni'),nl=document.getElementById('nl'),si=document.getElementById('si');
+function ld(){try{return JSON.parse(localStorage.getItem(K))||[];}catch{return[];}}
+function sv(n){localStorage.setItem(K,JSON.stringify(n));}
+function render(){const notes=ld();nl.innerHTML='';notes.forEach((n,i)=>{const li=document.createElement('li');li.className='nit';li.innerHTML='<span class="tx">'+n.text+'</span><span class="tm">'+n.time+'</span><button class="dl">&times;</button>';li.querySelector('.dl').addEventListener('click',()=>{notes.splice(i,1);sv(notes);render();});nl.appendChild(li);});const b=new Blob([localStorage.getItem(K)||'']).size;si.textContent=notes.length+' notes ('+b+' bytes)';}
+document.getElementById('an').addEventListener('click',()=>{const t=ni.value.trim();if(!t)return;const n=ld();n.unshift({text:t,time:new Date().toLocaleTimeString()});sv(n);ni.value='';render();});
+ni.addEventListener('keydown',(e)=>{if(e.key==='Enter')document.getElementById('an').click();});
+document.getElementById('ca').addEventListener('click',()=>{localStorage.removeItem(K);render();});
+window.addEventListener('storage',(e)=>{if(e.key===K)render();});render();`,
+    },
   },
 
   // UI Components
@@ -2622,6 +2828,16 @@ render();`,
     description:
       'Create skeleton loading screens with animated placeholder content using CSS animations and template literals.',
     concepts: ['CSS animations', 'Template literals', 'Loading states', 'DOM manipulation'],
+    demoCode: {
+      html: `<button id="tl" class="tlb">Toggle Loading</button><div class="skc" id="skc"><div class="skd" id="s1"></div><div class="skd" id="s2"></div><div class="skd" id="s3"></div></div>`,
+      css: `.tlb{padding:8px 16px;border-radius:8px;border:none;background:#3b82f6;color:white;font-weight:600;cursor:pointer;margin-bottom:12px}.skc{display:flex;flex-direction:column;gap:10px}.skd{padding:14px;background:#1e293b;border:1px solid #334155;border-radius:10px}.sk{border-radius:4px;background:linear-gradient(110deg,#334155 30%,#475569 50%,#334155 70%);background-size:200% 100%;animation:shim 1.5s infinite}.ska{width:40px;height:40px;border-radius:50%}.skt{height:14px;width:60%;margin-bottom:8px}.skx{height:10px;width:90%;margin-bottom:6px}.sks{height:10px;width:50%}.skr{display:flex;gap:12px;align-items:center}.skb{flex:1}.rr{display:flex;gap:12px;align-items:center}.ra{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:16px}.rt{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px}.rx{font-size:12px;color:#94a3b8}@keyframes shim{to{background-position:-200% 0}}`,
+      js: `const rd=[{name:'Alice Johnson',text:'Working on the dashboard',color:'#3b82f6',i:'A'},{name:'Bob Smith',text:'Reviewing pull requests',color:'#22c55e',i:'B'},{name:'Carol Davis',text:'Setting up CI/CD',color:'#a855f7',i:'C'}];
+let il=true;
+function showSk(){document.querySelectorAll('.skd').forEach(c=>{c.innerHTML='<div class="skr"><div class="sk ska"></div><div class="skb"><div class="sk skt"></div><div class="sk skx"></div><div class="sk sks"></div></div></div>';});}
+function showRl(){document.querySelectorAll('.skd').forEach((c,i)=>{const d=rd[i];c.innerHTML='<div class="rr"><div class="ra" style="background:'+d.color+'">'+d.i+'</div><div><div class="rt">'+d.name+'</div><div class="rx">'+d.text+'</div></div></div>';});}
+document.getElementById('tl').addEventListener('click',()=>{il=!il;if(il)showSk();else setTimeout(showRl,800);});
+showSk();`,
+    },
   },
   {
     id: 'js-empty-states',
@@ -2632,6 +2848,15 @@ render();`,
     description:
       'Design and implement empty state screens with illustrations, helpful messages, and call-to-action buttons using template literals.',
     concepts: ['Template literals', 'DOM manipulation', 'UX patterns', 'SVG'],
+    demoCode: {
+      html: `<div class="ed"><div class="et"><button class="stb active" data-scene="inbox">Inbox</button><button class="stb" data-scene="search">Search</button><button class="stb" data-scene="error">Error</button></div><div class="es" id="es"></div></div>`,
+      css: `.ed{max-width:380px}.et{display:flex;gap:4px;margin-bottom:12px}.stb{padding:6px 14px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px}.stb:hover{border-color:#3b82f6}.stb.active{background:#3b82f6;border-color:#3b82f6;color:white}.es{text-align:center;padding:32px 16px;background:#1e293b;border:1px solid #334155;border-radius:12px}.ei{font-size:48px;margin-bottom:12px}.etl{font-size:18px;font-weight:600;color:#e2e8f0;margin-bottom:6px}.etx{font-size:14px;color:#94a3b8;margin-bottom:16px;line-height:1.6}.eb{padding:10px 20px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:13px}.ebp{background:#3b82f6;color:white}.ebs{background:#334155;color:#94a3b8}`,
+      js: `const scenes={inbox:{icon:'&#128236;',title:'Your inbox is empty',text:'When you receive new messages, they will appear here.',btn:'Compose Message',cls:'ebp'},search:{icon:'&#128269;',title:'No results found',text:'Try adjusting your search terms or filters.',btn:'Clear Filters',cls:'ebs'},error:{icon:'&#9888;',title:'Something went wrong',text:'We could not load this content. Please try again.',btn:'Retry',cls:'ebp'}};
+const es=document.getElementById('es'),tabs=document.querySelectorAll('.stb');
+function show(s){const d=scenes[s];es.innerHTML='<div class="ei">'+d.icon+'</div><div class="etl">'+d.title+'</div><div class="etx">'+d.text+'</div><button class="eb '+d.cls+'">'+d.btn+'</button>';}
+tabs.forEach(t=>t.addEventListener('click',()=>{tabs.forEach(x=>x.classList.remove('active'));t.classList.add('active');show(t.dataset.scene);}));
+show('inbox');`,
+    },
   },
   {
     id: 'js-image-zoom',
@@ -2642,6 +2867,18 @@ render();`,
     description:
       'Implement image zoom/magnify functionality on hover using CSS transform and pointer position tracking for product image previews.',
     concepts: ['Pointer events', 'CSS transform', 'Mouse tracking', 'Image manipulation'],
+    demoCode: {
+      html: `<div class="zd"><p class="zh">Hover over the image to zoom</p><div class="zc" id="zc"><div class="zi"><div class="zg"><div class="zgl" style="background:#1e3a5f">A1</div><div class="zgl" style="background:#3b1f5e">B2</div><div class="zgl" style="background:#1f4a3b">C3</div><div class="zgl" style="background:#5e3b1f">D4</div><div class="zgl" style="background:#1f3b5e">E5</div><div class="zgl" style="background:#4a1f3b">F6</div><div class="zgl" style="background:#2d3a1f">G7</div><div class="zgl" style="background:#3a1f2d">H8</div><div class="zgl" style="background:#1f2d3a">I9</div></div></div><div class="zl" id="zl"></div></div><div class="zp" id="zp"></div></div>`,
+      css: `.zd{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}.zh{width:100%;font-size:12px;color:#64748b;margin-bottom:4px}.zc{position:relative;width:200px;height:200px;border-radius:10px;overflow:hidden;border:1px solid #334155;cursor:crosshair}.zi{width:100%;height:100%}.zg{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%}.zgl{display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:rgba(255,255,255,0.7)}.zl{position:absolute;width:60px;height:60px;border:2px solid #3b82f6;background:rgba(59,130,246,0.15);pointer-events:none;display:none}.zp{width:160px;height:160px;border-radius:10px;border:1px solid #334155;overflow:hidden;background:#1e293b;display:none}.zp .zg{width:600px;height:600px}.zp .zgl{font-size:60px}`,
+      js: `const zc=document.getElementById('zc'),zl=document.getElementById('zl'),zp=document.getElementById('zp'),f=3;
+const og=zc.querySelector('.zg'),cl=og.cloneNode(true);
+cl.style.width=(zc.offsetWidth*f)+'px';cl.style.height=(zc.offsetHeight*f)+'px';
+cl.querySelectorAll('.zgl').forEach(c=>c.style.fontSize='60px');
+zp.appendChild(cl);
+zc.addEventListener('mouseenter',()=>{zl.style.display='block';zp.style.display='block';});
+zc.addEventListener('mouseleave',()=>{zl.style.display='none';zp.style.display='none';});
+zc.addEventListener('mousemove',(e)=>{const r=zc.getBoundingClientRect(),lw=zl.offsetWidth/2,lh=zl.offsetHeight/2;let x=e.clientX-r.left-lw,y=e.clientY-r.top-lh;x=Math.max(0,Math.min(x,r.width-zl.offsetWidth));y=Math.max(0,Math.min(y,r.height-zl.offsetHeight));zl.style.left=x+'px';zl.style.top=y+'px';cl.style.transform='translate(-'+(x*f)+'px,-'+(y*f)+'px)';});`,
+    },
   },
   {
     id: 'js-toggle-switch',
@@ -2652,5 +2889,10 @@ render();`,
     description:
       'Create accessible toggle switches with smooth animations, disabled states, and keyboard support using checkbox inputs and CSS.',
     concepts: ['Checkbox input', 'CSS transitions', 'ARIA', 'Keyboard events'],
+    demoCode: {
+      html: `<div class="tgs"><div class="tr"><label class="tw"><input type="checkbox" id="tw" checked /><span class="ts"></span></label><span class="tl">Wi-Fi</span><span class="tt" id="sw">On</span></div><div class="tr"><label class="tw"><input type="checkbox" id="tb" /><span class="ts"></span></label><span class="tl">Bluetooth</span><span class="tt" id="sb">Off</span></div><div class="tr"><label class="tw"><input type="checkbox" id="td" checked /><span class="ts"></span></label><span class="tl">Dark Mode</span><span class="tt" id="sd">On</span></div><div class="tr dis"><label class="tw"><input type="checkbox" id="ta" disabled /><span class="ts"></span></label><span class="tl">Airplane Mode</span><span class="tt" id="sa">Disabled</span></div></div>`,
+      css: `.tgs{max-width:300px}.tr{display:flex;align-items:center;gap:12px;padding:12px;background:#1e293b;border:1px solid #334155;border-radius:8px;margin-bottom:8px}.tr.dis{opacity:.4}.tl{flex:1;font-size:14px;color:#e2e8f0}.tt{font-size:12px;color:#64748b;min-width:50px;text-align:right}.tw{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}.tw input{opacity:0;width:0;height:0}.ts{position:absolute;inset:0;background:#475569;border-radius:24px;cursor:pointer;transition:background .3s}.ts::before{content:'';position:absolute;left:2px;bottom:2px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .3s}input:checked+.ts{background:#3b82f6}input:checked+.ts::before{transform:translateX(20px)}input:focus-visible+.ts{box-shadow:0 0 0 3px rgba(59,130,246,0.4)}input:disabled+.ts{cursor:not-allowed}`,
+      js: `[{id:'tw',sid:'sw'},{id:'tb',sid:'sb'},{id:'td',sid:'sd'}].forEach(({id,sid})=>{const inp=document.getElementById(id),st=document.getElementById(sid);function u(){st.textContent=inp.checked?'On':'Off';st.style.color=inp.checked?'#3b82f6':'#64748b';}inp.addEventListener('change',u);u();});`,
+    },
   },
 ];

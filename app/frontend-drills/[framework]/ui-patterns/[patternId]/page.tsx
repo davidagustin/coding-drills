@@ -525,39 +525,15 @@ ${userCode}
                   </div>
                 )}
               </div>
-
-              {/* User's Live Preview */}
-              {userPreviewSrcdoc ? (
-                <div className="mt-4 border-t border-zinc-700/30 pt-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-medium text-zinc-400">Your Preview</span>
-                  </div>
-                  <div className="rounded-lg overflow-hidden border border-zinc-700/50 bg-zinc-950/50">
-                    <iframe
-                      srcDoc={userPreviewSrcdoc}
-                      sandbox="allow-scripts"
-                      title="Your implementation preview"
-                      className="w-full border-0 bg-zinc-950"
-                      style={{ height: 200 }}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-4 border-t border-zinc-700/30 pt-4">
-                  <div className="flex items-center justify-center py-6 text-zinc-600 text-xs">
-                    Start typing code above to see your preview here
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Live Demo Section - Takes 2 columns (40%) */}
-          <div className="lg:col-span-2">
+          {/* Right Column - Live Demo + Your Preview */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            {/* Live Demo */}
             {pattern.demoCode ? (
-              <div className="bg-gradient-to-br from-emerald-950/40 via-zinc-900/60 to-zinc-900/80 rounded-3xl p-1.5 border border-emerald-500/20 shadow-2xl shadow-emerald-500/10 h-full">
-                <div className="bg-zinc-900/90 rounded-2xl p-6 h-full">
+              <div className="bg-gradient-to-br from-emerald-950/40 via-zinc-900/60 to-zinc-900/80 rounded-3xl p-1.5 border border-emerald-500/20 shadow-2xl shadow-emerald-500/10">
+                <div className="bg-zinc-900/90 rounded-2xl p-6">
                   <div className="flex items-center gap-3 mb-5">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
                       <svg
@@ -589,13 +565,13 @@ ${userCode}
                       css={pattern.demoCode.css}
                       js={pattern.demoCode.js}
                       framework={framework as FrameworkId}
-                      height={400}
+                      height={300}
                     />
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="bg-zinc-800/20 rounded-3xl p-12 border-2 border-dashed border-zinc-700/40 h-full flex flex-col items-center justify-center text-center min-h-[400px]">
+              <div className="bg-zinc-800/20 rounded-3xl p-12 border-2 border-dashed border-zinc-700/40 flex flex-col items-center justify-center text-center min-h-[300px]">
                 <div className="w-20 h-20 rounded-2xl bg-zinc-800/50 flex items-center justify-center mb-5 rotate-3 shadow-xl">
                   <svg
                     className="w-10 h-10 text-zinc-600"
@@ -618,6 +594,29 @@ ${userCode}
                 </p>
               </div>
             )}
+
+            {/* Your Preview */}
+            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                <span className="text-sm font-medium text-zinc-300">Your Preview</span>
+              </div>
+              {userPreviewSrcdoc ? (
+                <div className="rounded-lg overflow-hidden border border-zinc-700/50 bg-zinc-950/50">
+                  <iframe
+                    srcDoc={userPreviewSrcdoc}
+                    sandbox="allow-scripts"
+                    title="Your implementation preview"
+                    className="w-full border-0 bg-zinc-950"
+                    style={{ height: 250 }}
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center justify-center py-8 text-zinc-600 text-xs rounded-lg border border-dashed border-zinc-700/40">
+                  Start typing code to see your preview here
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
