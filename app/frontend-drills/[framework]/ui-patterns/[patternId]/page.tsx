@@ -910,10 +910,35 @@ try {
                     />
                   </svg>
                 </div>
-                <div>
+                <div className="flex-1">
                   <h2 className="text-lg font-bold text-white">Your Implementation</h2>
                   <p className="text-xs text-zinc-500">Write your JS — HTML & CSS are provided</p>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUserCode(generateStarterCode(pattern, framework));
+                    setEditorTab('js');
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-700/50 transition-colors cursor-pointer"
+                  title="Reset to starter code"
+                >
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"
+                    />
+                  </svg>
+                  Reset
+                </button>
               </div>
 
               {/* Editor Tabs */}
