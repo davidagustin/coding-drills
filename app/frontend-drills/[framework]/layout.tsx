@@ -45,6 +45,18 @@ const MODES: { slug: string; label: string; icon: ReactNode }[] = [
     ),
   },
   {
+    slug: 'training',
+    label: 'Training',
+    // Clipboard/checklist icon for individual problem training
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" {...s} />
+        <rect x="9" y="3" width="6" height="4" rx="1" {...s} />
+        <path d="M9 12l2 2 4-4" {...s} />
+      </svg>
+    ),
+  },
+  {
     slug: 'ui-patterns',
     label: 'UI Patterns',
     // Grid layout icon (4 squares)
