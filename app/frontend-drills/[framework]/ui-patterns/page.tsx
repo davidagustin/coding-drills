@@ -17,21 +17,6 @@ import {
 } from '@/lib/frontend-drills';
 
 // Icon components
-function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      className={className}
-      aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-    </svg>
-  );
-}
-
 function FormIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
     <svg
@@ -167,25 +152,6 @@ function SearchIcon({ className = 'w-6 h-6' }: { className?: string }) {
   );
 }
 
-function ExternalLinkIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      className={className}
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-      />
-    </svg>
-  );
-}
-
 const CATEGORY_ICONS: Record<UIPatternCategory, React.ReactNode> = {
   'forms-input': <FormIcon />,
   interactive: <InteractiveIcon />,
@@ -204,16 +170,28 @@ function PatternCard({
 }) {
   const diffConfig = UI_PATTERN_DIFFICULTY_CONFIG[pattern.difficulty];
 
-  const cardContent = (
-    <>
-      {/* Title and difficulty */}
+  return (
+    <Link
+      href={`/frontend-drills/${pattern.framework}/ui-patterns/${pattern.id}`}
+      className={`
+        group relative w-full text-left p-4 rounded-xl border transition-all duration-300 block
+        ${frameworkConfig.borderColor} bg-zinc-900/50
+        hover:scale-[1.02] hover:shadow-lg ${frameworkConfig.hoverBg}
+      `}
+    >
+      {/* Title */}
       <div className="flex items-start gap-3 mb-2">
         <h3 className="text-white font-medium group-hover:text-white/90 flex-1">{pattern.title}</h3>
-        {pattern.externalUrl && (
-          <ExternalLinkIcon
-            className={`w-4 h-4 ${frameworkConfig.color} opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0`}
-          />
-        )}
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          className={`w-4 h-4 ${frameworkConfig.color} opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0`}
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
       </div>
 
       {/* Difficulty badge */}
@@ -239,29 +217,8 @@ function PatternCard({
           </span>
         ))}
       </div>
-    </>
+    </Link>
   );
-
-  const baseClasses = `
-    group relative w-full text-left p-4 rounded-xl border transition-all duration-300
-    ${frameworkConfig.borderColor} bg-zinc-900/50
-    hover:scale-[1.02] hover:shadow-lg ${frameworkConfig.hoverBg}
-  `;
-
-  if (pattern.externalUrl) {
-    return (
-      <a
-        href={pattern.externalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${baseClasses} block`}
-      >
-        {cardContent}
-      </a>
-    );
-  }
-
-  return <div className={baseClasses}>{cardContent}</div>;
 }
 
 function CategorySection({
@@ -440,15 +397,6 @@ export default function UIPatterns() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Back link */}
-      <Link
-        href={`/frontend-drills/${framework}`}
-        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 group"
-      >
-        <ArrowLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        Back to {config.name}
-      </Link>
-
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-white mb-3">UI Patterns</h1>
