@@ -49,6 +49,162 @@ function getImplementationHint(concept: string, framework: string): string {
   return `Implement ${concept} using ${framework} patterns and best practices`;
 }
 
+function generateStarterCode(pattern: UIPattern, framework: string): string {
+  const frameworkName = FRAMEWORK_CONFIG[framework as FrameworkId]?.name || framework;
+  const componentName = pattern.title
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .trim()
+    .split(/\s+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join('');
+
+  const steps = pattern.concepts
+    .map((c, i) => `  // Step ${i + 1}: ${c}\n  // ${getImplementationHint(c, frameworkName)}`)
+    .join('\n\n');
+
+  if (framework === 'react') return reactStarter(pattern, componentName, steps);
+  if (framework === 'vue') return vueStarter(pattern, componentName, steps);
+  return vanillaStarter(pattern, componentName, steps, framework);
+}
+
+function reactStarter(pattern: UIPattern, name: string, steps: string): string {
+  const hooks = new Set(['useState']);
+  const joined = pattern.concepts.join(' ').toLowerCase();
+  if (/memo|computed|derived|strength|filter|calculate/.test(joined)) hooks.add('useMemo');
+  if (/effect|lifecycle|async|fetch|timer|mount|load/.test(joined)) hooks.add('useEffect');
+  if (/callback|debounce|throttle/.test(joined)) hooks.add('useCallback');
+  if (/ref|dom|focus|scroll|element/.test(joined)) hooks.add('useRef');
+
+  let stateLines: string[] = [];
+  if (pattern.demoCode?.js) {
+    stateLines = pattern.demoCode.js
+      .split('\n')
+      .filter((l) => /^\s*const\s+\[.*\]\s*=\s*useState/.test(l))
+      .map((l) => l.replace(/^\s+/, '  '));
+  }
+  if (stateLines.length === 0) {
+    stateLines = [`  const [value, setValue] = useState('');`];
+  }
+
+  let funcName = name;
+  if (pattern.demoCode?.js) {
+    const match = pattern.demoCode.js.match(/function\s+([A-Z]\w*)/);
+    if (match) funcName = match[1];
+  }
+
+  return `const { ${Array.from(hooks).join(', ')} } = React;
+
+function ${funcName}() {
+${stateLines.join('\n')}
+
+${steps}
+
+  return (
+    <div>
+      <h3>${pattern.title}</h3>
+      {/* Build your implementation here */}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(<${funcName} />);`;
+}
+
+function vueStarter(pattern: UIPattern, name: string, steps: string): string {
+  const imports = new Set(['createApp', 'ref']);
+  const joined = pattern.concepts.join(' ').toLowerCase();
+  if (/computed|derived|filter|calculate|strength/.test(joined)) imports.add('computed');
+  if (/reactive|form|object|group/.test(joined)) imports.add('reactive');
+  if (/watch|effect|async|lifecycle/.test(joined)) imports.add('watch');
+
+  let stateLines: string[] = [];
+  if (pattern.demoCode?.js) {
+    stateLines = pattern.demoCode.js
+      .split('\n')
+      .filter((l) => /^\s*const\s+\w+\s*=\s*(ref|reactive)\(/.test(l))
+      .map((l) => '    ' + l.trim());
+  }
+  if (stateLines.length === 0) {
+    stateLines = [`    const value = ref('');`];
+  }
+
+  const varNames = stateLines
+    .map((l) => l.match(/const\s+(\w+)/)?.[1])
+    .filter((v): v is string => !!v);
+
+  const indentedSteps = steps.replace(/^ {2}/gm, '    ');
+
+  return `const { ${Array.from(imports).join(', ')} } = Vue;
+
+createApp({
+  setup() {
+${stateLines.join('\n')}
+
+${indentedSteps}
+
+    return { ${varNames.join(', ')} };
+  },
+  template: \`
+    <div>
+      <h3>${pattern.title}</h3>
+      <!-- Build your implementation here -->
+    </div>
+  \`
+}).mount('#app');`;
+}
+
+function vanillaStarter(
+  pattern: UIPattern,
+  name: string,
+  steps: string,
+  framework: string,
+): string {
+  const prefix = framework === 'angular' ? `// Simulating Angular ${pattern.title}\n` : '';
+
+  let stateLines: string[] = [];
+  if (pattern.demoCode?.js) {
+    stateLines = pattern.demoCode.js
+      .split('\n')
+      .filter((l) => {
+        const t = l.trim();
+        return (
+          /^(let|const)\s+\w+\s*=\s*/.test(t) &&
+          !t.includes('document.') &&
+          !t.includes('function') &&
+          !/=\s*\(/.test(t)
+        );
+      })
+      .slice(0, 6)
+      .map((l) => l.trim());
+  }
+  if (stateLines.length === 0) {
+    stateLines = [`let value = '';`];
+  }
+
+  const unindentedSteps = steps.replace(/^ {2}/gm, '');
+
+  return `${prefix}const app = document.getElementById('app');
+
+// State
+${stateLines.join('\n')}
+
+${unindentedSteps}
+
+// Render
+function render() {
+  app.innerHTML = \`
+    <div>
+      <h3>${pattern.title}</h3>
+      <!-- Build your implementation here -->
+    </div>
+  \`;
+
+  // TODO: Add event listeners
+}
+
+render();`;
+}
+
 function patternToExercise(pattern: UIPattern, frameworkName: string): Exercise {
   return {
     id: pattern.id,
@@ -60,9 +216,7 @@ function patternToExercise(pattern: UIPattern, frameworkName: string): Exercise 
       pattern.promptDescription ||
       `Build a ${pattern.title} component using ${frameworkName}. Focus on implementing each building block step by step.`,
     instructions: pattern.concepts.map((c, i) => `Step ${i + 1}: Implement ${c}`),
-    starterCode: pattern.demoCode
-      ? `// Reference demo code available above\n// Implement your own version below\n`
-      : `// Implement ${pattern.title}\n`,
+    starterCode: generateStarterCode(pattern, pattern.framework),
     solutionCode: pattern.demoCode
       ? `// HTML:\n${pattern.demoCode.html}\n\n// CSS:\n${pattern.demoCode.css}\n\n// JS:\n${pattern.demoCode.js}`
       : `// No reference solution available yet`,
@@ -80,9 +234,18 @@ export default function UIPatternDetail() {
   const [userCode, setUserCode] = useState('');
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Required for hydration safety
-    setMounted(true);
+    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- hydration safety
   }, []);
+
+  // Initialize editor with framework-specific starter code
+  useEffect(() => {
+    if (!mounted) return;
+    if (!isValidFramework(framework)) return;
+    const p = getUIPatternById(framework as FrameworkId, patternId);
+    if (p) {
+      setUserCode(generateStarterCode(p, framework)); // eslint-disable-line react-hooks/set-state-in-effect -- Initialize starter code for pattern
+    }
+  }, [mounted, framework, patternId]);
 
   // Build a preview document from the user's code
   // Must be before early returns to satisfy rules of hooks
