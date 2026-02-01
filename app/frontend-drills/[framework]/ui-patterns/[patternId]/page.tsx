@@ -603,7 +603,7 @@ ${userCode}
           <p className="text-zinc-400 text-base leading-relaxed max-w-3xl">{pattern.description}</p>
         </div>
 
-        {/* Two-Column Layout: Code Editor (left ~60%) + Live Demo (right ~40%) */}
+        {/* Row 1: Code Editor (left) + Your Preview (right) */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
           {/* Code Editor Section - Takes 3 columns (60%) */}
           <div className="lg:col-span-3">
@@ -690,75 +690,8 @@ ${userCode}
             </div>
           </div>
 
-          {/* Right Column - Live Demo + Your Preview */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            {/* Live Demo */}
-            {pattern.demoCode ? (
-              <div className="bg-gradient-to-br from-emerald-950/40 via-zinc-900/60 to-zinc-900/80 rounded-3xl p-1.5 border border-emerald-500/20 shadow-2xl shadow-emerald-500/10">
-                <div className="bg-zinc-900/90 rounded-2xl p-6">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                      <svg
-                        className="w-5 h-5 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-bold text-white">Live Demo</h2>
-                      <p className="text-xs text-emerald-400/80">Interactive preview</p>
-                    </div>
-                    <span className="text-xs px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
-                      Running
-                    </span>
-                  </div>
-                  <div className="rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-950/50">
-                    <LivePreview
-                      html={pattern.demoCode.html}
-                      css={pattern.demoCode.css}
-                      js={pattern.demoCode.js}
-                      framework={framework as FrameworkId}
-                      height={300}
-                      showCodeTabs={['js']}
-                    />
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-zinc-800/20 rounded-3xl p-12 border-2 border-dashed border-zinc-700/40 flex flex-col items-center justify-center text-center min-h-[300px]">
-                <div className="w-20 h-20 rounded-2xl bg-zinc-800/50 flex items-center justify-center mb-5 rotate-3 shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-zinc-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
-                    />
-                  </svg>
-                </div>
-                <p className="text-zinc-500 text-lg font-medium mb-2">Live demo coming soon</p>
-                <p className="text-zinc-600 text-sm max-w-xs">
-                  Use the AI tutor below to get guidance on building this pattern yourself
-                </p>
-              </div>
-            )}
-
-            {/* Your Preview */}
+          {/* Your Preview - directly to the right */}
+          <div className="lg:col-span-2">
             <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
@@ -771,7 +704,7 @@ ${userCode}
                     sandbox="allow-scripts"
                     title="Your implementation preview"
                     className="w-full border-0 bg-zinc-950"
-                    style={{ height: 250 }}
+                    style={{ height: 350 }}
                   />
                 </div>
               ) : (
@@ -783,7 +716,7 @@ ${userCode}
           </div>
         </div>
 
-        {/* AI Tutor + Building Blocks Row */}
+        {/* Row 2: AI Tutor (left) + Live Demo & Building Blocks (right) */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
           {/* AI Tutor Section - Left (60%) */}
           <div className="lg:col-span-3">
@@ -799,9 +732,76 @@ ${userCode}
             />
           </div>
 
-          {/* Building Blocks Section - Right (40%) */}
-          <div className="lg:col-span-2">
-            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 backdrop-blur-sm h-full">
+          {/* Right Column - Live Demo + Building Blocks */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            {/* Live Demo */}
+            {pattern.demoCode ? (
+              <div className="bg-gradient-to-br from-emerald-950/40 via-zinc-900/60 to-zinc-900/80 rounded-3xl p-1.5 border border-emerald-500/20 shadow-2xl shadow-emerald-500/10">
+                <div className="bg-zinc-900/90 rounded-2xl p-5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-lg font-bold text-white">Live Demo</h2>
+                      <p className="text-xs text-emerald-400/80">Reference answer</p>
+                    </div>
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+                      Running
+                    </span>
+                  </div>
+                  <div className="rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-950/50">
+                    <LivePreview
+                      html={pattern.demoCode.html}
+                      css={pattern.demoCode.css}
+                      js={pattern.demoCode.js}
+                      framework={framework as FrameworkId}
+                      height={250}
+                      showCodeTabs={['js']}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-zinc-800/20 rounded-3xl p-8 border-2 border-dashed border-zinc-700/40 flex flex-col items-center justify-center text-center">
+                <div className="w-14 h-14 rounded-xl bg-zinc-800/50 flex items-center justify-center mb-4 rotate-3 shadow-xl">
+                  <svg
+                    className="w-7 h-7 text-zinc-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
+                    />
+                  </svg>
+                </div>
+                <p className="text-zinc-500 text-sm font-medium mb-1">Live demo coming soon</p>
+                <p className="text-zinc-600 text-xs max-w-xs">
+                  Use the AI tutor to get guidance on building this pattern
+                </p>
+              </div>
+            )}
+
+            {/* Building Blocks */}
+            <div className="bg-zinc-800/30 rounded-2xl p-5 border border-zinc-700/30 backdrop-blur-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
                   <svg
@@ -828,7 +828,7 @@ ${userCode}
                 </div>
               </div>
 
-              <div className="space-y-2.5 max-h-[500px] overflow-y-auto pr-1 scrollbar-thin scrollbar-track-zinc-800/50 scrollbar-thumb-zinc-700/50">
+              <div className="space-y-2.5 max-h-[400px] overflow-y-auto pr-1 scrollbar-thin scrollbar-track-zinc-800/50 scrollbar-thumb-zinc-700/50">
                 {pattern.concepts.map((concept, index) => (
                   <div
                     key={index}
