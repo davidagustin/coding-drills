@@ -44,23 +44,31 @@ export function StudySetup({
 
   // Compute available categories + per-category card counts
   const { categories, categoryCounts } = useMemo(() => {
-    const cats = new Set<string>();
-    for (const src of selectedSources) {
-      for (const cat of getAvailableCategories(src, context)) {
-        cats.add(cat);
-      }
-    }
-    const sorted = [...cats].sort();
-
-    // Count cards per category
-    const allCards = getAllFlashcards({ sources: selectedSources, ...context });
+    // Count cards per category, respecting the interview-only filter
+    const allCards = getAllFlashcards({
+      sources: selectedSources,
+      ...context,
+      interviewOnly: interviewOnly || undefined,
+    });
     const counts: Record<string, number> = {};
+    const cats = new Set<string>();
     for (const card of allCards) {
       counts[card.category] = (counts[card.category] ?? 0) + 1;
+      cats.add(card.category);
     }
 
+    // When not filtering by interview, also include categories from source metadata
+    if (!interviewOnly) {
+      for (const src of selectedSources) {
+        for (const cat of getAvailableCategories(src, context)) {
+          cats.add(cat);
+        }
+      }
+    }
+
+    const sorted = [...cats].sort();
     return { categories: sorted, categoryCounts: counts };
-  }, [selectedSources, context]);
+  }, [selectedSources, context, interviewOnly]);
 
   // Preview cards matching current filters
   const previewCards = useMemo((): Flashcard[] => {
@@ -108,6 +116,88 @@ export function StudySetup({
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
+  // ── Q&A preview local filter/sort state ────────────────────
+  const [qaSearch, setQaSearch] = useState('');
+  const [qaDifficulty, setQaDifficulty] = useState<string>('all');
+  const [qaCategory, setQaCategory] = useState<string>('all');
+  const [qaSource, setQaSource] = useState<string>('all');
+  const [qaSort, setQaSort] = useState<string>('default');
+
+  // Derive unique values for filter dropdowns from previewCards
+  const qaFilterOptions = useMemo(() => {
+    const cats = new Set<string>();
+    const sources = new Set<string>();
+    for (const card of previewCards) {
+      cats.add(card.category);
+      sources.add(card.source);
+    }
+    return {
+      categories: [...cats].sort(),
+      sources: [...sources].sort(),
+    };
+  }, [previewCards]);
+
+  // Apply local filters + sort to preview cards
+  const filteredPreviewCards = useMemo(() => {
+    let cards = previewCards;
+
+    if (qaSearch.trim()) {
+      const q = qaSearch.toLowerCase();
+      cards = cards.filter(
+        (c) =>
+          c.front.prompt.toLowerCase().includes(q) ||
+          c.back.answer.toLowerCase().includes(q) ||
+          (c.front.detail && c.front.detail.toLowerCase().includes(q)) ||
+          (c.back.explanation && c.back.explanation.toLowerCase().includes(q)) ||
+          c.category.toLowerCase().includes(q),
+      );
+    }
+    if (qaDifficulty !== 'all') {
+      cards = cards.filter((c) => c.difficulty === qaDifficulty);
+    }
+    if (qaCategory !== 'all') {
+      cards = cards.filter((c) => c.category === qaCategory);
+    }
+    if (qaSource !== 'all') {
+      cards = cards.filter((c) => c.source === qaSource);
+    }
+
+    // Sort
+    const diffOrder: Record<string, number> = { easy: 0, medium: 1, hard: 2 };
+    switch (qaSort) {
+      case 'category':
+        cards = [...cards].sort((a, b) => a.category.localeCompare(b.category));
+        break;
+      case 'difficulty':
+        cards = [...cards].sort(
+          (a, b) => (diffOrder[a.difficulty] ?? 1) - (diffOrder[b.difficulty] ?? 1),
+        );
+        break;
+      case 'difficulty-desc':
+        cards = [...cards].sort(
+          (a, b) => (diffOrder[b.difficulty] ?? 1) - (diffOrder[a.difficulty] ?? 1),
+        );
+        break;
+      case 'source':
+        cards = [...cards].sort((a, b) => a.source.localeCompare(b.source));
+        break;
+      default:
+        break;
+    }
+
+    return cards;
+  }, [previewCards, qaSearch, qaDifficulty, qaCategory, qaSource, qaSort]);
+
+  // Reset local Q&A filters when closing preview
+  const closePreview = useCallback(() => {
+    setIsPreviewOpen(false);
+    setQaSearch('');
+    setQaDifficulty('all');
+    setQaCategory('all');
+    setQaSource('all');
+    setQaSort('default');
+  }, []);
+
   const handleStart = useCallback(() => {
     if (selectedSources.length === 0) return;
     onStart({
@@ -132,6 +222,12 @@ export function StudySetup({
 
   // ── Full-page Q&A preview ──────────────────────────────────
   if (isPreviewOpen && previewCards.length > 0) {
+    const hasActiveFilters =
+      qaSearch.trim() !== '' ||
+      qaDifficulty !== 'all' ||
+      qaCategory !== 'all' ||
+      qaSource !== 'all';
+
     return (
       <div className="min-h-screen bg-zinc-950 text-white">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -140,8 +236,9 @@ export function StudySetup({
             <div>
               <h1 className="text-2xl font-bold text-white">Questions & Answers</h1>
               <p className="text-zinc-400 text-sm mt-1">
-                {previewCards.length} card{previewCards.length !== 1 ? 's' : ''} matching your
-                filters
+                {filteredPreviewCards.length === previewCards.length
+                  ? `${previewCards.length} card${previewCards.length !== 1 ? 's' : ''} matching your filters`
+                  : `${filteredPreviewCards.length} of ${previewCards.length} card${previewCards.length !== 1 ? 's' : ''} shown`}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -155,7 +252,7 @@ export function StudySetup({
               </button>
               <button
                 type="button"
-                onClick={() => setIsPreviewOpen(false)}
+                onClick={closePreview}
                 className="flex items-center gap-2 px-4 py-2.5 text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50 cursor-pointer"
               >
                 <svg
@@ -177,75 +274,285 @@ export function StudySetup({
             </div>
           </div>
 
-          {/* Card list */}
-          <div className="flex flex-col gap-4">
-            {previewCards.map((card, i) => (
-              <div
-                key={card.id}
-                className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 p-6 hover:border-zinc-600/50 transition-colors"
+          {/* Filter & Sort toolbar */}
+          <div className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 p-4 mb-6">
+            {/* Search row */}
+            <div className="relative mb-3">
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden="true"
               >
-                {/* Top row: number + badges */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-medium text-zinc-500 tabular-nums">#{i + 1}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-700/50 text-zinc-300 capitalize">
-                      {card.category}
-                    </span>
-                    <span
-                      className={`text-xs px-2.5 py-1 rounded-full capitalize ${
-                        card.difficulty === 'easy'
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : card.difficulty === 'medium'
-                            ? 'bg-amber-500/20 text-amber-400'
-                            : 'bg-red-500/20 text-red-400'
-                      }`}
-                    >
-                      {card.difficulty}
-                    </span>
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-700/30 text-zinc-500 capitalize">
-                      {card.source}
-                    </span>
-                  </div>
-                </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
+              </svg>
+              <input
+                type="text"
+                value={qaSearch}
+                onChange={(e) => setQaSearch(e.target.value)}
+                placeholder="Search questions, answers, categories..."
+                className="w-full pl-10 pr-4 py-2.5 bg-zinc-900/80 border border-zinc-700/50 rounded-xl text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/25 transition-colors"
+              />
+              {qaSearch && (
+                <button
+                  type="button"
+                  onClick={() => setQaSearch('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
 
-                {/* Question + Answer side by side on large screens, stacked on small */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                  {/* Question */}
-                  <div>
-                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
-                      Question
-                    </div>
-                    <div className="text-base text-zinc-200 font-medium">{card.front.prompt}</div>
-                    {card.front.detail && (
-                      <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                        {card.front.detail}
-                      </div>
-                    )}
-                    {card.front.code && (
-                      <pre className="mt-3 text-sm bg-zinc-900/80 rounded-lg px-4 py-3 text-blue-300 whitespace-pre-wrap break-words font-mono border border-zinc-700/30 leading-relaxed">
-                        {card.front.code}
-                      </pre>
-                    )}
-                  </div>
+            {/* Filter dropdowns + sort row */}
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Difficulty filter */}
+              <select
+                value={qaDifficulty}
+                onChange={(e) => setQaDifficulty(e.target.value)}
+                className="px-3 py-2 bg-zinc-900/80 border border-zinc-700/50 rounded-lg text-sm text-zinc-300 focus:outline-none focus:border-blue-500/50 cursor-pointer appearance-none"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 10px center',
+                  paddingRight: '28px',
+                }}
+              >
+                <option value="all">All Difficulties</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
 
-                  {/* Answer */}
-                  <div className="lg:border-l lg:border-zinc-700/30 lg:pl-5">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
-                      Answer
-                    </div>
-                    <div className="text-lg text-emerald-400 font-semibold">{card.back.answer}</div>
-                    {card.back.explanation && (
-                      <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                        {card.back.explanation.length > 200
-                          ? `${card.back.explanation.slice(0, 200)}...`
-                          : card.back.explanation}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+              {/* Category filter */}
+              <select
+                value={qaCategory}
+                onChange={(e) => setQaCategory(e.target.value)}
+                className="px-3 py-2 bg-zinc-900/80 border border-zinc-700/50 rounded-lg text-sm text-zinc-300 focus:outline-none focus:border-blue-500/50 cursor-pointer appearance-none max-w-[200px]"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 10px center',
+                  paddingRight: '28px',
+                }}
+              >
+                <option value="all">All Categories</option>
+                {qaFilterOptions.categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+
+              {/* Source filter */}
+              {qaFilterOptions.sources.length > 1 && (
+                <select
+                  value={qaSource}
+                  onChange={(e) => setQaSource(e.target.value)}
+                  className="px-3 py-2 bg-zinc-900/80 border border-zinc-700/50 rounded-lg text-sm text-zinc-300 focus:outline-none focus:border-blue-500/50 cursor-pointer appearance-none"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 10px center',
+                    paddingRight: '28px',
+                  }}
+                >
+                  <option value="all">All Sources</option>
+                  {qaFilterOptions.sources.map((src) => (
+                    <option key={src} value={src} className="capitalize">
+                      {src}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              {/* Spacer */}
+              <div className="flex-1" />
+
+              {/* Sort */}
+              <select
+                value={qaSort}
+                onChange={(e) => setQaSort(e.target.value)}
+                className="px-3 py-2 bg-zinc-900/80 border border-zinc-700/50 rounded-lg text-sm text-zinc-300 focus:outline-none focus:border-blue-500/50 cursor-pointer appearance-none"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 10px center',
+                  paddingRight: '28px',
+                }}
+              >
+                <option value="default">Default Order</option>
+                <option value="category">Sort by Category</option>
+                <option value="difficulty">Difficulty: Easy First</option>
+                <option value="difficulty-desc">Difficulty: Hard First</option>
+                <option value="source">Sort by Source</option>
+              </select>
+
+              {/* Clear filters */}
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQaSearch('');
+                    setQaDifficulty('all');
+                    setQaCategory('all');
+                    setQaSource('all');
+                  }}
+                  className="px-3 py-2 text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* Card list */}
+          {filteredPreviewCards.length === 0 ? (
+            <div className="text-center py-16">
+              <svg
+                className="w-12 h-12 mx-auto text-zinc-600 mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
+              </svg>
+              <p className="text-zinc-400 text-lg font-medium">No cards match your filters</p>
+              <p className="text-zinc-500 text-sm mt-1">Try adjusting your search or filters</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setQaSearch('');
+                  setQaDifficulty('all');
+                  setQaCategory('all');
+                  setQaSource('all');
+                }}
+                className="mt-4 px-4 py-2 text-sm text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-lg transition-colors cursor-pointer"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {filteredPreviewCards.map((card, i) => (
+                <div
+                  key={card.id}
+                  className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 p-6 hover:border-zinc-600/50 transition-colors"
+                >
+                  {/* Top row: number + badges */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm font-medium text-zinc-500 tabular-nums">#{i + 1}</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setQaCategory(qaCategory === card.category ? 'all' : card.category);
+                        }}
+                        className={`text-xs px-2.5 py-1 rounded-full capitalize cursor-pointer transition-colors ${
+                          qaCategory === card.category
+                            ? 'bg-blue-500/30 text-blue-300 ring-1 ring-blue-500/50'
+                            : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
+                        }`}
+                      >
+                        {card.category}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setQaDifficulty(
+                            qaDifficulty === card.difficulty ? 'all' : card.difficulty,
+                          );
+                        }}
+                        className={`text-xs px-2.5 py-1 rounded-full capitalize cursor-pointer transition-colors ${
+                          qaDifficulty === card.difficulty ? 'ring-1 ring-current' : ''
+                        } ${
+                          card.difficulty === 'easy'
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : card.difficulty === 'medium'
+                              ? 'bg-amber-500/20 text-amber-400'
+                              : 'bg-red-500/20 text-red-400'
+                        }`}
+                      >
+                        {card.difficulty}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setQaSource(qaSource === card.source ? 'all' : card.source);
+                        }}
+                        className={`text-xs px-2.5 py-1 rounded-full capitalize cursor-pointer transition-colors ${
+                          qaSource === card.source
+                            ? 'bg-zinc-600/50 text-zinc-200 ring-1 ring-zinc-500/50'
+                            : 'bg-zinc-700/30 text-zinc-500 hover:bg-zinc-700/50'
+                        }`}
+                      >
+                        {card.source}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Question + Answer side by side on large screens, stacked on small */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    {/* Question */}
+                    <div>
+                      <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+                        Question
+                      </div>
+                      <div className="text-base text-zinc-200 font-medium">{card.front.prompt}</div>
+                      {card.front.detail && (
+                        <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                          {card.front.detail}
+                        </div>
+                      )}
+                      {card.front.code && (
+                        <pre className="mt-3 text-sm bg-zinc-900/80 rounded-lg px-4 py-3 text-blue-300 whitespace-pre-wrap break-words font-mono border border-zinc-700/30 leading-relaxed">
+                          {card.front.code}
+                        </pre>
+                      )}
+                    </div>
+
+                    {/* Answer */}
+                    <div className="lg:border-l lg:border-zinc-700/30 lg:pl-5">
+                      <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+                        Answer
+                      </div>
+                      <div className="text-lg text-emerald-400 font-semibold">
+                        {card.back.answer}
+                      </div>
+                      {card.back.explanation && (
+                        <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                          {card.back.explanation.length > 200
+                            ? `${card.back.explanation.slice(0, 200)}...`
+                            : card.back.explanation}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -307,6 +614,54 @@ export function StudySetup({
               Study
             </span>
           </div>
+        )}
+
+        {/* View All Q&A — prominent placement */}
+        {previewCards.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setIsPreviewOpen(true)}
+            className="w-full mb-8 group relative overflow-hidden rounded-2xl border border-zinc-700/50 hover:border-zinc-600 bg-zinc-800/50 hover:bg-zinc-800 transition-all duration-200 cursor-pointer p-5"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 group-hover:bg-blue-500/25 transition-colors">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                    />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <div className="text-base font-semibold text-zinc-100 group-hover:text-white transition-colors">
+                    View All Questions & Answers
+                  </div>
+                  <div className="text-sm text-zinc-500">
+                    Browse, search, and filter all {previewCards.length} cards
+                  </div>
+                </div>
+              </div>
+              <svg
+                className="w-5 h-5 text-zinc-500 group-hover:text-zinc-300 group-hover:translate-x-0.5 transition-all"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </div>
+          </button>
         )}
 
         {/* What to Study */}
@@ -523,36 +878,13 @@ export function StudySetup({
           </div>
         </div>
 
-        {/* Preview & Start buttons */}
-        <div className="flex gap-3 mb-4">
-          {previewCards.length > 0 && (
-            <button
-              type="button"
-              onClick={() => setIsPreviewOpen(true)}
-              className="flex-1 py-4 rounded-xl font-semibold text-base transition-all duration-200 bg-zinc-700/50 hover:bg-zinc-700 border border-zinc-600 text-zinc-200 cursor-pointer flex items-center justify-center gap-2"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                />
-              </svg>
-              View All Q&A ({previewCards.length})
-            </button>
-          )}
+        {/* Start button */}
+        <div className="mb-4">
           <button
             type="button"
             onClick={handleStart}
             disabled={selectedSources.length === 0}
-            className={`flex-1 py-4 rounded-xl font-bold text-xl transition-all duration-200
+            className={`w-full py-4 rounded-xl font-bold text-xl transition-all duration-200
                        shadow-lg transform hover:scale-[1.02] active:scale-[0.98] ${
                          selectedSources.length === 0
                            ? 'bg-zinc-700 text-zinc-500 cursor-not-allowed shadow-none'
