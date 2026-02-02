@@ -19,6 +19,11 @@ const SpiralMatrixViz = dynamic(() => import('./SpiralMatrixViz'), { ssr: false 
 const StackViz = dynamic(() => import('./StackViz'), { ssr: false });
 const TwoPointerViz = dynamic(() => import('./TwoPointerViz'), { ssr: false });
 const LinkedListViz = dynamic(() => import('./LinkedListViz'), { ssr: false });
+const ContainerMostWaterViz = dynamic(() => import('./ContainerMostWaterViz'), { ssr: false });
+const ThreeSumViz = dynamic(() => import('./ThreeSumViz'), { ssr: false });
+const TrappingRainWaterViz = dynamic(() => import('./TrappingRainWaterViz'), { ssr: false });
+const MoveZeroesViz = dynamic(() => import('./MoveZeroesViz'), { ssr: false });
+const DutchNationalFlagViz = dynamic(() => import('./DutchNationalFlagViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -37,6 +42,12 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'two-pointer-remove-dupes': TwoPointerViz,
   'linked-list-traverse': LinkedListViz,
   'linked-list-reverse': LinkedListViz,
+  // Agent 1: Two Pointers visualizations
+  'container-most-water': ContainerMostWaterViz,
+  'three-sum-zero': ThreeSumViz,
+  'trapping-rain-water': TrappingRainWaterViz,
+  'move-zeroes': MoveZeroesViz,
+  'dutch-national-flag': DutchNationalFlagViz,
 };
 
 /**
