@@ -30,11 +30,12 @@ export function validateFrontendDrillAnswer(
     problem.validPatterns &&
     problem.validPatterns.length > 0
   ) {
-    const patternResult = checkRequiredPatterns(
-      userAnswer,
-      problem.validPatterns,
-      problem.setupCode,
-    );
+    // Pass empty setupCode so the "must use setup variables" check is
+    // skipped.  Angular setupCode is informational scaffolding (e.g.
+    // `const template = '';`) that the answer never references — the
+    // validPatterns already verify correctness.  Syntax checking
+    // (bracket balance) still runs because it doesn't depend on setupCode.
+    const patternResult = checkRequiredPatterns(userAnswer, problem.validPatterns, '');
     if (patternResult) {
       return patternResult; // Failed pattern check
     }
