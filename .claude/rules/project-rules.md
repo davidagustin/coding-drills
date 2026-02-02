@@ -1,5 +1,5 @@
 ---
-description: Project rules – TDD, Ralph loop, README, push when done, no extra MD, multi-agent
+description: Project rules – TDD, Ralph loop, README, wiki, push when done, no extra MD, multi-agent
 alwaysApply: true
 ---
 
@@ -34,14 +34,15 @@ Do not claim completion without fresh verification evidence (e.g. test/build out
 
 ---
 
-## README Before Commit
+## README & Wiki Before Commit
 
 Before committing changes:
 
 1. **Look at the codebase** – Review what changed (new features, APIs, structure, scripts, or config) so docs stay in sync.
 2. **Update README** – Add or edit README.md so it reflects current setup, usage, and behavior (e.g. new commands, env vars, or features). Keep it accurate and useful for someone cloning the repo.
+3. **Update the GitHub Wiki** – Push corresponding updates to the repo's GitHub wiki (`https://github.com/davidagustin/coding-drills/wiki`). Use `gh api` or clone the wiki repo (`coding-drills.wiki.git`) to create/update pages. The wiki should mirror major README sections with additional detail (e.g. per-feature pages, architecture docs, how-to guides). At minimum, keep the wiki Home page in sync with the README overview.
 
-Do this **before** staging and committing. If the change is trivial and doesn't affect setup or usage, a README update may be unnecessary.
+Do this **before** staging and committing. If the change is trivial and doesn't affect setup or usage, a README/wiki update may be unnecessary.
 
 ---
 
