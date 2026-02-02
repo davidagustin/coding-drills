@@ -62,7 +62,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const inputRef = useRef(null);
 
-  const filtered = query ? fruits.filter(f => f.toLowerCase().includes(query.toLowerCase())) : [];
+  const filtered = []; // TODO: Filtered
 
   const highlight = (text) => {
     // TODO: Implement highlight
@@ -182,7 +182,7 @@ function PasswordStrength() {
     { label: 'Contains special char', test: /[^A-Za-z0-9]/.test(password) },
   ], [password]);
 
-  const strength = rules.filter(r => r.test).length;
+  const strength = []; // TODO: Strength
   const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
   const labels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
 
@@ -495,10 +495,7 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.style.height = 'auto';
-      ref.current.style.height = ref.current.scrollHeight + 'px';
-    }
+    // TODO: Use effect — update styles
   }, [text]);
 
   return (
@@ -519,7 +516,7 @@ const prompts = ['Build a todo app','Create a weather dashboard','Design a chat 
 
 function App() {
   const [value, setValue] = useState('');
-  const match = value ? prompts.find(p => p.toLowerCase().startsWith(value.toLowerCase())) : null;
+  const match = null; // TODO: Match
 
   const onKey = (e) => {
     // TODO: On key — update state, prevent default, handle keyboard events
@@ -605,9 +602,7 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const onKey = (e) => {
@@ -736,10 +731,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 function Modal({ open, onClose, title, children }) {
   const ref = useRef(null);
   useEffect(() => {
-    if (open && ref.current) ref.current.focus();
-    const handler = (e) => { if (e.key === 'Escape') onClose(); };
-    if (open) document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    // TODO: Use effect — handle keyboard events, attach event listeners
   }, [open]);
 
   if (!open) return null;
@@ -835,10 +827,7 @@ function App() {
   const [sortAsc, setSortAsc] = useState(true);
   const [selected, setSelected] = useState([]);
 
-  const sorted = [...data].sort((a, b) => {
-    const v = a[sortKey] > b[sortKey] ? 1 : -1;
-    return sortAsc ? v : -v;
-  });
+  const sorted = []; // TODO: Sorted
 
   const toggleSort = (key) => {
     // TODO: Implement toggleSort
@@ -895,14 +884,10 @@ function App() {
   const [sortKey, setSortKey] = useState('id');
   const [asc, setAsc] = useState(true);
 
-  const cats = ['All', ...new Set(rows.map(r => r.category))];
+  const cats = []; // TODO: Cats
 
   const filtered = useMemo(() => {
-    let d = rows;
-    if (catFilter !== 'All') d = d.filter(r => r.category === catFilter);
-    if (search) d = d.filter(r => r.name.toLowerCase().includes(search.toLowerCase()));
-    d = [...d].sort((a,b) => { const v = a[sortKey] > b[sortKey] ? 1 : -1; return asc ? v : -v; });
-    return d;
+    // TODO: Filtered — filter items, remove item
   }, [search, catFilter, sortKey, asc]);
 
   const sort = (k) => {
@@ -957,8 +942,7 @@ function App() {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    if (playing) timerRef.current = setInterval(() => setIdx(i => (i + 1) % slides.length), 3000);
-    return () => clearInterval(timerRef.current);
+    // TODO: Use effect — update state, handle timing
   }, [playing]);
 
   const go = (i) => {
@@ -998,7 +982,7 @@ const tabs = [
 
 function App() {
   const [active, setActive] = useState('overview');
-  const tab = tabs.find(t => t.id === active);
+  const tab = null; // TODO: Tab
 
   return (
     <div>
@@ -1095,9 +1079,7 @@ function App() {
   };
 
   useEffect(() => {
-    const close = () => setMenu(null);
-    document.addEventListener('click', close);
-    return () => document.removeEventListener('click', close);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   return (
@@ -1437,11 +1419,7 @@ function App() {
   }, [histIdx, history]);
 
   useEffect(() => {
-    const handler = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    // TODO: Use effect — prevent default, handle keyboard events, attach event listeners
   }, [undo, redo]);
 
   return (
@@ -1739,7 +1717,7 @@ const catColors = { Tutorial: '#3b82f6', Project: '#22c55e', Article: '#eab308' 
 
 function App() {
   const [filter, setFilter] = useState('All');
-  const cats = ['All', ...new Set(items.map(i => i.cat))];
+  const cats = []; // TODO: Cats
   const filtered = useMemo(() => filter === 'All' ? items : items.filter(i => i.cat === filter), [filter]);
 
   return (
@@ -1778,9 +1756,7 @@ function App() {
   const [query, setQuery] = useState('');
 
   const results = useMemo(() => {
-    if (!query) return data;
-    const q = query.toLowerCase();
-    return data.filter(d => d.title.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q));
+    // TODO: Results — filter items, remove item
   }, [query]);
 
   const highlight = (text) => {
@@ -1823,11 +1799,7 @@ function App() {
   const [maxPrice, setMaxPrice] = useState('');
 
   const filtered = useMemo(() => {
-    let r = products;
-    if (search) r = r.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
-    if (cat) r = r.filter(p => p.cat === cat);
-    if (maxPrice) r = r.filter(p => p.price <= +maxPrice);
-    return r;
+    // TODO: Filtered — filter items, remove item
   }, [search, cat, maxPrice]);
 
   const clear = () => {
@@ -1880,11 +1852,7 @@ function App() {
   const [statusFilter, setStatusFilter] = useState('');
 
   const filtered = useMemo(() => {
-    let r = rows;
-    if (nameFilter) r = r.filter(x => x.name.toLowerCase().includes(nameFilter.toLowerCase()));
-    if (deptFilter) r = r.filter(x => x.dept === deptFilter);
-    if (statusFilter) r = r.filter(x => x.status === statusFilter);
-    return r;
+    // TODO: Filtered — filter items, remove item
   }, [nameFilter, deptFilter, statusFilter]);
 
   return (
@@ -1987,7 +1955,7 @@ const colors = ['#3b82f6','#22c55e','#a855f7','#ef4444','#eab308','#ec4899'];
 
 function App() {
   const [selected, setSelected] = useState(null);
-  const maxCount = Math.max(...tags.map(t => t.count));
+  const maxCount = []; // TODO: Max count
 
   return (
     <div>
@@ -2292,7 +2260,7 @@ const tabs = [
 
 function App() {
   const [active, setActive] = useState('home');
-  const tab = tabs.find(t => t.id === active);
+  const tab = null; // TODO: Tab
 
   return (
     <div className="phone-frame">
@@ -2325,9 +2293,7 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const items = [
@@ -2439,7 +2405,7 @@ const views = [
 
 function App() {
   const [view, setView] = useState('home');
-  const current = views.find(v => v.id === view);
+  const current = null; // TODO: Current
 
   return (
     <div>
@@ -2473,7 +2439,7 @@ const modules = [
 
 function App() {
   const [active, setActive] = useState('users');
-  const mod = modules.find(m => m.id === active);
+  const mod = null; // TODO: Mod
 
   return (
     <div>
@@ -2642,15 +2608,7 @@ function App() {
   ];
 
   useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        setOpen(!open);
-      }
-      if (e.key === 'Escape') setOpen(false);
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
+    // TODO: Use effect — update state, prevent default, handle keyboard events
   }, [open]);
 
   return (
@@ -3003,9 +2961,7 @@ function App() {
   const [openId, setOpenId] = useState(null);
   const [search, setSearch] = useState('');
 
-  const filtered = faqs.filter(f =>
-    f.q.toLowerCase().includes(search.toLowerCase()) ||
-    f.a.toLowerCase().includes(search.toLowerCase()));
+  const filtered = []; // TODO: Filtered
 
   return (
     <div className="faq-container">
@@ -3047,29 +3003,7 @@ function App() {
   const [triggered, setTriggered] = useState('');
 
   useEffect(() => {
-    const handler = (e) => {
-      const parts = [];
-      if (e.ctrlKey || e.metaKey) parts.push('Ctrl');
-      if (e.shiftKey) parts.push('Shift');
-      if (e.altKey) parts.push('Alt');
-      if (e.key !== 'Control' && e.key !== 'Meta' && e.key !== 'Shift' && e.key !== 'Alt') {
-        parts.push(e.key.length === 1 ? e.key.toUpperCase() : e.key);
-      }
-      const combo = parts.join(' + ');
-      setLastKey(combo);
-
-      const match = shortcuts.find(s => {
-        const sk = s.keys.join(' + ').toUpperCase();
-        return combo.toUpperCase() === sk;
-      });
-      if (match) {
-        e.preventDefault();
-        setTriggered(match.action);
-        setTimeout(() => setTriggered(''), 1500);
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    // TODO: Use effect — update state, add item, prevent default
   }, []);
 
   return (
@@ -3114,14 +3048,13 @@ function App() {
     // TODO: Add rule — update state
   };
 
-  const updateRule = (id, key, val) => setRules(prev =>
-    prev.map(r => r.id === id ? { ...r, [key]: val } : r));
+  const updateRule = []; // TODO: Update rule
 
   const removeRule = (id) => {
     // TODO: Remove rule — update state, filter items, remove item
   };
 
-  const summary = rules.map(r => \\\`\\\${r.field} \\\${r.operator} "\\\${r.value}"\\\`).join(\\\` \\\${logic} \\\`);
+  const summary = []; // TODO: Summary
 
   return (
     <div className="rule-container">
@@ -3163,8 +3096,7 @@ const steps = [
 function App() {
   const [completed, setCompleted] = useState(['name']);
 
-  const toggle = (id) => setCompleted(prev =>
-    prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
+  const toggle = []; // TODO: Toggle
 
   const pct = Math.round((completed.length / steps.length) * 100);
   const color = pct < 40 ? '#ef4444' : pct < 70 ? '#f59e0b' : '#22c55e';
@@ -3216,10 +3148,9 @@ function App() {
   const [favorites, setFavorites] = useState([1, 4]);
   const [tab, setTab] = useState('all');
 
-  const toggleFav = (id) => setFavorites(prev =>
-    prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
+  const toggleFav = []; // TODO: Toggle fav
 
-  const items = tab === 'all' ? allItems : allItems.filter(it => favorites.includes(it.id));
+  const items = []; // TODO: Items
 
   return (
     <div className="fav-container">
@@ -3272,9 +3203,7 @@ function App() {
     // TODO: Handle key down — prevent default, handle keyboard events
   };
 
-  const suggestions = input.length > 0
-    ? allSuggestions.filter(s => s.startsWith(input.toLowerCase()) && !tags.includes(s))
-    : [];
+  const suggestions = []; // TODO: Suggestions
 
   return (
     <div className="tagging-container">
@@ -3325,7 +3254,7 @@ const categories = ['all', 'work', 'personal', 'health', 'finance'];
 function App() {
   const [active, setActive] = useState('all');
 
-  const filtered = active === 'all' ? items : items.filter(it => it.category === active);
+  const filtered = []; // TODO: Filtered
 
   return (
     <div className="cat-container">
@@ -3431,10 +3360,9 @@ function App() {
   const [items, setItems] = useState(initial);
   const [tab, setTab] = useState('active');
 
-  const toggle = (id) => setItems(prev =>
-    prev.map(it => it.id === id ? { ...it, archived: !it.archived } : it));
+  const toggle = []; // TODO: Toggle
 
-  const shown = items.filter(it => tab === 'active' ? !it.archived : it.archived);
+  const shown = []; // TODO: Shown
 
   return (
     <div className="archive-container">
@@ -3824,12 +3752,7 @@ function App() {
   const timer = useRef(null);
 
   useEffect(() => {
-    if (playing) {
-      timer.current = setInterval(() => {
-        setCurrent(c => (c + 1) % slides.length);
-      }, 2500);
-    }
-    return () => clearInterval(timer.current);
+    // TODO: Use effect — update state, handle timing
   }, [playing]);
 
   const go = (i) => {
@@ -3917,8 +3840,7 @@ function App() {
     // TODO: Handle change — update state
   };
 
-  const score = quiz.reduce((s, q, i) =>
-    s + (answers[i].toLowerCase().trim() === q.answer ? 1 : 0), 0);
+  const score = null; // TODO: Score
 
   return (
     <div className="blanks-container">
@@ -4015,9 +3937,7 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const toggle = (opt) => {
@@ -4343,8 +4263,7 @@ function App() {
   const btnsRef = useRef([]);
 
   useEffect(() => {
-    const btn = btnsRef.current[active];
-    if (btn) setIndicator({ left: btn.offsetLeft, width: btn.offsetWidth });
+    // TODO: Use effect — update state
   }, [active]);
 
   return (
@@ -4373,12 +4292,10 @@ function App() {
   const [open, setOpen] = useState(false);
   const [focusIdx, setFocusIdx] = useState(-1);
   const ref = useRef(null);
-  const filtered = items.filter(i => i.toLowerCase().includes(value.toLowerCase()));
+  const filtered = []; // TODO: Filtered
 
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const onKey = (e) => {
@@ -4421,7 +4338,7 @@ function App() {
     // TODO: Insert mention — update state
   };
 
-  const filtered = mentioning !== null ? users.filter(u => u.toLowerCase().startsWith(mentioning.toLowerCase())) : [];
+  const filtered = []; // TODO: Filtered
 
   return (
     <div className="mention-wrap">
@@ -4477,13 +4394,7 @@ function App() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    const c = canvasRef.current;
-    c.width = 396;
-    c.height = 160;
-    const ctx = c.getContext('2d');
-    ctx.strokeStyle = '#4fc3f7';
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
+    // TODO: Implement useEffect
   }, []);
 
   const getPos = (e) => {
@@ -4566,9 +4477,7 @@ function Popover({ trigger, title, children }) {
   const ref = useRef(null);
 
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   return (
@@ -4612,14 +4521,7 @@ function App() {
   const [idx, setIdx] = useState(null);
 
   useEffect(() => {
-    if (idx === null) return;
-    const handler = (e) => {
-      if (e.key === 'Escape') setIdx(null);
-      if (e.key === 'ArrowRight') setIdx(i => (i + 1) % images.length);
-      if (e.key === 'ArrowLeft') setIdx(i => (i - 1 + images.length) % images.length);
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    // TODO: Use effect — update state, handle keyboard events, attach event listeners
   }, [idx]);
 
   return (
@@ -4900,7 +4802,7 @@ function Panel({ title, content }) {
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
-    if (bodyRef.current) setHeight(bodyRef.current.scrollHeight);
+    // TODO: Use effect — update state
   }, [content]);
 
   return (
@@ -5003,15 +4905,10 @@ function App() {
   const [active, setActive] = useState(0);
   const inputRef = useRef(null);
 
-  const filtered = commands.filter(c => c.name.toLowerCase().includes(query.toLowerCase()));
+  const filtered = []; // TODO: Filtered
 
   useEffect(() => {
-    const handler = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setOpen(o => !o); setQuery(''); setActive(0); }
-      if (e.key === 'Escape') setOpen(false);
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    // TODO: Use effect — update state, prevent default, handle keyboard events
   }, []);
 
   useEffect(() => { if (open && inputRef.current) inputRef.current.focus(); }, [open]);
@@ -5060,21 +4957,12 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const handler = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === '/') { e.preventDefault(); setOpen(o => !o); setQ(''); }
-      if (e.key === 'Escape') setOpen(false);
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    // TODO: Use effect — update state, prevent default, handle keyboard events
   }, []);
 
   useEffect(() => { if (open && ref.current) ref.current.focus(); }, [open]);
 
-  const results = Object.entries(data).reduce((acc, [cat, items]) => {
-    const f = items.filter(i => i.toLowerCase().includes(q.toLowerCase()));
-    if (f.length) acc.push([cat, f]);
-    return acc;
-  }, []);
+  const results = []; // TODO: Results
 
   return (
     <div>
@@ -5229,7 +5117,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
   'react-avatar': `const { useState } = React;
 
 function Avatar({ name, size = 'md', status }) {
-  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const initials = []; // TODO: Initials
   const colorIdx = name.length % 5;
   return (
     <div className={\`avatar \${size} colors-\${colorIdx}\`}>
@@ -5339,7 +5227,7 @@ const logs = [
 function App() {
   const [filter, setFilter] = useState('all');
   const types = ['all', 'info', 'success', 'warning', 'error'];
-  const filtered = filter === 'all' ? logs : logs.filter(l => l.type === filter);
+  const filtered = []; // TODO: Filtered
 
   return (
     <div className="log-wrap">
@@ -5503,7 +5391,7 @@ function JsonNode({ data, depth = 0 }) {
   if (typeof data === 'boolean') return <span className="jv-bool">{String(data)}</span>;
 
   const isArr = Array.isArray(data);
-  const entries = isArr ? data.map((v, i) => [i, v]) : Object.entries(data);
+  const entries = []; // TODO: Entries
 
   return (
     <span>
@@ -5771,23 +5659,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 function Sparkline({ data, color }) {
   const ref = useRef(null);
   useEffect(() => {
-    const c = ref.current;
-    if (!c) return;
-    const ctx = c.getContext('2d');
-    c.width = c.offsetWidth * 2;
-    c.height = 60;
-    ctx.clearRect(0, 0, c.width, c.height);
-    const max = Math.max(...data), min = Math.min(...data);
-    const range = max - min || 1;
-    ctx.beginPath();
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    data.forEach((v, i) => {
-      const x = (i / (data.length - 1)) * c.width;
-      const y = c.height - ((v - min) / range) * (c.height - 4) - 2;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    });
-    ctx.stroke();
+    // TODO: Use effect — update state, calculate values
   }, [data, color]);
   return <div className="md-spark"><canvas ref={ref} /></div>;
 }
@@ -5801,14 +5673,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setMetrics(prev => prev.map(m => ({
-        ...m,
-        val: +(m.val + (Math.random() - 0.5) * m.val * 0.05).toFixed(m.val < 10 ? 1 : 0),
-        data: [...m.data.slice(1), m.val + (Math.random() - 0.5) * m.val * 0.1],
-      })));
-    }, 2000);
-    return () => clearInterval(id);
+    // TODO: Use effect — update state, handle timing, calculate values
   }, []);
 
   return (
@@ -5849,16 +5714,14 @@ function App() {
   const [q, setQ] = useState('');
   const [active, setActive] = useState(0);
   const current = menus[path[path.length - 1]];
-  const allItems = current.sections.flatMap(s => s.items).filter(i => i.name.toLowerCase().includes(q.toLowerCase()));
+  const allItems = []; // TODO: All items
 
   const select = (item) => {
     // TODO: Select — update state
   };
 
   useEffect(() => {
-    const h = (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setOpen(o => !o); setPath(['root']); setQ(''); } if (e.key === 'Escape') setOpen(false); };
-    window.addEventListener('keydown', h);
-    return () => window.removeEventListener('keydown', h);
+    // TODO: Use effect — update state, prevent default, handle keyboard events
   }, []);
 
   return (
@@ -5905,10 +5768,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const el = contentRef.current;
-    el.addEventListener('scroll', onScroll);
-    onScroll();
-    return () => el.removeEventListener('scroll', onScroll);
+    // TODO: Use effect — attach event listeners
   }, [onScroll]);
 
   const clickMinimap = (e) => {
@@ -5939,10 +5799,7 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const el = ref.current;
-    const handler = () => setShow(el.scrollTop > 150);
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const scrollTop = () => {
@@ -5974,16 +5831,7 @@ function App() {
   };
 
   useEffect(() => {
-    const el = contentRef.current;
-    const handler = () => {
-      const positions = sectionRefs.current.map(s => s?.offsetTop || 0);
-      const scrollPos = el.scrollTop + 40;
-      let idx = 0;
-      positions.forEach((p, i) => { if (scrollPos >= p) idx = i; });
-      setActive(idx);
-    };
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   return (
@@ -6032,15 +5880,7 @@ function App() {
   };
 
   useEffect(() => {
-    const el = contentRef.current;
-    const handler = () => {
-      const scrollPos = el.scrollTop + 30;
-      let idx = 0;
-      headingRefs.current.forEach((ref, i) => { if (ref && ref.offsetTop <= scrollPos) idx = i; });
-      setActiveIdx(idx);
-    };
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   return (
@@ -6144,14 +5984,7 @@ function App() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const el = containerRef.current;
-    const handler = () => {
-      const current = el.scrollTop;
-      setHidden(current > 80 && current > lastScroll.current);
-      lastScroll.current = current;
-    };
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   return (
@@ -6176,10 +6009,7 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const el = ref.current;
-    const handler = () => setScrolled(el.scrollTop > 80);
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   return (
@@ -6379,13 +6209,7 @@ function App() {
   const [page, setPage] = useState('home');
 
   useEffect(() => {
-    const handler = () => {
-      const hash = window.location.hash.slice(1) || 'home';
-      if (pages[hash]) setPage(hash);
-    };
-    window.addEventListener('hashchange', handler);
-    handler();
-    return () => window.removeEventListener('hashchange', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const navigate = (p) => {
@@ -6432,10 +6256,7 @@ function App() {
   const [sort, setSort] = useState('name');
 
   const filtered = useMemo(() => {
-    return items
-      .filter(i => category === 'all' || i.category === category)
-      .filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
-      .sort((a, b) => sort === 'year' ? a.year - b.year : a.name.localeCompare(b.name));
+    // TODO: Filtered — filter items, remove item
   }, [category, search, sort]);
 
   const urlPreview = '?category=' + category + '&search=' + encodeURIComponent(search) + '&sort=' + sort;
@@ -6467,15 +6288,7 @@ function App() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const el = ref.current;
-    const handler = () => {
-      const scrollable = el.scrollHeight - el.clientHeight;
-      const pct = scrollable > 0 ? (el.scrollTop / scrollable) * 100 : 0;
-      setProgress(pct);
-      setShow(el.scrollTop > 100);
-    };
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const circumference = 2 * Math.PI * 18;
@@ -6505,20 +6318,7 @@ function App() {
   const sectionRefs = useRef([]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const idx = sectionRefs.current.indexOf(entry.target);
-            if (idx >= 0) setActive(idx);
-          }
-        });
-      },
-      { root: container, threshold: 0.3 }
-    );
-    sectionRefs.current.forEach(el => { if (el) observer.observe(el); });
-    return () => observer.disconnect();
+    // TODO: Use effect — update state
   }, []);
 
   const scrollTo = (idx) => {
@@ -6608,22 +6408,7 @@ function FocusTrap({ children, active }) {
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!active || !ref.current) return;
-    const focusable = ref.current.querySelectorAll('input, button, [tabindex]');
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    first?.focus();
-
-    const handler = (e) => {
-      if (e.key !== 'Tab') return;
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-      } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    // TODO: Use effect — prevent default, handle keyboard events, attach event listeners
   }, [active]);
 
   return <div ref={ref}>{children}</div>;
@@ -6636,10 +6421,7 @@ function App() {
   const close = useCallback(() => { setOpen(false); triggerRef.current?.focus(); }, []);
 
   useEffect(() => {
-    if (!open) return;
-    const handler = (e) => { if (e.key === 'Escape') close(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    // TODO: Use effect — handle keyboard events, attach event listeners
   }, [open, close]);
 
   return (
@@ -6712,13 +6494,7 @@ function App() {
   const [simulated, setSimulated] = useState(false);
 
   useEffect(() => {
-    if (simulated) return;
-    const goOnline = () => setOnline(true);
-    const goOffline = () => setOnline(false);
-    window.addEventListener('online', goOnline);
-    window.addEventListener('offline', goOffline);
-    setOnline(navigator.onLine);
-    return () => { window.removeEventListener('online', goOnline); window.removeEventListener('offline', goOffline); };
+    // TODO: Use effect — update state, attach event listeners
   }, [simulated]);
 
   const toggleSimulate = () => {
@@ -6937,18 +6713,7 @@ function App() {
   const [log, setLog] = useState([]);
 
   useEffect(() => {
-    const handler = (e) => {
-      for (const hk of hotkeys) {
-        if (hk.combo(e)) {
-          e.preventDefault();
-          const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-          setLog(prev => [{ time, action: hk.action, keys: hk.keys.join('+') }, ...prev].slice(0, 20));
-          break;
-        }
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    // TODO: Use effect — update state, prevent default, attach event listeners
   }, []);
 
   return (
@@ -6988,19 +6753,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'];
-    events.forEach(e => window.addEventListener(e, resetIdle));
-    const interval = setInterval(() => {
-      const seconds = Math.floor((Date.now() - lastActivity.current) / 1000);
-      setIdle(seconds);
-      if (seconds >= AWAY_THRESHOLD) setStatus('away');
-      else if (seconds >= IDLE_THRESHOLD) setStatus('idle');
-      else setStatus('active');
-    }, 1000);
-    return () => {
-      events.forEach(e => window.removeEventListener(e, resetIdle));
-      clearInterval(interval);
-    };
+    // TODO: Use effect — update state, handle timing, attach event listeners
   }, [resetIdle]);
 
   return (
@@ -7025,10 +6778,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 function useMediaQuery(query) {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
   useEffect(() => {
-    const mql = window.matchMedia(query);
-    const handler = (e) => setMatches(e.matches);
-    mql.addEventListener('change', handler);
-    return () => mql.removeEventListener('change', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, [query]);
   return matches;
 }
@@ -7042,9 +6792,7 @@ function App() {
   const [size, setSize] = useState({ w: window.innerWidth, h: window.innerHeight });
 
   useEffect(() => {
-    const handler = () => setSize({ w: window.innerWidth, h: window.innerHeight });
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const device = isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop';
@@ -7245,11 +6993,7 @@ function App() {
   const [containerHeight, setContainerHeight] = useState(300);
 
   useEffect(() => {
-    const el = containerRef.current;
-    setContainerHeight(el.clientHeight);
-    const handler = () => setScrollTop(el.scrollTop);
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const startIdx = Math.floor(scrollTop / ITEM_HEIGHT);
@@ -7537,9 +7281,7 @@ function Breadcrumbs({ items, maxVisible = 3 }) {
   const ref = useRef(null);
 
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setMenuOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    // TODO: Use effect — update state, attach event listeners
   }, []);
 
   const needsCollapse = items.length > maxVisible;
@@ -7754,13 +7496,7 @@ function App() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const el = containerRef.current;
-    const handler = () => {
-      const idx = Math.round(el.scrollLeft / 292);
-      setActiveIdx(Math.min(idx, cards.length - 1));
-    };
-    el.addEventListener('scroll', handler);
-    return () => el.removeEventListener('scroll', handler);
+    // TODO: Use effect — update state, attach event listeners, calculate values
   }, []);
 
   const scrollToCard = (idx) => {
@@ -7815,9 +7551,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const el = containerRef.current;
-    el.addEventListener('scroll', onScroll);
-    return () => el.removeEventListener('scroll', onScroll);
+    // TODO: Use effect — attach event listeners
   }, [onScroll]);
 
   return (

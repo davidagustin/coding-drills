@@ -105,6 +105,7 @@ function blankFunctionBodies(
     let isMultiLine = false;
     let isSingleLine = false;
     let isCurried = false;
+    let isReactiveWrapper = false;
     let arrowSingleExpr: string | undefined;
 
     if (shouldAttemptBlank) {
@@ -158,6 +159,20 @@ function blankFunctionBodies(
         isSingleLine = true;
         arrowSingleExpr = arrowSingleMatch[4];
       }
+
+      // Pattern 7: const name = computed/useMemo(() => { ... }) (reactive wrapper)
+      // The inner arrow body contains implementation logic that should be blanked,
+      // but the computed/useMemo wrapper itself is kept.
+      if (!funcName) {
+        const reactiveWrapperMatch = trimmed.match(
+          /^(const|let|var)\s+(\w+)\s*=\s*(?:computed|useMemo)\s*\(\s*(?:\([^)]*\)|\w+)\s*=>\s*\{/,
+        );
+        if (reactiveWrapperMatch) {
+          funcName = reactiveWrapperMatch[2];
+          isMultiLine = true;
+          isReactiveWrapper = true;
+        }
+      }
     }
 
     // ─── Determine if we should skip this function ───
@@ -176,7 +191,7 @@ function blankFunctionBodies(
         trimmed.includes('reactive(') ||
         trimmed.includes('computed('));
 
-    const shouldBlank = funcName && !isReactComponent && !isHookOrState;
+    const shouldBlank = funcName && !isReactComponent && (!isHookOrState || isReactiveWrapper);
 
     if (shouldBlank && isMultiLine) {
       // Multi-line function — find the closing brace and replace body
@@ -252,6 +267,155 @@ function blankFunctionBodies(
 
       i++;
       continue;
+    }
+
+    // ─── Check for implementation expressions that should be blanked ───
+    // Variable assignments containing method chains with arrow callbacks
+    // (e.g., `const filtered = items.filter(f => ...)`)
+    // These aren't function declarations but contain business logic that
+    // causes false-positive test passes when left in starter code.
+    if (shouldAttemptBlank && !funcName) {
+      const varMatch = trimmed.match(/^(const|let|var)\s+(\w+)\s*=/);
+      if (varMatch) {
+        const varKeyword = varMatch[1];
+        const varName = varMatch[2];
+
+        // Skip hooks and reactive primitives (these are setup, not logic)
+        const isHookOrReactive =
+          /=\s*(use\w+|React\.use\w+|ref|reactive|computed|watch|inject|provide)\s*\(/.test(
+            trimmed,
+          );
+
+        // Skip destructuring (const { x } = ... or const [ x ] = ...)
+        const isDestructuring = /^(const|let|var)\s*[[{]/.test(trimmed);
+
+        if (!isHookOrReactive && !isDestructuring) {
+          // Collect full expression (may span multiple lines)
+          let fullExpr = trimmed;
+          let exprEnd = i;
+
+          if (!trimmed.endsWith(';') && !trimmed.endsWith(',')) {
+            let parenDepth = 0;
+            let bracketDepth = 0;
+            let braceDepthLocal = 0;
+            for (let j = i; j < lines.length; j++) {
+              const l = lines[j].trim();
+              for (const ch of l) {
+                if (ch === '(') parenDepth++;
+                if (ch === ')') parenDepth--;
+                if (ch === '[') bracketDepth++;
+                if (ch === ']') bracketDepth--;
+                if (ch === '{') braceDepthLocal++;
+                if (ch === '}') braceDepthLocal--;
+              }
+              if (j > i) fullExpr += ' ' + l;
+              if (
+                parenDepth <= 0 &&
+                bracketDepth <= 0 &&
+                braceDepthLocal <= 0 &&
+                (l.endsWith(';') || l.endsWith(','))
+              ) {
+                exprEnd = j;
+                break;
+              }
+              if (j === lines.length - 1) exprEnd = j;
+            }
+          }
+
+          // Regexes matching method chains with arrow callbacks
+          const IMPL_METHODS = [
+            /\.\s*filter\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*map\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*reduce\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*find\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*findIndex\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*some\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*every\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*sort\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*flatMap\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+            /\.\s*forEach\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
+          ];
+
+          if (IMPL_METHODS.some((rx) => rx.test(fullExpr))) {
+            // Determine safe default based on dominant method
+            let defaultVal = '[]';
+            const hasArrayMethod = /\.\s*(filter|map|flatMap|sort)\s*\(/.test(fullExpr);
+            if (!hasArrayMethod) {
+              if (/\.\s*find\s*\(/.test(fullExpr)) defaultVal = 'null';
+              else if (/\.\s*findIndex\s*\(/.test(fullExpr)) defaultVal = '-1';
+              else if (/\.\s*(some|every)\s*\(/.test(fullExpr)) defaultVal = 'false';
+              else if (/\.\s*reduce\s*\(/.test(fullExpr)) defaultVal = 'null';
+            }
+
+            const indent = line.match(/^(\s*)/)?.[1] || '';
+            const desc = nameToDescription(varName);
+            result.push(`${indent}${varKeyword} ${varName} = ${defaultVal}; // TODO: ${desc}`);
+
+            // Update globalDepth for all skipped lines
+            for (let j = i; j <= exprEnd; j++) {
+              for (const ch of lines[j]) {
+                if (ch === '{') globalDepth++;
+                if (ch === '}') globalDepth--;
+              }
+            }
+
+            i = exprEnd + 1;
+            continue;
+          }
+        }
+      }
+    }
+
+    // ─── Check for anonymous callback bodies that should be blanked ───
+    // Event handler callbacks like addEventListener('event', (e) => { ... })
+    // and bare hook calls like useEffect(() => { ... }) contain implementation
+    // logic that causes false-positive test passes.
+    if (shouldAttemptBlank && !funcName && /=>\s*\{$/.test(trimmed)) {
+      const isEventHandler = /\.addEventListener\s*\(/.test(trimmed);
+      const isBareHookCall =
+        /^(?:useEffect|useLayoutEffect|onMounted|onUnmounted|onUpdated)\s*\(/.test(trimmed);
+      if (isEventHandler || isBareHookCall) {
+        const indent = line.match(/^(\s*)/)?.[1] || '';
+        let braceDepthLocal = 0;
+        let bodyEnd = i;
+        for (let j = i; j < lines.length; j++) {
+          for (const ch of lines[j]) {
+            if (ch === '{') braceDepthLocal++;
+            if (ch === '}') braceDepthLocal--;
+          }
+          if (braceDepthLocal === 0) {
+            bodyEnd = j;
+            break;
+          }
+        }
+
+        let callbackLabel: string;
+        if (isBareHookCall) {
+          const hookMatch = trimmed.match(/^(\w+)\s*\(/);
+          callbackLabel = hookMatch ? hookMatch[1] : 'effect';
+        } else {
+          const eventMatch = trimmed.match(/\.addEventListener\s*\(\s*['"](\w+)['"]/);
+          callbackLabel = `handle ${eventMatch ? eventMatch[1] : 'event'}`;
+        }
+        const bodyContent = lines.slice(i + 1, bodyEnd).join('\n');
+        const todo = generateTodo(callbackLabel, bodyContent);
+
+        const openBraceIdx = line.lastIndexOf('{');
+        const sigLine = openBraceIdx >= 0 ? line.substring(0, openBraceIdx + 1) : line;
+
+        const closingLine = lines[bodyEnd];
+        const closingTrimmed = closingLine.trim();
+        const lastBraceIdx = closingTrimmed.lastIndexOf('}');
+        const closingSuffix = closingTrimmed.substring(lastBraceIdx);
+
+        result.push(sigLine);
+        result.push(`${indent}  ${todo}`);
+        result.push(indent + closingSuffix);
+
+        globalDepth = depthAtLineStart;
+        i = bodyEnd + 1;
+        continue;
+      }
     }
 
     // Keep the line as-is and update brace depth
