@@ -11,6 +11,7 @@ import {
   FRAMEWORK_CONFIG,
   type FrameworkId,
   getUIPatternById,
+  getUIPatterns,
   isValidFramework,
   UI_PATTERN_CATEGORIES,
   UI_PATTERN_DIFFICULTY_CONFIG,
@@ -859,6 +860,14 @@ export default function UIPatternDetail() {
     }
   }, []);
 
+  const patternTests = useMemo(
+    () =>
+      isValidFramework(framework)
+        ? getPatternTests(framework as FrameworkId, patternId)
+        : undefined,
+    [framework, patternId],
+  );
+
   // Re-initialize starter code when navigating between patterns.
   // The initial value is set synchronously in useState above;
   // this effect handles subsequent pattern/framework changes.
@@ -979,6 +988,11 @@ try {
 
   const frameworkConfig = FRAMEWORK_CONFIG[framework];
   const pattern = getUIPatternById(framework, patternId);
+
+  const patterns = getUIPatterns(framework);
+  const patternIndex = patterns.findIndex((p) => p.id === patternId);
+  const prevPattern = patternIndex > 0 ? patterns[patternIndex - 1] : null;
+  const nextPattern = patternIndex < patterns.length - 1 ? patterns[patternIndex + 1] : null;
 
   if (!pattern) {
     return (
@@ -1331,9 +1345,47 @@ try {
               )}
 
               {/* Test Runner */}
-              {isValidFramework(framework) &&
-              getPatternTests(framework as FrameworkId, patternId)?.length ? (
+              {patternTests?.length ? (
                 <div className="mt-3">
+                  {/* Test checklist – always visible so users know what will be tested */}
+                  <div className="mb-2 rounded-lg bg-zinc-900/60 border border-zinc-700/30 p-3 space-y-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-medium text-zinc-400">
+                        {testResults
+                          ? `${testResults.filter((r) => r.pass).length}/${testResults.length} passing`
+                          : `${patternTests.length} ${patternTests.length === 1 ? 'test' : 'tests'}`}
+                      </span>
+                      {testResults?.every((r) => r.pass) && (
+                        <span className="text-xs text-emerald-400 font-medium">
+                          All tests pass!
+                        </span>
+                      )}
+                    </div>
+                    {testResults
+                      ? testResults.map((r) => (
+                          <div
+                            key={r.id}
+                            className={`flex items-start gap-2 text-xs py-1 ${r.pass ? 'text-emerald-400' : 'text-red-400'}`}
+                          >
+                            <span className="mt-0.5 flex-shrink-0">
+                              {r.pass ? '\u2713' : '\u2717'}
+                            </span>
+                            <span>
+                              {r.name}
+                              {r.error && <span className="text-red-500/70 ml-1">({r.error})</span>}
+                            </span>
+                          </div>
+                        ))
+                      : patternTests.map((t, i) => (
+                          <div
+                            key={i}
+                            className="flex items-start gap-2 text-xs py-1 text-zinc-500"
+                          >
+                            <span className="mt-0.5 flex-shrink-0">○</span>
+                            <span>{t.name}</span>
+                          </div>
+                        ))}
+                  </div>
                   <button
                     type="button"
                     onClick={handleRunTests}
@@ -1342,34 +1394,6 @@ try {
                   >
                     {testsRunning ? 'Running Tests...' : 'Run Tests'}
                   </button>
-                  {testResults && (
-                    <div className="mt-2 rounded-lg bg-zinc-900/60 border border-zinc-700/30 p-3 space-y-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium text-zinc-400">
-                          {testResults.filter((r) => r.pass).length}/{testResults.length} passing
-                        </span>
-                        {testResults.every((r) => r.pass) && (
-                          <span className="text-xs text-emerald-400 font-medium">
-                            All tests pass!
-                          </span>
-                        )}
-                      </div>
-                      {testResults.map((r) => (
-                        <div
-                          key={r.id}
-                          className={`flex items-start gap-2 text-xs py-1 ${r.pass ? 'text-emerald-400' : 'text-red-400'}`}
-                        >
-                          <span className="mt-0.5 flex-shrink-0">
-                            {r.pass ? '\u2713' : '\u2717'}
-                          </span>
-                          <span>
-                            {r.name}
-                            {r.error && <span className="text-red-500/70 ml-1">({r.error})</span>}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ) : null}
             </div>
@@ -1462,10 +1486,118 @@ try {
           </div>
         </div>
 
-        {/* Footer: External Link + Back Button */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-zinc-800/50">
-          <div>
-            {pattern.externalUrl && (
+        {/* Footer: Navigation + External Link */}
+        <div className="flex flex-col gap-4 pt-6 border-t border-zinc-800/50">
+          {/* Prev / Next Navigation */}
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              {prevPattern ? (
+                <Link
+                  href={`/frontend-drills/${framework}/ui-patterns/${prevPattern.id}`}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border transition-all ${frameworkConfig.borderColor} ${frameworkConfig.color} hover:bg-zinc-800/50`}
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                    />
+                  </svg>
+                  <span className="hidden sm:inline truncate max-w-[200px]">
+                    {prevPattern.title}
+                  </span>
+                  <span className="sm:hidden">Previous</span>
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border border-zinc-700/30 text-zinc-600 cursor-not-allowed">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                    />
+                  </svg>
+                  Previous
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col items-center gap-1 px-4">
+              <span className="text-xs text-zinc-500 font-medium">
+                {patternIndex + 1} of {patterns.length}
+              </span>
+              <Link
+                href={`/frontend-drills/${framework}/ui-patterns`}
+                className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+              >
+                All Patterns
+              </Link>
+            </div>
+
+            <div className="flex-1 flex justify-end">
+              {nextPattern ? (
+                <Link
+                  href={`/frontend-drills/${framework}/ui-patterns/${nextPattern.id}`}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border transition-all ${frameworkConfig.borderColor} ${frameworkConfig.color} hover:bg-zinc-800/50`}
+                >
+                  <span className="hidden sm:inline truncate max-w-[200px]">
+                    {nextPattern.title}
+                  </span>
+                  <span className="sm:hidden">Next</span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border border-zinc-700/30 text-zinc-600 cursor-not-allowed">
+                  Next
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* External Reference Link */}
+          {pattern.externalUrl && (
+            <div className="flex justify-center">
               <a
                 href={pattern.externalUrl}
                 target="_blank"
@@ -1488,28 +1620,8 @@ try {
                 </svg>
                 View reference implementation
               </a>
-            )}
-          </div>
-          <Link
-            href={`/frontend-drills/${framework}/ui-patterns`}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm text-zinc-400 hover:text-white bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50 hover:border-zinc-600 transition-all"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-              />
-            </svg>
-            Back to Patterns
-          </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -11,7 +11,8 @@ export const reactProblems: FrontendDrillProblem[] = [
     setup: 'No setup needed — implement useState yourself.',
     setupCode: ``,
     expected: 42,
-    sample: 'const useState = (initial) => [initial, (v) => v];\nuseState(42)[0]',
+    sample: `const useState = (initial) => [initial, (v) => v];
+useState(42)[0]`,
     hints: [
       'useState returns a two-element array: [currentValue, setterFunction]',
       'The state value is the first element (index 0)',
@@ -28,8 +29,13 @@ export const reactProblems: FrontendDrillProblem[] = [
     setup: 'The previous state value.',
     setupCode: `const prevState = 10;`,
     expected: 15,
-    sample:
-      'const setState = (updater) => { if (typeof updater === "function") return updater(prevState); return updater; };\nsetState((prev) => prev + 5)',
+    sample: `const setState = (updater) => {
+  if (typeof updater === "function") {
+    return updater(prevState);
+  }
+  return updater;
+};
+setState((prev) => prev + 5)`,
     hints: [
       'setState can accept a function or a direct value',
       'When given a function, call it with the previous state as the argument',
@@ -46,8 +52,8 @@ export const reactProblems: FrontendDrillProblem[] = [
     setup: 'Dependency values.',
     setupCode: `const a = 1, b = 2;`,
     expected: { effect: 'cleanup', deps: [1, 2] },
-    sample:
-      'const useEffect = (effect, deps) => ({ effect: effect(), deps });\nuseEffect(() => "cleanup", [a, b])',
+    sample: `const useEffect = (effect, deps) => ({ effect: effect(), deps });
+useEffect(() => "cleanup", [a, b])`,
     hints: [
       'useEffect should call the effect function and capture its return value',
       'Return an object with both the effect result and the dependency array',
@@ -64,7 +70,8 @@ export const reactProblems: FrontendDrillProblem[] = [
     setup: 'No setup needed — implement useRef yourself.',
     setupCode: ``,
     expected: { current: 'hello' },
-    sample: 'const useRef = (initial) => ({ current: initial });\nuseRef("hello")',
+    sample: `const useRef = (initial) => ({ current: initial });
+useRef("hello")`,
     hints: [
       'useRef returns a plain object, not a special container',
       'The object has a single property called current',
@@ -81,8 +88,8 @@ export const reactProblems: FrontendDrillProblem[] = [
     setup: 'An array of numbers.',
     setupCode: `const arr = [1, 2, 3, 4, 5];`,
     expected: 15,
-    sample:
-      'const useMemo = (fn, deps) => fn();\nuseMemo(() => arr.reduce((a, b) => a + b, 0), [arr])',
+    sample: `const useMemo = (fn, deps) => fn();
+useMemo(() => arr.reduce((a, b) => a + b, 0), [arr])`,
     hints: [
       'useMemo caches a computed value — for the mock, just call the function',
       'Use reduce to sum the array elements',
@@ -99,8 +106,8 @@ export const reactProblems: FrontendDrillProblem[] = [
     setup: 'A multiplier value.',
     setupCode: `const multiplier = 3;`,
     expected: 21,
-    sample:
-      'const useCallback = (fn, deps) => fn;\nuseCallback((x) => x * multiplier, [multiplier])(7)',
+    sample: `const useCallback = (fn, deps) => fn;
+useCallback((x) => x * multiplier, [multiplier])(7)`,
     hints: [
       'useCallback returns the same function reference — for the mock, just return fn',
       'Call the returned function with 7: multiply 7 * 3',
@@ -226,7 +233,10 @@ const handleChange = "function";`,
     setupCode: `const props = { name: 'Alice', age: 30 };`,
     expected: 'Alice is 30 years old',
     // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
-    sample: '(() => { const { name, age } = props; return `${name} is ${age} years old`; })()',
+    sample: `(() => {
+  const { name, age } = props;
+  return \`\${name} is \${age} years old\`;
+})()`,
     hints: ['Use destructuring assignment', 'Combine with template literal'],
     tags: ['props', 'destructuring', 'patterns'],
   },
@@ -240,7 +250,10 @@ const handleChange = "function";`,
     setup: 'Mock useEffect available.',
     setupCode: `const useEffect = (effect, deps) => effect;`,
     expected: 'cleared: 123',
-    sample: 'useEffect(() => { const id = 123; return () => "cleared: " + id; }, [])()()',
+    sample: `useEffect(() => {
+  const id = 123;
+  return () => "cleared: " + id;
+}, [])()()`,
     hints: [
       'Effect returns cleanup function',
       'Cleanup function should return "cleared: 123"',
@@ -295,8 +308,13 @@ const handleChange = "function";`,
     setup: 'A mock event object with preventDefault method.',
     setupCode: `// Use this mock event in your solution\nconst mockEvent = { preventDefault: () => {}, type: "submit" };`,
     expected: 'prevented',
-    sample:
-      '(() => { const handleSubmit = (e) => { e.preventDefault(); return "prevented"; }; return handleSubmit(mockEvent); })()',
+    sample: `(() => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    return "prevented";
+  };
+  return handleSubmit(mockEvent);
+})()`,
     hints: [
       'Define a handler function that calls e.preventDefault()',
       'Return the string "prevented" after calling preventDefault',
@@ -313,8 +331,11 @@ const handleChange = "function";`,
     setup: 'A mock synthetic event object.',
     setupCode: `// Extract properties from this event object\nconst syntheticEvent = {\n  target: { value: "hello" },\n  type: "change",\n  bubbles: true,\n  nativeEvent: {},\n  preventDefault: () => {},\n  stopPropagation: () => {}\n};`,
     expected: { value: 'hello', type: 'change', bubbles: true },
-    sample:
-      '((e) => ({ value: e.target.value, type: e.type, bubbles: e.bubbles }))(syntheticEvent)',
+    sample: `((e) => ({
+  value: e.target.value,
+  type: e.type,
+  bubbles: e.bubbles
+}))(syntheticEvent)`,
     hints: [
       'Access nested target.value for the input value',
       'Read type and bubbles directly from the event',
@@ -331,8 +352,10 @@ const handleChange = "function";`,
     setup: 'A mock event with dataset.',
     setupCode: `// Write a handler that reads the dataset id from this event\nconst mockEvent = { target: { dataset: { id: "3" } } };`,
     expected: 'item-3',
-    sample:
-      '((e) => { const id = e.target.dataset.id; return id ? "item-" + id : "none"; })(mockEvent)',
+    sample: `((e) => {
+  const id = e.target.dataset.id;
+  return id ? "item-" + id : "none";
+})(mockEvent)`,
     hints: [
       'Access e.target.dataset.id to find which item was clicked',
       'Use a ternary to handle the case when id is missing',
@@ -417,8 +440,11 @@ const handleChange = "function";`,
     setup: 'A pooled event factory.',
     setupCode: `// Create an event, persist it, then read the value\nconst createPooledEvent = (val) => {\n  let persisted = false;\n  let value = val;\n  return {\n    target: { value },\n    persist: () => { persisted = true; },\n    _access: () => persisted ? value : null\n  };\n};`,
     expected: 'saved',
-    sample:
-      '(() => { const evt = createPooledEvent("saved"); evt.persist(); return evt._access(); })()',
+    sample: `(() => {
+  const evt = createPooledEvent("saved");
+  evt.persist();
+  return evt._access();
+})()`,
     hints: [
       'Create the event first, then call persist() before accessing',
       'Without persist(), _access() returns null due to pooling',
@@ -452,7 +478,8 @@ const handleChange = "function";`,
     setup: 'No setup needed — implement createHandler yourself.',
     setupCode: ``,
     expected: 'clicked-5',
-    sample: 'const createHandler = (id) => () => "clicked-" + id;\ncreateHandler(5)()',
+    sample: `const createHandler = (id) => () => "clicked-" + id;
+createHandler(5)()`,
     hints: [
       'Use a closure to capture the id parameter',
       'Return a function that concatenates "clicked-" with the captured id',
@@ -469,8 +496,19 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement debounce from scratch.',
     setupCode: `// Implement debounce and use it below`,
     expected: 'third',
-    sample:
-      '(() => { const debounce = (fn) => { let lastArgs; const debounced = (...args) => { lastArgs = args; }; debounced.flush = () => fn(...lastArgs); return debounced; }; const handler = debounce((val) => val); handler("first"); handler("second"); handler("third"); return handler.flush(); })()',
+    sample: `(() => {
+  const debounce = (fn) => {
+    let lastArgs;
+    const debounced = (...args) => { lastArgs = args; };
+    debounced.flush = () => fn(...lastArgs);
+    return debounced;
+  };
+  const handler = debounce((val) => val);
+  handler("first");
+  handler("second");
+  handler("third");
+  return handler.flush();
+})()`,
     hints: [
       'Store the latest arguments each time the debounced function is called',
       'flush() should call the original function with the stored arguments',
@@ -487,8 +525,20 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement throttle from scratch.',
     setupCode: `// Implement throttle and use it below`,
     expected: 'first',
-    sample:
-      '(() => { const throttle = (fn) => { let called = false; let result; return (...args) => { if (!called) { called = true; result = fn(...args); } return result; }; }; const handler = throttle((val) => val); handler("first"); handler("second"); return handler("third"); })()',
+    sample: `(() => {
+  const throttle = (fn) => {
+    let called = false;
+    let result;
+    return (...args) => {
+      if (!called) { called = true; result = fn(...args); }
+      return result;
+    };
+  };
+  const handler = throttle((val) => val);
+  handler("first");
+  handler("second");
+  return handler("third");
+})()`,
     hints: [
       'Use a boolean flag to track if the function has already been called',
       'Store and return the result from the first invocation on all subsequent calls',
@@ -505,8 +555,13 @@ const handleChange = "function";`,
     setup: 'Two handlers and a log array.',
     setupCode: `// Compose these handlers into one function\nconst log = [];\nconst handler1 = () => log.push("validated");\nconst handler2 = () => log.push("submitted");`,
     expected: ['validated', 'submitted'],
-    sample:
-      '(() => { const compose = (...fns) => () => { fns.forEach(fn => fn()); return log; }; return compose(handler1, handler2)(); })()',
+    sample: `(() => {
+  const compose = (...fns) => () => {
+    fns.forEach(fn => fn());
+    return log;
+  };
+  return compose(handler1, handler2)();
+})()`,
     hints: [
       'Use rest parameters (...fns) to accept multiple handlers',
       'Iterate over the functions array and call each one in order',
@@ -561,7 +616,8 @@ const handleChange = "function";`,
     setup: 'A theme context object.',
     setupCode: `const ThemeContext = { _currentValue: "dark" };`,
     expected: 'dark',
-    sample: 'const useContext = (ctx) => ctx._currentValue;\nuseContext(ThemeContext)',
+    sample: `const useContext = (ctx) => ctx._currentValue;
+useContext(ThemeContext)`,
     hints: [
       'Context objects store their current value in _currentValue',
       'useContext simply reads and returns that stored value',
@@ -578,8 +634,13 @@ const handleChange = "function";`,
     setup: 'A counter reducer with INCREMENT and DECREMENT actions.',
     setupCode: `const counterReducer = (state, action) => {\n  switch(action.type) {\n    case 'INCREMENT': return { count: state.count + 1 };\n    case 'DECREMENT': return { count: state.count - 1 };\n    default: return state;\n  }\n};`,
     expected: { count: 1 },
-    sample:
-      'const useReducer = (reducer, init) => { let state = init; const dispatch = (action) => { state = reducer(state, action); }; dispatch({ type: "INCREMENT" }); return [state, dispatch]; };\nuseReducer(counterReducer, { count: 0 })[0]',
+    sample: `const useReducer = (reducer, init) => {
+  let state = init;
+  const dispatch = (action) => { state = reducer(state, action); };
+  dispatch({ type: "INCREMENT" });
+  return [state, dispatch];
+};
+useReducer(counterReducer, { count: 0 })[0]`,
     hints: [
       'useReducer creates local state and a dispatch function',
       'dispatch applies the reducer: state = reducer(state, action)',
@@ -596,8 +657,8 @@ const handleChange = "function";`,
     setup: 'The previous state object.',
     setupCode: `const prevState = { name: "Alice", age: 30, city: "NYC" };`,
     expected: { name: 'Alice', age: 31, city: 'NYC' },
-    sample:
-      'const updateState = (prev, partial) => ({ ...prev, ...partial });\nupdateState(prevState, { age: 31 })',
+    sample: `const updateState = (prev, partial) => ({ ...prev, ...partial });
+updateState(prevState, { age: 31 })`,
     hints: [
       'Spread the previous state first, then spread the partial update',
       'Later properties override earlier ones in object spread',
@@ -614,7 +675,8 @@ const handleChange = "function";`,
     setup: 'An initial array of items.',
     setupCode: `const items = ["apple", "banana"];`,
     expected: ['apple', 'banana', 'cherry'],
-    sample: 'const addItem = (arr, item) => [...arr, item];\naddItem(items, "cherry")',
+    sample: `const addItem = (arr, item) => [...arr, item];
+addItem(items, "cherry")`,
     hints: [
       'Use the spread operator to create a new array',
       'Append the new item after spreading the original',
@@ -631,8 +693,12 @@ const handleChange = "function";`,
     setup: 'No setup needed — implement useState yourself.',
     setupCode: ``,
     expected: 100,
-    sample:
-      'const useState = (init) => { let val = init; if (typeof init === "function") { val = init(); } return [val, () => {}]; };\nuseState(() => 50 * 2)[0]',
+    sample: `const useState = (init) => {
+  let val = init;
+  if (typeof init === "function") { val = init(); }
+  return [val, () => {}];
+};
+useState(() => 50 * 2)[0]`,
     hints: [
       'Check if init is a function using typeof',
       'If it is a function, call it to compute the initial value',
@@ -649,8 +715,8 @@ const handleChange = "function";`,
     setup: 'A log array to collect effect results.',
     setupCode: `const log = [];`,
     expected: ['effect-1', 'effect-2', 'effect-3'],
-    sample:
-      'const useEffect = (fn) => { log.push(fn()); };\n(useEffect(() => "effect-1"), useEffect(() => "effect-2"), useEffect(() => "effect-3"), log)',
+    sample: `const useEffect = (fn) => { log.push(fn()); };
+(useEffect(() => "effect-1"), useEffect(() => "effect-2"), useEffect(() => "effect-3"), log)`,
     hints: [
       'useEffect should call fn() and push the result to the log',
       'Call useEffect three times with three different effect functions',
@@ -684,8 +750,11 @@ const handleChange = "function";`,
     setup: 'A mock context factory.',
     setupCode: `// Create context, set provider value, then read\nconst createContext = (defaultVal) => {\n  let current = defaultVal;\n  return {\n    _currentValue: current,\n    Provider: (val) => { current = val; },\n    read: () => current\n  };\n};`,
     expected: 'dark',
-    sample:
-      '(() => { const ThemeCtx = createContext("light"); ThemeCtx.Provider("dark"); return ThemeCtx.read(); })()',
+    sample: `(() => {
+  const ThemeCtx = createContext("light");
+  ThemeCtx.Provider("dark");
+  return ThemeCtx.read();
+})()`,
     hints: [
       'Call createContext with the default value first',
       'Use Provider to override, then read to consume the current value',
@@ -707,8 +776,19 @@ const handleChange = "function";`,
         { id: 2, text: 'Build app', done: false },
       ],
     },
-    sample:
-      '(() => { const todoReducer = (state, action) => { switch(action.type) { case "ADD_TODO": return { ...state, todos: [...state.todos, { id: action.id, text: action.text, done: false }] }; case "TOGGLE_TODO": return { ...state, todos: state.todos.map(t => t.id === action.id ? { ...t, done: !t.done } : t) }; default: return state; } }; return actions.reduce(todoReducer, { todos: [] }); })()',
+    sample: `(() => {
+  const todoReducer = (state, action) => {
+    switch (action.type) {
+      case "ADD_TODO":
+        return { ...state, todos: [...state.todos, { id: action.id, text: action.text, done: false }] };
+      case "TOGGLE_TODO":
+        return { ...state, todos: state.todos.map(t => t.id === action.id ? { ...t, done: !t.done } : t) };
+      default:
+        return state;
+    }
+  };
+  return actions.reduce(todoReducer, { todos: [] });
+})()`,
     hints: [
       'Use a switch statement to handle each action type',
       'Use Array.reduce to apply all actions sequentially to the initial state',
@@ -725,8 +805,13 @@ const handleChange = "function";`,
     setup: 'A mock useRef function.',
     setupCode: `// Create a ref and increment it 3 times\nconst useRef = (initial) => ({ current: initial });`,
     expected: 3,
-    sample:
-      '(() => { const renderCount = useRef(0); renderCount.current++; renderCount.current++; renderCount.current++; return renderCount.current; })()',
+    sample: `(() => {
+  const renderCount = useRef(0);
+  renderCount.current++;
+  renderCount.current++;
+  renderCount.current++;
+  return renderCount.current;
+})()`,
     hints: [
       'useRef returns an object with a mutable current property',
       'Increment current with ++ to track renders',
@@ -774,8 +859,11 @@ const handleChange = "function";`,
     setup: 'A mock useState function.',
     setupCode: `// Initialize with true, toggle using functional updater\nconst useState = (init) => {\n  let val = init;\n  const setState = (updater) => { val = typeof updater === 'function' ? updater(val) : updater; };\n  return [() => val, setState];\n};`,
     expected: false,
-    sample:
-      '(() => { const [getVal, setState] = useState(true); setState(prev => !prev); return getVal(); })()',
+    sample: `(() => {
+  const [getVal, setState] = useState(true);
+  setState(prev => !prev);
+  return getVal();
+})()`,
     hints: [
       'Pass a function to setState that receives the previous value',
       'Use the logical NOT operator (!) to toggle a boolean',
@@ -900,8 +988,15 @@ const handleChange = "function";`,
     setup: 'A shared ref object for tracking previous values.',
     setupCode: `// Use this ref to track the previous value across calls\nconst ref = { current: undefined };`,
     expected: 5,
-    sample:
-      '(() => { const usePrevious = (value) => { const prev = ref.current; ref.current = value; return prev; }; usePrevious(5); return usePrevious(10); })()',
+    sample: `(() => {
+  const usePrevious = (value) => {
+    const prev = ref.current;
+    ref.current = value;
+    return prev;
+  };
+  usePrevious(5);
+  return usePrevious(10);
+})()`,
     hints: [
       'Read ref.current before updating it to get the previous value',
       'The second call should return what was stored from the first call',
@@ -918,8 +1013,8 @@ const handleChange = "function";`,
     setup: 'No setup needed — implement createPortal yourself.',
     setupCode: ``,
     expected: { type: 'portal', children: 'Modal Content', container: 'modal-root' },
-    sample:
-      'const createPortal = (children, container) => ({ type: "portal", children, container });\ncreatePortal("Modal Content", "modal-root")',
+    sample: `const createPortal = (children, container) => ({ type: "portal", children, container });
+createPortal("Modal Content", "modal-root")`,
     hints: [
       'createPortal returns an object describing where to render',
       'Include type: "portal", children, and container in the descriptor',
@@ -936,8 +1031,19 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the error boundary logic.',
     setupCode: `// Implement the error boundary pattern from scratch`,
     expected: { hasError: true, error: 'Component crashed' },
-    sample:
-      '(() => { let state = { hasError: false, error: null }; const getDerivedStateFromError = (error) => ({ hasError: true, error: error.message }); try { throw new Error("Component crashed"); } catch (e) { state = getDerivedStateFromError(e); } return state; })()',
+    sample: `(() => {
+  let state = { hasError: false, error: null };
+  const getDerivedStateFromError = (error) => ({
+    hasError: true,
+    error: error.message
+  });
+  try {
+    throw new Error("Component crashed");
+  } catch (e) {
+    state = getDerivedStateFromError(e);
+  }
+  return state;
+})()`,
     hints: [
       'Use try/catch to simulate catching a render error',
       'getDerivedStateFromError should return new state with the error message',
@@ -986,8 +1092,11 @@ const handleChange = "function";`,
     setup: 'An array of provider name/value pairs.',
     setupCode: `// Write composeProviders to merge these into one object\nconst providers = [\n  ["ThemeProvider", { theme: "dark" }],\n  ["AuthProvider", { user: "Alice" }],\n  ["LangProvider", { lang: "en" }]\n];`,
     expected: { theme: 'dark', user: 'Alice', lang: 'en' },
-    sample:
-      '(() => { const composeProviders = (provs) => provs.reduce((acc, [name, value]) => ({ ...acc, ...value }), {}); return composeProviders(providers); })()',
+    sample: `(() => {
+  const composeProviders = (provs) =>
+    provs.reduce((acc, [name, value]) => ({ ...acc, ...value }), {});
+  return composeProviders(providers);
+})()`,
     hints: [
       'Use Array.reduce to accumulate values from each provider',
       'Spread each value object into the accumulator',
@@ -1032,8 +1141,10 @@ const handleChange = "function";`,
     setup: 'Mock window dimension values.',
     setupCode: `// Use these values in your useWindowSize implementation\nconst mockWidth = 1024;\nconst mockHeight = 768;`,
     expected: { width: 1024, height: 768 },
-    sample:
-      '(() => { const useWindowSize = () => ({ width: mockWidth, height: mockHeight }); return useWindowSize(); })()',
+    sample: `(() => {
+  const useWindowSize = () => ({ width: mockWidth, height: mockHeight });
+  return useWindowSize();
+})()`,
     hints: [
       'A custom hook is just a function that returns state',
       'Return an object with width and height properties',
@@ -1067,8 +1178,8 @@ const handleChange = "function";`,
     setup: 'No setup needed — implement Layout yourself.',
     setupCode: ``,
     expected: { header: 'My App', body: 'Content here', footer: '2024' },
-    sample:
-      'const Layout = (slots) => ({ header: slots.header, body: slots.body, footer: slots.footer });\nLayout({ header: "My App", body: "Content here", footer: "2024" })',
+    sample: `const Layout = (slots) => ({ header: slots.header, body: slots.body, footer: slots.footer });
+Layout({ header: "My App", body: "Content here", footer: "2024" })`,
     hints: [
       'The Layout function destructures named slots from its argument',
       'Return an object with each slot mapped to its position',
@@ -1085,8 +1196,22 @@ const handleChange = "function";`,
     setup: 'A results array for collecting listener output.',
     setupCode: `// Implement createStore and use it\nconst results = [];`,
     expected: ['A:42', 'B:42'],
-    sample:
-      '(() => { const createStore = (initial) => { let value = initial; const listeners = []; return { subscribe: (fn) => { listeners.push(fn); }, emit: (val) => { value = val; listeners.forEach(fn => fn(val)); }, getValue: () => value }; }; const store = createStore(0); store.subscribe(v => results.push("A:" + v)); store.subscribe(v => results.push("B:" + v)); store.emit(42); return results; })()',
+    sample: `(() => {
+  const createStore = (initial) => {
+    let value = initial;
+    const listeners = [];
+    return {
+      subscribe: (fn) => { listeners.push(fn); },
+      emit: (val) => { value = val; listeners.forEach(fn => fn(val)); },
+      getValue: () => value
+    };
+  };
+  const store = createStore(0);
+  store.subscribe(v => results.push("A:" + v));
+  store.subscribe(v => results.push("B:" + v));
+  store.emit(42);
+  return results;
+})()`,
     hints: [
       'Store listeners in an array and iterate on emit',
       'Each listener receives the emitted value as an argument',
@@ -1121,8 +1246,12 @@ const handleChange = "function";`,
     setup: 'Mock data keyed by URL.',
     setupCode: `// Use this data map in your useFetch implementation\nconst mockData = { "/api/users": [{ id: 1, name: "Alice" }] };`,
     expected: { loading: false, data: [{ id: 1, name: 'Alice' }], error: null },
-    sample:
-      '((url) => { if (mockData[url]) { return { loading: false, data: mockData[url], error: null }; } return { loading: true, data: null, error: null }; })("/api/users")',
+    sample: `((url) => {
+  if (mockData[url]) {
+    return { loading: false, data: mockData[url], error: null };
+  }
+  return { loading: true, data: null, error: null };
+})("/api/users")`,
     hints: [
       'Check if the URL exists in the mock data map',
       'Return different states based on whether data is available',
@@ -1142,8 +1271,8 @@ const handleChange = "function";`,
     setup: 'No setup needed — implement Fragment yourself.',
     setupCode: ``,
     expected: { type: 'fragment', children: ['Hello', ' ', 'World'] },
-    sample:
-      'const Fragment = (...children) => ({ type: "fragment", children });\nFragment("Hello", " ", "World")',
+    sample: `const Fragment = (...children) => ({ type: "fragment", children });
+Fragment("Hello", " ", "World")`,
     hints: [
       'Use rest parameters (...children) to collect all arguments',
       'Return an object with type: "fragment" and the children array',
@@ -1334,8 +1463,8 @@ const handleChange = "function";`,
     setup: 'Component state flags.',
     setupCode: `const isActive = true;\nconst isDisabled = false;\nconst isLarge = true;`,
     expected: 'btn active large',
-    sample:
-      'const cx = (...classes) => classes.filter(Boolean).join(" ");\ncx("btn", isActive && "active", isDisabled && "disabled", isLarge && "large")',
+    sample: `const cx = (...classes) => classes.filter(Boolean).join(" ");
+cx("btn", isActive && "active", isDisabled && "disabled", isLarge && "large")`,
     hints: [
       'Use filter(Boolean) to remove falsy values (false, null, undefined, 0, "")',
       'Join the remaining truthy class names with a space',
@@ -1352,8 +1481,12 @@ const handleChange = "function";`,
     setup: 'No setup needed — implement createElement yourself.',
     setupCode: ``,
     expected: { $$typeof: 'react.element', type: 'div', props: { id: 'root', children: 'Hello' } },
-    sample:
-      'const createElement = (type, props, ...children) => ({ $$typeof: "react.element", type, props: { ...props, children: children.length === 1 ? children[0] : children } });\ncreateElement("div", { id: "root" }, "Hello")',
+    sample: `const createElement = (type, props, ...children) => ({
+  $$typeof: "react.element",
+  type,
+  props: { ...props, children: children.length === 1 ? children[0] : children }
+});
+createElement("div", { id: "root" }, "Hello")`,
     hints: [
       'Use rest parameters for children',
       'If there is exactly one child, unwrap it from the array',
@@ -1370,8 +1503,8 @@ const handleChange = "function";`,
     setup: 'Priority constants and a list of tasks.',
     setupCode: `const PRIORITIES = { IMMEDIATE: 1, USER_BLOCKING: 2, NORMAL: 3, LOW: 4, IDLE: 5 };\nconst tasks = [\n  { name: "animation", priority: PRIORITIES.USER_BLOCKING },\n  { name: "data-fetch", priority: PRIORITIES.NORMAL },\n  { name: "analytics", priority: PRIORITIES.IDLE },\n  { name: "click-handler", priority: PRIORITIES.IMMEDIATE }\n];`,
     expected: ['click-handler', 'animation', 'data-fetch', 'analytics'],
-    sample:
-      'const schedule = (t) => [...t].sort((a, b) => a.priority - b.priority).map(t => t.name);\nschedule(tasks)',
+    sample: `const schedule = (t) => [...t].sort((a, b) => a.priority - b.priority).map(t => t.name);
+schedule(tasks)`,
     hints: [
       'Sort tasks by priority number — lower number means higher urgency',
       'Use .map() to extract just the task names after sorting',
@@ -1388,8 +1521,14 @@ const handleChange = "function";`,
     setup: 'An array of values to test.',
     setupCode: `// Write willRender and filter this array\nconst values = [false, 0, "", null, undefined, true, NaN, "hello"];`,
     expected: [0, '', 'hello'],
-    sample:
-      '(() => { const willRender = (val) => { if (val === false || val === null || val === undefined || val === true) return false; if (val === 0 || val === "") return true; return !!val; }; return values.filter(v => willRender(v)); })()',
+    sample: `(() => {
+  const willRender = (val) => {
+    if (val === false || val === null || val === undefined || val === true) return false;
+    if (val === 0 || val === "") return true;
+    return !!val;
+  };
+  return values.filter(v => willRender(v));
+})()`,
     hints: [
       'React skips false, null, undefined, and true in JSX output',
       '0 and empty string are rendered as visible text despite being falsy',
@@ -1427,8 +1566,15 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the fetch simulation.',
     setupCode: `// Implement simulateFetch and call it`,
     expected: { loading: false, data: null, error: 'Network request failed' },
-    sample:
-      '(() => { const simulateFetch = (shouldFail) => { if (shouldFail) { return { loading: false, data: null, error: "Network request failed" }; } return { loading: false, data: { id: 1 }, error: null }; }; return simulateFetch(true); })()',
+    sample: `(() => {
+  const simulateFetch = (shouldFail) => {
+    if (shouldFail) {
+      return { loading: false, data: null, error: "Network request failed" };
+    }
+    return { loading: false, data: { id: 1 }, error: null };
+  };
+  return simulateFetch(true);
+})()`,
     hints: [
       'Use an if/else or ternary based on the shouldFail flag',
       'The error state should have loading: false and data: null',
@@ -1459,8 +1605,11 @@ const handleChange = "function";`,
     setup: 'A mock AbortController factory.',
     setupCode: `// Create a controller, abort it, check signal.aborted\nconst AbortController = () => {\n  let aborted = false;\n  return {\n    signal: { get aborted() { return aborted; } },\n    abort: () => { aborted = true; }\n  };\n};`,
     expected: true,
-    sample:
-      '(() => { const controller = AbortController(); controller.abort(); return controller.signal.aborted; })()',
+    sample: `(() => {
+  const controller = AbortController();
+  controller.abort();
+  return controller.signal.aborted;
+})()`,
     hints: [
       'Create the controller first, then call abort()',
       'signal.aborted reflects whether abort() has been called',
@@ -1477,8 +1626,20 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement retry logic.',
     setupCode: `// Implement fetchWithRetry with a retry loop`,
     expected: { ok: true, data: 'success', attempt: 3 },
-    sample:
-      '(() => { const fetchWithRetry = (maxRetries) => { let attempt = 0; const tryFetch = () => { attempt++; if (attempt < 3) return { ok: false, attempt }; return { ok: true, data: "success", attempt }; }; let result = tryFetch(); while (!result.ok && attempt < maxRetries) { result = tryFetch(); } return result; }; return fetchWithRetry(5); })()',
+    sample: `(() => {
+  const fetchWithRetry = (maxRetries) => {
+    let attempt = 0;
+    const tryFetch = () => {
+      attempt++;
+      if (attempt < 3) return { ok: false, attempt };
+      return { ok: true, data: "success", attempt };
+    };
+    let result = tryFetch();
+    while (!result.ok && attempt < maxRetries) { result = tryFetch(); }
+    return result;
+  };
+  return fetchWithRetry(5);
+})()`,
     hints: [
       'Use a while loop that continues while result.ok is false and attempts remain',
       'The tryFetch function succeeds when attempt reaches 3',
@@ -1495,8 +1656,19 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the fetch manager.',
     setupCode: `// Implement createFetchManager with ID tracking`,
     expected: { isStale: true, isFresh: true },
-    sample:
-      '(() => { const createFetchManager = () => { let currentId = 0; return { request: (data) => { const id = ++currentId; return { id, data }; }, isLatest: (id) => id === currentId }; }; const manager = createFetchManager(); const result1 = manager.request("stale"); const result2 = manager.request("fresh"); return { isStale: !manager.isLatest(result1.id), isFresh: manager.isLatest(result2.id) }; })()',
+    sample: `(() => {
+  const createFetchManager = () => {
+    let currentId = 0;
+    return {
+      request: (data) => { const id = ++currentId; return { id, data }; },
+      isLatest: (id) => id === currentId
+    };
+  };
+  const manager = createFetchManager();
+  const result1 = manager.request("stale");
+  const result2 = manager.request("fresh");
+  return { isStale: !manager.isLatest(result1.id), isFresh: manager.isLatest(result2.id) };
+})()`,
     hints: [
       'Each fetch call should increment and capture a unique ID',
       'isLatest compares a given ID against the current (most recent) ID',
@@ -1513,8 +1685,20 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement pagination state.',
     setupCode: `// Implement createPagination with fetchPage and getState`,
     expected: { items: ['a', 'b', 'c', 'd'], page: 2, hasMore: true },
-    sample:
-      '(() => { const createPagination = () => { let state = { items: [], page: 1, hasMore: true }; const fetchPage = (page, newItems) => { state = { items: [...state.items, ...newItems], page, hasMore: newItems.length > 0 }; return state; }; return { fetchPage, getState: () => state }; }; const pager = createPagination(); pager.fetchPage(1, ["a", "b"]); pager.fetchPage(2, ["c", "d"]); return pager.getState(); })()',
+    sample: `(() => {
+  const createPagination = () => {
+    let state = { items: [], page: 1, hasMore: true };
+    const fetchPage = (page, newItems) => {
+      state = { items: [...state.items, ...newItems], page, hasMore: newItems.length > 0 };
+      return state;
+    };
+    return { fetchPage, getState: () => state };
+  };
+  const pager = createPagination();
+  pager.fetchPage(1, ["a", "b"]);
+  pager.fetchPage(2, ["c", "d"]);
+  return pager.getState();
+})()`,
     hints: [
       'Spread existing items and new items together when fetching a new page',
       'hasMore is true when newItems array is non-empty',
@@ -1531,8 +1715,18 @@ const handleChange = "function";`,
     setup: 'Tracking objects for counts and pending requests.',
     setupCode: `// Use these to track fetch state\nconst fetchCounts = {};\nconst pending = {};`,
     expected: { '/api/users': 1, '/api/posts': 1 },
-    sample:
-      '(() => { const dedupedFetch = (url) => { if (pending[url]) return pending[url]; fetchCounts[url] = (fetchCounts[url] || 0) + 1; pending[url] = { data: url + "-data" }; return pending[url]; }; dedupedFetch("/api/users"); dedupedFetch("/api/users"); dedupedFetch("/api/posts"); return fetchCounts; })()',
+    sample: `(() => {
+  const dedupedFetch = (url) => {
+    if (pending[url]) return pending[url];
+    fetchCounts[url] = (fetchCounts[url] || 0) + 1;
+    pending[url] = { data: url + "-data" };
+    return pending[url];
+  };
+  dedupedFetch("/api/users");
+  dedupedFetch("/api/users");
+  dedupedFetch("/api/posts");
+  return fetchCounts;
+})()`,
     hints: [
       'Check if the URL already exists in the pending map before counting',
       'Only increment fetchCounts for genuinely new requests',
@@ -1566,8 +1760,17 @@ const handleChange = "function";`,
     setup: 'A pre-populated SWR cache.',
     setupCode: `// Implement swr using this cache\nconst swrCache = { "/api/data": { data: "stale-data", timestamp: 1000 } };`,
     expected: { data: 'fresh-data', isValidating: false },
-    sample:
-      '(() => { const swr = (url, freshData) => { const cached = swrCache[url]; const state = { data: cached ? cached.data : null, isValidating: true }; swrCache[url] = { data: freshData, timestamp: 2000 }; state.data = freshData; state.isValidating = false; return state; }; return swr("/api/data", "fresh-data"); })()',
+    sample: `(() => {
+  const swr = (url, freshData) => {
+    const cached = swrCache[url];
+    const state = { data: cached ? cached.data : null, isValidating: true };
+    swrCache[url] = { data: freshData, timestamp: 2000 };
+    state.data = freshData;
+    state.isValidating = false;
+    return state;
+  };
+  return swr("/api/data", "fresh-data");
+})()`,
     hints: [
       'Read from cache first to get stale data',
       'Update the cache and state with fresh data, then set isValidating to false',
@@ -1605,8 +1808,17 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the poll function.',
     setupCode: `// Implement poll(times) that simulates polling iterations`,
     expected: { count: 30, polls: 3 },
-    sample:
-      '(() => { const poll = (times) => { let state = { count: 0, polls: 0 }; for (let i = 0; i < times; i++) { state.count += 10; state.polls++; } return state; }; return poll(3); })()',
+    sample: `(() => {
+  const poll = (times) => {
+    let state = { count: 0, polls: 0 };
+    for (let i = 0; i < times; i++) {
+      state.count += 10;
+      state.polls++;
+    }
+    return state;
+  };
+  return poll(3);
+})()`,
     hints: [
       'Use a for loop to simulate each polling iteration',
       'Each iteration should add 10 to count and increment polls by 1',
@@ -1623,8 +1835,11 @@ const handleChange = "function";`,
     setup: 'Page data for infinite scroll.',
     setupCode: `// Write accumulate to combine these pages\nconst pages = [\n  { data: [1, 2], cursor: "c1" },\n  { data: [3, 4], cursor: "c2" },\n  { data: [5, 6], cursor: null }\n];`,
     expected: { items: [1, 2, 3, 4, 5, 6], nextCursor: null, hasMore: false },
-    sample:
-      '((pgs) => ({ items: pgs.flatMap(p => p.data), nextCursor: pgs[pgs.length - 1].cursor, hasMore: pgs[pgs.length - 1].cursor !== null }))(pages)',
+    sample: `((pgs) => ({
+  items: pgs.flatMap(p => p.data),
+  nextCursor: pgs[pgs.length - 1].cursor,
+  hasMore: pgs[pgs.length - 1].cursor !== null
+}))(pages)`,
     hints: [
       'Use flatMap to flatten all data arrays into one',
       'Check the last page cursor to determine hasMore',
@@ -1648,8 +1863,15 @@ const handleChange = "function";`,
       },
       allIds: ['u1', 'u2', 'u3'],
     },
-    sample:
-      '((items) => { const byId = {}; const allIds = []; items.forEach(item => { byId[item.id] = item; allIds.push(item.id); }); return { byId, allIds }; })(entities)',
+    sample: `((items) => {
+  const byId = {};
+  const allIds = [];
+  items.forEach(item => {
+    byId[item.id] = item;
+    allIds.push(item.id);
+  });
+  return { byId, allIds };
+})(entities)`,
     hints: [
       'Build a byId lookup object using each entity id as key',
       'Collect all ids into an array to maintain order',
@@ -1683,8 +1905,11 @@ const handleChange = "function";`,
     setup: 'Mock fetch functions with a dependency.',
     setupCode: `// Fetch user first, then use user.id to fetch posts\nconst fetchUser = () => ({ id: 42, name: "Alice" });\nconst fetchUserPosts = (userId) => [{ userId, title: "Post by " + userId }];`,
     expected: { user: { id: 42, name: 'Alice' }, posts: [{ userId: 42, title: 'Post by 42' }] },
-    sample:
-      '(() => { const user = fetchUser(); const posts = fetchUserPosts(user.id); return { user, posts }; })()',
+    sample: `(() => {
+  const user = fetchUser();
+  const posts = fetchUserPosts(user.id);
+  return { user, posts };
+})()`,
     hints: [
       'The second fetch depends on data from the first',
       'Call fetchUser first, then pass user.id to fetchUserPosts',
@@ -1701,8 +1926,12 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the error recovery function.',
     setupCode: `// Implement errorRecovery(error, retryCount)`,
     expected: { status: 'error', message: 'Timeout', retryCount: 1, canRetry: true },
-    sample:
-      '((error, retryCount) => ({ status: "error", message: error, retryCount, canRetry: retryCount < 3 }))("Timeout", 1)',
+    sample: `((error, retryCount) => ({
+  status: "error",
+  message: error,
+  retryCount,
+  canRetry: retryCount < 3
+}))("Timeout", 1)`,
     hints: [
       'Build an object with the error details and retry information',
       'canRetry should be a boolean comparison against the max retry limit',
@@ -1750,8 +1979,13 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement touched state tracking.',
     setupCode: `// Implement touched tracking from scratch`,
     expected: { name: true, email: true },
-    sample:
-      '(() => { const touched = {}; const touch = (field) => { touched[field] = true; }; touch("name"); touch("email"); return touched; })()',
+    sample: `(() => {
+  const touched = {};
+  const touch = (field) => { touched[field] = true; };
+  touch("name");
+  touch("email");
+  return touched;
+})()`,
     hints: [
       'Use an object to store which fields have been visited',
       'Set each field key to true when the touch function is called',
@@ -1786,8 +2020,14 @@ const handleChange = "function";`,
     setup: 'A validator that returns no errors.',
     setupCode: `// Write handleSubmit and test with this validator\nconst noErrors = () => ({});`,
     expected: { success: true, data: { name: 'Alice' } },
-    sample:
-      '(() => { const handleSubmit = (values, validate) => { const errors = validate(values); if (Object.keys(errors).length > 0) return { success: false, errors }; return { success: true, data: values }; }; return handleSubmit({ name: "Alice" }, noErrors); })()',
+    sample: `(() => {
+  const handleSubmit = (values, validate) => {
+    const errors = validate(values);
+    if (Object.keys(errors).length > 0) return { success: false, errors };
+    return { success: true, data: values };
+  };
+  return handleSubmit({ name: "Alice" }, noErrors);
+})()`,
     hints: [
       'Run validation first, then check if any errors exist',
       'Use Object.keys(errors).length to check for errors',
@@ -1807,8 +2047,20 @@ const handleChange = "function";`,
       { id: 2, value: 'second' },
       { id: 3, value: 'third' },
     ],
-    sample:
-      '(() => { const createFieldManager = () => { let fields = [{ id: 1, value: "first" }, { id: 2, value: "second" }]; return { add: (field) => { fields = [...fields, field]; }, remove: (id) => { fields = fields.filter(f => f.id !== id); }, getFields: () => fields }; }; const manager = createFieldManager(); manager.add({ id: 3, value: "third" }); manager.remove(1); return manager.getFields(); })()',
+    sample: `(() => {
+  const createFieldManager = () => {
+    let fields = [{ id: 1, value: "first" }, { id: 2, value: "second" }];
+    return {
+      add: (field) => { fields = [...fields, field]; },
+      remove: (id) => { fields = fields.filter(f => f.id !== id); },
+      getFields: () => fields
+    };
+  };
+  const manager = createFieldManager();
+  manager.add({ id: 3, value: "third" });
+  manager.remove(1);
+  return manager.getFields();
+})()`,
     hints: [
       'Use spread to add and .filter() to remove immutably',
       'remove should filter out the field whose id matches',
@@ -1825,8 +2077,22 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the field array helper.',
     setupCode: `// Implement fieldArray with append, prepend, swap, getValues`,
     expected: ['333', '111', '222', '000'],
-    sample:
-      '(() => { const fieldArray = (initial) => { let arr = [...initial]; return { append: (val) => { arr = [...arr, val]; }, prepend: (val) => { arr = [val, ...arr]; }, swap: (a, b) => { const temp = arr[a]; arr[a] = arr[b]; arr[b] = temp; }, getValues: () => arr }; }; const phones = fieldArray(["111", "222"]); phones.append("333"); phones.prepend("000"); phones.swap(0, 3); return phones.getValues(); })()',
+    sample: `(() => {
+  const fieldArray = (initial) => {
+    let arr = [...initial];
+    return {
+      append: (val) => { arr = [...arr, val]; },
+      prepend: (val) => { arr = [val, ...arr]; },
+      swap: (a, b) => { const temp = arr[a]; arr[a] = arr[b]; arr[b] = temp; },
+      getValues: () => arr
+    };
+  };
+  const phones = fieldArray(["111", "222"]);
+  phones.append("333");
+  phones.prepend("000");
+  phones.swap(0, 3);
+  return phones.getValues();
+})()`,
     hints: [
       'append spreads existing plus new at end, prepend puts new at start',
       'swap uses a temp variable to exchange two array indices',
@@ -1843,8 +2109,10 @@ const handleChange = "function";`,
     setup: 'A list of taken usernames.',
     setupCode: `// Write validateUsername using this list\nconst takenUsernames = ["alice", "bob", "admin"];`,
     expected: { valid: false, error: 'Username already taken' },
-    sample:
-      '((username) => { const isTaken = takenUsernames.includes(username.toLowerCase()); return { valid: !isTaken, error: isTaken ? "Username already taken" : null }; })("alice")',
+    sample: `((username) => {
+  const isTaken = takenUsernames.includes(username.toLowerCase());
+  return { valid: !isTaken, error: isTaken ? "Username already taken" : null };
+})("alice")`,
     hints: [
       'Lowercase the input before checking the list',
       'Use .includes() to check if the username is taken',
@@ -1875,8 +2143,15 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the radio group.',
     setupCode: `// Implement radioGroup and create one`,
     expected: { options: ['small', 'medium', 'large'], selected: 'medium' },
-    sample:
-      '(() => { const radioGroup = (options, selected) => ({ options, selected, isSelected: (opt) => opt === selected }); const sizes = radioGroup(["small", "medium", "large"], "medium"); return { options: sizes.options, selected: sizes.selected }; })()',
+    sample: `(() => {
+  const radioGroup = (options, selected) => ({
+    options,
+    selected,
+    isSelected: (opt) => opt === selected
+  });
+  const sizes = radioGroup(["small", "medium", "large"], "medium");
+  return { options: sizes.options, selected: sizes.selected };
+})()`,
     hints: [
       'A radio group allows only one selection at a time',
       'isSelected compares an option against the selected value',
@@ -1893,8 +2168,16 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the checkbox group.',
     setupCode: `// Implement toggle logic using a Set`,
     expected: ['react', 'vue'],
-    sample:
-      '(() => { const selected = new Set(); const toggle = (item) => { if (selected.has(item)) selected.delete(item); else selected.add(item); }; toggle("react"); toggle("vue"); return Array.from(selected).sort(); })()',
+    sample: `(() => {
+  const selected = new Set();
+  const toggle = (item) => {
+    if (selected.has(item)) selected.delete(item);
+    else selected.add(item);
+  };
+  toggle("react");
+  toggle("vue");
+  return Array.from(selected).sort();
+})()`,
     hints: [
       'Use Set.has() to check membership, .add() and .delete() to toggle',
       'Convert the Set to an array and sort for consistent output',
@@ -1911,8 +2194,13 @@ const handleChange = "function";`,
     setup: 'Errors and touched state objects.',
     setupCode: `// Write visibleErrors to filter these\nconst errors = { name: "Required", email: "Invalid email", age: null };\nconst touched = { name: true, email: false, age: true };`,
     expected: { name: 'Required' },
-    sample:
-      '((errs, tch) => { const result = {}; Object.keys(errs).forEach(key => { if (tch[key] && errs[key]) result[key] = errs[key]; }); return result; })(errors, touched)',
+    sample: `((errs, tch) => {
+  const result = {};
+  Object.keys(errs).forEach(key => {
+    if (tch[key] && errs[key]) result[key] = errs[key];
+  });
+  return result;
+})(errors, touched)`,
     hints: [
       'Iterate over error keys and check both conditions',
       'A field must be touched AND have a truthy error to be visible',
@@ -1935,8 +2223,21 @@ const handleChange = "function";`,
       billing: 'yearly',
       agree: true,
     },
-    sample:
-      '(() => { const createWizard = () => { let currentStep = 0; const data = {}; return { next: (stepData) => { Object.assign(data, stepData); currentStep++; }, getData: () => data }; }; const wizard = createWizard(); wizard.next({ name: "Alice", email: "alice@test.com" }); wizard.next({ plan: "pro", billing: "yearly" }); wizard.next({ agree: true }); return wizard.getData(); })()',
+    sample: `(() => {
+  const createWizard = () => {
+    let currentStep = 0;
+    const data = {};
+    return {
+      next: (stepData) => { Object.assign(data, stepData); currentStep++; },
+      getData: () => data
+    };
+  };
+  const wizard = createWizard();
+  wizard.next({ name: "Alice", email: "alice@test.com" });
+  wizard.next({ plan: "pro", billing: "yearly" });
+  wizard.next({ agree: true });
+  return wizard.getData();
+})()`,
     hints: [
       'Use Object.assign to merge each step data into the accumulated object',
       'getData returns the accumulated data from all steps',
@@ -1953,8 +2254,11 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement multi-select state.',
     setupCode: `// Implement multiSelect(options, selectedValues)`,
     expected: { options: ['JS', 'TS', 'Python', 'Go'], selected: ['JS', 'TS'], display: 'JS, TS' },
-    sample:
-      '((options, selectedValues) => ({ options, selected: selectedValues, display: selectedValues.join(", ") }))(["JS", "TS", "Python", "Go"], ["JS", "TS"])',
+    sample: `((options, selectedValues) => ({
+  options,
+  selected: selectedValues,
+  display: selectedValues.join(", ")
+}))(["JS", "TS", "Python", "Go"], ["JS", "TS"])`,
     hints: [
       'Use .join(", ") to create the display string from selected values',
       'Return all three properties in the result object',
@@ -1971,8 +2275,18 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement password validation.',
     setupCode: `// Implement validatePassword and test with "Hello123"`,
     expected: { strength: 3, valid: true },
-    sample:
-      '(() => { const validatePassword = (password) => { const rules = [ password.length >= 8, /[A-Z]/.test(password), /[0-9]/.test(password) ]; const strength = rules.filter(Boolean).length; return { strength, valid: strength === rules.length }; }; return validatePassword("Hello123"); })()',
+    sample: `(() => {
+  const validatePassword = (password) => {
+    const rules = [
+      password.length >= 8,
+      /[A-Z]/.test(password),
+      /[0-9]/.test(password)
+    ];
+    const strength = rules.filter(Boolean).length;
+    return { strength, valid: strength === rules.length };
+  };
+  return validatePassword("Hello123");
+})()`,
     hints: [
       'Use regex for uppercase (/[A-Z]/) and number (/[0-9]/) checks',
       'Count the number of passing rules to determine strength',
@@ -1989,8 +2303,17 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement debounced validation.',
     setupCode: `// Implement validate and simulate debounced input`,
     expected: { valid: true },
-    sample:
-      '(() => { let lastValue = ""; const validate = (val) => { lastValue = val; return val.length >= 3 ? { valid: true } : { valid: false, error: "Min 3 chars" }; }; validate("a"); validate("ab"); validate("abc"); return validate(lastValue); })()',
+    sample: `(() => {
+  let lastValue = "";
+  const validate = (val) => {
+    lastValue = val;
+    return val.length >= 3 ? { valid: true } : { valid: false, error: "Min 3 chars" };
+  };
+  validate("a");
+  validate("ab");
+  validate("abc");
+  return validate(lastValue);
+})()`,
     hints: [
       'Track the latest value on each call to simulate debouncing',
       'The final validation runs on the last captured value',
@@ -2007,8 +2330,21 @@ const handleChange = "function";`,
     setup: 'No setup needed -- implement the form with reset.',
     setupCode: `// Implement createForm with update, reset, getValues`,
     expected: { name: '', email: '' },
-    sample:
-      '(() => { const createForm = (initialValues) => { let values = { ...initialValues }; return { update: (field, val) => { values = { ...values, [field]: val }; }, reset: () => { values = { ...initialValues }; }, getValues: () => values }; }; const form = createForm({ name: "", email: "" }); form.update("name", "Alice"); form.update("email", "alice@test.com"); form.reset(); return form.getValues(); })()',
+    sample: `(() => {
+  const createForm = (initialValues) => {
+    let values = { ...initialValues };
+    return {
+      update: (field, val) => { values = { ...values, [field]: val }; },
+      reset: () => { values = { ...initialValues }; },
+      getValues: () => values
+    };
+  };
+  const form = createForm({ name: "", email: "" });
+  form.update("name", "Alice");
+  form.update("email", "alice@test.com");
+  form.reset();
+  return form.getValues();
+})()`,
     hints: [
       'Keep a copy of initialValues to restore on reset',
       'Use spread to create a fresh copy when resetting',

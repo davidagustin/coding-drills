@@ -108,12 +108,37 @@ export function validateJavaScript(
     if (trimmedAnswer.startsWith('return ')) {
       fullCode = trimmedAnswer;
     } else {
-      // Check if code contains statements (const, let, var, function, class, etc.)
+      // Check if code contains TOP-LEVEL statements (const, let, var, etc.)
+      // Statement keywords inside nested { } blocks (e.g. inside IIFEs or
+      // arrow function bodies) should NOT cause the code to be treated as
+      // multi-statement. We track brace depth to distinguish top-level from nested.
       const statementPattern =
         /^(const |let |var |function |class |if |for |while |switch |try |do |throw )/;
-      const hasStatements =
-        statementPattern.test(trimmedAnswer) ||
-        trimmedAnswer.split('\n').some((line) => statementPattern.test(line.trim()));
+
+      const hasTopLevelStatements = (() => {
+        // Quick check: if the very first line is a statement, it's multi-statement
+        if (statementPattern.test(trimmedAnswer)) return true;
+
+        // Walk lines tracking brace/bracket depth to find top-level statements
+        let depth = 0;
+        const lines = trimmedAnswer.split('\n');
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line) continue;
+
+          // At depth 0, a statement keyword means real top-level statement
+          if (depth === 0 && statementPattern.test(line)) return true;
+
+          // Track brace depth (handles { } nesting in arrow functions, IIFEs, etc.)
+          for (const ch of line) {
+            if (ch === '{' || ch === '(' || ch === '[') depth++;
+            else if (ch === '}' || ch === ')' || ch === ']') depth--;
+          }
+        }
+        return false;
+      })();
+
+      const hasStatements = hasTopLevelStatements;
 
       if (hasStatements) {
         // Multi-statement code: execute all lines, return value of last expression
