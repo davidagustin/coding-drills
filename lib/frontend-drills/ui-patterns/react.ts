@@ -8367,4 +8367,6286 @@ function App() {
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
     },
   },
+  // ========== NEW PATTERNS (100) ==========
+  // --- forms-input ---
+  {
+    id: 'react-rating-stars',
+    title: 'Rating Stars',
+    category: 'forms-input',
+    difficulty: 'beginner',
+    description: 'Interactive star rating component with hover preview and click to set',
+    concepts: ['controlled input', 'hover state', 'event handling', 'accessibility'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.rating { display: flex; gap: 4px; align-items: center; }
+.star { font-size: 32px; cursor: pointer; transition: color 0.15s; color: #555; background: none; border: none; padding: 0; }
+.star.active { color: #fbbf24; }
+.star.hovered { color: #fcd34d; }
+.rating-label { margin-left: 12px; font-size: 14px; color: #e0e0e0; }
+body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 60px; font-family: sans-serif; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const labels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+  return (
+    <div>
+      <h3 style={{marginBottom: 12}}>Rate this item</h3>
+      <div className="rating">
+        {[1,2,3,4,5].map(i => (
+          <button key={i} className={\`star \${i <= rating ? 'active' : ''} \${i <= hover ? 'hovered' : ''}\`}
+            onClick={() => setRating(i)}
+            onMouseEnter={() => setHover(i)}
+            onMouseLeave={() => setHover(0)}
+            aria-label={\`\${i} star\`}>&#9733;</button>
+        ))}
+        <span className="rating-label">{labels[hover || rating] || 'Select a rating'}</span>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-tag-input',
+    title: 'Tag Input',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'Input that converts typed text into removable tag chips on Enter',
+    concepts: ['array state', 'keyboard events', 'chip UI', 'controlled input'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 40px; font-family: sans-serif; }
+.tag-input-wrap { width: 360px; }
+.tags-container { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border: 1px solid #334155; border-radius: 8px; background: #1e293b; min-height: 44px; align-items: center; cursor: text; }
+.tags-container:focus-within { border-color: #4fc3f7; }
+.tag { display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 16px; background: #4fc3f7; color: #1a1a2e; font-size: 13px; font-weight: 600; }
+.tag button { background: none; border: none; cursor: pointer; font-size: 14px; color: #1a1a2e; padding: 0 2px; }
+.tag-input { border: none; outline: none; background: transparent; color: #e0e0e0; font-size: 14px; flex: 1; min-width: 80px; }
+.hint { font-size: 12px; color: #666; margin-top: 6px; }`,
+      js: `const { useState, useRef } = React;
+
+function App() {
+  const [tags, setTags] = useState(['React', 'TypeScript']);
+  const [value, setValue] = useState('');
+  const inputRef = useRef(null);
+
+  const addTag = () => {
+    const t = value.trim();
+    if (t && !tags.includes(t)) { setTags([...tags, t]); }
+    setValue('');
+  };
+
+  const removeTag = (idx) => setTags(tags.filter((_, i) => i !== idx));
+
+  const onKey = (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+    if (e.key === 'Backspace' && !value && tags.length) removeTag(tags.length - 1);
+  };
+
+  return (
+    <div className="tag-input-wrap">
+      <label style={{fontSize:14,color:'#94a3b8',display:'block',marginBottom:6}}>Tags</label>
+      <div className="tags-container" onClick={() => inputRef.current.focus()}>
+        {tags.map((t, i) => (
+          <span className="tag" key={i}>{t}<button onClick={() => removeTag(i)}>&times;</button></span>
+        ))}
+        <input ref={inputRef} className="tag-input" value={value} onChange={e => setValue(e.target.value)}
+          onKeyDown={onKey} placeholder={tags.length ? '' : 'Add tags...'} />
+      </div>
+      <div className="hint">Press Enter to add, Backspace to remove last</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-multi-select',
+    title: 'Multi Select',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'Dropdown that allows selecting multiple options with checkboxes',
+    concepts: ['dropdown state', 'checkbox group', 'click outside', 'array toggle'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 40px; font-family: sans-serif; }
+.ms-wrap { width: 320px; position: relative; }
+.ms-trigger { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; cursor: pointer; text-align: left; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+.ms-trigger:focus { border-color: #4fc3f7; outline: none; }
+.ms-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #1e293b; border: 1px solid #334155; border-radius: 8px; max-height: 200px; overflow-y: auto; z-index: 10; }
+.ms-option { display: flex; align-items: center; gap: 8px; padding: 8px 12px; cursor: pointer; font-size: 14px; }
+.ms-option:hover { background: #334155; }
+.ms-option input { accent-color: #4fc3f7; }
+.ms-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.ms-chip { padding: 3px 8px; border-radius: 12px; background: #334155; font-size: 12px; color: #4fc3f7; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const options = ['JavaScript', 'TypeScript', 'Python', 'Rust', 'Go', 'Java', 'C++', 'Swift'];
+
+function App() {
+  const [selected, setSelected] = useState(['JavaScript']);
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const toggle = (opt) => {
+    setSelected(prev => prev.includes(opt) ? prev.filter(s => s !== opt) : [...prev, opt]);
+  };
+
+  return (
+    <div className="ms-wrap" ref={ref}>
+      <label style={{fontSize:14,color:'#94a3b8',display:'block',marginBottom:6}}>Languages</label>
+      <button className="ms-trigger" onClick={() => setOpen(!open)}>
+        <span>{selected.length ? \`\${selected.length} selected\` : 'Select...'}</span>
+        <span>{open ? '\\u25B2' : '\\u25BC'}</span>
+      </button>
+      {open && (
+        <div className="ms-dropdown">
+          {options.map(opt => (
+            <label className="ms-option" key={opt}>
+              <input type="checkbox" checked={selected.includes(opt)} onChange={() => toggle(opt)} />
+              {opt}
+            </label>
+          ))}
+        </div>
+      )}
+      <div className="ms-chips">
+        {selected.map(s => <span className="ms-chip" key={s}>{s}</span>)}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-otp-input',
+    title: 'OTP Input',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'One-time password input with auto-focus advancing between digit boxes',
+    concepts: ['refs array', 'auto-focus', 'controlled inputs', 'keyboard navigation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 60px; font-family: sans-serif; }
+.otp-wrap { text-align: center; }
+.otp-inputs { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+.otp-box { width: 48px; height: 56px; text-align: center; font-size: 24px; font-weight: 700; border-radius: 8px; border: 2px solid #334155; background: #1e293b; color: #4fc3f7; outline: none; }
+.otp-box:focus { border-color: #4fc3f7; }
+.otp-msg { font-size: 14px; color: #94a3b8; }
+.otp-success { color: #4ade80; font-weight: 600; }`,
+      js: `const { useState, useRef } = React;
+
+function App() {
+  const [otp, setOtp] = useState(Array(6).fill(''));
+  const refs = useRef([]);
+  const [done, setDone] = useState(false);
+
+  const handleChange = (i, val) => {
+    if (!/^[0-9]?$/.test(val)) return;
+    const next = [...otp];
+    next[i] = val;
+    setOtp(next);
+    if (val && i < 5) refs.current[i + 1].focus();
+    if (next.every(d => d !== '')) setDone(true);
+  };
+
+  const handleKey = (i, e) => {
+    if (e.key === 'Backspace' && !otp[i] && i > 0) refs.current[i - 1].focus();
+  };
+
+  return (
+    <div className="otp-wrap">
+      <h3>Enter verification code</h3>
+      <div className="otp-inputs">
+        {otp.map((d, i) => (
+          <input key={i} className="otp-box" maxLength={1} value={d}
+            ref={el => refs.current[i] = el}
+            onChange={e => handleChange(i, e.target.value)}
+            onKeyDown={e => handleKey(i, e)} />
+        ))}
+      </div>
+      {done ? <div className="otp-success">Code entered!</div> : <div className="otp-msg">We sent a 6-digit code to your email</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-credit-card-input',
+    title: 'Credit Card Input',
+    category: 'forms-input',
+    difficulty: 'advanced',
+    description: 'Formatted credit card input with auto-spacing and card type detection',
+    concepts: ['input masking', 'format validation', 'pattern detection', 'controlled input'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 40px; font-family: sans-serif; }
+.card-form { width: 360px; padding: 24px; background: #16213e; border-radius: 12px; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.field input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; font-size: 16px; font-family: monospace; outline: none; box-sizing: border-box; }
+.field input:focus { border-color: #4fc3f7; }
+.row { display: flex; gap: 12px; }
+.row .field { flex: 1; }
+.card-type { font-size: 13px; color: #4fc3f7; margin-top: 4px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [card, setCard] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [cvc, setCvc] = useState('');
+
+  const formatCard = (v) => v.replace(/\\D/g, '').slice(0, 16).replace(/(\\d{4})(?=\\d)/g, '$1 ');
+  const formatExpiry = (v) => {
+    const d = v.replace(/\\D/g, '').slice(0, 4);
+    return d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d;
+  };
+  const getType = (n) => {
+    const d = n.replace(/\\s/g, '');
+    if (/^4/.test(d)) return 'Visa';
+    if (/^5[1-5]/.test(d)) return 'Mastercard';
+    if (/^3[47]/.test(d)) return 'Amex';
+    if (/^6/.test(d)) return 'Discover';
+    return d.length > 0 ? 'Unknown' : '';
+  };
+
+  return (
+    <div className="card-form">
+      <h3 style={{marginBottom: 16, color: '#4fc3f7'}}>Payment Details</h3>
+      <div className="field">
+        <label>Card Number</label>
+        <input value={card} onChange={e => setCard(formatCard(e.target.value))} placeholder="1234 5678 9012 3456" />
+        {getType(card) && <div className="card-type">{getType(card)}</div>}
+      </div>
+      <div className="row">
+        <div className="field">
+          <label>Expiry</label>
+          <input value={expiry} onChange={e => setExpiry(formatExpiry(e.target.value))} placeholder="MM/YY" />
+        </div>
+        <div className="field">
+          <label>CVC</label>
+          <input value={cvc} onChange={e => setCvc(e.target.value.replace(/\\D/g, '').slice(0, 4))} placeholder="123" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-address-form',
+    title: 'Address Form',
+    category: 'forms-input',
+    difficulty: 'beginner',
+    description: 'Structured address form with country-dependent fields and validation',
+    concepts: ['multi-field forms', 'conditional fields', 'select inputs', 'validation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 30px; font-family: sans-serif; }
+.addr-form { width: 380px; }
+.fg { margin-bottom: 12px; }
+.fg label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 4px; }
+.fg input, .fg select { width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; font-size: 14px; outline: none; box-sizing: border-box; }
+.fg input:focus, .fg select:focus { border-color: #4fc3f7; }
+.row2 { display: flex; gap: 10px; }
+.row2 .fg { flex: 1; }
+.err { color: #ef4444; font-size: 12px; margin-top: 2px; }
+.btn { width: 100%; padding: 10px; border: none; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; margin-top: 8px; }
+.btn:hover { background: #81d4fa; }
+.done { text-align: center; color: #4ade80; margin-top: 12px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [f, setF] = useState({ street: '', city: '', state: '', zip: '', country: 'US' });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const upd = (k) => (e) => { setF({...f, [k]: e.target.value}); setErrors({...errors, [k]: ''}); };
+
+  const submit = (e) => {
+    e.preventDefault();
+    const errs = {};
+    if (!f.street.trim()) errs.street = 'Required';
+    if (!f.city.trim()) errs.city = 'Required';
+    if (!f.zip.trim()) errs.zip = 'Required';
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setSubmitted(true);
+  };
+
+  if (submitted) return <div className="addr-form"><div className="done">Address saved!</div></div>;
+
+  return (
+    <form className="addr-form" onSubmit={submit}>
+      <h3 style={{marginBottom: 16}}>Shipping Address</h3>
+      <div className="fg"><label>Country</label><select value={f.country} onChange={upd('country')}><option value="US">United States</option><option value="CA">Canada</option><option value="UK">United Kingdom</option></select></div>
+      <div className="fg"><label>Street</label><input value={f.street} onChange={upd('street')} placeholder="123 Main St" />{errors.street && <div className="err">{errors.street}</div>}</div>
+      <div className="row2">
+        <div className="fg"><label>City</label><input value={f.city} onChange={upd('city')} />{errors.city && <div className="err">{errors.city}</div>}</div>
+        <div className="fg"><label>{f.country === 'UK' ? 'Postcode' : 'State'}</label><input value={f.state} onChange={upd('state')} /></div>
+      </div>
+      <div className="fg"><label>{f.country === 'UK' ? 'Postcode' : 'ZIP Code'}</label><input value={f.zip} onChange={upd('zip')} />{errors.zip && <div className="err">{errors.zip}</div>}</div>
+      <button className="btn" type="submit">Save Address</button>
+    </form>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-survey-form',
+    title: 'Survey Form',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'Multi-step survey with progress bar, radio groups, and results summary',
+    concepts: ['multi-step form', 'progress tracking', 'radio groups', 'form summary'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 30px; font-family: sans-serif; }
+.survey { width: 380px; }
+.progress-bar { height: 6px; background: #334155; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+.progress-fill { height: 100%; background: #4fc3f7; transition: width 0.3s; border-radius: 3px; }
+.question { margin-bottom: 16px; }
+.question h4 { margin-bottom: 10px; }
+.opt { display: block; padding: 10px 14px; margin-bottom: 6px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; cursor: pointer; transition: all 0.15s; font-size: 14px; }
+.opt:hover { border-color: #4fc3f7; }
+.opt.selected { border-color: #4fc3f7; background: rgba(79,195,247,0.1); }
+.nav-btns { display: flex; gap: 8px; margin-top: 16px; }
+.nav-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.nav-btns .next { background: #4fc3f7; color: #1a1a2e; }
+.nav-btns .prev { background: #334155; color: #e0e0e0; }
+.summary p { padding: 6px 0; border-bottom: 1px solid #334155; font-size: 14px; }`,
+      js: `const { useState } = React;
+
+const questions = [
+  { q: 'How often do you code?', opts: ['Daily', 'Weekly', 'Monthly', 'Rarely'] },
+  { q: 'Preferred language?', opts: ['JavaScript', 'Python', 'Rust', 'Go', 'Other'] },
+  { q: 'Experience level?', opts: ['Beginner', 'Intermediate', 'Advanced', 'Expert'] },
+];
+
+function App() {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const done = step >= questions.length;
+  const progress = ((done ? questions.length : step) / questions.length) * 100;
+
+  const select = (val) => setAnswers({...answers, [step]: val});
+
+  return (
+    <div className="survey">
+      <div className="progress-bar"><div className="progress-fill" style={{width: progress + '%'}} /></div>
+      {done ? (
+        <div>
+          <h3>Survey Complete!</h3>
+          <div className="summary">{questions.map((q, i) => <p key={i}><strong>{q.q}</strong><br/>{answers[i]}</p>)}</div>
+        </div>
+      ) : (
+        <div className="question">
+          <h4>Q{step+1}/{questions.length}: {questions[step].q}</h4>
+          {questions[step].opts.map(o => (
+            <div key={o} className={\`opt \${answers[step] === o ? 'selected' : ''}\`} onClick={() => select(o)}>{o}</div>
+          ))}
+          <div className="nav-btns">
+            {step > 0 && <button className="prev" onClick={() => setStep(step-1)}>Back</button>}
+            <button className="next" disabled={!answers[step]} onClick={() => setStep(step+1)}>{step === questions.length - 1 ? 'Submit' : 'Next'}</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-textarea-autogrow',
+    title: 'Textarea Autogrow',
+    category: 'forms-input',
+    difficulty: 'beginner',
+    description: 'Textarea that automatically grows in height as the user types more lines',
+    concepts: ['auto-resize', 'ref manipulation', 'scrollHeight', 'controlled textarea'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 50px; font-family: sans-serif; }
+.autogrow-wrap { width: 380px; }
+.autogrow-wrap label { display: block; font-size: 14px; color: #94a3b8; margin-bottom: 6px; }
+.autogrow-wrap textarea { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; font-size: 14px; font-family: inherit; resize: none; overflow: hidden; outline: none; box-sizing: border-box; transition: border-color 0.15s; }
+.autogrow-wrap textarea:focus { border-color: #4fc3f7; }
+.char-count { font-size: 12px; color: #666; text-align: right; margin-top: 4px; }`,
+      js: `const { useState, useRef, useCallback } = React;
+
+function App() {
+  const [value, setValue] = useState('');
+  const ref = useRef(null);
+
+  const handleChange = useCallback((e) => {
+    setValue(e.target.value);
+    const ta = ref.current;
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }, []);
+
+  return (
+    <div className="autogrow-wrap">
+      <label>Write your message</label>
+      <textarea ref={ref} value={value} onChange={handleChange} placeholder="Start typing... the textarea will grow automatically." rows={1} />
+      <div className="char-count">{value.length} characters</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-phone-input',
+    title: 'Phone Input',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'Phone number input with country code selector and auto-formatting',
+    concepts: ['input masking', 'select integration', 'formatting', 'validation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 50px; font-family: sans-serif; }
+.phone-wrap { width: 340px; }
+.phone-wrap label { display: block; font-size: 14px; color: #94a3b8; margin-bottom: 6px; }
+.phone-row { display: flex; gap: 8px; }
+.phone-row select { width: 90px; padding: 10px 6px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; outline: none; font-size: 14px; }
+.phone-row input { flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; outline: none; font-size: 16px; font-family: monospace; }
+.phone-row select:focus, .phone-row input:focus { border-color: #4fc3f7; }
+.phone-display { margin-top: 10px; font-size: 13px; color: #4fc3f7; }`,
+      js: `const { useState } = React;
+
+const codes = [{ code: '+1', flag: 'US' }, { code: '+44', flag: 'UK' }, { code: '+91', flag: 'IN' }, { code: '+81', flag: 'JP' }, { code: '+49', flag: 'DE' }];
+
+function formatPhone(v) {
+  const d = v.replace(/\\D/g, '').slice(0, 10);
+  if (d.length <= 3) return d;
+  if (d.length <= 6) return '(' + d.slice(0,3) + ') ' + d.slice(3);
+  return '(' + d.slice(0,3) + ') ' + d.slice(3,6) + '-' + d.slice(6);
+}
+
+function App() {
+  const [country, setCountry] = useState('+1');
+  const [phone, setPhone] = useState('');
+
+  return (
+    <div className="phone-wrap">
+      <label>Phone Number</label>
+      <div className="phone-row">
+        <select value={country} onChange={e => setCountry(e.target.value)}>
+          {codes.map(c => <option key={c.code} value={c.code}>{c.flag} {c.code}</option>)}
+        </select>
+        <input value={phone} onChange={e => setPhone(formatPhone(e.target.value))} placeholder="(555) 123-4567" />
+      </div>
+      {phone && <div className="phone-display">Full: {country} {phone}</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-currency-input',
+    title: 'Currency Input',
+    category: 'forms-input',
+    difficulty: 'beginner',
+    description: 'Input that formats values as currency with symbol and thousand separators',
+    concepts: ['number formatting', 'locale formatting', 'controlled input', 'prefix symbol'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 50px; font-family: sans-serif; }
+.currency-wrap { width: 320px; }
+.currency-wrap label { display: block; font-size: 14px; color: #94a3b8; margin-bottom: 6px; }
+.currency-row { display: flex; align-items: center; border: 1px solid #334155; border-radius: 8px; background: #1e293b; overflow: hidden; }
+.currency-row:focus-within { border-color: #4fc3f7; }
+.currency-symbol { padding: 10px 12px; background: #334155; color: #4fc3f7; font-weight: 700; font-size: 16px; }
+.currency-row input { flex: 1; padding: 10px 12px; border: none; background: transparent; color: #e0e0e0; font-size: 18px; outline: none; font-family: monospace; }
+.currency-hint { font-size: 13px; color: #666; margin-top: 6px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [raw, setRaw] = useState('');
+
+  const handleChange = (e) => {
+    const digits = e.target.value.replace(/[^0-9]/g, '');
+    setRaw(digits);
+  };
+
+  const formatted = raw ? Number(raw).toLocaleString('en-US') : '';
+
+  return (
+    <div className="currency-wrap">
+      <label>Amount</label>
+      <div className="currency-row">
+        <span className="currency-symbol">$</span>
+        <input value={formatted} onChange={handleChange} placeholder="0" />
+      </div>
+      <div className="currency-hint">{raw ? 'Value: $' + formatted + '.00' : 'Enter an amount'}</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-slider-range',
+    title: 'Slider Range',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'Dual-thumb range slider for selecting a min/max value range',
+    concepts: ['range input', 'dual thumbs', 'CSS track styling', 'controlled values'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 60px; font-family: sans-serif; }
+.slider-wrap { width: 340px; }
+.slider-wrap label { display: block; font-size: 14px; color: #94a3b8; margin-bottom: 16px; }
+.range-container { position: relative; height: 40px; }
+.range-container input[type=range] { position: absolute; width: 100%; top: 12px; -webkit-appearance: none; appearance: none; background: transparent; pointer-events: none; }
+.range-container input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #4fc3f7; cursor: pointer; pointer-events: all; border: 2px solid #1a1a2e; }
+.track { position: absolute; top: 18px; height: 6px; border-radius: 3px; background: #334155; width: 100%; }
+.track-fill { position: absolute; top: 18px; height: 6px; border-radius: 3px; background: #4fc3f7; }
+.vals { display: flex; justify-content: space-between; font-size: 14px; color: #4fc3f7; font-weight: 600; margin-top: 8px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [min, setMin] = useState(20);
+  const [max, setMax] = useState(80);
+  const lo = Math.min(min, max);
+  const hi = Math.max(min, max);
+
+  return (
+    <div className="slider-wrap">
+      <label>Price Range: \${lo} - \${hi}</label>
+      <div className="range-container">
+        <div className="track" />
+        <div className="track-fill" style={{left: lo + '%', width: (hi - lo) + '%'}} />
+        <input type="range" min={0} max={100} value={min} onChange={e => setMin(+e.target.value)} />
+        <input type="range" min={0} max={100} value={max} onChange={e => setMax(+e.target.value)} />
+      </div>
+      <div className="vals"><span>\${lo}</span><span>\${hi}</span></div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-toggle-group',
+    title: 'Toggle Group',
+    category: 'forms-input',
+    difficulty: 'beginner',
+    description: 'Group of toggle buttons where one or more can be selected',
+    concepts: ['toggle state', 'button group', 'multi-select', 'active styles'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 50px; font-family: sans-serif; }
+.tg-wrap { width: 360px; }
+.tg-wrap h3 { margin-bottom: 12px; }
+.tg-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.tg-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 14px; transition: all 0.15s; }
+.tg-btn:hover { border-color: #4fc3f7; color: #e0e0e0; }
+.tg-btn.active { background: #4fc3f7; color: #1a1a2e; border-color: #4fc3f7; font-weight: 600; }
+.tg-result { margin-top: 14px; font-size: 13px; color: #94a3b8; }`,
+      js: `const { useState } = React;
+
+const items = ['React', 'Vue', 'Angular', 'Svelte', 'Solid', 'Preact', 'Lit', 'Qwik'];
+
+function App() {
+  const [selected, setSelected] = useState(new Set(['React']));
+
+  const toggle = (item) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(item) ? next.delete(item) : next.add(item);
+      return next;
+    });
+  };
+
+  return (
+    <div className="tg-wrap">
+      <h3>Select frameworks</h3>
+      <div className="tg-group">
+        {items.map(item => (
+          <button key={item} className={\`tg-btn \${selected.has(item) ? 'active' : ''}\`}
+            onClick={() => toggle(item)}>{item}</button>
+        ))}
+      </div>
+      <div className="tg-result">Selected: {[...selected].join(', ') || 'None'}</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-segmented-control',
+    title: 'Segmented Control',
+    category: 'forms-input',
+    difficulty: 'beginner',
+    description: 'iOS-style segmented control with animated sliding indicator',
+    concepts: ['tab selection', 'CSS transitions', 'indicator animation', 'layout measurement'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 60px; font-family: sans-serif; }
+.seg-wrap { width: 340px; text-align: center; }
+.seg-control { display: inline-flex; position: relative; background: #1e293b; border-radius: 10px; padding: 3px; }
+.seg-indicator { position: absolute; top: 3px; bottom: 3px; border-radius: 8px; background: #4fc3f7; transition: left 0.25s ease, width 0.25s ease; z-index: 0; }
+.seg-btn { position: relative; z-index: 1; padding: 8px 20px; border: none; background: transparent; color: #94a3b8; cursor: pointer; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+.seg-btn.active { color: #1a1a2e; font-weight: 700; }
+.seg-content { margin-top: 20px; padding: 16px; background: #1e293b; border-radius: 8px; font-size: 14px; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const tabs = ['Daily', 'Weekly', 'Monthly'];
+
+function App() {
+  const [active, setActive] = useState(0);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const btnsRef = useRef([]);
+
+  useEffect(() => {
+    const btn = btnsRef.current[active];
+    if (btn) setIndicator({ left: btn.offsetLeft, width: btn.offsetWidth });
+  }, [active]);
+
+  return (
+    <div className="seg-wrap">
+      <div className="seg-control">
+        <div className="seg-indicator" style={{ left: indicator.left, width: indicator.width }} />
+        {tabs.map((t, i) => (
+          <button key={t} ref={el => btnsRef.current[i] = el}
+            className={\`seg-btn \${i === active ? 'active' : ''}\`}
+            onClick={() => setActive(i)}>{t}</button>
+        ))}
+      </div>
+      <div className="seg-content">Showing <strong>{tabs[active]}</strong> data view</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-combobox',
+    title: 'Combobox',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'Searchable dropdown combining text input with filtered option list',
+    concepts: ['combo input', 'filtering', 'keyboard navigation', 'aria-combobox'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 40px; font-family: sans-serif; }
+.cb-wrap { width: 320px; position: relative; }
+.cb-wrap label { display: block; font-size: 14px; color: #94a3b8; margin-bottom: 6px; }
+.cb-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; font-size: 14px; outline: none; box-sizing: border-box; }
+.cb-input:focus { border-color: #4fc3f7; }
+.cb-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #1e293b; border: 1px solid #334155; border-radius: 8px; max-height: 180px; overflow-y: auto; z-index: 10; }
+.cb-item { padding: 8px 12px; cursor: pointer; font-size: 14px; }
+.cb-item:hover, .cb-item.focused { background: #334155; }
+.cb-item.focused { color: #4fc3f7; }
+.cb-empty { padding: 12px; color: #666; font-size: 13px; text-align: center; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const items = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape', 'Honeydew', 'Kiwi', 'Lemon', 'Mango', 'Orange', 'Papaya'];
+
+function App() {
+  const [value, setValue] = useState('');
+  const [open, setOpen] = useState(false);
+  const [focusIdx, setFocusIdx] = useState(-1);
+  const ref = useRef(null);
+  const filtered = items.filter(i => i.toLowerCase().includes(value.toLowerCase()));
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const onKey = (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setFocusIdx(i => Math.min(i + 1, filtered.length - 1)); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); setFocusIdx(i => Math.max(i - 1, 0)); }
+    if (e.key === 'Enter' && focusIdx >= 0) { setValue(filtered[focusIdx]); setOpen(false); }
+    if (e.key === 'Escape') setOpen(false);
+  };
+
+  return (
+    <div className="cb-wrap" ref={ref}>
+      <label>Choose a fruit</label>
+      <input className="cb-input" value={value}
+        onChange={e => { setValue(e.target.value); setOpen(true); setFocusIdx(-1); }}
+        onFocus={() => setOpen(true)} onKeyDown={onKey} placeholder="Type to search..." />
+      {open && (
+        <div className="cb-list">
+          {filtered.length ? filtered.map((item, i) => (
+            <div key={item} className={\`cb-item \${i === focusIdx ? 'focused' : ''}\`}
+              onClick={() => { setValue(item); setOpen(false); }}>{item}</div>
+          )) : <div className="cb-empty">No results</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-mentions-input',
+    title: 'Mentions Input',
+    category: 'forms-input',
+    difficulty: 'advanced',
+    description: 'Text input that triggers a user mention dropdown when typing @',
+    concepts: ['trigger character', 'popup positioning', 'text insertion', 'caret tracking'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 40px; font-family: sans-serif; }
+.mention-wrap { width: 380px; position: relative; }
+.mention-wrap textarea { width: 100%; min-height: 80px; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; resize: vertical; box-sizing: border-box; }
+.mention-wrap textarea:focus { border-color: #4fc3f7; }
+.mention-popup { position: absolute; left: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; width: 200px; z-index: 10; overflow: hidden; }
+.mention-item { padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.mention-item:hover { background: #334155; }
+.mention-avatar { width: 24px; height: 24px; border-radius: 50%; background: #4fc3f7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #1a1a2e; }`,
+      js: `const { useState } = React;
+
+const users = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'];
+
+function App() {
+  const [text, setText] = useState('');
+  const [mentioning, setMentioning] = useState(null);
+
+  const onChange = (e) => {
+    const val = e.target.value;
+    setText(val);
+    const cursor = e.target.selectionStart;
+    const before = val.slice(0, cursor);
+    const match = before.match(/@(\\w*)$/);
+    setMentioning(match ? match[1] : null);
+  };
+
+  const insertMention = (name) => {
+    const match = text.match(/@(\\w*)$/);
+    if (match) {
+      setText(text.slice(0, text.length - match[0].length) + '@' + name + ' ');
+    }
+    setMentioning(null);
+  };
+
+  const filtered = mentioning !== null ? users.filter(u => u.toLowerCase().startsWith(mentioning.toLowerCase())) : [];
+
+  return (
+    <div className="mention-wrap">
+      <label style={{display:'block',fontSize:14,color:'#94a3b8',marginBottom:6}}>Post a comment (type @ to mention)</label>
+      <textarea value={text} onChange={onChange} placeholder="Write something... use @ to mention people" />
+      {filtered.length > 0 && (
+        <div className="mention-popup" style={{bottom: 'calc(100% - 70px)'}}>
+          {filtered.map(u => (
+            <div key={u} className="mention-item" onClick={() => insertMention(u)}>
+              <span className="mention-avatar">{u[0]}</span>{u}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-code-input',
+    title: 'Code Input',
+    category: 'forms-input',
+    difficulty: 'intermediate',
+    description: 'Code-style input with monospace font, line numbers, and tab support',
+    concepts: ['monospace input', 'tab handling', 'line counting', 'textarea customization'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 30px; font-family: sans-serif; }
+.code-wrap { width: 420px; }
+.code-editor { display: flex; border: 1px solid #334155; border-radius: 8px; overflow: hidden; background: #0f172a; }
+.line-nums { padding: 12px 8px; background: #1e293b; color: #555; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; text-align: right; user-select: none; min-width: 32px; }
+.code-editor textarea { flex: 1; padding: 12px; background: transparent; color: #e0e0e0; border: none; outline: none; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; resize: none; min-height: 200px; tab-size: 2; }
+.code-info { display: flex; justify-content: space-between; padding: 6px 8px; font-size: 12px; color: #555; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [code, setCode] = useState('function hello() {\\n  console.log("Hello!");\\n}');
+  const lines = code.split('\\n');
+
+  const onKey = (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const ta = e.target;
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      const newCode = code.slice(0, start) + '  ' + code.slice(end);
+      setCode(newCode);
+      setTimeout(() => { ta.selectionStart = ta.selectionEnd = start + 2; }, 0);
+    }
+  };
+
+  return (
+    <div className="code-wrap">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
+        <span style={{fontSize:14,color:'#94a3b8'}}>Code Editor</span>
+        <span style={{fontSize:12,color:'#4fc3f7'}}>JavaScript</span>
+      </div>
+      <div className="code-editor">
+        <div className="line-nums">{lines.map((_, i) => <div key={i}>{i + 1}</div>)}</div>
+        <textarea value={code} onChange={e => setCode(e.target.value)} onKeyDown={onKey} spellCheck={false} />
+      </div>
+      <div className="code-info"><span>{lines.length} lines</span><span>{code.length} chars</span></div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-signature-pad',
+    title: 'Signature Pad',
+    category: 'forms-input',
+    difficulty: 'advanced',
+    description: 'Canvas-based signature drawing pad with clear and save functionality',
+    concepts: ['canvas API', 'mouse/touch events', 'drawing', 'data URL export'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 30px; font-family: sans-serif; }
+.sig-wrap { width: 400px; }
+.sig-wrap h3 { margin-bottom: 10px; }
+canvas { border: 2px dashed #334155; border-radius: 8px; cursor: crosshair; background: #0f172a; display: block; }
+.sig-btns { display: flex; gap: 8px; margin-top: 10px; }
+.sig-btns button { flex: 1; padding: 8px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+.sig-clear { background: #334155; color: #e0e0e0; }
+.sig-save { background: #4fc3f7; color: #1a1a2e; }
+.sig-hint { font-size: 12px; color: #555; margin-top: 8px; text-align: center; }`,
+      js: `const { useRef, useEffect, useState, useCallback } = React;
+
+function App() {
+  const canvasRef = useRef(null);
+  const drawing = useRef(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const c = canvasRef.current;
+    c.width = 396;
+    c.height = 160;
+    const ctx = c.getContext('2d');
+    ctx.strokeStyle = '#4fc3f7';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+  }, []);
+
+  const getPos = (e) => {
+    const r = canvasRef.current.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
+  };
+
+  const start = useCallback((e) => {
+    e.preventDefault();
+    drawing.current = true;
+    const ctx = canvasRef.current.getContext('2d');
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }, []);
+
+  const move = useCallback((e) => {
+    if (!drawing.current) return;
+    e.preventDefault();
+    const ctx = canvasRef.current.getContext('2d');
+    const p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  }, []);
+
+  const stop = useCallback(() => { drawing.current = false; }, []);
+
+  const clear = () => {
+    const c = canvasRef.current;
+    c.getContext('2d').clearRect(0, 0, c.width, c.height);
+    setSaved(false);
+  };
+
+  const save = () => { setSaved(true); };
+
+  return (
+    <div className="sig-wrap">
+      <h3>Sign Below</h3>
+      <canvas ref={canvasRef}
+        onMouseDown={start} onMouseMove={move} onMouseUp={stop} onMouseLeave={stop}
+        onTouchStart={start} onTouchMove={move} onTouchEnd={stop} />
+      <div className="sig-btns">
+        <button className="sig-clear" onClick={clear}>Clear</button>
+        <button className="sig-save" onClick={save}>Save Signature</button>
+      </div>
+      <div className="sig-hint">{saved ? 'Signature saved!' : 'Draw your signature above'}</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  // --- interactive ---
+  {
+    id: 'react-tooltip',
+    title: 'Tooltip',
+    category: 'interactive',
+    difficulty: 'beginner',
+    description: 'Hoverable tooltip that appears near the trigger element with an arrow',
+    concepts: ['hover events', 'positioning', 'CSS arrow', 'delay handling'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 100px; font-family: sans-serif; }
+.demo { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+.tip-wrap { position: relative; display: inline-block; }
+.tip-trigger { padding: 10px 20px; border-radius: 8px; background: #1e293b; border: 1px solid #334155; color: #e0e0e0; cursor: pointer; font-size: 14px; }
+.tip-trigger:hover { border-color: #4fc3f7; }
+.tooltip { position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); padding: 8px 12px; border-radius: 6px; background: #4fc3f7; color: #1a1a2e; font-size: 12px; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+.tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #4fc3f7; }
+.tip-wrap:hover .tooltip { opacity: 1; }`,
+      js: `const { useState } = React;
+
+function Tooltip({ text, children }) {
+  return (
+    <span className="tip-wrap">
+      {children}
+      <span className="tooltip">{text}</span>
+    </span>
+  );
+}
+
+function App() {
+  return (
+    <div className="demo">
+      <Tooltip text="Save your work"><button className="tip-trigger">Save</button></Tooltip>
+      <Tooltip text="Edit this item"><button className="tip-trigger">Edit</button></Tooltip>
+      <Tooltip text="Delete permanently"><button className="tip-trigger">Delete</button></Tooltip>
+      <Tooltip text="Share with others"><button className="tip-trigger">Share</button></Tooltip>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-popover',
+    title: 'Popover',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Click-triggered popover with rich content and click-outside dismissal',
+    concepts: ['click toggle', 'click outside', 'positioning', 'portal concept'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 80px; font-family: sans-serif; }
+.pop-wrap { position: relative; display: inline-block; }
+.pop-trigger { padding: 10px 20px; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; border: none; cursor: pointer; font-weight: 600; font-size: 14px; }
+.popover { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); width: 260px; padding: 16px; border-radius: 10px; background: #1e293b; border: 1px solid #334155; box-shadow: 0 10px 40px rgba(0,0,0,0.4); z-index: 10; }
+.popover::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border: 8px solid transparent; border-bottom-color: #334155; }
+.popover h4 { margin: 0 0 8px; color: #4fc3f7; }
+.popover p { margin: 0; font-size: 13px; color: #94a3b8; line-height: 1.5; }
+.pop-close { margin-top: 10px; padding: 6px 12px; border: none; border-radius: 6px; background: #334155; color: #e0e0e0; cursor: pointer; font-size: 12px; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+function Popover({ trigger, title, children }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div className="pop-wrap" ref={ref}>
+      <button className="pop-trigger" onClick={() => setOpen(!open)}>{trigger}</button>
+      {open && (
+        <div className="popover">
+          <h4>{title}</h4>
+          {children}
+          <button className="pop-close" onClick={() => setOpen(false)}>Close</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div style={{textAlign:'center'}}>
+      <Popover trigger="Click me" title="Popover Title">
+        <p>This is a rich popover with any content you want. It dismisses when you click outside.</p>
+      </Popover>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-lightbox',
+    title: 'Lightbox',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Full-screen image lightbox overlay with previous/next navigation',
+    concepts: ['overlay', 'keyboard navigation', 'image gallery', 'body scroll lock'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 30px; font-family: sans-serif; }
+.grid { display: grid; grid-template-columns: repeat(3, 100px); gap: 8px; }
+.thumb { width: 100px; height: 100px; border-radius: 8px; cursor: pointer; object-fit: cover; display: flex; align-items: center; justify-content: center; font-size: 28px; background: #1e293b; border: 1px solid #334155; transition: border-color 0.15s; }
+.thumb:hover { border-color: #4fc3f7; }
+.lb-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.lb-close { position: absolute; top: 16px; right: 20px; font-size: 28px; color: #e0e0e0; cursor: pointer; background: none; border: none; }
+.lb-content { font-size: 80px; text-align: center; }
+.lb-label { font-size: 14px; color: #94a3b8; margin-top: 12px; text-align: center; }
+.lb-nav { position: absolute; top: 50%; font-size: 32px; color: #e0e0e0; cursor: pointer; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+.lb-prev { left: 16px; }
+.lb-next { right: 16px; }`,
+      js: `const { useState, useEffect } = React;
+
+const images = [
+  { emoji: '\\u{1F304}', label: 'Sunrise' },
+  { emoji: '\\u{1F30A}', label: 'Wave' },
+  { emoji: '\\u{1F3D4}', label: 'Mountain' },
+  { emoji: '\\u{1F308}', label: 'Rainbow' },
+  { emoji: '\\u{1F33B}', label: 'Sunflower' },
+  { emoji: '\\u{1F30C}', label: 'Galaxy' },
+];
+
+function App() {
+  const [idx, setIdx] = useState(null);
+
+  useEffect(() => {
+    if (idx === null) return;
+    const handler = (e) => {
+      if (e.key === 'Escape') setIdx(null);
+      if (e.key === 'ArrowRight') setIdx(i => (i + 1) % images.length);
+      if (e.key === 'ArrowLeft') setIdx(i => (i - 1 + images.length) % images.length);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [idx]);
+
+  return (
+    <div>
+      <h3 style={{marginBottom:12}}>Gallery</h3>
+      <div className="grid">
+        {images.map((img, i) => (
+          <div key={i} className="thumb" onClick={() => setIdx(i)}>{img.emoji}</div>
+        ))}
+      </div>
+      {idx !== null && (
+        <div className="lb-overlay" onClick={() => setIdx(null)}>
+          <button className="lb-close" onClick={() => setIdx(null)}>&times;</button>
+          <button className="lb-nav lb-prev" onClick={e => { e.stopPropagation(); setIdx((idx - 1 + images.length) % images.length); }}>&lsaquo;</button>
+          <div onClick={e => e.stopPropagation()}>
+            <div className="lb-content">{images[idx].emoji}</div>
+            <div className="lb-label">{images[idx].label} ({idx + 1}/{images.length})</div>
+          </div>
+          <button className="lb-nav lb-next" onClick={e => { e.stopPropagation(); setIdx((idx + 1) % images.length); }}>&rsaquo;</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-sortable-list',
+    title: 'Sortable List',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Drag-and-drop sortable list using HTML5 drag events',
+    concepts: ['drag and drop', 'reorder array', 'drag events', 'visual feedback'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; padding-top: 30px; font-family: sans-serif; }
+.sort-wrap { width: 320px; }
+.sort-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 6px; border-radius: 8px; background: #1e293b; border: 1px solid #334155; cursor: grab; transition: all 0.15s; font-size: 14px; }
+.sort-item:active { cursor: grabbing; }
+.sort-item.dragging { opacity: 0.4; border-color: #4fc3f7; }
+.sort-item.over { border-color: #4fc3f7; background: rgba(79,195,247,0.1); }
+.drag-handle { color: #555; font-size: 18px; }
+.sort-idx { color: #4fc3f7; font-weight: 700; min-width: 20px; }`,
+      js: `const { useState, useRef } = React;
+
+const initial = ['Learn React', 'Build a project', 'Write tests', 'Deploy app', 'Get feedback'];
+
+function App() {
+  const [items, setItems] = useState(initial);
+  const dragIdx = useRef(null);
+  const [overIdx, setOverIdx] = useState(null);
+
+  const onDragStart = (i) => { dragIdx.current = i; };
+  const onDragOver = (e, i) => { e.preventDefault(); setOverIdx(i); };
+  const onDrop = (i) => {
+    const from = dragIdx.current;
+    if (from === null || from === i) { setOverIdx(null); return; }
+    const next = [...items];
+    const [moved] = next.splice(from, 1);
+    next.splice(i, 0, moved);
+    setItems(next);
+    dragIdx.current = null;
+    setOverIdx(null);
+  };
+
+  return (
+    <div className="sort-wrap">
+      <h3 style={{marginBottom:12}}>Priority List</h3>
+      {items.map((item, i) => (
+        <div key={item}
+          className={\`sort-item \${dragIdx.current === i ? 'dragging' : ''} \${overIdx === i ? 'over' : ''}\`}
+          draggable
+          onDragStart={() => onDragStart(i)}
+          onDragOver={(e) => onDragOver(e, i)}
+          onDrop={() => onDrop(i)}
+          onDragEnd={() => { dragIdx.current = null; setOverIdx(null); }}>
+          <span className="drag-handle">&#x2630;</span>
+          <span className="sort-idx">{i + 1}</span>
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-resizable-panels',
+    title: 'Resizable Panels',
+    category: 'interactive',
+    difficulty: 'advanced',
+    description: 'Two-pane layout with draggable divider to resize panels',
+    concepts: ['mouse tracking', 'resize handling', 'flex layout', 'drag divider'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; padding: 20px; }
+.panels { display: flex; height: 300px; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
+.panel { padding: 16px; overflow: auto; }
+.panel-left { background: #1e293b; }
+.panel-right { background: #16213e; }
+.divider { width: 6px; background: #334155; cursor: col-resize; flex-shrink: 0; transition: background 0.15s; }
+.divider:hover, .divider.active { background: #4fc3f7; }
+.panel h4 { color: #4fc3f7; margin-bottom: 8px; }
+.panel p { font-size: 13px; color: #94a3b8; line-height: 1.6; }`,
+      js: `const { useState, useRef, useCallback } = React;
+
+function App() {
+  const [leftWidth, setLeftWidth] = useState(50);
+  const dragging = useRef(false);
+  const containerRef = useRef(null);
+
+  const onMouseDown = useCallback(() => { dragging.current = true; }, []);
+
+  const onMouseMove = useCallback((e) => {
+    if (!dragging.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const pct = ((e.clientX - rect.left) / rect.width) * 100;
+    setLeftWidth(Math.max(20, Math.min(80, pct)));
+  }, []);
+
+  const onMouseUp = useCallback(() => { dragging.current = false; }, []);
+
+  return (
+    <div>
+      <h3 style={{marginBottom:12}}>Resizable Panels</h3>
+      <div className="panels" ref={containerRef}
+        onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
+        <div className="panel panel-left" style={{width: leftWidth + '%'}}>
+          <h4>Left Panel</h4>
+          <p>Drag the divider to resize. This panel can be resized between 20% and 80% of the total width.</p>
+        </div>
+        <div className={\`divider \${dragging.current ? 'active' : ''}\`} onMouseDown={onMouseDown} />
+        <div className="panel panel-right" style={{flex:1}}>
+          <h4>Right Panel</h4>
+          <p>This panel takes the remaining space. The divider snaps smoothly as you drag it.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-split-view',
+    title: 'Split View',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Side-by-side editor and preview panes like a markdown editor',
+    concepts: ['split layout', 'real-time preview', 'synchronized scroll', 'pane toggle'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; padding: 16px; }
+.split { display: flex; height: 280px; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
+.split-pane { flex: 1; display: flex; flex-direction: column; }
+.pane-header { padding: 8px 12px; background: #334155; font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+.split-pane textarea { flex: 1; padding: 12px; background: #0f172a; color: #e0e0e0; border: none; outline: none; font-family: monospace; font-size: 13px; resize: none; }
+.preview { flex: 1; padding: 12px; background: #1e293b; overflow: auto; font-size: 14px; line-height: 1.6; }
+.preview h1, .preview h2, .preview h3 { color: #4fc3f7; margin: 8px 0; }
+.preview strong { color: #4fc3f7; }
+.split-divider { width: 2px; background: #334155; }`,
+      js: `const { useState } = React;
+
+function simpleMarkdown(text) {
+  return text
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')
+    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')
+    .replace(/\`(.+?)\`/g, '<code style="background:#334155;padding:2px 4px;border-radius:3px">$1</code>')
+    .replace(/\\n/g, '<br/>');
+}
+
+function App() {
+  const [text, setText] = useState('# Hello World\\n\\nThis is a **split view** editor.\\n\\n## Features\\n- Real-time *preview*\\n- Simple \`markdown\` support\\n- Side by side layout');
+
+  return (
+    <div>
+      <h3 style={{marginBottom:10}}>Split View Editor</h3>
+      <div className="split">
+        <div className="split-pane">
+          <div className="pane-header">Editor</div>
+          <textarea value={text} onChange={e => setText(e.target.value)} />
+        </div>
+        <div className="split-divider" />
+        <div className="split-pane">
+          <div className="pane-header">Preview</div>
+          <div className="preview" dangerouslySetInnerHTML={{__html: simpleMarkdown(text)}} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-kanban-board',
+    title: 'Kanban Board',
+    category: 'interactive',
+    difficulty: 'advanced',
+    description: 'Multi-column kanban board with drag-and-drop cards between columns',
+    concepts: ['drag and drop', 'multi-column layout', 'state management', 'card movement'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; padding: 16px; }
+.kanban { display: flex; gap: 12px; overflow-x: auto; }
+.column { flex: 0 0 200px; background: #16213e; border-radius: 10px; padding: 12px; }
+.col-header { font-size: 13px; font-weight: 700; color: #4fc3f7; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; }
+.col-count { background: #334155; border-radius: 10px; padding: 1px 8px; font-size: 11px; color: #94a3b8; }
+.card { padding: 10px 12px; margin-bottom: 8px; border-radius: 8px; background: #1e293b; border: 1px solid #334155; cursor: grab; font-size: 13px; transition: border-color 0.15s; }
+.card:active { cursor: grabbing; }
+.card.over { border-color: #4fc3f7; background: rgba(79,195,247,0.08); }
+.col-drop { min-height: 40px; border: 2px dashed transparent; border-radius: 8px; transition: border-color 0.15s; }
+.col-drop.active { border-color: #334155; }`,
+      js: `const { useState, useRef } = React;
+
+const init = {
+  todo: ['Design UI', 'Setup DB', 'Write docs'],
+  progress: ['Build API', 'Auth flow'],
+  done: ['Project setup'],
+};
+
+function App() {
+  const [cols, setCols] = useState(init);
+  const drag = useRef(null);
+  const [overCol, setOverCol] = useState(null);
+
+  const onDragStart = (col, idx) => { drag.current = { col, idx }; };
+  const onDragOver = (e, col) => { e.preventDefault(); setOverCol(col); };
+  const onDrop = (toCol) => {
+    if (!drag.current) return;
+    const { col: fromCol, idx } = drag.current;
+    const item = cols[fromCol][idx];
+    const next = { ...cols };
+    next[fromCol] = next[fromCol].filter((_, i) => i !== idx);
+    next[toCol] = [...next[toCol], item];
+    setCols(next);
+    drag.current = null;
+    setOverCol(null);
+  };
+
+  const labels = { todo: 'To Do', progress: 'In Progress', done: 'Done' };
+
+  return (
+    <div>
+      <h3 style={{marginBottom:12}}>Kanban Board</h3>
+      <div className="kanban">
+        {Object.keys(cols).map(col => (
+          <div key={col} className="column"
+            onDragOver={e => onDragOver(e, col)} onDrop={() => onDrop(col)}>
+            <div className="col-header">{labels[col]} <span className="col-count">{cols[col].length}</span></div>
+            {cols[col].map((item, i) => (
+              <div key={item + i} className={\`card \${overCol === col ? 'over' : ''}\`}
+                draggable onDragStart={() => onDragStart(col, i)}>{item}</div>
+            ))}
+            <div className={\`col-drop \${overCol === col ? 'active' : ''}\`} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-timeline',
+    title: 'Timeline',
+    category: 'interactive',
+    difficulty: 'beginner',
+    description: 'Vertical timeline with alternating cards and connecting line',
+    concepts: ['timeline layout', 'alternating styles', 'CSS pseudo-elements', 'list rendering'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.timeline { position: relative; max-width: 380px; padding-left: 30px; }
+.timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: #334155; }
+.tl-item { position: relative; margin-bottom: 24px; }
+.tl-dot { position: absolute; left: -25px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: #4fc3f7; border: 2px solid #1a1a2e; }
+.tl-date { font-size: 12px; color: #4fc3f7; font-weight: 600; margin-bottom: 4px; }
+.tl-card { padding: 12px 14px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; }
+.tl-card h4 { margin: 0 0 4px; font-size: 14px; }
+.tl-card p { margin: 0; font-size: 13px; color: #94a3b8; }`,
+      js: `const { useState } = React;
+
+const events = [
+  { date: 'Jan 2024', title: 'Project Started', desc: 'Initial commit and project setup' },
+  { date: 'Feb 2024', title: 'MVP Launched', desc: 'First version deployed to production' },
+  { date: 'Apr 2024', title: 'Team Expanded', desc: 'Hired 3 new developers' },
+  { date: 'Jul 2024', title: 'v2.0 Released', desc: 'Major redesign with new features' },
+  { date: 'Oct 2024', title: '10K Users', desc: 'Reached ten thousand active users' },
+];
+
+function App() {
+  return (
+    <div>
+      <h3 style={{textAlign:'center',marginBottom:16}}>Project Timeline</h3>
+      <div className="timeline">
+        {events.map((e, i) => (
+          <div className="tl-item" key={i}>
+            <div className="tl-dot" />
+            <div className="tl-date">{e.date}</div>
+            <div className="tl-card">
+              <h4>{e.title}</h4>
+              <p>{e.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-tree-view',
+    title: 'Tree View',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Expandable/collapsible tree structure for hierarchical data',
+    concepts: ['recursive rendering', 'tree state', 'expand/collapse', 'nested data'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.tree { width: 320px; }
+.tree-node { margin-left: 16px; }
+.tree-label { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background 0.1s; }
+.tree-label:hover { background: #1e293b; }
+.tree-icon { font-size: 12px; width: 16px; text-align: center; color: #4fc3f7; }
+.tree-name { color: #e0e0e0; }
+.tree-leaf .tree-icon { color: #555; }`,
+      js: `const { useState } = React;
+
+const data = [
+  { name: 'src', children: [
+    { name: 'components', children: [
+      { name: 'Button.tsx' }, { name: 'Modal.tsx' }, { name: 'Input.tsx' },
+    ]},
+    { name: 'hooks', children: [{ name: 'useAuth.ts' }, { name: 'useFetch.ts' }] },
+    { name: 'App.tsx' }, { name: 'index.ts' },
+  ]},
+  { name: 'public', children: [{ name: 'index.html' }, { name: 'favicon.ico' }] },
+  { name: 'package.json' }, { name: 'tsconfig.json' },
+];
+
+function TreeNode({ node, depth = 0 }) {
+  const [open, setOpen] = useState(depth < 1);
+  const hasChildren = node.children && node.children.length > 0;
+
+  return (
+    <div>
+      <div className={\`tree-label \${hasChildren ? '' : 'tree-leaf'}\`} onClick={() => hasChildren && setOpen(!open)} style={{paddingLeft: depth * 12}}>
+        <span className="tree-icon">{hasChildren ? (open ? '\\u25BC' : '\\u25B6') : '\\u25CB'}</span>
+        <span className="tree-name">{hasChildren ? '\\u{1F4C1}' : '\\u{1F4C4}'} {node.name}</span>
+      </div>
+      {open && hasChildren && (
+        <div className="tree-node">
+          {node.children.map((child, i) => <TreeNode key={i} node={child} depth={depth + 1} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="tree">
+      <h3 style={{marginBottom:10}}>File Explorer</h3>
+      {data.map((node, i) => <TreeNode key={i} node={node} />)}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-collapsible-panel',
+    title: 'Collapsible Panel',
+    category: 'interactive',
+    difficulty: 'beginner',
+    description: 'Animated expand/collapse panels with smooth height transitions',
+    concepts: ['accordion', 'height animation', 'overflow hidden', 'toggle state'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.panels { width: 380px; }
+.panel { margin-bottom: 8px; border-radius: 8px; border: 1px solid #334155; overflow: hidden; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #1e293b; cursor: pointer; font-size: 14px; font-weight: 600; }
+.panel-header:hover { background: #253352; }
+.panel-arrow { transition: transform 0.25s; color: #4fc3f7; }
+.panel-arrow.open { transform: rotate(180deg); }
+.panel-body { overflow: hidden; transition: max-height 0.3s ease; background: #16213e; }
+.panel-content { padding: 14px; font-size: 13px; color: #94a3b8; line-height: 1.6; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const panels = [
+  { title: 'Getting Started', content: 'Install dependencies with npm install, then run npm start to launch the development server. The app will be available at localhost:3000.' },
+  { title: 'Configuration', content: 'Edit the config.ts file to change settings. Environment variables can be set in the .env file. Remember to restart the server after changes.' },
+  { title: 'Deployment', content: 'Run npm run build to create a production build. Deploy the dist folder to your hosting provider. CI/CD pipelines can be configured in the .github folder.' },
+];
+
+function Panel({ title, content }) {
+  const [open, setOpen] = useState(false);
+  const bodyRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (bodyRef.current) setHeight(bodyRef.current.scrollHeight);
+  }, [content]);
+
+  return (
+    <div className="panel">
+      <div className="panel-header" onClick={() => setOpen(!open)}>
+        {title}
+        <span className={\`panel-arrow \${open ? 'open' : ''}\`}>\\u25BC</span>
+      </div>
+      <div className="panel-body" ref={bodyRef} style={{maxHeight: open ? height : 0}}>
+        <div className="panel-content">{content}</div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="panels">
+      <h3 style={{marginBottom:12}}>Documentation</h3>
+      {panels.map((p, i) => <Panel key={i} {...p} />)}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-drawer',
+    title: 'Drawer',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Slide-in drawer panel from the side with overlay backdrop',
+    concepts: ['slide animation', 'overlay', 'focus management', 'transform translate'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 60px; margin: 0; }
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 300px; background: #16213e; z-index: 51; transform: translateX(100%); transition: transform 0.3s ease; padding: 20px; }
+.drawer.open { transform: translateX(0); }
+.drawer-close { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; }
+.drawer h3 { color: #4fc3f7; margin-bottom: 16px; }
+.drawer-item { padding: 10px 12px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: background 0.1s; }
+.drawer-item:hover { background: #1e293b; }
+.open-btn { padding: 12px 24px; border: none; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; font-size: 14px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const items = ['Dashboard', 'Profile', 'Settings', 'Notifications', 'Help', 'Logout'];
+
+  return (
+    <div>
+      <button className="open-btn" onClick={() => setOpen(true)}>Open Drawer</button>
+      <div className={\`drawer-overlay \${open ? 'open' : ''}\`} onClick={() => setOpen(false)} />
+      <div className={\`drawer \${open ? 'open' : ''}\`}>
+        <button className="drawer-close" onClick={() => setOpen(false)}>&times;</button>
+        <h3>Navigation</h3>
+        {items.map(item => (
+          <div key={item} className="drawer-item" onClick={() => setOpen(false)}>{item}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-bottom-sheet',
+    title: 'Bottom Sheet',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Mobile-style bottom sheet that slides up from the bottom with drag to dismiss',
+    concepts: ['bottom sheet', 'touch events', 'slide animation', 'drag gesture'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 60px; margin: 0; }
+.bs-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+.bs-overlay.open { opacity: 1; pointer-events: all; }
+.bs { position: fixed; left: 0; right: 0; bottom: 0; background: #16213e; z-index: 51; border-radius: 16px 16px 0 0; transform: translateY(100%); transition: transform 0.3s ease; max-height: 60vh; overflow: auto; }
+.bs.open { transform: translateY(0); }
+.bs-handle { display: flex; justify-content: center; padding: 10px; cursor: grab; }
+.bs-handle-bar { width: 40px; height: 4px; border-radius: 2px; background: #334155; }
+.bs-content { padding: 0 20px 20px; }
+.bs-content h3 { color: #4fc3f7; margin-bottom: 12px; }
+.bs-item { padding: 12px 0; border-bottom: 1px solid #1e293b; font-size: 14px; }
+.open-btn { padding: 12px 24px; border: none; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; font-size: 14px; }`,
+      js: `const { useState, useRef } = React;
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const startY = useRef(0);
+
+  const onTouchStart = (e) => { startY.current = e.touches[0].clientY; };
+  const onTouchEnd = (e) => {
+    const diff = e.changedTouches[0].clientY - startY.current;
+    if (diff > 80) setOpen(false);
+  };
+
+  const actions = ['Share', 'Copy Link', 'Edit', 'Move to Folder', 'Delete', 'Report'];
+
+  return (
+    <div>
+      <button className="open-btn" onClick={() => setOpen(true)}>Open Bottom Sheet</button>
+      <div className={\`bs-overlay \${open ? 'open' : ''}\`} onClick={() => setOpen(false)} />
+      <div className={\`bs \${open ? 'open' : ''}\`} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div className="bs-handle"><div className="bs-handle-bar" /></div>
+        <div className="bs-content">
+          <h3>Actions</h3>
+          {actions.map(a => <div key={a} className="bs-item" onClick={() => setOpen(false)}>{a}</div>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-command-palette',
+    title: 'Command Palette',
+    category: 'interactive',
+    difficulty: 'advanced',
+    description: 'VS Code-style command palette with fuzzy search and keyboard navigation',
+    concepts: ['keyboard shortcut', 'fuzzy search', 'overlay UI', 'keyboard navigation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 60px; margin: 0; }
+.cp-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: flex; justify-content: center; padding-top: 80px; }
+.cp { width: 480px; max-height: 360px; background: #16213e; border: 1px solid #334155; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.cp-input { width: 100%; padding: 14px 16px; background: transparent; border: none; border-bottom: 1px solid #334155; color: #e0e0e0; font-size: 15px; outline: none; box-sizing: border-box; }
+.cp-list { max-height: 280px; overflow-y: auto; }
+.cp-item { padding: 10px 16px; cursor: pointer; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+.cp-item:hover, .cp-item.active { background: #1e293b; }
+.cp-item.active { color: #4fc3f7; }
+.cp-shortcut { font-size: 11px; color: #555; font-family: monospace; }
+.hint { font-size: 13px; color: #555; text-align: center; }`,
+      js: `const { useState, useEffect, useRef } = React;
+
+const commands = [
+  { name: 'Open File', shortcut: 'Ctrl+O' },
+  { name: 'Save File', shortcut: 'Ctrl+S' },
+  { name: 'New Terminal', shortcut: 'Ctrl+\`' },
+  { name: 'Toggle Sidebar', shortcut: 'Ctrl+B' },
+  { name: 'Find in Files', shortcut: 'Ctrl+Shift+F' },
+  { name: 'Go to Line', shortcut: 'Ctrl+G' },
+  { name: 'Format Document', shortcut: 'Shift+Alt+F' },
+  { name: 'Toggle Word Wrap', shortcut: 'Alt+Z' },
+  { name: 'Split Editor', shortcut: 'Ctrl+\\\\' },
+  { name: 'Close Tab', shortcut: 'Ctrl+W' },
+];
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [active, setActive] = useState(0);
+  const inputRef = useRef(null);
+
+  const filtered = commands.filter(c => c.name.toLowerCase().includes(query.toLowerCase()));
+
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setOpen(o => !o); setQuery(''); setActive(0); }
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  useEffect(() => { if (open && inputRef.current) inputRef.current.focus(); }, [open]);
+
+  const onKey = (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive(i => Math.min(i + 1, filtered.length - 1)); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); setActive(i => Math.max(i - 1, 0)); }
+    if (e.key === 'Enter') { setOpen(false); }
+  };
+
+  return (
+    <div>
+      <div className="hint">Press <strong>Ctrl+K</strong> to open command palette</div>
+      {open && (
+        <div className="cp-overlay" onClick={() => setOpen(false)}>
+          <div className="cp" onClick={e => e.stopPropagation()}>
+            <input ref={inputRef} className="cp-input" value={query} onChange={e => { setQuery(e.target.value); setActive(0); }}
+              onKeyDown={onKey} placeholder="Type a command..." />
+            <div className="cp-list">
+              {filtered.map((c, i) => (
+                <div key={c.name} className={\`cp-item \${i === active ? 'active' : ''}\`}
+                  onClick={() => setOpen(false)} onMouseEnter={() => setActive(i)}>
+                  <span>{c.name}</span>
+                  <span className="cp-shortcut">{c.shortcut}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-spotlight-search',
+    title: 'Spotlight Search',
+    category: 'interactive',
+    difficulty: 'intermediate',
+    description: 'Mac Spotlight-style search overlay with categorized results',
+    concepts: ['search UI', 'categorized results', 'keyboard shortcut', 'filtering'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 60px; margin: 0; }
+.spot-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: flex; justify-content: center; padding-top: 100px; }
+.spot { width: 440px; background: #16213e; border: 1px solid #334155; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.spot input { width: 100%; padding: 14px 16px; background: transparent; border: none; border-bottom: 1px solid #334155; color: #e0e0e0; font-size: 16px; outline: none; box-sizing: border-box; }
+.spot-cat { padding: 6px 16px; font-size: 11px; color: #4fc3f7; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; background: #0f172a; }
+.spot-item { padding: 10px 16px; cursor: pointer; font-size: 14px; }
+.spot-item:hover { background: #1e293b; }
+.hint2 { font-size: 13px; color: #555; text-align: center; }`,
+      js: `const { useState, useEffect, useRef } = React;
+
+const data = {
+  Files: ['index.ts', 'App.tsx', 'styles.css', 'config.json'],
+  Commands: ['Build Project', 'Run Tests', 'Deploy', 'Lint Code'],
+  People: ['Alice Smith', 'Bob Jones', 'Charlie Lee'],
+};
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState('');
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === '/') { e.preventDefault(); setOpen(o => !o); setQ(''); }
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  useEffect(() => { if (open && ref.current) ref.current.focus(); }, [open]);
+
+  const results = Object.entries(data).reduce((acc, [cat, items]) => {
+    const f = items.filter(i => i.toLowerCase().includes(q.toLowerCase()));
+    if (f.length) acc.push([cat, f]);
+    return acc;
+  }, []);
+
+  return (
+    <div>
+      <div className="hint2">Press <strong>Ctrl+/</strong> to search</div>
+      {open && (
+        <div className="spot-overlay" onClick={() => setOpen(false)}>
+          <div className="spot" onClick={e => e.stopPropagation()}>
+            <input ref={ref} value={q} onChange={e => setQ(e.target.value)} placeholder="Search everything..." />
+            {results.map(([cat, items]) => (
+              <div key={cat}>
+                <div className="spot-cat">{cat}</div>
+                {items.map(item => <div key={item} className="spot-item" onClick={() => setOpen(false)}>{item}</div>)}
+              </div>
+            ))}
+            {q && !results.length && <div style={{padding:16,textAlign:'center',color:'#555'}}>No results</div>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-floating-action-btn',
+    title: 'Floating Action Button',
+    category: 'interactive',
+    difficulty: 'beginner',
+    description: 'Material-style FAB with expandable speed dial actions',
+    concepts: ['floating button', 'speed dial', 'CSS transitions', 'toggle menu'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; min-height: 400px; position: relative; }
+.fab-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column-reverse; align-items: center; gap: 10px; }
+.fab { width: 56px; height: 56px; border-radius: 50%; background: #4fc3f7; border: none; color: #1a1a2e; font-size: 28px; cursor: pointer; box-shadow: 0 4px 16px rgba(79,195,247,0.3); transition: transform 0.25s; display: flex; align-items: center; justify-content: center; }
+.fab.open { transform: rotate(45deg); }
+.fab-action { width: 44px; height: 44px; border-radius: 50%; background: #1e293b; border: 1px solid #334155; color: #e0e0e0; font-size: 18px; cursor: pointer; opacity: 0; transform: scale(0.5) translateY(20px); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.fab-action.show { opacity: 1; transform: scale(1) translateY(0); }
+.fab-action:hover { background: #334155; }
+.fab-label { position: absolute; right: 56px; background: #334155; padding: 4px 10px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; }
+.fab-action:hover .fab-label { opacity: 1; }
+.page-content { padding: 40px; text-align: center; color: #555; }`,
+      js: `const { useState } = React;
+
+const actions = [
+  { icon: '\\u{1F4DD}', label: 'New Note' },
+  { icon: '\\u{1F4F7}', label: 'Upload Photo' },
+  { icon: '\\u{1F517}', label: 'Add Link' },
+];
+
+function App() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <div className="page-content"><p>Page content goes here. The FAB is in the bottom-right corner.</p></div>
+      <div className="fab-container">
+        <button className={\`fab \${open ? 'open' : ''}\`} onClick={() => setOpen(!open)}>+</button>
+        {actions.map((a, i) => (
+          <button key={i} className={\`fab-action \${open ? 'show' : ''}\`}
+            style={{transitionDelay: open ? (i * 0.05) + 's' : '0s'}}
+            onClick={() => setOpen(false)}>
+            {a.icon}
+            <span className="fab-label">{a.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-skeleton-loader',
+    title: 'Skeleton Loader',
+    category: 'interactive',
+    difficulty: 'beginner',
+    description: 'Animated placeholder skeleton screens shown while content loads',
+    concepts: ['loading state', 'CSS animation', 'shimmer effect', 'placeholder UI'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.skel-wrap { width: 360px; }
+@keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+.skel { background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%); background-size: 800px 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+.skel-avatar { width: 48px; height: 48px; border-radius: 50%; }
+.skel-line { height: 14px; margin-bottom: 8px; }
+.skel-line.short { width: 60%; }
+.skel-card { padding: 16px; background: #16213e; border-radius: 10px; margin-bottom: 12px; }
+.skel-row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.loaded-card { padding: 16px; background: #16213e; border-radius: 10px; margin-bottom: 12px; border: 1px solid #334155; }
+.loaded-card h4 { margin: 0 0 4px; color: #4fc3f7; }
+.loaded-card p { margin: 0; font-size: 13px; color: #94a3b8; }
+button { margin-bottom: 16px; padding: 8px 16px; border: none; border-radius: 6px; background: #4fc3f7; color: #1a1a2e; font-weight: 600; cursor: pointer; }`,
+      js: `const { useState, useEffect } = React;
+
+function SkeletonCard() {
+  return (
+    <div className="skel-card">
+      <div className="skel-row"><div className="skel skel-avatar" /><div style={{flex:1}}><div className="skel skel-line" style={{width:'50%'}} /><div className="skel skel-line short" style={{width:'30%'}} /></div></div>
+      <div className="skel skel-line" /><div className="skel skel-line" /><div className="skel skel-line short" />
+    </div>
+  );
+}
+
+function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { const t = setTimeout(() => setLoading(false), 2500); return () => clearTimeout(t); }, []);
+
+  return (
+    <div className="skel-wrap">
+      <button onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 2500); }}>Reload</button>
+      {loading ? (
+        <>{[1,2,3].map(i => <SkeletonCard key={i} />)}</>
+      ) : (
+        [{name:'Alice',text:'Working on the new dashboard feature.'},{name:'Bob',text:'Just deployed v2.0 to production!'},{name:'Charlie',text:'Fixed the authentication bug.'}].map((p,i) => (
+          <div className="loaded-card" key={i}><h4>{p.name}</h4><p>{p.text}</p></div>
+        ))
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-progress-bar',
+    title: 'Progress Bar',
+    category: 'interactive',
+    difficulty: 'beginner',
+    description: 'Animated progress bar with percentage label and multiple variants',
+    concepts: ['progress indicator', 'CSS transitions', 'percentage calculation', 'variants'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.prog-wrap { width: 380px; }
+.prog-group { margin-bottom: 20px; }
+.prog-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; color: #94a3b8; }
+.prog-track { height: 10px; background: #1e293b; border-radius: 5px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+.prog-fill.blue { background: #4fc3f7; }
+.prog-fill.green { background: #4ade80; }
+.prog-fill.orange { background: #fb923c; }
+.prog-fill.red { background: #f87171; }
+.prog-fill.striped { background: repeating-linear-gradient(-45deg, #4fc3f7, #4fc3f7 10px, #81d4fa 10px, #81d4fa 20px); }
+button { margin-top: 16px; padding: 8px 16px; border: none; border-radius: 6px; background: #4fc3f7; color: #1a1a2e; font-weight: 600; cursor: pointer; }`,
+      js: `const { useState, useEffect } = React;
+
+function Progress({ label, value, color }) {
+  return (
+    <div className="prog-group">
+      <div className="prog-label"><span>{label}</span><span>{value}%</span></div>
+      <div className="prog-track"><div className={\`prog-fill \${color}\`} style={{width: value + '%'}} /></div>
+    </div>
+  );
+}
+
+function App() {
+  const [vals, setVals] = useState([72, 45, 88, 30, 60]);
+
+  const randomize = () => setVals(vals.map(() => Math.floor(Math.random() * 100)));
+
+  return (
+    <div className="prog-wrap">
+      <h3 style={{marginBottom:16}}>Progress Bars</h3>
+      <Progress label="Upload" value={vals[0]} color="blue" />
+      <Progress label="Storage" value={vals[1]} color="green" />
+      <Progress label="CPU Usage" value={vals[2]} color="orange" />
+      <Progress label="Memory" value={vals[3]} color="red" />
+      <Progress label="Bandwidth" value={vals[4]} color="striped" />
+      <button onClick={randomize}>Randomize</button>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  // --- data-display ---
+  {
+    id: 'react-badge',
+    title: 'Badge',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Notification badges and status indicators in various styles',
+    concepts: ['badge variants', 'status indicators', 'icon badges', 'dot indicators'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 40px; }
+.badge-wrap { width: 360px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-blue { background: rgba(79,195,247,0.15); color: #4fc3f7; }
+.badge-green { background: rgba(74,222,128,0.15); color: #4ade80; }
+.badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
+.badge-yellow { background: rgba(250,204,21,0.15); color: #facc15; }
+.badge-outline { background: transparent; border: 1px solid #334155; color: #94a3b8; }
+.icon-badge { position: relative; display: inline-flex; padding: 10px; background: #1e293b; border-radius: 8px; font-size: 20px; }
+.icon-badge .dot { position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; border-radius: 50%; background: #f87171; border: 2px solid #1a1a2e; }
+.icon-badge .count { position: absolute; top: -4px; right: -8px; min-width: 18px; height: 18px; border-radius: 9px; background: #f87171; color: white; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }`,
+      js: `const { useState } = React;
+
+function App() {
+  return (
+    <div className="badge-wrap">
+      <h3 style={{marginBottom:12}}>Badges</h3>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Status</h4>
+      <div className="row">
+        <span className="badge badge-blue">Active</span>
+        <span className="badge badge-green">Completed</span>
+        <span className="badge badge-red">Failed</span>
+        <span className="badge badge-yellow">Pending</span>
+        <span className="badge badge-outline">Draft</span>
+      </div>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>With Dot</h4>
+      <div className="row">
+        <span className="badge badge-green"><span style={{width:6,height:6,borderRadius:'50%',background:'#4ade80',display:'inline-block'}} /> Online</span>
+        <span className="badge badge-red"><span style={{width:6,height:6,borderRadius:'50%',background:'#f87171',display:'inline-block'}} /> Offline</span>
+      </div>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Icon Badges</h4>
+      <div className="row">
+        <span className="icon-badge">&#x1F514;<span className="dot" /></span>
+        <span className="icon-badge">&#x2709;&#xFE0F;<span className="count">3</span></span>
+        <span className="icon-badge">&#x1F4AC;<span className="count">12</span></span>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-avatar',
+    title: 'Avatar',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'User avatar component with image, initials, and status indicator variants',
+    concepts: ['image fallback', 'initials generation', 'status dot', 'size variants'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 40px; }
+.av-wrap { width: 360px; }
+.av-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+.avatar { position: relative; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; background: #4fc3f7; color: #1a1a2e; flex-shrink: 0; }
+.avatar.sm { width: 32px; height: 32px; font-size: 12px; }
+.avatar.md { width: 44px; height: 44px; font-size: 16px; }
+.avatar.lg { width: 56px; height: 56px; font-size: 20px; }
+.avatar.xl { width: 72px; height: 72px; font-size: 28px; }
+.av-status { position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #1a1a2e; }
+.av-online { background: #4ade80; }
+.av-offline { background: #6b7280; }
+.av-busy { background: #f87171; }
+.colors-0 { background: #4fc3f7; } .colors-1 { background: #a78bfa; } .colors-2 { background: #fb923c; } .colors-3 { background: #f87171; } .colors-4 { background: #4ade80; }`,
+      js: `const { useState } = React;
+
+function Avatar({ name, size = 'md', status }) {
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const colorIdx = name.length % 5;
+  return (
+    <div className={\`avatar \${size} colors-\${colorIdx}\`}>
+      {initials}
+      {status && <span className={\`av-status av-\${status}\`} />}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="av-wrap">
+      <h3 style={{marginBottom:12}}>Avatars</h3>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Sizes</h4>
+      <div className="av-row">
+        <Avatar name="Alice B" size="sm" />
+        <Avatar name="Bob C" size="md" />
+        <Avatar name="Charlie D" size="lg" />
+        <Avatar name="Diana E" size="xl" />
+      </div>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>With Status</h4>
+      <div className="av-row">
+        <Avatar name="Eve F" size="lg" status="online" />
+        <Avatar name="Frank G" size="lg" status="offline" />
+        <Avatar name="Grace H" size="lg" status="busy" />
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-stat-card',
+    title: 'Stat Card',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Dashboard stat cards showing key metrics with trend indicators',
+    concepts: ['card layout', 'number formatting', 'trend arrows', 'grid display'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 380px; }
+.stat { padding: 16px; background: #16213e; border-radius: 10px; border: 1px solid #334155; }
+.stat-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.stat-value { font-size: 28px; font-weight: 800; color: #e0e0e0; margin-bottom: 6px; }
+.stat-trend { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; }
+.trend-up { color: #4ade80; }
+.trend-down { color: #f87171; }`,
+      js: `const { useState } = React;
+
+const stats = [
+  { label: 'Total Revenue', value: '$48,200', trend: '+12.5%', up: true },
+  { label: 'Active Users', value: '2,847', trend: '+8.2%', up: true },
+  { label: 'Bounce Rate', value: '34.1%', trend: '-2.4%', up: false },
+  { label: 'Avg Session', value: '4m 23s', trend: '+0.8%', up: true },
+];
+
+function App() {
+  return (
+    <div>
+      <h3 style={{marginBottom:12,textAlign:'center'}}>Dashboard</h3>
+      <div className="stats">
+        {stats.map((s, i) => (
+          <div className="stat" key={i}>
+            <div className="stat-label">{s.label}</div>
+            <div className="stat-value">{s.value}</div>
+            <div className={\`stat-trend \${s.up ? 'trend-up' : 'trend-down'}\`}>
+              {s.up ? '\\u25B2' : '\\u25BC'} {s.trend}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-timeline-feed',
+    title: 'Timeline Feed',
+    category: 'data-display',
+    difficulty: 'intermediate',
+    description: 'Social-style activity feed with timestamps and action types',
+    concepts: ['feed layout', 'relative time', 'action icons', 'list rendering'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.feed { width: 380px; }
+.feed-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #1e293b; }
+.feed-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.feed-icon.commit { background: rgba(79,195,247,0.15); }
+.feed-icon.merge { background: rgba(74,222,128,0.15); }
+.feed-icon.issue { background: rgba(248,113,113,0.15); }
+.feed-icon.comment { background: rgba(250,204,21,0.15); }
+.feed-body { flex: 1; }
+.feed-title { font-size: 14px; margin-bottom: 2px; }
+.feed-title strong { color: #4fc3f7; }
+.feed-time { font-size: 12px; color: #555; }
+.feed-desc { font-size: 13px; color: #94a3b8; margin-top: 4px; }`,
+      js: `const { useState } = React;
+
+const items = [
+  { type: 'commit', icon: '\\u{1F4E6}', user: 'Alice', action: 'pushed 3 commits to', target: 'main', time: '2m ago', desc: 'feat: add user dashboard' },
+  { type: 'merge', icon: '\\u{1F500}', user: 'Bob', action: 'merged PR #42 into', target: 'main', time: '15m ago', desc: 'fix: resolve auth race condition' },
+  { type: 'issue', icon: '\\u{1F41B}', user: 'Charlie', action: 'opened issue', target: '#128', time: '1h ago', desc: 'Bug: sidebar collapse broken on mobile' },
+  { type: 'comment', icon: '\\u{1F4AC}', user: 'Diana', action: 'commented on', target: '#125', time: '2h ago', desc: 'This looks good, approved!' },
+  { type: 'commit', icon: '\\u{1F4E6}', user: 'Eve', action: 'pushed 1 commit to', target: 'feature/api', time: '3h ago', desc: 'chore: update dependencies' },
+];
+
+function App() {
+  return (
+    <div className="feed">
+      <h3 style={{marginBottom:8}}>Activity Feed</h3>
+      {items.map((item, i) => (
+        <div className="feed-item" key={i}>
+          <div className={\`feed-icon \${item.type}\`}>{item.icon}</div>
+          <div className="feed-body">
+            <div className="feed-title"><strong>{item.user}</strong> {item.action} <strong>{item.target}</strong></div>
+            <div className="feed-time">{item.time}</div>
+            <div className="feed-desc">{item.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-activity-log',
+    title: 'Activity Log',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Chronological log of system events with filtering by type',
+    concepts: ['log display', 'type filtering', 'timestamp formatting', 'scrollable list'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.log-wrap { width: 400px; }
+.log-filters { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.log-filter { padding: 5px 12px; border-radius: 16px; border: 1px solid #334155; background: transparent; color: #94a3b8; cursor: pointer; font-size: 12px; }
+.log-filter.active { background: #4fc3f7; color: #1a1a2e; border-color: #4fc3f7; font-weight: 600; }
+.log-list { max-height: 260px; overflow-y: auto; }
+.log-entry { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1e293b; font-size: 13px; align-items: flex-start; }
+.log-time { color: #555; font-family: monospace; font-size: 11px; min-width: 60px; padding-top: 2px; }
+.log-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.log-dot.info { background: #4fc3f7; } .log-dot.success { background: #4ade80; }
+.log-dot.warning { background: #facc15; } .log-dot.error { background: #f87171; }`,
+      js: `const { useState } = React;
+
+const logs = [
+  { time: '14:32', type: 'info', msg: 'Server started on port 3000' },
+  { time: '14:33', type: 'success', msg: 'Database connection established' },
+  { time: '14:34', type: 'info', msg: 'Loading configuration from env' },
+  { time: '14:35', type: 'warning', msg: 'Cache TTL not set, using default 300s' },
+  { time: '14:36', type: 'error', msg: 'Failed to connect to Redis cluster' },
+  { time: '14:37', type: 'info', msg: 'Fallback to in-memory cache' },
+  { time: '14:38', type: 'success', msg: 'All routes registered successfully' },
+  { time: '14:39', type: 'warning', msg: 'Rate limiter threshold at 80%' },
+  { time: '14:40', type: 'success', msg: 'Health check endpoint responding' },
+];
+
+function App() {
+  const [filter, setFilter] = useState('all');
+  const types = ['all', 'info', 'success', 'warning', 'error'];
+  const filtered = filter === 'all' ? logs : logs.filter(l => l.type === filter);
+
+  return (
+    <div className="log-wrap">
+      <h3 style={{marginBottom:10}}>System Log</h3>
+      <div className="log-filters">
+        {types.map(t => (
+          <button key={t} className={\`log-filter \${filter === t ? 'active' : ''}\`} onClick={() => setFilter(t)}>
+            {t.charAt(0).toUpperCase() + t.slice(1)}
+          </button>
+        ))}
+      </div>
+      <div className="log-list">
+        {filtered.map((l, i) => (
+          <div className="log-entry" key={i}>
+            <span className="log-time">{l.time}</span>
+            <span className={\`log-dot \${l.type}\`} />
+            <span>{l.msg}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-diff-viewer',
+    title: 'Diff Viewer',
+    category: 'data-display',
+    difficulty: 'intermediate',
+    description: 'Side-by-side diff viewer highlighting added and removed lines',
+    concepts: ['diff display', 'line comparison', 'syntax highlighting', 'split view'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.diff-wrap { width: 460px; }
+.diff-container { display: flex; border: 1px solid #334155; border-radius: 8px; overflow: hidden; font-family: monospace; font-size: 12px; }
+.diff-pane { flex: 1; }
+.diff-header { padding: 6px 10px; background: #334155; font-size: 11px; color: #94a3b8; font-weight: 600; }
+.diff-line { display: flex; padding: 1px 0; min-height: 20px; }
+.diff-num { width: 32px; text-align: right; padding: 0 6px; color: #555; flex-shrink: 0; user-select: none; }
+.diff-text { padding: 0 8px; flex: 1; white-space: pre; }
+.line-removed { background: rgba(248,113,113,0.1); }
+.line-removed .diff-text { color: #f87171; }
+.line-added { background: rgba(74,222,128,0.1); }
+.line-added .diff-text { color: #4ade80; }
+.line-normal { }`,
+      js: `const { useState } = React;
+
+const oldLines = [
+  'function greet(name) {',
+  '  console.log("Hello " + name);',
+  '  return name;',
+  '}',
+];
+
+const newLines = [
+  'function greet(name) {',
+  '  const msg = \\\`Hello \\\${name}!\\\`;',
+  '  console.log(msg);',
+  '  return msg;',
+  '}',
+];
+
+function DiffPane({ title, lines, other }) {
+  return (
+    <div className="diff-pane">
+      <div className="diff-header">{title}</div>
+      {lines.map((line, i) => {
+        const inOther = other.includes(line);
+        const cls = !inOther ? (title.includes('Old') ? 'line-removed' : 'line-added') : 'line-normal';
+        return (
+          <div key={i} className={\`diff-line \${cls}\`}>
+            <span className="diff-num">{i + 1}</span>
+            <span className="diff-text">{line}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="diff-wrap">
+      <h3 style={{marginBottom:10}}>Diff Viewer</h3>
+      <div className="diff-container">
+        <DiffPane title="Old Version" lines={oldLines} other={newLines} />
+        <DiffPane title="New Version" lines={newLines} other={oldLines} />
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-code-block',
+    title: 'Code Block',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Styled code block with copy button and language label',
+    concepts: ['code display', 'clipboard API', 'monospace styling', 'copy feedback'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.cb-wrap { width: 420px; }
+.code-block { position: relative; background: #0f172a; border: 1px solid #334155; border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+.cb-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #1e293b; }
+.cb-lang { font-size: 12px; color: #4fc3f7; font-weight: 600; }
+.cb-copy { padding: 4px 10px; border: none; border-radius: 4px; background: #334155; color: #94a3b8; cursor: pointer; font-size: 11px; }
+.cb-copy:hover { background: #4fc3f7; color: #1a1a2e; }
+.cb-code { padding: 14px 16px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre; color: #e0e0e0; }`,
+      js: `const { useState } = React;
+
+function CodeBlock({ language, code }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+  return (
+    <div className="code-block">
+      <div className="cb-header">
+        <span className="cb-lang">{language}</span>
+        <button className="cb-copy" onClick={copy}>{copied ? 'Copied!' : 'Copy'}</button>
+      </div>
+      <div className="cb-code">{code}</div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="cb-wrap">
+      <h3 style={{marginBottom:12}}>Code Blocks</h3>
+      <CodeBlock language="JavaScript" code={\`const sum = (a, b) => a + b;\\nconsole.log(sum(2, 3)); // 5\`} />
+      <CodeBlock language="Python" code={\`def greet(name):\\n    return f"Hello, {name}!"\\n\\nprint(greet("World"))\`} />
+      <CodeBlock language="CSS" code={\`.container {\\n  display: grid;\\n  gap: 16px;\\n  grid-template-columns: repeat(3, 1fr);\\n}\`} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-markdown-preview',
+    title: 'Markdown Preview',
+    category: 'data-display',
+    difficulty: 'intermediate',
+    description: 'Real-time markdown text to HTML preview with basic syntax support',
+    concepts: ['text parsing', 'regex transforms', 'dangerouslySetInnerHTML', 'live preview'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.md-wrap { width: 440px; }
+.md-split { display: flex; gap: 1px; height: 280px; border: 1px solid #334155; border-radius: 10px; overflow: hidden; }
+.md-pane { flex: 1; display: flex; flex-direction: column; }
+.md-pane-label { padding: 6px 12px; background: #334155; font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+.md-pane textarea { flex: 1; padding: 12px; background: #0f172a; color: #e0e0e0; border: none; outline: none; font-family: monospace; font-size: 13px; resize: none; }
+.md-preview { flex: 1; padding: 12px; background: #1e293b; overflow: auto; font-size: 14px; line-height: 1.6; }
+.md-preview h1 { font-size: 22px; color: #4fc3f7; border-bottom: 1px solid #334155; padding-bottom: 6px; }
+.md-preview h2 { font-size: 18px; color: #4fc3f7; }
+.md-preview code { background: #334155; padding: 2px 5px; border-radius: 3px; font-size: 12px; }
+.md-preview blockquote { border-left: 3px solid #4fc3f7; padding-left: 12px; color: #94a3b8; margin: 8px 0; }`,
+      js: `const { useState } = React;
+
+function parse(md) {
+  return md
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')
+    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')
+    .replace(/\`(.+?)\`/g, '<code>$1</code>')
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\\/li>)/s, '<ul>$1</ul>')
+    .replace(/\\n/g, '<br/>');
+}
+
+function App() {
+  const [md, setMd] = useState('# Markdown Preview\\n\\n## Features\\n\\n- **Bold** text\\n- *Italic* text\\n- \`inline code\`\\n\\n> This is a blockquote\\n\\nType markdown on the left to see the preview on the right.');
+
+  return (
+    <div className="md-wrap">
+      <h3 style={{marginBottom:8}}>Markdown Preview</h3>
+      <div className="md-split">
+        <div className="md-pane">
+          <div className="md-pane-label">Markdown</div>
+          <textarea value={md} onChange={e => setMd(e.target.value)} />
+        </div>
+        <div className="md-pane">
+          <div className="md-pane-label">Preview</div>
+          <div className="md-preview" dangerouslySetInnerHTML={{__html: parse(md)}} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-json-viewer',
+    title: 'JSON Viewer',
+    category: 'data-display',
+    difficulty: 'intermediate',
+    description: 'Collapsible JSON tree viewer with syntax coloring and expand/collapse all',
+    concepts: ['recursive rendering', 'JSON parsing', 'syntax coloring', 'tree toggle'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.jv-wrap { width: 400px; }
+.jv { font-family: monospace; font-size: 13px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; overflow: auto; max-height: 300px; }
+.jv-key { color: #4fc3f7; }
+.jv-string { color: #4ade80; }
+.jv-number { color: #fb923c; }
+.jv-bool { color: #a78bfa; }
+.jv-null { color: #f87171; }
+.jv-toggle { cursor: pointer; color: #94a3b8; user-select: none; }
+.jv-toggle:hover { color: #4fc3f7; }
+.jv-row { padding-left: 16px; }
+.jv-btns { display: flex; gap: 8px; margin-bottom: 8px; }
+.jv-btns button { padding: 4px 10px; border: 1px solid #334155; border-radius: 4px; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 11px; }`,
+      js: `const { useState } = React;
+
+const sampleData = {
+  name: "Project Alpha",
+  version: "2.1.0",
+  active: true,
+  tags: ["react", "typescript", "ui"],
+  config: { port: 3000, debug: false, db: { host: "localhost", name: "app_db" } },
+  author: null
+};
+
+function JsonNode({ data, depth = 0 }) {
+  const [open, setOpen] = useState(depth < 2);
+  if (data === null) return <span className="jv-null">null</span>;
+  if (typeof data === 'string') return <span className="jv-string">"{data}"</span>;
+  if (typeof data === 'number') return <span className="jv-number">{data}</span>;
+  if (typeof data === 'boolean') return <span className="jv-bool">{String(data)}</span>;
+
+  const isArr = Array.isArray(data);
+  const entries = isArr ? data.map((v, i) => [i, v]) : Object.entries(data);
+
+  return (
+    <span>
+      <span className="jv-toggle" onClick={() => setOpen(!open)}>{open ? '\\u25BC' : '\\u25B6'} </span>
+      {isArr ? '[' : '{'}
+      {open ? (
+        <div>{entries.map(([k, v]) => (
+          <div className="jv-row" key={k}>
+            {!isArr && <><span className="jv-key">"{k}"</span>: </>}
+            <JsonNode data={v} depth={depth + 1} />
+            {','}
+          </div>
+        ))}</div>
+      ) : <span style={{color:'#555'}}> ... {entries.length} items </span>}
+      {isArr ? ']' : '}'}
+    </span>
+  );
+}
+
+function App() {
+  return (
+    <div className="jv-wrap">
+      <h3 style={{marginBottom:8}}>JSON Viewer</h3>
+      <div className="jv"><JsonNode data={sampleData} /></div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-comparison-table',
+    title: 'Comparison Table',
+    category: 'data-display',
+    difficulty: 'intermediate',
+    description: 'Feature comparison table with checkmarks across multiple products',
+    concepts: ['table layout', 'comparison grid', 'check/cross icons', 'sticky headers'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.ct-wrap { width: 440px; overflow-x: auto; }
+.ct { width: 100%; border-collapse: collapse; }
+.ct th { padding: 10px 12px; text-align: center; background: #16213e; border-bottom: 2px solid #334155; font-size: 14px; color: #4fc3f7; }
+.ct th:first-child { text-align: left; color: #94a3b8; }
+.ct td { padding: 8px 12px; text-align: center; border-bottom: 1px solid #1e293b; font-size: 13px; }
+.ct td:first-child { text-align: left; color: #e0e0e0; }
+.check { color: #4ade80; font-size: 16px; }
+.cross { color: #555; font-size: 16px; }
+.ct tr:hover td { background: rgba(79,195,247,0.05); }
+.ct .highlight { background: rgba(79,195,247,0.08); }`,
+      js: `const { useState } = React;
+
+const features = [
+  { name: 'Users', free: '1', pro: '10', enterprise: 'Unlimited' },
+  { name: 'Storage', free: '1 GB', pro: '50 GB', enterprise: '1 TB' },
+  { name: 'API Access', free: false, pro: true, enterprise: true },
+  { name: 'Custom Domain', free: false, pro: true, enterprise: true },
+  { name: 'Analytics', free: false, pro: false, enterprise: true },
+  { name: 'Priority Support', free: false, pro: false, enterprise: true },
+  { name: 'SSO', free: false, pro: false, enterprise: true },
+];
+
+function Cell({ val }) {
+  if (val === true) return <span className="check">\\u2713</span>;
+  if (val === false) return <span className="cross">\\u2717</span>;
+  return <span>{val}</span>;
+}
+
+function App() {
+  return (
+    <div className="ct-wrap">
+      <h3 style={{marginBottom:10}}>Plan Comparison</h3>
+      <table className="ct">
+        <thead><tr><th>Feature</th><th>Free</th><th className="highlight">Pro</th><th>Enterprise</th></tr></thead>
+        <tbody>
+          {features.map((f, i) => (
+            <tr key={i}><td>{f.name}</td><td><Cell val={f.free} /></td><td className="highlight"><Cell val={f.pro} /></td><td><Cell val={f.enterprise} /></td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-pricing-table',
+    title: 'Pricing Table',
+    category: 'data-display',
+    difficulty: 'intermediate',
+    description: 'Pricing cards with plan features, popular badge, and toggle for monthly/annual',
+    concepts: ['pricing layout', 'toggle switch', 'card highlight', 'price calculation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.pricing-wrap { width: 460px; text-align: center; }
+.billing-toggle { display: inline-flex; gap: 8px; align-items: center; margin-bottom: 16px; font-size: 13px; color: #94a3b8; }
+.billing-toggle button { padding: 6px 14px; border-radius: 16px; border: 1px solid #334155; background: transparent; color: #94a3b8; cursor: pointer; font-size: 13px; }
+.billing-toggle button.active { background: #4fc3f7; color: #1a1a2e; border-color: #4fc3f7; font-weight: 600; }
+.plans { display: flex; gap: 12px; }
+.plan { flex: 1; padding: 20px 14px; background: #16213e; border: 1px solid #334155; border-radius: 12px; text-align: center; }
+.plan.popular { border-color: #4fc3f7; position: relative; }
+.pop-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #4fc3f7; color: #1a1a2e; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+.plan-name { font-size: 14px; color: #94a3b8; margin-bottom: 8px; }
+.plan-price { font-size: 32px; font-weight: 800; color: #e0e0e0; margin-bottom: 4px; }
+.plan-period { font-size: 12px; color: #555; margin-bottom: 12px; }
+.plan-feature { font-size: 12px; color: #94a3b8; padding: 4px 0; }
+.plan-btn { width: 100%; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; margin-top: 12px; }
+.plan-btn.primary { background: #4fc3f7; color: #1a1a2e; }
+.plan-btn.secondary { background: #334155; color: #e0e0e0; }`,
+      js: `const { useState } = React;
+
+const plans = [
+  { name: 'Starter', monthly: 9, features: ['1 User', '5 GB Storage', 'Email Support'] },
+  { name: 'Pro', monthly: 29, features: ['10 Users', '50 GB Storage', 'Priority Support', 'API Access'], popular: true },
+  { name: 'Enterprise', monthly: 99, features: ['Unlimited Users', '1 TB Storage', '24/7 Support', 'SSO', 'Custom Domain'] },
+];
+
+function App() {
+  const [annual, setAnnual] = useState(false);
+
+  return (
+    <div className="pricing-wrap">
+      <h3 style={{marginBottom:12}}>Pricing</h3>
+      <div className="billing-toggle">
+        <button className={!annual ? 'active' : ''} onClick={() => setAnnual(false)}>Monthly</button>
+        <button className={annual ? 'active' : ''} onClick={() => setAnnual(true)}>Annual (save 20%)</button>
+      </div>
+      <div className="plans">
+        {plans.map(p => (
+          <div key={p.name} className={\`plan \${p.popular ? 'popular' : ''}\`}>
+            {p.popular && <span className="pop-badge">Popular</span>}
+            <div className="plan-name">{p.name}</div>
+            <div className="plan-price">\${annual ? Math.round(p.monthly * 0.8) : p.monthly}</div>
+            <div className="plan-period">per month{annual ? ', billed annually' : ''}</div>
+            {p.features.map(f => <div key={f} className="plan-feature">\\u2713 {f}</div>)}
+            <button className={\`plan-btn \${p.popular ? 'primary' : 'secondary'}\`}>Get Started</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-feature-list',
+    title: 'Feature List',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Feature showcase list with icons, titles, and descriptions',
+    concepts: ['list layout', 'icon display', 'card grid', 'responsive layout'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.fl-wrap { width: 420px; }
+.fl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.fl-card { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; }
+.fl-icon { font-size: 28px; margin-bottom: 8px; }
+.fl-title { font-size: 14px; font-weight: 700; color: #e0e0e0; margin-bottom: 4px; }
+.fl-desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }`,
+      js: `const { useState } = React;
+
+const features = [
+  { icon: '\\u26A1', title: 'Lightning Fast', desc: 'Optimized for speed with lazy loading and code splitting.' },
+  { icon: '\\u{1F512}', title: 'Secure', desc: 'Built-in authentication and authorization with JWT tokens.' },
+  { icon: '\\u{1F4F1}', title: 'Responsive', desc: 'Works beautifully on desktop, tablet, and mobile devices.' },
+  { icon: '\\u{1F527}', title: 'Customizable', desc: 'Fully themeable with CSS variables and design tokens.' },
+  { icon: '\\u{1F4E6}', title: 'Modular', desc: 'Pick only the components you need. Tree-shakeable.' },
+  { icon: '\\u{267F}', title: 'Accessible', desc: 'WCAG 2.1 AA compliant with full keyboard support.' },
+];
+
+function App() {
+  return (
+    <div className="fl-wrap">
+      <h3 style={{marginBottom:12,textAlign:'center'}}>Features</h3>
+      <div className="fl-grid">
+        {features.map((f, i) => (
+          <div className="fl-card" key={i}>
+            <div className="fl-icon">{f.icon}</div>
+            <div className="fl-title">{f.title}</div>
+            <div className="fl-desc">{f.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-testimonials',
+    title: 'Testimonials',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Testimonial cards with quotes, avatars, and star ratings',
+    concepts: ['testimonial layout', 'quote styling', 'avatar display', 'card design'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.test-wrap { width: 420px; }
+.test-card { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; margin-bottom: 12px; }
+.test-quote { font-size: 14px; color: #94a3b8; line-height: 1.6; font-style: italic; margin-bottom: 12px; position: relative; padding-left: 20px; }
+.test-quote::before { content: '\\201C'; position: absolute; left: 0; top: -4px; font-size: 28px; color: #4fc3f7; font-style: normal; }
+.test-author { display: flex; align-items: center; gap: 10px; }
+.test-av { width: 36px; height: 36px; border-radius: 50%; background: #4fc3f7; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #1a1a2e; font-size: 14px; }
+.test-name { font-size: 14px; font-weight: 600; }
+.test-role { font-size: 12px; color: #555; }
+.test-stars { color: #fbbf24; font-size: 13px; margin-bottom: 8px; }`,
+      js: `const { useState } = React;
+
+const testimonials = [
+  { name: 'Sarah K.', role: 'Product Manager', quote: 'This tool transformed our workflow. We shipped features 3x faster after adopting it.', stars: 5 },
+  { name: 'Mike D.', role: 'Senior Developer', quote: 'The API is intuitive and the docs are excellent. Best DX I have experienced.', stars: 5 },
+  { name: 'Lisa R.', role: 'UX Designer', quote: 'Beautiful components out of the box. Saved us weeks of design implementation time.', stars: 4 },
+];
+
+function App() {
+  return (
+    <div className="test-wrap">
+      <h3 style={{marginBottom:12,textAlign:'center'}}>What People Say</h3>
+      {testimonials.map((t, i) => (
+        <div className="test-card" key={i}>
+          <div className="test-stars">{'\\u2605'.repeat(t.stars)}{'\\u2606'.repeat(5 - t.stars)}</div>
+          <div className="test-quote">{t.quote}</div>
+          <div className="test-author">
+            <div className="test-av">{t.name[0]}</div>
+            <div><div className="test-name">{t.name}</div><div className="test-role">{t.role}</div></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-team-grid',
+    title: 'Team Grid',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Grid of team member cards with photo placeholder, name, and role',
+    concepts: ['grid layout', 'card component', 'avatar placeholder', 'hover effects'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.team-wrap { width: 420px; }
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.team-card { text-align: center; padding: 16px 10px; background: #16213e; border: 1px solid #334155; border-radius: 10px; transition: border-color 0.15s; }
+.team-card:hover { border-color: #4fc3f7; }
+.team-avatar { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #1a1a2e; }
+.c0 { background: #4fc3f7; } .c1 { background: #a78bfa; } .c2 { background: #fb923c; }
+.c3 { background: #4ade80; } .c4 { background: #f87171; } .c5 { background: #facc15; }
+.team-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.team-role { font-size: 12px; color: #94a3b8; }`,
+      js: `const { useState } = React;
+
+const team = [
+  { name: 'Alice Chen', role: 'CEO' },
+  { name: 'Bob Park', role: 'CTO' },
+  { name: 'Carol Wu', role: 'Design Lead' },
+  { name: 'Dan Kim', role: 'Lead Dev' },
+  { name: 'Eve Patel', role: 'PM' },
+  { name: 'Frank Lee', role: 'DevOps' },
+];
+
+function App() {
+  return (
+    <div className="team-wrap">
+      <h3 style={{marginBottom:12,textAlign:'center'}}>Our Team</h3>
+      <div className="team-grid">
+        {team.map((t, i) => (
+          <div className="team-card" key={i}>
+            <div className={\`team-avatar c\${i % 6}\`}>{t.name.split(' ').map(n => n[0]).join('')}</div>
+            <div className="team-name">{t.name}</div>
+            <div className="team-role">{t.role}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-changelog',
+    title: 'Changelog',
+    category: 'data-display',
+    difficulty: 'beginner',
+    description: 'Version changelog display with categorized changes and version badges',
+    concepts: ['changelog format', 'version display', 'categorized items', 'timeline list'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.cl-wrap { width: 400px; }
+.cl-version { margin-bottom: 24px; }
+.cl-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.cl-badge { padding: 3px 10px; border-radius: 10px; background: #4fc3f7; color: #1a1a2e; font-size: 13px; font-weight: 700; }
+.cl-date { font-size: 12px; color: #555; }
+.cl-item { display: flex; gap: 8px; padding: 4px 0; font-size: 13px; }
+.cl-tag { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.cl-tag.added { background: rgba(74,222,128,0.15); color: #4ade80; }
+.cl-tag.fixed { background: rgba(79,195,247,0.15); color: #4fc3f7; }
+.cl-tag.changed { background: rgba(250,204,21,0.15); color: #facc15; }
+.cl-tag.removed { background: rgba(248,113,113,0.15); color: #f87171; }`,
+      js: `const { useState } = React;
+
+const changelog = [
+  { version: '2.1.0', date: 'Jan 15, 2025', items: [
+    { type: 'added', text: 'Dark mode support for all components' },
+    { type: 'added', text: 'New Kanban board component' },
+    { type: 'fixed', text: 'Modal focus trap not working in Safari' },
+    { type: 'changed', text: 'Upgraded to React 19' },
+  ]},
+  { version: '2.0.0', date: 'Dec 1, 2024', items: [
+    { type: 'added', text: 'Complete TypeScript rewrite' },
+    { type: 'changed', text: 'New design system with CSS variables' },
+    { type: 'removed', text: 'Legacy class components' },
+    { type: 'fixed', text: 'Memory leak in virtual list' },
+  ]},
+];
+
+function App() {
+  return (
+    <div className="cl-wrap">
+      <h3 style={{marginBottom:16}}>Changelog</h3>
+      {changelog.map(v => (
+        <div className="cl-version" key={v.version}>
+          <div className="cl-header">
+            <span className="cl-badge">v{v.version}</span>
+            <span className="cl-date">{v.date}</span>
+          </div>
+          {v.items.map((item, i) => (
+            <div className="cl-item" key={i}>
+              <span className={\`cl-tag \${item.type}\`}>{item.type}</span>
+              <span>{item.text}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-status-page',
+    title: 'Status Page',
+    category: 'data-display',
+    difficulty: 'intermediate',
+    description: 'System status page showing service health with uptime bars',
+    concepts: ['status indicators', 'health display', 'uptime visualization', 'service monitoring'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.sp-wrap { width: 420px; }
+.sp-overall { padding: 16px; border-radius: 10px; margin-bottom: 16px; text-align: center; font-weight: 600; }
+.sp-overall.ok { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+.sp-service { padding: 12px 0; border-bottom: 1px solid #1e293b; }
+.sp-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.sp-name { font-size: 14px; }
+.sp-status { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.sp-status.up { color: #4ade80; }
+.sp-status.degraded { color: #facc15; }
+.sp-dot { width: 8px; height: 8px; border-radius: 50%; }
+.sp-dot.up { background: #4ade80; } .sp-dot.degraded { background: #facc15; }
+.sp-uptime { display: flex; gap: 2px; }
+.sp-bar { width: 6px; height: 20px; border-radius: 2px; }
+.sp-bar.ok { background: #4ade80; } .sp-bar.warn { background: #facc15; } .sp-bar.down { background: #f87171; }
+.sp-uptime-label { font-size: 11px; color: #555; margin-top: 4px; }`,
+      js: `const { useState } = React;
+
+const services = [
+  { name: 'API Server', status: 'up', uptime: 99.98, bars: Array(30).fill('ok') },
+  { name: 'Web App', status: 'up', uptime: 99.95, bars: [...Array(28).fill('ok'), 'warn', 'ok'] },
+  { name: 'Database', status: 'up', uptime: 99.99, bars: Array(30).fill('ok') },
+  { name: 'CDN', status: 'degraded', uptime: 98.50, bars: [...Array(26).fill('ok'), 'warn', 'down', 'warn', 'ok'] },
+  { name: 'Email Service', status: 'up', uptime: 99.90, bars: [...Array(29).fill('ok'), 'warn'] },
+];
+
+function App() {
+  return (
+    <div className="sp-wrap">
+      <h3 style={{marginBottom:12}}>System Status</h3>
+      <div className="sp-overall ok">All Systems Operational</div>
+      {services.map((s, i) => (
+        <div className="sp-service" key={i}>
+          <div className="sp-row">
+            <span className="sp-name">{s.name}</span>
+            <span className={\`sp-status \${s.status}\`}><span className={\`sp-dot \${s.status}\`} />{s.status === 'up' ? 'Operational' : 'Degraded'}</span>
+          </div>
+          <div className="sp-uptime">{s.bars.map((b, j) => <div key={j} className={\`sp-bar \${b}\`} />)}</div>
+          <div className="sp-uptime-label">{s.uptime}% uptime (30 days)</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-metric-dashboard',
+    title: 'Metric Dashboard',
+    category: 'data-display',
+    difficulty: 'advanced',
+    description: 'Dashboard with live-updating metrics, sparkline charts, and time range selector',
+    concepts: ['real-time data', 'sparkline', 'canvas drawing', 'interval updates'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.md-wrap { width: 440px; }
+.md-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.md-card { padding: 14px; background: #16213e; border: 1px solid #334155; border-radius: 10px; }
+.md-card-label { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+.md-card-val { font-size: 26px; font-weight: 800; margin: 4px 0; }
+.md-card-change { font-size: 12px; }
+.md-spark { height: 30px; margin-top: 6px; }
+.md-spark canvas { width: 100%; height: 30px; }
+.up { color: #4ade80; } .down { color: #f87171; }`,
+      js: `const { useState, useEffect, useRef } = React;
+
+function Sparkline({ data, color }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c = ref.current;
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    c.width = c.offsetWidth * 2;
+    c.height = 60;
+    ctx.clearRect(0, 0, c.width, c.height);
+    const max = Math.max(...data), min = Math.min(...data);
+    const range = max - min || 1;
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    data.forEach((v, i) => {
+      const x = (i / (data.length - 1)) * c.width;
+      const y = c.height - ((v - min) / range) * (c.height - 4) - 2;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }, [data, color]);
+  return <div className="md-spark"><canvas ref={ref} /></div>;
+}
+
+function App() {
+  const [metrics, setMetrics] = useState([
+    { label: 'Requests/s', val: 1247, change: 12.3, up: true, data: Array.from({length: 20}, () => 1000 + Math.random() * 500), color: '#4fc3f7' },
+    { label: 'Latency (ms)', val: 42, change: -5.1, up: false, data: Array.from({length: 20}, () => 30 + Math.random() * 30), color: '#4ade80' },
+    { label: 'Error Rate', val: 0.3, change: 0.1, up: true, data: Array.from({length: 20}, () => Math.random() * 1), color: '#f87171' },
+    { label: 'CPU Usage', val: 67, change: -2.4, up: false, data: Array.from({length: 20}, () => 50 + Math.random() * 40), color: '#fb923c' },
+  ]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setMetrics(prev => prev.map(m => ({
+        ...m,
+        val: +(m.val + (Math.random() - 0.5) * m.val * 0.05).toFixed(m.val < 10 ? 1 : 0),
+        data: [...m.data.slice(1), m.val + (Math.random() - 0.5) * m.val * 0.1],
+      })));
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="md-wrap">
+      <h3 style={{marginBottom:10}}>Live Metrics</h3>
+      <div className="md-cards">
+        {metrics.map((m, i) => (
+          <div className="md-card" key={i}>
+            <div className="md-card-label">{m.label}</div>
+            <div className="md-card-val">{m.val}</div>
+            <div className={\`md-card-change \${m.change > 0 ? 'up' : 'down'}\`}>
+              {m.change > 0 ? '\\u25B2' : '\\u25BC'} {Math.abs(m.change)}%
+            </div>
+            <Sparkline data={m.data} color={m.color} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  // --- navigation ---
+  {
+    id: 'react-command-menu',
+    title: 'Command Menu',
+    category: 'navigation',
+    difficulty: 'advanced',
+    description: 'Nested command menu with sections, keyboard navigation, and breadcrumbs',
+    concepts: ['nested menus', 'keyboard navigation', 'breadcrumb trail', 'command routing'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 60px; margin: 0; }
+.cm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: flex; justify-content: center; padding-top: 80px; }
+.cm { width: 420px; background: #16213e; border: 1px solid #334155; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.cm input { width: 100%; padding: 12px 14px; background: transparent; border: none; border-bottom: 1px solid #334155; color: #e0e0e0; font-size: 14px; outline: none; box-sizing: border-box; }
+.cm-crumb { padding: 6px 14px; font-size: 11px; color: #4fc3f7; background: #0f172a; }
+.cm-section { padding: 4px 14px; font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.cm-item { padding: 8px 14px; cursor: pointer; font-size: 14px; display: flex; justify-content: space-between; }
+.cm-item:hover, .cm-item.active { background: #1e293b; color: #4fc3f7; }
+.cm-hint { font-size: 11px; color: #555; }
+.trigger { padding: 12px 24px; border: none; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; }`,
+      js: `const { useState, useEffect, useRef } = React;
+
+const menus = {
+  root: { sections: [
+    { label: 'Navigation', items: [{ name: 'Go to Dashboard', action: true }, { name: 'Go to Settings', action: true }] },
+    { label: 'Actions', items: [{ name: 'Create...', sub: 'create' }, { name: 'Edit...', sub: 'edit' }] },
+  ]},
+  create: { sections: [{ label: 'Create', items: [{ name: 'New File', action: true }, { name: 'New Folder', action: true }, { name: 'New Project', action: true }] }] },
+  edit: { sections: [{ label: 'Edit', items: [{ name: 'Undo', action: true }, { name: 'Redo', action: true }, { name: 'Find & Replace', action: true }] }] },
+};
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [path, setPath] = useState(['root']);
+  const [q, setQ] = useState('');
+  const [active, setActive] = useState(0);
+  const current = menus[path[path.length - 1]];
+  const allItems = current.sections.flatMap(s => s.items).filter(i => i.name.toLowerCase().includes(q.toLowerCase()));
+
+  const select = (item) => {
+    if (item.sub) { setPath([...path, item.sub]); setQ(''); setActive(0); }
+    else setOpen(false);
+  };
+
+  useEffect(() => {
+    const h = (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setOpen(o => !o); setPath(['root']); setQ(''); } if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, []);
+
+  return (
+    <div>
+      <button className="trigger" onClick={() => { setOpen(true); setPath(['root']); setQ(''); }}>Open Command Menu (Ctrl+K)</button>
+      {open && (
+        <div className="cm-overlay" onClick={() => setOpen(false)}>
+          <div className="cm" onClick={e => e.stopPropagation()}>
+            <input value={q} onChange={e => { setQ(e.target.value); setActive(0); }} placeholder="Search commands..." autoFocus />
+            {path.length > 1 && <div className="cm-crumb" onClick={() => { setPath(path.slice(0, -1)); setQ(''); }}>&larr; Back</div>}
+            {allItems.map((item, i) => (
+              <div key={item.name} className={\`cm-item \${i === active ? 'active' : ''}\`}
+                onClick={() => select(item)} onMouseEnter={() => setActive(i)}>
+                <span>{item.name}</span>
+                {item.sub && <span className="cm-hint">&rarr;</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-mini-map',
+    title: 'Mini Map',
+    category: 'navigation',
+    difficulty: 'advanced',
+    description: 'Document mini-map showing a scaled overview with viewport indicator',
+    concepts: ['scroll tracking', 'scaled preview', 'viewport indicator', 'scroll-to'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; padding: 0; }
+.mm-layout { display: flex; height: 400px; }
+.mm-content { flex: 1; overflow-y: auto; padding: 20px 30px; }
+.mm-content h2 { color: #4fc3f7; }
+.mm-content p { color: #94a3b8; font-size: 14px; line-height: 1.7; margin-bottom: 16px; }
+.mm-sidebar { width: 60px; background: #0f172a; position: relative; border-left: 1px solid #334155; }
+.mm-track { position: absolute; inset: 0; }
+.mm-line { height: 2px; margin: 2px 6px; border-radius: 1px; background: #1e293b; }
+.mm-line.heading { background: #4fc3f7; height: 3px; }
+.mm-viewport { position: absolute; left: 2px; right: 2px; background: rgba(79,195,247,0.15); border: 1px solid rgba(79,195,247,0.3); border-radius: 2px; cursor: pointer; }`,
+      js: `const { useState, useRef, useEffect, useCallback } = React;
+
+const sections = Array.from({length: 8}, (_, i) => ({
+  title: 'Section ' + (i + 1),
+  text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. '.repeat(2),
+}));
+
+function App() {
+  const contentRef = useRef(null);
+  const [vp, setVp] = useState({ top: 0, height: 30 });
+
+  const onScroll = useCallback(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const pct = el.scrollTop / el.scrollHeight;
+    const hPct = (el.clientHeight / el.scrollHeight) * 100;
+    setVp({ top: pct * 100, height: hPct });
+  }, []);
+
+  useEffect(() => {
+    const el = contentRef.current;
+    el.addEventListener('scroll', onScroll);
+    onScroll();
+    return () => el.removeEventListener('scroll', onScroll);
+  }, [onScroll]);
+
+  const clickMinimap = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = (e.clientY - rect.top) / rect.height;
+    contentRef.current.scrollTop = pct * contentRef.current.scrollHeight;
+  };
+
+  return (
+    <div className="mm-layout">
+      <div className="mm-content" ref={contentRef}>
+        {sections.map((s, i) => <div key={i}><h2>{s.title}</h2><p>{s.text}</p></div>)}
+      </div>
+      <div className="mm-sidebar" onClick={clickMinimap}>
+        <div className="mm-track">
+          {sections.map((_, i) => <div key={i}><div className="mm-line heading" />{Array(4).fill(0).map((_, j) => <div key={j} className="mm-line" />)}</div>)}
+        </div>
+        <div className="mm-viewport" style={{top: vp.top + '%', height: vp.height + '%'}} />
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-scroll-to-top',
+    title: 'Scroll to Top',
+    category: 'navigation',
+    difficulty: 'beginner',
+    description: 'Floating button that appears when scrolling down and smoothly scrolls to top',
+    concepts: ['scroll event', 'smooth scroll', 'visibility toggle', 'intersection observer'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.page { height: 400px; overflow-y: auto; padding: 20px; position: relative; }
+.page h3 { color: #4fc3f7; margin-bottom: 12px; }
+.page p { color: #94a3b8; font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
+.stt-btn { position: absolute; bottom: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: #4fc3f7; color: #1a1a2e; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 16px rgba(79,195,247,0.3); opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; display: flex; align-items: center; justify-content: center; }
+.stt-btn.visible { opacity: 1; transform: translateY(0); }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+function App() {
+  const [show, setShow] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    const handler = () => setShow(el.scrollTop > 150);
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  const scrollTop = () => ref.current.scrollTo({ top: 0, behavior: 'smooth' });
+
+  return (
+    <div className="page" ref={ref}>
+      <h3>Scroll Down</h3>
+      {Array(15).fill(0).map((_, i) => <p key={i}>Paragraph {i + 1}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>)}
+      <button className={\`stt-btn \${show ? 'visible' : ''}\`} onClick={scrollTop}>\\u2191</button>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-anchor-links',
+    title: 'Anchor Links',
+    category: 'navigation',
+    difficulty: 'beginner',
+    description: 'Smooth-scrolling anchor links that highlight the active section',
+    concepts: ['anchor navigation', 'smooth scroll', 'active tracking', 'scroll position'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.al-layout { display: flex; height: 400px; }
+.al-nav { width: 160px; padding: 16px; background: #16213e; border-right: 1px solid #334155; flex-shrink: 0; }
+.al-link { display: block; padding: 8px 12px; font-size: 13px; color: #94a3b8; cursor: pointer; border-radius: 4px; border-left: 2px solid transparent; margin-bottom: 2px; transition: all 0.15s; }
+.al-link:hover { color: #e0e0e0; }
+.al-link.active { color: #4fc3f7; border-left-color: #4fc3f7; background: rgba(79,195,247,0.05); }
+.al-content { flex: 1; overflow-y: auto; padding: 20px; }
+.al-section { min-height: 200px; margin-bottom: 20px; }
+.al-section h2 { color: #4fc3f7; margin-bottom: 8px; }
+.al-section p { color: #94a3b8; font-size: 14px; line-height: 1.7; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const sections = ['Introduction', 'Features', 'Installation', 'Usage', 'API Reference'];
+
+function App() {
+  const [active, setActive] = useState(0);
+  const contentRef = useRef(null);
+  const sectionRefs = useRef([]);
+
+  const scrollTo = (idx) => {
+    sectionRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  useEffect(() => {
+    const el = contentRef.current;
+    const handler = () => {
+      const positions = sectionRefs.current.map(s => s?.offsetTop || 0);
+      const scrollPos = el.scrollTop + 40;
+      let idx = 0;
+      positions.forEach((p, i) => { if (scrollPos >= p) idx = i; });
+      setActive(idx);
+    };
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  return (
+    <div className="al-layout">
+      <nav className="al-nav">
+        {sections.map((s, i) => (
+          <div key={s} className={\`al-link \${i === active ? 'active' : ''}\`} onClick={() => scrollTo(i)}>{s}</div>
+        ))}
+      </nav>
+      <div className="al-content" ref={contentRef}>
+        {sections.map((s, i) => (
+          <div key={s} className="al-section" ref={el => sectionRefs.current[i] = el}>
+            <h2>{s}</h2>
+            <p>Content for the {s.toLowerCase()} section. This demonstrates smooth scrolling anchor navigation with active state tracking as you scroll through the document.</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-table-of-contents',
+    title: 'Table of Contents',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Auto-generated table of contents from headings with nested indentation',
+    concepts: ['heading extraction', 'nested list', 'intersection observer', 'auto-generation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.toc-layout { display: flex; height: 400px; }
+.toc-sidebar { width: 200px; padding: 16px; background: #16213e; border-right: 1px solid #334155; overflow-y: auto; flex-shrink: 0; }
+.toc-sidebar h4 { font-size: 11px; text-transform: uppercase; color: #555; letter-spacing: 1px; margin-bottom: 10px; }
+.toc-item { display: block; padding: 4px 0; font-size: 13px; color: #94a3b8; cursor: pointer; transition: color 0.15s; }
+.toc-item:hover { color: #e0e0e0; }
+.toc-item.active { color: #4fc3f7; font-weight: 600; }
+.toc-item.h3 { padding-left: 16px; font-size: 12px; }
+.toc-content { flex: 1; overflow-y: auto; padding: 20px; }
+.toc-content h2 { color: #4fc3f7; margin-top: 20px; }
+.toc-content h3 { color: #81d4fa; margin-top: 14px; font-size: 16px; }
+.toc-content p { color: #94a3b8; font-size: 14px; line-height: 1.7; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const doc = [
+  { level: 2, text: 'Getting Started', body: 'Welcome to the documentation. This guide will help you set up and run the project.' },
+  { level: 3, text: 'Prerequisites', body: 'You need Node.js 18+ and npm installed on your machine.' },
+  { level: 3, text: 'Quick Start', body: 'Run npx create-app and follow the prompts to set up your project.' },
+  { level: 2, text: 'Configuration', body: 'The project can be configured through various config files.' },
+  { level: 3, text: 'Environment Variables', body: 'Create a .env file in the root directory with your settings.' },
+  { level: 3, text: 'Build Options', body: 'Configure the build pipeline in the build.config.ts file.' },
+  { level: 2, text: 'API Reference', body: 'The complete API reference for all exported functions and components.' },
+  { level: 3, text: 'Components', body: 'All React components exported by the library.' },
+  { level: 3, text: 'Hooks', body: 'Custom React hooks for common patterns.' },
+  { level: 2, text: 'Deployment', body: 'Instructions for deploying to various platforms.' },
+];
+
+function App() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const contentRef = useRef(null);
+  const headingRefs = useRef([]);
+
+  const scrollTo = (idx) => headingRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  useEffect(() => {
+    const el = contentRef.current;
+    const handler = () => {
+      const scrollPos = el.scrollTop + 30;
+      let idx = 0;
+      headingRefs.current.forEach((ref, i) => { if (ref && ref.offsetTop <= scrollPos) idx = i; });
+      setActiveIdx(idx);
+    };
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  return (
+    <div className="toc-layout">
+      <div className="toc-sidebar">
+        <h4>Contents</h4>
+        {doc.map((d, i) => (
+          <div key={i} className={\`toc-item \${d.level === 3 ? 'h3' : ''} \${i === activeIdx ? 'active' : ''}\`}
+            onClick={() => scrollTo(i)}>{d.text}</div>
+        ))}
+      </div>
+      <div className="toc-content" ref={contentRef}>
+        {doc.map((d, i) => (
+          <div key={i} ref={el => headingRefs.current[i] = el}>
+            {d.level === 2 ? <h2>{d.text}</h2> : <h3>{d.text}</h3>}
+            <p>{d.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-step-indicator',
+    title: 'Step Indicator',
+    category: 'navigation',
+    difficulty: 'beginner',
+    description: 'Multi-step progress indicator with active, completed, and upcoming states',
+    concepts: ['step tracking', 'progress states', 'connecting lines', 'step navigation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 40px; }
+.step-wrap { width: 420px; }
+.steps { display: flex; align-items: center; margin-bottom: 24px; }
+.step-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; transition: all 0.25s; }
+.step-circle.completed { background: #4ade80; color: #1a1a2e; }
+.step-circle.active { background: #4fc3f7; color: #1a1a2e; }
+.step-circle.upcoming { background: #1e293b; color: #555; border: 2px solid #334155; }
+.step-line { flex: 1; height: 2px; background: #334155; margin: 0 4px; transition: background 0.25s; }
+.step-line.done { background: #4ade80; }
+.step-labels { display: flex; justify-content: space-between; }
+.step-label { font-size: 12px; color: #94a3b8; text-align: center; width: 80px; }
+.step-label.active-label { color: #4fc3f7; font-weight: 600; }
+.step-content { padding: 20px; background: #16213e; border-radius: 10px; border: 1px solid #334155; margin-bottom: 12px; text-align: center; }
+.step-btns { display: flex; gap: 8px; }
+.step-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.btn-next { background: #4fc3f7; color: #1a1a2e; }
+.btn-prev { background: #334155; color: #e0e0e0; }`,
+      js: `const { useState } = React;
+
+const stepNames = ['Account', 'Profile', 'Settings', 'Review'];
+
+function App() {
+  const [current, setCurrent] = useState(0);
+
+  return (
+    <div className="step-wrap">
+      <div className="steps">
+        {stepNames.map((_, i) => (
+          <React.Fragment key={i}>
+            <div className={\`step-circle \${i < current ? 'completed' : i === current ? 'active' : 'upcoming'}\`}>
+              {i < current ? '\\u2713' : i + 1}
+            </div>
+            {i < stepNames.length - 1 && <div className={\`step-line \${i < current ? 'done' : ''}\`} />}
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="step-labels">
+        {stepNames.map((name, i) => <span key={i} className={\`step-label \${i === current ? 'active-label' : ''}\`}>{name}</span>)}
+      </div>
+      <div className="step-content">
+        <h3>{stepNames[current]}</h3>
+        <p style={{color:'#94a3b8',fontSize:14}}>Complete the {stepNames[current].toLowerCase()} step to continue.</p>
+      </div>
+      <div className="step-btns">
+        {current > 0 && <button className="btn-prev" onClick={() => setCurrent(current - 1)}>Previous</button>}
+        <button className="btn-next" onClick={() => setCurrent(Math.min(current + 1, stepNames.length - 1))}>
+          {current === stepNames.length - 1 ? 'Finish' : 'Next'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-app-shell',
+    title: 'App Shell',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Application shell layout with header, sidebar, and content area',
+    concepts: ['layout structure', 'sidebar toggle', 'responsive shell', 'slot pattern'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.shell { display: flex; flex-direction: column; height: 400px; border: 1px solid #334155; border-radius: 10px; overflow: hidden; }
+.shell-header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: #16213e; border-bottom: 1px solid #334155; }
+.shell-toggle { background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; padding: 4px; }
+.shell-title { font-size: 14px; font-weight: 700; color: #4fc3f7; }
+.shell-body { display: flex; flex: 1; overflow: hidden; }
+.shell-sidebar { width: 180px; background: #16213e; border-right: 1px solid #334155; padding: 12px 0; transition: width 0.25s, padding 0.25s; overflow: hidden; }
+.shell-sidebar.collapsed { width: 0; padding: 0; }
+.shell-nav-item { padding: 8px 16px; font-size: 13px; color: #94a3b8; cursor: pointer; transition: all 0.1s; }
+.shell-nav-item:hover { color: #e0e0e0; background: #1e293b; }
+.shell-nav-item.active { color: #4fc3f7; background: rgba(79,195,247,0.05); border-right: 2px solid #4fc3f7; }
+.shell-content { flex: 1; padding: 16px; overflow-y: auto; }`,
+      js: `const { useState } = React;
+
+const navItems = ['Dashboard', 'Projects', 'Team', 'Analytics', 'Settings'];
+
+function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [active, setActive] = useState(0);
+
+  return (
+    <div className="shell">
+      <div className="shell-header">
+        <button className="shell-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>&#x2630;</button>
+        <span className="shell-title">My Application</span>
+      </div>
+      <div className="shell-body">
+        <div className={\`shell-sidebar \${sidebarOpen ? '' : 'collapsed'}\`}>
+          {navItems.map((item, i) => (
+            <div key={item} className={\`shell-nav-item \${i === active ? 'active' : ''}\`}
+              onClick={() => setActive(i)}>{item}</div>
+          ))}
+        </div>
+        <div className="shell-content">
+          <h2 style={{color:'#4fc3f7',marginBottom:8}}>{navItems[active]}</h2>
+          <p style={{color:'#94a3b8',fontSize:14,lineHeight:1.7}}>This is the {navItems[active].toLowerCase()} page. The sidebar can be toggled with the hamburger menu in the header.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-header-scroll-hide',
+    title: 'Header Scroll Hide',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Header that hides when scrolling down and reappears when scrolling up',
+    concepts: ['scroll direction', 'header toggle', 'CSS transform', 'scroll event'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.hsh-container { height: 400px; overflow-y: auto; position: relative; }
+.hsh-header { position: sticky; top: 0; z-index: 10; padding: 12px 16px; background: #16213e; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; transition: transform 0.3s; }
+.hsh-header.hidden { transform: translateY(-100%); }
+.hsh-header h3 { margin: 0; font-size: 16px; color: #4fc3f7; }
+.hsh-content { padding: 20px; }
+.hsh-content p { color: #94a3b8; font-size: 14px; line-height: 1.7; margin-bottom: 16px; }
+.hsh-badge { padding: 4px 10px; border-radius: 12px; background: #334155; color: #94a3b8; font-size: 12px; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+function App() {
+  const [hidden, setHidden] = useState(false);
+  const lastScroll = useRef(0);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    const handler = () => {
+      const current = el.scrollTop;
+      setHidden(current > 80 && current > lastScroll.current);
+      lastScroll.current = current;
+    };
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  return (
+    <div className="hsh-container" ref={containerRef}>
+      <div className={\`hsh-header \${hidden ? 'hidden' : ''}\`}>
+        <h3>My App</h3>
+        <span className="hsh-badge">Scroll down then up</span>
+      </div>
+      <div className="hsh-content">
+        {Array(20).fill(0).map((_, i) => <p key={i}>Paragraph {i + 1}: Scroll down to hide the header, then scroll up to reveal it. The header uses scroll direction detection with a CSS transform transition.</p>)}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-sticky-header',
+    title: 'Sticky Header',
+    category: 'navigation',
+    difficulty: 'beginner',
+    description: 'Header that becomes sticky with a shadow effect after scrolling past it',
+    concepts: ['sticky positioning', 'scroll detection', 'shadow on scroll', 'CSS position sticky'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.sh-container { height: 400px; overflow-y: auto; }
+.sh-hero { padding: 30px 20px; text-align: center; background: linear-gradient(135deg, #16213e, #0f172a); }
+.sh-hero h1 { font-size: 24px; color: #4fc3f7; margin-bottom: 8px; }
+.sh-hero p { color: #94a3b8; font-size: 14px; }
+.sh-header { position: sticky; top: 0; z-index: 10; padding: 10px 16px; background: #16213e; border-bottom: 1px solid #334155; display: flex; gap: 16px; align-items: center; transition: box-shadow 0.25s; }
+.sh-header.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.sh-nav { font-size: 13px; color: #94a3b8; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.sh-nav:hover { color: #4fc3f7; background: rgba(79,195,247,0.05); }
+.sh-content { padding: 20px; }
+.sh-content p { color: #94a3b8; font-size: 14px; line-height: 1.7; margin-bottom: 16px; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+function App() {
+  const [scrolled, setScrolled] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    const handler = () => setScrolled(el.scrollTop > 80);
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  return (
+    <div className="sh-container" ref={ref}>
+      <div className="sh-hero">
+        <h1>Welcome</h1>
+        <p>Scroll down to see the sticky header</p>
+      </div>
+      <div className={\`sh-header \${scrolled ? 'scrolled' : ''}\`}>
+        <span style={{fontSize:14,fontWeight:700,color:'#4fc3f7'}}>Logo</span>
+        {['Home','Features','Docs','Blog'].map(n => <span key={n} className="sh-nav">{n}</span>)}
+      </div>
+      <div className="sh-content">
+        {Array(15).fill(0).map((_, i) => <p key={i}>Section content paragraph {i + 1}. The header becomes sticky with a shadow effect once you scroll past the hero section above.</p>)}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-page-transitions',
+    title: 'Page Transitions',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Animated page transitions with fade and slide effects between views',
+    concepts: ['route transitions', 'CSS animations', 'view switching', 'exit animations'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.pt-wrap { border: 1px solid #334155; border-radius: 10px; overflow: hidden; height: 360px; display: flex; flex-direction: column; }
+.pt-nav { display: flex; background: #16213e; border-bottom: 1px solid #334155; }
+.pt-nav-item { flex: 1; padding: 10px; text-align: center; font-size: 13px; color: #94a3b8; cursor: pointer; transition: all 0.15s; }
+.pt-nav-item:hover { color: #e0e0e0; }
+.pt-nav-item.active { color: #4fc3f7; border-bottom: 2px solid #4fc3f7; }
+.pt-content { flex: 1; position: relative; overflow: hidden; }
+.pt-page { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeSlideOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-30px); } }
+.pt-page.entering { animation: fadeSlideIn 0.3s ease forwards; }
+.pt-page.exiting { animation: fadeSlideOut 0.3s ease forwards; }
+.pt-page h2 { color: #4fc3f7; margin-bottom: 8px; font-size: 24px; }
+.pt-page p { color: #94a3b8; font-size: 14px; text-align: center; max-width: 300px; }`,
+      js: `const { useState, useEffect, useRef } = React;
+
+const pages = [
+  { name: 'Home', icon: '\\u{1F3E0}', desc: 'Welcome to the home page. Navigate between pages to see the transition effects.' },
+  { name: 'About', icon: '\\u{1F4CB}', desc: 'This is the about page. Notice the smooth slide and fade transition.' },
+  { name: 'Contact', icon: '\\u{2709}', desc: 'Get in touch! Each page transition animates in from the right.' },
+];
+
+function App() {
+  const [current, setCurrent] = useState(0);
+  const [anim, setAnim] = useState('entering');
+  const pendingRef = useRef(null);
+
+  const navigate = (idx) => {
+    if (idx === current) return;
+    setAnim('exiting');
+    pendingRef.current = idx;
+    setTimeout(() => {
+      setCurrent(pendingRef.current);
+      setAnim('entering');
+    }, 300);
+  };
+
+  return (
+    <div className="pt-wrap">
+      <div className="pt-nav">
+        {pages.map((p, i) => (
+          <div key={p.name} className={\`pt-nav-item \${i === current ? 'active' : ''}\`}
+            onClick={() => navigate(i)}>{p.name}</div>
+        ))}
+      </div>
+      <div className="pt-content">
+        <div className={\`pt-page \${anim}\`}>
+          <div style={{fontSize:48}}>{pages[current].icon}</div>
+          <h2>{pages[current].name}</h2>
+          <p>{pages[current].desc}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-route-guard',
+    title: 'Route Guard',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Protected route pattern that redirects unauthenticated users to login',
+    concepts: ['route protection', 'auth state', 'conditional rendering', 'redirect pattern'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.rg-wrap { width: 380px; }
+.rg-card { padding: 24px; background: #16213e; border: 1px solid #334155; border-radius: 12px; text-align: center; }
+.rg-card h3 { color: #4fc3f7; margin-bottom: 12px; }
+.rg-card p { font-size: 14px; color: #94a3b8; margin-bottom: 16px; }
+.rg-btn { padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; margin: 4px; }
+.rg-login { background: #4fc3f7; color: #1a1a2e; }
+.rg-logout { background: #334155; color: #e0e0e0; }
+.rg-nav { display: flex; gap: 8px; margin-bottom: 16px; }
+.rg-nav button { flex: 1; padding: 8px; border: 1px solid #334155; border-radius: 6px; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 13px; }
+.rg-nav button.active { border-color: #4fc3f7; color: #4fc3f7; }
+.rg-lock { font-size: 48px; margin-bottom: 8px; }
+.rg-badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-bottom: 12px; }
+.rg-badge.auth { background: rgba(74,222,128,0.15); color: #4ade80; }
+.rg-badge.unauth { background: rgba(248,113,113,0.15); color: #f87171; }`,
+      js: `const { useState } = React;
+
+function LoginPage({ onLogin }) {
+  return (
+    <div className="rg-card">
+      <div className="rg-lock">\\u{1F512}</div>
+      <h3>Login Required</h3>
+      <p>You must be logged in to access this page.</p>
+      <button className="rg-btn rg-login" onClick={onLogin}>Log In</button>
+    </div>
+  );
+}
+
+function ProtectedPage({ page, onLogout }) {
+  return (
+    <div className="rg-card">
+      <h3>{page}</h3>
+      <span className="rg-badge auth">Authenticated</span>
+      <p>Welcome! You have access to the {page.toLowerCase()} page.</p>
+      <button className="rg-btn rg-logout" onClick={onLogout}>Log Out</button>
+    </div>
+  );
+}
+
+function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [page, setPage] = useState('Dashboard');
+  const protectedPages = ['Dashboard', 'Settings', 'Admin'];
+
+  return (
+    <div className="rg-wrap">
+      <div className="rg-nav">
+        {protectedPages.map(p => (
+          <button key={p} className={page === p ? 'active' : ''} onClick={() => setPage(p)}>
+            {loggedIn ? '' : '\\u{1F512} '}{p}
+          </button>
+        ))}
+      </div>
+      {loggedIn ? (
+        <ProtectedPage page={page} onLogout={() => setLoggedIn(false)} />
+      ) : (
+        <LoginPage onLogin={() => setLoggedIn(true)} />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-nested-routes',
+    title: 'Nested Routes',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Nested route layout with parent/child views and outlet pattern',
+    concepts: ['nested layout', 'outlet pattern', 'route nesting', 'layout persistence'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.nr-app { height: 380px; display: flex; flex-direction: column; border: 1px solid #334155; border-radius: 10px; overflow: hidden; }
+.nr-top-nav { display: flex; background: #16213e; border-bottom: 1px solid #334155; }
+.nr-top-item { padding: 10px 16px; font-size: 13px; color: #94a3b8; cursor: pointer; }
+.nr-top-item:hover { color: #e0e0e0; }
+.nr-top-item.active { color: #4fc3f7; border-bottom: 2px solid #4fc3f7; }
+.nr-body { flex: 1; display: flex; overflow: hidden; }
+.nr-sub-nav { width: 140px; background: #0f172a; border-right: 1px solid #334155; padding: 10px 0; }
+.nr-sub-item { padding: 6px 14px; font-size: 12px; color: #94a3b8; cursor: pointer; }
+.nr-sub-item:hover { color: #e0e0e0; }
+.nr-sub-item.active { color: #4fc3f7; background: rgba(79,195,247,0.05); }
+.nr-content { flex: 1; padding: 16px; }
+.nr-content h3 { color: #4fc3f7; margin-bottom: 8px; }
+.nr-crumbs { font-size: 12px; color: #555; margin-bottom: 12px; }
+.nr-crumbs span { color: #4fc3f7; }`,
+      js: `const { useState } = React;
+
+const routes = {
+  Dashboard: { subs: ['Overview', 'Analytics', 'Reports'] },
+  Settings: { subs: ['General', 'Security', 'Notifications'] },
+  Users: { subs: ['All Users', 'Roles', 'Invitations'] },
+};
+
+function App() {
+  const [page, setPage] = useState('Dashboard');
+  const [sub, setSub] = useState('Overview');
+  const topNav = Object.keys(routes);
+
+  const changePage = (p) => { setPage(p); setSub(routes[p].subs[0]); };
+
+  return (
+    <div className="nr-app">
+      <div className="nr-top-nav">
+        {topNav.map(p => <div key={p} className={\`nr-top-item \${p === page ? 'active' : ''}\`} onClick={() => changePage(p)}>{p}</div>)}
+      </div>
+      <div className="nr-body">
+        <div className="nr-sub-nav">
+          {routes[page].subs.map(s => <div key={s} className={\`nr-sub-item \${s === sub ? 'active' : ''}\`} onClick={() => setSub(s)}>{s}</div>)}
+        </div>
+        <div className="nr-content">
+          <div className="nr-crumbs">{page} / <span>{sub}</span></div>
+          <h3>{sub}</h3>
+          <p style={{color:'#94a3b8',fontSize:14}}>This is the {sub} view inside the {page} section. The parent layout persists while the child content changes.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-tab-router',
+    title: 'Tab Router',
+    category: 'navigation',
+    difficulty: 'beginner',
+    description: 'Simple tab-based routing that preserves tab state across navigation',
+    concepts: ['tab routing', 'state preservation', 'lazy rendering', 'active tab'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.tr-wrap { width: 400px; border: 1px solid #334155; border-radius: 10px; overflow: hidden; }
+.tr-tabs { display: flex; background: #16213e; }
+.tr-tab { flex: 1; padding: 10px; text-align: center; font-size: 13px; color: #94a3b8; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tr-tab:hover { color: #e0e0e0; }
+.tr-tab.active { color: #4fc3f7; border-bottom-color: #4fc3f7; }
+.tr-panel { padding: 20px; min-height: 150px; }
+.tr-panel h3 { color: #4fc3f7; margin-bottom: 8px; }
+.tr-panel p { color: #94a3b8; font-size: 14px; }
+.tr-counter { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.tr-counter button { padding: 6px 12px; border: none; border-radius: 6px; background: #334155; color: #e0e0e0; cursor: pointer; font-size: 16px; }
+.tr-counter span { font-size: 20px; font-weight: 700; color: #4fc3f7; min-width: 30px; text-align: center; }`,
+      js: `const { useState } = React;
+
+function TabContent({ name, preserved }) {
+  const [count, setCount] = useState(0);
+  return (
+    <div className="tr-panel">
+      <h3>{name}</h3>
+      <p>This tab has its own state that is preserved when you switch tabs.</p>
+      <div className="tr-counter">
+        <button onClick={() => setCount(c => c - 1)}>-</button>
+        <span>{count}</span>
+        <button onClick={() => setCount(c => c + 1)}>+</button>
+      </div>
+    </div>
+  );
+}
+
+const tabs = ['Home', 'Profile', 'Messages'];
+
+function App() {
+  const [active, setActive] = useState(0);
+
+  return (
+    <div className="tr-wrap">
+      <div className="tr-tabs">
+        {tabs.map((t, i) => (
+          <div key={t} className={\`tr-tab \${i === active ? 'active' : ''}\`} onClick={() => setActive(i)}>{t}</div>
+        ))}
+      </div>
+      {tabs.map((t, i) => (
+        <div key={t} style={{display: i === active ? 'block' : 'none'}}>
+          <TabContent name={t} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-deep-linking',
+    title: 'Deep Linking',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Hash-based deep linking that syncs UI state with the URL fragment',
+    concepts: ['hash routing', 'URL sync', 'history API', 'state from URL'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.dl-wrap { width: 380px; }
+.dl-nav { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.dl-link { padding: 6px 14px; border-radius: 16px; border: 1px solid #334155; background: transparent; color: #94a3b8; cursor: pointer; font-size: 13px; text-decoration: none; }
+.dl-link:hover { border-color: #4fc3f7; color: #e0e0e0; }
+.dl-link.active { background: #4fc3f7; color: #1a1a2e; border-color: #4fc3f7; font-weight: 600; }
+.dl-content { padding: 20px; background: #16213e; border: 1px solid #334155; border-radius: 10px; }
+.dl-content h3 { color: #4fc3f7; margin-bottom: 8px; }
+.dl-content p { font-size: 14px; color: #94a3b8; }
+.dl-url { margin-top: 12px; padding: 8px 12px; background: #0f172a; border-radius: 6px; font-family: monospace; font-size: 12px; color: #4fc3f7; }`,
+      js: `const { useState, useEffect } = React;
+
+const pages = {
+  home: { title: 'Home', desc: 'Welcome to the home page.' },
+  about: { title: 'About', desc: 'Learn about our project.' },
+  features: { title: 'Features', desc: 'Explore our features.' },
+  pricing: { title: 'Pricing', desc: 'View pricing plans.' },
+};
+
+function App() {
+  const [page, setPage] = useState('home');
+
+  useEffect(() => {
+    const handler = () => {
+      const hash = window.location.hash.slice(1) || 'home';
+      if (pages[hash]) setPage(hash);
+    };
+    window.addEventListener('hashchange', handler);
+    handler();
+    return () => window.removeEventListener('hashchange', handler);
+  }, []);
+
+  const navigate = (p) => {
+    window.location.hash = p;
+    setPage(p);
+  };
+
+  const current = pages[page];
+
+  return (
+    <div className="dl-wrap">
+      <h3 style={{marginBottom:10}}>Deep Linking</h3>
+      <div className="dl-nav">
+        {Object.keys(pages).map(p => (
+          <button key={p} className={\`dl-link \${p === page ? 'active' : ''}\`} onClick={() => navigate(p)}>
+            {pages[p].title}
+          </button>
+        ))}
+      </div>
+      <div className="dl-content">
+        <h3>{current.title}</h3>
+        <p>{current.desc}</p>
+        <div className="dl-url">URL hash: #{page}</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-url-state',
+    title: 'URL State',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description: 'Sync component state with URL search parameters for shareable views',
+    concepts: ['URL parameters', 'state sync', 'search params', 'shareable state'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.us-wrap { width: 380px; }
+.us-controls { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.us-group label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
+.us-group select, .us-group input { padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; outline: none; font-size: 14px; width: 100%; box-sizing: border-box; }
+.us-url { padding: 10px; background: #0f172a; border-radius: 6px; font-family: monospace; font-size: 11px; color: #4fc3f7; word-break: break-all; margin-bottom: 12px; }
+.us-result { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; }
+.us-item { padding: 8px 0; border-bottom: 1px solid #1e293b; font-size: 14px; }`,
+      js: `const { useState, useMemo } = React;
+
+const items = [
+  { name: 'React', category: 'frontend', year: 2013 },
+  { name: 'Vue', category: 'frontend', year: 2014 },
+  { name: 'Express', category: 'backend', year: 2010 },
+  { name: 'Django', category: 'backend', year: 2005 },
+  { name: 'Next.js', category: 'fullstack', year: 2016 },
+  { name: 'Remix', category: 'fullstack', year: 2021 },
+];
+
+function App() {
+  const [category, setCategory] = useState('all');
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState('name');
+
+  const filtered = useMemo(() => {
+    return items
+      .filter(i => category === 'all' || i.category === category)
+      .filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
+      .sort((a, b) => sort === 'year' ? a.year - b.year : a.name.localeCompare(b.name));
+  }, [category, search, sort]);
+
+  const urlPreview = '?category=' + category + '&search=' + encodeURIComponent(search) + '&sort=' + sort;
+
+  return (
+    <div className="us-wrap">
+      <h3 style={{marginBottom:10}}>URL State Sync</h3>
+      <div className="us-controls">
+        <div className="us-group"><label>Category</label><select value={category} onChange={e => setCategory(e.target.value)}><option value="all">All</option><option value="frontend">Frontend</option><option value="backend">Backend</option><option value="fullstack">Fullstack</option></select></div>
+        <div className="us-group"><label>Search</label><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Filter..." /></div>
+        <div className="us-group"><label>Sort</label><select value={sort} onChange={e => setSort(e.target.value)}><option value="name">Name</option><option value="year">Year</option></select></div>
+      </div>
+      <div className="us-url">{urlPreview}</div>
+      <div className="us-result">
+        {filtered.map(i => <div className="us-item" key={i.name}>{i.name} <span style={{color:'#555'}}>({i.category}, {i.year})</span></div>)}
+        {!filtered.length && <div style={{color:'#555',textAlign:'center'}}>No results</div>}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-back-to-top',
+    title: 'Back to Top',
+    category: 'navigation',
+    difficulty: 'beginner',
+    description: 'Progress-aware back-to-top button with scroll percentage indicator',
+    concepts: ['scroll progress', 'circular progress', 'smooth scroll', 'SVG arc'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.btt-container { height: 400px; overflow-y: auto; position: relative; padding: 20px; }
+.btt-container p { color: #94a3b8; font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
+.btt-btn { position: absolute; bottom: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; background: #16213e; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s; z-index: 5; }
+.btt-btn.visible { opacity: 1; }
+.btt-btn svg { position: absolute; transform: rotate(-90deg); }
+.btt-arrow { color: #4fc3f7; font-size: 18px; z-index: 1; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+function App() {
+  const [progress, setProgress] = useState(0);
+  const [show, setShow] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    const handler = () => {
+      const scrollable = el.scrollHeight - el.clientHeight;
+      const pct = scrollable > 0 ? (el.scrollTop / scrollable) * 100 : 0;
+      setProgress(pct);
+      setShow(el.scrollTop > 100);
+    };
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  const circumference = 2 * Math.PI * 18;
+  const offset = circumference - (progress / 100) * circumference;
+
+  return (
+    <div className="btt-container" ref={ref}>
+      <h3 style={{color:'#4fc3f7',marginBottom:12}}>Scroll Progress</h3>
+      {Array(20).fill(0).map((_, i) => <p key={i}>Paragraph {i + 1}: Scroll down to see the progress indicator on the back-to-top button.</p>)}
+      <button className={\`btt-btn \${show ? 'visible' : ''}\`} onClick={() => ref.current.scrollTo({top:0,behavior:'smooth'})}>
+        <svg width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#334155" strokeWidth="3" /><circle cx="24" cy="24" r="18" fill="none" stroke="#4fc3f7" strokeWidth="3" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" /></svg>
+        <span className="btt-arrow">\\u2191</span>
+      </button>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-scroll-spy',
+    title: 'Scroll Spy',
+    category: 'navigation',
+    difficulty: 'intermediate',
+    description:
+      'Navigation that highlights the currently visible section using IntersectionObserver',
+    concepts: ['IntersectionObserver', 'scroll spy', 'active section', 'observer API'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.ss-layout { display: flex; height: 400px; }
+.ss-nav { width: 150px; padding: 14px; background: #16213e; border-right: 1px solid #334155; }
+.ss-nav-item { padding: 6px 10px; font-size: 13px; color: #94a3b8; border-left: 2px solid transparent; cursor: pointer; margin-bottom: 2px; transition: all 0.15s; border-radius: 0 4px 4px 0; }
+.ss-nav-item:hover { color: #e0e0e0; }
+.ss-nav-item.active { color: #4fc3f7; border-left-color: #4fc3f7; background: rgba(79,195,247,0.05); }
+.ss-content { flex: 1; overflow-y: auto; padding: 20px; }
+.ss-section { min-height: 200px; margin-bottom: 20px; padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 8px; }
+.ss-section h2 { color: #4fc3f7; margin-bottom: 8px; }
+.ss-section p { color: #94a3b8; font-size: 14px; line-height: 1.7; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const sections = ['Overview', 'Installation', 'Configuration', 'API', 'Examples', 'FAQ'];
+
+function App() {
+  const [active, setActive] = useState(0);
+  const containerRef = useRef(null);
+  const sectionRefs = useRef([]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = sectionRefs.current.indexOf(entry.target);
+            if (idx >= 0) setActive(idx);
+          }
+        });
+      },
+      { root: container, threshold: 0.3 }
+    );
+    sectionRefs.current.forEach(el => { if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollTo = (idx) => {
+    sectionRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  return (
+    <div className="ss-layout">
+      <div className="ss-nav">
+        {sections.map((s, i) => (
+          <div key={s} className={\`ss-nav-item \${i === active ? 'active' : ''}\`} onClick={() => scrollTo(i)}>{s}</div>
+        ))}
+      </div>
+      <div className="ss-content" ref={containerRef}>
+        {sections.map((s, i) => (
+          <div key={s} className="ss-section" ref={el => sectionRefs.current[i] = el}>
+            <h2>{s}</h2>
+            <p>Content for the {s} section. Scroll through the sections to see the navigation highlight update automatically using the Intersection Observer API.</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  // --- advanced ---
+  {
+    id: 'react-theme-switcher',
+    title: 'Theme Switcher',
+    category: 'advanced',
+    difficulty: 'beginner',
+    description: 'Light/dark theme toggle that persists preference and uses CSS variables',
+    concepts: ['CSS variables', 'theme persistence', 'context pattern', 'toggle UI'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `.theme-wrap { padding: 24px; border-radius: 12px; min-height: 250px; transition: all 0.3s; font-family: sans-serif; }
+.theme-wrap.dark { background: #1a1a2e; color: #e0e0e0; }
+.theme-wrap.light { background: #f8f9fa; color: #1a1a2e; }
+.theme-toggle { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.toggle-track { width: 48px; height: 26px; border-radius: 13px; cursor: pointer; position: relative; transition: background 0.3s; }
+.dark .toggle-track { background: #334155; }
+.light .toggle-track { background: #cbd5e1; }
+.toggle-thumb { position: absolute; top: 3px; width: 20px; height: 20px; border-radius: 50%; transition: all 0.3s; }
+.dark .toggle-thumb { left: 25px; background: #4fc3f7; }
+.light .toggle-thumb { left: 3px; background: #f59e0b; }
+.theme-card { padding: 16px; border-radius: 8px; margin-bottom: 12px; transition: all 0.3s; }
+.dark .theme-card { background: #16213e; border: 1px solid #334155; }
+.light .theme-card { background: white; border: 1px solid #e2e8f0; }
+.theme-card h4 { margin: 0 0 4px; }
+.dark .theme-card h4 { color: #4fc3f7; }
+.light .theme-card h4 { color: #3b82f6; }
+.theme-card p { margin: 0; font-size: 13px; opacity: 0.7; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [dark, setDark] = useState(true);
+
+  return (
+    <div className={\`theme-wrap \${dark ? 'dark' : 'light'}\`}>
+      <div className="theme-toggle">
+        <span>{dark ? '\\u{1F319}' : '\\u2600\\uFE0F'}</span>
+        <div className="toggle-track" onClick={() => setDark(!dark)}>
+          <div className="toggle-thumb" />
+        </div>
+        <span>{dark ? 'Dark' : 'Light'} Mode</span>
+      </div>
+      <div className="theme-card"><h4>Card Title</h4><p>This card adapts to the current theme automatically.</p></div>
+      <div className="theme-card"><h4>Another Card</h4><p>Toggle the switch above to change between light and dark themes.</p></div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-i18n-locale',
+    title: 'i18n Locale',
+    category: 'advanced',
+    difficulty: 'intermediate',
+    description: 'Internationalization with locale switcher and translated content',
+    concepts: ['i18n', 'locale context', 'translation objects', 'language switching'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.i18n-wrap { width: 380px; }
+.lang-switcher { display: flex; gap: 6px; margin-bottom: 16px; }
+.lang-btn { padding: 6px 14px; border-radius: 16px; border: 1px solid #334155; background: transparent; color: #94a3b8; cursor: pointer; font-size: 13px; }
+.lang-btn.active { background: #4fc3f7; color: #1a1a2e; border-color: #4fc3f7; font-weight: 600; }
+.i18n-card { padding: 20px; background: #16213e; border: 1px solid #334155; border-radius: 10px; }
+.i18n-card h2 { color: #4fc3f7; margin-bottom: 8px; }
+.i18n-card p { font-size: 14px; color: #94a3b8; line-height: 1.6; margin-bottom: 12px; }
+.i18n-btn { padding: 10px 20px; border: none; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; }
+.i18n-meta { margin-top: 12px; font-size: 12px; color: #555; }`,
+      js: `const { useState } = React;
+
+const translations = {
+  en: { greeting: 'Hello, World!', desc: 'This page demonstrates internationalization. Switch languages to see translations update in real-time.', cta: 'Get Started', locale: 'English', dir: 'ltr' },
+  es: { greeting: '\\u00A1Hola, Mundo!', desc: 'Esta p\\u00E1gina demuestra la internacionalizaci\\u00F3n. Cambia de idioma para ver las traducciones actualizarse en tiempo real.', cta: 'Comenzar', locale: 'Espa\\u00F1ol', dir: 'ltr' },
+  ja: { greeting: '\\u3053\\u3093\\u306B\\u3061\\u306F\\u4E16\\u754C\\uFF01', desc: '\\u3053\\u306E\\u30DA\\u30FC\\u30B8\\u306F\\u56FD\\u969B\\u5316\\u3092\\u5B9F\\u6F14\\u3057\\u307E\\u3059\\u3002\\u8A00\\u8A9E\\u3092\\u5207\\u308A\\u66FF\\u3048\\u3066\\u3001\\u30EA\\u30A2\\u30EB\\u30BF\\u30A4\\u30E0\\u3067\\u7FFB\\u8A33\\u304C\\u66F4\\u65B0\\u3055\\u308C\\u308B\\u306E\\u3092\\u3054\\u89A7\\u304F\\u3060\\u3055\\u3044\\u3002', cta: '\\u59CB\\u3081\\u308B', locale: '\\u65E5\\u672C\\u8A9E', dir: 'ltr' },
+  ar: { greeting: '\\u0645\\u0631\\u062D\\u0628\\u0627 \\u0628\\u0627\\u0644\\u0639\\u0627\\u0644\\u0645!', desc: '\\u062A\\u0648\\u0636\\u062D \\u0647\\u0630\\u0647 \\u0627\\u0644\\u0635\\u0641\\u062D\\u0629 \\u0627\\u0644\\u062A\\u062F\\u0648\\u064A\\u0644. \\u0642\\u0645 \\u0628\\u062A\\u0628\\u062F\\u064A\\u0644 \\u0627\\u0644\\u0644\\u063A\\u0627\\u062A \\u0644\\u0631\\u0624\\u064A\\u0629 \\u0627\\u0644\\u062A\\u0631\\u062C\\u0645\\u0627\\u062A.', cta: '\\u0627\\u0628\\u062F\\u0623', locale: '\\u0627\\u0644\\u0639\\u0631\\u0628\\u064A\\u0629', dir: 'rtl' },
+};
+
+function App() {
+  const [lang, setLang] = useState('en');
+  const t = translations[lang];
+
+  return (
+    <div className="i18n-wrap">
+      <div className="lang-switcher">
+        {Object.keys(translations).map(l => (
+          <button key={l} className={\`lang-btn \${l === lang ? 'active' : ''}\`} onClick={() => setLang(l)}>
+            {translations[l].locale}
+          </button>
+        ))}
+      </div>
+      <div className="i18n-card" style={{direction: t.dir}}>
+        <h2>{t.greeting}</h2>
+        <p>{t.desc}</p>
+        <button className="i18n-btn">{t.cta}</button>
+        <div className="i18n-meta">Locale: {lang} | Direction: {t.dir}</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-a11y-focus-trap',
+    title: 'Accessibility Focus Trap',
+    category: 'advanced',
+    difficulty: 'advanced',
+    description: 'Focus trap for modals ensuring keyboard focus stays within the dialog',
+    concepts: ['focus trap', 'tab management', 'modal accessibility', 'ARIA roles'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 60px; margin: 0; }
+.ft-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.ft-modal { width: 360px; padding: 24px; background: #16213e; border: 1px solid #334155; border-radius: 12px; }
+.ft-modal h3 { color: #4fc3f7; margin-bottom: 12px; }
+.ft-modal p { font-size: 14px; color: #94a3b8; margin-bottom: 16px; }
+.ft-field { margin-bottom: 12px; }
+.ft-field label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 4px; }
+.ft-field input { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; outline: none; box-sizing: border-box; }
+.ft-field input:focus { border-color: #4fc3f7; box-shadow: 0 0 0 2px rgba(79,195,247,0.2); }
+.ft-btns { display: flex; gap: 8px; margin-top: 16px; }
+.ft-btns button { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.ft-btns button:focus { outline: 2px solid #4fc3f7; outline-offset: 2px; }
+.ft-cancel { background: #334155; color: #e0e0e0; }
+.ft-confirm { background: #4fc3f7; color: #1a1a2e; }
+.trigger-btn { padding: 12px 24px; border: none; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; }
+.trigger-btn:focus { outline: 2px solid #4fc3f7; outline-offset: 2px; }
+.ft-hint { margin-top: 8px; font-size: 12px; color: #555; text-align: center; }`,
+      js: `const { useState, useRef, useEffect, useCallback } = React;
+
+function FocusTrap({ children, active }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!active || !ref.current) return;
+    const focusable = ref.current.querySelectorAll('input, button, [tabindex]');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+
+    const handler = (e) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [active]);
+
+  return <div ref={ref}>{children}</div>;
+}
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+
+  const close = useCallback(() => { setOpen(false); triggerRef.current?.focus(); }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open, close]);
+
+  return (
+    <div>
+      <button className="trigger-btn" ref={triggerRef} onClick={() => setOpen(true)}>Open Modal (Focus Trapped)</button>
+      <div className="ft-hint">Try tabbing - focus stays inside the modal</div>
+      {open && (
+        <div className="ft-overlay" role="dialog" aria-modal="true" aria-label="Form dialog">
+          <FocusTrap active={open}>
+            <div className="ft-modal">
+              <h3>Focus Trapped Modal</h3>
+              <p>Tab through the fields. Focus wraps from last to first element.</p>
+              <div className="ft-field"><label>Name</label><input placeholder="Your name" /></div>
+              <div className="ft-field"><label>Email</label><input placeholder="Your email" /></div>
+              <div className="ft-btns">
+                <button className="ft-cancel" onClick={close}>Cancel</button>
+                <button className="ft-confirm" onClick={close}>Confirm</button>
+              </div>
+            </div>
+          </FocusTrap>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-a11y-live-region',
+    title: 'Accessibility Live Region',
+    category: 'advanced',
+    difficulty: 'intermediate',
+    description: 'ARIA live regions that announce dynamic content changes to screen readers',
+    concepts: ['aria-live', 'screen reader', 'polite announcements', 'assertive messages'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.lr-wrap { width: 380px; }
+.lr-demo { padding: 20px; background: #16213e; border: 1px solid #334155; border-radius: 10px; margin-bottom: 12px; }
+.lr-demo h4 { color: #4fc3f7; margin-bottom: 10px; }
+.lr-btn { padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; margin-right: 6px; margin-bottom: 6px; }
+.lr-polite { background: #4fc3f7; color: #1a1a2e; }
+.lr-assertive { background: #f87171; color: white; }
+.lr-status { background: #334155; color: #e0e0e0; }
+.lr-announce { margin-top: 10px; padding: 10px; border-radius: 6px; font-size: 13px; min-height: 20px; }
+.lr-announce.pol { background: rgba(79,195,247,0.1); border: 1px solid rgba(79,195,247,0.3); color: #4fc3f7; }
+.lr-announce.ass { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+.lr-announce.stat { background: rgba(148,163,184,0.1); border: 1px solid rgba(148,163,184,0.3); color: #94a3b8; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [messages, setMessages] = useState([]);
+  const [polite, setPolite] = useState('');
+  const [assertive, setAssertive] = useState('');
+  const [status, setStatus] = useState('');
+
+  const announce = (type, text) => {
+    setMessages(prev => [...prev, { type, text, id: Date.now() }]);
+    if (type === 'polite') { setPolite(''); setTimeout(() => setPolite(text), 50); }
+    if (type === 'assertive') { setAssertive(''); setTimeout(() => setAssertive(text), 50); }
+    if (type === 'status') { setStatus(''); setTimeout(() => setStatus(text), 50); }
+  };
+
+  return (
+    <div className="lr-wrap">
+      <h3 style={{marginBottom:10}}>ARIA Live Regions</h3>
+      <div className="lr-demo">
+        <h4>Trigger Announcements</h4>
+        <button className="lr-btn lr-polite" onClick={() => announce('polite', 'Item added to cart (polite)')}>Polite</button>
+        <button className="lr-btn lr-assertive" onClick={() => announce('assertive', 'Error: form validation failed! (assertive)')}>Assertive</button>
+        <button className="lr-btn lr-status" onClick={() => announce('status', 'Loading complete (status)')}>Status</button>
+      </div>
+      <div>
+        {messages.slice(-5).reverse().map(m => (
+          <div key={m.id} className={\`lr-announce \${m.type === 'polite' ? 'pol' : m.type === 'assertive' ? 'ass' : 'stat'}\`}>
+            [{m.type}] {m.text}
+          </div>
+        ))}
+      </div>
+      <div aria-live="polite" aria-atomic="true" className="sr-only">{polite}</div>
+      <div aria-live="assertive" aria-atomic="true" className="sr-only">{assertive}</div>
+      <div role="status" aria-atomic="true" className="sr-only">{status}</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-offline-indicator',
+    title: 'Offline Indicator',
+    category: 'advanced',
+    difficulty: 'beginner',
+    description: 'Network status indicator that shows online/offline state with banner',
+    concepts: ['navigator.onLine', 'online/offline events', 'status banner', 'reconnection'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.oi-wrap { width: 380px; }
+.oi-banner { padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; transition: all 0.3s; }
+.oi-banner.online { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; }
+.oi-banner.offline { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+.oi-dot { width: 8px; height: 8px; border-radius: 50%; }
+.oi-dot.on { background: #4ade80; }
+.oi-dot.off { background: #f87171; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.oi-card { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; }
+.oi-card p { font-size: 14px; color: #94a3b8; }
+.oi-btn { margin-top: 12px; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+.oi-toggle { background: #334155; color: #e0e0e0; }`,
+      js: `const { useState, useEffect } = React;
+
+function App() {
+  const [online, setOnline] = useState(true);
+  const [simulated, setSimulated] = useState(false);
+
+  useEffect(() => {
+    if (simulated) return;
+    const goOnline = () => setOnline(true);
+    const goOffline = () => setOnline(false);
+    window.addEventListener('online', goOnline);
+    window.addEventListener('offline', goOffline);
+    setOnline(navigator.onLine);
+    return () => { window.removeEventListener('online', goOnline); window.removeEventListener('offline', goOffline); };
+  }, [simulated]);
+
+  const toggleSimulate = () => {
+    setSimulated(true);
+    setOnline(prev => !prev);
+  };
+
+  return (
+    <div className="oi-wrap">
+      <h3 style={{marginBottom:10}}>Network Status</h3>
+      <div className={\`oi-banner \${online ? 'online' : 'offline'}\`}>
+        <span className={\`oi-dot \${online ? 'on' : 'off'}\`} />
+        {online ? 'You are online' : 'You are offline - some features may be unavailable'}
+      </div>
+      <div className="oi-card">
+        <p>{online ? 'All features are available. Your connection is stable.' : 'You appear to be offline. Cached content is still available, but new data cannot be fetched.'}</p>
+        <button className="oi-btn oi-toggle" onClick={toggleSimulate}>
+          Simulate {online ? 'Offline' : 'Online'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-websocket-chat',
+    title: 'WebSocket Chat',
+    category: 'advanced',
+    difficulty: 'advanced',
+    description: 'Simulated real-time chat interface with typing indicators and message bubbles',
+    concepts: ['real-time messaging', 'chat UI', 'typing indicator', 'auto-scroll'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.chat { display: flex; flex-direction: column; height: 400px; border: 1px solid #334155; border-radius: 10px; overflow: hidden; max-width: 420px; margin: 16px auto; }
+.chat-header { padding: 10px 14px; background: #16213e; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: 8px; }
+.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: #4fc3f7; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #1a1a2e; }
+.chat-name { font-size: 14px; font-weight: 600; }
+.chat-status { font-size: 11px; color: #4ade80; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.msg { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
+.msg-self { align-self: flex-end; background: #4fc3f7; color: #1a1a2e; border-bottom-right-radius: 4px; }
+.msg-other { align-self: flex-start; background: #1e293b; color: #e0e0e0; border-bottom-left-radius: 4px; }
+.msg-time { font-size: 10px; opacity: 0.6; margin-top: 2px; }
+.typing { align-self: flex-start; font-size: 12px; color: #94a3b8; font-style: italic; padding: 4px 0; }
+.chat-input { display: flex; gap: 8px; padding: 10px; background: #16213e; border-top: 1px solid #334155; }
+.chat-input input { flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; outline: none; font-size: 13px; }
+.chat-input button { padding: 8px 16px; border: none; border-radius: 20px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const botReplies = ['That sounds great!', 'Interesting, tell me more.', 'I see what you mean.', 'Good point!', 'Let me think about that...'];
+
+function App() {
+  const [messages, setMessages] = useState([
+    { text: 'Hey! How are you?', self: false, time: '10:30' },
+    { text: 'Doing great, thanks!', self: true, time: '10:31' },
+  ]);
+  const [input, setInput] = useState('');
+  const [typing, setTyping] = useState(false);
+  const bottomRef = useRef(null);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, typing]);
+
+  const send = () => {
+    if (!input.trim()) return;
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setMessages(prev => [...prev, { text: input, self: true, time: now }]);
+    setInput('');
+    setTyping(true);
+    setTimeout(() => {
+      setTyping(false);
+      const reply = botReplies[Math.floor(Math.random() * botReplies.length)];
+      const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setMessages(prev => [...prev, { text: reply, self: false, time: replyTime }]);
+    }, 1000 + Math.random() * 1500);
+  };
+
+  return (
+    <div className="chat">
+      <div className="chat-header">
+        <div className="chat-avatar">B</div>
+        <div><div className="chat-name">Bot</div><div className="chat-status">{typing ? 'typing...' : 'online'}</div></div>
+      </div>
+      <div className="chat-messages">
+        {messages.map((m, i) => (
+          <div key={i} className={\`msg \${m.self ? 'msg-self' : 'msg-other'}\`}>
+            {m.text}<div className="msg-time">{m.time}</div>
+          </div>
+        ))}
+        {typing && <div className="typing">Bot is typing...</div>}
+        <div ref={bottomRef} />
+      </div>
+      <div className="chat-input">
+        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} placeholder="Type a message..." />
+        <button onClick={send}>Send</button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-optimistic-update',
+    title: 'Optimistic Update',
+    category: 'advanced',
+    difficulty: 'advanced',
+    description: 'Optimistic UI updates that show changes immediately then reconcile with server',
+    concepts: ['optimistic UI', 'rollback', 'pending state', 'async reconciliation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.ou-wrap { width: 380px; }
+.ou-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 6px; background: #16213e; border: 1px solid #334155; border-radius: 8px; font-size: 14px; transition: opacity 0.2s; }
+.ou-item.pending { opacity: 0.6; }
+.ou-item.error { border-color: #f87171; }
+.ou-like { background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; }
+.ou-count { font-size: 14px; color: #4fc3f7; font-weight: 700; min-width: 24px; }
+.ou-status { margin-left: auto; font-size: 11px; padding: 2px 8px; border-radius: 8px; }
+.ou-status.saving { background: rgba(250,204,21,0.15); color: #facc15; }
+.ou-status.saved { background: rgba(74,222,128,0.15); color: #4ade80; }
+.ou-status.failed { background: rgba(248,113,113,0.15); color: #f87171; }
+.ou-note { font-size: 12px; color: #555; margin-top: 8px; }`,
+      js: `const { useState, useCallback } = React;
+
+const fakeApi = () => new Promise((resolve, reject) => {
+  setTimeout(() => Math.random() > 0.3 ? resolve() : reject(new Error('Network error')), 800);
+});
+
+function App() {
+  const [items, setItems] = useState([
+    { id: 1, name: 'React Patterns', likes: 42, status: 'saved' },
+    { id: 2, name: 'TypeScript Tips', likes: 28, status: 'saved' },
+    { id: 3, name: 'CSS Tricks', likes: 35, status: 'saved' },
+    { id: 4, name: 'Node.js Guide', likes: 19, status: 'saved' },
+  ]);
+
+  const toggleLike = useCallback(async (id) => {
+    setItems(prev => prev.map(i => i.id === id ? { ...i, likes: i.likes + 1, status: 'saving' } : i));
+    try {
+      await fakeApi();
+      setItems(prev => prev.map(i => i.id === id ? { ...i, status: 'saved' } : i));
+    } catch {
+      setItems(prev => prev.map(i => i.id === id ? { ...i, likes: i.likes - 1, status: 'failed' } : i));
+    }
+  }, []);
+
+  return (
+    <div className="ou-wrap">
+      <h3 style={{marginBottom:10}}>Optimistic Updates</h3>
+      {items.map(item => (
+        <div key={item.id} className={\`ou-item \${item.status === 'saving' ? 'pending' : ''} \${item.status === 'failed' ? 'error' : ''}\`}>
+          <button className="ou-like" onClick={() => toggleLike(item.id)}>\\u2764\\uFE0F</button>
+          <span className="ou-count">{item.likes}</span>
+          <span>{item.name}</span>
+          <span className={\`ou-status \${item.status}\`}>{item.status === 'saving' ? 'Saving...' : item.status === 'failed' ? 'Failed!' : 'Saved'}</span>
+        </div>
+      ))}
+      <div className="ou-note">Click heart to like. ~30% chance of simulated failure with rollback.</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-undo-manager',
+    title: 'Undo Manager',
+    category: 'advanced',
+    difficulty: 'advanced',
+    description: 'Undo/redo system with action history stack for state management',
+    concepts: ['undo stack', 'redo stack', 'action history', 'state snapshots'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.um-wrap { width: 400px; }
+.um-toolbar { display: flex; gap: 6px; margin-bottom: 12px; }
+.um-btn { padding: 6px 14px; border: 1px solid #334155; border-radius: 6px; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 12px; }
+.um-btn:hover:not(:disabled) { border-color: #4fc3f7; color: #4fc3f7; }
+.um-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.um-canvas { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; margin-bottom: 12px; }
+.um-cell { aspect-ratio: 1; border-radius: 4px; cursor: pointer; transition: all 0.1s; border: 1px solid transparent; }
+.um-cell:hover { border-color: #4fc3f7; transform: scale(1.05); }
+.um-colors { display: flex; gap: 6px; margin-bottom: 12px; }
+.um-color { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.um-color.active { border-color: white; }
+.um-history { max-height: 100px; overflow-y: auto; font-size: 11px; color: #555; }
+.um-history div { padding: 2px 0; }
+.um-history .current { color: #4fc3f7; }`,
+      js: `const { useState, useCallback } = React;
+
+const colors = ['#4fc3f7', '#f87171', '#4ade80', '#facc15', '#a78bfa', '#1e293b'];
+const initGrid = Array(64).fill('#1e293b');
+
+function App() {
+  const [grid, setGrid] = useState(initGrid);
+  const [history, setHistory] = useState([initGrid]);
+  const [histIdx, setHistIdx] = useState(0);
+  const [color, setColor] = useState('#4fc3f7');
+
+  const paint = useCallback((idx) => {
+    const next = [...grid];
+    next[idx] = color;
+    const newHistory = [...history.slice(0, histIdx + 1), next];
+    setGrid(next);
+    setHistory(newHistory);
+    setHistIdx(newHistory.length - 1);
+  }, [grid, history, histIdx, color]);
+
+  const undo = () => {
+    if (histIdx > 0) { setHistIdx(histIdx - 1); setGrid(history[histIdx - 1]); }
+  };
+  const redo = () => {
+    if (histIdx < history.length - 1) { setHistIdx(histIdx + 1); setGrid(history[histIdx + 1]); }
+  };
+
+  return (
+    <div className="um-wrap">
+      <h3 style={{marginBottom:8}}>Pixel Painter (Undo/Redo)</h3>
+      <div className="um-toolbar">
+        <button className="um-btn" onClick={undo} disabled={histIdx === 0}>\\u21A9 Undo</button>
+        <button className="um-btn" onClick={redo} disabled={histIdx >= history.length - 1}>\\u21AA Redo</button>
+        <button className="um-btn" onClick={() => { setGrid(initGrid); setHistory([initGrid]); setHistIdx(0); }}>Clear</button>
+        <span style={{marginLeft:'auto',fontSize:11,color:'#555'}}>{histIdx}/{history.length - 1} steps</span>
+      </div>
+      <div className="um-colors">
+        {colors.map(c => <div key={c} className={\`um-color \${c === color ? 'active' : ''}\`} style={{background:c}} onClick={() => setColor(c)} />)}
+      </div>
+      <div className="um-canvas">
+        {grid.map((c, i) => <div key={i} className="um-cell" style={{background:c}} onClick={() => paint(i)} />)}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-clipboard-manager',
+    title: 'Clipboard Manager',
+    category: 'advanced',
+    difficulty: 'intermediate',
+    description: 'Copy-to-clipboard manager with history of copied items and quick paste',
+    concepts: ['clipboard API', 'copy history', 'write text', 'feedback animation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.cm-wrap { width: 380px; }
+.cm-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 6px; background: #16213e; border: 1px solid #334155; border-radius: 8px; }
+.cm-text { flex: 1; font-size: 13px; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-copy { padding: 4px 10px; border: none; border-radius: 4px; background: #334155; color: #94a3b8; cursor: pointer; font-size: 11px; transition: all 0.15s; }
+.cm-copy:hover { background: #4fc3f7; color: #1a1a2e; }
+.cm-copy.copied { background: #4ade80; color: #1a1a2e; }
+.cm-input-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.cm-input-row input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; outline: none; font-size: 14px; }
+.cm-input-row button { padding: 8px 14px; border: none; border-radius: 6px; background: #4fc3f7; color: #1a1a2e; font-weight: 600; cursor: pointer; }
+.cm-label { font-size: 12px; color: #555; margin-bottom: 8px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState([
+    'npm install react',
+    'git commit -m "initial commit"',
+    'console.log("Hello World")',
+  ]);
+  const [copiedIdx, setCopiedIdx] = useState(null);
+
+  const addToHistory = () => {
+    if (!input.trim()) return;
+    setHistory([input.trim(), ...history]);
+    copyText(input.trim(), -1);
+    setInput('');
+  };
+
+  const copyText = async (text, idx) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIdx(idx);
+      setTimeout(() => setCopiedIdx(null), 1500);
+    } catch { setCopiedIdx(idx); setTimeout(() => setCopiedIdx(null), 1500); }
+  };
+
+  return (
+    <div className="cm-wrap">
+      <h3 style={{marginBottom:10}}>Clipboard Manager</h3>
+      <div className="cm-input-row">
+        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addToHistory()} placeholder="Type text to copy..." />
+        <button onClick={addToHistory}>Copy</button>
+      </div>
+      <div className="cm-label">History ({history.length} items)</div>
+      {history.map((item, i) => (
+        <div className="cm-item" key={i}>
+          <span className="cm-text">{item}</span>
+          <button className={\`cm-copy \${copiedIdx === i ? 'copied' : ''}\`} onClick={() => copyText(item, i)}>
+            {copiedIdx === i ? 'Copied!' : 'Copy'}
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-hotkey-manager',
+    title: 'Hotkey Manager',
+    category: 'advanced',
+    difficulty: 'intermediate',
+    description: 'Global keyboard shortcut manager with customizable key bindings',
+    concepts: ['keyboard shortcuts', 'key combinations', 'event listeners', 'binding management'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.hk-wrap { width: 400px; }
+.hk-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; margin-bottom: 6px; background: #16213e; border: 1px solid #334155; border-radius: 8px; }
+.hk-action { font-size: 14px; }
+.hk-keys { display: flex; gap: 4px; }
+.hk-key { padding: 3px 8px; border-radius: 4px; background: #0f172a; border: 1px solid #334155; font-family: monospace; font-size: 12px; color: #4fc3f7; }
+.hk-log { margin-top: 16px; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; max-height: 120px; overflow-y: auto; }
+.hk-log-item { font-size: 12px; color: #94a3b8; padding: 2px 0; font-family: monospace; }
+.hk-log-item .time { color: #555; }
+.hk-log-item .action { color: #4fc3f7; }
+.hk-hint { font-size: 12px; color: #555; margin-top: 8px; text-align: center; }`,
+      js: `const { useState, useEffect } = React;
+
+const hotkeys = [
+  { keys: ['Ctrl', 'S'], action: 'Save', combo: (e) => (e.ctrlKey || e.metaKey) && e.key === 's' },
+  { keys: ['Ctrl', 'Z'], action: 'Undo', combo: (e) => (e.ctrlKey || e.metaKey) && e.key === 'z' },
+  { keys: ['Ctrl', 'Shift', 'P'], action: 'Command Palette', combo: (e) => (e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'P' },
+  { keys: ['Esc'], action: 'Close', combo: (e) => e.key === 'Escape' },
+  { keys: ['Ctrl', '/'], action: 'Toggle Comment', combo: (e) => (e.ctrlKey || e.metaKey) && e.key === '/' },
+];
+
+function App() {
+  const [log, setLog] = useState([]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      for (const hk of hotkeys) {
+        if (hk.combo(e)) {
+          e.preventDefault();
+          const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          setLog(prev => [{ time, action: hk.action, keys: hk.keys.join('+') }, ...prev].slice(0, 20));
+          break;
+        }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  return (
+    <div className="hk-wrap">
+      <h3 style={{marginBottom:10}}>Hotkey Manager</h3>
+      {hotkeys.map((hk, i) => (
+        <div className="hk-item" key={i}>
+          <span className="hk-action">{hk.action}</span>
+          <div className="hk-keys">{hk.keys.map(k => <span key={k} className="hk-key">{k}</span>)}</div>
+        </div>
+      ))}
+      <div className="hk-log">
+        {log.length ? log.map((l, i) => (
+          <div key={i} className="hk-log-item"><span className="time">[{l.time}]</span> <span className="action">{l.action}</span> ({l.keys})</div>
+        )) : <div style={{color:'#555',fontSize:12,textAlign:'center'}}>Press a shortcut to see it logged here</div>}
+      </div>
+      <div className="hk-hint">Try pressing the keyboard shortcuts above</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-idle-detector',
+    title: 'Idle Detector',
+    category: 'advanced',
+    difficulty: 'intermediate',
+    description: 'User idle detection with configurable timeout and activity tracking',
+    concepts: ['idle detection', 'activity events', 'timeout management', 'presence tracking'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.id-wrap { width: 380px; text-align: center; }
+.id-circle { width: 120px; height: 120px; border-radius: 50%; margin: 20px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.5s; }
+.id-circle.active { background: rgba(74,222,128,0.1); border: 3px solid #4ade80; }
+.id-circle.idle { background: rgba(250,204,21,0.1); border: 3px solid #facc15; }
+.id-circle.away { background: rgba(248,113,113,0.1); border: 3px solid #f87171; }
+.id-icon { font-size: 32px; }
+.id-label { font-size: 12px; font-weight: 600; margin-top: 4px; }
+.id-circle.active .id-label { color: #4ade80; }
+.id-circle.idle .id-label { color: #facc15; }
+.id-circle.away .id-label { color: #f87171; }
+.id-timer { font-size: 14px; color: #94a3b8; margin: 12px 0; }
+.id-info { font-size: 12px; color: #555; margin-top: 8px; }
+.id-btn { padding: 8px 16px; border: none; border-radius: 6px; background: #334155; color: #e0e0e0; cursor: pointer; margin-top: 12px; font-size: 13px; }`,
+      js: `const { useState, useEffect, useRef, useCallback } = React;
+
+function App() {
+  const [idle, setIdle] = useState(0);
+  const [status, setStatus] = useState('active');
+  const lastActivity = useRef(Date.now());
+  const IDLE_THRESHOLD = 5;
+  const AWAY_THRESHOLD = 15;
+
+  const resetIdle = useCallback(() => {
+    lastActivity.current = Date.now();
+    setIdle(0);
+    setStatus('active');
+  }, []);
+
+  useEffect(() => {
+    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'];
+    events.forEach(e => window.addEventListener(e, resetIdle));
+    const interval = setInterval(() => {
+      const seconds = Math.floor((Date.now() - lastActivity.current) / 1000);
+      setIdle(seconds);
+      if (seconds >= AWAY_THRESHOLD) setStatus('away');
+      else if (seconds >= IDLE_THRESHOLD) setStatus('idle');
+      else setStatus('active');
+    }, 1000);
+    return () => {
+      events.forEach(e => window.removeEventListener(e, resetIdle));
+      clearInterval(interval);
+    };
+  }, [resetIdle]);
+
+  return (
+    <div className="id-wrap">
+      <h3>Idle Detector</h3>
+      <div className={\`id-circle \${status}\`}>
+        <span className="id-icon">{status === 'active' ? '\\u{1F7E2}' : status === 'idle' ? '\\u{1F7E1}' : '\\u{1F534}'}</span>
+        <span className="id-label">{status.toUpperCase()}</span>
+      </div>
+      <div className="id-timer">Idle for: {idle}s</div>
+      <div className="id-info">Active: 0-{IDLE_THRESHOLD}s | Idle: {IDLE_THRESHOLD}-{AWAY_THRESHOLD}s | Away: {AWAY_THRESHOLD}s+</div>
+      <div className="id-info">Move your mouse or press a key to reset</div>
+      <button className="id-btn" onClick={resetIdle}>Manual Reset</button>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-media-query-hook',
+    title: 'Media Query Hook',
+    category: 'advanced',
+    difficulty: 'intermediate',
+    description: 'Custom hook for responsive breakpoints with live device info display',
+    concepts: ['matchMedia', 'responsive design', 'custom hook', 'breakpoint detection'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.mq-wrap { width: 400px; }
+.mq-card { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; margin-bottom: 12px; }
+.mq-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #1e293b; font-size: 14px; }
+.mq-label { color: #94a3b8; }
+.mq-val { font-weight: 600; }
+.mq-val.true { color: #4ade80; }
+.mq-val.false { color: #555; }
+.mq-device { text-align: center; padding: 20px; background: #0f172a; border-radius: 8px; margin-top: 12px; }
+.mq-device-icon { font-size: 48px; margin-bottom: 8px; }
+.mq-device-label { font-size: 14px; color: #4fc3f7; font-weight: 600; }`,
+      js: `const { useState, useEffect, useCallback } = React;
+
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const handler = (e) => setMatches(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [query]);
+  return matches;
+}
+
+function App() {
+  const isMobile = useMediaQuery('(max-width: 640px)');
+  const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
+  const isDesktop = useMediaQuery('(min-width: 1025px)');
+  const isDark = useMediaQuery('(prefers-color-scheme: dark)');
+  const isReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const [size, setSize] = useState({ w: window.innerWidth, h: window.innerHeight });
+
+  useEffect(() => {
+    const handler = () => setSize({ w: window.innerWidth, h: window.innerHeight });
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
+  const device = isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop';
+  const icon = isMobile ? '\\u{1F4F1}' : isTablet ? '\\u{1F4BB}' : '\\u{1F5A5}';
+
+  const queries = [
+    ['Mobile (<=640px)', isMobile],
+    ['Tablet (641-1024px)', isTablet],
+    ['Desktop (>1024px)', isDesktop],
+    ['Prefers Dark Mode', isDark],
+    ['Prefers Reduced Motion', isReducedMotion],
+  ];
+
+  return (
+    <div className="mq-wrap">
+      <h3 style={{marginBottom:10}}>Media Query Hook</h3>
+      <div className="mq-card">
+        {queries.map(([label, val]) => (
+          <div className="mq-row" key={label}>
+            <span className="mq-label">{label}</span>
+            <span className={\`mq-val \${val}\`}>{val ? 'Yes' : 'No'}</span>
+          </div>
+        ))}
+        <div className="mq-row">
+          <span className="mq-label">Viewport</span>
+          <span className="mq-val" style={{color:'#4fc3f7'}}>{size.w} x {size.h}</span>
+        </div>
+      </div>
+      <div className="mq-device">
+        <div className="mq-device-icon">{icon}</div>
+        <div className="mq-device-label">Current: {device}</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-portal-demo',
+    title: 'Portal Demo',
+    category: 'advanced',
+    difficulty: 'intermediate',
+    description: 'React portal rendering content outside the parent DOM hierarchy',
+    concepts: ['createPortal', 'DOM hierarchy', 'z-index management', 'portal pattern'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div><div id="portal-root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.pd-wrap { width: 380px; }
+.pd-container { padding: 20px; background: #16213e; border: 2px solid #334155; border-radius: 10px; position: relative; overflow: hidden; }
+.pd-container h4 { color: #4fc3f7; margin-bottom: 8px; }
+.pd-container p { font-size: 13px; color: #94a3b8; margin-bottom: 12px; }
+.pd-overflow-note { font-size: 11px; color: #555; margin-bottom: 12px; }
+.pd-btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; margin-right: 6px; }
+.pd-btn.portal { background: #4fc3f7; color: #1a1a2e; }
+.pd-btn.normal { background: #334155; color: #e0e0e0; }
+.pd-tooltip { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 16px 20px; background: #16213e; border: 2px solid #4fc3f7; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 9999; text-align: center; }
+.pd-tooltip h4 { color: #4fc3f7; margin-bottom: 4px; }
+.pd-tooltip p { font-size: 13px; color: #94a3b8; margin-bottom: 10px; }
+.pd-close { padding: 6px 14px; border: none; border-radius: 4px; background: #4fc3f7; color: #1a1a2e; cursor: pointer; font-weight: 600; font-size: 12px; }
+.pd-normal-popup { position: absolute; top: 10px; right: 10px; padding: 12px; background: #334155; border-radius: 6px; font-size: 12px; z-index: 1; }`,
+      js: `const { useState } = React;
+
+function PortalPopup({ onClose }) {
+  return ReactDOM.createPortal(
+    <div className="pd-tooltip">
+      <h4>Portal Popup</h4>
+      <p>I rendered outside the parent container via a portal! I escape overflow:hidden.</p>
+      <button className="pd-close" onClick={onClose}>Close</button>
+    </div>,
+    document.getElementById('portal-root')
+  );
+}
+
+function App() {
+  const [showPortal, setShowPortal] = useState(false);
+  const [showNormal, setShowNormal] = useState(false);
+
+  return (
+    <div className="pd-wrap">
+      <h3 style={{marginBottom:10}}>React Portal</h3>
+      <div className="pd-container">
+        <h4>Container (overflow: hidden)</h4>
+        <p>This container has overflow:hidden. Normal popups get clipped, but portals escape!</p>
+        <div className="pd-overflow-note">overflow: hidden is set on this container</div>
+        <button className="pd-btn portal" onClick={() => setShowPortal(true)}>Show Portal Popup</button>
+        <button className="pd-btn normal" onClick={() => setShowNormal(!showNormal)}>Show Normal Popup</button>
+        {showNormal && <div className="pd-normal-popup">I am clipped by overflow:hidden! <button style={{marginTop:4,display:'block'}} className="pd-close" onClick={() => setShowNormal(false)}>x</button></div>}
+      </div>
+      {showPortal && <PortalPopup onClose={() => setShowPortal(false)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-error-boundary',
+    title: 'Error Boundary',
+    category: 'advanced',
+    difficulty: 'advanced',
+    description: 'Error boundary component that catches render errors with fallback UI',
+    concepts: ['error boundaries', 'componentDidCatch', 'fallback UI', 'error recovery'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.eb-wrap { width: 400px; }
+.eb-fallback { padding: 20px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 10px; text-align: center; }
+.eb-fallback h3 { color: #f87171; margin-bottom: 8px; }
+.eb-fallback p { font-size: 13px; color: #94a3b8; margin-bottom: 12px; }
+.eb-fallback code { display: block; padding: 8px; background: #0f172a; border-radius: 4px; font-size: 11px; color: #f87171; margin-bottom: 12px; text-align: left; }
+.eb-retry { padding: 8px 16px; border: none; border-radius: 6px; background: #f87171; color: white; cursor: pointer; font-weight: 600; }
+.eb-card { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; margin-bottom: 12px; }
+.eb-card h4 { color: #4fc3f7; margin-bottom: 4px; }
+.eb-card p { font-size: 13px; color: #94a3b8; }
+.eb-btn { padding: 8px 16px; border: none; border-radius: 6px; background: #334155; color: #e0e0e0; cursor: pointer; font-size: 13px; margin-top: 12px; }`,
+      js: `const { useState, Component } = React;
+
+class ErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="eb-fallback">
+          <h3>Something went wrong</h3>
+          <p>An error occurred while rendering this component.</p>
+          <code>{this.state.error.message}</code>
+          <button className="eb-retry" onClick={() => { this.setState({ error: null }); this.props.onRetry?.(); }}>Try Again</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function BuggyComponent({ shouldCrash }) {
+  if (shouldCrash) throw new Error('Component crashed! This is a simulated error.');
+  return <div className="eb-card"><h4>Working Component</h4><p>This component is rendering correctly.</p></div>;
+}
+
+function App() {
+  const [crash, setCrash] = useState(false);
+  const [key, setKey] = useState(0);
+
+  return (
+    <div className="eb-wrap">
+      <h3 style={{marginBottom:10}}>Error Boundary</h3>
+      <ErrorBoundary key={key} onRetry={() => { setCrash(false); setKey(k => k + 1); }}>
+        <BuggyComponent shouldCrash={crash} />
+      </ErrorBoundary>
+      <button className="eb-btn" onClick={() => setCrash(true)}>Trigger Error</button>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-retry-mechanism',
+    title: 'Retry Mechanism',
+    category: 'advanced',
+    difficulty: 'advanced',
+    description: 'Auto-retry with exponential backoff for failed async operations',
+    concepts: ['retry logic', 'exponential backoff', 'async operations', 'error recovery'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.rt-wrap { width: 400px; }
+.rt-card { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; margin-bottom: 12px; }
+.rt-status { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.rt-dot { width: 10px; height: 10px; border-radius: 50%; }
+.rt-dot.loading { background: #facc15; animation: pulse 1s infinite; }
+.rt-dot.success { background: #4ade80; }
+.rt-dot.error { background: #f87171; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+.rt-label { font-size: 14px; font-weight: 600; }
+.rt-attempts { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
+.rt-log { font-size: 11px; font-family: monospace; max-height: 100px; overflow-y: auto; }
+.rt-log div { padding: 2px 0; color: #555; }
+.rt-log .err { color: #f87171; }
+.rt-log .ok { color: #4ade80; }
+.rt-btn { padding: 8px 16px; border: none; border-radius: 6px; background: #4fc3f7; color: #1a1a2e; cursor: pointer; font-weight: 600; font-size: 13px; }
+.rt-settings { display: flex; gap: 12px; margin-bottom: 12px; }
+.rt-settings label { font-size: 12px; color: #94a3b8; }
+.rt-settings select { padding: 4px 6px; border-radius: 4px; border: 1px solid #334155; background: #1e293b; color: #e0e0e0; font-size: 12px; }`,
+      js: `const { useState, useCallback } = React;
+
+function App() {
+  const [status, setStatus] = useState('idle');
+  const [attempts, setAttempts] = useState(0);
+  const [maxRetries, setMaxRetries] = useState(3);
+  const [failRate, setFailRate] = useState(70);
+  const [log, setLog] = useState([]);
+
+  const addLog = (msg, type) => setLog(prev => [...prev, { msg, type, time: new Date().toLocaleTimeString([], { second: '2-digit', minute: '2-digit' }) }]);
+
+  const fetchWithRetry = useCallback(async () => {
+    setStatus('loading');
+    setAttempts(0);
+    setLog([]);
+
+    for (let i = 0; i <= maxRetries; i++) {
+      setAttempts(i + 1);
+      const delay = Math.min(1000 * Math.pow(2, i), 8000);
+      if (i > 0) {
+        addLog('Waiting ' + delay + 'ms (backoff)...', 'info');
+        await new Promise(r => setTimeout(r, delay));
+      }
+      addLog('Attempt ' + (i + 1) + '/' + (maxRetries + 1) + '...', 'info');
+      await new Promise(r => setTimeout(r, 500));
+
+      if (Math.random() * 100 > failRate) {
+        addLog('Success!', 'ok');
+        setStatus('success');
+        return;
+      }
+      addLog('Failed (simulated ' + failRate + '% fail rate)', 'err');
+    }
+    addLog('All retries exhausted.', 'err');
+    setStatus('error');
+  }, [maxRetries, failRate]);
+
+  return (
+    <div className="rt-wrap">
+      <h3 style={{marginBottom:10}}>Retry with Backoff</h3>
+      <div className="rt-settings">
+        <div><label>Max Retries</label><br/><select value={maxRetries} onChange={e => setMaxRetries(+e.target.value)}>{[1,2,3,5].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+        <div><label>Fail Rate</label><br/><select value={failRate} onChange={e => setFailRate(+e.target.value)}>{[30,50,70,90].map(n => <option key={n} value={n}>{n}%</option>)}</select></div>
+      </div>
+      <div className="rt-card">
+        <div className="rt-status">
+          <span className={\`rt-dot \${status}\`} />
+          <span className="rt-label">{status === 'idle' ? 'Ready' : status === 'loading' ? 'Fetching...' : status === 'success' ? 'Success!' : 'Failed'}</span>
+        </div>
+        {attempts > 0 && <div className="rt-attempts">Attempts: {attempts}/{maxRetries + 1}</div>}
+        <div className="rt-log">
+          {log.map((l, i) => <div key={i} className={l.type}>[{l.time}] {l.msg}</div>)}
+        </div>
+      </div>
+      <button className="rt-btn" onClick={fetchWithRetry} disabled={status === 'loading'}>
+        {status === 'loading' ? 'Retrying...' : 'Start Fetch'}
+      </button>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-virtual-list-advanced',
+    title: 'Virtual List Advanced',
+    category: 'advanced',
+    difficulty: 'advanced',
+    description:
+      'High-performance virtualized list rendering only visible items from a large dataset',
+    concepts: ['virtualization', 'windowing', 'scroll position', 'performance optimization'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.vl-wrap { width: 400px; }
+.vl-info { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
+.vl-container { height: 300px; overflow-y: auto; border: 1px solid #334155; border-radius: 8px; position: relative; }
+.vl-item { position: absolute; left: 0; right: 0; padding: 0 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1e293b; box-sizing: border-box; }
+.vl-item:hover { background: rgba(79,195,247,0.05); }
+.vl-idx { font-size: 11px; color: #555; min-width: 40px; font-family: monospace; }
+.vl-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #1a1a2e; flex-shrink: 0; }
+.vl-name { font-size: 13px; }
+.vl-email { font-size: 11px; color: #555; }`,
+      js: `const { useState, useRef, useEffect, useMemo, useCallback } = React;
+
+const TOTAL = 10000;
+const ITEM_HEIGHT = 48;
+const colors = ['#4fc3f7','#a78bfa','#fb923c','#4ade80','#f87171','#facc15'];
+const names = ['Alice','Bob','Charlie','Diana','Eve','Frank','Grace','Hank','Iris','Jack'];
+
+const data = Array.from({ length: TOTAL }, (_, i) => ({
+  id: i,
+  name: names[i % names.length] + ' #' + i,
+  email: 'user' + i + '@example.com',
+  color: colors[i % colors.length],
+}));
+
+function App() {
+  const containerRef = useRef(null);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(300);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    setContainerHeight(el.clientHeight);
+    const handler = () => setScrollTop(el.scrollTop);
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  const startIdx = Math.floor(scrollTop / ITEM_HEIGHT);
+  const endIdx = Math.min(startIdx + Math.ceil(containerHeight / ITEM_HEIGHT) + 2, TOTAL);
+  const visibleItems = data.slice(startIdx, endIdx);
+
+  return (
+    <div className="vl-wrap">
+      <h3 style={{marginBottom:6}}>Virtual List ({TOTAL.toLocaleString()} items)</h3>
+      <div className="vl-info">
+        <span>Rendering: {visibleItems.length} items</span>
+        <span>Scroll: {Math.round(scrollTop)}px</span>
+      </div>
+      <div className="vl-container" ref={containerRef}>
+        <div style={{ height: TOTAL * ITEM_HEIGHT, position: 'relative' }}>
+          {visibleItems.map(item => (
+            <div key={item.id} className="vl-item" style={{ top: item.id * ITEM_HEIGHT, height: ITEM_HEIGHT }}>
+              <span className="vl-idx">{item.id}</span>
+              <div className="vl-avatar" style={{background:item.color}}>{item.name[0]}</div>
+              <div><div className="vl-name">{item.name}</div><div className="vl-email">{item.email}</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  // --- ui-components ---
+  {
+    id: 'react-spinner',
+    title: 'Spinner',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Loading spinner component with multiple variants and sizes',
+    concepts: ['CSS animation', 'spinner variants', 'size props', 'keyframe animation'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.sp-wrap { width: 400px; }
+.sp-row { display: flex; gap: 24px; align-items: center; justify-content: center; margin-bottom: 24px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse-spin { 0% { transform: rotate(0); opacity: 1; } 50% { opacity: 0.4; } 100% { transform: rotate(360deg); opacity: 1; } }
+@keyframes dots { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
+.spinner { border-radius: 50%; border: 3px solid #334155; border-top-color: #4fc3f7; animation: spin 0.8s linear infinite; }
+.spinner.sm { width: 20px; height: 20px; }
+.spinner.md { width: 32px; height: 32px; }
+.spinner.lg { width: 48px; height: 48px; border-width: 4px; }
+.spinner.green { border-top-color: #4ade80; }
+.spinner.red { border-top-color: #f87171; }
+.spinner.orange { border-top-color: #fb923c; }
+.dots-spinner { display: flex; gap: 6px; }
+.dots-spinner span { width: 10px; height: 10px; border-radius: 50%; background: #4fc3f7; animation: dots 1.2s infinite ease-in-out; }
+.dots-spinner span:nth-child(2) { animation-delay: 0.16s; }
+.dots-spinner span:nth-child(3) { animation-delay: 0.32s; }
+.sp-label { font-size: 12px; color: #94a3b8; text-align: center; margin-top: 4px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  return (
+    <div className="sp-wrap">
+      <h3 style={{marginBottom:16,textAlign:'center'}}>Spinners</h3>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Sizes</h4>
+      <div className="sp-row">
+        <div><div className="spinner sm" /><div className="sp-label">Small</div></div>
+        <div><div className="spinner md" /><div className="sp-label">Medium</div></div>
+        <div><div className="spinner lg" /><div className="sp-label">Large</div></div>
+      </div>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Colors</h4>
+      <div className="sp-row">
+        <div className="spinner md" />
+        <div className="spinner md green" />
+        <div className="spinner md red" />
+        <div className="spinner md orange" />
+      </div>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Dots</h4>
+      <div className="sp-row">
+        <div className="dots-spinner"><span /><span /><span /></div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-chip',
+    title: 'Chip',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Chip/tag component with variants, icons, and dismissible functionality',
+    concepts: ['chip variants', 'dismissible', 'icon prefix', 'inline display'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.chip-wrap { width: 380px; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 16px; font-size: 13px; font-weight: 500; }
+.chip-blue { background: rgba(79,195,247,0.15); color: #4fc3f7; }
+.chip-green { background: rgba(74,222,128,0.15); color: #4ade80; }
+.chip-red { background: rgba(248,113,113,0.15); color: #f87171; }
+.chip-yellow { background: rgba(250,204,21,0.15); color: #facc15; }
+.chip-outline { background: transparent; border: 1px solid #334155; color: #94a3b8; }
+.chip-dismiss { background: none; border: none; cursor: pointer; font-size: 14px; color: inherit; padding: 0 2px; opacity: 0.6; }
+.chip-dismiss:hover { opacity: 1; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [chips, setChips] = useState(['React', 'TypeScript', 'CSS', 'Node.js', 'GraphQL']);
+
+  const remove = (idx) => setChips(chips.filter((_, i) => i !== idx));
+
+  return (
+    <div className="chip-wrap">
+      <h3 style={{marginBottom:12}}>Chips</h3>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Variants</h4>
+      <div className="chip-row">
+        <span className="chip chip-blue">Blue</span>
+        <span className="chip chip-green">Green</span>
+        <span className="chip chip-red">Red</span>
+        <span className="chip chip-yellow">Yellow</span>
+        <span className="chip chip-outline">Outline</span>
+      </div>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Dismissible</h4>
+      <div className="chip-row">
+        {chips.map((c, i) => (
+          <span key={c} className="chip chip-blue">
+            {c}
+            <button className="chip-dismiss" onClick={() => remove(i)}>&times;</button>
+          </span>
+        ))}
+      </div>
+      {chips.length === 0 && <div style={{fontSize:13,color:'#555'}}>All chips dismissed. Refresh to reset.</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-divider',
+    title: 'Divider',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Horizontal and vertical dividers with optional text labels',
+    concepts: ['separator', 'horizontal rule', 'text divider', 'layout helper'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.div-wrap { width: 380px; }
+.divider { display: flex; align-items: center; margin: 16px 0; }
+.divider-line { flex: 1; height: 1px; background: #334155; }
+.divider-text { padding: 0 12px; font-size: 12px; color: #94a3b8; white-space: nowrap; }
+.divider-dashed .divider-line { border-top: 1px dashed #334155; background: transparent; }
+.divider-dotted .divider-line { border-top: 1px dotted #334155; background: transparent; }
+.divider-thick .divider-line { height: 2px; }
+.divider-accent .divider-line { background: #4fc3f7; }
+.v-demo { display: flex; align-items: center; gap: 16px; padding: 12px; background: #16213e; border-radius: 8px; margin-top: 16px; }
+.v-divider { width: 1px; height: 24px; background: #334155; }
+.v-item { font-size: 13px; color: #94a3b8; }
+.section-card { padding: 10px 14px; background: #16213e; border-radius: 8px; font-size: 14px; }`,
+      js: `const { useState } = React;
+
+function Divider({ text, variant = '' }) {
+  return (
+    <div className={\`divider \${variant}\`}>
+      <div className="divider-line" />
+      {text && <span className="divider-text">{text}</span>}
+      {text && <div className="divider-line" />}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="div-wrap">
+      <h3 style={{marginBottom:8}}>Dividers</h3>
+      <div className="section-card">Content above</div>
+      <Divider />
+      <div className="section-card">Simple divider</div>
+      <Divider text="OR" />
+      <div className="section-card">With text label</div>
+      <Divider text="DASHED" variant="divider-dashed" />
+      <div className="section-card">Dashed style</div>
+      <Divider text="ACCENT" variant="divider-accent" />
+      <div className="section-card">Accent color</div>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginTop:16,marginBottom:8}}>Vertical</h4>
+      <div className="v-demo">
+        <span className="v-item">Home</span>
+        <span className="v-divider" />
+        <span className="v-item">About</span>
+        <span className="v-divider" />
+        <span className="v-item">Contact</span>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-alert-banner',
+    title: 'Alert Banner',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Dismissible alert banners with info, success, warning, and error variants',
+    concepts: ['alert types', 'dismissible', 'icon variants', 'status colors'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.ab-wrap { width: 400px; }
+.alert { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; transition: opacity 0.3s; }
+.alert.info { background: rgba(79,195,247,0.1); border: 1px solid rgba(79,195,247,0.3); color: #4fc3f7; }
+.alert.success { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; }
+.alert.warning { background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3); color: #facc15; }
+.alert.error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+.alert-icon { font-size: 18px; flex-shrink: 0; }
+.alert-body { flex: 1; }
+.alert-title { font-weight: 700; margin-bottom: 2px; }
+.alert-msg { font-size: 13px; opacity: 0.8; }
+.alert-close { background: none; border: none; color: inherit; cursor: pointer; font-size: 16px; padding: 0; opacity: 0.5; }
+.alert-close:hover { opacity: 1; }`,
+      js: `const { useState } = React;
+
+const alerts = [
+  { type: 'info', icon: '\\u{2139}\\uFE0F', title: 'Info', msg: 'A new update is available for download.' },
+  { type: 'success', icon: '\\u2705', title: 'Success', msg: 'Your changes have been saved successfully.' },
+  { type: 'warning', icon: '\\u26A0\\uFE0F', title: 'Warning', msg: 'Your storage is almost full (90% used).' },
+  { type: 'error', icon: '\\u274C', title: 'Error', msg: 'Failed to process payment. Please try again.' },
+];
+
+function App() {
+  const [visible, setVisible] = useState(alerts.map(() => true));
+
+  const dismiss = (idx) => {
+    const next = [...visible];
+    next[idx] = false;
+    setVisible(next);
+  };
+
+  const reset = () => setVisible(alerts.map(() => true));
+
+  return (
+    <div className="ab-wrap">
+      <h3 style={{marginBottom:12}}>Alert Banners</h3>
+      {alerts.map((a, i) => visible[i] && (
+        <div key={i} className={\`alert \${a.type}\`}>
+          <span className="alert-icon">{a.icon}</span>
+          <div className="alert-body"><div className="alert-title">{a.title}</div><div className="alert-msg">{a.msg}</div></div>
+          <button className="alert-close" onClick={() => dismiss(i)}>&times;</button>
+        </div>
+      ))}
+      {visible.some(v => !v) && <button style={{padding:'6px 12px',border:'none',borderRadius:6,background:'#334155',color:'#e0e0e0',cursor:'pointer',fontSize:12}} onClick={reset}>Reset All</button>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-callout',
+    title: 'Callout',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Callout/admonition component for highlighting important information',
+    concepts: ['callout styles', 'tip/warning/note', 'icon integration', 'content blocks'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.co-wrap { width: 400px; }
+.callout { padding: 14px 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid; }
+.callout.note { background: rgba(79,195,247,0.08); border-left-color: #4fc3f7; }
+.callout.tip { background: rgba(74,222,128,0.08); border-left-color: #4ade80; }
+.callout.warning { background: rgba(250,204,21,0.08); border-left-color: #facc15; }
+.callout.danger { background: rgba(248,113,113,0.08); border-left-color: #f87171; }
+.callout-header { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.callout.note .callout-header { color: #4fc3f7; }
+.callout.tip .callout-header { color: #4ade80; }
+.callout.warning .callout-header { color: #facc15; }
+.callout.danger .callout-header { color: #f87171; }
+.callout p { font-size: 13px; color: #94a3b8; line-height: 1.5; margin: 0; }`,
+      js: `const { useState } = React;
+
+function Callout({ type, title, children }) {
+  const icons = { note: '\\u{1F4DD}', tip: '\\u{1F4A1}', warning: '\\u26A0\\uFE0F', danger: '\\u{1F6A8}' };
+  return (
+    <div className={\`callout \${type}\`}>
+      <div className="callout-header">{icons[type]} {title}</div>
+      <p>{children}</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="co-wrap">
+      <h3 style={{marginBottom:12}}>Callouts</h3>
+      <Callout type="note" title="Note">This is general information that might be useful to the reader.</Callout>
+      <Callout type="tip" title="Tip">Use keyboard shortcuts to speed up your workflow significantly.</Callout>
+      <Callout type="warning" title="Warning">This action cannot be undone. Please proceed with caution.</Callout>
+      <Callout type="danger" title="Danger">Deleting this resource will permanently remove all associated data.</Callout>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-empty-state-v2',
+    title: 'Empty State v2',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Empty state placeholder with illustration, message, and action button',
+    concepts: ['empty state', 'placeholder UI', 'call to action', 'illustration'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.es-wrap { width: 400px; }
+.empty-state { padding: 40px 20px; text-align: center; background: #16213e; border: 2px dashed #334155; border-radius: 12px; }
+.es-icon { font-size: 56px; margin-bottom: 12px; }
+.es-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: #e0e0e0; }
+.es-desc { font-size: 14px; color: #94a3b8; margin-bottom: 16px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+.es-btn { padding: 10px 20px; border: none; border-radius: 8px; background: #4fc3f7; color: #1a1a2e; font-weight: 700; cursor: pointer; font-size: 14px; }
+.es-btn:hover { background: #81d4fa; }
+.es-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.es-tab { padding: 8px 16px; border: 1px solid #334155; border-radius: 6px; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 13px; }
+.es-tab.active { border-color: #4fc3f7; color: #4fc3f7; }`,
+      js: `const { useState } = React;
+
+const states = [
+  { icon: '\\u{1F4E6}', title: 'No Projects Yet', desc: 'Create your first project to get started building something amazing.', action: 'Create Project' },
+  { icon: '\\u{1F50D}', title: 'No Results Found', desc: 'Try adjusting your search or filter to find what you are looking for.', action: 'Clear Filters' },
+  { icon: '\\u{1F514}', title: 'No Notifications', desc: 'You are all caught up! New notifications will appear here.', action: 'Settings' },
+];
+
+function App() {
+  const [active, setActive] = useState(0);
+  const s = states[active];
+
+  return (
+    <div className="es-wrap">
+      <h3 style={{marginBottom:10}}>Empty States</h3>
+      <div className="es-tabs">
+        {states.map((st, i) => (
+          <button key={i} className={\`es-tab \${i === active ? 'active' : ''}\`} onClick={() => setActive(i)}>{st.title.split(' ').slice(1).join(' ')}</button>
+        ))}
+      </div>
+      <div className="empty-state">
+        <div className="es-icon">{s.icon}</div>
+        <div className="es-title">{s.title}</div>
+        <div className="es-desc">{s.desc}</div>
+        <button className="es-btn">{s.action}</button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-avatar-group',
+    title: 'Avatar Group',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Stacked avatar group with overflow count and tooltip on hover',
+    concepts: ['avatar stack', 'overflow count', 'z-index stacking', 'negative margin'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 40px; }
+.ag-wrap { width: 360px; }
+.avatar-group { display: flex; align-items: center; }
+.ag-item { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #1a1a2e; border: 3px solid #1a1a2e; margin-left: -10px; position: relative; cursor: pointer; transition: transform 0.15s; }
+.ag-item:first-child { margin-left: 0; }
+.ag-item:hover { transform: translateY(-4px); z-index: 10; }
+.ag-more { background: #334155 !important; color: #94a3b8 !important; font-size: 11px; }
+.ag-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); padding: 4px 8px; background: #334155; border-radius: 4px; font-size: 11px; color: #e0e0e0; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+.ag-item:hover .ag-tooltip { opacity: 1; }
+.ag-sizes { margin-top: 24px; }
+.ag-sm .ag-item { width: 28px; height: 28px; font-size: 10px; margin-left: -6px; border-width: 2px; }
+.ag-lg .ag-item { width: 52px; height: 52px; font-size: 18px; margin-left: -14px; border-width: 3px; }`,
+      js: `const { useState } = React;
+
+const users = [
+  { name: 'Alice', color: '#4fc3f7' },
+  { name: 'Bob', color: '#a78bfa' },
+  { name: 'Carol', color: '#fb923c' },
+  { name: 'Dan', color: '#4ade80' },
+  { name: 'Eve', color: '#f87171' },
+  { name: 'Frank', color: '#facc15' },
+  { name: 'Grace', color: '#4fc3f7' },
+];
+
+function AvatarGroup({ people, max = 4, className = '' }) {
+  const visible = people.slice(0, max);
+  const remaining = people.length - max;
+
+  return (
+    <div className={\`avatar-group \${className}\`}>
+      {visible.map((p, i) => (
+        <div key={i} className="ag-item" style={{ background: p.color, zIndex: visible.length - i }}>
+          {p.name[0]}
+          <span className="ag-tooltip">{p.name}</span>
+        </div>
+      ))}
+      {remaining > 0 && <div className="ag-item ag-more" style={{zIndex: 0}}>+{remaining}</div>}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="ag-wrap">
+      <h3 style={{marginBottom:16}}>Avatar Groups</h3>
+      <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Default (max 4)</h4>
+      <AvatarGroup people={users} max={4} />
+      <h4 style={{fontSize:13,color:'#94a3b8',marginTop:20,marginBottom:8}}>Show all</h4>
+      <AvatarGroup people={users} max={7} />
+      <div className="ag-sizes">
+        <h4 style={{fontSize:13,color:'#94a3b8',marginBottom:8}}>Small</h4>
+        <AvatarGroup people={users} max={5} className="ag-sm" />
+        <h4 style={{fontSize:13,color:'#94a3b8',marginTop:16,marginBottom:8}}>Large</h4>
+        <AvatarGroup people={users.slice(0, 4)} max={4} className="ag-lg" />
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-breadcrumb-overflow',
+    title: 'Breadcrumb Overflow',
+    category: 'ui-components',
+    difficulty: 'intermediate',
+    description: 'Breadcrumb navigation that collapses middle items into an ellipsis menu',
+    concepts: ['breadcrumb', 'overflow handling', 'ellipsis menu', 'responsive nav'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 40px; }
+.bc-wrap { width: 400px; }
+.breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; padding: 10px 14px; background: #16213e; border: 1px solid #334155; border-radius: 8px; margin-bottom: 12px; }
+.bc-item { font-size: 13px; color: #94a3b8; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+.bc-item:hover { color: #4fc3f7; background: rgba(79,195,247,0.05); }
+.bc-item.current { color: #e0e0e0; font-weight: 600; cursor: default; }
+.bc-sep { color: #334155; font-size: 12px; padding: 0 2px; }
+.bc-ellipsis { position: relative; }
+.bc-menu { position: absolute; top: calc(100% + 4px); left: 0; background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 4px 0; z-index: 10; min-width: 140px; }
+.bc-menu-item { padding: 6px 12px; font-size: 13px; color: #94a3b8; cursor: pointer; }
+.bc-menu-item:hover { background: #334155; color: #4fc3f7; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const paths = ['Home', 'Documents', 'Projects', 'Web', 'Frontend', 'Components', 'Breadcrumbs'];
+
+function Breadcrumbs({ items, maxVisible = 3 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setMenuOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const needsCollapse = items.length > maxVisible;
+  const first = items[0];
+  const last = items.slice(-(maxVisible - 1));
+  const hidden = needsCollapse ? items.slice(1, items.length - maxVisible + 1) : [];
+
+  const renderItem = (item, isLast) => (
+    <span key={item} className={\`bc-item \${isLast ? 'current' : ''}\`}>{item}</span>
+  );
+
+  return (
+    <div className="breadcrumbs">
+      {renderItem(first, !needsCollapse && items.length === 1)}
+      {needsCollapse && (
+        <>
+          <span className="bc-sep">/</span>
+          <span className="bc-ellipsis" ref={ref}>
+            <span className="bc-item" onClick={() => setMenuOpen(!menuOpen)}>...</span>
+            {menuOpen && (
+              <div className="bc-menu">
+                {hidden.map(h => <div key={h} className="bc-menu-item" onClick={() => setMenuOpen(false)}>{h}</div>)}
+              </div>
+            )}
+          </span>
+        </>
+      )}
+      {(needsCollapse ? last : items.slice(1)).map((item, i, arr) => (
+        <React.Fragment key={item}>
+          <span className="bc-sep">/</span>
+          {renderItem(item, i === arr.length - 1)}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="bc-wrap">
+      <h3 style={{marginBottom:12}}>Breadcrumb Overflow</h3>
+      <h4 style={{fontSize:12,color:'#555',marginBottom:4}}>Full path (7 items, collapsed)</h4>
+      <Breadcrumbs items={paths} maxVisible={3} />
+      <h4 style={{fontSize:12,color:'#555',marginBottom:4}}>Short path (no collapse)</h4>
+      <Breadcrumbs items={paths.slice(0, 3)} maxVisible={3} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-truncated-text',
+    title: 'Truncated Text',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Text truncation with expand/collapse and configurable line clamp',
+    concepts: ['text truncation', 'line clamp', 'expand toggle', 'CSS webkit-line-clamp'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.tt-wrap { width: 380px; }
+.tt-card { padding: 16px; background: #16213e; border: 1px solid #334155; border-radius: 10px; margin-bottom: 12px; }
+.tt-card h4 { color: #4fc3f7; margin-bottom: 8px; font-size: 14px; }
+.tt-text { font-size: 14px; color: #94a3b8; line-height: 1.6; }
+.tt-text.clamped { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.tt-toggle { background: none; border: none; color: #4fc3f7; cursor: pointer; font-size: 13px; padding: 0; margin-top: 6px; font-weight: 600; }`,
+      js: `const { useState } = React;
+
+function TruncatedText({ text, lines = 3 }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div>
+      <div className={\`tt-text \${expanded ? '' : 'clamped'}\`}
+        style={expanded ? {} : { WebkitLineClamp: lines }}>
+        {text}
+      </div>
+      <button className="tt-toggle" onClick={() => setExpanded(!expanded)}>
+        {expanded ? 'Show less' : 'Read more'}
+      </button>
+    </div>
+  );
+}
+
+const longText = 'React is a JavaScript library for building user interfaces. It lets you compose complex UIs from small and isolated pieces of code called components. React has been designed from the start for gradual adoption, and you can use as little or as much React as you need. Whether you want to get a taste of React, add some interactivity to a simple HTML page, or start a complex React-powered app, this section will help you get started. It was created by Facebook and has grown into one of the most popular frontend libraries in the world.';
+
+function App() {
+  return (
+    <div className="tt-wrap">
+      <h3 style={{marginBottom:12}}>Truncated Text</h3>
+      <div className="tt-card">
+        <h4>2 Lines</h4>
+        <TruncatedText text={longText} lines={2} />
+      </div>
+      <div className="tt-card">
+        <h4>3 Lines</h4>
+        <TruncatedText text={longText} lines={3} />
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-responsive-grid',
+    title: 'Responsive Grid',
+    category: 'ui-components',
+    difficulty: 'intermediate',
+    description: 'Auto-responsive grid that adjusts columns based on container width',
+    concepts: ['CSS grid', 'auto-fit', 'minmax', 'responsive layout'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.rg-wrap { width: 460px; }
+.rg-controls { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.rg-controls label { font-size: 12px; color: #94a3b8; }
+.rg-controls input { width: 120px; }
+.rg-grid { display: grid; gap: 10px; }
+.rg-card { padding: 20px; background: #16213e; border: 1px solid #334155; border-radius: 8px; text-align: center; transition: border-color 0.15s; }
+.rg-card:hover { border-color: #4fc3f7; }
+.rg-card-num { font-size: 24px; font-weight: 800; color: #4fc3f7; }
+.rg-card-label { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+.rg-info { font-size: 12px; color: #555; margin-top: 8px; }`,
+      js: `const { useState } = React;
+
+function App() {
+  const [minWidth, setMinWidth] = useState(120);
+  const items = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  return (
+    <div className="rg-wrap">
+      <h3 style={{marginBottom:8}}>Responsive Grid</h3>
+      <div className="rg-controls">
+        <label>Min card width: {minWidth}px</label>
+        <input type="range" min={80} max={200} value={minWidth} onChange={e => setMinWidth(+e.target.value)} />
+      </div>
+      <div className="rg-grid" style={{ gridTemplateColumns: \`repeat(auto-fit, minmax(\${minWidth}px, 1fr))\` }}>
+        {items.map(i => (
+          <div className="rg-card" key={i}>
+            <div className="rg-card-num">{i}</div>
+            <div className="rg-card-label">Card {i}</div>
+          </div>
+        ))}
+      </div>
+      <div className="rg-info">grid-template-columns: repeat(auto-fit, minmax({minWidth}px, 1fr))</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-masonry-layout',
+    title: 'Masonry Layout',
+    category: 'ui-components',
+    difficulty: 'intermediate',
+    description: 'Pinterest-style masonry grid with variable height cards',
+    concepts: ['masonry grid', 'CSS columns', 'variable height', 'break-inside avoid'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.mas-wrap { width: 460px; }
+.masonry { column-count: 3; column-gap: 10px; }
+.mas-item { break-inside: avoid; margin-bottom: 10px; padding: 14px; background: #16213e; border: 1px solid #334155; border-radius: 8px; transition: border-color 0.15s; }
+.mas-item:hover { border-color: #4fc3f7; }
+.mas-icon { font-size: 28px; margin-bottom: 6px; }
+.mas-title { font-size: 13px; font-weight: 700; color: #e0e0e0; margin-bottom: 4px; }
+.mas-desc { font-size: 11px; color: #94a3b8; line-height: 1.5; }
+.mas-cols { display: flex; gap: 8px; margin-bottom: 12px; }
+.mas-cols button { padding: 5px 12px; border: 1px solid #334155; border-radius: 6px; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 12px; }
+.mas-cols button.active { border-color: #4fc3f7; color: #4fc3f7; }`,
+      js: `const { useState } = React;
+
+const cards = [
+  { icon: '\\u{1F3A8}', title: 'Design', desc: 'Beautiful interfaces with modern design principles.' },
+  { icon: '\\u{1F680}', title: 'Performance', desc: 'Optimized for speed.' },
+  { icon: '\\u{1F512}', title: 'Security', desc: 'Built-in authentication and authorization with industry-standard protocols and encryption.' },
+  { icon: '\\u{1F4F1}', title: 'Mobile', desc: 'Responsive and touch-friendly.' },
+  { icon: '\\u{2699}', title: 'Config', desc: 'Highly customizable with environment variables, config files, and runtime options for any deployment.' },
+  { icon: '\\u{1F4CA}', title: 'Analytics', desc: 'Real-time insights and dashboards.' },
+  { icon: '\\u{1F310}', title: 'i18n', desc: 'Multi-language support with RTL layout handling and locale-aware formatting for dates and numbers.' },
+  { icon: '\\u{1F9EA}', title: 'Testing', desc: 'Comprehensive test suite.' },
+  { icon: '\\u{1F4E6}', title: 'Deploy', desc: 'One-click deployments.' },
+];
+
+function App() {
+  const [cols, setCols] = useState(3);
+
+  return (
+    <div className="mas-wrap">
+      <h3 style={{marginBottom:8}}>Masonry Layout</h3>
+      <div className="mas-cols">
+        {[2, 3, 4].map(n => <button key={n} className={cols === n ? 'active' : ''} onClick={() => setCols(n)}>{n} Columns</button>)}
+      </div>
+      <div className="masonry" style={{ columnCount: cols }}>
+        {cards.map((c, i) => (
+          <div className="mas-item" key={i}>
+            <div className="mas-icon">{c.icon}</div>
+            <div className="mas-title">{c.title}</div>
+            <div className="mas-desc">{c.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-aspect-ratio-box',
+    title: 'Aspect Ratio Box',
+    category: 'ui-components',
+    difficulty: 'beginner',
+    description: 'Container that maintains a fixed aspect ratio regardless of width',
+    concepts: ['aspect-ratio CSS', 'responsive sizing', 'object-fit', 'container queries'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; }
+.ar-wrap { width: 420px; }
+.ar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.ar-box { border-radius: 8px; background: #16213e; border: 1px solid #334155; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s; }
+.ar-box:hover { border-color: #4fc3f7; }
+.ar-label { font-size: 11px; color: #94a3b8; text-align: center; }
+.ar-ratio { font-size: 18px; font-weight: 800; color: #4fc3f7; }
+.ar-controls { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.ar-controls label { font-size: 12px; color: #94a3b8; }
+.ar-btn { padding: 4px 10px; border: 1px solid #334155; border-radius: 4px; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 11px; }
+.ar-btn.active { border-color: #4fc3f7; color: #4fc3f7; }
+.ar-preview { border-radius: 10px; background: #16213e; border: 2px solid #334155; display: flex; align-items: center; justify-content: center; font-size: 32px; }`,
+      js: `const { useState } = React;
+
+const ratios = [
+  { label: '1:1', value: '1/1' },
+  { label: '16:9', value: '16/9' },
+  { label: '4:3', value: '4/3' },
+  { label: '3:2', value: '3/2' },
+  { label: '21:9', value: '21/9' },
+  { label: '9:16', value: '9/16' },
+];
+
+function App() {
+  const [selected, setSelected] = useState('16/9');
+
+  return (
+    <div className="ar-wrap">
+      <h3 style={{marginBottom:8}}>Aspect Ratio Boxes</h3>
+      <div className="ar-grid">
+        {ratios.map(r => (
+          <div key={r.value} className="ar-box" style={{ aspectRatio: r.value }}
+            onClick={() => setSelected(r.value)}>
+            <div>
+              <div className="ar-ratio">{r.label}</div>
+              <div className="ar-label">aspect-ratio: {r.value}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="ar-controls">
+        <label>Preview:</label>
+        {ratios.map(r => (
+          <button key={r.value} className={\`ar-btn \${selected === r.value ? 'active' : ''}\`}
+            onClick={() => setSelected(r.value)}>{r.label}</button>
+        ))}
+      </div>
+      <div className="ar-preview" style={{ aspectRatio: selected }}>
+        <span>{ratios.find(r => r.value === selected)?.label}</span>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-scroll-snap',
+    title: 'Scroll Snap',
+    category: 'ui-components',
+    difficulty: 'intermediate',
+    description: 'CSS scroll-snap based horizontal carousel with snap-to-card behavior',
+    concepts: ['scroll-snap', 'horizontal scroll', 'snap alignment', 'CSS scroll behavior'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.ss-wrap { width: 420px; }
+.ss-container { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 4px 0 16px; -ms-overflow-style: none; scrollbar-width: none; }
+.ss-container::-webkit-scrollbar { display: none; }
+.ss-card { flex: 0 0 280px; scroll-snap-align: center; padding: 24px; background: #16213e; border: 1px solid #334155; border-radius: 12px; }
+.ss-card-icon { font-size: 36px; margin-bottom: 10px; }
+.ss-card h4 { color: #4fc3f7; margin-bottom: 6px; }
+.ss-card p { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+.ss-dots { display: flex; justify-content: center; gap: 6px; margin-top: 4px; }
+.ss-dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; cursor: pointer; transition: background 0.2s; }
+.ss-dot.active { background: #4fc3f7; }
+.ss-hint { font-size: 12px; color: #555; text-align: center; margin-top: 8px; }`,
+      js: `const { useState, useRef, useEffect } = React;
+
+const cards = [
+  { icon: '\\u{1F3AF}', title: 'Focus', desc: 'Stay focused on what matters most with smart prioritization.' },
+  { icon: '\\u26A1', title: 'Speed', desc: 'Lightning-fast performance with optimized rendering pipeline.' },
+  { icon: '\\u{1F6E1}', title: 'Secure', desc: 'Enterprise-grade security with end-to-end encryption.' },
+  { icon: '\\u{1F4CA}', title: 'Insights', desc: 'Real-time analytics and actionable business insights.' },
+  { icon: '\\u{1F91D}', title: 'Collaborate', desc: 'Seamless team collaboration with real-time sync.' },
+];
+
+function App() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    const handler = () => {
+      const idx = Math.round(el.scrollLeft / 292);
+      setActiveIdx(Math.min(idx, cards.length - 1));
+    };
+    el.addEventListener('scroll', handler);
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
+
+  const scrollToCard = (idx) => {
+    containerRef.current.scrollTo({ left: idx * 292, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="ss-wrap">
+      <h3 style={{marginBottom:10}}>Scroll Snap Carousel</h3>
+      <div className="ss-container" ref={containerRef}>
+        {cards.map((c, i) => (
+          <div className="ss-card" key={i}>
+            <div className="ss-card-icon">{c.icon}</div>
+            <h4>{c.title}</h4>
+            <p>{c.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div className="ss-dots">
+        {cards.map((_, i) => <div key={i} className={\`ss-dot \${i === activeIdx ? 'active' : ''}\`} onClick={() => scrollToCard(i)} />)}
+      </div>
+      <div className="ss-hint">Swipe or scroll horizontally</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-parallax',
+    title: 'Parallax',
+    category: 'ui-components',
+    difficulty: 'intermediate',
+    description: 'Parallax scrolling effect with layers moving at different speeds',
+    concepts: ['parallax scroll', 'transform translate', 'scroll speed layers', 'depth effect'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; margin: 0; }
+.px-container { height: 400px; overflow-y: auto; position: relative; }
+.px-section { position: relative; min-height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.px-bg { position: absolute; inset: -50px; display: flex; align-items: center; justify-content: center; font-size: 120px; opacity: 0.15; transition: transform 0.1s linear; }
+.px-content { position: relative; z-index: 1; text-align: center; padding: 40px; }
+.px-content h2 { font-size: 28px; color: #4fc3f7; margin-bottom: 8px; }
+.px-content p { font-size: 14px; color: #94a3b8; max-width: 300px; }
+.s1 { background: #0f172a; }
+.s2 { background: #16213e; }
+.s3 { background: #1e293b; }`,
+      js: `const { useState, useRef, useEffect, useCallback } = React;
+
+const sections = [
+  { bg: '\\u{1F30C}', title: 'Explore', desc: 'Discover new horizons with parallax scrolling.', cls: 's1' },
+  { bg: '\\u{1F3D4}', title: 'Adventure', desc: 'Each layer moves at a different speed creating depth.', cls: 's2' },
+  { bg: '\\u{1F30A}', title: 'Create', desc: 'Build immersive experiences with simple scroll effects.', cls: 's3' },
+];
+
+function App() {
+  const containerRef = useRef(null);
+  const bgRefs = useRef([]);
+  const speeds = [0.3, 0.5, 0.2];
+
+  const onScroll = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const scrollTop = el.scrollTop;
+    bgRefs.current.forEach((bg, i) => {
+      if (bg) {
+        const offset = scrollTop * speeds[i];
+        bg.style.transform = 'translateY(' + offset + 'px)';
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    el.addEventListener('scroll', onScroll);
+    return () => el.removeEventListener('scroll', onScroll);
+  }, [onScroll]);
+
+  return (
+    <div className="px-container" ref={containerRef}>
+      {sections.map((s, i) => (
+        <div className={\`px-section \${s.cls}\`} key={i}>
+          <div className="px-bg" ref={el => bgRefs.current[i] = el}>{s.bg}</div>
+          <div className="px-content">
+            <h2>{s.title}</h2>
+            <p>{s.desc}</p>
+          </div>
+        </div>
+      ))}
+      <div style={{height:200,background:'#0f172a',display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <p style={{color:'#555',fontSize:14}}>Scroll up to see the parallax effect</p>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-animated-counter',
+    title: 'Animated Counter',
+    category: 'ui-components',
+    difficulty: 'intermediate',
+    description: 'Number counter that animates from 0 to target with easing',
+    concepts: ['number animation', 'requestAnimationFrame', 'easing functions', 'counter display'],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 30px; }
+.ac-wrap { width: 420px; }
+.ac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.ac-card { padding: 20px 12px; background: #16213e; border: 1px solid #334155; border-radius: 10px; text-align: center; }
+.ac-num { font-size: 32px; font-weight: 800; font-family: monospace; }
+.ac-num.blue { color: #4fc3f7; }
+.ac-num.green { color: #4ade80; }
+.ac-num.orange { color: #fb923c; }
+.ac-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+.ac-btn { padding: 8px 20px; border: none; border-radius: 6px; background: #4fc3f7; color: #1a1a2e; font-weight: 600; cursor: pointer; display: block; margin: 0 auto; }`,
+      js: `const { useState, useEffect, useRef, useCallback } = React;
+
+function useAnimatedCounter(target, duration = 2000) {
+  const [value, setValue] = useState(0);
+  const frameRef = useRef(null);
+  const startTimeRef = useRef(null);
+
+  const animate = useCallback(() => {
+    setValue(0);
+    startTimeRef.current = null;
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
+
+    const step = (timestamp) => {
+      if (!startTimeRef.current) startTimeRef.current = timestamp;
+      const elapsed = timestamp - startTimeRef.current;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.floor(eased * target));
+      if (progress < 1) frameRef.current = requestAnimationFrame(step);
+    };
+    frameRef.current = requestAnimationFrame(step);
+  }, [target, duration]);
+
+  useEffect(() => { animate(); return () => { if (frameRef.current) cancelAnimationFrame(frameRef.current); }; }, [animate]);
+
+  return [value, animate];
+}
+
+function Counter({ target, label, color, prefix = '', suffix = '' }) {
+  const [val, replay] = useAnimatedCounter(target, 2000);
+  return (
+    <div className="ac-card" onClick={replay} style={{cursor:'pointer'}}>
+      <div className={\`ac-num \${color}\`}>{prefix}{val.toLocaleString()}{suffix}</div>
+      <div className="ac-label">{label}</div>
+    </div>
+  );
+}
+
+function App() {
+  const [key, setKey] = useState(0);
+  return (
+    <div className="ac-wrap" key={key}>
+      <h3 style={{marginBottom:12,textAlign:'center'}}>Animated Counters</h3>
+      <div className="ac-grid">
+        <Counter target={12847} label="Users" color="blue" />
+        <Counter target={98} label="Uptime" color="green" suffix="%" />
+        <Counter target={4200} label="Revenue" color="orange" prefix="$" />
+      </div>
+      <button className="ac-btn" onClick={() => setKey(k => k + 1)}>Replay Animation</button>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
+  {
+    id: 'react-confetti',
+    title: 'Confetti',
+    category: 'ui-components',
+    difficulty: 'intermediate',
+    description: 'Canvas-based confetti celebration animation triggered by user action',
+    concepts: [
+      'canvas animation',
+      'particle system',
+      'requestAnimationFrame',
+      'physics simulation',
+    ],
+    framework: 'react',
+    demoCode: {
+      html: `<div id="root"></div>`,
+      css: `body { background: #1a1a2e; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; padding-top: 60px; margin: 0; }
+.conf-wrap { text-align: center; position: relative; }
+canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 100; }
+.conf-btn { padding: 14px 32px; border: none; border-radius: 10px; background: #4fc3f7; color: #1a1a2e; font-weight: 800; font-size: 16px; cursor: pointer; transition: transform 0.15s; }
+.conf-btn:hover { transform: scale(1.05); }
+.conf-btn:active { transform: scale(0.95); }
+.conf-msg { margin-top: 16px; font-size: 14px; color: #94a3b8; }`,
+      js: `const { useRef, useCallback } = React;
+
+const colors = ['#4fc3f7', '#f87171', '#4ade80', '#facc15', '#a78bfa', '#fb923c', '#ec4899'];
+
+function App() {
+  const canvasRef = useRef(null);
+
+  const fire = useCallback(() => {
+    const canvas = canvasRef.current;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+
+    for (let i = 0; i < 150; i++) {
+      particles.push({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        vx: (Math.random() - 0.5) * 15,
+        vy: Math.random() * -12 - 4,
+        w: Math.random() * 8 + 4,
+        h: Math.random() * 4 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 10,
+        gravity: 0.15 + Math.random() * 0.1,
+        opacity: 1,
+      });
+    }
+
+    let frame;
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = 0;
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.vy += p.gravity;
+        p.y += p.vy;
+        p.rotation += p.rotSpeed;
+        p.opacity -= 0.005;
+        if (p.opacity <= 0) return;
+        alive++;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      if (alive > 0) frame = requestAnimationFrame(animate);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+    animate();
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <div className="conf-wrap">
+      <canvas ref={canvasRef} />
+      <button className="conf-btn" onClick={fire}>\\u{1F389} Celebrate!</button>
+      <div className="conf-msg">Click the button to launch confetti</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
+    },
+  },
 ];

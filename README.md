@@ -41,7 +41,7 @@ An interactive learning platform for mastering programming languages through han
 - **AI Mock Interview** — Algorithm and system design practice with an AI interviewer (offline WebLLM or cloud).
 - **Regex Trainer** — Regex challenges with live matching and test validation.
 - **Reference & Cheatsheets** — Method docs and language cheatsheets for quick lookup.
-- **Frontend Drills** — Framework-specific practice for React, Angular, Vue, and Native JavaScript. Drill mode, quiz mode, UI patterns catalog, and cheatsheets with interactive code examples.
+- **Frontend Drills** — Framework-specific practice for React, Angular, Vue, and Native JavaScript. **460 training problems**, **448 quiz questions**, **616+ UI patterns** (each with starter code and behavioral tests), drill mode, and cheatsheets with interactive code examples.
 
 ---
 
@@ -103,7 +103,7 @@ Framework-specific training for **React**, **Angular**, **Vue**, and **Native Ja
 
 - **Drill Mode** — Write code solutions to framework-specific challenges in a Monaco Editor.
 - **Quiz Mode** — Multiple-choice questions testing framework concepts and API knowledge.
-- **UI Patterns** — Catalog of common UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, and key concepts.
+- **UI Patterns** — Catalog of 616+ UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, key concepts, starter code, and behavioral test suites.
 - **Cheatsheet** — Comprehensive quick-reference with 6 sections: Overview, Core Concepts, Key APIs, Common Patterns, Code Examples (interactive Monaco editors), and Ecosystem & Tools. Two-column layout with scroll spy, collapsible sections, SVG section icons, and material-inspired visual polish.
 
 ---
@@ -234,11 +234,11 @@ coding-drills/
 │   ├── interview/             # Algorithm + system design problems, prompts
 │   ├── methods/              # Method reference data
 │   ├── cheatsheets/          # Cheatsheet data
-│   ├── frontend-drills/        # Frontend framework data
+│   ├── frontend-drills/        # Frontend framework data (4 frameworks)
 │   │   ├── cheatsheet/         # Cheatsheet data (react, angular, vue, native-js)
-│   │   ├── ui-patterns/        # UI pattern definitions per framework
-│   │   ├── problems/           # Drill problems per framework
-│   │   └── quiz/               # Quiz questions per framework
+│   │   ├── ui-patterns/        # 616+ UI patterns with starters + behavioral tests
+│   │   ├── problems/           # 460 training problems across frameworks
+│   │   └── quiz/               # 448 quiz questions across frameworks
 │   ├── regexTrainer/         # Regex problems and matcher
 │   ├── quizGenerator.ts      # Quiz generation
 │   ├── codeRunner.ts, codeValidator.ts
