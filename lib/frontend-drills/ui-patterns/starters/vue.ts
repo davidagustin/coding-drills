@@ -922,7 +922,7 @@ createApp({
       error: ['Build failed', 'Connection lost', 'Payment declined'],
     };
 
-    const unread = []; // TODO: Unread — filter items, remove item
+    const unread = 0; // TODO: Unread — filter items, remove item
 
     const addNotification = (type) => {
       // TODO: Add notification — calculate values

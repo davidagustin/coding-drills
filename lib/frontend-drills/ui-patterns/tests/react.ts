@@ -66,7 +66,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-password-strength': [
     {
       name: 'Weak password shows low strength',
-      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'abc'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); return (fill && parseFloat(fill.style.width) < 50) || document.body.innerText.toLowerCase().includes('weak'); })()",
+      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'abc'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); var w = fill ? parseFloat(fill.style.width) : 0; return (w > 0 && w < 50) || document.body.innerText.toLowerCase().includes('weak'); })()",
     },
     {
       name: 'Strong password shows high strength',

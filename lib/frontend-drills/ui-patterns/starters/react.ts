@@ -162,7 +162,7 @@ function PasswordStrength() {
 
   const rules = []; // TODO: Implement rules
 
-  const strength = []; // TODO: Strength
+  const strength = 0; // TODO: Strength
   const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
   const labels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
 

@@ -234,6 +234,8 @@ function blankFunctionBodies(
           else if (/\.toLocaleString|\.toFixed|\.join\(/.test(fullExpr)) defaultVal = "''";
           else if (/\[/.test(fullExpr)) defaultVal = '[]';
           else if (/\{/.test(fullExpr)) defaultVal = '{}';
+          // Override: chain ending with .length/.size produces a number regardless
+          if (/\.\s*(?:length|size)\s*[;,)}\s]*$/.test(fullExpr.trim())) defaultVal = '0';
 
           const bodyContent = fullExpr;
           const todo = generateTodo(varName, bodyContent);
@@ -473,7 +475,11 @@ function blankFunctionBodies(
             let defaultVal = '[]';
             if (hasMethodChain) {
               const hasArrayMethod = /\.\s*(filter|map|flatMap|sort)\s*\(/.test(fullExpr);
-              if (!hasArrayMethod) {
+              // Check if chain ends with .length/.size (produces a number, not an array)
+              const endsWithLength = /\.\s*(?:length|size)\s*[;,)}\s]*$/.test(fullExpr.trim());
+              if (endsWithLength) {
+                defaultVal = '0';
+              } else if (!hasArrayMethod) {
                 if (/\.\s*find\s*\(/.test(fullExpr)) defaultVal = 'null';
                 else if (/\.\s*findIndex\s*\(/.test(fullExpr)) defaultVal = '-1';
                 else if (/\.\s*(some|every)\s*\(/.test(fullExpr)) defaultVal = 'false';
