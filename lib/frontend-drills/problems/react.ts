@@ -177,7 +177,7 @@ const data = "Hello World";`,
     setup: 'No setup needed.',
     setupCode: ``,
     expected: { loading: true, data: null, error: null },
-    sample: '({ loading: true, data: null, error: null })',
+    sample: '{ loading: true, data: null, error: null }',
     realWorldExample:
       'When you open a Twitter profile, the app enters a loading state (spinner), then transitions to data (tweets) or error (failed to load) -- this pattern captures all three phases.',
     hints: [
@@ -197,7 +197,7 @@ const data = "Hello World";`,
     setupCode: `const inputValue = "test@example.com";
 const handleChange = "function";`,
     expected: { value: 'test@example.com', onChange: 'function' },
-    sample: '({ value: inputValue, onChange: handleChange })',
+    sample: '{ value: inputValue, onChange: handleChange }',
     realWorldExample:
       'Gmail compose fields (To, Subject) are controlled inputs -- React owns the value so it can validate email addresses and auto-suggest contacts in real time.',
     hints: [
@@ -910,7 +910,7 @@ useState(() => 50 * 2)[0]`,
     setup: 'A mock useImperativeHandle.',
     setupCode: `const useImperativeHandle = (ref, createHandle) => {\n  ref.current = createHandle();\n};\nconst ref = { current: null };\nuseImperativeHandle(ref, () => ({\n  focus: () => "focused",\n  scrollTo: (pos) => "scrolled-to-" + pos\n}));`,
     expected: { focus: 'focused', scrollTo: 'scrolled-to-top' },
-    sample: '({ focus: ref.current.focus(), scrollTo: ref.current.scrollTo("top") })',
+    sample: '{ focus: ref.current.focus(), scrollTo: ref.current.scrollTo("top") }',
     realWorldExample:
       'Rich text editors like Draft.js expose focus() and insertText() methods via useImperativeHandle so parent toolbars can control the editor without accessing DOM internals directly.',
     hints: ['useImperativeHandle customizes the ref value', 'Return an object with custom methods'],
@@ -1003,7 +1003,7 @@ useState(() => 50 * 2)[0]`,
     setup: 'Mock useState returns different values for each call.',
     setupCode: `let callIndex = 0;\nconst states = [["Alice", () => {}], [25, () => {}]];\nconst useState = (init) => states[callIndex++] || [init, () => {}];\nconst name = useState("")[0];\nconst age = useState(0)[0];`,
     expected: { name: 'Alice', age: 25 },
-    sample: '({ name, age })',
+    sample: '{ name, age }',
     realWorldExample:
       'A user profile card on LinkedIn uses separate useState calls for name, headline, and avatar -- each piece of state updates independently without affecting the others.',
     hints: ['Each useState call is independent', 'React tracks hook calls by order'],
@@ -1243,7 +1243,7 @@ createPortal("Modal Content", "modal-root")`,
     setup: 'A mock React.lazy implementation.',
     setupCode: `const lazy = (importFn) => {\n  return { $$typeof: "lazy", _init: importFn, _status: "pending" };\n};\nconst LazyComponent = lazy(() => ({ default: "MyComponent" }));`,
     expected: { $$typeof: 'lazy', _status: 'pending' },
-    sample: '({ $$typeof: LazyComponent.$$typeof, _status: LazyComponent._status })',
+    sample: '{ $$typeof: LazyComponent.$$typeof, _status: LazyComponent._status }',
     realWorldExample:
       'GitHub loads the code editor, markdown preview, and diff viewer as lazy components so the initial page load is fast and heavy features are fetched only when needed.',
     hints: ['React.lazy wraps a dynamic import', 'Returns a special lazy type'],
@@ -2080,7 +2080,7 @@ schedule(tasks)`,
     setup: 'Mock fetch functions for user and posts.',
     setupCode: `// Call both and combine results\nconst fetchUser = () => ({ name: "Alice" });\nconst fetchPosts = () => ([{ title: "Hello" }]);`,
     expected: { user: { name: 'Alice' }, posts: [{ title: 'Hello' }] },
-    sample: '({ user: fetchUser(), posts: fetchPosts() })',
+    sample: '{ user: fetchUser(), posts: fetchPosts() }',
     realWorldExample:
       'A GitHub profile page fetches user data and repositories in parallel with Promise.all -- loading both simultaneously instead of sequentially cuts perceived load time in half.',
     hints: [
