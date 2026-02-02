@@ -853,9 +853,10 @@ export default function UIPatternDetail() {
   }, []);
 
   // Reset test results when user code changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally re-run on userCode change
   useEffect(() => {
     setTestResults(null); // eslint-disable-line react-hooks/set-state-in-effect -- Reset tests on code change
-  }, []);
+  }, [userCode]);
 
   const handleRunTests = useCallback(() => {
     if (previewIframeRef.current?.contentWindow) {
