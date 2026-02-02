@@ -296,6 +296,7 @@ export default function CodeEditor({
             7006, // Parameter 'X' implicitly has an 'any' type (untyped function params)
             2874, // JSX tag requires 'React' in scope (handled by automatic runtime)
             2875, // JSX tag requires module path 'react/jsx-runtime' (not available in Monaco virtual FS)
+            2693, // 'X' only refers to a type, but is being used as a value (e.g. decorator property annotations outside class body)
           ];
 
           monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
