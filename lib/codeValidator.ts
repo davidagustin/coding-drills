@@ -157,14 +157,15 @@ export function validateJavaScript(
           // Last line is also a statement (function def, if, etc.) — run everything, return undefined
           fullCode = trimmedAnswer;
         } else if (lastLine.endsWith(';')) {
-          fullCode = `${precedingLines}\nreturn ${lastLine.slice(0, -1)};`;
+          fullCode = `${precedingLines}\nreturn (${lastLine.slice(0, -1)});`;
         } else {
           fullCode = `${precedingLines}\nreturn (${lastLine});`;
         }
       } else {
-        // Pure expression
+        // Pure expression — always wrap in parens so object literals are not
+        // parsed as blocks (e.g. `{ a: 1 }` without parens is a block + label)
         if (trimmedAnswer.endsWith(';')) {
-          fullCode = `return ${trimmedAnswer.slice(0, -1)};`;
+          fullCode = `return (${trimmedAnswer.slice(0, -1)});`;
         } else {
           fullCode = `return (${trimmedAnswer});`;
         }

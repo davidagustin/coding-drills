@@ -54,7 +54,10 @@ export const angularProblems: FrontendDrillProblem[] = [
     setupCode: `class MyComponent {}`,
     expected: '@Input decorated property',
     sample: `@Input() name: string;`,
-    validPatterns: [/@Input\s*\(\s*\)\s+name\s*:\s*string/, /@Input\s*\(\s*\)\s+name\s*[;:]/],
+    validPatterns: [
+      /@Input\s*\(\s*\)\s+name\s*!?\s*:\s*string/,
+      /@Input\s*\(\s*\)\s+name\s*!?\s*[;:]/,
+    ],
     realWorldExample:
       'In a YouTube-style app, a VideoCard component receives a video title and thumbnail URL from its parent via @Input -- this is how parent components pass data down to children.',
     hints: [
@@ -508,7 +511,7 @@ onClick(event: Event) {}`,
     setupCode: `class MyComponent {}`,
     expected: '@ViewChild with template reference',
     sample: `@ViewChild('myInput') inputRef: ElementRef;`,
-    validPatterns: [/@ViewChild\s*\(\s*['"]myInput['"]\s*\)\s+inputRef\s*:\s*ElementRef/],
+    validPatterns: [/@ViewChild\s*\(\s*['"]myInput['"]\s*\)\s+inputRef\s*!?\s*:\s*ElementRef/],
     realWorldExample:
       'Notion auto-focuses the title input when you create a new page -- @ViewChild grabs a reference to that input element so the component can call .focus() on it.',
     hints: [
@@ -530,7 +533,7 @@ onClick(event: Event) {}`,
     expected: '@ViewChildren with QueryList',
     sample: `@ViewChildren(ItemComponent) items: QueryList<ItemComponent>;`,
     validPatterns: [
-      /@ViewChildren\s*\(\s*ItemComponent\s*\)\s+items\s*:\s*QueryList\s*<\s*ItemComponent\s*>/,
+      /@ViewChildren\s*\(\s*ItemComponent\s*\)\s+items\s*!?\s*:\s*QueryList\s*<\s*ItemComponent\s*>/,
     ],
     realWorldExample:
       'A Kanban board like Trello needs references to all card components in a column to calculate drag-drop positions -- @ViewChildren returns a live QueryList of matching children.',
@@ -615,7 +618,9 @@ onClick(event: Event) {}`,
     setupCode: `class MyComponent {}`,
     expected: '@ContentChild with TemplateRef',
     sample: `@ContentChild('header') headerContent: TemplateRef<any>;`,
-    validPatterns: [/@ContentChild\s*\(\s*['"]header['"]\s*\)\s+headerContent\s*:\s*TemplateRef/],
+    validPatterns: [
+      /@ContentChild\s*\(\s*['"]header['"]\s*\)\s+headerContent\s*!?\s*:\s*TemplateRef/,
+    ],
     realWorldExample:
       "A reusable modal component in an Angular Material-style library accesses the projected header template via @ContentChild to position it in the modal's title bar.",
     hints: [
@@ -888,7 +893,7 @@ count.set(5);`,
     setupCode: `const signal = (val: any) => { const s = () => val; s.set = (v: any) => { val = v; }; s.update = (fn: any) => { val = fn(val); }; return s; };\nconst count = signal(10);`,
     expected: 'Signal update with function',
     sample: `count.update(v => v + 1);`,
-    validPatterns: [/count\.update\s*\(\s*v\s*=>\s*v\s*\+\s*1\s*\)/],
+    validPatterns: [/count\.update\s*\(\s*\(?\s*\w+\s*\)?\s*=>\s*\w+\s*\+\s*1\s*\)/],
     realWorldExample:
       "A 'Like' button on Instagram increments a counter based on the current value -- signal.update() derives the new state from the old without a separate read step.",
     hints: [

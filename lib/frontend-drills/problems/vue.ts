@@ -84,7 +84,7 @@ const count = ref(10);`,
     category: 'Common Patterns',
     difficulty: 'medium',
     title: 'Watch a Reactive Property',
-    text: 'Use watch() to track changes to a ref. When the ref changes from 5 to 10, capture the new value. Return an object with the captured value.',
+    text: 'Use watch() to observe a ref and capture its current value. The mock watch() immediately invokes the callback with the ref value. Return an object with the captured value.',
     setup:
       'Mock watch() executes the callback immediately with (newVal, oldVal). A counter ref is provided.',
     setupCode: `const ref = (val) => ({ value: val });
@@ -368,8 +368,8 @@ handleWithPrevent(event)`,
     category: 'DOM & Events',
     difficulty: 'medium',
     title: 'Event Modifier: Once',
-    text: 'Simulate the .once modifier: create a handler wrapper that only allows a callback to execute once. Call it 3 times and return the call count.',
-    setup: 'No setup needed.',
+    text: 'A once() wrapper is provided that simulates the .once modifier — it only allows a callback to execute once. Use it to wrap a counter function, call the wrapper 3 times, and return the call count.',
+    setup: 'A once() wrapper function.',
     setupCode: `const once = (fn) => { let called = false; return (...args) => { if (!called) { called = true; fn(...args); } }; };`,
     expected: { callCount: 1 },
     sample: `let callCount = 0;
@@ -415,8 +415,8 @@ checkKeyModifier(keyEvent, "Enter")`,
     category: 'DOM & Events',
     difficulty: 'medium',
     title: 'Simple Event Bus',
-    text: 'Create a simple event bus with on() and emit() methods. Register a handler for "notify", emit with payload "hello", return the received payload.',
-    setup: 'No external setup needed.',
+    text: 'A createEventBus() factory is provided with on() and emit() methods. Create a bus, register a handler for "notify", emit with payload "hello", and return the received payload.',
+    setup: 'A createEventBus() factory.',
     setupCode: `function createEventBus() {
   const listeners = {};
   return {
