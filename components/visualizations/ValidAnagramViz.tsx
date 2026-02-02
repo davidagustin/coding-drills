@@ -201,7 +201,7 @@ export default function ValidAnagramViz() {
                     key={c}
                     className="p-3 rounded-lg border-2"
                     style={{
-                      backgroundColor: matches ? COLORS.match + '20' : COLORS.mismatch + '20',
+                      backgroundColor: matches ? `${COLORS.match}20` : `${COLORS.mismatch}20`,
                       borderColor: matches ? COLORS.match : COLORS.mismatch,
                     }}
                   >

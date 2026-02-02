@@ -138,17 +138,17 @@ describe('storage', () => {
     it('tracks category stats for correct answer', () => {
       saveDrillProgress('js', { correct: true, category: 'arrays' });
       const p = getProgress('js');
-      expect(p.drillStats.categoryStats['arrays']).toBeDefined();
-      expect(p.drillStats.categoryStats['arrays'].attempted).toBe(1);
-      expect(p.drillStats.categoryStats['arrays'].correct).toBe(1);
-      expect(p.drillStats.categoryStats['arrays'].lastAttempted).toBeDefined();
+      expect(p.drillStats.categoryStats.arrays).toBeDefined();
+      expect(p.drillStats.categoryStats.arrays.attempted).toBe(1);
+      expect(p.drillStats.categoryStats.arrays.correct).toBe(1);
+      expect(p.drillStats.categoryStats.arrays.lastAttempted).toBeDefined();
     });
 
     it('tracks category stats for incorrect answer', () => {
       saveDrillProgress('js', { correct: false, category: 'strings' });
       const p = getProgress('js');
-      expect(p.drillStats.categoryStats['strings'].attempted).toBe(1);
-      expect(p.drillStats.categoryStats['strings'].correct).toBe(0);
+      expect(p.drillStats.categoryStats.strings.attempted).toBe(1);
+      expect(p.drillStats.categoryStats.strings.correct).toBe(0);
     });
 
     it('handles missing category gracefully', () => {
@@ -162,8 +162,8 @@ describe('storage', () => {
       saveDrillProgress('js', { correct: false, category: 'loops' });
       saveDrillProgress('js', { correct: true, category: 'loops' });
       const p = getProgress('js');
-      expect(p.drillStats.categoryStats['loops'].attempted).toBe(3);
-      expect(p.drillStats.categoryStats['loops'].correct).toBe(2);
+      expect(p.drillStats.categoryStats.loops.attempted).toBe(3);
+      expect(p.drillStats.categoryStats.loops.correct).toBe(2);
     });
 
     it('updates lastPlayed timestamp', () => {
@@ -480,8 +480,8 @@ describe('storage', () => {
       saveDrillProgress('python', { correct: true });
       clearProgress('js');
       const all = getAllProgress();
-      expect(all['js']).toBeUndefined();
-      expect(all['python']).toBeDefined();
+      expect(all.js).toBeUndefined();
+      expect(all.python).toBeDefined();
     });
 
     it('clears all progress when no language specified', () => {
@@ -612,7 +612,7 @@ describe('storage', () => {
       const data = exportProgress();
       expect(data.version).toBe('1.0.0');
       expect(data.exportDate).toBeDefined();
-      expect(data.progress['js']).toBeDefined();
+      expect(data.progress.js).toBeDefined();
       expect(data.settings.theme).toBe('dark');
     });
 
@@ -697,7 +697,7 @@ describe('storage', () => {
       };
       const result = importProgress(data);
       expect(result).toEqual({ success: true });
-      expect(getAllProgress()['js']).toBeDefined();
+      expect(getAllProgress().js).toBeDefined();
       expect(getSettings().theme).toBe('dark');
     });
 

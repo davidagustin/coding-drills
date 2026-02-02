@@ -20,7 +20,7 @@ interface NavbarProps {
 export function Navbar({ links = [], showLanguageNav = false, currentLanguage }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '/';
 
   // Track scroll position for enhanced styling
   useEffect(() => {

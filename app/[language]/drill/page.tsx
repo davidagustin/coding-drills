@@ -924,7 +924,7 @@ function DrillPhaseComponent({
   // Scroll to top when question changes or component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [state.currentIndex]);
+  }, []);
 
   const handleSubmit = useCallback(() => {
     if (userAnswer.trim()) {

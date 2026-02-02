@@ -247,30 +247,29 @@ export default function DiagonalTraversalViz() {
         </p>
         <div className="flex flex-wrap items-center gap-1 font-mono text-sm min-h-[28px]">
           <span className="text-zinc-600 font-semibold">[</span>
-          {current !== null &&
-            current.collected.map((val, i) => {
-              const isLast = i === current.collected.length - 1;
-              // Find the diagonal color for this value by looking it up in STEPS
-              const stepData = STEPS[i];
-              const valColor = DIAGONAL_COLORS[stepData.currentDiagonal];
-              return (
-                <span key={i} className="flex items-center">
-                  <span
-                    className="font-bold"
-                    style={{
-                      color: valColor,
-                      opacity: isLast ? 1 : 0.75,
-                      transition: 'opacity 0.3s',
-                    }}
-                  >
-                    {val}
-                  </span>
-                  {i < current.collected.length - 1 && (
-                    <span className="text-zinc-600 mr-0.5">,</span>
-                  )}
+          {current?.collected.map((val, i) => {
+            const isLast = i === current.collected.length - 1;
+            // Find the diagonal color for this value by looking it up in STEPS
+            const stepData = STEPS[i];
+            const valColor = DIAGONAL_COLORS[stepData.currentDiagonal];
+            return (
+              <span key={i} className="flex items-center">
+                <span
+                  className="font-bold"
+                  style={{
+                    color: valColor,
+                    opacity: isLast ? 1 : 0.75,
+                    transition: 'opacity 0.3s',
+                  }}
+                >
+                  {val}
                 </span>
-              );
-            })}
+                {i < current.collected.length - 1 && (
+                  <span className="text-zinc-600 mr-0.5">,</span>
+                )}
+              </span>
+            );
+          })}
           <span className="text-zinc-600 font-semibold">]</span>
         </div>
       </div>

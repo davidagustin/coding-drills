@@ -62,7 +62,7 @@ function computeSteps(): SimplifyStep[] {
     }
   }
 
-  const result = '/' + stack.join('/');
+  const result = `/${stack.join('/')}`;
   steps.push({
     path: PATH,
     parts: [...parts],
@@ -92,7 +92,7 @@ export default function SimplifyPathViz() {
   }, [step]);
 
   const { parts, stack, explanation } = currentStep;
-  const result = '/' + stack.join('/');
+  const result = `/${stack.join('/')}`;
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-zinc-900 rounded-xl border border-zinc-800">

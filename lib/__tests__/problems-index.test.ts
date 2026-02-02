@@ -192,15 +192,15 @@ describe('getProblemCountByLanguage', () => {
     const counts = getProblemCountByLanguage();
     expect(typeof counts).toBe('object');
 
-    expect(counts['javascript']).toBeGreaterThan(0);
-    expect(counts['python']).toBeGreaterThan(0);
-    expect(counts['typescript']).toBeGreaterThan(0);
+    expect(counts.javascript).toBeGreaterThan(0);
+    expect(counts.python).toBeGreaterThan(0);
+    expect(counts.typescript).toBeGreaterThan(0);
   });
 
   it('should match actual problem lengths', () => {
     const counts = getProblemCountByLanguage();
     const jsProblems = getProblemsForLanguage('javascript');
-    expect(counts['javascript']).toBe(jsProblems.length);
+    expect(counts.javascript).toBe(jsProblems.length);
   });
 });
 
@@ -223,7 +223,7 @@ describe('getRandomProblem', () => {
     expect(problem).not.toBeNull();
     const allJsProblems = getProblemsForLanguage('javascript');
     const ids = allJsProblems.map((p) => p.id);
-    expect(ids).toContain(problem!.id);
+    expect(ids).toContain(problem?.id);
   });
 });
 
@@ -233,7 +233,7 @@ describe('searchProblemsByTag', () => {
     const allProblems = getProblemsForLanguage('javascript');
     const problemWithTags = allProblems.find((p) => p.tags && p.tags.length > 0);
 
-    if (problemWithTags && problemWithTags.tags) {
+    if (problemWithTags?.tags) {
       const tag = problemWithTags.tags[0];
       const results = searchProblemsByTag('javascript', tag);
       expect(results.length).toBeGreaterThan(0);

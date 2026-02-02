@@ -423,7 +423,7 @@ describe('CodeEditor', () => {
       expect(jsDefs.setDiagnosticsOptions).toHaveBeenCalled();
       // TS-specific diagnostics with codes to ignore
       expect(tsDefs.setDiagnosticsOptions).toHaveBeenCalled();
-      const diagCall = tsDefs.setDiagnosticsOptions.mock.calls.at(-1)![0];
+      const diagCall = tsDefs.setDiagnosticsOptions.mock.calls.at(-1)?.[0];
       expect(diagCall.diagnosticCodesToIgnore).toBeDefined();
       expect(diagCall.diagnosticCodesToIgnore).toContain(2451);
       // Markers cleared on the current model
@@ -796,7 +796,7 @@ describe('CodeEditor', () => {
 
       // Trigger paste so a timeout is queued
       act(() => {
-        mockState.onDidPasteCallback!();
+        mockState.onDidPasteCallback?.();
       });
 
       // Unmount before the paste timeout fires
@@ -820,7 +820,7 @@ describe('CodeEditor', () => {
       expect(mockState.onDidPasteCallback).not.toBeNull();
 
       act(() => {
-        mockState.onDidPasteCallback!();
+        mockState.onDidPasteCallback?.();
       });
 
       act(() => {
@@ -835,10 +835,10 @@ describe('CodeEditor', () => {
       render(<CodeEditor code="" language="javascript" onChange={() => {}} />);
 
       act(() => {
-        mockState.onDidPasteCallback!();
+        mockState.onDidPasteCallback?.();
       });
       act(() => {
-        mockState.onDidPasteCallback!();
+        mockState.onDidPasteCallback?.();
       });
 
       act(() => {

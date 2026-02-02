@@ -142,7 +142,7 @@ export default function KruskalMSTViz() {
                 key={idx}
                 className="p-3 rounded-lg border-2 flex items-center justify-between"
                 style={{
-                  backgroundColor: bgColor + '20',
+                  backgroundColor: `${bgColor}20`,
                   borderColor: bgColor,
                 }}
                 animate={{

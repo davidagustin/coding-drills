@@ -72,7 +72,7 @@ function computeSteps(): LevelStep[] {
     if (!levelMap.has(level)) {
       levelMap.set(level, []);
     }
-    levelMap.get(level)!.push(node.value);
+    levelMap.get(level)?.push(node.value);
     traverse(node.left, level + 1);
     traverse(node.right, level + 1);
   }

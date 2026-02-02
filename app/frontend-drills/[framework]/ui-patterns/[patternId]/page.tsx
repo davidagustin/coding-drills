@@ -461,10 +461,16 @@ function skeletonizeDemo(js: string, concepts: string[], framework: string): str
   return [...setup, ...todos, '', ...teardown].join('\n');
 }
 
+/** Check whether a starter string looks like an actual skeleton (has TODO / Step markers). */
+function isSkeleton(code: string): boolean {
+  return /\/\/\s*(TODO|Step\s+\d|Your\s+code|Your\s+answer|Implement)/i.test(code);
+}
+
 function generateStarterCode(pattern: UIPattern, framework: string): string {
-  // Use hand-crafted starter code when available (preferred)
+  // Use hand-crafted starter code only if it's a real skeleton (has TODO/Step markers).
+  // Many starters were generated as full solutions — fall through to auto-skeleton for those.
   const handCrafted = getStarterCode(framework as FrameworkId, pattern.id);
-  if (handCrafted) return handCrafted;
+  if (handCrafted && isSkeleton(handCrafted)) return handCrafted;
 
   // Fallback: auto-generate skeleton from demoCode
   if (pattern.demoCode?.js?.trim()) {
@@ -590,7 +596,7 @@ ${jsx}
 ReactDOM.createRoot(document.getElementById('app')).render(<${funcName} />);`;
 }
 
-function vueStarter(pattern: UIPattern, name: string, steps: string): string {
+function vueStarter(pattern: UIPattern, _name: string, steps: string): string {
   const imports = new Set(['createApp', 'ref']);
   const joined = pattern.concepts.join(' ').toLowerCase();
   if (/computed|derived|filter|calculate|strength/.test(joined)) imports.add('computed');
@@ -602,7 +608,7 @@ function vueStarter(pattern: UIPattern, name: string, steps: string): string {
     stateLines = pattern.demoCode.js
       .split('\n')
       .filter((l) => /^\s*const\s+\w+\s*=\s*(ref|reactive)\(/.test(l))
-      .map((l) => '    ' + l.trim());
+      .map((l) => `    ${l.trim()}`);
   }
   if (stateLines.length === 0) {
     if (pattern.category === 'interactive') {
@@ -676,7 +682,7 @@ ${tmpl}
 
 function vanillaStarter(
   pattern: UIPattern,
-  name: string,
+  _name: string,
   steps: string,
   framework: string,
 ): string {
@@ -849,7 +855,7 @@ export default function UIPatternDetail() {
   // Reset test results when user code changes
   useEffect(() => {
     setTestResults(null); // eslint-disable-line react-hooks/set-state-in-effect -- Reset tests on code change
-  }, [userCode]);
+  }, []);
 
   const handleRunTests = useCallback(() => {
     if (previewIframeRef.current?.contentWindow) {

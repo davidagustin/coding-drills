@@ -312,9 +312,9 @@ describe('quizGenerator', () => {
     it('should return method info when found', () => {
       const info = getMethodInfo('map', 'javascript');
       expect(info).toBeDefined();
-      expect(info!.name).toBe('map');
-      expect(info!.category).toBe('arrays');
-      expect(info!.description).toBeTruthy();
+      expect(info?.name).toBe('map');
+      expect(info?.category).toBe('arrays');
+      expect(info?.description).toBeTruthy();
     });
 
     it('should return undefined for non-existent method', () => {
@@ -325,7 +325,7 @@ describe('quizGenerator', () => {
     it('should find python methods', () => {
       const info = getMethodInfo('append', 'python');
       expect(info).toBeDefined();
-      expect(info!.name).toBe('append');
+      expect(info?.name).toBe('append');
     });
   });
 

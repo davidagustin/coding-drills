@@ -81,14 +81,14 @@ describe('executeJavaScript', () => {
     const result = executeJavaScript('', 'console.warn("warning msg"); return 1;');
     expect(result.success).toBe(true);
     expect(result.logs).toEqual(expect.arrayContaining([expect.stringContaining('[WARN]')]));
-    expect(result.logs![0]).toContain('warning msg');
+    expect(result.logs?.[0]).toContain('warning msg');
   });
 
   it('should capture console.error output', () => {
     const result = executeJavaScript('', 'console.error("error msg"); return 1;');
     expect(result.success).toBe(true);
     expect(result.logs).toEqual(expect.arrayContaining([expect.stringContaining('[ERROR]')]));
-    expect(result.logs![0]).toContain('error msg');
+    expect(result.logs?.[0]).toContain('error msg');
   });
 
   it('should handle compile/syntax error (new Function fails)', () => {
@@ -104,7 +104,7 @@ describe('executeJavaScript', () => {
     const result = executeJavaScript('', 'if (');
     expect(result.success).toBe(false);
     // Verify only one "Syntax error:" prefix
-    const occurrences = (result.error!.match(/Syntax error:/g) || []).length;
+    const occurrences = (result.error?.match(/Syntax error:/g) || []).length;
     expect(occurrences).toBe(1);
   });
 
@@ -235,13 +235,13 @@ describe('executeJavaScriptAsync', () => {
   it('should capture console.warn in async mode', async () => {
     const result = await executeJavaScriptAsync('', 'console.warn("async warn"); return 1;');
     expect(result.success).toBe(true);
-    expect(result.logs![0]).toContain('[WARN]');
+    expect(result.logs?.[0]).toContain('[WARN]');
   });
 
   it('should capture console.error in async mode', async () => {
     const result = await executeJavaScriptAsync('', 'console.error("async error"); return 1;');
     expect(result.success).toBe(true);
-    expect(result.logs![0]).toContain('[ERROR]');
+    expect(result.logs?.[0]).toContain('[ERROR]');
   });
 
   it('should timeout for long-running async code', async () => {
@@ -525,7 +525,7 @@ describe('validateCode', () => {
       );
       expect(result.valid).toBe(false);
       expect(result.antiCheatFlags).toBeDefined();
-      expect(result.antiCheatFlags!.some((f) => f.severity === 'error')).toBe(true);
+      expect(result.antiCheatFlags?.some((f) => f.severity === 'error')).toBe(true);
     });
 
     it('should block code with forbidden patterns', () => {
@@ -537,7 +537,7 @@ describe('validateCode', () => {
         mockProblemWithForbidden,
       );
       expect(result.valid).toBe(false);
-      expect(result.antiCheatFlags!.some((f) => f.type === 'forbidden_pattern')).toBe(true);
+      expect(result.antiCheatFlags?.some((f) => f.type === 'forbidden_pattern')).toBe(true);
     });
   });
 });
@@ -820,74 +820,74 @@ describe('getErrorHint', () => {
   it('should match "is not defined" error', () => {
     const hint = getErrorHint('foo is not defined');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('declared');
+    expect(hint?.hint).toContain('declared');
   });
 
   it('should match "Cannot read property of undefined"', () => {
     const hint = getErrorHint('Cannot read property "x" of undefined');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('undefined');
+    expect(hint?.hint).toContain('undefined');
   });
 
   it('should match "Cannot read properties of null"', () => {
     const hint = getErrorHint('Cannot read properties "x" of null');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('null');
+    expect(hint?.hint).toContain('null');
   });
 
   it('should match "is not a function"', () => {
     const hint = getErrorHint('foo is not a function');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('not a function');
+    expect(hint?.hint).toContain('not a function');
   });
 
   it('should match "Unexpected token"', () => {
     const hint = getErrorHint('Unexpected token ;');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('syntax error');
+    expect(hint?.hint).toContain('syntax error');
   });
 
   it('should match "Maximum call stack size exceeded"', () => {
     const hint = getErrorHint('Maximum call stack size exceeded');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('recursion');
+    expect(hint?.hint).toContain('recursion');
   });
 
   it('should match "Assignment to constant variable"', () => {
     const hint = getErrorHint('Assignment to constant variable');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('const');
+    expect(hint?.hint).toContain('const');
   });
 
   it('should match "Invalid left-hand side in assignment"', () => {
     const hint = getErrorHint('Invalid left-hand side in assignment');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('assigning');
+    expect(hint?.hint).toContain('assigning');
   });
 
   it('should match "Unexpected end of input"', () => {
     const hint = getErrorHint('Unexpected end of input');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('incomplete');
+    expect(hint?.hint).toContain('incomplete');
   });
 
   it('should match "SyntaxError: Unexpected identifier"', () => {
     const hint = getErrorHint('SyntaxError: Unexpected identifier');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('missing operator');
+    expect(hint?.hint).toContain('missing operator');
   });
 
   it('should match "TypeError: obj.method is not a function"', () => {
     const hint = getErrorHint('TypeError: myObj.doStuff is not a function');
     expect(hint).not.toBeNull();
     // The more specific pattern should match
-    expect(hint!.hint).toBeDefined();
+    expect(hint?.hint).toBeDefined();
   });
 
   it('should match "RangeError: Invalid array length"', () => {
     const hint = getErrorHint('RangeError: Invalid array length');
     expect(hint).not.toBeNull();
-    expect(hint!.hint).toContain('Array length');
+    expect(hint?.hint).toContain('Array length');
   });
 
   it('should return null for unrecognized error', () => {
@@ -1371,7 +1371,7 @@ describe('_internal', () => {
     });
 
     it('should detect close number match', () => {
-      const suggestions = _internal.generateSuggestions(3.14, 3.141);
+      const suggestions = _internal.generateSuggestions(3.14, Math.PI);
       expect(suggestions.some((s) => s.includes('rounding') || s.includes('close'))).toBe(true);
     });
 
@@ -1528,7 +1528,7 @@ describe('Edge cases', () => {
     expect(result.valid).toBe(false);
     // Should have suggestion about array order
     expect(result.suggestions).toBeDefined();
-    expect(result.suggestions!.some((s) => s.includes('order'))).toBe(true);
+    expect(result.suggestions?.some((s) => s.includes('order'))).toBe(true);
   });
 
   it('validateCode for JavaScript with correct output includes antiCheatFlags when present', () => {

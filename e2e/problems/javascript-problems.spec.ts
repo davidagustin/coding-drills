@@ -1212,7 +1212,7 @@ test.describe('JavaScript Problems - Pattern Matching Validation', () => {
         const result = await submitAnswer(page, withoutFilter);
 
         // Should be rejected if pattern requires .filter
-        if (problem.validPatterns && problem.validPatterns.some((p) => p.test(problem.sample))) {
+        if (problem.validPatterns?.some((p) => p.test(problem.sample))) {
           const patternError = page.locator('text=/must use|expected method|filter/i');
           const hasError = await patternError.isVisible().catch(() => false);
           expect(result.isCorrect === false || hasError).toBeTruthy();

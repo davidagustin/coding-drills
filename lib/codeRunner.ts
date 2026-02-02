@@ -752,7 +752,7 @@ function normalizeCodeForPatternMatching(code: string): string[] {
   // Version 2: Add consistent single spaces (standard spacing)
   // {age:30} -> { age: 30 }
   const standard = code
-    .replace(/\{([^}]+)\}/g, (match, content) => {
+    .replace(/\{([^}]+)\}/g, (_match, content) => {
       const normalized = content
         .replace(/\s*:\s*/g, ': ')
         .replace(/\s*,\s*/g, ', ')
@@ -760,7 +760,7 @@ function normalizeCodeForPatternMatching(code: string): string[] {
         .trim();
       return `{ ${normalized} }`;
     })
-    .replace(/\[([^\]]+)\]/g, (match, content) => {
+    .replace(/\[([^\]]+)\]/g, (_match, content) => {
       const normalized = content
         .replace(/\s*,\s*/g, ', ')
         .replace(/\s+/g, ' ')

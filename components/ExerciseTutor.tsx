@@ -97,6 +97,18 @@ export default function ExerciseTutor({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const systemPromptRef = useRef('');
 
+  const startChat = useCallback(() => {
+    systemPromptRef.current = buildExerciseTutorSystemPrompt(exercise, hasVisualization);
+    const greeting: Message = {
+      id: generateId(),
+      role: 'assistant',
+      content: getRandomTutorStarter(exercise, hasVisualization),
+      timestamp: new Date(),
+    };
+    setMessages([greeting]);
+    setPhase('ready');
+  }, [exercise, hasVisualization]);
+
   // Check WebGPU support and whether model is already loaded
   useEffect(() => {
     let cancelled = false;
@@ -118,8 +130,7 @@ export default function ExerciseTutor({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [startChat]);
 
   // Focus input when ready
   useEffect(() => {
@@ -127,18 +138,6 @@ export default function ExerciseTutor({
       inputRef.current?.focus();
     }
   }, [phase]);
-
-  const startChat = useCallback(() => {
-    systemPromptRef.current = buildExerciseTutorSystemPrompt(exercise, hasVisualization);
-    const greeting: Message = {
-      id: generateId(),
-      role: 'assistant',
-      content: getRandomTutorStarter(exercise, hasVisualization),
-      timestamp: new Date(),
-    };
-    setMessages([greeting]);
-    setPhase('ready');
-  }, [exercise, hasVisualization]);
 
   const handleActivate = useCallback(async () => {
     // If model already loaded, skip download

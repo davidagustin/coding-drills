@@ -213,7 +213,7 @@ function blankFunctionBodies(
       const closingSuffix = closingTrimmed.substring(lastBraceIdx);
 
       result.push(sigLine);
-      result.push(indent + '  ' + todo);
+      result.push(`${indent}  ${todo}`);
       result.push(indent + closingSuffix);
 
       // Update global depth for the lines we skipped
@@ -239,9 +239,9 @@ function blankFunctionBodies(
         arrowIdx = trimmed.indexOf('=>', arrowIdx + 2);
       }
       const sigPart = trimmed.substring(0, arrowIdx + 2);
-      result.push(indent + sigPart + ' {');
-      result.push(indent + '  ' + todo);
-      result.push(indent + '};');
+      result.push(`${indent + sigPart} {`);
+      result.push(`${indent}  ${todo}`);
+      result.push(`${indent}};`);
 
       // Update global depth: no net change (single line)
       // But count braces on the original line to keep depth accurate
@@ -362,13 +362,13 @@ function generateStarterFile(varName: string, starters: Record<string, string>):
   lines.push(' * Generated from reference demoCode — DO NOT manually edit individual entries.');
   lines.push(' * To regenerate, run: npx tsx scripts/generate-starters.ts');
   lines.push(' */');
-  lines.push('export const ' + varName + ': Record<string, string> = {');
+  lines.push(`export const ${varName}: Record<string, string> = {`);
 
   const entries = Object.entries(starters);
   for (let idx = 0; idx < entries.length; idx++) {
     const [id, code] = entries[idx];
     const escaped = escapeForTemplateLiteral(code);
-    lines.push("  '" + id + "': `" + escaped + '`' + (idx < entries.length - 1 ? ',' : ','));
+    lines.push(`  '${id}': \`${escaped}\`${idx < entries.length - 1 ? ',' : ','}`);
     lines.push('');
   }
 

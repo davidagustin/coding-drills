@@ -214,7 +214,7 @@ describe('complexityProblems', () => {
     it('should return count matching getComplexityCategoryCounts for a specific category', () => {
       const counts = getComplexityCategoryCounts();
       const sortingQuestions = getComplexityQuestionsByCategory(['sorting']);
-      expect(sortingQuestions).toHaveLength(counts['sorting']);
+      expect(sortingQuestions).toHaveLength(counts.sorting);
     });
   });
 });

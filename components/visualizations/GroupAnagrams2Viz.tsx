@@ -137,7 +137,7 @@ export default function GroupAnagrams2Viz() {
                         key={i}
                         className="px-3 py-1 rounded border-2 font-mono font-bold text-white"
                         style={{
-                          backgroundColor: COLORS.grouped + '40',
+                          backgroundColor: `${COLORS.grouped}40`,
                           borderColor: COLORS.grouped,
                         }}
                       >

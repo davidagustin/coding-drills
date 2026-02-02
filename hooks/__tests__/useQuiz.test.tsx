@@ -1124,7 +1124,7 @@ describe('useQuiz', () => {
 
     // Trigger the timeout
     act(() => {
-      onComplete!();
+      onComplete?.();
     });
 
     // Should mark as incorrect

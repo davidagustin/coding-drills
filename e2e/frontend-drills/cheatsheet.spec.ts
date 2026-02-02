@@ -41,7 +41,7 @@ test.describe('Frontend Cheatsheet — native-js', () => {
     // Cheatsheet may have a sidebar/nav for sections
     const nav = page.locator('nav, [class*="sidebar"], [class*="toc"], [class*="navigation"]');
     // Some cheatsheets may use scroll spy instead of visible nav
-    const hasNav = await nav.count();
+    const _hasNav = await nav.count();
     // Verify page loaded regardless
     expect(await page.locator('h1, h2').first().isVisible()).toBe(true);
   });

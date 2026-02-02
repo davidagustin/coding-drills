@@ -174,7 +174,7 @@ export default function TwoSumViz() {
                   key={val}
                   className="px-3 py-2 rounded-lg border-2 flex flex-col items-center"
                   style={{
-                    backgroundColor: COLORS.default + '20',
+                    backgroundColor: `${COLORS.default}20`,
                     borderColor: COLORS.default,
                   }}
                 >

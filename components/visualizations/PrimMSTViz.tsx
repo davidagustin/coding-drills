@@ -131,7 +131,7 @@ export default function PrimMSTViz() {
                 key={idx}
                 className="p-4 rounded-lg border-2 text-center"
                 style={{
-                  backgroundColor: bgColor + '20',
+                  backgroundColor: `${bgColor}20`,
                   borderColor: bgColor,
                 }}
               >

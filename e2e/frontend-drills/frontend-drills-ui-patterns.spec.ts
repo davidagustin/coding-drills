@@ -30,7 +30,7 @@ test.describe('Frontend Drills - UI Patterns List', () => {
 
   test('should have link back to Frontend Drills or framework', async ({ page }) => {
     const backLink = page
-      .locator('a[href="/frontend-drills"], a[href*="/frontend-drills/' + FRAMEWORK + '"]')
+      .locator(`a[href="/frontend-drills"], a[href*="/frontend-drills/${FRAMEWORK}"]`)
       .first();
     await expect(backLink).toBeVisible();
   });

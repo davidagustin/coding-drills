@@ -42,15 +42,15 @@ describe('C language helpers', () => {
     it('should return a problem for a valid id', () => {
       const problem = getCProblemById('c-strlen');
       expect(problem).toBeDefined();
-      expect(problem!.id).toBe('c-strlen');
-      expect(problem!.title).toMatch(/strlen/i);
+      expect(problem?.id).toBe('c-strlen');
+      expect(problem?.title).toMatch(/strlen/i);
     });
 
     it('should return the correct problem object', () => {
       const problem = getCProblemById('c-strcpy');
       expect(problem).toBeDefined();
-      expect(problem!.id).toBe('c-strcpy');
-      expect(problem!.category).toBe('String Functions');
+      expect(problem?.id).toBe('c-strcpy');
+      expect(problem?.category).toBe('String Functions');
     });
 
     it('should return undefined for a non-existent id', () => {
@@ -223,14 +223,14 @@ describe('TypeScript language helpers', () => {
     it('should return a problem for a valid id', () => {
       const problem = getTypescriptProblemById('ts-filter-type-guard-nullish');
       expect(problem).toBeDefined();
-      expect(problem!.id).toBe('ts-filter-type-guard-nullish');
+      expect(problem?.id).toBe('ts-filter-type-guard-nullish');
     });
 
     it('should return the correct problem object', () => {
       const problem = getTypescriptProblemById('ts-filter-type-guard-numbers');
       expect(problem).toBeDefined();
-      expect(problem!.id).toBe('ts-filter-type-guard-numbers');
-      expect(problem!.category).toBe('Type-Safe Array Methods');
+      expect(problem?.id).toBe('ts-filter-type-guard-numbers');
+      expect(problem?.category).toBe('Type-Safe Array Methods');
     });
 
     it('should return undefined for a non-existent id', () => {

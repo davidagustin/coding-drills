@@ -86,11 +86,10 @@ function parseAssignments(): AgentAssignment[] {
     const pendingMatch = line.match(/^-\s+⏳\s+`([^`]+)`/);
     if (pendingMatch) {
       const id = pendingMatch[1];
-      const componentName =
-        id
-          .split('-')
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join('') + 'Viz';
+      const componentName = `${id
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join('')}Viz`;
 
       currentAgent.tasks.push({
         id,
