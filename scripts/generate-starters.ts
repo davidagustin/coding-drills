@@ -176,6 +176,82 @@ function blankFunctionBodies(
         }
       }
 
+      // Pattern 9: Expression-body reactive wrapper (no braces)
+      // const x = computed(() => expr) or const x = useMemo(() => expr, [deps])
+      if (!funcName) {
+        const exprReactiveMatch = trimmed.match(
+          /^(const|let|var)\s+(\w+)\s*=\s*(?:computed|useMemo|useCallback)\s*\(\s*(?:\([^)]*\)|\w+)\s*=>\s*(?!\{)/,
+        );
+        if (exprReactiveMatch) {
+          // This is an expression-body hook that needs blanking
+          // Collect the full multi-line expression by tracking paren depth
+          // to find where the outer hook call closes
+          const indent = line.match(/^(\s*)/)?.[1] || '';
+          const varKeyword = exprReactiveMatch[1];
+          const varName = exprReactiveMatch[2];
+
+          // Collect full expression to determine a good default value
+          let fullExpr = trimmed;
+          let exprEnd = i;
+          let parenDepth = 0;
+          let bracketDepth = 0;
+          let braceDepthLocal = 0;
+
+          for (let j = i; j < lines.length; j++) {
+            const l = lines[j];
+            for (const ch of l) {
+              if (ch === '(') parenDepth++;
+              if (ch === ')') parenDepth--;
+              if (ch === '[') bracketDepth++;
+              if (ch === ']') bracketDepth--;
+              if (ch === '{') braceDepthLocal++;
+              if (ch === '}') braceDepthLocal--;
+            }
+            if (j > i) fullExpr += ' ' + l.trim();
+            // The outer hook call is closed when all brackets/parens balance and line ends with ; or ,
+            if (parenDepth <= 0 && bracketDepth <= 0 && braceDepthLocal <= 0) {
+              exprEnd = j;
+              break;
+            }
+            if (j === lines.length - 1) exprEnd = j;
+          }
+
+          // Determine safe default based on expression content
+          // Check if expression starts with array/object literal (structural indicators take priority)
+          const exprBody = trimmed.match(/=>\s*(.*)$/)?.[1] || '';
+          let defaultVal = '[]';
+          if (/^\s*\[/.test(exprBody))
+            defaultVal = '[]'; // Expression starts with [
+          else if (/^\s*\{/.test(exprBody) && !/^\s*\{[^}]*\}/.test(exprBody))
+            defaultVal = '{}'; // Expression starts with { (but not single-line object)
+          else if (/\.\s*(?:filter|map|flatMap|sort)\s*\(/.test(fullExpr)) defaultVal = '[]';
+          else if (/\.\s*find\s*\(/.test(fullExpr)) defaultVal = 'null';
+          else if (/\.\s*(?:some|every)\s*\(/.test(fullExpr)) defaultVal = 'false';
+          else if (/\.\s*reduce\s*\(/.test(fullExpr)) defaultVal = 'null';
+          else if (/Math\./.test(fullExpr)) defaultVal = '0';
+          else if (/\.length/.test(fullExpr) || /\.size/.test(fullExpr)) defaultVal = '0';
+          else if (/\?[^:]+:/.test(fullExpr)) defaultVal = 'null';
+          else if (/\.toLocaleString|\.toFixed|\.join\(/.test(fullExpr)) defaultVal = "''";
+          else if (/\[/.test(fullExpr)) defaultVal = '[]';
+          else if (/\{/.test(fullExpr)) defaultVal = '{}';
+
+          const bodyContent = fullExpr;
+          const todo = generateTodo(varName, bodyContent);
+          result.push(`${indent}${varKeyword} ${varName} = ${defaultVal}; ${todo}`);
+
+          // Update globalDepth for all skipped lines
+          for (let j = i; j <= exprEnd; j++) {
+            for (const ch of lines[j]) {
+              if (ch === '{') globalDepth++;
+              if (ch === '}') globalDepth--;
+            }
+          }
+
+          i = exprEnd + 1;
+          continue;
+        }
+      }
+
       // Pattern 8: obj.prop = function() { or obj.prop = () => {  (property assignment functions)
       if (!funcName) {
         const propFnMatch = trimmed.match(
@@ -295,8 +371,9 @@ function blankFunctionBodies(
         const varName = varMatch[2];
 
         // Skip hooks and reactive primitives (these are setup, not logic)
+        // Only skip simple hooks/refs — useMemo/computed/useCallback can contain implementation logic
         const isHookOrReactive =
-          /=\s*(use\w+|React\.use\w+|ref|reactive|computed|watch|inject|provide)\s*\(/.test(
+          /=\s*(useState|useRef|useContext|useReducer|React\.use\w+|ref|reactive|watch|inject|provide)\s*\(/.test(
             trimmed,
           );
 

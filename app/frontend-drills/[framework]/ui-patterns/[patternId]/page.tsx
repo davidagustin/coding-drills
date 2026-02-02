@@ -299,7 +299,7 @@ function isSkeletonSetup(t: string): boolean {
   // Vue createApp / setup
   if (/^createApp\s*\(\s*\{/.test(t) || /^setup\s*\(\)\s*\{/.test(t)) return true;
   // State hooks: const [x, setX] = useState(...)
-  if (/useState\(|useRef\(|useMemo\(/.test(t) && /^(const|let)\s/.test(t)) return true;
+  if (/useState\(|useRef\(/.test(t) && /^(const|let)\s/.test(t)) return true;
   // Vue reactivity: const x = ref(...)
   if (/\bref\(|reactive\(/.test(t) && /^(const|let)\s/.test(t)) return true;
   // DOM references: const el = document.getElementById(...)
