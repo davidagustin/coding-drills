@@ -124,8 +124,7 @@ function generateTrainingStarter(problem: FrontendDrillProblem): string {
     lines.push('  // Your code here');
     lines.push('}');
   } else {
-    // Expression, decorator, HTML template, object literal, or other
-    lines.push('// Your answer here');
+    // Expression, decorator, HTML template, object literal, or other — hints are sufficient
   }
 
   return lines.join('\n');

@@ -145,7 +145,7 @@ export function validateJavaScript(
         const lines = trimmedAnswer
           .split('\n')
           .map((l) => l.trim())
-          .filter((l) => l.length > 0);
+          .filter((l) => l.length > 0 && !l.startsWith('//'));
         const lastLine = lines[lines.length - 1];
         const precedingLines = lines.slice(0, -1).join('\n');
 
