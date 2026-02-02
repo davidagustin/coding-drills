@@ -1,7 +1,9 @@
-name: PR Check (disabled – Vercel only)
+name: PR Check (weekly)
 
 on:
-  workflow_dispatch: # manual-only, effectively disabled
+  schedule:
+    - cron: '0 9 * * 1' # Every Monday at 9:00 UTC
+  workflow_dispatch:
 
 concurrency:
   group: pr-${{ github.event.pull_request.number }}
