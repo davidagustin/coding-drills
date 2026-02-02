@@ -1,10 +1,7 @@
-name: CI
+name: CI (disabled – Vercel only)
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch: # manual-only, effectively disabled
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

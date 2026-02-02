@@ -1,8 +1,7 @@
-name: PR Check
+name: PR Check (disabled – Vercel only)
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch: # manual-only, effectively disabled
 
 concurrency:
   group: pr-${{ github.event.pull_request.number }}
