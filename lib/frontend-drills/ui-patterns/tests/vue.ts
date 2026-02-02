@@ -210,7 +210,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
   'vue-drag-drop': [
     {
       name: 'Dragging item updates visual state',
-      test: "(async function() { var item = document.querySelector('.drag-item'); if (!item) return false; var dragStart = new Event('dragstart', {bubbles:true}); item.dispatchEvent(dragStart); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var item = document.querySelector('.drag-item'); if (!item) return false; var dragStart = new Event('dragstart', {bubbles:true}); item.dispatchEvent(dragStart); await new Promise(function(r) { setTimeout(r, 150); }); return item.classList.contains('dragging') || item.classList.contains('drag-active') || item.style.opacity !== ''; })()",
     },
     {
       name: 'Order display reflects item arrangement',
@@ -526,7 +526,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking menu link selects it',
-      test: "(async function() { var trigger = document.querySelector('.menu-trigger'); if (!trigger) return false; var evt = new MouseEvent('mouseenter', {bubbles:true}); trigger.dispatchEvent(evt); await new Promise(function(r) { setTimeout(r, 150); }); var link = document.querySelector('.mega-dropdown a, .mega-dropdown div'); if (!link) return false; link.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var trigger = document.querySelector('.menu-trigger'); if (!trigger) return false; var evt = new MouseEvent('mouseenter', {bubbles:true}); trigger.dispatchEvent(evt); await new Promise(function(r) { setTimeout(r, 150); }); var link = document.querySelector('.mega-dropdown a, .mega-dropdown div'); if (!link) return false; link.click(); await new Promise(function(r) { setTimeout(r, 150); }); return link.classList.contains('active') || link.classList.contains('selected') || link.style.fontWeight !== ''; })()",
     },
     {
       name: 'Mouse leave closes dropdown',
@@ -569,11 +569,11 @@ export const vueTests: Record<string, PatternTestCase[]> = {
   'vue-settings': [
     {
       name: 'Changing theme updates setting value',
-      test: "(async function() { var themeBtn = document.querySelector('button'); if (!themeBtn) return false; themeBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var themeBtn = document.querySelector('button'); if (!themeBtn) return false; var initialClass = document.body.className || document.documentElement.className; themeBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newClass = document.body.className || document.documentElement.className; return newClass !== initialClass || document.body.classList.contains('dark') || document.body.classList.contains('light'); })()",
     },
     {
       name: 'Font size slider updates display',
-      test: "(async function() { var slider = document.querySelector('input[type=\"range\"]'); if (!slider) return false; slider.value = 20; slider.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var slider = document.querySelector('input[type=\"range\"]'); if (!slider) return false; var display = document.querySelector('.font-size, .size-display, .value'); if (!display) return false; var initial = display.textContent; slider.value = 20; slider.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return display.textContent !== initial && display.textContent.includes('20'); })()",
     },
     {
       name: 'Toggle switches change state',
@@ -596,7 +596,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Mark all read button updates notification states',
-      test: "(async function() { var addBtn = document.querySelector('button'); if (!addBtn) return false; addBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var markBtn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Mark'); }); if (!markBtn) return false; markBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var addBtn = document.querySelector('button'); if (!addBtn) return false; addBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var markBtn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Mark'); }); if (!markBtn) return false; markBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var notifications = document.querySelectorAll('.notification, .notif-item, .notif'); return Array.from(notifications).every(function(n) { return n.classList.contains('read') || n.style.opacity === '0.6'; }); })()",
     },
     {
       name: 'Dismiss button removes notification',
@@ -815,7 +815,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Country code selector changes format',
-      test: "(async function() { var select = document.querySelector('select, .country-select'); if (!select) return false; var input = document.querySelector('input[type=\"tel\"], input'); if (!input) return false; select.value = select.options[1] ? select.options[1].value : ''; select.dispatchEvent(new Event('change', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var select = document.querySelector('select, .country-select'); if (!select) return false; var input = document.querySelector('input[type=\"tel\"], input'); if (!input) return false; var formatDisplay = document.querySelector('.format, .placeholder, .hint'); var initial = formatDisplay ? formatDisplay.textContent : input.placeholder; select.value = select.options[1] ? select.options[1].value : ''; select.dispatchEvent(new Event('change', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); var newValue = formatDisplay ? formatDisplay.textContent : input.placeholder; return newValue !== initial; })()",
     },
   ],
 
@@ -971,7 +971,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Move buttons reorder list items',
-      test: "(async function() { var items = document.querySelectorAll('.item, .sortable-item, li'); if (items.length < 2) return false; var firstText = items[0].textContent; var moveBtn = items[0].querySelector('.move-down, .down, button'); if (moveBtn) { moveBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newItems = document.querySelectorAll('.item, .sortable-item, li'); return newItems[0].textContent !== firstText; } return true; })()",
+      test: "(async function() { var items = document.querySelectorAll('.item, .sortable-item, li'); if (items.length < 2) return false; var firstText = items[0].textContent; var moveBtn = items[0].querySelector('.move-down, .down, button'); if (!moveBtn) return false; moveBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newItems = document.querySelectorAll('.item, .sortable-item, li'); return newItems[0].textContent !== firstText; })()",
     },
   ],
 
@@ -993,7 +993,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Resize handle adjusts pane proportions',
-      test: "(async function() { var handle = document.querySelector('.handle, .gutter, .resizer'); if (!handle) return false; var pane = document.querySelector('.pane, .split-panel'); if (!pane) return false; var rect = handle.getBoundingClientRect(); handle.dispatchEvent(new MouseEvent('mousedown', {clientX: rect.left, clientY: rect.top, bubbles:true})); document.dispatchEvent(new MouseEvent('mousemove', {clientX: rect.left + 80, clientY: rect.top, bubbles:true})); document.dispatchEvent(new MouseEvent('mouseup', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var handle = document.querySelector('.handle, .gutter, .resizer'); if (!handle) return false; var pane = document.querySelector('.pane, .split-panel'); if (!pane) return false; var initialWidth = pane.offsetWidth; var rect = handle.getBoundingClientRect(); handle.dispatchEvent(new MouseEvent('mousedown', {clientX: rect.left, clientY: rect.top, bubbles:true})); document.dispatchEvent(new MouseEvent('mousemove', {clientX: rect.left + 80, clientY: rect.top, bubbles:true})); document.dispatchEvent(new MouseEvent('mouseup', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return pane.offsetWidth !== initialWidth; })()",
     },
   ],
 
@@ -1034,7 +1034,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking collapse hides child nodes',
-      test: "(async function() { var toggle = document.querySelector('.toggle, .expand, .caret, .arrow'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var toggle = document.querySelector('.toggle, .expand, .caret, .arrow'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); var childrenBefore = document.querySelectorAll('.children .tree-node, .children .node, ul ul li'); if (childrenBefore.length === 0) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); var childrenAfter = document.querySelectorAll('.children .tree-node, .children .node, ul ul li'); return childrenAfter.length === 0 || Array.from(childrenAfter).every(function(c) { return c.offsetHeight === 0 || c.style.display === 'none'; }); })()",
     },
   ],
 
@@ -1045,7 +1045,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Multiple panels can be toggled independently',
-      test: "(async function() { var headers = document.querySelectorAll('.panel-header, .collapse-header, summary'); if (headers.length < 2) return false; headers[0].click(); await new Promise(function(r) { setTimeout(r, 100); }); headers[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var headers = document.querySelectorAll('.panel-header, .collapse-header, summary'); if (headers.length < 2) return false; headers[0].click(); await new Promise(function(r) { setTimeout(r, 100); }); headers[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); var content0 = headers[0].nextElementSibling || headers[0].parentElement.querySelector('.panel-content, .collapse-body, .content'); var content1 = headers[1].nextElementSibling || headers[1].parentElement.querySelector('.panel-content, .collapse-body, .content'); return content0 && content1 && content0.offsetHeight > 0 && content1.offsetHeight > 0; })()",
     },
   ],
 
@@ -1067,7 +1067,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Dragging down dismisses bottom sheet',
-      test: "(async function() { var btn = document.querySelector('button, .trigger'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var handle = document.querySelector('.handle, .drag-handle, .sheet-header'); if (!handle) return false; var rect = handle.getBoundingClientRect(); handle.dispatchEvent(new MouseEvent('mousedown', {clientX: rect.left, clientY: rect.top, bubbles:true})); document.dispatchEvent(new MouseEvent('mousemove', {clientX: rect.left, clientY: rect.top + 200, bubbles:true})); document.dispatchEvent(new MouseEvent('mouseup', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var btn = document.querySelector('button, .trigger'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var sheet = document.querySelector('.bottom-sheet, .sheet'); if (!sheet) return false; var handle = document.querySelector('.handle, .drag-handle, .sheet-header'); if (!handle) return false; var rect = handle.getBoundingClientRect(); handle.dispatchEvent(new MouseEvent('mousedown', {clientX: rect.left, clientY: rect.top, bubbles:true})); document.dispatchEvent(new MouseEvent('mousemove', {clientX: rect.left, clientY: rect.top + 200, bubbles:true})); document.dispatchEvent(new MouseEvent('mouseup', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return !sheet.classList.contains('open') && !sheet.classList.contains('visible'); })()",
     },
   ],
 
@@ -1093,7 +1093,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Search results update as user types',
-      test: "(async function() { var btn = document.querySelector('button, .trigger'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var input = document.querySelector('.spotlight input, .search-overlay input'); if (!input) return false; input.value = 'test'; input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.result, .item, .suggestion').length >= 0; })()",
+      test: "(async function() { var btn = document.querySelector('button, .trigger'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var input = document.querySelector('.spotlight input, .search-overlay input'); if (!input) return false; input.value = 'test'; input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.result, .item, .suggestion').length > 0; })()",
     },
   ],
 
@@ -1108,7 +1108,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking action item triggers action',
-      test: "(async function() { var fab = document.querySelector('.fab, .floating-btn, [class*=\"float\"]'); if (!fab) return false; fab.click(); await new Promise(function(r) { setTimeout(r, 150); }); var action = document.querySelector('.fab-menu button, .action-item, .fab-action'); if (!action) return false; action.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var fab = document.querySelector('.fab, .floating-btn, [class*=\"float\"]'); if (!fab) return false; fab.click(); await new Promise(function(r) { setTimeout(r, 150); }); var action = document.querySelector('.fab-menu button, .action-item, .fab-action'); if (!action) return false; var initialClass = fab.className; action.click(); await new Promise(function(r) { setTimeout(r, 150); }); return fab.className !== initialClass || !document.querySelector('.fab-menu, .action-menu') || document.querySelector('.result, .action-result'); })()",
     },
   ],
 
@@ -1195,7 +1195,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Filter changes displayed entries',
-      test: "(async function() { var filter = document.querySelector('select, .filter input, .filter button'); if (!filter) return true; if (filter.tagName === 'SELECT') { filter.value = filter.options[1] ? filter.options[1].value : ''; filter.dispatchEvent(new Event('change', {bubbles:true})); } else { filter.click(); } await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var filter = document.querySelector('select, .filter input, .filter button'); if (!filter) return false; var initialCount = document.querySelectorAll('.log-entry, .activity, .event').length; if (filter.tagName === 'SELECT') { filter.value = filter.options[1] ? filter.options[1].value : ''; filter.dispatchEvent(new Event('change', {bubbles:true})); } else { filter.click(); } await new Promise(function(r) { setTimeout(r, 150); }); var newCount = document.querySelectorAll('.log-entry, .activity, .event').length; return newCount !== initialCount; })()",
     },
   ],
 
@@ -1206,7 +1206,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Toggle between unified and split view',
-      test: "(async function() { var toggle = document.querySelector('button, .view-toggle, select'); if (!toggle) return true; toggle.click ? toggle.click() : (toggle.value = toggle.options[1].value, toggle.dispatchEvent(new Event('change', {bubbles:true}))); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var toggle = document.querySelector('button, .view-toggle, select'); if (!toggle) return false; var container = document.querySelector('.diff-viewer, .diff, .viewer'); if (!container) return false; var initialClass = container.className; toggle.click ? toggle.click() : (toggle.value = toggle.options[1].value, toggle.dispatchEvent(new Event('change', {bubbles:true}))); await new Promise(function(r) { setTimeout(r, 150); }); return container.className !== initialClass; })()",
     },
   ],
 
@@ -1239,11 +1239,11 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking node expands/collapses children',
-      test: "(async function() { var node = document.querySelector('.node, .key, .expandable, .toggle'); if (!node) return false; node.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var node = document.querySelector('.node, .key, .expandable, .toggle'); if (!node) return false; var children = node.parentElement.querySelector('.children, .nested, .sub-items'); if (!children) return false; var initialDisplay = children.offsetHeight; node.click(); await new Promise(function(r) { setTimeout(r, 150); }); return children.offsetHeight !== initialDisplay; })()",
     },
     {
       name: 'Search filters visible nodes',
-      test: "(async function() { var input = document.querySelector('input'); if (!input) return true; input.value = 'name'; input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var input = document.querySelector('input'); if (!input) return false; var initialCount = document.querySelectorAll('.node, .key, .property, .json-key').length; input.value = 'name'; input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); var newCount = document.querySelectorAll('.node, .key, .property, .json-key').length; return newCount < initialCount || newCount !== initialCount; })()",
     },
   ],
 
@@ -1341,7 +1341,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Refresh button updates metric values',
-      test: "(async function() { var btn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Refresh') || b.textContent.includes('Update'); }); if (!btn) return true; var initial = document.querySelector('.value, .number, .metric-value').textContent; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var btn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Refresh') || b.textContent.includes('Update'); }); if (!btn) return false; var valueEl = document.querySelector('.value, .number, .metric-value'); if (!valueEl) return false; var initial = valueEl.textContent; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newValue = document.querySelector('.value, .number, .metric-value').textContent; return newValue !== initial; })()",
     },
   ],
 
@@ -1387,7 +1387,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking anchor scrolls to section',
-      test: '(async function() { var link = document.querySelector(\'a[href*="#"], .anchor-link\'); if (!link) return false; link.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()',
+      test: '(async function() { var link = document.querySelector(\'a[href*="#"], .anchor-link\'); if (!link) return false; var initialScroll = window.scrollY || document.documentElement.scrollTop; link.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newScroll = window.scrollY || document.documentElement.scrollTop; return newScroll !== initialScroll || newScroll > 0; })()',
     },
   ],
 
@@ -1470,7 +1470,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Authenticated user can access protected route',
-      test: "(async function() { var loginBtn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Login') || b.textContent.includes('Sign in'); }); if (!loginBtn) return true; loginBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var loginBtn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Login') || b.textContent.includes('Sign in'); }); if (!loginBtn) return false; loginBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var protectedContent = document.querySelector('.protected, .dashboard, .admin'); return !!protectedContent && !document.querySelector('.login, .auth, .guard-message, .blocked'); })()",
     },
   ],
 
@@ -1503,7 +1503,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'State restores from URL parameters',
-      test: "(async function() { window.location.hash = '#test'; window.dispatchEvent(new Event('hashchange')); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { window.location.hash = '#test'; window.dispatchEvent(new Event('hashchange')); await new Promise(function(r) { setTimeout(r, 150); }); var content = document.querySelector('.content, .view, .page'); return content && (content.textContent.includes('test') || content.className.includes('test')); })()",
     },
   ],
 
@@ -1514,14 +1514,14 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'URL state persists across reload simulation',
-      test: "(async function() { var input = document.querySelector('input, select'); if (!input) return false; return true; })()",
+      test: "(async function() { var input = document.querySelector('input, select'); if (!input) return false; if (input.tagName === 'SELECT') { input.value = input.options[1] ? input.options[1].value : ''; input.dispatchEvent(new Event('change', {bubbles:true})); } else { input.value = 'test123'; input.dispatchEvent(new Event('input', {bubbles:true})); } await new Promise(function(r) { setTimeout(r, 150); }); var stateValue = window.location.search || window.location.hash; return stateValue && (input.value === 'test123' || input.value === input.options[1].value); })()",
     },
   ],
 
   'vue-back-to-top': [
     {
       name: 'Button hidden at top of page',
-      test: "(async function() { window.scrollTo(0, 0); await new Promise(function(r) { setTimeout(r, 150); }); var btn = document.querySelector('.back-to-top, .scroll-top, .to-top'); return !btn || btn.offsetHeight === 0 || btn.style.display === 'none' || btn.style.opacity === '0'; })()",
+      test: "(async function() { window.scrollTo(0, 500); window.dispatchEvent(new Event('scroll')); await new Promise(function(r) { setTimeout(r, 150); }); var btn = document.querySelector('.back-to-top, .scroll-top, .to-top'); if (!btn) return false; var wasVisible = btn.offsetHeight > 0 && btn.style.display !== 'none' && btn.style.opacity !== '0'; window.scrollTo(0, 0); window.dispatchEvent(new Event('scroll')); await new Promise(function(r) { setTimeout(r, 150); }); var isHidden = btn.offsetHeight === 0 || btn.style.display === 'none' || btn.style.opacity === '0'; return wasVisible && isHidden; })()",
     },
     {
       name: 'Button appears after scrolling',
@@ -1560,7 +1560,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'All text elements update on locale change',
-      test: "(async function() { var select = document.querySelector('select, .lang-switch'); if (!select) return false; if (select.tagName === 'SELECT' && select.options.length >= 2) { select.value = select.options[1].value; select.dispatchEvent(new Event('change', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); } return true; })()",
+      test: "(async function() { var select = document.querySelector('select, .lang-switch'); if (!select) return false; var textEl = document.querySelector('h1, h2, p, .text'); if (!textEl) return false; var initialText = textEl.textContent; if (select.tagName === 'SELECT' && select.options.length >= 2) { select.value = select.options[1].value; select.dispatchEvent(new Event('change', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); } return textEl.textContent !== initialText; })()",
     },
   ],
 
@@ -1691,7 +1691,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Portal content is interactive',
-      test: "(async function() { var btn = document.querySelector('button, .trigger'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var closeBtn = document.querySelector('.close, .close-btn, .portal-target button'); if (!closeBtn) return true; closeBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var btn = document.querySelector('button, .trigger'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var portal = document.querySelector('.portal-target, [data-teleport], .teleported, .modal'); if (!portal) return false; var closeBtn = document.querySelector('.close, .close-btn, .portal-target button, .modal button'); if (!closeBtn) return false; closeBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !document.querySelector('.portal-target, [data-teleport], .teleported, .modal') || document.querySelector('.modal').style.display === 'none'; })()",
     },
   ],
 
@@ -1796,7 +1796,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Action button triggers appropriate action',
-      test: "(async function() { var btn = document.querySelector('.empty-state button, .empty button, .cta'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return true; })()",
+      test: "(async function() { var btn = document.querySelector('.empty-state button, .empty button, .cta'); if (!btn) return false; var list = document.querySelector('.list, .items, .results'); var initialCount = list ? list.children.length : 0; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newCount = list ? list.children.length : 0; return newCount > initialCount || !document.querySelector('.empty-state, .empty, .no-data'); })()",
     },
   ],
 

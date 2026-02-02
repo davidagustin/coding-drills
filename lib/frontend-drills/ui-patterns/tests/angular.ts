@@ -14,7 +14,7 @@ export const angularTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Name validation clears with valid input',
-      test: "(function() { var el = document.getElementById('name'); if (!el) return false; el.value = 'John'; el.dispatchEvent(new Event('input', {bubbles:true})); var err = document.getElementById('name-error'); return err && err.textContent.trim() === ''; })()",
+      test: "(function() { var el = document.getElementById('name'); if (!el) return false; el.value = ''; el.dispatchEvent(new Event('input', {bubbles:true})); var err = document.getElementById('name-error'); if (!err || err.textContent.trim().length === 0) return false; el.value = 'John'; el.dispatchEvent(new Event('input', {bubbles:true})); return err.textContent.trim() === ''; })()",
     },
     {
       name: 'Email validation requires @ symbol',
@@ -1564,7 +1564,7 @@ export const angularTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking TOC item scrolls to heading',
-      test: "(function() { var item = document.querySelector('#toc .toc-item a'); var content = document.getElementById('toc-content'); if (!item || !content) return false; item.click(); return true; })()",
+      test: "(function() { var item = document.querySelector('#toc .toc-item a'); var content = document.getElementById('toc-content'); if (!item || !content) return false; var beforeScroll = content.scrollTop; item.click(); return content.scrollTop !== beforeScroll || content.scrollTop === 0; })()",
     },
   ],
 
@@ -1717,15 +1717,15 @@ export const angularTests: Record<string, PatternTestCase[]> = {
   'ng-back-to-top': [
     {
       name: 'Button hidden initially',
-      test: "(function() { var btn = document.getElementById('back-top'); if (!btn) return false; return btn.style.display === 'none' || btn.style.opacity === '0' || !btn.classList.contains('visible'); })()",
+      test: "(function() { var btn = document.getElementById('btt-btn'); if (!btn) return false; var container = document.getElementById('btt-scroll'); if (!container) return false; container.scrollTop = 800; container.dispatchEvent(new Event('scroll', {bubbles:true})); var wasShown = btn.classList.contains('visible') || (btn.style.display !== 'none' && btn.style.opacity !== '0' && parseFloat(btn.style.opacity || '1') > 0.5); if (!wasShown) return false; container.scrollTop = 0; container.dispatchEvent(new Event('scroll', {bubbles:true})); return btn.style.display === 'none' || parseFloat(btn.style.opacity || '1') < 0.5 || !btn.classList.contains('visible'); })()",
     },
     {
       name: 'Button shows after scrolling',
-      test: "(function() { var btn = document.getElementById('back-top'); var container = document.getElementById('btt-content'); if (!btn || !container) return false; container.scrollTop = 400; container.dispatchEvent(new Event('scroll', {bubbles:true})); return btn.style.display !== 'none' || btn.classList.contains('visible'); })()",
+      test: "(function() { var btn = document.getElementById('btt-btn'); var container = document.getElementById('btt-scroll'); if (!btn || !container) return false; container.scrollTop = 400; container.dispatchEvent(new Event('scroll', {bubbles:true})); return btn.style.display !== 'none' || btn.classList.contains('visible') || parseFloat(btn.style.opacity || '1') > 0.5; })()",
     },
     {
       name: 'Clicking scrolls container to top',
-      test: "(function() { var btn = document.getElementById('back-top'); var container = document.getElementById('btt-content'); if (!btn || !container) return false; container.scrollTop = 400; container.dispatchEvent(new Event('scroll', {bubbles:true})); btn.click(); return container.scrollTop < 400; })()",
+      test: "(function() { var btn = document.getElementById('btt-btn'); var container = document.getElementById('btt-scroll'); if (!btn || !container) return false; container.scrollTop = 400; container.dispatchEvent(new Event('scroll', {bubbles:true})); btn.click(); return container.scrollTop < 400; })()",
     },
   ],
 

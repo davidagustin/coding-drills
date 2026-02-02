@@ -49,9 +49,6 @@ function getEditorLanguage(framework: FrameworkId, problem: FrontendDrillProblem
   switch (framework) {
     case 'angular':
       return 'typescript';
-    case 'native-js':
-    case 'react':
-    case 'vue':
     default:
       return 'javascript';
   }
@@ -197,14 +194,12 @@ export default function TrainingProblemDetailPage() {
 
   // Hydration safety
   useEffect(() => {
-     
     setMounted(true);
   }, []);
 
   // Load progress from localStorage after mount
   useEffect(() => {
     if (mounted && isValidFramework(framework)) {
-       
       setProgress(loadProgress(framework));
     }
   }, [mounted, framework]);
@@ -228,7 +223,6 @@ export default function TrainingProblemDetailPage() {
   // Reset state when problem changes & pre-populate with starter code
   // biome-ignore lint/correctness/useExhaustiveDependencies: problemId needed to reset state on navigation
   useEffect(() => {
-     
     setUserCode(problem ? generateTrainingStarter(problem) : '');
     setFeedback(null);
     setShowHints(false);

@@ -267,7 +267,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
   'js-accordion': [
     {
       name: 'All panels closed initially',
-      test: "document.querySelectorAll('.accordion-body.open').length === 0",
+      test: "(function() { var header = document.querySelector('.accordion-header'); if (!header) return false; var openBefore = document.querySelectorAll('.accordion-body.open, .accordion-content.open, .accordion-panel.active').length; if (openBefore > 0) return false; header.click(); var openAfter = document.querySelectorAll('.accordion-body.open, .accordion-content.open, .accordion-panel.active').length; return openAfter > 0; })()",
     },
     {
       name: 'Clicking header opens panel',
@@ -331,7 +331,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
   'js-toast-notifications': [
     {
       name: 'No toasts initially',
-      test: "document.querySelectorAll('#toast-container .toast').length === 0",
+      test: "(function() { var btn = document.querySelector('.toast-btn[data-type=\"success\"]'); var container = document.getElementById('toast-container'); if (!btn || !container) return false; var before = container.querySelectorAll('.toast').length; if (before > 0) return false; btn.click(); return new Promise(function(resolve) { setTimeout(function() { resolve(container.querySelectorAll('.toast').length > 0); }, 100); }); })()",
     },
     {
       name: 'Clicking success button shows toast',
@@ -609,7 +609,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
   'js-notifications': [
     {
       name: 'Empty state shows initially',
-      test: "document.getElementById('ne')?.style.display !== 'none'",
+      test: "(function() { var btn = document.getElementById('sn'); var empty = document.getElementById('ne'); var list = document.getElementById('nli'); if (!btn || !empty || !list) return false; var emptyVisibleBefore = empty.style.display !== 'none'; if (!emptyVisibleBefore) return false; btn.click(); return list.querySelectorAll('.ni').length > 0 && empty.style.display === 'none'; })()",
     },
     {
       name: 'Send button adds notification',
@@ -1067,7 +1067,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Dragging splitter changes pane sizes',
-      test: "(function() { var splitter = document.querySelector('.splitter'); var pane = document.querySelector('.split-pane'); if (!splitter || !pane) return false; var before = pane.offsetWidth; splitter.dispatchEvent(new MouseEvent('mousedown', {bubbles:true, clientX:200})); document.dispatchEvent(new MouseEvent('mousemove', {bubbles:true, clientX:300})); document.dispatchEvent(new MouseEvent('mouseup', {bubbles:true})); return true; })()",
+      test: "(function() { var splitter = document.querySelector('.splitter'); var pane = document.querySelector('.split-pane'); if (!splitter || !pane) return false; var before = pane.offsetWidth; splitter.dispatchEvent(new MouseEvent('mousedown', {bubbles:true, clientX:200})); document.dispatchEvent(new MouseEvent('mousemove', {bubbles:true, clientX:300})); document.dispatchEvent(new MouseEvent('mouseup', {bubbles:true})); var after = pane.offsetWidth; return after !== before; })()",
     },
   ],
 
@@ -1522,7 +1522,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
   'js-scroll-to-top': [
     {
       name: 'Button hidden at top of page',
-      test: "(function() { var btn = document.getElementById('scroll-top'); return btn && (btn.style.display === 'none' || !btn.classList.contains('visible')); })()",
+      test: "(function() { var btn = document.getElementById('scroll-top'); var scroller = document.getElementById('scroll-area') || window; if (!btn) return false; var hiddenAtTop = btn.style.display === 'none' || !btn.classList.contains('visible'); if (!hiddenAtTop) return false; if (scroller.scrollTop !== undefined) scroller.scrollTop = 500; scroller.dispatchEvent ? scroller.dispatchEvent(new Event('scroll', {bubbles:true})) : window.dispatchEvent(new Event('scroll')); return btn.classList.contains('visible') || btn.style.display !== 'none'; })()",
     },
     {
       name: 'Button appears after scrolling',
@@ -1541,7 +1541,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking anchor scrolls to section',
-      test: '(function() { var link = document.querySelector(\'a[href^="#"]\'); if (!link) return false; link.click(); return true; })()',
+      test: "(function() { var link = document.querySelector('a[href^=\"#\"]'); var scroller = document.getElementById('anchor-content') || document.documentElement; if (!link || !scroller) return false; var before = scroller.scrollTop; link.click(); return new Promise(function(resolve) { setTimeout(function() { resolve(scroller.scrollTop !== before); }, 100); }); })()",
     },
     {
       name: 'Active anchor highlighted on scroll',
@@ -1560,7 +1560,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking TOC item scrolls to heading',
-      test: "(function() { var item = document.querySelector('#toc a, .toc-item a'); if (!item) return false; item.click(); return true; })()",
+      test: "(function() { var item = document.querySelector('#toc a, .toc-item a'); var scroller = document.getElementById('article') || document.documentElement; if (!item || !scroller) return false; var before = scroller.scrollTop; item.click(); return new Promise(function(resolve) { setTimeout(function() { resolve(scroller.scrollTop !== before); }, 100); }); })()",
     },
   ],
 
@@ -1697,7 +1697,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
   'js-back-to-top': [
     {
       name: 'Button hidden initially',
-      test: "(function() { var btn = document.getElementById('btt-btn'); return btn && (btn.style.display === 'none' || btn.style.opacity === '0' || !btn.classList.contains('visible')); })()",
+      test: "(function() { var btn = document.getElementById('btt-btn'); var scroller = document.getElementById('btt-area') || window; if (!btn) return false; var hiddenInitially = btn.style.display === 'none' || btn.style.opacity === '0' || !btn.classList.contains('visible'); if (!hiddenInitially) return false; if (scroller.scrollTop !== undefined) scroller.scrollTop = 500; scroller.dispatchEvent ? scroller.dispatchEvent(new Event('scroll', {bubbles:true})) : window.dispatchEvent(new Event('scroll')); return btn.classList.contains('visible') || btn.style.display !== 'none'; })()",
     },
     {
       name: 'Button visible after scrolling down',
@@ -2118,7 +2118,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Ratio selector changes dimensions',
-      test: "(function() { var sel = document.getElementById('ratio-select'); var box = document.querySelector('.aspect-ratio-box'); if (!sel || !box) return false; var before = box.offsetHeight; sel.value = '1:1'; sel.dispatchEvent(new Event('change', {bubbles:true})); return true; })()",
+      test: "(function() { var sel = document.getElementById('ratio-select'); var box = document.querySelector('.aspect-ratio-box'); if (!sel || !box) return false; var before = box.offsetHeight; sel.value = '1:1'; sel.dispatchEvent(new Event('change', {bubbles:true})); var after = box.offsetHeight; return after !== before; })()",
     },
   ],
 

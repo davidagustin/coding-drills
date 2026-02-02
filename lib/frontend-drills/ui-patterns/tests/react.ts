@@ -360,7 +360,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Undo button reverts last action',
-      test: "(async function() { var cell = document.querySelector('.cell'); if (!cell) return false; cell.click(); await new Promise(function(r) { setTimeout(r, 150); }); var undoBtn = document.querySelector('.tool-btn'); if (!undoBtn) return false; var painted = cell.style.backgroundColor; undoBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !undoBtn.disabled || document.body.innerText.toLowerCase().includes('undo'); })()",
+      test: "(async function() { var cell = document.querySelector('.cell'); if (!cell) return false; var beforeColor = cell.style.backgroundColor; cell.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterPaint = cell.style.backgroundColor; if (afterPaint === beforeColor) return false; var undoBtn = document.querySelector('.tool-btn'); if (!undoBtn) return false; undoBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return cell.style.backgroundColor !== afterPaint; })()",
     },
   ],
 
@@ -727,7 +727,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-archive': [
     {
       name: 'Archive button moves item to archive tab',
-      test: "(async function() { var archiveBtn = document.querySelector('.archive-btn'); if (!archiveBtn) return false; archiveBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.item-card').length >= 0; })()",
+      test: "(async function() { var archiveBtn = document.querySelector('.archive-btn'); if (!archiveBtn) return false; var archivedTab = Array.from(document.querySelectorAll('.tab-bar button')).find(function(b) { return b.textContent.toLowerCase().includes('archived'); }); if (!archivedTab) return false; var beforeCount = parseInt(archivedTab.textContent.match(/\\d+/)?.[0] || '0', 10); archiveBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = parseInt(archivedTab.textContent.match(/\\d+/)?.[0] || '0', 10); return afterCount > beforeCount && afterCount > 0; })()",
     },
   ],
 
@@ -1425,7 +1425,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Clicking an anchor link scrolls to the section',
-      test: '(async function() { var links = document.querySelectorAll(\'.anchor-link, a[href^="#"]\'); if (links.length < 2) return false; links[1].click(); await new Promise(function(r) { setTimeout(r, 200); }); return true; })()',
+      test: "(async function() { var links = document.querySelectorAll('.anchor-link, .al-link'); if (links.length < 2) return false; var container = document.querySelector('.al-content') || document.scrollingElement || document.documentElement; if (!container) return false; var before = container.scrollTop; links[1].click(); await new Promise(function(r) { setTimeout(r, 300); }); return container.scrollTop !== before || container.scrollTop > 20; })()",
     },
   ],
 
