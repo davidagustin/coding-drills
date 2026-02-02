@@ -1,0 +1,15 @@
+---
+description: Ralph loop – loop until done, verify before claiming completion
+alwaysApply: true
+---
+
+# Ralph Loop – Tasks Until Done
+
+When working on a task:
+
+1. **Loop until done** – Keep iterating until the task is fully complete. Do not stop with partial implementations or "good enough" states.
+2. **Verify before claiming completion** – Before saying the task is done: run the relevant verification (tests, build, lint), read the output and confirm it passed, then treat the task as complete.
+3. **No partial completion** – Deliver the full scope. If verification fails or something is missing, fix it and re-verify; do not leave failing tests or broken builds.
+4. **Use a todo list** – For multi-step work, track items and ensure every item is completed before finishing.
+
+Do not claim completion without fresh verification evidence (e.g. test/build output showing success).

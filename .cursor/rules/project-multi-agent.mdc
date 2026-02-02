@@ -1,0 +1,15 @@
+---
+description: Multi-agent unique tasks – assign distinct work, no overlap
+alwaysApply: true
+---
+
+# Multi-Agent Unique Tasks
+
+When spawning or orchestrating multiple agents (e.g. parallel workers, swarm, autopilot, pipeline):
+
+1. **Assign distinct work** – Each agent must have a clearly different responsibility. No two agents should be given the same task, file, or subtask.
+2. **Partition by scope** – Split work by file, feature, layer, or step so there is no overlap (e.g. one agent on frontend, one on backend; or one per file/component).
+3. **Avoid duplicate effort** – Before spawning, confirm the task list has no duplicate entries. If using a shared task list, use atomic claiming so only one agent takes each item.
+4. **Name or tag tasks** – When creating tasks for multiple agents, label them so it's obvious which agent does what (e.g. "Agent A: auth API", "Agent B: login UI").
+
+If you are about to spawn N agents, ensure there are at least N unique tasks (or N non-overlapping scopes); never assign the same task to more than one agent.
