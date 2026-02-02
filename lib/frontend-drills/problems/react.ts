@@ -1448,7 +1448,7 @@ const handleChange = "function";`,
     setupCode: `// Implement createFetchManager with ID tracking`,
     expected: { isStale: true, isFresh: true },
     sample:
-      '(() => { const createFetchManager = () => { let currentId = 0; return { fetch: (data) => { const id = ++currentId; return { id, data }; }, isLatest: (id) => id === currentId }; }; const manager = createFetchManager(); const result1 = manager.fetch("stale"); const result2 = manager.fetch("fresh"); return { isStale: !manager.isLatest(result1.id), isFresh: manager.isLatest(result2.id) }; })()',
+      '(() => { const createFetchManager = () => { let currentId = 0; return { request: (data) => { const id = ++currentId; return { id, data }; }, isLatest: (id) => id === currentId }; }; const manager = createFetchManager(); const result1 = manager.request("stale"); const result2 = manager.request("fresh"); return { isStale: !manager.isLatest(result1.id), isFresh: manager.isLatest(result2.id) }; })()',
     hints: [
       'Each fetch call should increment and capture a unique ID',
       'isLatest compares a given ID against the current (most recent) ID',
