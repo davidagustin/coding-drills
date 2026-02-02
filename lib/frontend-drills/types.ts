@@ -40,6 +40,8 @@ export interface FrontendDrillProblem {
   validPatterns?: RegExp[];
   /** Override the editor language (e.g. 'html' for Angular template problems). */
   editorLanguage?: string;
+  /** Short real-world example showing why this pattern matters. */
+  realWorldExample?: string;
   tags?: string[];
 }
 

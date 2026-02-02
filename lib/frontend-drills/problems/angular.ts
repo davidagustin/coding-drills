@@ -19,6 +19,8 @@ export const angularProblems: FrontendDrillProblem[] = [
       /@Component\s*\(\s*\{[^}]*selector\s*:\s*['"]app-hello['"][^}]*template\s*:/,
       /@Component\s*\(\s*\{[^}]*template\s*:[^}]*selector\s*:\s*['"]app-hello['"]/,
     ],
+    realWorldExample:
+      "Every Angular app starts with a root component -- Gmail's entire inbox view is a single @Component with a selector and template.",
     hints: ['Use @Component({...}) with selector and template properties'],
     tags: ['decorator', 'component'],
   },
@@ -34,6 +36,8 @@ export const angularProblems: FrontendDrillProblem[] = [
     expected: 'Template with (click) event binding',
     sample: `<button (click)="handleClick()">Click Me</button>`,
     validPatterns: [/<button[^>]*\(click\)\s*=\s*["']handleClick\(\)["'][^>]*>/],
+    realWorldExample:
+      "The 'Send' button in Slack fires a (click) event that triggers message delivery -- Angular's event binding wires UI actions to component logic.",
     hints: ['Use Angular event binding syntax: (eventName)="handler()"'],
     editorLanguage: 'html',
     tags: ['events', 'template'],
@@ -51,6 +55,8 @@ export const angularProblems: FrontendDrillProblem[] = [
     expected: '@Input decorated property',
     sample: `@Input() name: string;`,
     validPatterns: [/@Input\s*\(\s*\)\s+name\s*:\s*string/, /@Input\s*\(\s*\)\s+name\s*[;:]/],
+    realWorldExample:
+      'In a YouTube-style app, a VideoCard component receives a video title and thumbnail URL from its parent via @Input -- this is how parent components pass data down to children.',
     hints: [
       'Angular uses a decorator to mark properties as receivable from parent components',
       'Place the decorator directly before the property declaration with its type annotation',
@@ -73,6 +79,8 @@ export const angularProblems: FrontendDrillProblem[] = [
       /@Output\s*\(\s*\)\s+notify\s*=\s*new\s+EventEmitter\s*<\s*string\s*>\s*\(\s*\)/,
       /@Output\s*\(\s*\)\s+notify:\s*EventEmitter<string>\s*=\s*new\s+EventEmitter/,
     ],
+    realWorldExample:
+      "When you click 'Add to Cart' on Amazon, the product component emits an event to the parent cart system -- @Output with EventEmitter enables child-to-parent communication.",
     hints: [
       'Angular uses a decorator to mark properties as event outputs',
       'The property must be initialized with an event emitter that specifies the emitted data type',
@@ -91,6 +99,8 @@ export const angularProblems: FrontendDrillProblem[] = [
     expected: 'Template with *ngFor loop',
     sample: `<li *ngFor="let item of items">{{ item }}</li>`,
     validPatterns: [/<li[^>]*\*ngFor\s*=\s*["']let\s+\w+\s+of\s+items["'][^>]*>/],
+    realWorldExample:
+      'Your Twitter/X feed renders each tweet by looping through an array of posts -- *ngFor iterates over data to generate repeated UI elements.',
     hints: ['Use *ngFor="let item of items" syntax'],
     editorLanguage: 'html',
     tags: ['ngfor', 'loops', 'template'],
@@ -107,6 +117,8 @@ export const angularProblems: FrontendDrillProblem[] = [
     expected: 'Template with *ngIf',
     sample: `<p *ngIf="isVisible">I am visible!</p>`,
     validPatterns: [/<p[^>]*\*ngIf\s*=\s*["']isVisible["'][^>]*>/],
+    realWorldExample:
+      "Netflix shows a 'Continue Watching' section only if you have unfinished shows -- *ngIf conditionally renders UI based on your data.",
     hints: ['Use *ngIf="condition" on the element'],
     editorLanguage: 'html',
     tags: ['ngif', 'conditional', 'template'],
@@ -126,6 +138,8 @@ export const angularProblems: FrontendDrillProblem[] = [
 })
 class DataService {}`,
     validPatterns: [/@Injectable\s*\(\s*\{[^}]*providedIn\s*:\s*['"]root['"]/],
+    realWorldExample:
+      "Spotify's music player needs a single AudioService shared across every component -- @Injectable({ providedIn: 'root' }) creates an app-wide singleton service.",
     hints: ["Use @Injectable({ providedIn: 'root' })"],
     tags: ['injectable', 'service', 'di'],
   },
@@ -147,6 +161,8 @@ class DataService {}`,
       /ngOnInit\s*\(\s*\)\s*\{[^}]*console\.log/,
       /ngOnInit\s*\(\s*\)\s*:\s*void\s*\{/,
     ],
+    realWorldExample:
+      "When GitHub's dashboard component loads, ngOnInit fetches your repositories and activity feed -- it is the standard place for initialization logic after inputs are set.",
     hints: [
       'Angular has a lifecycle hook that fires once after the first change detection',
       'The method name follows the pattern ng + lifecycle event name',
@@ -167,6 +183,8 @@ class DataService {}`,
   console.log(data);
 });`,
     validPatterns: [/http\.get\s*\(\s*['"]\/api\/users['"]\s*\)\.subscribe/],
+    realWorldExample:
+      "When Spotify loads your playlists on app startup, it makes an HTTP GET request to the API -- Angular's HttpClient returns an Observable you subscribe to for the response.",
     hints: [
       'Angular HTTP methods return Observables that must be subscribed to',
       'Chain the subscription directly after the HTTP call',
@@ -192,6 +210,8 @@ const map = (fn: any) => fn;`,
       /source\$\.pipe\s*\(\s*map\s*\(/,
       /\.pipe\s*\([^)]*map\s*\([^)]*=>\s*[^)]*\*\s*2/,
     ],
+    realWorldExample:
+      'Google Maps transforms raw GPS coordinates into human-readable addresses -- RxJS pipe with map lets you reshape each value flowing through a stream.',
     hints: [
       'Use the pipe method on the observable to compose operators',
       'The transformation operator takes a callback that receives each value and returns the transformed result',
@@ -210,6 +230,8 @@ const map = (fn: any) => fn;`,
     expected: 'Input with [(ngModel)]',
     sample: `<input [(ngModel)]="username" />`,
     validPatterns: [/<input[^>]*\[\(ngModel\)\]\s*=\s*["']username["'][^>]*>/],
+    realWorldExample:
+      'Google Search keeps the search bar text and the underlying query model perfectly in sync as you type -- [(ngModel)] provides that instant two-way data binding.',
     hints: ['Use [(ngModel)]="propertyName" for two-way binding'],
     editorLanguage: 'html',
     tags: ['ngmodel', 'forms', 'two-way'],
@@ -230,6 +252,8 @@ const map = (fn: any) => fn;`,
       /const\s+emailControl\s*=\s*new\s+FormControl\s*\(/,
       /emailControl\s*=\s*new\s+FormControl\s*\(\s*['"]{2}\s*\)/,
     ],
+    realWorldExample:
+      "A Mailchimp signup form tracks each input field independently -- FormControl wraps a single field's value, validation, and dirty/touched state.",
     hints: [
       'Reactive forms use a class to wrap individual form field values',
       'Pass the initial value as the constructor argument',
@@ -250,6 +274,8 @@ class UserService {}`,
     expected: 'Constructor with private injected service',
     sample: `constructor(private userService: UserService) {}`,
     validPatterns: [/constructor\s*\(\s*private\s+\w+\s*:\s*UserService\s*\)/],
+    realWorldExample:
+      "Every page on GitHub that shows user data injects a UserService through the constructor -- Angular's DI wires shared services into components automatically.",
     hints: [
       'Angular can auto-assign constructor parameters as class properties',
       'Use the private/public modifier before the parameter name and type',
@@ -269,6 +295,8 @@ class UserService {}`,
     sample: `<input #nameInput type="text">
 <button (click)="logValue(nameInput.value)">Log</button>`,
     validPatterns: [/<input[^>]*#nameInput/, /nameInput\.value/],
+    realWorldExample:
+      "In Notion's search box, clicking the 'Clear' button reads the input value directly via a template reference -- #refs give you direct DOM access without component code.",
     hints: ['Use #variableName to create a reference, then use it in event bindings'],
     editorLanguage: 'html',
     tags: ['template-ref', 'reference-variable'],
@@ -294,6 +322,8 @@ class UserService {}`,
       /<img[^>]*\[alt\]\s*=\s*["']imageAlt["'][^>]*\[src\]\s*=\s*["']imageUrl["']/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      "Netflix dynamically sets each movie poster's [src] from its API data -- property binding lets you drive HTML attributes from component state.",
     hints: ['Use [property]="expression" syntax for property binding'],
     tags: ['property-binding', 'template'],
   },
@@ -310,6 +340,8 @@ class UserService {}`,
     sample: `<p>Hello, {{ name }}!</p>`,
     validPatterns: [/<p>[^<]*\{\{\s*name\s*\}\}[^<]*<\/p>/],
     editorLanguage: 'html',
+    realWorldExample:
+      "GitHub displays 'Hello, {{ username }}' in the top-right corner after login -- string interpolation injects dynamic values directly into HTML text.",
     hints: ['Use {{ expression }} for interpolation inside element content'],
     tags: ['interpolation', 'template'],
   },
@@ -326,6 +358,8 @@ class UserService {}`,
     sample: `<input (keyup.enter)="onSubmit()" />`,
     validPatterns: [/<input[^>]*\(keyup\.enter\)\s*=\s*["']onSubmit\(\)["'][^>]*>/],
     editorLanguage: 'html',
+    realWorldExample:
+      "Pressing Enter in Slack's message input sends your message instantly -- (keyup.enter) binds the Enter key to a specific action without checking keycodes manually.",
     hints: ['Use (keyup.enter)="handler()" for Enter key events'],
     tags: ['events', 'keyup', 'template'],
   },
@@ -342,6 +376,8 @@ class UserService {}`,
     sample: `<input (input)="onInput($event)" />`,
     validPatterns: [/<input[^>]*\(input\)\s*=\s*["']onInput\(\$event\)["'][^>]*>/],
     editorLanguage: 'html',
+    realWorldExample:
+      'Google Docs tracks every keystroke by passing $event to calculate cursor position and formatting -- the event object carries details like which key was pressed and the input value.',
     hints: ['Use $event to pass the native DOM event to your handler'],
     tags: ['events', '$event', 'template'],
   },
@@ -359,6 +395,8 @@ class UserService {}`,
     sample: `@HostListener('click', ['$event'])
 onClick(event: Event) {}`,
     validPatterns: [/@HostListener\s*\(\s*['"]click['"][^)]*\$event[^)]*\)/],
+    realWorldExample:
+      "VS Code's web editor uses host listeners on its panel containers to detect clicks for focus management -- @HostListener binds DOM events directly to directive methods.",
     hints: [
       'There is a decorator that binds a method to a DOM event on the host element',
       'The decorator takes the event name and an array of arguments to pass to the method',
@@ -378,6 +416,8 @@ onClick(event: Event) {}`,
     expected: '@HostBinding with class.active',
     sample: `@HostBinding('class.active') isActive = false;`,
     validPatterns: [/@HostBinding\s*\(\s*['"]class\.active['"]\s*\)\s+isActive/],
+    realWorldExample:
+      "A Trello card directive toggles an 'active' CSS class on hover to show a blue border -- @HostBinding dynamically controls host element properties from directive state.",
     hints: [
       'There is a decorator that binds a class property to a host element property',
       'Use the "class.className" syntax to target a specific CSS class',
@@ -397,6 +437,8 @@ onClick(event: Event) {}`,
     sample: `<div [ngClass]="{ 'active': isActive, 'disabled': isDisabled }"></div>`,
     validPatterns: [/<div[^>]*\[ngClass\]\s*=\s*["']\{[^}]*active[^}]*isActive[^}]*\}["']/],
     editorLanguage: 'html',
+    realWorldExample:
+      'Gmail highlights the active folder with a bold style and background color -- [ngClass] conditionally applies CSS classes based on which mailbox is selected.',
     hints: ['Use [ngClass]="{ className: condition }" for conditional classes'],
     tags: ['ngclass', 'template', 'styling'],
   },
@@ -413,6 +455,8 @@ onClick(event: Event) {}`,
     sample: `<div [ngStyle]="{ 'color': textColor, 'font-size': fontSize }"></div>`,
     validPatterns: [/<div[^>]*\[ngStyle\]\s*=\s*["']\{[^}]*color[^}]*textColor[^}]*\}["']/],
     editorLanguage: 'html',
+    realWorldExample:
+      "Figma's color picker dynamically sets the preview swatch's background color based on user selection -- [ngStyle] drives inline styles from component data.",
     hints: ['Use [ngStyle]="{ styleProp: expression }" for dynamic styles'],
     tags: ['ngstyle', 'template', 'styling'],
   },
@@ -429,6 +473,8 @@ onClick(event: Event) {}`,
     sample: `<div [class.highlight]="isHighlighted"></div>`,
     validPatterns: [/<div[^>]*\[class\.highlight\]\s*=\s*["']isHighlighted["'][^>]*>/],
     editorLanguage: 'html',
+    realWorldExample:
+      "GitHub toggles a 'selected' class on each file in a diff view when you click its checkbox -- [class.highlight] is a concise way to toggle one CSS class.",
     hints: ['Use [class.className]="condition" to toggle a single class'],
     tags: ['class-binding', 'template'],
   },
@@ -445,6 +491,8 @@ onClick(event: Event) {}`,
     sample: `<div [style.background-color]="bgColor"></div>`,
     validPatterns: [/<div[^>]*\[style\.background-color\]\s*=\s*["']bgColor["'][^>]*>/],
     editorLanguage: 'html',
+    realWorldExample:
+      "A Canva design tool sets each element's background-color from the user's palette selection -- [style.background-color] binds a single CSS property to a dynamic value.",
     hints: ['Use [style.property]="expression" to bind a single style'],
     tags: ['style-binding', 'template'],
   },
@@ -461,6 +509,8 @@ onClick(event: Event) {}`,
     expected: '@ViewChild with template reference',
     sample: `@ViewChild('myInput') inputRef: ElementRef;`,
     validPatterns: [/@ViewChild\s*\(\s*['"]myInput['"]\s*\)\s+inputRef\s*:\s*ElementRef/],
+    realWorldExample:
+      'Notion auto-focuses the title input when you create a new page -- @ViewChild grabs a reference to that input element so the component can call .focus() on it.',
     hints: [
       'Angular provides a decorator to query a single child element from the view',
       'Pass the template reference variable name as a string to the decorator',
@@ -482,6 +532,8 @@ onClick(event: Event) {}`,
     validPatterns: [
       /@ViewChildren\s*\(\s*ItemComponent\s*\)\s+items\s*:\s*QueryList\s*<\s*ItemComponent\s*>/,
     ],
+    realWorldExample:
+      'A Kanban board like Trello needs references to all card components in a column to calculate drag-drop positions -- @ViewChildren returns a live QueryList of matching children.',
     hints: [
       'There is a decorator that queries multiple child elements/components from the view',
       'The property type should be a QueryList parameterized with the component type',
@@ -503,6 +555,8 @@ onClick(event: Event) {}`,
     validPatterns: [
       /this\.renderer\.setAttribute\s*\(\s*this\.el\.nativeElement\s*,\s*['"]role['"]\s*,\s*['"]button['"]\s*\)/,
     ],
+    realWorldExample:
+      'Accessibility-critical apps like gov.uk set ARIA roles programmatically on custom widgets -- Renderer2 safely manipulates the DOM without breaking server-side rendering.',
     hints: [
       'Renderer2 provides methods like setAttribute for safe DOM manipulation',
       'The method takes the target element, attribute name, and attribute value as arguments',
@@ -523,6 +577,8 @@ onClick(event: Event) {}`,
   selector: '[appHighlight]'
 })`,
     validPatterns: [/@Directive\s*\(\s*\{[^}]*selector\s*:\s*['"]\[appHighlight\]['"]/],
+    realWorldExample:
+      'Medium highlights text when you select it for quoting -- a custom [appHighlight] directive can apply visual effects to any element it decorates.',
     hints: ['Attribute directive selectors use [bracketSyntax]'],
     tags: ['directive', 'attribute-directive', 'decorator'],
   },
@@ -542,6 +598,8 @@ onClick(event: Event) {}`,
       /<div[^>]*\(mouseleave\)\s*=\s*["']onLeave\(\)["'][^>]*\(mouseenter\)\s*=\s*["']onHover\(\)["']/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      'Amazon product cards show a quick-view overlay on hover and hide it when you move away -- (mouseenter) and (mouseleave) handle these hover interactions.',
     hints: ['Use (mouseenter) and (mouseleave) for hover events'],
     tags: ['events', 'mouse', 'template'],
   },
@@ -558,6 +616,8 @@ onClick(event: Event) {}`,
     expected: '@ContentChild with TemplateRef',
     sample: `@ContentChild('header') headerContent: TemplateRef<any>;`,
     validPatterns: [/@ContentChild\s*\(\s*['"]header['"]\s*\)\s+headerContent\s*:\s*TemplateRef/],
+    realWorldExample:
+      "A reusable modal component in an Angular Material-style library accesses the projected header template via @ContentChild to position it in the modal's title bar.",
     hints: [
       'There is a decorator for querying a single projected content element',
       'It works like the view query decorator but targets content projected via ng-content',
@@ -582,6 +642,8 @@ class UnlessDirective {
       /@Directive\s*\(\s*\{[^}]*selector\s*:\s*['"]\[appUnless\]['"]/,
       /constructor\s*\([^)]*TemplateRef[^)]*ViewContainerRef[^)]*\)/,
     ],
+    realWorldExample:
+      'A feature-flag system like LaunchDarkly might use an *appUnless directive to hide beta features for non-enrolled users -- custom structural directives control whether DOM elements exist.',
     hints: ['Structural directives need TemplateRef and ViewContainerRef injected'],
     tags: ['structural-directive', 'directive', 'advanced'],
   },
@@ -609,6 +671,8 @@ class UnlessDirective {
       /ngOnChanges\s*\(\s*changes\s*:\s*SimpleChanges\s*\)\s*\{/,
       /changes\.\w+\.currentValue/,
     ],
+    realWorldExample:
+      'When you switch profiles on Netflix, the ProfileHeader component detects the name @Input changed and re-fetches the avatar -- ngOnChanges reacts to every input property update.',
     hints: ['SimpleChanges provides currentValue and previousValue for each changed input'],
     tags: ['lifecycle', 'ngonchanges', 'simplechanges'],
   },
@@ -629,6 +693,8 @@ class UnlessDirective {
   }
 }`,
     validPatterns: [/ngDoCheck\s*\(\s*\)\s*\{/, /differ\.diff\s*\(/],
+    realWorldExample:
+      "A Google Sheets cell editor must detect deep mutations in a cell's formatting object that Angular's default check misses -- ngDoCheck with KeyValueDiffers catches those subtle changes.",
     hints: ['ngDoCheck runs on every change detection cycle; use Differs for deep comparison'],
     tags: ['lifecycle', 'ngdocheck', 'change-detection'],
   },
@@ -647,6 +713,8 @@ class UnlessDirective {
   this.inputRef.nativeElement.focus();
 }`,
     validPatterns: [/ngAfterViewInit\s*\(\s*\)\s*\{/, /nativeElement\.focus\s*\(\s*\)/],
+    realWorldExample:
+      'When Notion opens a new page, the title input auto-focuses after the view renders -- ngAfterViewInit is the safe place to interact with DOM elements via ViewChild references.',
     hints: [
       'Angular has a lifecycle hook that signals the view DOM is ready for interaction',
       'Access the underlying DOM element through the nativeElement property of ElementRef',
@@ -667,6 +735,8 @@ class UnlessDirective {
   console.log(this.contentChild.length);
 }`,
     validPatterns: [/ngAfterContentInit\s*\(\s*\)\s*\{/, /this\.contentChild/],
+    realWorldExample:
+      'An Angular Material tab group counts how many tab panels were projected into it so it can build the tab header bar -- ngAfterContentInit fires once projected content is ready.',
     hints: ['ngAfterContentInit fires after projected content (ng-content) is initialized'],
     tags: ['lifecycle', 'aftercontentinit', 'content-projection'],
   },
@@ -685,6 +755,8 @@ class UnlessDirective {
   this.subscription.unsubscribe();
 }`,
     validPatterns: [/ngOnDestroy\s*\(\s*\)\s*\{/, /\.unsubscribe\s*\(\s*\)/],
+    realWorldExample:
+      'When you navigate away from a Slack channel, the component unsubscribes from the real-time message stream to prevent memory leaks -- ngOnDestroy is the cleanup hook.',
     hints: [
       'Angular has a lifecycle hook for cleanup before a component is destroyed',
       'Call the method on the subscription object that stops it from receiving further values',
@@ -708,6 +780,8 @@ class UnlessDirective {
   }
 }`,
     validPatterns: [/ngAfterViewChecked\s*\(\s*\)\s*\{/, /nativeElement\.scrollHeight/],
+    realWorldExample:
+      "A Discord-like chat auto-scrolls to the bottom when new messages arrive by checking if the container's scrollHeight changed -- ngAfterViewChecked detects post-render DOM changes.",
     hints: [
       'ngAfterViewChecked runs after every check of the view — avoid changing bound properties here',
     ],
@@ -731,6 +805,8 @@ set name(value: string) {
       /@Input\s*\(\s*\)\s*\n?\s*set\s+name\s*\(\s*value\s*:\s*string\s*\)/,
       /this\._name\s*=\s*value\.trim\(\)/,
     ],
+    realWorldExample:
+      'A username display component trims whitespace from the input before rendering it -- @Input with a setter lets you sanitize or transform incoming data on arrival.',
     hints: ['Use a setter on @Input to intercept and transform incoming values'],
     tags: ['input', 'setter', 'state'],
   },
@@ -748,6 +824,8 @@ set name(value: string) {
     sample: `const count = signal(0);
 count.set(5);`,
     validPatterns: [/const\s+count\s*=\s*signal\s*\(\s*0\s*\)/, /count\.set\s*\(\s*5\s*\)/],
+    realWorldExample:
+      'A shopping cart badge on Amazon updates its item count reactively -- Angular Signals provide fine-grained reactivity without RxJS for simple UI state like counters.',
     hints: [
       'Angular 16+ introduced a reactive primitive that wraps values',
       'To replace the value entirely, use the setter method on the signal',
@@ -769,6 +847,8 @@ count.set(5);`,
     validPatterns: [
       /const\s+doubleCount\s*=\s*computed\s*\(\s*\(\s*\)\s*=>\s*count\s*\(\s*\)\s*\*\s*2\s*\)/,
     ],
+    realWorldExample:
+      'An e-commerce checkout automatically recalculates the total price whenever item quantities change -- computed signals derive values that stay in sync with their sources.',
     hints: [
       'Angular 16+ has a function for creating derived read-only signals',
       "Read a signal's value by calling it as a function inside the derivation callback",
@@ -788,6 +868,8 @@ count.set(5);`,
     expected: 'Effect reacting to signal changes',
     sample: `effect(() => console.log("Count:", count()));`,
     validPatterns: [/effect\s*\(\s*\(\s*\)\s*=>\s*console\.log\s*\([^)]*count\s*\(\s*\)/],
+    realWorldExample:
+      'Google Analytics tracks page views by running a side effect whenever the current route signal changes -- effect() automatically re-runs when any signal it reads updates.',
     hints: [
       'Angular 16+ provides a function for registering reactive side effects',
       'Inside the callback, reading a signal creates a dependency that triggers re-execution',
@@ -807,6 +889,8 @@ count.set(5);`,
     expected: 'Signal update with function',
     sample: `count.update(v => v + 1);`,
     validPatterns: [/count\.update\s*\(\s*v\s*=>\s*v\s*\+\s*1\s*\)/],
+    realWorldExample:
+      "A 'Like' button on Instagram increments a counter based on the current value -- signal.update() derives the new state from the old without a separate read step.",
     hints: [
       'Signals have a method that takes a callback receiving the current value',
       'The callback should return the new value',
@@ -831,6 +915,8 @@ count.set(5);`,
     validPatterns: [
       /@Component\s*\(\s*\{[^}]*changeDetection\s*:\s*ChangeDetectionStrategy\.OnPush/,
     ],
+    realWorldExample:
+      'A Twitter/X timeline with thousands of tweet components uses OnPush so Angular only re-renders a tweet when its data reference actually changes, avoiding unnecessary DOM updates.',
     hints: ['OnPush only runs change detection when @Input references change or events fire'],
     tags: ['change-detection', 'onpush', 'performance'],
   },
@@ -849,6 +935,8 @@ count.set(5);`,
   this.cdr.markForCheck();
 }`,
     validPatterns: [/this\.cdr\.markForCheck\s*\(\s*\)/],
+    realWorldExample:
+      "A Slack-like chat receives WebSocket messages outside Angular's zone -- markForCheck() tells Angular the OnPush component has new data to display on the next cycle.",
     hints: [
       'ChangeDetectorRef has a method that marks a component for checking on the next cycle',
       'This is different from immediately running change detection',
@@ -870,6 +958,8 @@ count.set(5);`,
   this.cdr.detectChanges();
 }`,
     validPatterns: [/this\.cdr\.detectChanges\s*\(\s*\)/],
+    realWorldExample:
+      'A real-time stock ticker must update prices immediately when data arrives, not on the next cycle -- detectChanges() forces a synchronous re-render of the component subtree.',
     hints: [
       'ChangeDetectorRef has a method that synchronously triggers change detection',
       'Unlike marking for check, this runs immediately on the component subtree',
@@ -897,6 +987,8 @@ ngOnDestroy() {
       /this\.destroy\$\.next\s*\(\s*\)/,
       /this\.destroy\$\.complete\s*\(\s*\)/,
     ],
+    realWorldExample:
+      'A dashboard with 10+ real-time data subscriptions uses destroy$ to clean up all of them at once when the user navigates away -- this pattern prevents memory leaks at scale.',
     hints: ['The takeUntil(destroy$) pattern auto-unsubscribes all observables on destroy'],
     tags: ['rxjs', 'takeuntil', 'lifecycle', 'cleanup'],
   },
@@ -912,6 +1004,8 @@ ngOnDestroy() {
     expected: '@Input with booleanAttribute transform',
     sample: `@Input({ transform: booleanAttribute }) disabled: boolean = false;`,
     validPatterns: [/@Input\s*\(\s*\{[^}]*transform\s*:\s*booleanAttribute[^}]*\}\s*\)\s+disabled/],
+    realWorldExample:
+      "An Angular Material button accepts a 'disabled' string attribute from HTML and coerces it to a boolean -- @Input({ transform: booleanAttribute }) automates that conversion.",
     hints: ['Angular 16+ allows transform functions on @Input to coerce values'],
     tags: ['input', 'transform', 'angular16'],
   },
@@ -927,6 +1021,8 @@ ngOnDestroy() {
     expected: '@Input with required option',
     sample: `@Input({ required: true }) title!: string;`,
     validPatterns: [/@Input\s*\(\s*\{[^}]*required\s*:\s*true[^}]*\}\s*\)\s+title/],
+    realWorldExample:
+      'A reusable PageHeader component must always receive a title -- @Input({ required: true }) gives you a compile-time error if the parent forgets to pass it.',
     hints: ['Angular 16+ @Input({ required: true }) makes inputs mandatory'],
     tags: ['input', 'required', 'angular16'],
   },
@@ -948,6 +1044,8 @@ ngOnDestroy() {
     expected: 'Provider with useFactory',
     sample: `{ provide: API_URL, useFactory: () => environment.apiUrl }`,
     validPatterns: [/provide\s*:\s*API_URL[^}]*useFactory\s*:\s*\(\s*\)\s*=>/],
+    realWorldExample:
+      'An enterprise app points to different API servers in dev vs production -- useFactory dynamically resolves the API URL at runtime based on the current environment config.',
     hints: [
       'Provider objects can specify a function that runs at injection time to produce the value',
       'The factory function is an arrow function that returns the resolved value',
@@ -969,6 +1067,8 @@ ngOnDestroy() {
     validPatterns: [
       /provide\s*:\s*BASE_URL[^}]*useValue\s*:\s*['"]https:\/\/api\.example\.com['"]/,
     ],
+    realWorldExample:
+      'A simple app hardcodes its API base URL as a constant string injected everywhere -- useValue provides a fixed value without needing a factory function or class.',
     hints: [
       'Provider objects specify a token and a strategy for resolving the dependency',
       'For a static/constant value, use the property that directly supplies the value',
@@ -990,6 +1090,8 @@ ngOnDestroy() {
     validPatterns: [
       /const\s+API_URL\s*=\s*new\s+InjectionToken\s*<\s*string\s*>\s*\(\s*['"]API_URL['"]\s*\)/,
     ],
+    realWorldExample:
+      "You cannot inject a plain string like an API URL by class type -- InjectionToken creates a unique, typed token so Angular's DI knows how to resolve non-class dependencies.",
     hints: [
       'Angular provides a class for creating tokens that represent non-class values',
       'The constructor takes a description string, and the class accepts a type parameter',
@@ -1011,6 +1113,8 @@ ngOnDestroy() {
 </div>`,
     validPatterns: [/<ng-content\s*><\/ng-content>/, /<div[^>]*class\s*=\s*["']card["']/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A reusable Card component in Angular Material accepts any content the parent passes between its tags -- ng-content is the slot mechanism that makes wrapper components flexible.',
     hints: ['ng-content acts like a slot where parent component can project content'],
     tags: ['content-projection', 'ng-content', 'template'],
   },
@@ -1031,6 +1135,8 @@ ngOnDestroy() {
       /<ng-content[^>]*select\s*=\s*["']\[body\]/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      "A dialog component like Angular Material's mat-dialog-content has separate slots for the header, body, and footer -- multi-slot projection routes each piece to its correct location.",
     hints: ['Use select attribute on ng-content to create named slots'],
     tags: ['content-projection', 'multi-slot', 'template'],
   },
@@ -1049,6 +1155,8 @@ ngOnDestroy() {
 </ng-container>`,
     validPatterns: [/<ng-container[^>]*\*ngIf\s*=\s*["']isLoggedIn["'][^>]*>/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A navigation bar conditionally shows login/logout links without adding a wrapper div that breaks flexbox layout -- ng-container applies structural directives without extra DOM nodes.',
     hints: ['ng-container is a grouping element that does not render to the DOM'],
     tags: ['ng-container', 'structural', 'template'],
   },
@@ -1066,6 +1174,8 @@ ngOnDestroy() {
 <ng-template #noData><p>No data</p></ng-template>`,
     validPatterns: [/\*ngIf\s*=\s*["']hasData\s*;\s*else\s+noData["']/, /<ng-template\s+#noData>/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A dashboard shows a spinner while loading and switches to the data view once ready -- *ngIf with else provides clean conditional rendering with a fallback template.',
     hints: ['Use *ngIf="condition; else templateRef" with <ng-template #ref>'],
     tags: ['ngif', 'else', 'ng-template'],
   },
@@ -1083,6 +1193,8 @@ ngOnDestroy() {
     sample: `<p>{{ data$ | async }}</p>`,
     validPatterns: [/\{\{\s*data\$\s*\|\s*async\s*\}\}/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A GitHub-style notification bell shows the unread count from an Observable stream -- the async pipe subscribes in the template and auto-unsubscribes on destroy, preventing memory leaks.',
     hints: [
       'Angular has a built-in pipe that unwraps Observables and Promises in templates',
       'It manages the subscription lifecycle automatically',
@@ -1109,6 +1221,8 @@ class TruncatePipe implements PipeTransform {
       /@Pipe\s*\(\s*\{[^}]*name\s*:\s*['"]truncate['"]/,
       /implements\s+PipeTransform/,
     ],
+    realWorldExample:
+      "Twitter/X truncates long tweet previews with an ellipsis -- a custom 'truncate' pipe encapsulates that logic so any template can use {{ text | truncate:140 }}.",
     hints: ['Custom pipes need @Pipe({ name }) and must implement PipeTransform.transform()'],
     tags: ['pipe', 'custom-pipe', 'transform'],
   },
@@ -1125,6 +1239,8 @@ class TruncatePipe implements PipeTransform {
     expected: '@Pipe with pure: false',
     sample: `@Pipe({ name: 'filter', pure: false })`,
     validPatterns: [/@Pipe\s*\(\s*\{[^}]*name\s*:\s*['"]filter['"][^}]*pure\s*:\s*false/],
+    realWorldExample:
+      'A live search filter pipe must re-evaluate when the array is mutated in place (e.g., items pushed) -- pure: false forces re-execution on every change detection cycle.',
     hints: [
       'By default, Angular pipes only re-run when the input reference changes',
       'There is a decorator property that controls whether the pipe runs on every cycle',
@@ -1151,6 +1267,8 @@ class TruncatePipe implements PipeTransform {
       /\*ngSwitchDefault/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      "An order tracking page displays different icons and text for 'pending', 'shipped', and 'delivered' statuses -- ngSwitch cleanly handles multiple discrete states.",
     hints: ['Use [ngSwitch], *ngSwitchCase, and *ngSwitchDefault together'],
     tags: ['ngswitch', 'conditional', 'template'],
   },
@@ -1171,6 +1289,8 @@ class TruncatePipe implements PipeTransform {
       /loadChildren\s*:\s*\(\s*\)\s*=>\s*import\s*\(/,
       /\.then\s*\(\s*m\s*=>\s*m\.AdminModule\s*\)/,
     ],
+    realWorldExample:
+      'GitHub only loads the Settings module when you actually visit /settings -- lazy loading with loadChildren keeps the initial bundle small and speeds up the first page load.',
     hints: [
       'Route objects have a property for lazy-loading that takes a function returning a dynamic import',
       'Chain a .then() to extract the specific module from the import result',
@@ -1190,6 +1310,8 @@ class TruncatePipe implements PipeTransform {
     expected: 'Functional canActivate guard',
     sample: `const authGuard: CanActivateFn = () => inject(AuthService).isLoggedIn();`,
     validPatterns: [/const\s+authGuard\s*:\s*CanActivateFn\s*=/, /inject\s*\(\s*AuthService\s*\)/],
+    realWorldExample:
+      'Visiting /dashboard on a banking app redirects unauthenticated users to /login -- a route guard checks your auth status before allowing navigation to protected pages.',
     hints: [
       'Functional guards are arrow functions typed with the appropriate Fn type',
       'Use the inject() function inside the guard to access services',
@@ -1212,6 +1334,8 @@ class TruncatePipe implements PipeTransform {
       /const\s+userResolver\s*:\s*ResolveFn/,
       /inject\s*\(\s*UserService\s*\)\.getUser/,
     ],
+    realWorldExample:
+      'A GitHub profile page pre-fetches user data before rendering /user/:id -- a route resolver ensures the component receives data immediately, avoiding a loading flash.',
     hints: [
       'Functional resolvers are typed with ResolveFn<T> and receive the route as a parameter',
       'Use inject() to access services and route.paramMap to read URL parameters',
@@ -1232,6 +1356,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<p>{{ birthday | date:'fullDate' }}</p>`,
     validPatterns: [/\{\{\s*birthday\s*\|\s*date\s*:\s*['"]fullDate['"]\s*\}\}/],
     editorLanguage: 'html',
+    realWorldExample:
+      "Facebook displays 'Friday, June 15, 2024' on event pages -- the date pipe formats raw Date objects into human-readable strings with locale support.",
     hints: [
       'Angular has a built-in pipe for formatting dates',
       'Pass the format string as an argument after the pipe name using a colon',
@@ -1252,6 +1378,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<span>{{ price | currency:'USD' }}</span>`,
     validPatterns: [/\{\{\s*price\s*\|\s*currency\s*:\s*['"]USD['"]\s*\}\}/],
     editorLanguage: 'html',
+    realWorldExample:
+      "Amazon displays product prices as '$29.99' with proper currency formatting -- the currency pipe handles symbol placement, decimal formatting, and locale differences.",
     hints: [
       'Angular has a built-in pipe for formatting numbers as currency',
       'Pass the ISO currency code as an argument after the pipe name',
@@ -1271,6 +1399,8 @@ class TruncatePipe implements PipeTransform {
     expected: 'Provider with useClass',
     sample: `{ provide: LoggerService, useClass: ConsoleLoggerService }`,
     validPatterns: [/provide\s*:\s*LoggerService[^}]*useClass\s*:\s*ConsoleLoggerService/],
+    realWorldExample:
+      'In testing, you swap the real PaymentService with a MockPaymentService -- useClass lets you substitute any implementation class behind the same injection token.',
     hints: [
       'Provider objects specify a token and a resolution strategy',
       'For replacing one class with another, use the strategy that maps a token to an alternative class',
@@ -1295,6 +1425,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<li *ngFor="let item of items; let i = index">{{ i }}: {{ item }}</li>`,
     validPatterns: [/\*ngFor\s*=\s*["']let\s+\w+\s+of\s+items\s*;\s*let\s+\w+\s*=\s*index["']/],
     editorLanguage: 'html',
+    realWorldExample:
+      "A numbered to-do list in Todoist shows '1. Buy groceries, 2. Call dentist' -- accessing the loop index in *ngFor lets you display position numbers alongside each item.",
     hints: ['Use "let i = index" to access the current loop index'],
     tags: ['ngfor', 'index', 'template'],
   },
@@ -1311,6 +1443,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<div *ngFor="let user of users; trackBy: trackById">{{ user.name }}</div>`,
     validPatterns: [/\*ngFor\s*=\s*["']let\s+\w+\s+of\s+users\s*;\s*trackBy\s*:\s*trackById["']/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A contacts list with 1,000 users on LinkedIn re-renders only changed items after a search update -- trackBy tells Angular to identify items by ID instead of re-creating every DOM element.',
     hints: ['trackBy helps Angular identify items and avoid unnecessary re-renders'],
     tags: ['ngfor', 'trackby', 'performance'],
   },
@@ -1327,6 +1461,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<div *ngFor="let item of items; let isFirst = first; let isLast = last" [class.first]="isFirst" [class.last]="isLast">{{ item }}</div>`,
     validPatterns: [/let\s+\w+\s*=\s*first/, /let\s+\w+\s*=\s*last/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A breadcrumb navigation adds a separator between items but not after the last one -- the first/last variables in *ngFor let you apply special styling to boundary items.',
     hints: ['*ngFor exposes first, last, even, odd boolean variables'],
     tags: ['ngfor', 'first', 'last', 'template'],
   },
@@ -1343,6 +1479,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<div *ngIf="user$ | async as user">{{ user.name }}</div>`,
     validPatterns: [/\*ngIf\s*=\s*["']user\$\s*\|\s*async\s+as\s+user["']/],
     editorLanguage: 'html',
+    realWorldExample:
+      "A user profile page unwraps the user$ Observable once and reuses the result across the template -- *ngIf with 'as' avoids duplicate subscriptions and provides a clean local variable.",
     hints: ['Combine *ngIf with async pipe and "as" to avoid multiple subscriptions'],
     tags: ['ngif', 'async', 'alias', 'template'],
   },
@@ -1360,6 +1498,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<p>{{ name | uppercase | slice:0:10 }}</p>`,
     validPatterns: [/\{\{\s*name\s*\|\s*uppercase\s*\|\s*slice\s*:\s*0\s*:\s*10\s*\}\}/],
     editorLanguage: 'html',
+    realWorldExample:
+      "A user directory displays names as 'JOHN DOE...' by chaining uppercase and slice pipes -- pipe chaining composes transformations declaratively in the template.",
     hints: [
       'Multiple pipes can be applied in sequence using the pipe operator',
       'Each pipe receives the output of the previous one as its input',
@@ -1380,6 +1520,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<p>{{ user?.address?.city }}</p>`,
     validPatterns: [/\{\{\s*user\?\.address\?\.city\s*\}\}/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A LinkedIn profile page safely accesses user?.company?.name because not all users have a company listed -- the safe navigation operator prevents null reference errors in templates.',
     hints: [
       'Angular templates support an operator for safe property access on potentially null values',
       'Apply it at each level of the property chain that could be null',
@@ -1400,6 +1542,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<p>{{ user!.name }}</p>`,
     validPatterns: [/\{\{\s*user!\.name\s*\}\}/],
     editorLanguage: 'html',
+    realWorldExample:
+      'A route-guarded profile page knows the user is always loaded before rendering -- the non-null assertion tells the compiler to trust that the value exists, suppressing strict null warnings.',
     hints: [
       'Angular templates support an operator to assert a value is definitely not null',
       'Place the operator after the potentially null expression, before accessing its properties',
@@ -1425,6 +1569,8 @@ class TruncatePipe implements PipeTransform {
       /@Component\s*\(\s*\{[^}]*styles\s*:\s*\[/,
       /:host\s*\{[^}]*display\s*:\s*block/,
     ],
+    realWorldExample:
+      "Each component in VS Code's web UI has its own scoped styles that cannot leak to other panels -- inline styles with :host let you style the component's root element in isolation.",
     hints: ['Component styles are encapsulated using ViewEncapsulation by default'],
     tags: ['component', 'styles', 'encapsulation'],
   },
@@ -1444,6 +1590,8 @@ class TruncatePipe implements PipeTransform {
   encapsulation: ViewEncapsulation.None
 })`,
     validPatterns: [/@Component\s*\(\s*\{[^}]*encapsulation\s*:\s*ViewEncapsulation\.None/],
+    realWorldExample:
+      'A global theme component that sets base typography and colors for the entire app needs styles to escape component boundaries -- ViewEncapsulation.None makes styles global.',
     hints: ['ViewEncapsulation.None applies styles globally without scoping'],
     tags: ['component', 'encapsulation', 'styles'],
   },
@@ -1460,6 +1608,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<tr *ngFor="let row of rows; let isEven = even" [class.even-row]="isEven"><td>{{ row }}</td></tr>`,
     validPatterns: [/let\s+\w+\s*=\s*even/, /\[class\.even-row\]/],
     editorLanguage: 'html',
+    realWorldExample:
+      'Excel-style data tables alternate row background colors for readability -- the even/odd variables in *ngFor let you apply zebra-striping without custom logic.',
     hints: ['*ngFor exposes even and odd boolean variables for alternating styles'],
     tags: ['ngfor', 'even', 'odd', 'template'],
   },
@@ -1478,6 +1628,8 @@ class TruncatePipe implements PipeTransform {
   templateUrl: './page.component.html'
 })`,
     validPatterns: [/@Component\s*\(\s*\{[^}]*templateUrl\s*:\s*['"]\.\/page\.component\.html['"]/],
+    realWorldExample:
+      'Large components like a multi-section settings page keep their HTML in a separate file for maintainability -- templateUrl references an external .html file instead of inlining the template.',
     hints: ['Use templateUrl for external template files'],
     tags: ['component', 'templateurl'],
   },
@@ -1497,6 +1649,8 @@ class TruncatePipe implements PipeTransform {
       /\$implicit\s*:\s*title/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      'A reusable data table component lets consumers pass in custom cell templates -- ngTemplateOutlet dynamically renders those templates with row data as context.',
     hints: ['ngTemplateOutlet renders a template with optional context data'],
     tags: ['ng-template', 'outlet', 'advanced'],
   },
@@ -1514,6 +1668,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<pre>{{ data | json }}</pre>`,
     validPatterns: [/\{\{\s*data\s*\|\s*json\s*\}\}/],
     editorLanguage: 'html',
+    realWorldExample:
+      'During development, you dump a complex API response object into a <pre> tag to inspect its shape -- the json pipe is the quickest way to visualize data structures in your template.',
     hints: [
       'Angular has a built-in pipe that serializes objects to their JSON string representation',
       'Wrap the output in a preformatted element for readability',
@@ -1535,6 +1691,8 @@ class TruncatePipe implements PipeTransform {
       /<button[^>]*\[attr\.disabled\]\s*=\s*["']isDisabled\s*\?\s*['"]{2}\s*:\s*null["']/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      "A checkout form disables the 'Place Order' button while payment is processing -- [attr.disabled] conditionally adds or removes the HTML attribute based on component state.",
     hints: ['Setting an attribute binding to null removes the attribute'],
     tags: ['attribute-binding', 'conditional', 'template'],
   },
@@ -1551,6 +1709,8 @@ class TruncatePipe implements PipeTransform {
     sample: `<h1 i18n="site header|Main heading">Welcome to My App</h1>`,
     validPatterns: [/<h1[^>]*i18n\s*=\s*["'][^"']*["'][^>]*>Welcome/],
     editorLanguage: 'html',
+    realWorldExample:
+      "Google's products are translated into 100+ languages -- the i18n attribute marks strings for extraction so Angular can generate localized bundles for each supported locale.",
     hints: ['The i18n attribute marks text for Angular i18n extraction'],
     tags: ['i18n', 'internationalization', 'template'],
   },
@@ -1569,6 +1729,8 @@ class TruncatePipe implements PipeTransform {
   this.vcRef.createComponent(MyComponent);
 }`,
     validPatterns: [/this\.vcRef\.createComponent\s*\(\s*MyComponent\s*\)/],
+    realWorldExample:
+      'A plugin system like VS Code extensions dynamically loads UI panels at runtime -- ViewContainerRef.createComponent() instantiates components programmatically without declaring them in a template.',
     hints: ['ViewContainerRef.createComponent() dynamically instantiates components'],
     tags: ['dynamic-component', 'viewcontainerref', 'advanced'],
   },
@@ -1591,6 +1753,8 @@ class TruncatePipe implements PipeTransform {
   console.log(data);
 });`,
     validPatterns: [/http\.post\s*\(\s*['"]\/api\/users['"]/, /\.subscribe\s*\(/],
+    realWorldExample:
+      'When you submit a new post on Reddit, the app sends a POST request with your title and content to the API -- http.post() is how Angular creates new server-side resources.',
     hints: ['http.post(url, body) sends data to the server'],
     tags: ['http', 'post', 'api'],
   },
@@ -1610,6 +1774,8 @@ class TruncatePipe implements PipeTransform {
       /new\s+HttpHeaders\s*\(\s*\)\.set\s*\(\s*['"]Authorization['"]/,
       /Bearer\s+token123/,
     ],
+    realWorldExample:
+      "Every API call to GitHub's REST API requires an Authorization header with your personal access token -- HttpHeaders lets you attach auth tokens to outgoing requests.",
     hints: [
       "Angular's header class is immutable - methods return a new instance",
       'Create a new instance first, then chain method calls to add headers',
@@ -1632,6 +1798,8 @@ class TruncatePipe implements PipeTransform {
       /new\s+HttpParams\s*\(\s*\)\.set\s*\(\s*['"]page['"]/,
       /\.set\s*\(\s*['"]limit['"]/,
     ],
+    realWorldExample:
+      'Amazon search adds ?page=1&limit=10 to paginate product results -- HttpParams builds type-safe query strings without manual string concatenation.',
     hints: [
       "Angular's params class is immutable like HttpHeaders",
       'Chain method calls to add multiple parameters',
@@ -1657,6 +1825,8 @@ class TruncatePipe implements PipeTransform {
       /req\.clone\s*\(/,
       /next\.handle\s*\(/,
     ],
+    realWorldExample:
+      'Every API call in a banking app needs an auth token -- an HTTP interceptor automatically attaches the Bearer token to every outgoing request without repeating code in each service.',
     hints: ['Interceptors clone the request to add headers, then pass to next.handle()'],
     tags: ['interceptor', 'http', 'auth'],
   },
@@ -1675,6 +1845,8 @@ class TruncatePipe implements PipeTransform {
   switchMap(term => http.get('/api/search?q=' + term))
 )`,
     validPatterns: [/\.pipe\s*\([^)]*switchMap\s*\(/, /http\.get\s*\(/],
+    realWorldExample:
+      "Google's autocomplete cancels the previous search request each time you type a new character -- switchMap ensures only the latest API call is active, discarding stale results.",
     hints: [
       'RxJS has a flattening operator that cancels previous inner observables when new values arrive',
       'It maps each value to an inner observable and subscribes to only the latest one',
@@ -1696,6 +1868,8 @@ class TruncatePipe implements PipeTransform {
   catchError(err => of([]))
 )`,
     validPatterns: [/\.pipe\s*\([^)]*catchError\s*\(/, /of\s*\(\s*\[\s*\]\s*\)/],
+    realWorldExample:
+      "If Spotify's recommendations API fails, the app shows an empty list instead of crashing -- catchError provides a graceful fallback so the UI stays functional.",
     hints: [
       'RxJS has an operator that intercepts errors in the stream',
       'The handler function must return a replacement observable (use the creation function for a single value)',
@@ -1715,6 +1889,8 @@ class TruncatePipe implements PipeTransform {
     expected: 'http.get() with retry operator',
     sample: `http.get('/api/data').pipe(retry(3))`,
     validPatterns: [/http\.get\s*\([^)]*\)\.pipe\s*\(\s*retry\s*\(\s*3\s*\)\s*\)/],
+    realWorldExample:
+      'Flaky network connections on mobile cause intermittent API failures -- retry(3) automatically re-attempts the HTTP request up to 3 times before surfacing the error.',
     hints: [
       'RxJS has an operator that resubscribes to the source on error',
       'Pass the maximum number of retry attempts as an argument',
@@ -1734,6 +1910,8 @@ class TruncatePipe implements PipeTransform {
     expected: 'pipe() with debounceTime()',
     sample: `search$.pipe(debounceTime(300))`,
     validPatterns: [/\.pipe\s*\(\s*debounceTime\s*\(\s*300\s*\)\s*\)/],
+    realWorldExample:
+      'Google Search waits until you pause typing before firing autocomplete suggestions -- debounceTime(300) prevents API calls on every single keystroke, reducing server load.',
     hints: [
       'RxJS has an operator that delays emissions until a specified quiet period has passed',
       'Use the pipe method to compose operators onto an observable',
@@ -1753,6 +1931,8 @@ class TruncatePipe implements PipeTransform {
     expected: 'pipe() with distinctUntilChanged()',
     sample: `input$.pipe(distinctUntilChanged())`,
     validPatterns: [/\.pipe\s*\(\s*distinctUntilChanged\s*\(\s*\)\s*\)/],
+    realWorldExample:
+      'If a user selects the same dropdown option twice in a row, there is no need to re-fetch data -- distinctUntilChanged skips duplicate emissions to avoid redundant work.',
     hints: [
       'RxJS has an operator that only emits when the current value differs from the previous one',
       'This operator takes no arguments for simple equality comparison',
@@ -1777,6 +1957,8 @@ class TruncatePipe implements PipeTransform {
       /combineLatest\s*\(\s*\[\s*user\$\s*,\s*settings\$\s*\]\s*\)/,
       /map\s*\(\s*\(\s*\[\s*user\s*,\s*settings\s*\]\s*\)/,
     ],
+    realWorldExample:
+      'A dashboard needs to display user info AND their settings together -- combineLatest merges both streams and updates the view whenever either source emits new data.',
     hints: [
       'RxJS has a creation function that emits an array of latest values when any source emits',
       'Pass an array of observables, then use map to reshape the output',
@@ -1805,6 +1987,8 @@ class TruncatePipe implements PipeTransform {
       /http\.get\s*\(\s*['"]\/api\/users['"]/,
       /http\.get\s*\(\s*['"]\/api\/posts['"]/,
     ],
+    realWorldExample:
+      "A Twitter/X profile page loads the user's tweets AND followers in parallel, rendering only after both finish -- forkJoin waits for all requests to complete before emitting.",
     hints: [
       'RxJS has a creation function that waits for all observables to complete',
       'Pass an object where each key maps to an observable for named results',
@@ -1828,6 +2012,8 @@ subject.next('hello');`,
       /new\s+Subject\s*<\s*string\s*>\s*\(\s*\)/,
       /subject\.next\s*\(\s*['"]hello['"]\s*\)/,
     ],
+    realWorldExample:
+      'A notification service in Slack pushes toast messages to any component listening -- a Subject lets you imperatively emit values that multiple subscribers receive.',
     hints: [
       'RxJS has a type that acts as both an observable and an observer',
       'Use the method that pushes a new value to all subscribers',
@@ -1848,6 +2034,8 @@ subject.next('hello');`,
     sample: `const count$ = new BehaviorSubject<number>(0);
 count$.getValue();`,
     validPatterns: [/new\s+BehaviorSubject\s*<\s*number\s*>\s*\(\s*0\s*\)/, /\.getValue\s*\(\s*\)/],
+    realWorldExample:
+      'An auth service stores the current user in a BehaviorSubject so any component that subscribes immediately gets the latest user state, even if login happened earlier.',
     hints: [
       'RxJS has a variant of Subject that requires an initial value and remembers the latest emission',
       'It has a synchronous method to retrieve the current value without subscribing',
@@ -1869,6 +2057,8 @@ count$.getValue();`,
   mergeMap(id => http.get('/api/item/' + id))
 )`,
     validPatterns: [/\.pipe\s*\([^)]*mergeMap\s*\(/, /http\.get\s*\(\s*['"]\/api\/item\//],
+    realWorldExample:
+      'A file uploader sends all selected files to the server simultaneously -- mergeMap makes concurrent HTTP requests for each file without canceling previous uploads.',
     hints: [
       'RxJS has a flattening operator that maintains all inner subscriptions concurrently',
       'Unlike the switching variant, this one does not cancel previous inner observables',
@@ -1888,6 +2078,8 @@ count$.getValue();`,
     expected: 'Typed http.get<T>()',
     sample: `http.get<User[]>('/api/users')`,
     validPatterns: [/http\.get\s*<\s*User\s*\[\s*\]\s*>\s*\(\s*['"]\/api\/users['"]\s*\)/],
+    realWorldExample:
+      'TypeScript autocompletion for user.name works only if the HTTP response is typed as User[] -- generic type parameters on http.get<T>() enable end-to-end type safety from API to template.',
     hints: [
       'The HTTP client methods accept a generic type parameter',
       'Place the type between angle brackets before the argument list',
@@ -1907,6 +2099,8 @@ count$.getValue();`,
     expected: 'pipe() with tap() for side effects',
     sample: `data$.pipe(tap(val => console.log('Received:', val)))`,
     validPatterns: [/\.pipe\s*\(\s*tap\s*\(\s*\w+\s*=>\s*console\.log/],
+    realWorldExample:
+      'When debugging why a search autocomplete fails, you insert tap(val => console.log(val)) into the pipeline to inspect values without altering the data flow.',
     hints: [
       'RxJS has an operator that performs side effects without transforming values',
       'It is commonly used for logging and debugging observable pipelines',
@@ -1924,6 +2118,8 @@ count$.getValue();`,
     setupCode: `const pipe = (...fns) => (arr) => fns.reduce((a, fn) => fn(a), arr);\nconst filter = (pred) => (arr) => arr.filter(pred);\nconst map = (fn) => (arr) => arr.map(fn);\nconst numbers = [1, 2, 3, 4, 5, 6];`,
     expected: [4, 8, 12],
     sample: `pipe(filter(n => n % 2 === 0), map(n => n * 2))(numbers)`,
+    realWorldExample:
+      'An analytics dashboard filters raw event data to keep only click events, then transforms each into a display-friendly format -- filter + map is the fundamental data pipeline pattern.',
     hints: ['Pipe composes functions left to right', 'Filter evens, then double'],
     tags: ['rxjs', 'pipe', 'filter', 'map'],
   },
@@ -1940,6 +2136,8 @@ count$.getValue();`,
     expected: 'pipe() with takeUntil() for auto-unsubscribe',
     sample: `data$.pipe(takeUntil(this.destroy$)).subscribe(val => console.log(val));`,
     validPatterns: [/\.pipe\s*\(\s*takeUntil\s*\(\s*this\.destroy\$\s*\)\s*\)\.subscribe/],
+    realWorldExample:
+      'A real-time stock price subscription must stop when the user navigates away from the stocks page -- takeUntil(destroy$) automatically completes the subscription on component destroy.',
     hints: [
       'RxJS has an operator that completes a stream when another observable emits',
       'Pass the notifier observable (the component destroy signal) as the argument',
@@ -1970,6 +2168,8 @@ count$.getValue();`,
       /name\s*:\s*new\s+FormControl/,
       /email\s*:\s*new\s+FormControl/,
     ],
+    realWorldExample:
+      'A user registration form groups name, email, and password fields together -- FormGroup manages the collective value, validity, and dirty state of all its child controls.',
     hints: ['FormGroup groups multiple FormControls together'],
     tags: ['reactive-forms', 'formgroup'],
   },
@@ -1992,6 +2192,8 @@ count$.getValue();`,
       /name\s*:\s*\[/,
       /email\s*:\s*\[[\s\S]*Validators\.required/,
     ],
+    realWorldExample:
+      "A complex checkout form with 15+ fields uses FormBuilder for concise setup -- fb.group() is shorthand that avoids repetitive 'new FormControl()' for every field.",
     hints: ['FormBuilder provides a shorthand for creating FormGroups'],
     tags: ['reactive-forms', 'formbuilder'],
   },
@@ -2008,6 +2210,8 @@ count$.getValue();`,
     expected: 'FormControl with required validator',
     sample: `const name = new FormControl('', Validators.required);`,
     validPatterns: [/new\s+FormControl\s*\(\s*['"]{2}\s*,\s*Validators\.required\s*\)/],
+    realWorldExample:
+      'A Stripe payment form requires the cardholder name to be filled in -- Validators.required ensures the field cannot be submitted empty, showing an error state.',
     hints: [
       'The FormControl constructor takes the initial value first, then validators',
       'Angular provides built-in validators on a static class',
@@ -2029,6 +2233,8 @@ count$.getValue();`,
     validPatterns: [
       /new\s+FormControl\s*\(\s*['"]{2}\s*,\s*\[\s*Validators\.required\s*,\s*Validators\.minLength\s*\(\s*3\s*\)\s*\]/,
     ],
+    realWorldExample:
+      'A password field on GitHub signup must not be empty AND be at least 8 characters -- passing an array of validators enforces multiple rules on a single control.',
     hints: [
       'When you need multiple validators, pass them as an array',
       "Angular's built-in validators include required and a minimum length checker",
@@ -2048,6 +2254,8 @@ count$.getValue();`,
     expected: 'FormControl with pattern validator',
     sample: `new FormControl('', Validators.pattern('^[0-9]{10}$'))`,
     validPatterns: [/new\s+FormControl\s*\([^)]*Validators\.pattern\s*\(\s*['"]\^?\[0-9\]/],
+    realWorldExample:
+      'A phone number field on an airline booking form only accepts exactly 10 digits -- Validators.pattern enforces format rules using a regular expression.',
     hints: [
       "Angular's built-in validators include one that accepts a regex string",
       'Use a regex that anchors the match and specifies exactly 10 digits',
@@ -2067,6 +2275,8 @@ count$.getValue();`,
     sample: `const items = new FormArray([new FormControl('Item 1'), new FormControl('Item 2')]);
 items.push(new FormControl('Item 3'));`,
     validPatterns: [/new\s+FormArray\s*\(\s*\[/, /items\.push\s*\(\s*new\s+FormControl/],
+    realWorldExample:
+      'A recipe editor lets you dynamically add or remove ingredient rows -- FormArray manages a variable-length list of form controls that grow and shrink at runtime.',
     hints: ['FormArray manages a dynamic list of controls; use .push() to add'],
     tags: ['reactive-forms', 'formarray', 'dynamic'],
   },
@@ -2088,6 +2298,8 @@ items.push(new FormControl('Item 3'));`,
       /formControlName\s*=\s*["']email["']/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      'A login form connects its HTML inputs to the TypeScript FormGroup model -- [formGroup] binds the form element and formControlName maps each input to its control.',
     hints: ['Bind the form with [formGroup] and controls with formControlName'],
     tags: ['reactive-forms', 'template', 'binding'],
   },
@@ -2106,6 +2318,8 @@ items.push(new FormControl('Item 3'));`,
       /\*ngIf\s*=\s*["']myForm\.get\(\s*['"]email['"]\s*\)\?\.errors\?\.required["']/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      "A signup form shows 'Email is required' in red text under the email field when the user tabs away without filling it -- accessing .errors?.required on the control drives inline error messages.",
     hints: ['Access errors via formGroup.get(controlName)?.errors?.validatorName'],
     tags: ['reactive-forms', 'validation', 'errors'],
   },
@@ -2127,6 +2341,8 @@ items.push(new FormControl('Item 3'));`,
       /forbiddenName\s*:\s*true/,
       /:\s*null/,
     ],
+    realWorldExample:
+      "A user registration form rejects 'admin' as a username to prevent impersonation -- a custom validator function encapsulates that business rule and returns an error object or null.",
     hints: ['Custom validators return an error object { key: true } or null for valid'],
     tags: ['validators', 'custom', 'reactive-forms'],
   },
@@ -2150,6 +2366,8 @@ items.push(new FormControl('Item 3'));`,
       /timer\s*\(\s*1000\s*\)/,
       /emailTaken\s*:\s*true/,
     ],
+    realWorldExample:
+      'GitHub checks if a repository name is already taken as you type -- an async validator makes a server call to verify uniqueness and returns a validation error if the name exists.',
     hints: ['Async validators return an Observable<ValidationErrors | null>'],
     tags: ['validators', 'async', 'reactive-forms'],
   },
@@ -2166,6 +2384,8 @@ items.push(new FormControl('Item 3'));`,
     expected: 'valueChanges subscription on form control',
     sample: `this.form.get('email')?.valueChanges.subscribe(value => console.log(value));`,
     validPatterns: [/this\.form\.get\s*\(\s*['"]email['"]\s*\)\?\.valueChanges\.subscribe/],
+    realWorldExample:
+      'A live search input on Airbnb updates results as you type -- valueChanges emits every keystroke as an Observable so you can debounce, switchMap, and fetch filtered results reactively.',
     hints: [
       'Use the FormGroup get() method to retrieve a specific control by name',
       'Each control exposes an observable property that emits on every value change',
@@ -2185,6 +2405,8 @@ items.push(new FormControl('Item 3'));`,
     expected: 'FormGroup patchValue call',
     sample: `this.form.patchValue({ name: 'Alice' });`,
     validPatterns: [/this\.form\.patchValue\s*\(\s*\{[^}]*name\s*:\s*['"]Alice['"]/],
+    realWorldExample:
+      "An 'Edit Profile' page pre-fills just the user's name from an API response without touching the email or bio fields -- patchValue updates a subset of form controls.",
     hints: [
       'FormGroup has two methods for setting values - one requires all fields, the other allows partial updates',
       'Call the partial update method on this.form with an object containing only the fields to change',
@@ -2204,6 +2426,8 @@ items.push(new FormControl('Item 3'));`,
     expected: 'FormGroup setValue call',
     sample: `this.form.setValue({ name: 'Alice', email: 'alice@test.com' });`,
     validPatterns: [/this\.form\.setValue\s*\(\s*\{[^}]*name\s*:\s*['"]Alice['"][^}]*email\s*:/],
+    realWorldExample:
+      'When loading a saved draft on a blogging platform, you restore the entire form (title, body, tags) from the server -- setValue replaces all controls at once and throws if any field is missing.',
     hints: [
       'FormGroup has a strict method that requires values for ALL controls',
       'It will throw if any control is missing from the provided object',
@@ -2223,6 +2447,8 @@ items.push(new FormControl('Item 3'));`,
     expected: 'FormGroup reset call',
     sample: `this.form.reset();`,
     validPatterns: [/this\.form\.reset\s*\(\s*\)/],
+    realWorldExample:
+      'After successfully submitting a contact form, the app clears all fields and removes validation errors so the user can submit another message -- reset() restores the form to its initial state.',
     hints: ['reset() clears all values and resets status to pristine/untouched'],
     tags: ['reactive-forms', 'reset'],
   },
@@ -2240,6 +2466,8 @@ items.push(new FormControl('Item 3'));`,
     sample: `<button [disabled]="!myForm.valid">Submit</button>`,
     validPatterns: [/<button[^>]*\[disabled\]\s*=\s*["']!myForm\.valid["'][^>]*>/],
     editorLanguage: 'html',
+    realWorldExample:
+      "A Stripe checkout grays out the 'Pay Now' button until all card details pass validation -- binding [disabled] to !myForm.valid prevents submission of incomplete forms.",
     hints: [
       'FormGroup exposes boolean properties for its current validation state',
       "Bind the disabled property to the negation of the form's validity status",
@@ -2267,6 +2495,8 @@ items.push(new FormControl('Item 3'));`,
       /group\.get\s*\(\s*['"]confirmPassword['"]/,
       /passwordMismatch\s*:\s*true/,
     ],
+    realWorldExample:
+      "Every password-change form on the web requires 'New Password' and 'Confirm Password' to match -- a cross-field validator compares two controls within the same FormGroup.",
     hints: ['Cross-field validators receive the FormGroup as the control parameter'],
     tags: ['validators', 'cross-field', 'reactive-forms'],
   },
@@ -2289,6 +2519,8 @@ items.push(new FormControl('Item 3'));`,
       /ngModel/,
     ],
     editorLanguage: 'html',
+    realWorldExample:
+      "A simple newsletter signup with just an email field uses template-driven forms for minimal boilerplate -- ngModel and #ref='ngForm' handle validation and submission entirely in the template.",
     hints: ['Template-driven forms use #ref="ngForm", ngModel, and (ngSubmit)'],
     tags: ['template-driven', 'ngform', 'ngmodel'],
   },

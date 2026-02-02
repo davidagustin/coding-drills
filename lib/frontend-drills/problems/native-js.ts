@@ -26,6 +26,8 @@ export const nativeJsProblems: FrontendDrillProblem[] = [
       { tagName: 'div', id: 'c', classList: ['active'] },
     ],
     sample: 'elements.filter(el => el.classList.includes("active"))',
+    realWorldExample:
+      'Gmail highlights all selected emails when you click the checkbox — it queries elements by class to find and style them.',
     hints: ['Use .filter() and .includes() methods', 'Check if classList array includes "active"'],
     tags: ['DOM', 'filter', 'classList', 'querySelector'],
   },
@@ -51,6 +53,8 @@ export const nativeJsProblems: FrontendDrillProblem[] = [
       { type: 'click', target: { id: 'btn-delete' } },
     ],
     sample: 'events.filter(e => e.target.id.startsWith("btn-"))',
+    realWorldExample:
+      "React's synthetic event system and click handlers on large lists (e.g., a todo app) use delegation to avoid attaching listeners to every single item.",
     hints: ['Use .filter() with .startsWith()', 'Access target.id from each event object'],
     tags: ['events', 'delegation', 'filter', 'startsWith'],
   },
@@ -75,6 +79,8 @@ const increment = () => { callCount++; };`,
   };
 }
 typeof debounce(increment, 100)`,
+    realWorldExample:
+      "Google's search autocomplete waits until you stop typing before sending API requests — that's debouncing in action.",
     hints: [
       'Use setTimeout and clearTimeout',
       'Return a new function that clears previous timeout',
@@ -105,6 +111,8 @@ const increment = () => { callCount++; };`,
   };
 }
 typeof throttle(increment, 100)`,
+    realWorldExample:
+      'Twitter/X throttles scroll event handlers to update the infinite feed at most once every 100ms, keeping the timeline smooth even during fast scrolling.',
     hints: [
       'Use a flag to track throttle state',
       'Call function immediately if not throttled',
@@ -124,6 +132,8 @@ typeof throttle(increment, 100)`,
     setupCode: `// Implement a localStorage-like storage object with setItem and getItem`,
     expected: 'dark',
     sample: `const storage = {\n  data: {},\n  setItem(key, value) { this.data[key] = value; },\n  getItem(key) { return this.data[key]; }\n};\nstorage.setItem("theme", "dark");\nconst theme = storage.getItem("theme");`,
+    realWorldExample:
+      'VS Code persists your theme, font size, and workspace settings across sessions using localStorage — every settings change writes to this API.',
     hints: [
       'Use a plain object (data) as the backing store',
       'setItem writes to this.data[key]',
@@ -145,6 +155,8 @@ typeof throttle(increment, 100)`,
     expected: '<li>Apple</li><li>Banana</li><li>Cherry</li>',
     // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
     sample: 'items.map(item => `<li>${item}</li>`).join("")',
+    realWorldExample:
+      'Amazon product listing pages render search results by mapping product data arrays into HTML card elements, dynamically building the page content.',
     hints: [
       'Use .map() to transform each item',
       'Use template literals',
@@ -168,6 +180,8 @@ typeof throttle(increment, 100)`,
       attributes: { class: 'btn-primary' },
     },
     sample: `function createElement(tag, text, attrs) {\n  return { tagName: tag, textContent: text, attributes: attrs };\n}\ncreateElement("button", "Click me", { class: "btn-primary" })`,
+    realWorldExample:
+      'React.createElement() works exactly like this under the hood — every JSX tag compiles down to a createElement call that builds virtual DOM nodes.',
     hints: [
       'The function returns an object with tagName, textContent, attributes',
       'Map the parameters to the object properties',
@@ -191,6 +205,8 @@ typeof throttle(increment, 100)`,
   return Promise.resolve({ data: [1, 2, 3] });
 }
 typeof mockFetch`,
+    realWorldExample:
+      'When writing unit tests for a Spotify-like music app, you mock the fetch API so tests run instantly without hitting real servers.',
     hints: [
       'Use Promise.resolve() to create a resolved promise',
       'Return an object with data property',
@@ -213,6 +229,8 @@ typeof mockFetch`,
   return result.data;
 }
 typeof getData`,
+    realWorldExample:
+      'Netflix uses async/await to fetch your personalized recommendations from their API and extract the movie list from the response payload.',
     hints: [
       'Use async function keyword',
       'Use await to wait for the promise',
@@ -236,6 +254,8 @@ typeof getData`,
   return email.includes("@") && email.includes(".");
 }
 isValidEmail(testEmail)`,
+    realWorldExample:
+      'Every signup form on sites like GitHub or Notion validates your email in real time, showing a red border if the format looks wrong before you even submit.',
     hints: ['Use .includes() to check for both "@" and "."', 'Return a boolean'],
     tags: ['validation', 'forms', 'email', 'regex'],
   },
@@ -262,6 +282,8 @@ isValidEmail(testEmail)`,
   acc[input.name] = input.value;
   return acc;
 }, {})`,
+    realWorldExample:
+      'When you submit a checkout form on Shopify, the browser collects all input fields into a key-value object to send as the POST request body.',
     hints: [
       'Use .reduce() to build an object',
       'Set acc[input.name] = input.value',
@@ -286,6 +308,8 @@ isValidEmail(testEmail)`,
   return "strong";
 }
 checkPasswordStrength(testPassword)`,
+    realWorldExample:
+      'Dropbox shows a color-coded password strength meter (weak/medium/strong) as you type during account creation, encouraging better security habits.',
     hints: [
       'Check password.length',
       'Use if/else or ternary operators',
@@ -307,6 +331,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Element with classList array\nconst el = { classList: ["active", "card"] };`,
     expected: ['card'],
     sample: `function toggleClass(element, cls) {\n  const idx = element.classList.indexOf(cls);\n  if (idx >= 0) element.classList.splice(idx, 1);\n  else element.classList.push(cls);\n  return element.classList;\n}\ntoggleClass(el, "active")`,
+    realWorldExample:
+      'Slack toggles a "selected" class on channels when you click them in the sidebar, visually highlighting the active conversation.',
     hints: [
       'Check if the class exists with indexOf or includes',
       'Use splice to remove, push to add',
@@ -326,6 +352,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Element with classList array\nconst el = { classList: ["card"] };`,
     expected: ['card', 'highlight'],
     sample: `function addClass(element, cls) {\n  if (!element.classList.includes(cls)) element.classList.push(cls);\n  return element.classList;\n}\naddClass(el, "highlight")`,
+    realWorldExample:
+      'Google Docs adds a "selected" class to table cells when you drag-select them, so the blue highlight appears on each selected cell.',
     hints: [
       'Check if the class already exists with includes',
       'Only push if not present',
@@ -345,6 +373,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Element with classList array\nconst el = { classList: ["card", "hidden", "active"] };`,
     expected: ['card', 'active'],
     sample: `function removeClass(element, cls) {\n  const idx = element.classList.indexOf(cls);\n  if (idx >= 0) element.classList.splice(idx, 1);\n  return element.classList;\n}\nremoveClass(el, "hidden")`,
+    realWorldExample:
+      'When a YouTube video finishes loading, the player removes the "loading" class from the skeleton placeholder to reveal the actual video thumbnail.',
     hints: [
       'Find the index of the class with indexOf',
       'Use splice to remove it',
@@ -364,6 +394,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement createKeyEvent and call it`,
     expected: { type: 'keydown', key: 'Enter', keyCode: 13 },
     sample: `function createKeyEvent(type, key, keyCode) {\n  return { type, key, keyCode };\n}\nconst event = createKeyEvent("keydown", "Enter", 13);`,
+    realWorldExample:
+      'VS Code listens for keyboard events to trigger shortcuts like Ctrl+S (save) or Ctrl+P (quick open) — each keystroke produces an event object with type and key info.',
     hints: [
       'The function takes three arguments and returns an object',
       'Use shorthand property names when key matches variable name',
@@ -383,6 +415,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Node chain: child -> par -> grandparent\nconst grandparent = { tagName: "DIV", parent: null };\nconst par = { tagName: "UL", parent: grandparent };\nconst child = { tagName: "LI", parent: par };`,
     expected: { tagName: 'UL', parent: { tagName: 'DIV', parent: null } },
     sample: `function closest(node, tag) {\n  let cur = node.parent;\n  while (cur) {\n    if (cur.tagName.toLowerCase() === tag.toLowerCase()) return cur;\n    cur = cur.parent;\n  }\n  return null;\n}\nclosest(child, "ul")`,
+    realWorldExample:
+      'When you click a delete icon inside a table row on Notion, the app uses closest() to find the parent row element so it knows which row to remove.',
     hints: [
       'Start from node.parent and walk upward',
       'Compare tagName using toLowerCase()',
@@ -402,6 +436,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Registry with a listeners object to store callbacks by type\nconst registry = { listeners: {} };`,
     expected: [11, 20],
     sample: `function addEventListener(reg, type, cb) {\n  if (!reg.listeners[type]) reg.listeners[type] = [];\n  reg.listeners[type].push(cb);\n}\nfunction emit(reg, type, data) {\n  return (reg.listeners[type] || []).map(cb => cb(data));\n}\naddEventListener(registry, "click", d => d.x + 1);\naddEventListener(registry, "click", d => d.x * 2);\nemit(registry, "click", { x: 10 })`,
+    realWorldExample:
+      'Node.js EventEmitter powers Express.js servers — every incoming HTTP request fires registered route handlers through this exact listener registry pattern.',
     hints: [
       'Store listeners in an object keyed by event type',
       'addEventListener pushes callbacks into the array for that type',
@@ -421,6 +457,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Each handler has a handler() function and a stop flag\nconst handlers = [\n  { handler: () => "child", stop: false },\n  { handler: () => "parent", stop: true },\n  { handler: () => "grandparent", stop: false }\n];`,
     expected: ['child', 'parent'],
     sample: `function propagate(handlers) {\n  const results = [];\n  for (const h of handlers) {\n    results.push(h.handler());\n    if (h.stop) break;\n  }\n  return results;\n}\npropagate(handlers)`,
+    realWorldExample:
+      'When you click a dropdown item inside a modal on GitHub, stopPropagation prevents the click from bubbling up and accidentally closing the modal.',
     hints: [
       'Loop through handlers and push each result',
       'Check the stop flag after each handler call',
@@ -440,6 +478,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Element with id and classList\nconst target = { id: "btn-1", classList: ["primary", "large"] };`,
     expected: true,
     sample: `function delegateMatch(el, selector) {\n  if (selector.startsWith("#")) return el.id === selector.slice(1);\n  if (selector.startsWith(".")) return el.classList.includes(selector.slice(1));\n  return false;\n}\ndelegateMatch(target, ".primary")`,
+    realWorldExample:
+      'jQuery\'s event delegation uses selector matching like this — when you write $(".list").on("click", ".item", handler), it checks if the clicked element matches ".item".',
     hints: [
       'Check the first character of the selector to determine type',
       'Use slice(1) to get the name without the prefix',
@@ -459,6 +499,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Pointer event with client coordinates\nconst event = { clientX: 150, clientY: 200 };\n// Container offset from viewport\nconst offset = { left: 50, top: 30 };`,
     expected: { x: 100, y: 170 },
     sample: `function relativePos(evt, off) {\n  return { x: evt.clientX - off.left, y: evt.clientY - off.top };\n}\nrelativePos(event, offset)`,
+    realWorldExample:
+      'Figma calculates where your mouse is relative to the canvas container so design tools like the pen tool draw at the exact position you click.',
     hints: ['x = clientX - left', 'y = clientY - top', 'Return an object with x and y properties'],
     tags: ['DOM', 'events', 'pointer', 'position'],
   },
@@ -474,6 +516,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Focusable element ids in tab order\nconst focusable = ["input-name", "input-email", "btn-submit"];`,
     expected: 'input-name',
     sample: `function focusNext(items, currentIdx) {\n  return items[(currentIdx + 1) % items.length];\n}\nfocusNext(focusable, 2)`,
+    realWorldExample:
+      'Accessible modals in apps like Stripe Checkout trap Tab focus so keyboard users cycle through the form fields without escaping the dialog.',
     hints: [
       'Use modulo (%) to wrap around the array length',
       'Index 2 + 1 = 3, and 3 % 3 = 0',
@@ -493,6 +537,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// scrollTop = how far scrolled, scrollHeight = total content, clientHeight = visible area\nconst scrollTop = 250;\nconst scrollHeight = 1000;\nconst clientHeight = 500;`,
     expected: 50,
     sample: `function scrollProgress(top, total, visible) {\n  return Math.round((top / (total - visible)) * 100);\n}\nscrollProgress(scrollTop, scrollHeight, clientHeight)`,
+    realWorldExample:
+      'Medium and many blog sites show a reading progress bar at the top of the page that fills as you scroll through an article.',
     hints: [
       'Maximum scroll distance is scrollHeight - clientHeight',
       'Progress = scrollTop / maxScroll * 100',
@@ -515,6 +561,8 @@ checkPasswordStrength(testPassword)`,
       { type: 'attribute', property: 'age', oldValue: 30, newValue: 31 },
     ],
     sample: `function createObserver() {\n  const mutations = [];\n  function observe(target) {\n    return new Proxy(target, {\n      set(obj, prop, value) {\n        mutations.push({ type: "attribute", property: prop, oldValue: obj[prop], newValue: value });\n        obj[prop] = value;\n        return true;\n      }\n    });\n  }\n  return { observe, mutations };\n}\nconst obs = createObserver();\nconst watched = obs.observe({ name: "Alice", age: 30 });\nwatched.name = "Bob";\nwatched.age = 31;\nobs.mutations`,
+    realWorldExample:
+      'Rich text editors like TinyMCE use MutationObserver to detect when content changes (e.g., pasting text) so they can update the undo history and sync state.',
     hints: [
       'Use Proxy with a set trap to intercept assignments',
       'Record obj[prop] as oldValue before updating',
@@ -539,6 +587,8 @@ checkPasswordStrength(testPassword)`,
       { id: 'd', isIntersecting: false },
     ],
     sample: `function checkIntersections(els, vTop, vBottom) {\n  return els.map(el => ({\n    id: el.id,\n    isIntersecting: el.top >= vTop && el.top <= vBottom\n  }));\n}\ncheckIntersections(elements, viewTop, viewBottom)`,
+    realWorldExample:
+      'Instagram uses IntersectionObserver to lazy-load images — photos only start downloading when they scroll into the visible viewport, saving bandwidth.',
     hints: [
       'Map each element to an entry object',
       'Check if top >= vTop && top <= vBottom',
@@ -561,6 +611,8 @@ checkPasswordStrength(testPassword)`,
       { target: '300x150', previousSize: '200x100' },
     ],
     sample: `function resize(element, w, h) {\n  const old = { width: element.width, height: element.height };\n  element.width = w;\n  element.height = h;\n  entries.push({ target: element.width + "x" + element.height, previousSize: old.width + "x" + old.height });\n}\nresize(el, 200, 100);\nresize(el, 300, 150);\nentries`,
+    realWorldExample:
+      'Google Maps uses ResizeObserver to detect when the map container changes size (e.g., sidebar toggle) and re-renders map tiles to fill the new dimensions.',
     hints: [
       'Save old dimensions before overwriting',
       'Format sizes as "WxH" strings',
@@ -580,6 +632,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Element with empty listeners map\nconst el = { listeners: {} };`,
     expected: [20, 20],
     sample: `function on(element, type, cb) {\n  if (!element.listeners[type]) element.listeners[type] = [];\n  element.listeners[type].push(cb);\n}\nfunction dispatch(element, type, detail) {\n  return (element.listeners[type] || []).map(cb => cb({ type, detail }));\n}\non(el, "custom", e => e.detail.value * 2);\non(el, "custom", e => e.detail.value + 10);\ndispatch(el, "custom", { value: 10 })`,
+    realWorldExample:
+      'Web Components in apps like GitHub use custom events (e.g., "tab-changed") to communicate between components without tight coupling.',
     hints: [
       'Store listeners in arrays keyed by event type',
       'dispatch passes {type, detail} to each callback',
@@ -599,6 +653,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Tree: div > [h1, ul > [li, li > [a]]]\nconst tree = {\n  tag: "div",\n  children: [\n    { tag: "h1", children: [] },\n    { tag: "ul", children: [\n      { tag: "li", children: [] },\n      { tag: "li", children: [{ tag: "a", children: [] }] }\n    ]}\n  ]\n};`,
     expected: ['div', 'h1', 'ul', 'li', 'li', 'a'],
     sample: `function dfs(node) {\n  const result = [node.tag];\n  for (const child of node.children) {\n    result.push(...dfs(child));\n  }\n  return result;\n}\ndfs(tree)`,
+    realWorldExample:
+      'Browser accessibility tools traverse the entire DOM tree depth-first to build the accessibility tree that screen readers like NVDA use to announce page content.',
     hints: [
       'Start with the current node tag in the result',
       'Recursively call dfs on each child',
@@ -618,6 +674,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Element with dataset (simulates data-user-id and data-role attributes)\nconst el = { dataset: { userId: "42", role: "admin" } };`,
     expected: { userId: '42', role: 'admin' },
     sample: `function extractData(element) {\n  return { userId: element.dataset.userId, role: element.dataset.role };\n}\nextractData(el)`,
+    realWorldExample:
+      'On Amazon product pages, each "Add to Cart" button stores the product ID in a data-product-id attribute so the click handler knows which item to add.',
     hints: [
       'Access element.dataset to get data attributes',
       'data-user-id is camelCased as dataset.userId',
@@ -639,6 +697,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement createStore with getState and setState`,
     expected: { count: 5, name: 'updated' },
     sample: `function createStore(initial) {\n  let state = { ...initial };\n  return {\n    getState() { return state; },\n    setState(update) { state = { ...state, ...update }; }\n  };\n}\nconst store = createStore({ count: 0, name: "test" });\nstore.setState({ count: 5 });\nstore.setState({ name: "updated" });\nstore.getState()`,
+    realWorldExample:
+      'Zustand, a popular React state library, works exactly like this — createStore returns get/set methods backed by a closure, powering apps like Vercel Dashboard.',
     hints: [
       'Use object spread to merge updates into state',
       'Store state in a closure variable',
@@ -658,6 +718,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Collect published messages here\nconst results = [];`,
     expected: ['A:hello', 'B:hello', 'A:world'],
     sample: `function createPubSub() {\n  const subs = {};\n  return {\n    subscribe(topic, cb) {\n      if (!subs[topic]) subs[topic] = [];\n      subs[topic].push(cb);\n      return () => { subs[topic] = subs[topic].filter(fn => fn !== cb); };\n    },\n    publish(topic, data) {\n      return (subs[topic] || []).map(cb => cb(data));\n    }\n  };\n}\nconst ps = createPubSub();\nps.subscribe("msg", d => results.push("A:" + d));\nconst unsub = ps.subscribe("msg", d => results.push("B:" + d));\nps.publish("msg", "hello");\nunsub();\nps.publish("msg", "world");\nresults`,
+    realWorldExample:
+      'Slack uses pub/sub internally so that when a new message arrives, all subscribed UI components (message list, unread badge, notification) update independently.',
     hints: [
       'Store subscribers in an object keyed by topic',
       'subscribe returns a function that filters out the callback',
@@ -677,6 +739,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Collect subscriber notifications here\nconst log = [];`,
     expected: [1, 2, 3],
     sample: `function observable(initial) {\n  let value = initial;\n  const listeners = [];\n  return {\n    get() { return value; },\n    set(v) { value = v; listeners.forEach(fn => fn(v)); },\n    subscribe(fn) { listeners.push(fn); }\n  };\n}\nconst obs = observable(0);\nobs.subscribe(v => log.push(v));\nobs.set(1);\nobs.set(2);\nobs.set(3);\nlog`,
+    realWorldExample:
+      'MobX, used by apps like Coinbase, makes state observable so the UI automatically re-renders whenever a value changes without manual subscription wiring.',
     hints: [
       'Store the value and listeners array in a closure',
       'set updates the value then calls each listener',
@@ -696,6 +760,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement createMachine and use it for a traffic light`,
     expected: 'yellow',
     sample: `function createMachine(initial, transitions) {\n  let state = initial;\n  return {\n    getState() { return state; },\n    transition() {\n      state = transitions[state] || state;\n      return state;\n    }\n  };\n}\nconst light = createMachine("green", { green: "yellow", yellow: "red", red: "green" });\nlight.transition();\nlight.transition();\nlight.transition();\nlight.transition();\nlight.getState()`,
+    realWorldExample:
+      'Stripe payment forms use state machines to manage the checkout flow: idle -> processing -> success/error, preventing double-submissions and invalid transitions.',
     hints: [
       'transitions is a lookup object: transitions[currentState] gives the next state',
       'Store the current state in a closure variable',
@@ -719,6 +785,8 @@ checkPasswordStrength(testPassword)`,
       { op: 'get', prop: 'x', value: 10 },
     ],
     sample: `function reactive(target) {\n  const log = [];\n  const proxy = new Proxy(target, {\n    get(obj, prop) {\n      log.push({ op: "get", prop, value: obj[prop] });\n      return obj[prop];\n    },\n    set(obj, prop, value) {\n      log.push({ op: "set", prop, value });\n      obj[prop] = value;\n      return true;\n    }\n  });\n  return { proxy, log };\n}\nconst { proxy, log } = reactive({ x: 1 });\nconst val = proxy.x;\nproxy.x = 10;\nconst val2 = proxy.x;\nlog`,
+    realWorldExample:
+      "Vue 3's reactivity system uses Proxy get/set traps to automatically track which components depend on which data, re-rendering only what changed.",
     hints: [
       'Proxy get trap: log the read, then return the value',
       'Proxy set trap: log the write, update the property, return true',
@@ -738,6 +806,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement createComponent with lifecycle hooks`,
     expected: ['mounted', 'updated:A', 'updated:B', 'destroyed'],
     sample: `function createComponent() {\n  const log = [];\n  return {\n    log,\n    onMount() { log.push("mounted"); },\n    onUpdate(data) { log.push("updated:" + data); },\n    onDestroy() { log.push("destroyed"); },\n    run() {\n      this.onMount();\n      this.onUpdate("A");\n      this.onUpdate("B");\n      this.onDestroy();\n    }\n  };\n}\nconst comp = createComponent();\ncomp.run();\ncomp.log`,
+    realWorldExample:
+      'React components follow this lifecycle: componentDidMount fires analytics tracking, componentDidUpdate refreshes data, componentWillUnmount cleans up WebSocket connections.',
     hints: [
       'Each hook method pushes a descriptive string to the log',
       'run() calls hooks in lifecycle order: mount, updates, destroy',
@@ -757,6 +827,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Shared resources array\nconst resources = [];`,
     expected: ['listener'],
     sample: `function setup(name) {\n  resources.push(name);\n  return () => {\n    const idx = resources.indexOf(name);\n    if (idx >= 0) resources.splice(idx, 1);\n  };\n}\nconst cleanupA = setup("timer");\nsetup("listener");\ncleanupA();\nresources`,
+    realWorldExample:
+      "React's useEffect return function is exactly this pattern — you return a cleanup that removes event listeners or cancels timers when the component unmounts.",
     hints: [
       'setup pushes the name and returns a removal function',
       'The cleanup function uses indexOf + splice to remove',
@@ -776,6 +848,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement errorBoundary with try/catch isolation`,
     expected: { results: [42, 99], errors: ['fail'] },
     sample: `function errorBoundary() {\n  const results = [];\n  const errors = [];\n  return {\n    results,\n    errors,\n    run(fn) {\n      try {\n        results.push(fn());\n      } catch (e) {\n        errors.push(e.message || String(e));\n      }\n    }\n  };\n}\nconst eb = errorBoundary();\neb.run(() => 42);\neb.run(() => { throw new Error("fail"); });\neb.run(() => 99);\n({ results: eb.results, errors: eb.errors })`,
+    realWorldExample:
+      'React Error Boundaries catch rendering crashes in child components so a broken widget on the Facebook News Feed shows a fallback instead of crashing the entire page.',
     hints: [
       'Wrap fn() in try/catch inside run()',
       'On success push to results, on error push e.message to errors',
@@ -795,6 +869,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement the reducer and dispatch actions`,
     expected: ['banana', 'cherry'],
     sample: `function reducer(state, action) {\n  switch (action.type) {\n    case "ADD": return [...state, action.payload];\n    case "REMOVE": return state.filter(x => x !== action.payload);\n    default: return state;\n  }\n}\nlet state = ["apple"];\nstate = reducer(state, { type: "ADD", payload: "banana" });\nstate = reducer(state, { type: "ADD", payload: "cherry" });\nstate = reducer(state, { type: "REMOVE", payload: "apple" });\nstate`,
+    realWorldExample:
+      'Redux powers the state management in apps like Twitter/X — every user action (like, retweet, bookmark) dispatches an action through a reducer to update the store.',
     hints: [
       'Use switch on action.type for different cases',
       'ADD: spread existing state and append payload',
@@ -814,6 +890,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// State to derive from\nconst state = { firstName: "John", lastName: "Doe" };`,
     expected: 'John Doe',
     sample: `function computed(stateFn) {\n  return { get value() { return stateFn(); } };\n}\nconst fullName = computed(() => state.firstName + " " + state.lastName);\nfullName.value`,
+    realWorldExample:
+      "Vue's computed properties derive values like a shopping cart total from the items array — it recalculates only when dependencies change, not on every render.",
     hints: [
       'Use a getter (get value()) to compute on access',
       'The stateFn captures state via closure',
@@ -833,6 +911,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement undo/redo history manager`,
     expected: 'C',
     sample: `function createHistory(initial) {\n  const past = [];\n  const future = [];\n  let current = initial;\n  return {\n    getCurrent() { return current; },\n    push(val) { past.push(current); current = val; future.length = 0; },\n    undo() { if (past.length) { future.push(current); current = past.pop(); } },\n    redo() { if (future.length) { past.push(current); current = future.pop(); } }\n  };\n}\nconst h = createHistory("A");\nh.push("B");\nh.push("C");\nh.push("D");\nh.undo();\nh.undo();\nh.redo();\nh.getCurrent()`,
+    realWorldExample:
+      'Figma and Photoshop maintain an undo/redo history stack so designers can Ctrl+Z to revert changes and Ctrl+Shift+Z to redo them.',
     hints: [
       'Use two arrays: past and future as stacks',
       'undo: push current to future, pop past to current',
@@ -852,6 +932,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement middleware-enhanced store, logger, and doubler middlewares`,
     expected: { state: 16, log: ['ADD', 'ADD'] },
     sample: `function createStoreWithMiddleware(reducer, initial, middlewares) {\n  let state = initial;\n  const log = [];\n  function dispatch(action) {\n    let act = action;\n    for (const mw of middlewares) {\n      act = mw(act, log);\n    }\n    state = reducer(state, act);\n  }\n  return { getState: () => state, dispatch, log };\n}\nconst logger = (action, log) => { log.push(action.type); return action; };\nconst doubler = (action, log) => {\n  if (action.type === "ADD") return { ...action, payload: action.payload * 2 };\n  return action;\n};\nconst store = createStoreWithMiddleware(\n  (state, action) => action.type === "ADD" ? state + action.payload : state,\n  0,\n  [logger, doubler]\n);\nstore.dispatch({ type: "ADD", payload: 5 });\nstore.dispatch({ type: "ADD", payload: 3 });\n({ state: store.getState(), log: store.log })`,
+    realWorldExample:
+      'Redux middleware like redux-thunk and redux-logger intercept every dispatched action — thunk handles async logic while logger prints actions to the console for debugging.',
     hints: [
       'Each middleware is a function (action, log) => transformedAction',
       'Loop through middlewares, passing the action through each in sequence',
@@ -871,6 +953,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement the effect scheduler`,
     expected: ['effect1', 'effect2', 'effect3'],
     sample: `function createScheduler() {\n  const queue = [];\n  const log = [];\n  return {\n    schedule(fn) { queue.push(fn); },\n    flush() { while (queue.length) { const fn = queue.shift(); log.push(fn()); } },\n    log\n  };\n}\nconst sched = createScheduler();\nsched.schedule(() => "effect1");\nsched.schedule(() => "effect2");\nsched.schedule(() => "effect3");\nsched.flush();\nsched.log`,
+    realWorldExample:
+      'React batches state updates and flushes them in a single render pass — useEffect callbacks are scheduled and flushed after the browser paints, following this exact queue pattern.',
     hints: [
       'schedule pushes functions into a queue array',
       'flush shifts from the queue and calls each function',
@@ -890,6 +974,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `const state = {\n  user: { name: "Alice", age: 30 },\n  settings: { theme: "dark", lang: "en" }\n};\nconst selectUserName = s => s.user.name;\nconst selectTheme = s => s.settings.theme;`,
     expected: { name: 'Alice', theme: 'dark' },
     sample: '({ name: selectUserName(state), theme: selectTheme(state) })',
+    realWorldExample:
+      'Redux selectors in the Spotify web player extract just the current track or playlist from a huge global state tree, keeping components focused on what they need.',
     hints: [
       'Selectors are functions that extract state slices',
       'Access nested properties with dot notation',
@@ -908,6 +994,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement a batching store that coalesces notifications`,
     expected: 2,
     sample: `function createBatchStore(initial) {\n  let state = { ...initial };\n  let notifyCount = 0;\n  let batching = false;\n  let pending = false;\n  return {\n    getState() { return state; },\n    getNotifyCount() { return notifyCount; },\n    setState(update) {\n      state = { ...state, ...update };\n      if (batching) { pending = true; }\n      else { notifyCount++; }\n    },\n    batch(fn) {\n      batching = true;\n      pending = false;\n      fn();\n      batching = false;\n      if (pending) notifyCount++;\n    }\n  };\n}\nconst s = createBatchStore({ a: 1, b: 2 });\ns.setState({ a: 10 });\ns.batch(() => {\n  s.setState({ a: 20 });\n  s.setState({ b: 30 });\n  s.setState({ a: 40 });\n});\ns.getNotifyCount()`,
+    realWorldExample:
+      'React 18 auto-batches multiple setState calls inside event handlers so that clicking a button that updates 5 state variables triggers only one re-render, not five.',
     hints: [
       'Use a batching flag to suppress individual notifications',
       'Track whether any setState was called during the batch with a pending flag',
@@ -927,6 +1015,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement a stack-based context provider`,
     expected: { r1: 'default', r2: ['outer', 'inner'] },
     sample: `function createContext(defaultValue) {\n  const stack = [defaultValue];\n  return {\n    provide(value, fn) {\n      stack.push(value);\n      const result = fn();\n      stack.pop();\n      return result;\n    },\n    consume() { return stack[stack.length - 1]; }\n  };\n}\nconst ctx = createContext("default");\nconst r1 = ctx.consume();\nconst r2 = ctx.provide("outer", () => {\n  const inner = ctx.provide("inner", () => ctx.consume());\n  return [ctx.consume(), inner];\n});\n({ r1, r2 })`,
+    realWorldExample:
+      'React Context lets a top-level ThemeProvider pass "dark" or "light" to deeply nested components without prop drilling — used everywhere from Material UI to Chakra.',
     hints: [
       'Use an array as a stack, initialized with defaultValue',
       'provide pushes, runs callback, then pops',
@@ -946,6 +1036,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement createSignal with get/set closure`,
     expected: 5,
     sample: `function createSignal(initial) {\n  let value = initial;\n  return {\n    get() { return value; },\n    set(v) { value = v; }\n  };\n}\nconst count = createSignal(0);\ncount.set(1);\ncount.set(2);\ncount.set(5);\ncount.get()`,
+    realWorldExample:
+      'SolidJS and Preact Signals use this exact pattern — createSignal returns get/set pairs that power fine-grained reactivity without a virtual DOM.',
     hints: [
       'Store the value in a closure variable',
       'get() returns the current value',
@@ -967,6 +1059,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Tracks how many times the real function runs\nlet callCount = 0;`,
     expected: { result: 25, calls: 2 },
     sample: `function memoize(fn) {\n  const cache = new Map();\n  return function(arg) {\n    if (cache.has(arg)) return cache.get(arg);\n    const result = fn(arg);\n    cache.set(arg, result);\n    return result;\n  };\n}\nconst expensive = memoize(n => { callCount++; return n * n; });\nexpensive(4);\nexpensive(4);\nexpensive(5);\nexpensive(4);\n({ result: expensive(5), calls: callCount })`,
+    realWorldExample:
+      "React.memo and useMemo use memoization to skip expensive re-renders — if a component's props haven't changed, React returns the cached result instead of re-rendering.",
     hints: [
       'Use a Map to store argument->result pairs',
       'Check cache.has(arg) before calling fn',
@@ -986,6 +1080,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function curry(fn) {\n  return function(a) {\n    return function(b) {\n      return function(c) {\n        return fn(a, b, c);\n      };\n    };\n  };\n}\nconst add3 = curry((a, b, c) => a + b + c);`,
     expected: 15,
     sample: 'add3(3)(5)(7)',
+    realWorldExample:
+      'Lodash/fp and Ramda use currying so you can create reusable helpers like formatCurrency = formatNumber("USD") that pre-fill the currency argument.',
     hints: [
       'Return nested functions, each taking one argument',
       'Call original function when all arguments collected',
@@ -1004,6 +1100,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function partial(fn, ...preArgs) {\n  return function(...laterArgs) {\n    return fn(...preArgs, ...laterArgs);\n  };\n}\nconst multiply = (a, b, c) => a * b * c;\nconst double = partial(multiply, 2);`,
     expected: 30,
     sample: 'double(3, 5)',
+    realWorldExample:
+      'Express.js middleware often uses partial application — cors({ origin: "https://myapp.com" }) returns a pre-configured handler with the origin baked in.',
     hints: [
       'Spread pre-filled args before later args',
       'Return a new function that combines both arg sets',
@@ -1022,6 +1120,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function pipe(...fns) {\n  return (x) => fns.reduce((acc, fn) => fn(acc), x);\n}\nconst transform = pipe(\n  x => x + 1,\n  x => x * 2,\n  x => x - 3\n);`,
     expected: 7,
     sample: 'transform(4)',
+    realWorldExample:
+      'RxJS Observable pipes in Angular apps chain operators like pipe(filter(...), map(...), debounceTime(300)) to transform data streams from API responses.',
     hints: ['Use reduce to chain function calls', 'Start with x, pass result to next function'],
     tags: ['pipe', 'compose', 'functional'],
   },
@@ -1037,6 +1137,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function compose(...fns) {\n  return (x) => fns.reduceRight((acc, fn) => fn(acc), x);\n}\nconst transform = compose(\n  x => x - 3,\n  x => x * 2,\n  x => x + 1\n);`,
     expected: 7,
     sample: 'transform(4)',
+    realWorldExample:
+      'Redux combineReducers and middleware compose functions right-to-left so enhancers like applyMiddleware wrap the store in the correct order.',
     hints: ['Use reduceRight to chain from right to left', 'Same as pipe but reversed order'],
     tags: ['compose', 'functional'],
   },
@@ -1055,6 +1157,8 @@ checkPasswordStrength(testPassword)`,
       { from: 'chatB', to: 'chatA', data: 'hi back' },
     ],
     sample: `function createMediator() {\n  const components = {};\n  const log = [];\n  return {\n    register(name, handler) { components[name] = handler; },\n    send(from, to, data) {\n      log.push({ from, to, data });\n      if (components[to]) components[to](data, from);\n    },\n    log\n  };\n}\nconst med = createMediator();\nmed.register("chatA", (data, from) => {});\nmed.register("chatB", (data, from) => {});\nmed.send("chatA", "chatB", "hello");\nmed.send("chatB", "chatA", "hi back");\nmed.log`,
+    realWorldExample:
+      'Air traffic control is a classic mediator — in Slack, a central message bus routes messages between the editor, notification system, and presence indicator without them knowing about each other.',
     hints: [
       'Store component handlers in an object keyed by name',
       'send logs the message then calls the target handler if registered',
@@ -1074,6 +1178,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement the command executor pattern`,
     expected: 15,
     sample: `function createCommandExecutor(initial) {\n  let value = initial;\n  const history = [];\n  return {\n    execute(cmd) {\n      history.push({ undo: () => { value = cmd.undo(value); } });\n      value = cmd.execute(value);\n    },\n    undo() {\n      const last = history.pop();\n      if (last) last.undo();\n    },\n    getValue() { return value; }\n  };\n}\nconst exec = createCommandExecutor(10);\nexec.execute({ execute: v => v + 5, undo: v => v - 5 });\nexec.execute({ execute: v => v * 2, undo: v => v / 2 });\nexec.undo();\nexec.getValue()`,
+    realWorldExample:
+      'Text editors like VS Code implement undo as a command stack — each edit (insert, delete, format) is a command object with execute/undo methods.',
     hints: [
       'Push undo closures onto a history stack before executing',
       'Each command object has execute(v) => newV and undo(v) => oldV',
@@ -1093,6 +1199,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function range(start, end) {\n  return {\n    [Symbol.iterator]() {\n      let current = start;\n      return {\n        next() {\n          if (current < end) return { value: current++, done: false };\n          return { done: true };\n        }\n      };\n    }\n  };\n}`,
     expected: [2, 3, 4, 5, 6],
     sample: '[...range(2, 7)]',
+    realWorldExample:
+      'Pagination components generate page number sequences like range(1, totalPages) to render clickable page buttons without hardcoding values.',
     hints: ['Implement Symbol.iterator method', 'Return object with next() method'],
     tags: ['iterator', 'Symbol.iterator', 'protocol'],
   },
@@ -1108,6 +1216,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement fibonacci generator and collect first 8 values`,
     expected: [0, 1, 1, 2, 3, 5, 8, 13],
     sample: `function* fibonacci() {\n  let a = 0, b = 1;\n  while (true) {\n    yield a;\n    [a, b] = [b, a + b];\n  }\n}\nconst fib = fibonacci();\nconst result = [];\nfor (let i = 0; i < 8; i++) result.push(fib.next().value);\nresult`,
+    realWorldExample:
+      'Redux-saga uses generators to manage complex async flows — yield pauses execution until an API call resolves, making async code read like synchronous steps.',
     hints: [
       'Use function* and yield to produce values lazily',
       'Track two variables a and b, yield a, then advance both',
@@ -1127,6 +1237,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement a singleton factory using closure`,
     expected: true,
     sample: `const createSingleton = (() => {\n  let instance = null;\n  return () => {\n    if (!instance) instance = { id: 1, created: true };\n    return instance;\n  };\n})();\nconst a = createSingleton();\nconst b = createSingleton();\na === b`,
+    realWorldExample:
+      'Database connection pools use the singleton pattern — your app creates one shared pool instance so every request reuses existing connections instead of opening new ones.',
     hints: [
       'Use an IIFE to create a private closure',
       'Store instance in a variable captured by closure',
@@ -1149,6 +1261,8 @@ checkPasswordStrength(testPassword)`,
       { type: 'rectangle', area: 24 },
     ],
     sample: `function createShape(type, params) {\n  if (type === "circle") return { type, area: Math.round(Math.PI * params.r * params.r) };\n  if (type === "rectangle") return { type, area: params.w * params.h };\n  return { type: "unknown", area: 0 };\n}\nconst c = createShape("circle", { r: 5 });\nconst r = createShape("rectangle", { w: 4, h: 6 });\n[c, r]`,
+    realWorldExample:
+      'UI component libraries like Material UI use factory patterns — createTheme() produces different theme objects (light, dark, custom) from a single function.',
     hints: [
       'Branch on the type string to decide which formula to use',
       'Circle area: Math.round(Math.PI * r * r)',
@@ -1168,6 +1282,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `const strategies = {\n  ascending: (a, b) => a - b,\n  descending: (a, b) => b - a\n};\nfunction sortWith(arr, strategyName) {\n  return [...arr].sort(strategies[strategyName]);\n}\nconst data = [3, 1, 4, 1, 5, 9];`,
     expected: { asc: [1, 1, 3, 4, 5, 9], desc: [9, 5, 4, 3, 1, 1] },
     sample: '({ asc: sortWith(data, "ascending"), desc: sortWith(data, "descending") })',
+    realWorldExample:
+      'Amazon product listings let you sort by price, rating, or newest — each sort option swaps in a different comparison strategy without changing the sorting code.',
     hints: ['Store strategy functions in an object', 'Look up strategy by name and pass to sort'],
     tags: ['strategy', 'pattern', 'sort'],
   },
@@ -1183,6 +1299,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function withLogging(fn) {\n  return function(...args) {\n    const result = fn(...args);\n    return { ...result, logged: true };\n  };\n}\nfunction withTimestamp(fn) {\n  return function(...args) {\n    const result = fn(...args);\n    return { ...result, timestamp: 12345 };\n  };\n}\nconst base = (x) => ({ value: x * 2 });\nconst decorated = withTimestamp(withLogging(base));`,
     expected: { value: 10, logged: true, timestamp: 12345 },
     sample: 'decorated(5)',
+    realWorldExample:
+      'NestJS and Angular use TypeScript decorators like @Injectable() and @Component() to add metadata and behavior to classes without modifying their source code.',
     hints: [
       'Each decorator wraps the function and enriches the result',
       'Chain decorators by passing one into another',
@@ -1201,6 +1319,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `const original = { user: { name: "Alice", address: { city: "Portland", state: "OR" } } };\nconst updated = {\n  ...original,\n  user: {\n    ...original.user,\n    address: { ...original.user.address, city: "Seattle" }\n  }\n};`,
     expected: { originalCity: 'Portland', newCity: 'Seattle' },
     sample: '({ originalCity: original.user.address.city, newCity: updated.user.address.city })',
+    realWorldExample:
+      'Redux requires immutable updates — when a user changes their shipping address on Amazon, the reducer spreads the old state and only overwrites the address field.',
     hints: ['Spread at each level of nesting', 'Only override the property you want to change'],
     tags: ['immutable', 'spread', 'update'],
   },
@@ -1216,6 +1336,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function deepClone(obj) {\n  if (obj === null || typeof obj !== "object") return obj;\n  if (Array.isArray(obj)) return obj.map(item => deepClone(item));\n  const cloned = {};\n  for (const key of Object.keys(obj)) cloned[key] = deepClone(obj[key]);\n  return cloned;\n}\nconst src = { a: 1, b: [2, 3], c: { d: 4 } };\nconst copy = deepClone(src);\ncopy.b.push(99);\ncopy.c.d = 999;`,
     expected: { srcB: [2, 3], copyB: [2, 3, 99], srcD: 4, copyD: 999 },
     sample: '({ srcB: src.b, copyB: copy.b, srcD: src.c.d, copyD: copy.c.d })',
+    realWorldExample:
+      'Immer (used by Redux Toolkit) deep-clones state before applying mutations, so you write code that looks mutable but produces immutable updates under the hood.',
     hints: [
       'Handle primitives, arrays, and objects separately',
       'Recursively clone nested structures',
@@ -1234,6 +1356,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Collect emitter output here\nconst log = [];`,
     expected: ['on:A', 'once:A', 'on:B'],
     sample: `function createEmitter() {\n  const events = {};\n  return {\n    on(evt, fn) {\n      if (!events[evt]) events[evt] = [];\n      events[evt].push({ fn, once: false });\n    },\n    once(evt, fn) {\n      if (!events[evt]) events[evt] = [];\n      events[evt].push({ fn, once: true });\n    },\n    emit(evt, data) {\n      if (!events[evt]) return [];\n      const results = events[evt].map(h => h.fn(data));\n      events[evt] = events[evt].filter(h => !h.once);\n      return results;\n    }\n  };\n}\nconst em = createEmitter();\nem.on("data", v => { log.push("on:" + v); });\nem.once("data", v => { log.push("once:" + v); });\nem.emit("data", "A");\nem.emit("data", "B");\nlog`,
+    realWorldExample:
+      "Node.js uses emitter.once('connect') so a database connection callback fires exactly once on first connect, then auto-removes to avoid duplicate handling.",
     hints: [
       'Store listeners as {fn, once} objects in arrays by event name',
       'After calling all listeners during emit, filter out once:true entries',
@@ -1253,6 +1377,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Tracks how many times the computation runs\nlet computeCount = 0;`,
     expected: { value: 42, count: 1 },
     sample: `function lazy(fn) {\n  let computed = false;\n  let result;\n  return {\n    get value() {\n      if (!computed) {\n        result = fn();\n        computed = true;\n      }\n      return result;\n    }\n  };\n}\nconst val = lazy(() => { computeCount++; return 42; });\nconst a = val.value;\nconst b = val.value;\nconst c = val.value;\n({ value: val.value, count: computeCount })`,
+    realWorldExample:
+      'Webpack uses lazy evaluation for module loading — import() only executes the module code when you first access it, speeding up initial page load on large apps.',
     hints: [
       'Use a getter (get value()) for lazy access',
       'Track a "computed" flag and a "result" variable',
@@ -1274,6 +1400,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `const oldTree = { tag: "div", props: { id: "root" }, children: [{ tag: "p", props: {}, children: ["Hello"] }] };\nconst newTree = { tag: "div", props: { id: "root" }, children: [{ tag: "p", props: {}, children: ["World"] }] };`,
     expected: [{ type: 'TEXT', path: [0, 0], oldVal: 'Hello', newVal: 'World' }],
     sample: `function diff(old, newN, path = []) {\n  if (typeof old === 'string' && typeof newN === 'string' && old !== newN) return [{ type: 'TEXT', path, oldVal: old, newVal: newN }];\n  if (!old || !newN) return [];\n  const patches = [];\n  const maxLen = Math.max((old.children||[]).length, (newN.children||[]).length);\n  for (let i = 0; i < maxLen; i++) patches.push(...diff((old.children||[])[i], (newN.children||[])[i], [...path, i]));\n  return patches;\n}\ndiff(oldTree, newTree)`,
+    realWorldExample:
+      "React's reconciliation algorithm diffs the old and new virtual DOM trees to compute the minimal set of actual DOM updates, making re-renders fast.",
     hints: ['Recursively compare children', 'Track path for patch location'],
     tags: ['virtual-DOM', 'diff', 'reconciliation'],
   },
@@ -1292,6 +1420,8 @@ checkPasswordStrength(testPassword)`,
     // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
     sample:
       '`<table><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</table>`',
+    realWorldExample:
+      'Admin dashboards like Retool render API response data as HTML tables — each row maps a database record to table cells for CRUD interfaces.',
     hints: [
       'Map headers to th elements',
       'Map rows to tr with td elements',
@@ -1311,6 +1441,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function renderGreeting(user) {\n  if (user && user.name) return \`<h1>Hello, \${user.name}!</h1>\`;\n  return "<h1>Please log in</h1>";\n}\nconst loggedIn = renderGreeting({ name: "Alice" });\nconst loggedOut = renderGreeting(null);`,
     expected: { loggedIn: '<h1>Hello, Alice!</h1>', loggedOut: '<h1>Please log in</h1>' },
     sample: '({ loggedIn, loggedOut })',
+    realWorldExample:
+      'Every app shows a loading spinner while fetching data, then swaps it with content — Netflix shows skeleton cards until movie data loads, then renders the real posters.',
     hints: ['Check if user and user.name exist', 'Return different HTML based on condition'],
     tags: ['rendering', 'conditional', 'template-literals'],
   },
@@ -1330,6 +1462,8 @@ checkPasswordStrength(testPassword)`,
       { op: 'add', id: 4, text: 'D' },
     ],
     sample: `function reconcile(oldL, newL) {\n  const ops = [];\n  const oldMap = new Map(oldL.map(i => [i.id, i]));\n  const newMap = new Map(newL.map(i => [i.id, i]));\n  for (const [id] of oldMap) {\n    if (!newMap.has(id)) ops.push({ op: "remove", id });\n  }\n  for (const [id, item] of newMap) {\n    if (!oldMap.has(id)) ops.push({ op: "add", id, text: item.text });\n    else if (oldMap.get(id).text !== item.text) ops.push({ op: "update", id, text: item.text });\n  }\n  return ops;\n}\nreconcile(oldList, newList)`,
+    realWorldExample:
+      'React uses key-based list reconciliation to efficiently update a Trello board — when you drag a card, it computes adds/removes/moves instead of re-rendering the entire list.',
     hints: [
       'Create Maps from both lists for O(1) lookups by id',
       'Items in old but not new are removes; items in new but not old are adds',
@@ -1353,6 +1487,8 @@ checkPasswordStrength(testPassword)`,
       { tag: 'div', props: {}, children: [] },
     ],
     sample: `function createFragment(tags) {\n  return tags.map(tag => ({ tag, props: {}, children: [] }));\n}\ncreateFragment(tags)`,
+    realWorldExample:
+      'React Fragments (<>...</>) let you return multiple sibling elements without a wrapper div — under the hood, they create a virtual node group just like this.',
     hints: [
       'Use .map() to transform each tag string',
       'Each node needs tag, props (empty object), and children (empty array)',
@@ -1372,6 +1508,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement a template engine with {{key}} interpolation`,
     expected: 'Hello Alice, you are 30 years old!',
     sample: `function template(str, data) {\n  return str.replace(/\\{\\{(\\w+)\\}\\}/g, (match, key) => {\n    return data[key] !== undefined ? data[key] : match;\n  });\n}\ntemplate("Hello {{name}}, you are {{age}} years old!", { name: "Alice", age: 30 })`,
+    realWorldExample:
+      'Handlebars and Mustache templates power email services like Mailchimp — {{firstName}} placeholders get replaced with actual subscriber data before sending.',
     hints: [
       'Use str.replace with a regex to find {{word}} patterns',
       'The regex capture group gives you the key name',
@@ -1391,6 +1529,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Nested items: A has children A1 and A2, B has no children\nconst items = [\n  { text: "A", children: [{ text: "A1" }, { text: "A2" }] },\n  { text: "B" }\n];`,
     expected: '<ul><li>A<ul><li>A1</li><li>A2</li></ul></li><li>B</li></ul>',
     sample: `function renderList(items) {\n  return "<ul>" + items.map(item => {\n    let html = "<li>" + item.text;\n    if (item.children) html += renderList(item.children);\n    html += "</li>";\n    return html;\n  }).join("") + "</ul>";\n}\nrenderList(items)`,
+    realWorldExample:
+      'File explorers in VS Code and GitHub render nested folder trees recursively — each folder can contain subfolders, and the same rendering logic applies at every level.',
     hints: [
       'Wrap the whole level in <ul>...</ul>',
       'Each item becomes <li>text</li>',
@@ -1410,6 +1550,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `function createRenderQueue(batchSize) {\n  const queue = [];\n  return {\n    add(renderFn) { queue.push(renderFn); },\n    flush() {\n      const batch = queue.splice(0, batchSize);\n      return batch.map(fn => fn());\n    }\n  };\n}\nconst rq = createRenderQueue(2);\nrq.add(() => "<div>1</div>");\nrq.add(() => "<div>2</div>");\nrq.add(() => "<div>3</div>");\nconst batch1 = rq.flush();\nconst batch2 = rq.flush();`,
     expected: { batch1: ['<div>1</div>', '<div>2</div>'], batch2: ['<div>3</div>'] },
     sample: '({ batch1, batch2 })',
+    realWorldExample:
+      'Twitter/X renders tweets in batches as you scroll — instead of rendering 1000 tweets at once, it processes them in chunks to keep the UI responsive.',
     hints: ['Use splice to take a batch from the queue', 'Map batch items to get render results'],
     tags: ['rendering', 'lazy', 'queue', 'batch'],
   },
@@ -1425,6 +1567,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement HTML entity escaping`,
     expected: '&lt;p class=&quot;test&quot;&gt;A &amp; B&lt;/p&gt;',
     sample: `function escapeHtml(str) {\n  const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" };\n  return str.replace(/[&<>"]/g, ch => map[ch]);\n}\nescapeHtml('<p class="test">A & B</p>')`,
+    realWorldExample:
+      'Any app that displays user-generated content (like Reddit comments or GitHub issues) must escape HTML to prevent XSS attacks from injected script tags.',
     hints: [
       'Create a lookup object mapping each character to its entity',
       'Use str.replace with a regex character class [&<>"]',
@@ -1451,6 +1595,8 @@ checkPasswordStrength(testPassword)`,
       ],
     },
     sample: `function createElement(tag, props, ...children) {\n  return { tag, props: props || {}, children: children.flat() };\n}\ncreateElement("div", { id: "app" }, createElement("h1", null, "Hello"), createElement("p", { class: "text" }, "World"))`,
+    realWorldExample:
+      'JSX compiles to nested createElement calls — every React component you write is transformed by Babel into this exact function call pattern at build time.',
     hints: [
       'Use rest params (...children) to collect all children arguments',
       'Use children.flat() in case of nested arrays',
@@ -1470,6 +1616,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement HTML attribute rendering`,
     expected: 'class="btn" id="main" disabled',
     sample: `function renderAttrs(attrs) {\n  return Object.entries(attrs)\n    .filter(([, v]) => v != null && v !== false)\n    .map(([k, v]) => v === true ? k : \`\${k}="\${v}"\`)\n    .join(" ");\n}\nrenderAttrs({ class: "btn", id: "main", hidden: false, disabled: true, title: null })`,
+    realWorldExample:
+      'Server-side rendering in Next.js converts React props to HTML attribute strings when generating the initial HTML response sent to the browser.',
     hints: [
       'Filter out entries where value is null, undefined, or false',
       'If value is true, output just the key name',
@@ -1489,6 +1637,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Virtual DOM tree: div#app > [h1("Title"), p.body("Content")]\nconst tree = { tag: "div", props: { id: "app" }, children: [\n  { tag: "h1", props: {}, children: ["Title"] },\n  { tag: "p", props: { class: "body" }, children: ["Content"] }\n]};`,
     expected: '<div id="app"><h1>Title</h1><p class="body">Content</p></div>',
     sample: `function toHtml(node) {\n  if (typeof node === "string") return node;\n  const attrs = Object.entries(node.props || {})\n    .map(([k, v]) => \` \${k}="\${v}"\`).join("");\n  const children = (node.children || []).map(c => toHtml(c)).join("");\n  return \`<\${node.tag}\${attrs}>\${children}</\${node.tag}>\`;\n}\ntoHtml(tree)`,
+    realWorldExample:
+      'Frameworks like Svelte compile components into optimized HTML string builders at build time — this is essentially what server-side rendering does on every request.',
     hints: [
       'Base case: if node is a string, return it directly',
       'Build attributes: map props entries to key="value" strings',
@@ -1512,6 +1662,8 @@ checkPasswordStrength(testPassword)`,
       success: '<div class="content">Hello</div>',
     },
     sample: `function renderByStatus(status, data) {\n  switch (status) {\n    case "loading": return "<div class=\\"spinner\\">Loading...</div>";\n    case "error": return \`<div class="error">\${data}</div>\`;\n    case "success": return \`<div class="content">\${data}</div>\`;\n    default: return "";\n  }\n}\n({ loading: renderByStatus("loading"), error: renderByStatus("error", "Network fail"), success: renderByStatus("success", "Hello") })`,
+    realWorldExample:
+      'Every data-fetching UI has three states: loading (spinner), error (retry button), success (content). GitHub PR pages show exactly this pattern when loading diff data.',
     hints: [
       'Use switch(status) with cases for each state',
       'loading does not use data, error and success interpolate it',
@@ -1531,6 +1683,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement classNames utility (like the classnames npm package)`,
     expected: 'btn btn-primary active',
     sample: `function classNames(obj) {\n  return Object.entries(obj)\n    .filter(([, v]) => v)\n    .map(([k]) => k)\n    .join(" ");\n}\nclassNames({ btn: true, "btn-primary": true, disabled: false, active: true, hidden: 0 })`,
+    realWorldExample:
+      'The classnames npm package (300M+ downloads) is used in virtually every React project to conditionally apply CSS classes based on component state.',
     hints: [
       'Use Object.entries to get [key, value] pairs',
       'Filter for truthy values only',
@@ -1551,6 +1705,8 @@ checkPasswordStrength(testPassword)`,
     expected: '<li>Alice</li><li>Charlie</li>',
     // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
     sample: 'users.filter(u => u.active).map(u => `<li>${u.name}</li>`).join("")',
+    realWorldExample:
+      'Discord shows only online friends in the sidebar by filtering the full friends list for active status before rendering the member list.',
     hints: ['Filter for active users first', 'Map to li elements', 'Join into string'],
     tags: ['rendering', 'filter', 'map', 'list'],
   },
@@ -1566,6 +1722,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement camelCase to kebab-case CSS conversion`,
     expected: 'background-color: red; font-size: 16px; margin-top: 10px',
     sample: `function styleToCSS(styles) {\n  return Object.entries(styles)\n    .map(([k, v]) => {\n      const prop = k.replace(/[A-Z]/g, m => "-" + m.toLowerCase());\n      return \`\${prop}: \${v}\`;\n    })\n    .join("; ");\n}\nstyleToCSS({ backgroundColor: "red", fontSize: "16px", marginTop: "10px" })`,
+    realWorldExample:
+      'React inline styles use camelCase (backgroundColor) but the browser needs kebab-case (background-color) — this conversion happens when React applies styles to the DOM.',
     hints: [
       'Use regex /[A-Z]/g to find uppercase letters',
       'Replace each with "-" + lowercase version',
@@ -1599,6 +1757,8 @@ checkPasswordStrength(testPassword)`,
       ],
     },
     sample: `function buildTree(config) {\n  const node = { tag: config.tag, attrs: config.attrs || {}, children: [] };\n  if (config.text) node.children.push(config.text);\n  if (config.children) {\n    for (const child of config.children) {\n      node.children.push(buildTree(child));\n    }\n  }\n  return node;\n}\nbuildTree(config)`,
+    realWorldExample:
+      'CMS platforms like Contentful store page layouts as JSON config trees — the frontend recursively builds the DOM from this configuration at render time.',
     hints: [
       'Create a node with tag, attrs (default {}), and empty children array',
       'If config.text exists, push it as a string child',
@@ -1620,6 +1780,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `const values = [1, 2, 3];\nfunction collectAll(items, fn) {\n  return items.map(fn);\n}`,
     expected: [10, 20, 30],
     sample: 'collectAll(values, v => v * 10)',
+    realWorldExample:
+      'Dashboard apps like Grafana fire multiple API requests in parallel with Promise.all to load different chart data simultaneously, cutting total load time.',
     hints: ['Map over items to apply the transform', 'Return the resulting array'],
     tags: ['Promise', 'Promise.all', 'map'],
   },
@@ -1635,6 +1797,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Each competitor has a value and priority (lower = faster)\nconst competitors = [\n  { value: "slow", priority: 1000 },\n  { value: "fast", priority: 1 },\n  { value: "medium", priority: 500 }\n];`,
     expected: 'fast',
     sample: `function race(items) {\n  return items.reduce((best, item) => item.priority < best.priority ? item : best).value;\n}\nrace(competitors)`,
+    realWorldExample:
+      'CDNs use Promise.race to fetch from multiple edge servers simultaneously and use whichever responds first, minimizing latency for the end user.',
     hints: [
       'Use reduce to find the item with the minimum priority',
       'Compare item.priority < best.priority',
@@ -1654,6 +1818,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Tracks total call count; fails until 3rd attempt\nlet attempts = 0;\nconst flakyFn = () => {\n  attempts++;\n  if (attempts < 3) throw new Error("fail");\n  return "success";\n};`,
     expected: { result: 'success', attempts: 3 },
     sample: `function retry(fn, maxRetries) {\n  for (let i = 0; i <= maxRetries; i++) {\n    try {\n      return fn();\n    } catch (e) {\n      if (i === maxRetries) throw e;\n    }\n  }\n}\n({ result: retry(flakyFn, 5), attempts })`,
+    realWorldExample:
+      'Stripe payment processing retries failed charges automatically — if a bank temporarily declines, the system retries with backoff before giving up.',
     hints: [
       'Loop from 0 to maxRetries inclusive',
       'Wrap fn() in try/catch inside the loop',
@@ -1673,6 +1839,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement exponential backoff delay calculation`,
     expected: [100, 200, 400, 800, 1600],
     sample: `function backoffDelays(base, maxDelay, retries) {\n  const delays = [];\n  for (let i = 0; i < retries; i++) {\n    delays.push(Math.min(base * Math.pow(2, i), maxDelay));\n  }\n  return delays;\n}\nbackoffDelays(100, 2000, 5)`,
+    realWorldExample:
+      'AWS SDKs use exponential backoff when API rate limits are hit — waiting 100ms, 200ms, 400ms... prevents thundering herd problems during outages.',
     hints: [
       'Loop from 0 to retries-1',
       'Each delay = base * 2^i',
@@ -1692,6 +1860,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement a sequential request queue`,
     expected: ['A', 'B', 'C'],
     sample: `function createQueue() {\n  const results = [];\n  const queue = [];\n  return {\n    add(fn) { queue.push(fn); },\n    run() {\n      while (queue.length) {\n        const fn = queue.shift();\n        results.push(fn());\n      }\n    },\n    getResults() { return results; }\n  };\n}\nconst q = createQueue();\nq.add(() => "A");\nq.add(() => "B");\nq.add(() => "C");\nq.run();\nq.getResults()`,
+    realWorldExample:
+      'Slack queues outgoing messages when you go offline and processes them sequentially when connectivity returns, ensuring messages send in order.',
     hints: [
       'Use an array as the queue, push to add, shift to dequeue',
       'process loops while queue has items',
@@ -1711,6 +1881,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Tracks how many times the real fetcher is called\nlet fetchCalls = 0;`,
     expected: { r1: 'data-a', r2: 'data-a', r3: 'data-b', calls: 2 },
     sample: `function createCachedFetcher(fetcher) {\n  const cache = new Map();\n  return {\n    get(key) {\n      if (cache.has(key)) return cache.get(key);\n      fetchCalls++;\n      const data = fetcher(key);\n      cache.set(key, data);\n      return data;\n    }\n  };\n}\nconst cf = createCachedFetcher(key => "data-" + key);\nconst r1 = cf.get("a");\nconst r2 = cf.get("a");\nconst r3 = cf.get("b");\n({ r1, r2, r3, calls: fetchCalls })`,
+    realWorldExample:
+      'Service workers in Progressive Web Apps cache API responses so revisiting a page loads instantly from cache instead of making network requests.',
     hints: [
       'Use a Map as the cache',
       'Check cache.has(key) before calling the fetcher',
@@ -1733,6 +1905,8 @@ checkPasswordStrength(testPassword)`,
       { state: 'new-confirmed', phase: 'confirmed' },
     ],
     sample: `function createOptimistic(initial) {\n  let state = initial;\n  const log = [];\n  return {\n    update(optimisticValue, fn) {\n      const prev = state;\n      state = optimisticValue;\n      log.push({ state, phase: "optimistic" });\n      try {\n        const result = fn();\n        state = result;\n        log.push({ state, phase: "confirmed" });\n      } catch (e) {\n        state = prev;\n        log.push({ state, phase: "rollback" });\n      }\n    },\n    getLog() { return log; }\n  };\n}\nconst opt = createOptimistic("old");\nopt.update("new", () => "new-confirmed");\nopt.getLog()`,
+    realWorldExample:
+      'When you like a tweet on Twitter/X, the heart turns red instantly (optimistic) before the server confirms — if the request fails, it rolls back to unliked.',
     hints: [
       'Save previous state before the optimistic update',
       'Wrap fn() in try/catch for confirmation vs rollback',
@@ -1752,6 +1926,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// 47 items numbered 1 to 47\nconst allItems = Array.from({ length: 47 }, (_, i) => i + 1);`,
     expected: { totalPages: 5, page: 3, pageItems: [31, 32, 33, 34, 35, 36, 37, 38, 39, 40] },
     sample: `function paginate(items, page, pageSize) {\n  const totalPages = Math.ceil(items.length / pageSize);\n  const start = page * pageSize;\n  const pageItems = items.slice(start, start + pageSize);\n  return { totalPages, page, pageItems };\n}\npaginate(allItems, 3, 10)`,
+    realWorldExample:
+      'Google search results show 10 results per page with "Next" and page number links — the backend slices the full result set using this exact pagination logic.',
     hints: [
       'totalPages = Math.ceil(items.length / pageSize)',
       'start index = page * pageSize',
@@ -1777,6 +1953,8 @@ checkPasswordStrength(testPassword)`,
       nextCursor: 'd4',
     },
     sample: `function fetchAfterCursor(items, cursor, limit) {\n  let startIdx = 0;\n  if (cursor) {\n    const cursorIdx = items.findIndex(i => i.id === cursor);\n    startIdx = cursorIdx >= 0 ? cursorIdx + 1 : 0;\n  }\n  const page = items.slice(startIdx, startIdx + limit);\n  const nextCursor = page.length === limit ? page[page.length - 1].id : null;\n  return { data: page, nextCursor };\n}\nfetchAfterCursor(items, "b2", 2)`,
+    realWorldExample:
+      "GitHub's GraphQL API uses cursor-based pagination — each response includes an endCursor you pass to fetch the next page of repositories or issues.",
     hints: [
       'Use findIndex to locate the cursor item',
       'Start from cursorIdx + 1',
@@ -1796,6 +1974,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement safe fetch wrapper with try/catch`,
     expected: { ok: { data: 'hello', error: null }, fail: { data: null, error: 'oops' } },
     sample: `function safeFetch(fn) {\n  try {\n    const data = fn();\n    return { data, error: null };\n  } catch (e) {\n    return { data: null, error: e.message };\n  }\n}\nconst ok = safeFetch(() => "hello");\nconst fail = safeFetch(() => { throw new Error("oops"); });\n({ ok, fail })`,
+    realWorldExample:
+      'SWR and React Query wrap fetch calls in try/catch and return {data, error} objects so your UI can show either content or an error message without crashing.',
     hints: [
       'Wrap fn() in try/catch',
       'On success: {data: fn(), error: null}',
@@ -1815,6 +1995,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement AbortController simulation and cancellable operation`,
     expected: { r1: { status: 'completed', data: 42 }, r2: { status: 'aborted' } },
     sample: `function createAbortController() {\n  const signal = { aborted: false };\n  return {\n    signal,\n    abort() { signal.aborted = true; }\n  };\n}\nfunction cancellableOp(signal) {\n  if (signal.aborted) return { status: "aborted" };\n  return { status: "completed", data: 42 };\n}\nconst ac = createAbortController();\nconst r1 = cancellableOp(ac.signal);\nac.abort();\nconst r2 = cancellableOp(ac.signal);\n({ r1, r2 })`,
+    realWorldExample:
+      'When you navigate away from a page on a Next.js app, AbortController cancels in-flight fetch requests to prevent updating state on an unmounted component.',
     hints: [
       'signal is a shared object; abort mutates it',
       'cancellableOp checks signal.aborted at the start',
@@ -1834,6 +2016,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement a "latest only" pattern to prevent stale responses`,
     expected: { r1: { stale: true, data: 'first' }, r2: { stale: false, data: 'second' } },
     sample: `function createLatestOnly() {\n  let currentId = 0;\n  let accepted = null;\n  return {\n    startRequest() { return ++currentId; },\n    acceptResult(id, data) {\n      if (id === currentId) { accepted = { stale: false, data }; return accepted; }\n      return { stale: true, data };\n    },\n    getAccepted() { return accepted; }\n  };\n}\nconst lo = createLatestOnly();\nconst id1 = lo.startRequest();\nconst id2 = lo.startRequest();\nconst r1 = lo.acceptResult(id1, "first");\nconst r2 = lo.acceptResult(id2, "second");\n({ r1, r2 })`,
+    realWorldExample:
+      'Google search autocomplete fires a new request on every keystroke — if you type fast, earlier responses arrive after newer ones and must be discarded as stale.',
     hints: [
       'Each startRequest increments a counter and returns the new ID',
       'acceptResult compares the given id to currentId',
@@ -1853,6 +2037,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Track poll count and server state\nlet pollCount = 0;\nlet serverValue = 0;`,
     expected: { result: 3, polls: 3 },
     sample: `function poll(fn, condition, maxPolls) {\n  for (let i = 0; i < maxPolls; i++) {\n    pollCount++;\n    const result = fn();\n    if (condition(result)) return result;\n  }\n  return null;\n}\nserverValue = 0;\nconst result = poll(\n  () => { serverValue++; return serverValue; },\n  v => v >= 3,\n  10\n);\n({ result, polls: pollCount })`,
+    realWorldExample:
+      'CI/CD dashboards like GitHub Actions poll the build status API every few seconds to check if your workflow has finished running.',
     hints: [
       'Loop up to maxPolls times',
       'Call fn() and check condition(result) each iteration',
@@ -1872,6 +2058,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Data source functions\nconst getUser = () => ({ id: 1, name: "Alice" });\nconst getPosts = () => [{ title: "Post 1" }, { title: "Post 2" }];`,
     expected: { user: { id: 1, name: 'Alice' }, posts: [{ title: 'Post 1' }, { title: 'Post 2' }] },
     sample: `function fetchAll(sources) {\n  const result = {};\n  for (const [key, fn] of Object.entries(sources)) {\n    result[key] = fn();\n  }\n  return result;\n}\nfetchAll({ user: getUser, posts: getPosts })`,
+    realWorldExample:
+      "A social media profile page fetches user info, posts, and followers in parallel — Facebook's Relay combines these into a single coordinated data fetch.",
     hints: [
       'Iterate over Object.entries of the sources',
       'Call each function and store the result by key',
@@ -1891,6 +2079,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Simulated API response\nconst apiResponse = { items: [\n  { name: "Alice", active: true },\n  { name: "Bob", active: false },\n  { name: "Charlie", active: true }\n]};`,
     expected: ['Alice', 'Charlie'],
     sample: `function createTransformer(...transforms) {\n  return function(data) {\n    return transforms.reduce((result, fn) => fn(result), data);\n  };\n}\nconst transform = createTransformer(\n  data => data.items,\n  items => items.filter(i => i.active),\n  items => items.map(i => i.name)\n);\ntransform(apiResponse)`,
+    realWorldExample:
+      'GraphQL clients like Apollo normalize API responses through transform pipelines — extracting data, filtering nulls, and reshaping objects before caching.',
     hints: [
       'Use rest params to collect transforms',
       'Reduce passes each result to the next function',
@@ -1914,6 +2104,8 @@ checkPasswordStrength(testPassword)`,
       { status: 'fulfilled', value: 3 },
     ],
     sample: `function allSettled(fns) {\n  return fns.map(fn => {\n    try {\n      const value = fn();\n      return { status: "fulfilled", value };\n    } catch (e) {\n      return { status: "rejected", reason: e.message || String(e) };\n    }\n  });\n}\nconst fns = [() => 1, () => { throw new Error("fail"); }, () => 3];\nallSettled(fns)`,
+    realWorldExample:
+      'Monitoring dashboards use Promise.allSettled to check multiple microservice health endpoints — even if some fail, you still get results from the healthy ones.',
     hints: [
       'Map over fns and wrap each call in try/catch',
       'On success return {status:"fulfilled", value: result}',
@@ -1933,6 +2125,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Tracks unique fetch calls\nlet dedupFetchCount = 0;`,
     expected: { a: 'val-x', b: 'val-x', c: 'val-y', fetchCount: 2 },
     sample: `function createDeduplicator(fetcher) {\n  const cache = new Map();\n  return {\n    get(key) {\n      if (cache.has(key)) return cache.get(key);\n      dedupFetchCount++;\n      const result = fetcher(key);\n      cache.set(key, result);\n      return result;\n    }\n  };\n}\nconst dd = createDeduplicator(k => "val-" + k);\nconst a = dd.get("x");\nconst b = dd.get("x");\nconst c = dd.get("y");\n({ a, b, c, fetchCount: dedupFetchCount })`,
+    realWorldExample:
+      'React Query deduplicates identical in-flight requests — if 5 components all request the same user profile, only one API call is made and shared across all of them.',
     hints: [
       'Use a Map for O(1) cache lookups',
       'Only call the fetcher when cache misses',
@@ -1954,6 +2148,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Form data (some fields empty or missing)\nconst formData = { name: "Alice", email: "", age: "30", phone: "" };\n// Required field names to check\nconst required = ["name", "email", "phone", "address"];`,
     expected: ['email', 'phone', 'address'],
     sample: `function getMissing(data, requiredFields) {\n  return requiredFields.filter(f => !data[f]);\n}\ngetMissing(formData, required)`,
+    realWorldExample:
+      'Typeform highlights all unanswered required questions in red when you try to submit, checking each field against a required list before allowing submission.',
     hints: [
       'Filter the required fields array',
       'A field is missing if data[field] is falsy',
@@ -1973,6 +2169,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement phone number formatting`,
     expected: '(555) 123-4567',
     sample: `function formatPhone(digits) {\n  return \`(\${digits.slice(0,3)}) \${digits.slice(3,6)}-\${digits.slice(6)}\`;\n}\nformatPhone("5551234567")`,
+    realWorldExample:
+      'Stripe and PayPal format phone numbers as you type in the checkout form, adding parentheses and dashes to make 10-digit strings human-readable.',
     hints: [
       'slice(0,3) for area code',
       'slice(3,6) for prefix, slice(6) for the rest',
@@ -1992,6 +2190,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement credit card input masking`,
     expected: '1234 5678 9012 3456',
     sample: `function maskCard(input) {\n  const digits = input.replace(/\\D/g, "").slice(0, 16);\n  return digits.replace(/(\\d{4})(?=\\d)/g, "$1 ");\n}\nmaskCard("1234-5678-9012-3456")`,
+    realWorldExample:
+      'The Stripe Elements credit card input automatically formats your card number with spaces every 4 digits as you type, preventing entry errors.',
     hints: [
       'First strip non-digits with replace(/\\D/g, "")',
       'Limit to 16 characters with slice(0, 16)',
@@ -2011,6 +2211,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement URL query string serialization`,
     expected: 'name=Alice%20Smith&age=30&city=New%20York',
     sample: `function serializeForm(data) {\n  return Object.entries(data)\n    .map(([k, v]) => encodeURIComponent(k) + "=" + encodeURIComponent(v))\n    .join("&");\n}\nserializeForm({ name: "Alice Smith", age: "30", city: "New York" })`,
+    realWorldExample:
+      'When you submit a search on eBay, the form data gets serialized into URL params like ?q=vintage+camera&category=electronics so the URL is shareable.',
     hints: [
       'Use Object.entries to get key-value pairs',
       'encodeURIComponent handles spaces and special chars',
@@ -2030,6 +2232,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement dynamic validation with pluggable rules`,
     expected: ['Needs uppercase', 'Needs digit'],
     sample: `function validate(value, rules) {\n  return rules\n    .map(rule => rule(value))\n    .filter(error => error !== null);\n}\nconst rules = [\n  v => v.length < 3 ? "Too short" : null,\n  v => v.length > 10 ? "Too long" : null,\n  v => !/[A-Z]/.test(v) ? "Needs uppercase" : null,\n  v => !/\\d/.test(v) ? "Needs digit" : null\n];\nvalidate("hello", rules)`,
+    realWorldExample:
+      'Password fields on sites like 1Password show multiple validation checks (length, uppercase, digit, symbol) as a checklist that updates in real time as you type.',
     hints: [
       'Each rule returns an error string or null',
       'Map all rules to get error/null results',
@@ -2053,6 +2257,8 @@ checkPasswordStrength(testPassword)`,
       payment: { card: '1234' },
     },
     sample: `function createMultiStepForm(steps) {\n  let current = 0;\n  const data = {};\n  return {\n    getCurrentStep() { return steps[current]; },\n    setData(stepData) { data[steps[current]] = stepData; },\n    next() { if (current < steps.length - 1) current++; },\n    prev() { if (current > 0) current--; },\n    getData() { return data; }\n  };\n}\nconst form = createMultiStepForm(["personal", "address", "payment"]);\nform.setData({ name: "Alice" });\nform.next();\nform.setData({ city: "Portland" });\nform.next();\nform.setData({ card: "1234" });\nform.getData()`,
+    realWorldExample:
+      'TurboTax walks you through tax filing in steps (personal info, income, deductions, review) — each step saves data independently and you can navigate back and forth.',
     hints: [
       'Use an index variable to track the current step',
       'setData stores data under data[steps[current]]',
@@ -2076,6 +2282,8 @@ checkPasswordStrength(testPassword)`,
       { name: 'huge.png', valid: false, errors: ['too-large'] },
     ],
     sample: `function validateFiles(files, constraints) {\n  return files.map(f => {\n    const errors = [];\n    if (f.size > constraints.maxSize) errors.push("too-large");\n    if (!constraints.allowedTypes.includes(f.type)) errors.push("invalid-type");\n    return { name: f.name, valid: errors.length === 0, errors };\n  });\n}\nvalidateFiles(files, constraints)`,
+    realWorldExample:
+      'Dropbox and Google Drive reject uploads that exceed size limits or have disallowed file types, showing specific error messages for each invalid file.',
     hints: [
       'Map each file to a validation result',
       'Check f.size > constraints.maxSize for size errors',
@@ -2103,6 +2311,8 @@ checkPasswordStrength(testPassword)`,
       ],
     },
     sample: `function createFormData() {\n  const data = new Map();\n  return {\n    append(key, value) {\n      if (!data.has(key)) data.set(key, []);\n      data.get(key).push(value);\n    },\n    get(key) {\n      const vals = data.get(key);\n      return vals ? vals[0] : null;\n    },\n    getAll(key) {\n      return data.get(key) || [];\n    },\n    entries() {\n      const result = [];\n      for (const [k, vals] of data) {\n        for (const v of vals) result.push([k, v]);\n      }\n      return result;\n    }\n  };\n}\nconst fd = createFormData();\nfd.append("name", "Alice");\nfd.append("hobby", "reading");\nfd.append("hobby", "coding");\n({ name: fd.get("name"), hobbies: fd.getAll("hobby"), entries: fd.entries() })`,
+    realWorldExample:
+      'HTML forms with multiple file inputs or checkbox groups use FormData to handle multiple values under one key — like selecting multiple tags on a Stack Overflow question.',
     hints: [
       'Store values as arrays in the Map',
       'append creates the array if needed, then pushes',
@@ -2128,6 +2338,8 @@ checkPasswordStrength(testPassword)`,
       patternMismatch: false,
     },
     sample: `function checkValidity(value, constraints) {\n  const validity = {\n    valid: true,\n    valueMissing: false,\n    tooShort: false,\n    tooLong: false,\n    patternMismatch: false\n  };\n  if (constraints.required && !value) { validity.valueMissing = true; validity.valid = false; }\n  if (constraints.minLength && value.length < constraints.minLength) { validity.tooShort = true; validity.valid = false; }\n  if (constraints.maxLength && value.length > constraints.maxLength) { validity.tooLong = true; validity.valid = false; }\n  if (constraints.pattern && !new RegExp(constraints.pattern).test(value)) { validity.patternMismatch = true; validity.valid = false; }\n  return validity;\n}\ncheckValidity("ab", { required: true, minLength: 3, maxLength: 10, pattern: "^[a-z]+$" })`,
+    realWorldExample:
+      'Browsers implement the Constraint Validation API natively — input.validity.tooShort and .patternMismatch power the built-in HTML5 form validation tooltips.',
     hints: [
       'Start with all flags false and valid true',
       'Check each constraint and flip flags as needed',
@@ -2147,6 +2359,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Initial and current form state\nconst initial = { name: "Alice", email: "a@b.com", age: "30" };\nconst current = { name: "Alice", email: "alice@new.com", age: "31" };`,
     expected: { isDirty: true, changedFields: ['email', 'age'] },
     sample: `function trackDirty(initial, current) {\n  const changedFields = Object.keys(current).filter(k => current[k] !== initial[k]);\n  return { isDirty: changedFields.length > 0, changedFields };\n}\ntrackDirty(initial, current)`,
+    realWorldExample:
+      'Google Docs shows a "Unsaved changes" indicator and warns you before leaving the page — it tracks which fields changed from their initial values to detect dirty state.',
     hints: [
       'Use Object.keys to iterate over field names',
       'Filter for keys where current[k] !== initial[k]',
@@ -2166,6 +2380,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement debounced validation (only validates the last input)`,
     expected: 'valid',
     sample: `function createDebouncedValidator(validateFn) {\n  let lastInput = null;\n  return {\n    validate(input) { lastInput = input; },\n    getResult() { return lastInput !== null ? validateFn(lastInput) : null; }\n  };\n}\nconst dv = createDebouncedValidator(v => v.length >= 3 ? "valid" : "too short");\ndv.validate("a");\ndv.validate("ab");\ndv.validate("abc");\ndv.validate("abcd");\ndv.getResult()`,
+    realWorldExample:
+      'GitHub username availability checks debounce your keystrokes — it only validates the final input after you pause typing, not on every character.',
     hints: [
       'validate just stores the input, it does not run validation yet',
       'getResult runs the validation function on the stored input',
@@ -2185,6 +2401,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Form data with cross-field dependencies\nconst formData = {\n  password: "abc123",\n  confirmPassword: "abc124",\n  startDate: "2024-03-01",\n  endDate: "2024-02-01"\n};\n// Rules that reference other fields\nconst rules = {\n  confirmPassword: (val, all) => val !== all.password ? "Passwords must match" : null,\n  endDate: (val, all) => val <= all.startDate ? "End must be after start" : null\n};`,
     expected: { confirmPassword: 'Passwords must match', endDate: 'End must be after start' },
     sample: `function validateWithDeps(data, rules) {\n  const errors = {};\n  for (const [field, ruleFn] of Object.entries(rules)) {\n    const error = ruleFn(data[field], data);\n    if (error) errors[field] = error;\n  }\n  return errors;\n}\nvalidateWithDeps(formData, rules)`,
+    realWorldExample:
+      'Signup forms on sites like Airbnb validate that "confirm password" matches "password" and that checkout end-date is after start-date — these cross-field validations require access to sibling fields.',
     hints: [
       'Iterate over rules entries: [fieldName, ruleFn]',
       'Pass both data[field] and the full data object to each rule',
@@ -2204,6 +2422,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement a touched field tracker`,
     expected: { name: true, email: true, age: false },
     sample: `function createTouchedTracker(fields) {\n  const touched = {};\n  fields.forEach(f => touched[f] = false);\n  return {\n    touch(field) { touched[field] = true; },\n    getTouched() { return { ...touched }; }\n  };\n}\nconst tracker = createTouchedTracker(["name", "email", "age"]);\ntracker.touch("name");\ntracker.touch("email");\ntracker.getTouched()`,
+    realWorldExample:
+      'Formik and React Hook Form only show validation errors for fields the user has interacted with (touched), so errors do not flash on fields you have not visited yet.',
     hints: [
       'Initialize each field to false in the touched object',
       'touch() sets the field to true',
@@ -2226,6 +2446,8 @@ checkPasswordStrength(testPassword)`,
       after: { name: '', email: '', age: '' },
     },
     sample: `function createForm(defaults) {\n  let current = { ...defaults };\n  return {\n    update(field, value) { current[field] = value; },\n    reset() { current = { ...defaults }; },\n    getValues() { return { ...current }; }\n  };\n}\nconst form = createForm({ name: "", email: "", age: "" });\nform.update("name", "Alice");\nform.update("email", "alice@test.com");\nconst beforeReset = form.getValues();\nform.reset();\nconst afterReset = form.getValues();\n({ before: beforeReset, after: afterReset })`,
+    realWorldExample:
+      'Jira issue creation forms have a "Reset" button that clears all fields back to their defaults so you can start fresh without reloading the page.',
     hints: [
       'Spread defaults to create a working copy',
       'reset re-spreads the original defaults',
@@ -2245,6 +2467,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Mock server data: taken usernames\nconst takenUsernames = ["admin", "root", "test"];`,
     expected: { username: 'Username taken' },
     sample: `function checkUsername(name) {\n  return takenUsernames.includes(name) ? "Username taken" : null;\n}\nfunction checkEmail(email) {\n  return email.endsWith("@spam.com") ? "Blocked domain" : null;\n}\nfunction validateFields(data, validators) {\n  const errors = {};\n  for (const [field, fn] of Object.entries(validators)) {\n    const error = fn(data[field]);\n    if (error) errors[field] = error;\n  }\n  return errors;\n}\nconst data = { username: "admin", email: "user@good.com" };\nconst validators = { username: checkUsername, email: checkEmail };\nvalidateFields(data, validators)`,
+    realWorldExample:
+      'Signup forms check username availability against a server-side database — if "admin" is taken, the field shows an error without needing to submit the whole form.',
     hints: [
       'Each validator returns an error string or null',
       'Iterate over validators entries and call each with data[field]',
@@ -2267,6 +2491,8 @@ checkPasswordStrength(testPassword)`,
       errors: [{ field: 'age', error: 'invalid-type' }],
     },
     sample: `function validateSchema(data, schema) {\n  const errors = [];\n  for (const [field, rules] of Object.entries(schema)) {\n    const value = data[field];\n    if (rules.required && (value === undefined || value === null || value === "")) {\n      errors.push({ field, error: "required" });\n      continue;\n    }\n    if (value !== undefined && value !== null && rules.type) {\n      if (rules.type === "number" && typeof value !== "number") errors.push({ field, error: "invalid-type" });\n      if (rules.type === "string" && typeof value !== "string") errors.push({ field, error: "invalid-type" });\n    }\n    if (rules.min !== undefined && typeof value === "number" && value < rules.min) {\n      errors.push({ field, error: "below-min" });\n    }\n  }\n  return { valid: errors.length === 0, errors };\n}\nvalidateSchema({ name: "Alice", age: "thirty" }, schema)`,
+    realWorldExample:
+      'Zod and Yup validate API request bodies against schemas in Next.js API routes — catching type mismatches (string where number expected) before they hit the database.',
     hints: [
       'Check required first; if missing, skip other checks (continue)',
       'Use typeof to check against rules.type',
@@ -2286,6 +2512,8 @@ checkPasswordStrength(testPassword)`,
     setupCode: `// Implement dynamic array field management`,
     expected: ['js', 'vue', 'angular', 'svelte'],
     sample: `function createArrayField(initial) {\n  const items = [...initial];\n  return {\n    add(item) { items.push(item); },\n    remove(index) { items.splice(index, 1); },\n    getAll() { return [...items]; }\n  };\n}\nconst tags = createArrayField(["js", "react"]);\ntags.add("vue");\ntags.add("angular");\ntags.remove(1);\ntags.add("svelte");\ntags.getAll()`,
+    realWorldExample:
+      'Tag inputs on Stack Overflow questions let you add and remove technology tags dynamically — the underlying data is an array field that grows and shrinks.',
     hints: [
       'Spread initial to create a working copy',
       'add uses push, remove uses splice(index, 1)',

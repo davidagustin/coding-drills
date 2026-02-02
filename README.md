@@ -41,7 +41,7 @@ An interactive learning platform for mastering programming languages through han
 - **AI Mock Interview** — Algorithm and system design practice with an AI interviewer (offline WebLLM or cloud).
 - **Regex Trainer** — Regex challenges with live matching and test validation.
 - **Reference & Cheatsheets** — Method docs and language cheatsheets for quick lookup.
-- **Frontend Drills** — Framework-specific practice for React, Angular, Vue, and Native JavaScript. **460 training problems**, **448 quiz questions**, **616+ UI patterns** (each with starter code and behavioral tests), drill mode, and cheatsheets with interactive code examples.
+- **Frontend Drills** — Framework-specific practice for React, Angular, Vue, and Native JavaScript. **460 training problems** (each with a real-world context example), **448 quiz questions**, **616+ UI patterns** (each with starter code and behavioral tests), drill mode, and cheatsheets with interactive code examples.
 
 ---
 

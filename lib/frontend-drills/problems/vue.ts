@@ -21,6 +21,8 @@ const initialValue = 42;`,
   return { value: val };
 }
 ref(initialValue)`,
+    realWorldExample:
+      "Alibaba's product pages use ref() to track the selected size or color variant -- any reactive primitive that changes the UI needs ref().",
     hints: [
       'ref() wraps a value in an object with a .value property',
       'Return an object literal with value set to the argument',
@@ -43,6 +45,8 @@ const userData = { name: "Alice", age: 25 };`,
   return obj;
 }
 reactive(userData)`,
+    realWorldExample:
+      "GitLab's merge request page tracks dozens of related fields (title, description, assignees, labels) as one reactive object so changing any field instantly updates the UI.",
     hints: [
       'reactive() takes a plain object and returns a reactive version',
       'In this simplified mock, returning the object itself is sufficient',
@@ -64,6 +68,8 @@ const computed = (fn) => ({ value: fn() });
 const count = ref(10);`,
     expected: { value: 20 },
     sample: 'computed(() => count.value * 2)',
+    realWorldExample:
+      'A shopping cart total on Amazon that automatically recalculates when item quantities change -- computed properties derive values reactively without manual recalculation.',
     hints: [
       'computed() takes a function that returns a value',
       'Access count.value to get the current count',
@@ -91,6 +97,8 @@ const counter = ref(10);`,
     sample: `let captured;
 watch(counter, (newVal) => { captured = newVal; });
 ({ captured })`,
+    realWorldExample:
+      "Spotify's player page watches the current track ref so it can update the waveform visualization and lyrics panel whenever you skip to a new song.",
     hints: [
       'watch() takes a source (ref or getter) and a callback',
       'The callback receives (newValue, oldValue)',
@@ -115,6 +123,8 @@ watch(counter, (newVal) => { captured = newVal; });
 let message;
 onMounted(() => { message = "Component mounted"; });
 ({ message })`,
+    realWorldExample:
+      'Google Maps initializes its map canvas inside onMounted because the DOM container must exist before the map SDK can render tiles into it.',
     hints: [
       'onMounted() takes a callback function and calls it when the component mounts',
       'In this mock, just call the callback immediately',
@@ -137,6 +147,8 @@ onMounted(() => { message = "Component mounted"; });
       { id: 3, done: true },
     ],
     sample: 'items.filter(item => item.done)',
+    realWorldExample:
+      "Netflix's 'My List' page filters your saved shows to display only the ones available in your region -- v-for with a filter renders a subset of data.",
     hints: [
       'Use .filter() to select items where done is true',
       'v-for in Vue uses JavaScript array methods',
@@ -158,6 +170,8 @@ onMounted(() => { message = "Component mounted"; });
 const handleClick = () => { count.value++; };
 handleClick(); handleClick(); handleClick();
 ({ count: count.value })`,
+    realWorldExample:
+      "Twitter/X's like button increments a counter every time you tap the heart -- a click handler updating reactive state is the most fundamental Vue interaction pattern.",
     hints: [
       'Create a ref for count starting at 0',
       'Define a handler function that increments count.value',
@@ -178,6 +192,8 @@ handleClick(); handleClick(); handleClick();
 const emit = (eventName, payload) => { lastEmit = { eventName, payload }; };`,
     expected: { eventName: 'update', payload: { value: 100 } },
     sample: `(emit("update", {value:100}), lastEmit)`,
+    realWorldExample:
+      "In Notion's block editor, each block component emits an 'update' event to the parent page whenever content changes so the page can persist the new state.",
     hints: [
       'Call emit() with event name and payload',
       'The function stores the event data',
@@ -204,6 +220,8 @@ const emit = (eventName, payload) => { lastEmit = { eventName, payload }; };`,
 const { count, increment } = useCounter();
 increment(); increment();
 ({ count: count.value })`,
+    realWorldExample:
+      "VS Code's Web extension API uses composable-like patterns to encapsulate editor state -- useCounter is the simplest example of packaging state + logic for reuse across components.",
     hints: [
       'A composable is a function that returns reactive state and methods',
       'Use ref() for the count',
@@ -229,6 +247,8 @@ const updatedText = "world";`,
 const inputValue = ref(initialText);
 inputValue.value = updatedText;
 ({ inputValue: inputValue.value })`,
+    realWorldExample:
+      "Google Search's input box uses two-way binding so the search query state always mirrors what the user types, enabling instant suggestions as they type.",
     hints: [
       'ref() wraps a value in an object with a .value property',
       'v-model creates two-way binding: the ref updates when input changes',
@@ -255,6 +275,8 @@ function loadData() {
 }
 loadData();
 ({ data: data.value })`,
+    realWorldExample:
+      "Amazon's product detail page fetches pricing and inventory data when you navigate to it -- the async setup pattern loads server data into reactive state on component mount.",
     hints: [
       'Create a ref function that returns { value: val }',
       'Initialize data ref as null, then set it after "fetching"',
@@ -279,6 +301,8 @@ const message = "Hello";`,
   return condition ? content : null;
 }
 renderIf(isVisible, message)`,
+    realWorldExample:
+      "Slack's channel sidebar hides the 'Threads' panel with v-if until you click the threads icon -- conditional rendering keeps the DOM lean by removing hidden sections entirely.",
     hints: [
       'v-if conditionally renders based on truthiness',
       'Use a ternary operator to return content or null',
@@ -304,6 +328,8 @@ const event = { stopped: false, stopPropagation() { this.stopped = true; } };`,
   return { stopped: evt.stopped };
 }
 handleWithStop(event)`,
+    realWorldExample:
+      "In GitHub's nested dropdown menus, clicking a sub-menu item uses .stop to prevent the click from closing the parent dropdown -- stopPropagation prevents event bubbling.",
     hints: [
       'The .stop modifier calls event.stopPropagation() to prevent event bubbling',
       'Define a function that takes an event, calls stopPropagation, and returns the result',
@@ -327,6 +353,8 @@ const event = { prevented: false, preventDefault() { this.prevented = true; } };
   return { prevented: evt.prevented };
 }
 handleWithPrevent(event)`,
+    realWorldExample:
+      "Gmail's compose form uses preventDefault on submit to stop the browser from doing a full page reload, allowing the app to send the email via AJAX instead.",
     hints: [
       'The .prevent modifier calls event.preventDefault() to stop the default browser action',
       'Define a function that takes an event, calls preventDefault, and returns the result',
@@ -348,6 +376,8 @@ handleWithPrevent(event)`,
 const handler = once(() => { callCount++; });
 handler(); handler(); handler();
 ({ callCount })`,
+    realWorldExample:
+      "A cookie consent banner on any website only needs to handle the 'Accept' click once -- the .once modifier auto-removes the listener after firing.",
     hints: [
       'The .once modifier ensures a handler fires only once',
       'Use a boolean flag to track first call',
@@ -370,6 +400,8 @@ const keyEvent = { key: "Enter" };`,
   return { isMatch: evt.key === targetKey };
 }
 checkKeyModifier(keyEvent, "Enter")`,
+    realWorldExample:
+      "Slack's message input submits when you press Enter -- key modifiers let you bind specific keyboard shortcuts without manual event.key checking.",
     hints: [
       'Vue key modifiers like @keyup.enter check event.key against a target key name',
       'Compare event.key to the target string to see if they match',
@@ -398,6 +430,8 @@ let received = null;
 bus.on("notify", (val) => { received = val; });
 bus.emit("notify", "hello");
 ({ received })`,
+    realWorldExample:
+      'In a large Vue 2 app like the GitLab web IDE, an event bus let unrelated components (file tree, editor tabs, terminal) communicate without passing props through many layers.',
     hints: [
       'An event bus stores listeners by event name',
       'on() registers a handler, emit() calls all handlers',
@@ -419,6 +453,8 @@ const defineEmits = (events) => (event, ...args) => { emitLog.push({ event, args
     sample: `const emit = defineEmits(["change"]);
 emit("change", 42);
 emitLog[0]`,
+    realWorldExample:
+      "A color picker component in Figma's design tool emits a 'change' event with the selected hex value so the parent toolbar updates the active color.",
     hints: [
       'defineEmits declares which events a component can emit',
       'The returned function is used to emit events',
@@ -439,6 +475,8 @@ emitLog[0]`,
     sample: `const handleAction = (id, action) => { result = { id, action }; };
 handleAction(5, "delete");
 result`,
+    realWorldExample:
+      "GitHub's issue list passes the issue ID and action type ('close', 'reopen') to the click handler so one handler function can manage all issue actions.",
     hints: [
       'In Vue templates you can pass arguments inline: @click="handler(id, type)"',
       'The handler receives the arguments directly',
@@ -469,6 +507,8 @@ emitter.on("click", () => { count++; });
 emitter.on("click", () => { logged = true; });
 emitter.trigger("click");
 ({ count, logged })`,
+    realWorldExample:
+      "When you click 'Add to Cart' on Amazon, multiple handlers fire simultaneously: one updates the cart count badge, another triggers the analytics event, and a third shows the confirmation toast.",
     hints: [
       'Multiple handlers can be attached to the same event',
       'Both handlers fire when the event is triggered',
@@ -497,6 +537,8 @@ const handler = debounce((val) => { callCount++; lastArg = val; });
 handler("a"); handler("b"); handler("c");
 handler.flush();
 ({ callCount, lastArg })`,
+    realWorldExample:
+      'Google Search debounces the autocomplete API call so it only fires after you stop typing, preventing a network request on every keystroke.',
     hints: [
       'Debounce delays execution until activity stops',
       'Only the last invocation should actually run',
@@ -523,6 +565,8 @@ let firstArg = null;
 const handler = throttle((val) => { callCount++; firstArg = val; });
 handler("a"); handler("b"); handler("c");
 ({ callCount, firstArg })`,
+    realWorldExample:
+      "Twitter/X throttles the scroll event handler on the infinite-scroll timeline so the 'load more tweets' check runs at most once every 200ms instead of hundreds of times per second.",
     hints: [
       'Throttle limits execution frequency',
       'Only the first call in a period should execute',
@@ -549,6 +593,8 @@ function childUpdate(newVal) {
 }
 childUpdate("new");
 ({ parentValue })`,
+    realWorldExample:
+      "Notion's database property cells emit updates to the parent row component via v-model, so editing a cell instantly reflects in the row without prop drilling.",
     hints: [
       'Vue uses "update:modelValue" event for v-model on components',
       'Create an emit function that updates parentValue when the right event fires',
@@ -572,6 +618,8 @@ const handler = selfOnly(() => { selfCount++; });
 handler({ target: "btn", currentTarget: "btn" });
 handler({ target: "child", currentTarget: "btn" });
 ({ selfCount })`,
+    realWorldExample:
+      "A modal overlay in Airbnb's booking page uses .self so clicking the dark backdrop closes the modal, but clicking inside the modal content does not.",
     hints: [
       '.self modifier only fires when target matches currentTarget',
       'It prevents handlers from firing for bubbled events',
@@ -594,6 +642,8 @@ const initialState = false;`,
 const isOpen = ref(initialState);
 isOpen.value = !isOpen.value;
 ({ isOpen: isOpen.value })`,
+    realWorldExample:
+      "The hamburger menu button on Spotify's mobile web toggles a sidebar open/closed with a single inline expression -- no separate handler function needed.",
     hints: [
       'ref() wraps a value in { value: val }',
       'Toggle a boolean by assigning !currentValue back to the ref',
@@ -624,6 +674,8 @@ isOpen.value = !isOpen.value;
 sys.onCapture((order) => order.push("capture"));
 sys.onBubble((order) => order.push("bubble"));
 sys.dispatch()`,
+    realWorldExample:
+      "A global keyboard shortcut handler in VS Code's web editor uses capture phase to intercept keystrokes before any focused input field can consume them.",
     hints: [
       '.capture modifier uses the capture phase instead of bubble',
       'Capture phase fires before bubble phase',
@@ -650,6 +702,8 @@ const handler = exactModifier(["ctrl"], () => { fireCount++; });
 handler({ modifiers: { ctrl: true } });
 handler({ modifiers: { ctrl: true, shift: true } });
 ({ fireCount })`,
+    realWorldExample:
+      'Google Docs uses exact modifier matching so Ctrl+B triggers bold but Ctrl+Shift+B does not -- .exact prevents accidental shortcut collisions.',
     hints: [
       '.exact ensures only the specified modifiers are active',
       'Extra modifier keys prevent the handler from firing',
@@ -673,6 +727,8 @@ const mouseEvent = { button: 2 };`,
   return { button: names[evt.button] };
 }
 identifyMouseButton(mouseEvent)`,
+    realWorldExample:
+      "Figma's canvas uses right-click to open a context menu and middle-click to pan -- mouse button modifiers let you bind different actions to each button.",
     hints: [
       'Mouse button codes: 0 = left, 1 = middle, 2 = right',
       'Create a mapping object from button numbers to names',
@@ -701,6 +757,8 @@ identifyMouseButton(mouseEvent)`,
   submit: (val) => val.name.length > 0
 });
 emit("submit", { name: "" })`,
+    realWorldExample:
+      "A payment form on Stripe's checkout validates the emit payload before sending it to the parent, ensuring no incomplete card data propagates up the component tree.",
     hints: [
       'Vue 3 allows emit validation in defineEmits',
       'Validators return true/false to allow/reject the emit',
@@ -737,6 +795,8 @@ function reactive(obj) {
 }
 const state = reactive({ count: ref(initialCount) });
 ({ count: state.count })`,
+    realWorldExample:
+      "In GitLab's dashboard, reactive objects containing ref properties auto-unwrap so templates can write state.count instead of state.count.value, reducing boilerplate in complex components.",
     hints: [
       'ref() should mark the object with __isRef: true',
       'reactive() should use Object.defineProperty with a getter',
@@ -766,6 +826,8 @@ const state = reactive({ count: ref(initialCount) });
 data.value.nested = "mutated";
 data.value = { nested: "changed" };
 ({ nested: data.value.nested, replacements: data.replacements })`,
+    realWorldExample:
+      'A large JSON config editor in Grafana uses shallowRef for the config object so Vue does not deeply observe thousands of nested properties, only triggering updates when the entire object is replaced.',
     hints: [
       'shallowRef only triggers on .value replacement',
       'Mutating nested properties does not trigger reactivity',
@@ -786,6 +848,8 @@ data.value = { nested: "changed" };
     sample: `const state = shallowReactive({ name: "Alice", details: { nested: "original" } });
 state.name = "Bob";
 ({ name: state.name, nested: state.details.nested })`,
+    realWorldExample:
+      'A dashboard widget in Datadog only needs reactivity on top-level config (title, refresh rate) but not on the deeply nested query result objects, making shallowReactive a performance win.',
     hints: [
       'shallowReactive makes only root-level properties reactive',
       'Nested objects are not made reactive',
@@ -811,6 +875,8 @@ const state = readonly(sourceData);
 let frozen = false;
 try { state.name = "Bob"; } catch(e) { frozen = true; }
 ({ name: state.name, frozen })`,
+    realWorldExample:
+      'Notion shares app-wide config (theme, locale) as readonly state so child components can read it but never accidentally mutate global settings.',
     hints: [
       'readonly() should return a frozen copy of the input object',
       'Object.freeze prevents property modifications',
@@ -837,6 +903,8 @@ const toRef = (obj, key) => ({
 const ageRef = toRef(state, "age");
 ageRef.value = 30;
 ({ refVal: ageRef.value, objVal: state.age })`,
+    realWorldExample:
+      "A user profile form in LinkedIn passes toRef(user, 'bio') to a reusable TextEditor composable so the composable edits the bio directly without needing the entire user object.",
     hints: [
       'toRef creates a ref that syncs with a reactive object property',
       'Changes to the ref update the original object',
@@ -868,6 +936,8 @@ const toRefs = (obj) => {
 const { name } = toRefs(state);
 name.value = "Bob";
 ({ name: name.value, original: state.name })`,
+    realWorldExample:
+      'Pinia stores use toRefs when you destructure store state in a component -- without it, destructured properties lose their reactivity connection to the store.',
     hints: [
       'toRefs converts each property to a ref',
       'Useful for destructuring reactive objects without losing reactivity',
@@ -894,6 +964,8 @@ function unref(val) {
 }
 const r = ref(testValue);
 ({ fromRef: unref(r), fromPlain: unref(testValue) })`,
+    realWorldExample:
+      'Composable libraries like VueUse accept either a ref or a plain value as arguments and use unref() internally so callers have maximum flexibility.',
     hints: [
       'ref() creates an object with value and __isRef: true',
       'unref() checks if the value has __isRef and unwraps it',
@@ -922,6 +994,8 @@ function isRef(val) {
 }
 const r = ref(refValue);
 ({ refCheck: isRef(r), plainCheck: isRef(plainObject) })`,
+    realWorldExample:
+      "Vue's internal renderer uses isRef() to decide whether to unwrap template bindings -- it distinguishes ref({ value: 10 }) from a plain object that happens to have a .value property.",
     hints: [
       'ref() should tag the object with __isRef: true',
       'isRef() checks for the __isRef flag using double negation for a boolean',
@@ -954,6 +1028,8 @@ sRef.onTrigger(() => { triggered = true; });
 sRef.value.inner = "mutated";
 sRef.trigger();
 ({ triggered, value: sRef.value.inner })`,
+    realWorldExample:
+      'A canvas-based chart component in Grafana mutates chart data in place for performance, then calls triggerRef to tell Vue the display needs updating.',
     hints: [
       'triggerRef forces watchers to run on a shallowRef',
       'Useful after mutating nested properties of a shallowRef',
@@ -993,6 +1069,8 @@ myRef.value = "middle";
 myRef.value = "final";
 const v = myRef.value;
 ({ getCount: myRef._getCount, setCount: myRef._setCount, value: v })`,
+    realWorldExample:
+      "VueUse's useDebouncedRef uses customRef to delay triggering watchers until the user stops typing, giving full control over when reactivity propagates.",
     hints: [
       'customRef gives you control over dependency tracking and triggering',
       'track() is called on get, trigger() on set',
@@ -1016,6 +1094,8 @@ const v = myRef.value;
 let cleaned = false;
 onUnmounted(() => { cleaned = true; });
 ({ cleaned })`,
+    realWorldExample:
+      "Slack's real-time message listener disconnects the WebSocket connection in onUnmounted so switching channels does not leak socket connections.",
     hints: [
       'onUnmounted runs when the component is removed from the DOM',
       'In this mock, call the cleanup function immediately',
@@ -1040,6 +1120,8 @@ onUnmounted(() => { cleaned = true; });
 let status = "idle";
 onBeforeMount(() => { status = "preparing"; });
 ({ status })`,
+    realWorldExample:
+      'A dashboard component in Datadog uses onBeforeMount to initialize analytics tracking before the component renders, ensuring no pageview is missed.',
     hints: [
       'onBeforeMount runs right before the component is mounted to the DOM',
       'In this mock, call the callback immediately to simulate the hook',
@@ -1072,6 +1154,8 @@ onBeforeUpdate(() => {});
 onUpdated(() => {});
 result = order;
 result`,
+    realWorldExample:
+      "Understanding lifecycle order is critical when building complex components like VS Code's editor tabs that need to set up state (beforeMount), initialize the DOM (mounted), and re-measure layout (updated).",
     hints: [
       'Vue lifecycle hooks run in a specific order during the component lifecycle',
       'The order is: beforeMount, mounted, beforeUpdate, updated',
@@ -1097,6 +1181,8 @@ let visits = 0;
 onActivated(() => { visits++; });
 onDeactivated(() => {});
 ({ activated: hooks.activated, deactivated: hooks.deactivated, visits })`,
+    realWorldExample:
+      "Gmail's tab-based inbox (Primary, Social, Promotions) uses KeepAlive so switching tabs does not lose scroll position -- onActivated refreshes data when you return to a tab.",
     hints: [
       'onActivated fires when a KeepAlive component becomes visible again',
       'onDeactivated fires when it is cached but hidden',
@@ -1121,6 +1207,8 @@ msg.value = "updated";
 let afterTick = false;
 nextTick(() => { afterTick = true; });
 ({ value: msg.value, afterTick })`,
+    realWorldExample:
+      "In Notion's editor, after programmatically inserting a new block, nextTick is used to scroll to and focus the new block after Vue finishes updating the DOM.",
     hints: [
       'nextTick runs a callback after the DOM has been updated',
       'Use it when you need to access the DOM after a state change',
@@ -1154,6 +1242,8 @@ scope.run(() => { ran++; });
 const beforeStop = scope.count;
 scope.stop();
 ({ ran, afterStop: scope.count, active: scope.active })`,
+    realWorldExample:
+      "VueUse composables use effectScope internally to group all watchers and computed properties so they can be collectively disposed when the composable's parent component unmounts.",
     hints: [
       'effectScope groups reactive effects for collective disposal',
       'Calling stop() cleans up all effects in the scope',
@@ -1175,6 +1265,8 @@ scope.stop();
 items.splice(1, 1);
 items.push("d");
 items`,
+    realWorldExample:
+      "Trello's board columns use reactive arrays so dragging a card (splice + push) instantly re-renders both the source and destination columns.",
     hints: [
       'Vue 3 reactive() works with arrays',
       'Array mutation methods like push, splice are reactive',
@@ -1212,6 +1304,8 @@ const fullName = writableComputed({
 });
 fullName.value = "John Doe";
 ({ first: firstName.value, last: lastName.value, full: fullName.value })`,
+    realWorldExample:
+      'A user profile editor on LinkedIn lets you type a full name that auto-splits into first/last fields, or edit first/last individually and see the full name update -- writable computed enables both directions.',
     hints: [
       'Writable computed has both get and set',
       'set receives the new value and updates dependencies',
@@ -1234,6 +1328,8 @@ const watchEffect = (fn) => { fn(); return () => {}; };`,
 let log = "";
 watchEffect(() => { log = "Count is " + count.value; });
 ({ log })`,
+    realWorldExample:
+      "Spotify's now-playing bar uses watchEffect to auto-sync the progress bar with the current playback position -- it re-runs whenever any accessed ref changes, no explicit dependency list needed.",
     hints: [
       'watchEffect runs immediately and re-runs when dependencies change',
       'It automatically tracks any reactive refs accessed inside',
@@ -1263,6 +1359,8 @@ const b = ref(2);
 let captured = {};
 watch([a, b], ([aVal, bVal]) => { captured = { a: aVal, b: bVal }; });
 captured`,
+    realWorldExample:
+      'A flight search on Google Flights watches both departure date and destination simultaneously so it can re-fetch prices whenever either input changes.',
     hints: [
       'watch() can take an array of sources',
       'The callback receives arrays of [newValues] and [oldValues]',
@@ -1290,6 +1388,8 @@ let detected = false;
 let name = "";
 watch(state, (val) => { detected = true; name = val.user.name; }, { deep: true });
 ({ detected, name })`,
+    realWorldExample:
+      'A rich settings panel in VS Code watches a deeply nested preferences object so any change -- even three levels deep like editor.font.ligatures -- triggers a settings save.',
     hints: [
       'Pass { deep: true } as the third argument to watch()',
       'Deep watch tracks all nested property changes',
@@ -1316,6 +1416,8 @@ const watch = (source, callback, options) => {
 let initial = "";
 watch(msg, (val) => { initial = val; }, { immediate: true });
 ({ initial })`,
+    realWorldExample:
+      'A route-aware sidebar in GitLab uses watch with immediate: true to highlight the current page link as soon as the component loads, not just on subsequent route changes.',
     hints: [
       'The immediate option runs the callback right away',
       'Useful for initializing with the current value',
@@ -1345,6 +1447,8 @@ watch(msg, (val) => { initial = val; }, { immediate: true });
 const { count, increment, decrement } = useCounter(0);
 increment(); increment(); increment(); decrement();
 ({ count: count.value })`,
+    realWorldExample:
+      'An e-commerce quantity selector on Shopify uses increment/decrement/reset actions -- useCounter with reset is the exact composable pattern for cart item quantities.',
     hints: [
       'Composables return reactive state and methods',
       'Use ref for the internal count state',
@@ -1370,6 +1474,8 @@ increment(); increment(); increment(); decrement();
 const { state, toggle } = useToggle(false);
 toggle(); toggle();
 ({ value: state.value })`,
+    realWorldExample:
+      'Dark mode toggles on virtually every modern website (GitHub, Twitter/X, Discord) use a useToggle composable to flip between light and dark themes.',
     hints: [
       'A toggle composable flips a boolean value',
       'Two toggles return to the original value',
@@ -1392,6 +1498,8 @@ const inject = (key, defaultVal) => store[key] !== undefined ? store[key] : defa
     sample: `provide("theme", "dark");
 const theme = inject("theme", "light");
 ({ theme })`,
+    realWorldExample:
+      "Element Plus (Alibaba's Vue component library) provides the current theme and locale at the app root so any deeply nested component can inject it without prop drilling.",
     hints: [
       'provide() sets a value available to all descendant components',
       'inject() retrieves the value, with an optional default',
@@ -1425,6 +1533,8 @@ save();
 data.value = "changed";
 load();
 ({ saved: mockStorage["test"].replace(/"/g, ""), loaded: data.value })`,
+    realWorldExample:
+      'Notion persists your sidebar width preference to localStorage so it survives page refreshes -- useLocalStorage keeps the ref and storage in sync automatically.',
     hints: [
       'useLocalStorage syncs a ref with localStorage',
       'save() writes to storage, load() reads from storage',
@@ -1457,6 +1567,8 @@ function useDebounce(initial) {
 update("a"); update("b"); update("c");
 flush();
 ({ current: value.value, debounced: debounced.value })`,
+    realWorldExample:
+      "Algolia's search-as-you-type debounces the query ref so the API call only fires after the user pauses typing, reducing unnecessary network requests and API costs.",
     hints: ['Debounce delays the output value', 'Only the last value is applied on flush'],
     tags: ['composables', 'useDebounce', 'debounce'],
   },
@@ -1477,6 +1589,8 @@ const defineProps = (schema) => schema;`,
   count: { type: "Number", default: 0 }
 };
 defineProps(schema)`,
+    realWorldExample:
+      'A reusable Button component in any design system (like Vuetify or Naive UI) uses defineProps to declare variant, size, and disabled props so consumers get type-safe, documented APIs.',
     hints: [
       'defineProps declares which props a component accepts',
       'Each prop is an object with type, and optionally required or default',
@@ -1503,6 +1617,8 @@ defineExpose({
   focus: () => "focused"
 });
 ({ hasReset: typeof exposed.reset === "function", hasFocus: typeof exposed.focus === "function" })`,
+    realWorldExample:
+      'A video player component on YouTube exposes play(), pause(), and seek() methods via defineExpose so the parent page can control playback from external buttons.',
     hints: [
       'defineExpose makes methods/properties available to parent via ref',
       'Only exposed members are accessible from outside',
@@ -1533,6 +1649,8 @@ const watcher = watch(num, (val, oldVal, onCleanup) => {
 });
 watcher.cleanup();
 ({ cleaned, value: num.value })`,
+    realWorldExample:
+      'A live-search component on GitHub cancels the previous in-flight API request whenever the search term changes, using watch cleanup to abort the old fetch before starting a new one.',
     hints: [
       'The third argument to watch callback is onCleanup',
       'Register a function to run before the next watch execution',
@@ -1556,6 +1674,8 @@ const taxRate = ref(0.15);
 const taxedPrice = computed(() => price.value * (1 + taxRate.value));
 const formatted = computed(() => "$" + taxedPrice.value.toFixed(2));
 ({ formatted: formatted.value })`,
+    realWorldExample:
+      "Shopify's checkout page chains computed values: subtotal -> tax amount -> formatted total with currency symbol, each derived from the previous, all auto-updating when the cart changes.",
     hints: [
       'Computed properties can depend on other computed properties',
       'They form a dependency chain that auto-updates',
@@ -1582,6 +1702,8 @@ function useMouse() {
     sample: `const { x, y, update } = useMouse();
 update(100, 200);
 ({ x: x.value, y: y.value })`,
+    realWorldExample:
+      "Figma's design canvas tracks the mouse position in real time to show cursor coordinates and enable freehand drawing -- useMouse encapsulates this listener logic for reuse.",
     hints: [
       'useMouse tracks the current mouse position',
       'In real code, it adds a mousemove event listener',
@@ -1610,6 +1732,8 @@ let count = 0;
 const stop = watch(num, () => { count++; });
 stop();
 ({ count })`,
+    realWorldExample:
+      'A real-time stock ticker component stops its price watcher when the user navigates away from the dashboard, preventing unnecessary background updates and memory leaks.',
     hints: [
       'watch() returns a stop function',
       'Calling it stops the watcher from reacting to changes',
@@ -1644,6 +1768,8 @@ const { previous, update } = usePrevious(val);
 update("b");
 update("c");
 ({ current: val.value, previous: previous.value })`,
+    realWorldExample:
+      'An analytics dashboard compares current week vs previous week metrics -- usePrevious tracks the old value so you can calculate deltas and show trend arrows.',
     hints: [
       'usePrevious stores the previous value before each update',
       'Useful for comparing old and new values',
@@ -1664,6 +1790,8 @@ update("c");
     setupCode: `const h = (tag, props, children) => ({ tag, props: props || {}, children: children || null });`,
     expected: { tag: 'div', props: { class: 'container' }, children: 'Hello' },
     sample: `h("div", { class: "container" }, "Hello")`,
+    realWorldExample:
+      'Headless UI libraries like Radix Vue use render functions with h() instead of templates to give consumers full control over the rendered HTML structure.',
     hints: ['h() creates virtual DOM nodes', 'Arguments: tag, props, children'],
     tags: ['rendering', 'h', 'vnode'],
   },
@@ -1686,6 +1814,8 @@ update("c");
       ],
     },
     sample: `h("ul", {}, [h("li", {}, "Item 1"), h("li", {}, "Item 2")])`,
+    realWorldExample:
+      "A recursive file tree component in VS Code's web editor uses nested render functions to build arbitrarily deep folder structures that cannot be easily expressed with static templates.",
     hints: ['Children can be an array of vnodes', 'Nest h() calls for tree structures'],
     tags: ['rendering', 'h', 'nested', 'vnode'],
   },
@@ -1705,6 +1835,8 @@ update("c");
       { key: 3, text: 'C' },
     ],
     sample: `items.map(item => ({ key: item.id, text: item.text }))`,
+    realWorldExample:
+      "Netflix's movie grid uses a stable key (the movie ID) in v-for so Vue can efficiently reorder cards when you sort by rating or date without destroying and recreating every DOM element.",
     hints: ['v-for should always have a :key binding', 'Map each item to include a key property'],
     tags: ['v-for', 'key', 'rendering'],
   },
@@ -1727,6 +1859,8 @@ function vIf(condition) {
   return condition ? { inDOM: true, display: "block" } : { inDOM: false, display: null };
 }
 ({ vShow: vShow(isVisible), vIf: vIf(isVisible) })`,
+    realWorldExample:
+      'An FAQ page uses v-show for answer panels that toggle frequently (cheap CSS toggle), while a premium-only feature section uses v-if to avoid rendering restricted content entirely for free users.',
     hints: [
       'v-show always keeps the element in the DOM but toggles CSS display',
       'v-if completely adds/removes the element from the DOM',
@@ -1751,6 +1885,8 @@ const fallbackText = "Default text";`,
 }
 const result = { withContent: renderSlot("Custom", fallbackText), withFallback: renderSlot(undefined, fallbackText) };
 result`,
+    realWorldExample:
+      "A Card component in Vuetify shows 'No content available' as fallback text when the parent does not pass any slot content, ensuring the card never renders empty.",
     hints: [
       'Slots allow parents to inject content into child components',
       'Check if slotContent is undefined to decide whether to use fallback',
@@ -1778,6 +1914,8 @@ const slotData = { header: "My Header", default: "Body text" };`,
   };
 }
 renderLayout(slotData)`,
+    realWorldExample:
+      'A page layout component in Nuxt uses named slots (#header, #default, #footer) so each page can inject its own header and footer while sharing the same overall layout shell.',
     hints: [
       'Named slots use the #slotName syntax in Vue templates',
       'Use the || operator to provide fallback values for missing slots',
@@ -1802,6 +1940,8 @@ renderLayout(slotData)`,
   [{ id: 1, name: "Apple" }, { id: 2, name: "Banana" }, { id: 3, name: "Cherry" }],
   (item) => "[" + item.id + "] " + item.name
 )`,
+    realWorldExample:
+      'A DataTable component on Element Plus uses scoped slots so the parent page controls how each cell renders (e.g., wrapping dates in formatted badges) while the table manages sorting and pagination.',
     hints: [
       'Scoped slots pass data from child back to parent',
       'The parent provides a function that receives slot props',
@@ -1831,6 +1971,8 @@ const currentComponent = "About";`,
   return component();
 }
 renderDynamic(currentComponent, registry)`,
+    realWorldExample:
+      'A tab panel in Notion switches between Table, Board, and Calendar views using dynamic components -- the same slot renders whichever view component matches the active tab.',
     hints: [
       'Vue\'s <component :is="name"> renders different components dynamically',
       'Look up the component function by name in the registry object',
@@ -1868,6 +2010,8 @@ const transitionName = "fade";`,
   };
 }
 transitionClasses(transitionName)`,
+    realWorldExample:
+      'Modals on Airbnb fade in and slide up using Vue transition classes -- the 6-class lifecycle gives precise control over enter/leave animations via CSS.',
     hints: [
       'Vue transitions apply 6 classes: 3 for enter and 3 for leave',
       'The pattern is: name + "-enter-from", name + "-enter-active", name + "-enter-to" (and same for leave)',
@@ -1891,6 +2035,8 @@ transitionClasses(transitionName)`,
       { index: 2, name: 'Charlie' },
     ],
     sample: `names.map((name, index) => ({ index, name }))`,
+    realWorldExample:
+      'A numbered leaderboard on any gaming site uses the v-for index to display rank numbers (1st, 2nd, 3rd) next to each player name.',
     hints: ['v-for provides (item, index) in the template', 'Use .map with both parameters'],
     tags: ['v-for', 'index', 'rendering'],
   },
@@ -1910,6 +2056,8 @@ transitionClasses(transitionName)`,
       { key: 'debug', value: 'false' },
     ],
     sample: `Object.entries(config).map(([key, value]) => ({ key, value }))`,
+    realWorldExample:
+      'A settings page in VS Code iterates over a configuration object to render each setting key-value pair as an editable row in the preferences panel.',
     hints: [
       'v-for can iterate over object properties',
       'Use Object.entries() to get key-value pairs',
@@ -1938,6 +2086,8 @@ const emptyItems = [];`,
 }
 const result = { filled: renderListOrEmpty(filledItems), empty: renderListOrEmpty(emptyItems) };
 result`,
+    realWorldExample:
+      "GitHub's pull request page shows a list of reviewers or an 'No reviewers yet' empty state -- conditional list rendering handles both cases gracefully.",
     hints: [
       'Check items.length to decide which branch to render',
       'Use .map() to extract the name property from each item',
@@ -1962,6 +2112,8 @@ const teleportContent = "Modal content";`,
   return { target: to, content, teleported: true };
 }
 teleport(targetSelector, teleportContent)`,
+    realWorldExample:
+      'Modal dialogs on Airbnb teleport their content to document.body so they overlay the entire page correctly, even though the component lives deep inside a nested layout.',
     hints: [
       'Teleport renders content at a different DOM location specified by a CSS selector',
       'Return an object with target, content, and a teleported flag set to true',
@@ -1988,6 +2140,8 @@ const body = "Body";`,
   return { tag, props: props || {}, children: children || null };
 }
 [h("h1", {}, heading), h("p", {}, body)]`,
+    realWorldExample:
+      'Vue 3 fragments let a TableRow component return multiple <td> elements without a wrapper div, which would break the HTML table structure in Vue 2.',
     hints: [
       'h() creates virtual DOM nodes with tag, props, and children',
       'Vue 3 fragments are simply arrays of multiple vnodes',
@@ -2024,6 +2178,8 @@ keepAlive.activate("CompB", { text: "hello" });
 keepAlive.deactivate("CompA");
 const restored = keepAlive.activate("CompA", { count: 0 });
 ({ restored, cacheSize: keepAlive.cacheSize })`,
+    realWorldExample:
+      'Gmail caches your inbox, sent, and drafts views with KeepAlive so switching tabs restores your exact scroll position and loaded emails instantly.',
     hints: ['KeepAlive caches component instances', 'Cached state is restored when switching back'],
     tags: ['KeepAlive', 'caching', 'rendering'],
   },
@@ -2043,6 +2199,8 @@ const rangeSize = 5;`,
   return Array.from({ length: n }, (_, i) => i + 1);
 }
 range(rangeSize)`,
+    realWorldExample:
+      'A star rating widget on Amazon renders exactly 5 star icons using v-for with a numeric range -- no array needed, just \'v-for="i in 5"\'.',
     hints: [
       'Vue\'s v-for="i in 5" generates numbers 1 through 5',
       'Use Array.from() with a length and a mapping function',
@@ -2071,6 +2229,8 @@ function arrayClass(arr) {
 }
 const result = { objectResult: objectClass({ active: isActive, error: hasError }), arrayResult: arrayClass(["base", isActive && "active", hasError && "error"]) };
 result`,
+    realWorldExample:
+      'A navigation bar on Twitter/X highlights the active tab with :class="{ active: isCurrentRoute }" -- dynamic class binding toggles CSS classes based on reactive state.',
     hints: [
       'Object syntax: iterate entries, keep only truthy values, join the keys',
       'Array syntax: filter out falsy values, then join with spaces',
@@ -2099,6 +2259,8 @@ const error = ref(null);
 data.value = fetchResult;
 loading.value = false;
 ({ loading: loading.value, data: data.value, error: error.value })`,
+    realWorldExample:
+      'Every page on GitHub shows a loading spinner while fetching repository data, then swaps to the content -- the loading/data/error tri-state pattern is the foundation of all data fetching UIs.',
     hints: [
       'Create ref() to wrap values in { value: val }',
       'Start with loading=true, then set data and flip loading to false',
@@ -2125,6 +2287,8 @@ const error = ref(null);
 error.value = errorMessage;
 loading.value = false;
 ({ loading: loading.value, data: data.value, error: error.value })`,
+    realWorldExample:
+      "When Spotify fails to load a playlist, it shows a 'Something went wrong' banner with a retry button -- the error state ref drives this fallback UI.",
     hints: [
       'On error, set the error ref to the message and stop loading',
       'Data should remain null when the fetch fails',
@@ -2158,6 +2322,8 @@ function useFetch(fetchFn) {
     expected: { data: { users: ['Alice'] }, loading: false, error: null },
     sample: `const { data, loading, error } = useFetch(() => ({ users: ["Alice"] }));
 ({ data: data.value, loading: loading.value, error: error.value })`,
+    realWorldExample:
+      "VueUse's useFetch composable is used across thousands of Vue apps to wrap the Fetch API with reactive loading/data/error state, eliminating boilerplate in every component that calls an API.",
     hints: [
       'useFetch wraps fetch logic with reactive state',
       'It manages loading, data, and error automatically',
@@ -2189,6 +2355,8 @@ function useFetch(fetchFn) {
     expected: { data: null, error: 'Server down', loading: false },
     sample: `const { data, error, loading } = useFetch(() => { throw new Error("Server down"); });
 ({ data: data.value, error: error.value, loading: loading.value })`,
+    realWorldExample:
+      "When the GitHub API returns a 500 error, useFetch catches it and populates the error ref so the UI can show 'Failed to load repositories' instead of a blank page.",
     hints: ['Wrap the fetch call in try/catch', 'Store the error message in the error ref'],
     tags: ['composables', 'useFetch', 'error-handling'],
   },
@@ -2226,6 +2394,8 @@ const result = fetchWithRetry((attempt) => {
   return "success";
 });
 result`,
+    realWorldExample:
+      "Slack's message sending retries up to 3 times on network failure before showing a 'message not sent' error, ensuring flaky connections do not lose your messages.",
     hints: ['Retry logic loops until success or max retries', 'Track the number of attempts'],
     tags: ['data-fetching', 'retry', 'resilience'],
   },
@@ -2253,6 +2423,8 @@ result`,
     sample: `const controller = createAbortable();
 controller.abort();
 controller.execute(() => "data")`,
+    realWorldExample:
+      'Google Maps aborts the previous tile fetch when you pan quickly, preventing stale map tiles from rendering -- AbortController cancels obsolete in-flight requests.',
     hints: [
       'AbortController allows cancelling in-flight requests',
       'Check the signal.aborted flag before executing',
@@ -2287,6 +2459,8 @@ controller.execute(() => "data")`,
 const r1 = cached.getData("/api/users", () => ["Alice"])
 const r2 = cached.getData("/api/users", () => ["Alice"])
 ({ first: r1.fromCache, second: r2.fromCache, fetchCount: cached.fetchCount })`,
+    realWorldExample:
+      "GitHub's API responses are cached so navigating back to a repository page loads instantly from cache instead of making another network request.",
     hints: ['Cache responses by URL', 'Return cached data on subsequent requests'],
     tags: ['data-fetching', 'caching', 'performance'],
   },
@@ -2320,6 +2494,8 @@ const fallbackText = "Loading...";`,
   };
 }
 suspense(loadData, fallbackText)`,
+    realWorldExample:
+      "Nuxt 3 uses Vue's Suspense to show a skeleton loader while async page data loads, then swaps in the real content once all promises resolve.",
     hints: [
       'Suspense shows fallback content while waiting for async data',
       'Wrap the async call in try/catch to handle loading vs error states',
@@ -2351,6 +2527,8 @@ function usePagination(pageSize) {
     sample: `const { page, totalPages, items } = usePagination(3);
 page.value = 2;
 ({ page: page.value, items: items(), totalPages })`,
+    realWorldExample:
+      "Amazon's search results show 20 products per page with 'Next' and 'Previous' buttons -- pagination composables manage page state and slice the data accordingly.",
     hints: [
       'Pagination splits data into pages of fixed size',
       'Calculate start index from page number and page size',
@@ -2379,6 +2557,8 @@ page.value = 2;
     sample: `const poller = createPoller((n) => "data-" + n);
 poller.poll(); poller.poll(); poller.poll();
 ({ pollCount: poller.pollCount, latestData: poller.latestData })`,
+    realWorldExample:
+      'Gmail polls the inbox every 30 seconds for new emails so the unread badge updates without requiring a manual refresh.',
     hints: ['Polling repeatedly fetches data at intervals', 'Track poll count and latest data'],
     tags: ['data-fetching', 'polling', 'interval'],
   },
@@ -2401,6 +2581,8 @@ function transformUsers(users) {
 const data = ref(null);
 data.value = transformUsers(rawData);
 ({ names: data.value })`,
+    realWorldExample:
+      "Slack's member list transforms the raw API response (which includes IDs, emails, roles) into a simple array of display names for the sidebar -- components should only hold the data they need.",
     hints: [
       'Transform API responses to the shape your component needs',
       'Use .map() to extract the name property from each user',
@@ -2434,6 +2616,8 @@ function useConditionalFetch(enabled, fetchFn) {
     sample: `const on = useConditionalFetch(true, () => "result")
 const off = useConditionalFetch(false, () => "result")
 ({ enabled: { data: on.data.value, fetched: on.fetched.value }, disabled: { data: off.data.value, fetched: off.fetched.value } })`,
+    realWorldExample:
+      'A user profile page only fetches premium subscription details when the user is logged in -- conditional fetching avoids unnecessary 401 errors for anonymous visitors.',
     hints: ['Only execute fetch when condition is truthy', 'Return empty state when disabled'],
     tags: ['data-fetching', 'conditional', 'composable'],
   },
@@ -2465,6 +2649,8 @@ const off = useConditionalFetch(false, () => "result")
 const first = swr.getData("key", () => "v1")
 const second = swr.getData("key", () => "v2")
 ({ first, second })`,
+    realWorldExample:
+      'Twitter/X shows your cached timeline instantly on app open (stale) while fetching new tweets in the background (revalidate), giving a near-instant perceived load time.',
     hints: [
       'SWR returns stale data immediately for fast UX',
       'Then revalidates with a fresh fetch',
@@ -2492,6 +2678,8 @@ const userId = 42;`,
   return { user, posts };
 }
 fetchUserWithPosts(userId)`,
+    realWorldExample:
+      'A GitHub profile page first fetches the user object, then uses the user ID to fetch their repositories -- the second request depends on data from the first.',
     hints: [
       'Dependent fetches chain: the second fetch needs data from the first',
       'First get the user, then use user.id to fetch their posts',
@@ -2518,6 +2706,8 @@ const fetchProducts = () => ["Widget", "Gadget"];`,
 }
 const [users, products] = fetchAll(fetchUsers, fetchProducts);
 ({ users, products })`,
+    realWorldExample:
+      'A Shopify storefront loads products, categories, and promotions in parallel on the homepage -- fetching all three simultaneously cuts total load time by two-thirds versus sequential fetching.',
     hints: [
       'In real Vue code you would use Promise.all for parallel fetches',
       'fetchAll should call each function and collect results in an array',
@@ -2548,6 +2738,8 @@ function optimisticUpdate(currentRef, newValue, serverFn) {
     expected: { rolledBack: true, value: 'original' },
     sample: `const data = ref("original");
 optimisticUpdate(data, "optimistic", () => false)`,
+    realWorldExample:
+      'When you like a tweet on Twitter/X, the heart fills instantly (optimistic) without waiting for the server -- if the API fails, the like is silently rolled back.',
     hints: [
       'Optimistic updates show the result immediately',
       'If the server rejects, roll back to the previous value',
@@ -2579,6 +2771,8 @@ function useInfiniteScroll() {
     sample: `const { items, page, loadMore } = useInfiniteScroll();
 loadMore(); loadMore();
 ({ items: items.value, page: page.value })`,
+    realWorldExample:
+      "Instagram's feed loads more posts as you scroll down -- infinite scroll appends new batches of data without requiring explicit page navigation.",
     hints: [
       'Infinite scroll appends new data to existing items',
       'Track the current page and load more on demand',
@@ -2606,6 +2800,8 @@ const withTrim = (r) => ({
 const trimmed = withTrim(input);
 trimmed.value = "  hello  ";
 ({ value: trimmed.value })`,
+    realWorldExample:
+      "A login form on any website trims the email input so users who accidentally type ' alice@gmail.com ' do not get an 'invalid email' error from trailing spaces.",
     hints: [
       '.trim modifier strips leading and trailing whitespace',
       'It is applied automatically to v-model',
@@ -2631,6 +2827,8 @@ const withNumber = (r) => ({
 const numInput = withNumber(input);
 numInput.value = "42";
 ({ value: numInput.value, type: typeof numInput.value })`,
+    realWorldExample:
+      "A quantity input on Amazon's checkout page uses .number so the cart calculation works with actual numbers instead of strings like '2' + '3' = '23'.",
     hints: ['.number modifier converts string input to a number', 'It uses Number() internally'],
     tags: ['v-model', 'number', 'modifiers'],
   },
@@ -2660,6 +2858,8 @@ model.onInput("typing");
 model.onInput("more");
 model.onChange("final");
 ({ value: model.value.value, logLength: model.log.length })`,
+    realWorldExample:
+      'A username field on a signup form uses .lazy to validate only when the user tabs away (change event), avoiding distracting error messages while they are still typing.',
     hints: [
       '.lazy syncs on change instead of input events',
       'Input events are ignored, only change events update the value',
@@ -2683,6 +2883,8 @@ form.email = "alice@test.com";
 form.age = 30;
 const valid = form.name !== "" && form.email !== "" && form.age !== null;
 ({ form: { ...form }, valid })`,
+    realWorldExample:
+      'A checkout form on Shopify groups name, email, address, and card fields into a single reactive object so validation and submission can operate on the entire form state at once.',
     hints: [
       'Use reactive() for form state with multiple fields',
       'Validate by checking each field',
@@ -2708,6 +2910,8 @@ function validate(value, ruleFns) {
 }`,
     expected: ['Min length 3'],
     sample: `validate("ab", [rules.required, rules.minLength(3)])`,
+    realWorldExample:
+      'VeeValidate, the most popular Vue form library, uses composable validation rules so you can combine required, minLength, and email checks declaratively on any field.',
     hints: [
       'Validation rules return null on success or an error message',
       'Apply all rules and collect non-null results',
@@ -2737,6 +2941,8 @@ function useField(initial) {
     sample: `const field = useField("initial");
 field.value.value = "changed";
 ({ dirty: field.dirty, value: field.value.value })`,
+    realWorldExample:
+      "VS Code's settings editor shows a blue dot next to modified settings -- dirty tracking compares the current value to the original to know what changed.",
     hints: [
       'A field is dirty when its current value differs from the original',
       'Track the original value for comparison',
@@ -2766,6 +2972,8 @@ field.value.value = "changed";
 field.blur();
 field.validate();
 ({ touched: field.touched, error: field.error, showError: field.touched && field.error !== null })`,
+    realWorldExample:
+      "Google's signup form only shows 'Email is required' after you click into the email field and then tab away -- showing errors before interaction feels hostile to users.",
     hints: [
       'Touched means the user has interacted with (blurred) the field',
       'Only show validation errors on touched fields',
@@ -2798,6 +3006,8 @@ field.validate();
   { name: "Alice", email: "" },
   { name: (v) => v ? null : "Required", email: (v) => v ? null : "Required" }
 )`,
+    realWorldExample:
+      'A job application form on LinkedIn validates all fields (name, email, resume) on submit and scrolls to the first error, preventing incomplete submissions from reaching the server.',
     hints: ['Validate all fields before submitting', 'Return errors if any field fails validation'],
     tags: ['forms', 'submit', 'validation'],
   },
@@ -2817,6 +3027,8 @@ const options = ["apple", "banana", "cherry"];`,
 const selected = ref(options[0]);
 selected.value = "banana";
 ({ selected: selected.value, options })`,
+    realWorldExample:
+      'A country selector dropdown on any international checkout form binds the selected country to a ref via v-model so shipping costs update instantly when you pick a different country.',
     hints: [
       'ref() wraps a value in { value: val } for reactive state',
       'Initialize the ref with the first option from the array',
@@ -2846,6 +3058,8 @@ toggleItem(selected, "react");
 toggleItem(selected, "svelte");
 toggleItem(selected, "react");
 ({ selected: selected.value })`,
+    realWorldExample:
+      "GitHub's label picker lets you toggle multiple labels on an issue -- each checkbox adds/removes a label from the selected array without affecting other selections.",
     hints: ['Checkbox groups bind to an array', 'Toggle adds if absent, removes if present'],
     tags: ['forms', 'checkbox', 'array'],
   },
@@ -2866,6 +3080,8 @@ const newSize = "medium";`,
 const size = ref(initialSize);
 size.value = newSize;
 ({ selected: size.value })`,
+    realWorldExample:
+      'A T-shirt size selector (S/M/L/XL) on any clothing store uses radio buttons bound to a single ref so only one size can be active at a time.',
     hints: [
       'Radio buttons bind to a single value via v-model',
       'Only one radio option is active at a time',
@@ -2894,6 +3110,8 @@ const takenUsernames = ["admin", "root", "test"];`,
 }
 const result = { taken: checkUsername("admin"), free: checkUsername("alice") };
 result`,
+    realWorldExample:
+      "GitHub's signup page checks username availability as you type by querying the server -- async validation gives instant feedback before you even submit the form.",
     hints: [
       'Use Array.includes() to check if the username is in the taken list',
       'Return an object with the username, availability boolean, and error message',
@@ -2925,6 +3143,8 @@ form.set("name", "changed");
 form.set("email", "test@test.com");
 form.reset();
 form.get()`,
+    realWorldExample:
+      "A search filter panel on Airbnb has a 'Clear All' button that resets price range, dates, and amenities to their defaults -- form reset restores the initial state in one action.",
     hints: [
       'Store initial values to enable reset',
       'Reset restores all fields to their original values',
@@ -2956,6 +3176,8 @@ function useFieldArray() {
 add("first"); add("second"); add("third");
 remove(2);
 ({ values: getValues(), count: fields.value.length })`,
+    realWorldExample:
+      'A resume builder lets you add and remove work experience entries dynamically -- useFieldArray manages the growing/shrinking list of form sections.',
     hints: [
       'Dynamic forms allow adding/removing fields at runtime',
       'Each field needs a unique id for stable rendering',
@@ -2984,6 +3206,8 @@ remove(2);
   { password: "abc123", confirmPassword: "abc124" },
   [(form) => form.password === form.confirmPassword ? null : "Passwords do not match"]
 )`,
+    realWorldExample:
+      'Every password change form (Google, Apple, GitHub) validates that the new password and confirmation match -- cross-field validation compares two fields against each other.',
     hints: [
       'Cross-field validation compares multiple fields',
       'Rules receive the entire form object',
@@ -3017,6 +3241,8 @@ const input = createCustomInput("initial");
 input.onUpdate((val) => { parentValue = val; });
 input.emitUpdate("updated");
 ({ parentValue, componentValue: input.modelValue })`,
+    realWorldExample:
+      'A custom DatePicker component in Element Plus uses v-model so parents can bind a date ref and the picker emits the selected date back, just like a native input.',
     hints: [
       'Custom v-model uses modelValue prop + update:modelValue emit',
       'Parent binds with v-model, child emits updates',
@@ -3041,6 +3267,8 @@ const charCount = computed(() => text.value.length);
 const remaining = computed(() => maxLength - charCount.value);
 const valid = computed(() => charCount.value <= maxLength);
 ({ text: text.value, charCount: charCount.value, remaining: remaining.value, valid: valid.value })`,
+    realWorldExample:
+      "Twitter/X's compose box shows '280' counting down as you type, turning red near the limit -- a computed character counter gives real-time feedback on remaining space.",
     hints: [
       'Use computed to derive character count from the text ref',
       'Calculate remaining characters from max length',

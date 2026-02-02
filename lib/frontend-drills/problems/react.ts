@@ -13,6 +13,8 @@ export const reactProblems: FrontendDrillProblem[] = [
     expected: 42,
     sample: `const useState = (initial) => [initial, (v) => v];
 useState(42)[0]`,
+    realWorldExample:
+      'Every interactive component -- like a dark mode toggle on Twitter or a cart counter on Amazon -- stores its current state with useState.',
     hints: [
       'useState returns a two-element array: [currentValue, setterFunction]',
       'The state value is the first element (index 0)',
@@ -36,6 +38,8 @@ useState(42)[0]`,
   return updater;
 };
 setState((prev) => prev + 5)`,
+    realWorldExample:
+      'When you rapidly click "Add to Cart" on Shopify, functional updates ensure each click increments from the true previous count, not a stale snapshot.',
     hints: [
       'setState can accept a function or a direct value',
       'When given a function, call it with the previous state as the argument',
@@ -54,6 +58,8 @@ setState((prev) => prev + 5)`,
     expected: { effect: 'cleanup', deps: [1, 2] },
     sample: `const useEffect = (effect, deps) => ({ effect: effect(), deps });
 useEffect(() => "cleanup", [a, b])`,
+    realWorldExample:
+      'Netflix refetches movie recommendations when you change genres -- useEffect with a dependency array triggers side effects only when specific values change.',
     hints: [
       'useEffect should call the effect function and capture its return value',
       'Return an object with both the effect result and the dependency array',
@@ -72,6 +78,8 @@ useEffect(() => "cleanup", [a, b])`,
     expected: { current: 'hello' },
     sample: `const useRef = (initial) => ({ current: initial });
 useRef("hello")`,
+    realWorldExample:
+      'VS Code uses refs to hold direct references to DOM elements like the editor textarea, enabling imperative focus management without triggering re-renders.',
     hints: [
       'useRef returns a plain object, not a special container',
       'The object has a single property called current',
@@ -90,6 +98,8 @@ useRef("hello")`,
     expected: 15,
     sample: `const useMemo = (fn, deps) => fn();
 useMemo(() => arr.reduce((a, b) => a + b, 0), [arr])`,
+    realWorldExample:
+      'Google Sheets recalculates cell totals only when the referenced cells change -- useMemo prevents expensive recomputations on every render.',
     hints: [
       'useMemo caches a computed value — for the mock, just call the function',
       'Use reduce to sum the array elements',
@@ -108,6 +118,8 @@ useMemo(() => arr.reduce((a, b) => a + b, 0), [arr])`,
     expected: 21,
     sample: `const useCallback = (fn, deps) => fn;
 useCallback((x) => x * multiplier, [multiplier])(7)`,
+    realWorldExample:
+      'In Slack, memoized callback refs for message handlers prevent child components from re-rendering every time the parent channel list updates.',
     hints: [
       'useCallback returns the same function reference — for the mock, just return fn',
       'Call the returned function with 7: multiply 7 * 3',
@@ -126,6 +138,8 @@ useCallback((x) => x * multiplier, [multiplier])(7)`,
 const data = "Hello World";`,
     expected: 'Content: Hello World',
     sample: 'isLoading ? "Loading..." : "Content: " + data',
+    realWorldExample:
+      'Every app shows a loading spinner while fetching data, then swaps it with content -- that is conditional rendering based on isLoading state, just like GitHub loading a repo page.',
     hints: ['Use ternary operator', 'isLoading is false so return the else branch'],
     tags: ['rendering', 'conditional', 'ternary'],
   },
@@ -148,6 +162,8 @@ const data = "Hello World";`,
       { key: 3, value: 'Cherry' },
     ],
     sample: 'items.map(item => ({ key: item.id, value: item.name }))',
+    realWorldExample:
+      'Amazon product listings map over an array of items, using product IDs as keys so React can efficiently reorder and update the list when filters change.',
     hints: ['Use map to transform the array', 'Create objects with key and value properties'],
     tags: ['rendering', 'lists', 'keys', 'map'],
   },
@@ -162,6 +178,8 @@ const data = "Hello World";`,
     setupCode: ``,
     expected: { loading: true, data: null, error: null },
     sample: '({ loading: true, data: null, error: null })',
+    realWorldExample:
+      'When you open a Twitter profile, the app enters a loading state (spinner), then transitions to data (tweets) or error (failed to load) -- this pattern captures all three phases.',
     hints: [
       'Think about what state a component needs before data arrives',
       'Three properties: loading (boolean), data, and error (both start as null)',
@@ -180,6 +198,8 @@ const data = "Hello World";`,
 const handleChange = "function";`,
     expected: { value: 'test@example.com', onChange: 'function' },
     sample: '({ value: inputValue, onChange: handleChange })',
+    realWorldExample:
+      'Gmail compose fields (To, Subject) are controlled inputs -- React owns the value so it can validate email addresses and auto-suggest contacts in real time.',
     hints: [
       'A controlled input has its value driven by state',
       'Both value and onChange props are required for controlled inputs',
@@ -198,6 +218,8 @@ const handleChange = "function";`,
     setupCode: `// Write an input handler and call it with a mock event`,
     expected: 'hello',
     sample: '((event) => event.target.value)({ target: { value: "hello" } })',
+    realWorldExample:
+      'Every search bar on Google, Notion, or GitHub captures keystrokes through an event handler that reads event.target.value to update the search query.',
     hints: [
       'React event handlers receive a synthetic event object',
       'The input value is at event.target.value',
@@ -215,6 +237,8 @@ const handleChange = "function";`,
     setupCode: `const useToggle = (initial) => [initial, "function"];`,
     expected: [false, 'function'],
     sample: 'useToggle(false)',
+    realWorldExample:
+      'Notion uses a useToggle hook for sidebar collapse, dark mode switches, and dropdown menus -- any boolean flip is a perfect custom hook candidate.',
     hints: [
       'Custom hooks return values like built-in hooks',
       'useToggle returns [boolean, function]',
@@ -237,6 +261,8 @@ const handleChange = "function";`,
   const { name, age } = props;
   return \`\${name} is \${age} years old\`;
 })()`,
+    realWorldExample:
+      'Every React component in a design system like Material UI destructures props (variant, size, color) at the top of the function for cleaner, more readable code.',
     hints: ['Use destructuring assignment', 'Combine with template literal'],
     tags: ['props', 'destructuring', 'patterns'],
   },
@@ -254,6 +280,8 @@ const handleChange = "function";`,
   const id = 123;
   return () => "cleared: " + id;
 }, [])()()`,
+    realWorldExample:
+      'Slack cleans up WebSocket connections when you switch channels -- the cleanup function in useEffect prevents memory leaks by disconnecting the old subscription.',
     hints: [
       'Effect returns cleanup function',
       'Cleanup function should return "cleared: 123"',
@@ -275,6 +303,8 @@ const handleChange = "function";`,
     setupCode: `// Call these handlers in bubbling order, then return log\nconst log = [];\nconst parentHandler = () => log.push("parent");\nconst childHandler = () => log.push("child");`,
     expected: ['child', 'parent'],
     sample: '(childHandler(), parentHandler(), log)',
+    realWorldExample:
+      'When you click a "Delete" button inside a card on Trello, both the button click and the card click fire -- understanding bubbling order prevents accidentally opening the card while deleting it.',
     hints: [
       'Events bubble from child to parent -- child fires first',
       'Call both handlers, then return the log array',
@@ -292,6 +322,8 @@ const handleChange = "function";`,
     setupCode: `// Use these to simulate stop propagation behavior\nconst log = [];\nlet stopped = false;\nconst event = { stopPropagation: () => { stopped = true; } };\nconst childHandler = () => log.push("child");\nconst parentHandler = () => log.push("parent");`,
     expected: ['child'],
     sample: '(childHandler(), event.stopPropagation(), stopped ? null : parentHandler(), log)',
+    realWorldExample:
+      'In a GitHub PR file list, clicking a "Copy path" button should not also expand/collapse the file diff -- stopPropagation prevents the click from reaching the parent row.',
     hints: [
       'Call childHandler first, then stopPropagation on the event',
       'Only call parentHandler if stopped is still false',
@@ -315,6 +347,8 @@ const handleChange = "function";`,
   };
   return handleSubmit(mockEvent);
 })()`,
+    realWorldExample:
+      'When you submit a login form on GitHub, preventDefault stops the browser from doing a full page reload, letting React handle the submission via an API call instead.',
     hints: [
       'Define a handler function that calls e.preventDefault()',
       'Return the string "prevented" after calling preventDefault',
@@ -336,6 +370,8 @@ const handleChange = "function";`,
   type: e.type,
   bubbles: e.bubbles
 }))(syntheticEvent)`,
+    realWorldExample:
+      'React wraps native browser events in SyntheticEvents so your onChange handler works identically in Chrome, Firefox, and Safari -- extracting properties like target.value is consistent across all browsers.',
     hints: [
       'Access nested target.value for the input value',
       'Read type and bubbles directly from the event',
@@ -356,6 +392,8 @@ const handleChange = "function";`,
   const id = e.target.dataset.id;
   return id ? "item-" + id : "none";
 })(mockEvent)`,
+    realWorldExample:
+      'Notion attaches a single click handler to a page list container and reads dataset.id to determine which page was clicked, rather than adding separate handlers to hundreds of page rows.',
     hints: [
       'Access e.target.dataset.id to find which item was clicked',
       'Use a ternary to handle the case when id is missing',
@@ -373,6 +411,8 @@ const handleChange = "function";`,
     setupCode: `// Write a handler that checks the key property\nconst enterEvent = { key: "Enter" };`,
     expected: 'submitted',
     sample: '((e) => e.key === "Enter" ? "submitted" : "ignored")(enterEvent)',
+    realWorldExample:
+      'Pressing Enter in the Slack message input sends your message -- a keyboard event handler checks for the Enter key to trigger the submit action.',
     hints: [
       'Check e.key to identify which key was pressed',
       'Use a ternary operator to return the correct string',
@@ -390,6 +430,8 @@ const handleChange = "function";`,
     setupCode: `// Extract the id from both target and currentTarget\nconst event = {\n  target: { id: "inner-span" },\n  currentTarget: { id: "outer-div" }\n};`,
     expected: { target: 'inner-span', currentTarget: 'outer-div' },
     sample: '((e) => ({ target: e.target.id, currentTarget: e.currentTarget.id }))(event)',
+    realWorldExample:
+      'In a Gmail email row, clicking the star icon (target) fires on the row handler (currentTarget) -- distinguishing them lets you star the email without opening it.',
     hints: [
       'target is the element that triggered the event',
       'currentTarget is the element the handler is attached to',
@@ -407,6 +449,8 @@ const handleChange = "function";`,
     setupCode: `// Call these handlers in focus/blur order, then return log\nconst log = [];\nconst onFocus = () => log.push("focused");\nconst onBlur = () => log.push("blurred");`,
     expected: ['focused', 'blurred'],
     sample: '(onFocus(), onBlur(), log)',
+    realWorldExample:
+      'LinkedIn highlights form fields with a blue border on focus and shows validation errors on blur -- these events drive the visual feedback for the profile edit form.',
     hints: [
       'Focus fires when element gains focus, blur when it loses focus',
       'Call onFocus first, then onBlur, then return log',
@@ -424,6 +468,8 @@ const handleChange = "function";`,
     setupCode: `// Extract coordinates from this mouse event\nconst mouseEvent = { clientX: 150, clientY: 200, type: "mousemove" };`,
     expected: { x: 150, y: 200 },
     sample: '((e) => ({ x: e.clientX, y: e.clientY }))(mouseEvent)',
+    realWorldExample:
+      'Figma tracks mouse coordinates to position cursor tooltips and render real-time collaborator cursors on the canvas at the exact pixel location.',
     hints: [
       'Mouse events expose clientX and clientY for coordinates',
       'Map them to x and y keys in the returned object',
@@ -445,6 +491,8 @@ const handleChange = "function";`,
   evt.persist();
   return evt._access();
 })()`,
+    realWorldExample:
+      'In older React versions, accessing event properties inside a setTimeout (like a debounced search) would fail unless you called persist() -- this was critical for async event handling in apps like Airbnb search.',
     hints: [
       'Create the event first, then call persist() before accessing',
       'Without persist(), _access() returns null due to pooling',
@@ -462,6 +510,8 @@ const handleChange = "function";`,
     setupCode: `// Extract the first touch point from this event\nconst touchEvent = { touches: [{ clientX: 100, clientY: 250 }] };`,
     expected: { x: 100, y: 250 },
     sample: '((e) => ({ x: e.touches[0].clientX, y: e.touches[0].clientY }))(touchEvent)',
+    realWorldExample:
+      'Google Maps on mobile reads touch coordinates to let you pan and pinch-zoom the map -- extracting the first touch point drives the gesture interaction.',
     hints: [
       'Touch events store touch points in the touches array',
       'Access the first element with touches[0]',
@@ -480,6 +530,8 @@ const handleChange = "function";`,
     expected: 'clicked-5',
     sample: `const createHandler = (id) => () => "clicked-" + id;
 createHandler(5)()`,
+    realWorldExample:
+      'In a Spotify playlist, each track row passes its track ID into a click handler factory so the "Play" button knows which specific track to start.',
     hints: [
       'Use a closure to capture the id parameter',
       'Return a function that concatenates "clicked-" with the captured id',
@@ -509,6 +561,8 @@ createHandler(5)()`,
   handler("third");
   return handler.flush();
 })()`,
+    realWorldExample:
+      'The Google search box debounces your keystrokes so it only fires an autocomplete API call after you pause typing, rather than on every single character.',
     hints: [
       'Store the latest arguments each time the debounced function is called',
       'flush() should call the original function with the stored arguments',
@@ -539,6 +593,8 @@ createHandler(5)()`,
   handler("second");
   return handler("third");
 })()`,
+    realWorldExample:
+      'Scroll-heavy pages like Twitter throttle their scroll event handlers so the "load more tweets" logic fires at most once per 200ms, preventing performance jank.',
     hints: [
       'Use a boolean flag to track if the function has already been called',
       'Store and return the result from the first invocation on all subsequent calls',
@@ -562,6 +618,8 @@ createHandler(5)()`,
   };
   return compose(handler1, handler2)();
 })()`,
+    realWorldExample:
+      'A Stripe checkout form composes validation, analytics tracking, and submission handlers into a single onSubmit -- each runs in sequence when the user clicks "Pay".',
     hints: [
       'Use rest parameters (...fns) to accept multiple handlers',
       'Iterate over the functions array and call each one in order',
@@ -580,6 +638,8 @@ createHandler(5)()`,
     expected: 'dragged-item-42',
     sample:
       '(dataTransfer.setData("text/plain", "dragged-item-42"), dataTransfer.getData("text/plain"))',
+    realWorldExample:
+      'Trello uses drag-and-drop with dataTransfer to move cards between columns -- setData stores the card ID during dragstart, and getData retrieves it on drop.',
     hints: [
       'Call setData with a MIME type key and a value',
       'Call getData with the same key to retrieve the value',
@@ -597,6 +657,8 @@ createHandler(5)()`,
     setupCode: `// Call these handlers in event flow order, then return log\nconst log = [];\nconst captureHandler = () => log.push("capture");\nconst bubbleHandler = () => log.push("bubble");`,
     expected: ['capture', 'bubble'],
     sample: '(captureHandler(), bubbleHandler(), log)',
+    realWorldExample:
+      'Analytics libraries like Mixpanel use capture-phase listeners to track clicks before any component can stopPropagation, ensuring no user interaction goes unrecorded.',
     hints: [
       'Capture phase runs top-down before bubble phase runs bottom-up',
       'In React, use onClickCapture for capture phase handlers',
@@ -618,6 +680,8 @@ createHandler(5)()`,
     expected: 'dark',
     sample: `const useContext = (ctx) => ctx._currentValue;
 useContext(ThemeContext)`,
+    realWorldExample:
+      'Spotify shares the current theme (dark/light) and logged-in user info across the entire app without prop drilling -- that is React Context consumed via useContext.',
     hints: [
       'Context objects store their current value in _currentValue',
       'useContext simply reads and returns that stored value',
@@ -641,6 +705,8 @@ useContext(ThemeContext)`,
   return [state, dispatch];
 };
 useReducer(counterReducer, { count: 0 })[0]`,
+    realWorldExample:
+      'A shopping cart on Amazon dispatches ADD_ITEM, REMOVE_ITEM, and UPDATE_QUANTITY actions through useReducer to manage complex state transitions predictably.',
     hints: [
       'useReducer creates local state and a dispatch function',
       'dispatch applies the reducer: state = reducer(state, action)',
@@ -659,6 +725,8 @@ useReducer(counterReducer, { count: 0 })[0]`,
     expected: { name: 'Alice', age: 31, city: 'NYC' },
     sample: `const updateState = (prev, partial) => ({ ...prev, ...partial });
 updateState(prevState, { age: 31 })`,
+    realWorldExample:
+      'When you edit your GitHub profile (name, bio, company), the form updates one field at a time by spreading the old state and overriding just the changed field.',
     hints: [
       'Spread the previous state first, then spread the partial update',
       'Later properties override earlier ones in object spread',
@@ -677,6 +745,8 @@ updateState(prevState, { age: 31 })`,
     expected: ['apple', 'banana', 'cherry'],
     sample: `const addItem = (arr, item) => [...arr, item];
 addItem(items, "cherry")`,
+    realWorldExample:
+      'Adding a new tag to a GitHub issue uses immutable array updates -- spread the existing tags and append the new one so React detects the state change and re-renders.',
     hints: [
       'Use the spread operator to create a new array',
       'Append the new item after spreading the original',
@@ -699,6 +769,8 @@ addItem(items, "cherry")`,
   return [val, () => {}];
 };
 useState(() => 50 * 2)[0]`,
+    realWorldExample:
+      'VS Code initializes editor settings by reading from localStorage -- lazy initialization avoids parsing JSON on every re-render, running the expensive read only once.',
     hints: [
       'Check if init is a function using typeof',
       'If it is a function, call it to compute the initial value',
@@ -717,6 +789,8 @@ useState(() => 50 * 2)[0]`,
     expected: ['effect-1', 'effect-2', 'effect-3'],
     sample: `const useEffect = (fn) => { log.push(fn()); };
 (useEffect(() => "effect-1"), useEffect(() => "effect-2"), useEffect(() => "effect-3"), log)`,
+    realWorldExample:
+      'A Notion page component might have separate effects for fetching page data, setting up keyboard shortcuts, and syncing with real-time collaboration -- each concern lives in its own useEffect.',
     hints: [
       'useEffect should call fn() and push the result to the log',
       'Call useEffect three times with three different effect functions',
@@ -734,6 +808,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `// Call these hooks in the correct order\nconst log = [];\nconst useLayoutEffect = (fn) => { log.push("layout:" + fn()); };\nconst useEffect = (fn) => { log.push("effect:" + fn()); };`,
     expected: ['layout:measure', 'effect:fetch'],
     sample: '(useLayoutEffect(() => "measure"), useEffect(() => "fetch"), log)',
+    realWorldExample:
+      'Tooltips in Stripe Dashboard use useLayoutEffect to measure element dimensions and position the tooltip before the browser paints, preventing a visible "jump" that useEffect would cause.',
     hints: [
       'useLayoutEffect fires synchronously before useEffect',
       'Call useLayoutEffect first, then useEffect',
@@ -755,6 +831,8 @@ useState(() => 50 * 2)[0]`,
   ThemeCtx.Provider("dark");
   return ThemeCtx.read();
 })()`,
+    realWorldExample:
+      'Apps like Discord wrap the component tree in a ThemeProvider that overrides the default theme -- deeply nested components read the theme without receiving it as props.',
     hints: [
       'Call createContext with the default value first',
       'Use Provider to override, then read to consume the current value',
@@ -789,6 +867,8 @@ useState(() => 50 * 2)[0]`,
   };
   return actions.reduce(todoReducer, { todos: [] });
 })()`,
+    realWorldExample:
+      'Todoist processes a stream of user actions (add task, toggle complete, reorder) through a reducer, ensuring each state transition is predictable and debuggable via Redux DevTools.',
     hints: [
       'Use a switch statement to handle each action type',
       'Use Array.reduce to apply all actions sequentially to the initial state',
@@ -812,6 +892,8 @@ useState(() => 50 * 2)[0]`,
   renderCount.current++;
   return renderCount.current;
 })()`,
+    realWorldExample:
+      'Performance monitoring in the React DevTools Profiler uses ref-based render counters to show how many times each component re-renders without causing additional renders.',
     hints: [
       'useRef returns an object with a mutable current property',
       'Increment current with ++ to track renders',
@@ -829,6 +911,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `const useImperativeHandle = (ref, createHandle) => {\n  ref.current = createHandle();\n};\nconst ref = { current: null };\nuseImperativeHandle(ref, () => ({\n  focus: () => "focused",\n  scrollTo: (pos) => "scrolled-to-" + pos\n}));`,
     expected: { focus: 'focused', scrollTo: 'scrolled-to-top' },
     sample: '({ focus: ref.current.focus(), scrollTo: ref.current.scrollTo("top") })',
+    realWorldExample:
+      'Rich text editors like Draft.js expose focus() and insertText() methods via useImperativeHandle so parent toolbars can control the editor without accessing DOM internals directly.',
     hints: ['useImperativeHandle customizes the ref value', 'Return an object with custom methods'],
     tags: ['hooks', 'useImperativeHandle', 'forwardRef'],
   },
@@ -843,6 +927,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `let renderCount = 0;\nlet state = { a: 0, b: 0 };\nconst batch = (fn) => {\n  const updates = [];\n  const setState = (partial) => updates.push(partial);\n  fn(setState);\n  updates.forEach(u => { state = { ...state, ...u }; });\n  renderCount++;\n  return { renderCount, state };\n};`,
     expected: { renderCount: 1, state: { a: 1, b: 2 } },
     sample: 'batch((setState) => { setState({ a: 1 }); setState({ b: 2 }); })',
+    realWorldExample:
+      'React 18 automatically batches state updates inside event handlers -- clicking "Buy Now" on Amazon might update cart count and total price in a single render instead of two.',
     hints: [
       'Batching merges multiple setState calls into one render',
       'Only one render count increment',
@@ -864,6 +950,8 @@ useState(() => 50 * 2)[0]`,
   setState(prev => !prev);
   return getVal();
 })()`,
+    realWorldExample:
+      'The hamburger menu on mobile Twitter toggles between open and closed with a single boolean state flip -- setState(prev => !prev) handles the toggle cleanly.',
     hints: [
       'Pass a function to setState that receives the previous value',
       'Use the logical NOT operator (!) to toggle a boolean',
@@ -881,6 +969,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `const depsChanged = (oldDeps, newDeps) => {\n  if (!oldDeps) return true;\n  return oldDeps.some((dep, i) => !Object.is(dep, newDeps[i]));\n};\nconst oldDeps = [1, "hello", true];\nconst newDeps = [1, "hello", false];`,
     expected: true,
     sample: 'depsChanged(oldDeps, newDeps)',
+    realWorldExample:
+      'React internally uses Object.is to compare each dependency before re-running effects -- understanding this explains why passing a new object literal on every render causes infinite re-fetch loops.',
     hints: ['Compare each dependency with Object.is', 'If any differ, the effect should re-run'],
     tags: ['hooks', 'useEffect', 'dependencies', 'shallow-compare'],
   },
@@ -895,6 +985,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `const store = {\n  _value: 42,\n  getSnapshot: function() { return this._value; },\n  subscribe: function(cb) { return () => {}; }\n};\nconst useSyncExternalStore = (subscribe, getSnapshot) => getSnapshot();`,
     expected: 42,
     sample: 'useSyncExternalStore(store.subscribe, () => store.getSnapshot())',
+    realWorldExample:
+      'Libraries like Zustand and Redux use useSyncExternalStore to safely subscribe React components to external state without tearing issues during concurrent rendering.',
     hints: [
       'useSyncExternalStore takes subscribe and getSnapshot',
       'getSnapshot returns the current value',
@@ -912,6 +1004,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `let callIndex = 0;\nconst states = [["Alice", () => {}], [25, () => {}]];\nconst useState = (init) => states[callIndex++] || [init, () => {}];\nconst name = useState("")[0];\nconst age = useState(0)[0];`,
     expected: { name: 'Alice', age: 25 },
     sample: '({ name, age })',
+    realWorldExample:
+      'A user profile card on LinkedIn uses separate useState calls for name, headline, and avatar -- each piece of state updates independently without affecting the others.',
     hints: ['Each useState call is independent', 'React tracks hook calls by order'],
     tags: ['hooks', 'useState', 'multiple-state'],
   },
@@ -926,6 +1020,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `const useReducer = (reducer, initArg, init) => {\n  const initialState = init ? init(initArg) : initArg;\n  return [initialState, () => {}];\n};\nconst init = (count) => ({ count, history: [count] });\nconst reducer = (s, a) => s;`,
     expected: { count: 10, history: [10] },
     sample: 'useReducer(reducer, 10, init)[0]',
+    realWorldExample:
+      'A data table component might accept a row count as a prop and use the init function to derive the full initial state (rows, sort order, page history) from that single number.',
     hints: ['The third argument transforms the initial arg', 'init(10) produces the initial state'],
     tags: ['hooks', 'useReducer', 'lazy-init'],
   },
@@ -943,6 +1039,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `const withAdmin = (Component) => (props) => Component({ ...props, isAdmin: true });\nconst MyComponent = (props) => props;\nconst Enhanced = withAdmin(MyComponent);`,
     expected: { name: 'Alice', isAdmin: true },
     sample: 'Enhanced({ name: "Alice" })',
+    realWorldExample:
+      'Redux connect() is a classic HOC that wraps your component and injects store data as props -- withAuth, withRouter, and withTheme all follow this exact pattern.',
     hints: ['HOC takes a component and returns a new one', 'Spread existing props and add isAdmin'],
     tags: ['patterns', 'hoc', 'higher-order-component'],
   },
@@ -957,6 +1055,8 @@ useState(() => 50 * 2)[0]`,
     setupCode: `const MouseTracker = (props) => {\n  const mouse = { x: 100, y: 200 };\n  return props.render(mouse);\n};`,
     expected: 'Mouse at 100, 200',
     sample: 'MouseTracker({ render: (mouse) => "Mouse at " + mouse.x + ", " + mouse.y })',
+    realWorldExample:
+      'Downshift (the autocomplete library used by Expedia) uses render props to share dropdown state, letting consumers fully customize how the suggestions list looks.',
     hints: [
       'Render props pass data to a render function',
       'The render function receives mouse coordinates',
@@ -975,6 +1075,8 @@ useState(() => 50 * 2)[0]`,
     expected: ['home:active', 'profile:inactive', 'settings:inactive'],
     sample:
       'Tabs({ defaultTab: "home", children: [Tab("home"), Tab("profile"), Tab("settings")] })',
+    realWorldExample:
+      'Headless UI and Radix use compound components for Tab panels, Accordions, and Menus -- the parent (Tabs) shares active state with children (Tab, TabPanel) implicitly.',
     hints: ['Parent passes shared state to children', 'Each child receives activeTab prop'],
     tags: ['patterns', 'compound-components', 'composition'],
   },
@@ -997,6 +1099,8 @@ useState(() => 50 * 2)[0]`,
   usePrevious(5);
   return usePrevious(10);
 })()`,
+    realWorldExample:
+      'A stock ticker on Robinhood uses usePrevious to compare the current price with the last price and flash the number green (up) or red (down).',
     hints: [
       'Read ref.current before updating it to get the previous value',
       'The second call should return what was stored from the first call',
@@ -1015,6 +1119,8 @@ useState(() => 50 * 2)[0]`,
     expected: { type: 'portal', children: 'Modal Content', container: 'modal-root' },
     sample: `const createPortal = (children, container) => ({ type: "portal", children, container });
 createPortal("Modal Content", "modal-root")`,
+    realWorldExample:
+      'Modals, tooltips, and toasts on apps like Notion and Slack render via portals to escape parent overflow:hidden and z-index stacking contexts.',
     hints: [
       'createPortal returns an object describing where to render',
       'Include type: "portal", children, and container in the descriptor',
@@ -1044,6 +1150,8 @@ createPortal("Modal Content", "modal-root")`,
   }
   return state;
 })()`,
+    realWorldExample:
+      'Facebook wraps each News Feed post in an error boundary so a single broken post shows "Something went wrong" instead of crashing the entire page.',
     hints: [
       'Use try/catch to simulate catching a render error',
       'getDerivedStateFromError should return new state with the error message',
@@ -1061,6 +1169,8 @@ createPortal("Modal Content", "modal-root")`,
     setupCode: `const context = { user: { name: "Alice", age: 30 }, theme: "dark", lang: "en" };\nconst useContextSelector = (ctx, selector) => selector(ctx);`,
     expected: 'Alice',
     sample: 'useContextSelector(context, (ctx) => ctx.user.name)',
+    realWorldExample:
+      'In a large app like Figma, a context might hold user data, theme, and permissions -- a selector ensures the avatar component only re-renders when user.name changes, not when theme updates.',
     hints: ['Selector function extracts a specific value', 'Prevents unnecessary re-renders'],
     tags: ['context', 'selector', 'performance'],
   },
@@ -1076,6 +1186,8 @@ createPortal("Modal Content", "modal-root")`,
     expected: 'controlled',
     sample:
       '((props) => props.value !== undefined ? "controlled" : "uncontrolled")(controlledProps)',
+    realWorldExample:
+      'Material UI TextField supports both modes -- passing a value prop makes it controlled (React owns the state), while defaultValue makes it uncontrolled (DOM owns the state).',
     hints: [
       'Controlled components have an explicit value prop',
       'Check if props.value is not undefined',
@@ -1097,6 +1209,8 @@ createPortal("Modal Content", "modal-root")`,
     provs.reduce((acc, [name, value]) => ({ ...acc, ...value }), {});
   return composeProviders(providers);
 })()`,
+    realWorldExample:
+      'Large Next.js apps often wrap the root in 5+ providers (Auth, Theme, Intl, Query, Analytics) -- composing them avoids deeply nested JSX known as "provider hell".',
     hints: [
       'Use Array.reduce to accumulate values from each provider',
       'Spread each value object into the accumulator',
@@ -1114,6 +1228,8 @@ createPortal("Modal Content", "modal-root")`,
     setupCode: `const mockStorage = { theme: "dark", lang: "en" };\nconst useLocalStorage = (key, defaultVal) => {\n  const stored = mockStorage[key];\n  return [stored !== undefined ? stored : defaultVal, (v) => { mockStorage[key] = v; }];\n};`,
     expected: 'dark',
     sample: 'useLocalStorage("theme", "light")[0]',
+    realWorldExample:
+      'Notion persists sidebar width and dark mode preference in localStorage -- useLocalStorage syncs React state with the browser so your settings survive page refreshes.',
     hints: ['Read from storage first', 'Fall back to default value'],
     tags: ['hooks', 'custom-hooks', 'localStorage'],
   },
@@ -1128,6 +1244,8 @@ createPortal("Modal Content", "modal-root")`,
     setupCode: `const lazy = (importFn) => {\n  return { $$typeof: "lazy", _init: importFn, _status: "pending" };\n};\nconst LazyComponent = lazy(() => ({ default: "MyComponent" }));`,
     expected: { $$typeof: 'lazy', _status: 'pending' },
     sample: '({ $$typeof: LazyComponent.$$typeof, _status: LazyComponent._status })',
+    realWorldExample:
+      'GitHub loads the code editor, markdown preview, and diff viewer as lazy components so the initial page load is fast and heavy features are fetched only when needed.',
     hints: ['React.lazy wraps a dynamic import', 'Returns a special lazy type'],
     tags: ['patterns', 'lazy', 'code-splitting'],
   },
@@ -1145,6 +1263,8 @@ createPortal("Modal Content", "modal-root")`,
   const useWindowSize = () => ({ width: mockWidth, height: mockHeight });
   return useWindowSize();
 })()`,
+    realWorldExample:
+      'Responsive dashboards like Grafana use useWindowSize to switch between compact mobile and full desktop layouts when the browser is resized.',
     hints: [
       'A custom hook is just a function that returns state',
       'Return an object with width and height properties',
@@ -1162,6 +1282,8 @@ createPortal("Modal Content", "modal-root")`,
     setupCode: `// Write useDebounce and call it with this value\nconst searchTerm = "react hooks";`,
     expected: 'react hooks',
     sample: '((value, delay) => value)(searchTerm, 500)',
+    realWorldExample:
+      'The npm package search on npmjs.com debounces search input with useDebounce so API calls only fire after the user stops typing for 300ms, reducing server load by 90%.',
     hints: [
       'In this simplified version, just return the value after the delay conceptually passes',
       'In a real hook, you would use useEffect with setTimeout to delay updates',
@@ -1180,6 +1302,8 @@ createPortal("Modal Content", "modal-root")`,
     expected: { header: 'My App', body: 'Content here', footer: '2024' },
     sample: `const Layout = (slots) => ({ header: slots.header, body: slots.body, footer: slots.footer });
 Layout({ header: "My App", body: "Content here", footer: "2024" })`,
+    realWorldExample:
+      'Dashboard frameworks like Ant Design Pro use a slot pattern for layout -- pass header, sidebar, and content as named children to a PageLayout component.',
     hints: [
       'The Layout function destructures named slots from its argument',
       'Return an object with each slot mapped to its position',
@@ -1212,6 +1336,8 @@ Layout({ header: "My App", body: "Content here", footer: "2024" })`,
   store.emit(42);
   return results;
 })()`,
+    realWorldExample:
+      'Zustand and MobX use the observer/pub-sub pattern at their core -- when a store value changes, all subscribed components are notified and re-render with fresh data.',
     hints: [
       'Store listeners in an array and iterate on emit',
       'Each listener receives the emitted value as an argument',
@@ -1233,6 +1359,8 @@ Layout({ header: "My App", body: "Content here", footer: "2024" })`,
       { child: 'Charlie', index: 2 },
     ],
     sample: 'Children.map(kids, (child, index) => ({ child, index }))',
+    realWorldExample:
+      'A Carousel component in Ant Design uses React.Children.map to clone each child slide and inject an index prop for determining which slide is currently active.',
     hints: ['Children.map iterates over React children', 'Transform each child with the callback'],
     tags: ['patterns', 'children', 'React.Children'],
   },
@@ -1252,6 +1380,8 @@ Layout({ header: "My App", body: "Content here", footer: "2024" })`,
   }
   return { loading: true, data: null, error: null };
 })("/api/users")`,
+    realWorldExample:
+      'TanStack Query (React Query) abstracts this useFetch pattern -- your component just calls useQuery("/api/users") and gets loading, data, and error states automatically.',
     hints: [
       'Check if the URL exists in the mock data map',
       'Return different states based on whether data is available',
@@ -1273,6 +1403,8 @@ Layout({ header: "My App", body: "Content here", footer: "2024" })`,
     expected: { type: 'fragment', children: ['Hello', ' ', 'World'] },
     sample: `const Fragment = (...children) => ({ type: "fragment", children });
 Fragment("Hello", " ", "World")`,
+    realWorldExample:
+      'When rendering a breadcrumb trail like "Home > Products > Shoes" in a nav bar, Fragments let you return multiple elements without wrapping them in an unnecessary div.',
     hints: [
       'Use rest parameters (...children) to collect all arguments',
       'Return an object with type: "fragment" and the children array',
@@ -1290,6 +1422,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const shallowEqual = (prev, next) => {\n  const prevKeys = Object.keys(prev);\n  const nextKeys = Object.keys(next);\n  if (prevKeys.length !== nextKeys.length) return false;\n  return prevKeys.every(key => Object.is(prev[key], next[key]));\n};\nconst prevProps = { name: "Alice", count: 5 };\nconst nextProps = { name: "Alice", count: 6 };`,
     expected: false,
     sample: 'shallowEqual(prevProps, nextProps)',
+    realWorldExample:
+      'In a Twitter feed with thousands of tweet cards, React.memo prevents re-rendering cards whose props have not changed, keeping scroll performance smooth.',
     hints: ['Shallow comparison checks each prop with Object.is', 'count changed from 5 to 6'],
     tags: ['rendering', 'memo', 'shallow-compare', 'performance'],
   },
@@ -1304,6 +1438,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const findMoved = (oldList, newList) => {\n  const oldOrder = oldList.map(i => i.key);\n  const newOrder = newList.map(i => i.key);\n  return newOrder.filter((key, i) => oldOrder[i] !== key);\n};\nconst oldList = [{ key: "a" }, { key: "b" }, { key: "c" }];\nconst newList = [{ key: "c" }, { key: "a" }, { key: "b" }];`,
     expected: ['c', 'a', 'b'],
     sample: 'findMoved(oldList, newList)',
+    realWorldExample:
+      'When you drag-reorder cards on a Trello board, React uses keys to reconcile the old and new positions, moving DOM nodes instead of destroying and recreating them.',
     hints: ['Compare positions by index', 'Items that changed position need to move'],
     tags: ['rendering', 'reconciliation', 'keys', 'virtual-dom'],
   },
@@ -1318,6 +1454,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `// Use these in a conditional expression\nconst shouldHide = true;\nconst content = "Visible Content";`,
     expected: null,
     sample: 'shouldHide ? null : content',
+    realWorldExample:
+      'Slack hides the unread badge by rendering null when the count is zero -- the component exists in the tree but produces no visible output.',
     hints: [
       'Use a ternary operator for inline conditional rendering',
       'Returning null tells React to render nothing',
@@ -1335,6 +1473,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const items = [1, 2, 3];\nconst hasItems = items.length > 0;\nconst count = items.length;`,
     expected: 3,
     sample: 'hasItems && count',
+    realWorldExample:
+      'GitHub PR pages use short-circuit rendering: {hasConflicts && <ConflictWarning />} only shows the merge conflict banner when conflicts actually exist.',
     hints: ['&& returns the right side if left is truthy', 'items.length is 3 which is truthy'],
     tags: ['rendering', 'conditional', 'short-circuit'],
   },
@@ -1349,6 +1489,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const renderByStatus = (status) => {\n  const views = {\n    loading: "Loading spinner",\n    error: "Error message",\n    success: "Data content",\n    empty: "No data"\n  };\n  return views[status] || "Unknown";\n};`,
     expected: 'Error message',
     sample: 'renderByStatus("error")',
+    realWorldExample:
+      'The Vercel deployment dashboard renders different views (building, ready, error, queued) based on deployment status -- an object lookup maps each status to its corresponding UI.',
     hints: ['Use an object lookup instead of switch-case', 'Map status to content'],
     tags: ['rendering', 'conditional', 'switch', 'patterns'],
   },
@@ -1363,6 +1505,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const users = [\n  { id: 1, name: "Alice", active: true },\n  { id: 2, name: "Bob", active: false },\n  { id: 3, name: "Charlie", active: true },\n  { id: 4, name: "Diana", active: false }\n];`,
     expected: ['Alice', 'Charlie'],
     sample: 'users.filter(u => u.active).map(u => u.name)',
+    realWorldExample:
+      'Slack filters the member list to show only "online" users in the sidebar -- filter(active).map(render) is the exact pattern for conditional list display.',
     hints: ['Filter first, then map', 'Only active users should be included'],
     tags: ['rendering', 'lists', 'filter', 'map'],
   },
@@ -1377,6 +1521,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const categories = [\n  { name: "Fruits", items: ["Apple", "Banana"] },\n  { name: "Vegs", items: ["Carrot"] }\n];`,
     expected: ['Fruits: Apple', 'Fruits: Banana', 'Vegs: Carrot'],
     sample: 'categories.flatMap(cat => cat.items.map(item => cat.name + ": " + item))',
+    realWorldExample:
+      'The Spotify library page renders nested playlists grouped by category (Made For You, Recently Played, etc.) -- flatMap flattens the two-level structure into a single renderable list.',
     hints: ['Use flatMap to flatten nested arrays', 'Combine category name with each item'],
     tags: ['rendering', 'lists', 'nested', 'flatMap'],
   },
@@ -1391,6 +1537,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `// Write areEqual and test with these props\nconst prevProps = { id: 1, name: "Alice" };\nconst nextProps = { id: 1, name: "Bob" };`,
     expected: true,
     sample: '((prev, next) => prev.id === next.id)(prevProps, nextProps)',
+    realWorldExample:
+      'A YouTube video thumbnail component might use a custom comparator that only checks videoId -- re-rendering for view count changes would be wasteful since the thumbnail image stays the same.',
     hints: [
       'areEqual returns true to skip re-render, false to re-render',
       'Only compare the id property, ignore other changes',
@@ -1408,6 +1556,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const Suspense = (props) => {\n  try {\n    const result = props.children();\n    return result;\n  } catch (e) {\n    if (e && typeof e.then === 'function') return props.fallback;\n    throw e;\n  }\n};\nconst Loading = "Loading...";\nconst pendingChild = () => { throw { then: () => {} }; };`,
     expected: 'Loading...',
     sample: 'Suspense({ children: pendingChild, fallback: Loading })',
+    realWorldExample:
+      'Next.js App Router uses Suspense boundaries to show skeleton loading states while server components stream in -- the user sees instant layout structure with content filling in progressively.',
     hints: ['Suspense catches thrown promises', 'Shows fallback while data is loading'],
     tags: ['rendering', 'suspense', 'fallback', 'async'],
   },
@@ -1422,6 +1572,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const REACT_ELEMENT_TYPE = "react.element";\nconst isValidElement = (obj) => obj !== null && typeof obj === 'object' && obj.$$typeof === REACT_ELEMENT_TYPE;\nconst element = { $$typeof: "react.element", type: "div", props: {} };\nconst notElement = { type: "div" };`,
     expected: true,
     sample: 'isValidElement(element)',
+    realWorldExample:
+      'Component libraries like Chakra UI use isValidElement to distinguish React elements from plain strings or numbers when processing children, enabling different rendering logic for each.',
     hints: ['React elements have $$typeof property', 'Check for the react.element symbol'],
     tags: ['rendering', 'elements', 'validation'],
   },
@@ -1436,6 +1588,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const diff = (oldNode, newNode) => {\n  const changes = [];\n  if (oldNode.type !== newNode.type) {\n    changes.push({ type: "REPLACE", path: "/" });\n  } else {\n    Object.keys(newNode.props || {}).forEach(key => {\n      if (oldNode.props[key] !== newNode.props[key]) {\n        changes.push({ type: "UPDATE", path: "/" + key, value: newNode.props[key] });\n      }\n    });\n  }\n  return changes;\n};\nconst oldTree = { type: "div", props: { className: "old", id: "main" } };\nconst newTree = { type: "div", props: { className: "new", id: "main" } };`,
     expected: [{ type: 'UPDATE', path: '/className', value: 'new' }],
     sample: 'diff(oldTree, newTree)',
+    realWorldExample:
+      'React internally diffs the previous and next virtual DOM trees to compute the minimal set of real DOM mutations -- this is why React apps update the screen efficiently without full page reloads.',
     hints: ['Compare each prop between old and new', 'Only className changed'],
     tags: ['rendering', 'virtual-dom', 'reconciliation', 'diff'],
   },
@@ -1450,6 +1604,8 @@ Fragment("Hello", " ", "World")`,
     setupCode: `const DataProvider = (props) => {\n  const data = { users: ["Alice", "Bob"] };\n  return props.children(data);\n};`,
     expected: 'Users: Alice, Bob',
     sample: 'DataProvider({ children: (data) => "Users: " + data.users.join(", ") })',
+    realWorldExample:
+      'React Spring uses the children-as-function pattern so animated values flow into your render function, giving you full control over how animated styles are applied.',
     hints: ['Children is a function that receives data', 'Invoke children with the fetched data'],
     tags: ['rendering', 'render-callback', 'children-as-function'],
   },
@@ -1465,6 +1621,8 @@ Fragment("Hello", " ", "World")`,
     expected: 'btn active large',
     sample: `const cx = (...classes) => classes.filter(Boolean).join(" ");
 cx("btn", isActive && "active", isDisabled && "disabled", isLarge && "large")`,
+    realWorldExample:
+      'Tailwind CSS projects use the clsx/classnames utility everywhere -- conditionally applying "bg-blue-500" when active or "opacity-50 cursor-not-allowed" when disabled.',
     hints: [
       'Use filter(Boolean) to remove falsy values (false, null, undefined, 0, "")',
       'Join the remaining truthy class names with a space',
@@ -1487,6 +1645,8 @@ cx("btn", isActive && "active", isDisabled && "disabled", isLarge && "large")`,
   props: { ...props, children: children.length === 1 ? children[0] : children }
 });
 createElement("div", { id: "root" }, "Hello")`,
+    realWorldExample:
+      'Every JSX tag you write (<div id="root">Hello</div>) is compiled by Babel into a React.createElement call -- understanding this function reveals what JSX actually produces.',
     hints: [
       'Use rest parameters for children',
       'If there is exactly one child, unwrap it from the array',
@@ -1505,6 +1665,8 @@ createElement("div", { id: "root" }, "Hello")`,
     expected: ['click-handler', 'animation', 'data-fetch', 'analytics'],
     sample: `const schedule = (t) => [...t].sort((a, b) => a.priority - b.priority).map(t => t.name);
 schedule(tasks)`,
+    realWorldExample:
+      'React 18 Concurrent Mode prioritizes user interactions (clicks, typing) over background work (analytics, prefetching) using a priority scheduler similar to this pattern.',
     hints: [
       'Sort tasks by priority number — lower number means higher urgency',
       'Use .map() to extract just the task names after sorting',
@@ -1529,6 +1691,8 @@ schedule(tasks)`,
   };
   return values.filter(v => willRender(v));
 })()`,
+    realWorldExample:
+      'A common React bug is writing {count && <Badge />} where count is 0 -- instead of rendering nothing, React renders a literal "0" on screen because 0 is a renderable falsy value.',
     hints: [
       'React skips false, null, undefined, and true in JSX output',
       '0 and empty string are rendered as visible text despite being falsy',
@@ -1550,6 +1714,8 @@ schedule(tasks)`,
     setupCode: `// Write a transition function using this map\nconst transitions = {\n  idle: { FETCH: "loading" },\n  loading: { SUCCESS: "success", ERROR: "error" },\n  success: { FETCH: "loading" },\n  error: { FETCH: "loading", RESET: "idle" }\n};`,
     expected: 'loading',
     sample: '((state, event) => transitions[state][event] || state)("idle", "FETCH")',
+    realWorldExample:
+      'XState powers state machines in apps like Stately Studio -- modeling fetch flows as idle/loading/success/error prevents impossible states like showing data and an error simultaneously.',
     hints: [
       'Look up the current state in the transitions map, then the event',
       'Fall back to the current state if no valid transition exists',
@@ -1575,6 +1741,8 @@ schedule(tasks)`,
   };
   return simulateFetch(true);
 })()`,
+    realWorldExample:
+      'When Stripe Dashboard fails to load payment data, it shows a clear error message with a "Retry" button -- this error state pattern ensures the UI gracefully handles network failures.',
     hints: [
       'Use an if/else or ternary based on the shouldFail flag',
       'The error state should have loading: false and data: null',
@@ -1592,6 +1760,8 @@ schedule(tasks)`,
     setupCode: `const cache = {};\nconst cachedFetch = (url, data) => {\n  if (cache[url]) return { cached: true, data: cache[url] };\n  cache[url] = data;\n  return { cached: false, data };\n};\ncachedFetch("/api/users", ["Alice", "Bob"]);`,
     expected: { cached: true, data: ['Alice', 'Bob'] },
     sample: 'cachedFetch("/api/users", null)',
+    realWorldExample:
+      'TanStack Query and SWR cache API responses so navigating back to a previously visited page on Airbnb shows instant results from cache while revalidating in the background.',
     hints: ['Check cache first before fetching', 'Return cached data if available'],
     tags: ['data-fetching', 'cache', 'performance'],
   },
@@ -1610,6 +1780,8 @@ schedule(tasks)`,
   controller.abort();
   return controller.signal.aborted;
 })()`,
+    realWorldExample:
+      'When you navigate away from a page on Netflix before movie data finishes loading, AbortController cancels the in-flight fetch to prevent updating state on an unmounted component.',
     hints: [
       'Create the controller first, then call abort()',
       'signal.aborted reflects whether abort() has been called',
@@ -1640,6 +1812,8 @@ schedule(tasks)`,
   };
   return fetchWithRetry(5);
 })()`,
+    realWorldExample:
+      'GitHub Actions retries failed API calls up to 3 times with exponential backoff -- retry logic ensures transient network blips do not cause permanent failures.',
     hints: [
       'Use a while loop that continues while result.ok is false and attempts remain',
       'The tryFetch function succeeds when attempt reaches 3',
@@ -1669,6 +1843,8 @@ schedule(tasks)`,
   const result2 = manager.request("fresh");
   return { isStale: !manager.isLatest(result1.id), isFresh: manager.isLatest(result2.id) };
 })()`,
+    realWorldExample:
+      'Rapidly switching between subreddits on Reddit can cause earlier, slower responses to arrive after newer ones -- a request ID tracker ensures only the latest search result is displayed.',
     hints: [
       'Each fetch call should increment and capture a unique ID',
       'isLatest compares a given ID against the current (most recent) ID',
@@ -1699,6 +1875,8 @@ schedule(tasks)`,
   pager.fetchPage(2, ["c", "d"]);
   return pager.getState();
 })()`,
+    realWorldExample:
+      'Twitter "Show more tweets" and GitHub issue lists load page-by-page -- paginated fetching accumulates results while tracking whether more pages exist.',
     hints: [
       'Spread existing items and new items together when fetching a new page',
       'hasMore is true when newItems array is non-empty',
@@ -1727,6 +1905,8 @@ schedule(tasks)`,
   dedupedFetch("/api/posts");
   return fetchCounts;
 })()`,
+    realWorldExample:
+      'If 10 components on a Next.js page all request /api/user, SWR deduplicates them into a single network request -- saving bandwidth and preventing redundant server load.',
     hints: [
       'Check if the URL already exists in the pending map before counting',
       'Only increment fetchCounts for genuinely new requests',
@@ -1744,6 +1924,8 @@ schedule(tasks)`,
     setupCode: `// Implement optimisticUpdate and call it with these values\nconst current = { likes: 10 };\nconst optimistic = { likes: 11 };\nconst serverResult = { ok: true, data: { likes: 11 } };`,
     expected: { likes: 11 },
     sample: '((curr, opt, srv) => srv.ok ? srv.data : curr)(current, optimistic, serverResult)',
+    realWorldExample:
+      'When you like a tweet on Twitter, the heart turns red instantly (optimistic) before the server confirms -- if the API fails, it reverts back to unliked.',
     hints: [
       'Check serverResult.ok to decide between confirming or rolling back',
       'On success use server data, on failure revert to current',
@@ -1771,6 +1953,8 @@ schedule(tasks)`,
   };
   return swr("/api/data", "fresh-data");
 })()`,
+    realWorldExample:
+      'Vercel SWR shows cached dashboard metrics instantly on page load (stale) while silently fetching fresh data in the background -- users see content immediately without waiting.',
     hints: [
       'Read from cache first to get stale data',
       'Update the cache and state with fresh data, then set isValidating to false',
@@ -1792,6 +1976,8 @@ schedule(tasks)`,
     ],
     sample:
       '((res) => res.data.results.map(u => ({ id: u.id, name: u.first_name + " " + u.last_name })))(apiResponse)',
+    realWorldExample:
+      'APIs like the GitHub REST API return deeply nested responses -- transforming them into a flat, component-friendly shape prevents messy data.results.items[0].user.login access throughout your UI.',
     hints: [
       'Navigate to data.results to get the array',
       'Use .map() to reshape each object, combining first_name and last_name',
@@ -1819,6 +2005,8 @@ schedule(tasks)`,
   };
   return poll(3);
 })()`,
+    realWorldExample:
+      'Gmail polls for new emails every few seconds to update your inbox badge count -- the polling pattern fetches fresh data at regular intervals without requiring WebSockets.',
     hints: [
       'Use a for loop to simulate each polling iteration',
       'Each iteration should add 10 to count and increment polls by 1',
@@ -1840,6 +2028,8 @@ schedule(tasks)`,
   nextCursor: pgs[pgs.length - 1].cursor,
   hasMore: pgs[pgs.length - 1].cursor !== null
 }))(pages)`,
+    realWorldExample:
+      'Instagram accumulates posts as you scroll down your feed -- infinite scroll fetches the next cursor-based page and appends results to the existing list.',
     hints: [
       'Use flatMap to flatten all data arrays into one',
       'Check the last page cursor to determine hasMore',
@@ -1872,6 +2062,8 @@ schedule(tasks)`,
   });
   return { byId, allIds };
 })(entities)`,
+    realWorldExample:
+      'Redux recommends normalizing API data into { byId, allIds } shape so looking up a specific user is O(1) instead of scanning an array -- this powers fast lookups in apps like Jira.',
     hints: [
       'Build a byId lookup object using each entity id as key',
       'Collect all ids into an array to maintain order',
@@ -1889,6 +2081,8 @@ schedule(tasks)`,
     setupCode: `// Call both and combine results\nconst fetchUser = () => ({ name: "Alice" });\nconst fetchPosts = () => ([{ title: "Hello" }]);`,
     expected: { user: { name: 'Alice' }, posts: [{ title: 'Hello' }] },
     sample: '({ user: fetchUser(), posts: fetchPosts() })',
+    realWorldExample:
+      'A GitHub profile page fetches user data and repositories in parallel with Promise.all -- loading both simultaneously instead of sequentially cuts perceived load time in half.',
     hints: [
       'Call each function to get its data',
       'Combine into one object with user and posts keys',
@@ -1910,6 +2104,8 @@ schedule(tasks)`,
   const posts = fetchUserPosts(user.id);
   return { user, posts };
 })()`,
+    realWorldExample:
+      'On Spotify, loading a playlist first fetches the playlist metadata, then uses the playlist ID to fetch the track list -- the second request depends on data from the first.',
     hints: [
       'The second fetch depends on data from the first',
       'Call fetchUser first, then pass user.id to fetchUserPosts',
@@ -1932,6 +2128,8 @@ schedule(tasks)`,
   retryCount,
   canRetry: retryCount < 3
 }))("Timeout", 1)`,
+    realWorldExample:
+      'Slack shows "Connecting..." with a retry counter when the WebSocket drops -- the error recovery state tracks attempt count and enables/disables the retry button accordingly.',
     hints: [
       'Build an object with the error details and retry information',
       'canRetry should be a boolean comparison against the max retry limit',
@@ -1952,6 +2150,8 @@ schedule(tasks)`,
     setupCode: `const formState = { name: "Alice", email: "", age: 25 };\nconst updateField = (state, field, value) => ({ ...state, [field]: value });`,
     expected: { name: 'Alice', email: 'alice@test.com', age: 25 },
     sample: 'updateField(formState, "email", "alice@test.com")',
+    realWorldExample:
+      'Formik manages multi-field forms with a single state object -- typing in the email field updates only that field while preserving name and age via spread operator.',
     hints: ['Use computed property names [field]', 'Spread existing state and override one field'],
     tags: ['forms', 'multi-field', 'state'],
   },
@@ -1966,6 +2166,8 @@ schedule(tasks)`,
     setupCode: `const validate = (values) => {\n  const errors = {};\n  if (!values.name) errors.name = "Name is required";\n  if (!values.email.includes("@")) errors.email = "Invalid email";\n  if (values.age <= 0) errors.age = "Age must be positive";\n  return errors;\n};`,
     expected: { email: 'Invalid email' },
     sample: 'validate({ name: "Alice", email: "invalid", age: 25 })',
+    realWorldExample:
+      'Zod and Yup validation schemas run synchronous checks on every field before a Stripe checkout form allows submission -- missing @ in the email highlights the error instantly.',
     hints: ['Check each field against its rule', 'Only add errors for failing validations'],
     tags: ['forms', 'validation', 'synchronous'],
   },
@@ -1986,6 +2188,8 @@ schedule(tasks)`,
   touch("email");
   return touched;
 })()`,
+    realWorldExample:
+      'Formik only shows validation errors for fields the user has actually visited -- clicking into and out of the email field marks it as "touched", triggering error display.',
     hints: [
       'Use an object to store which fields have been visited',
       'Set each field key to true when the touch function is called',
@@ -2004,6 +2208,8 @@ schedule(tasks)`,
     expected: true,
     sample:
       '((init, curr) => Object.keys(init).some(key => init[key] !== curr[key]))(initial, current)',
+    realWorldExample:
+      'Google Docs shows "Unsaved changes" and prompts before navigation when the document has been modified -- dirty checking compares current values against the last saved state.',
     hints: [
       'Iterate over the keys and compare each value',
       'Use .some() to check if any field differs',
@@ -2028,6 +2234,8 @@ schedule(tasks)`,
   };
   return handleSubmit({ name: "Alice" }, noErrors);
 })()`,
+    realWorldExample:
+      'When you click "Place Order" on Amazon, the submit handler validates all fields (address, payment, etc.) and either shows errors or proceeds to order confirmation.',
     hints: [
       'Run validation first, then check if any errors exist',
       'Use Object.keys(errors).length to check for errors',
@@ -2061,6 +2269,8 @@ schedule(tasks)`,
   manager.remove(1);
   return manager.getFields();
 })()`,
+    realWorldExample:
+      'LinkedIn "Add Experience" section lets you dynamically add and remove job entries -- each click creates a new field group or removes one from the form array.',
     hints: [
       'Use spread to add and .filter() to remove immutably',
       'remove should filter out the field whose id matches',
@@ -2093,6 +2303,8 @@ schedule(tasks)`,
   phones.swap(0, 3);
   return phones.getValues();
 })()`,
+    realWorldExample:
+      'React Hook Form useFieldArray powers dynamic phone number inputs on contact forms -- append adds a new number, swap lets users drag-reorder, and remove deletes one.',
     hints: [
       'append spreads existing plus new at end, prepend puts new at start',
       'swap uses a temp variable to exchange two array indices',
@@ -2113,6 +2325,8 @@ schedule(tasks)`,
   const isTaken = takenUsernames.includes(username.toLowerCase());
   return { valid: !isTaken, error: isTaken ? "Username already taken" : null };
 })("alice")`,
+    realWorldExample:
+      'GitHub checks username availability as you type during signup -- an async validator hits the API to see if "cooldev123" is already taken before you submit the form.',
     hints: [
       'Lowercase the input before checking the list',
       'Use .includes() to check if the username is taken',
@@ -2130,6 +2344,8 @@ schedule(tasks)`,
     setupCode: `const setNested = (obj, path, value) => {\n  const keys = path.split(".");\n  const result = JSON.parse(JSON.stringify(obj));\n  let current = result;\n  for (let i = 0; i < keys.length - 1; i++) {\n    current = current[keys[i]];\n  }\n  current[keys[keys.length - 1]] = value;\n  return result;\n};\nconst form = { user: { address: { city: "NYC", zip: "10001" } } };`,
     expected: { user: { address: { city: 'LA', zip: '10001' } } },
     sample: 'setNested(form, "user.address.city", "LA")',
+    realWorldExample:
+      'Formik and React Hook Form support dot-notation paths like "address.city" for deeply nested shipping address forms -- setNested updates the right level without flattening the structure.',
     hints: ['Split the path by dots', 'Navigate to the nested location and set the value'],
     tags: ['forms', 'nested', 'deep-update'],
   },
@@ -2152,6 +2368,8 @@ schedule(tasks)`,
   const sizes = radioGroup(["small", "medium", "large"], "medium");
   return { options: sizes.options, selected: sizes.selected };
 })()`,
+    realWorldExample:
+      'Amazon product pages use radio groups for selecting size (S, M, L, XL) or color variants -- only one option can be active at a time, and the selected option drives the displayed price.',
     hints: [
       'A radio group allows only one selection at a time',
       'isSelected compares an option against the selected value',
@@ -2178,6 +2396,8 @@ schedule(tasks)`,
   toggle("vue");
   return Array.from(selected).sort();
 })()`,
+    realWorldExample:
+      'GitHub issue label selectors let you toggle multiple labels (bug, enhancement, documentation) on and off -- a Set tracks which labels are currently applied.',
     hints: [
       'Use Set.has() to check membership, .add() and .delete() to toggle',
       'Convert the Set to an array and sort for consistent output',
@@ -2201,6 +2421,8 @@ schedule(tasks)`,
   });
   return result;
 })(errors, touched)`,
+    realWorldExample:
+      'Stripe checkout only shows "Card number is invalid" after the user has actually interacted with that field -- showing all errors upfront would overwhelm users on a fresh form.',
     hints: [
       'Iterate over error keys and check both conditions',
       'A field must be touched AND have a truthy error to be visible',
@@ -2238,6 +2460,8 @@ schedule(tasks)`,
   wizard.next({ agree: true });
   return wizard.getData();
 })()`,
+    realWorldExample:
+      'TurboTax walks you through Personal Info, Income, Deductions, and Review in a multi-step wizard -- each step merges its data into a single accumulated form state.',
     hints: [
       'Use Object.assign to merge each step data into the accumulated object',
       'getData returns the accumulated data from all steps',
@@ -2259,6 +2483,8 @@ schedule(tasks)`,
   selected: selectedValues,
   display: selectedValues.join(", ")
 }))(["JS", "TS", "Python", "Go"], ["JS", "TS"])`,
+    realWorldExample:
+      'LinkedIn job filters let you select multiple locations, job types, and experience levels from multi-select dropdowns -- the selected values are displayed as comma-separated chips.',
     hints: [
       'Use .join(", ") to create the display string from selected values',
       'Return all three properties in the result object',
@@ -2287,6 +2513,8 @@ schedule(tasks)`,
   };
   return validatePassword("Hello123");
 })()`,
+    realWorldExample:
+      '1Password and Bitwarden show a password strength meter (weak/fair/strong) as you type -- each passing rule (length, uppercase, digit, special char) increases the strength score.',
     hints: [
       'Use regex for uppercase (/[A-Z]/) and number (/[0-9]/) checks',
       'Count the number of passing rules to determine strength',
@@ -2314,6 +2542,8 @@ schedule(tasks)`,
   validate("abc");
   return validate(lastValue);
 })()`,
+    realWorldExample:
+      'Algolia search validates and queries only after the user pauses typing -- debouncing validation prevents showing flickering error messages for every intermediate keystroke.',
     hints: [
       'Track the latest value on each call to simulate debouncing',
       'The final validation runs on the last captured value',
@@ -2345,6 +2575,8 @@ schedule(tasks)`,
   form.reset();
   return form.getValues();
 })()`,
+    realWorldExample:
+      'A "Clear Filters" button on Airbnb search resets price range, dates, and guest count back to their initial empty state -- form reset restores the original values in one action.',
     hints: [
       'Keep a copy of initialValues to restore on reset',
       'Use spread to create a fresh copy when resetting',
