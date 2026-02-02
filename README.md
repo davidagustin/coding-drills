@@ -103,7 +103,14 @@ Framework-specific training for **React**, **Angular**, **Vue**, and **Native Ja
 
 - **Drill Mode** — Write code solutions to framework-specific challenges in a Monaco Editor.
 - **Quiz Mode** — Multiple-choice questions testing framework concepts and API knowledge.
-- **UI Patterns** — Catalog of 616+ UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, key concepts, starter code, and behavioral test suites.
+- **UI Patterns** — Catalog of 616+ UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, key concepts, starter code, and behavioral test suites. Each pattern detail page features:
+  - **Building Blocks** — Numbered concept checklist at the top showing what to master.
+  - **Tabbed Code Editor** — HTML and CSS tabs (read-only reference) plus an editable JS tab with auto-generated starter skeletons.
+  - **Your Preview** — Live iframe that re-executes your code as you type, using the pattern's HTML/CSS.
+  - **Live Demo** — Reference implementation running in a sandboxed iframe.
+  - **AI Tutor** — In-browser AI for guidance, hints, and code review.
+  - **Reset Button** — One-click reset to regenerate the starter skeleton.
+  - All 216 patterns across 4 frameworks have interactive `demoCode` (HTML + CSS + JS) for Live Demo and starter code generation.
 - **Cheatsheet** — Comprehensive quick-reference with 6 sections: Overview, Core Concepts, Key APIs, Common Patterns, Code Examples (interactive Monaco editors), and Ecosystem & Tools. Two-column layout with scroll spy, collapsible sections, SVG section icons, and material-inspired visual polish.
 
 ---
