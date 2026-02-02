@@ -623,6 +623,7 @@ export default function TrainingProblemDetailPage() {
                 onSubmitShortcut={handleSubmit}
                 setupCode={problem.setupCode}
                 monacoLanguageOverride={problem.editorLanguage}
+                hideValidation={!!problem.validPatterns?.length}
               />
               <p className="text-xs text-zinc-500 mt-2">
                 Press{' '}

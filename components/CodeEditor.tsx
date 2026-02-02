@@ -112,6 +112,8 @@ interface CodeEditorProps {
   setupCode?: string;
   /** Override the Monaco language (e.g. 'html' for Angular templates) */
   monacoLanguageOverride?: string;
+  /** Hide validation squiggles (e.g. Angular decorator syntax that isn't valid JS) */
+  hideValidation?: boolean;
 }
 
 /**
@@ -142,6 +144,7 @@ export default function CodeEditor({
   autoFocus = false,
   setupCode,
   monacoLanguageOverride,
+  hideValidation = false,
 }: CodeEditorProps) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const isSettingValueRef = useRef(false);
@@ -194,6 +197,12 @@ export default function CodeEditor({
           monaco.Uri.parse(uniqueId),
         );
         editor.setModel(model);
+      }
+
+      // Hide all validation squiggles for pattern-validated editors
+      // (e.g. Angular decorator syntax that isn't valid JS/TS)
+      if (hideValidation) {
+        editor.updateOptions({ renderValidationDecorations: 'off' });
       }
 
       // Configure TypeScript/JavaScript settings
@@ -366,7 +375,7 @@ export default function CodeEditor({
         }, 100);
       });
     },
-    [code, fileExtension, language, monacoLanguage, autoFocus, setupCode],
+    [code, fileExtension, language, monacoLanguage, autoFocus, setupCode, hideValidation],
   );
 
   const handleEditorChange = useCallback(
