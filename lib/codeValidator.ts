@@ -92,7 +92,7 @@ export function validateJavaScript(
     // Strip TypeScript type annotations before execution
     // TypeScript syntax is not valid JavaScript, so we need to remove type annotations
     const sanitizedAnswer = stripTypeScriptAnnotations(normalizedAnswer);
-    const sanitizedSetupCode = stripTypeScriptAnnotations(setupCode);
+    const sanitizedSetupCode = setupCode;
 
     // Construct the code that returns the user's expression result
     // This ensures the code is compiled and executed, not just parsed
@@ -104,14 +104,41 @@ export function validateJavaScript(
     if (trimmedAnswer.startsWith('return ')) {
       fullCode = trimmedAnswer;
     } else {
-      // Otherwise, wrap it in a return statement
-      // Check if it's already a valid expression (ends with semicolon or is a simple expression)
-      if (trimmedAnswer.endsWith(';')) {
-        // It's a statement, just add return
-        fullCode = `return ${trimmedAnswer.slice(0, -1)};`;
+      // Check if code contains statements (const, let, var, function, class, etc.)
+      const statementPattern =
+        /^(const |let |var |function |class |if |for |while |switch |try |do |throw )/;
+      const hasStatements =
+        statementPattern.test(trimmedAnswer) ||
+        trimmedAnswer.split('\n').some((line) => statementPattern.test(line.trim()));
+
+      if (hasStatements) {
+        // Multi-statement code: execute all lines, return value of last expression
+        const lines = trimmedAnswer
+          .split('\n')
+          .map((l) => l.trim())
+          .filter((l) => l.length > 0);
+        const lastLine = lines[lines.length - 1];
+        const precedingLines = lines.slice(0, -1).join('\n');
+
+        // If last line is a variable declaration, return the variable
+        const constMatch = lastLine.match(/^(?:const|let|var)\s+(\w+)\s*=/);
+        if (constMatch) {
+          fullCode = `${precedingLines}\n${lastLine}\nreturn ${constMatch[1]};`;
+        } else if (statementPattern.test(lastLine)) {
+          // Last line is also a statement (function def, if, etc.) — run everything, return undefined
+          fullCode = trimmedAnswer;
+        } else if (lastLine.endsWith(';')) {
+          fullCode = `${precedingLines}\nreturn ${lastLine.slice(0, -1)};`;
+        } else {
+          fullCode = `${precedingLines}\nreturn (${lastLine});`;
+        }
       } else {
-        // It's an expression, wrap it
-        fullCode = `return (${trimmedAnswer});`;
+        // Pure expression
+        if (trimmedAnswer.endsWith(';')) {
+          fullCode = `return ${trimmedAnswer.slice(0, -1)};`;
+        } else {
+          fullCode = `return (${trimmedAnswer});`;
+        }
       }
     }
 

@@ -128,9 +128,10 @@ export function executeJavaScript(
       },
     };
 
-    // Strip TypeScript type annotations from setup code for JavaScript execution
-    // TypeScript syntax like `: string[]` is not valid JavaScript
-    const sanitizedSetupCode = stripTypes ? stripTypeScriptAnnotations(setupCode) : setupCode;
+    // Never strip types from setupCode - it's developer-authored JavaScript
+    // that never contains TypeScript annotations. Stripping corrupts object
+    // literals like ({ key: value }) by treating property colons as types.
+    const sanitizedSetupCode = setupCode;
     const sanitizedUserCode = stripTypes ? stripTypeScriptAnnotations(userCode) : userCode;
 
     // Combine setup and user code
@@ -1574,8 +1575,53 @@ function escapeRegex(str: string): string {
 }
 
 /**
+ * Determines if a string looks like a TypeScript type annotation rather than
+ * a JavaScript value expression. Used by stripTypeScriptAnnotations to avoid
+ * corrupting object literal properties (e.g., { type: e.type }).
+ *
+ * TypeScript types: string, number, boolean, Array<T>, MyType, string[]
+ * JS values: e.type, val, "hello", 1024, true, effect(), x * 2
+ */
+function looksLikeTypeAnnotation(value: string): boolean {
+  if (!value) return false;
+
+  // Remove trailing content after default value assignment for analysis
+  const cleanValue = value.replace(/\s*=.*$/, '').trim();
+  if (!cleanValue) return false;
+
+  // Known TypeScript primitive types (exact match with optional array/union suffixes)
+  const primitivePattern =
+    /^(?:string|number|boolean|any|void|never|undefined|null|unknown|symbol|bigint|object)(?:\s*\[\s*\])*(?:\s*[|&]\s*(?:string|number|boolean|any|void|never|undefined|null|unknown|symbol|bigint|object|[A-Z]\w*)(?:\s*\[\s*\])*)*$/;
+  if (primitivePattern.test(cleanValue)) return true;
+
+  // Capitalized type names: Array<string>, Record<K,V>, MyType, MyType[]
+  if (/^[A-Z]/.test(cleanValue)) return true;
+
+  // Definitely NOT a type: contains dots (property access like e.type),
+  // quotes (string literal), arithmetic operators, or function calls
+  if (/[.'"()+\-*/%!~]/.test(cleanValue)) return false;
+
+  // Numeric literals (1024, 768) are values not types
+  if (/^\d/.test(cleanValue)) return false;
+
+  // Boolean literals in value position (though also valid literal types,
+  // they're almost never used as parameter types)
+  if (/^(?:true|false)$/.test(cleanValue)) return false;
+
+  // If it's a single lowercase identifier that's not a known type,
+  // it's likely a variable reference (val, data, result), not a type
+  if (/^\w+$/.test(cleanValue)) return false;
+
+  return false;
+}
+
+/**
  * Strip TypeScript type annotations from code for JavaScript execution
  * Removes type annotations like `: string[]`, `: number`, etc.
+ *
+ * IMPORTANT: This function must handle nested parentheses correctly.
+ * A naive regex like /\(([^)]*)\)/g will break on nested parens such as
+ * `items.map(item => ({ key: item.id, value: item.name }))`.
  */
 function stripTypeScriptAnnotations(code: string): string {
   if (!code) return code;
@@ -1585,13 +1631,42 @@ function stripTypeScriptAnnotations(code: string): string {
 
   // Remove type annotations in function parameters: function(x: Type) or (x: Type) =>
   sanitized = sanitized.replace(/\(([^)]*)\)/g, (match, params) => {
-    // Remove type annotations from each parameter
+    const trimmedParams = params.trim();
+
+    // Skip if this looks like an object literal being passed as argument
+    // e.g., ({ key: value, key2: value2 }) — the content starts with {
+    if (trimmedParams.startsWith('{')) {
+      return match;
+    }
+
     const cleanedParams = params
       .split(',')
       .map((param: string) => {
         const trimmed = param.trim();
-        // Remove type annotation: param: Type -> param
-        return trimmed.replace(/:\s*[^=,]+(?=\s*=|$)/g, '').trim();
+
+        // Skip pieces that are part of object literals (start/end with braces)
+        if (trimmed.startsWith('{') || trimmed.endsWith('}')) {
+          return param;
+        }
+
+        // Check if this looks like a parameter with a type annotation
+        // Pattern: identifier: or ...identifier: or identifier?:
+        const paramMatch = trimmed.match(/^(\.{0,3}\w+)\s*(\?)?\s*:\s*([\s\S]*)/);
+        if (paramMatch) {
+          const afterColon = paramMatch[3].trim();
+          // Only strip if what follows the colon looks like a TypeScript type,
+          // NOT a value expression. This prevents corrupting object properties
+          // like "type: e.type" or "width: 1024" which look similar to "name: string".
+          if (looksLikeTypeAnnotation(afterColon)) {
+            // Strip the type annotation, preserving default values
+            const defaultMatch = afterColon.match(/^[^=]*=\s*([\s\S]*)/);
+            if (defaultMatch) {
+              return `${paramMatch[1]} = ${defaultMatch[1]}`.trim();
+            }
+            return paramMatch[1].trim();
+          }
+        }
+        return trimmed;
       })
       .join(', ');
     return `(${cleanedParams})`;

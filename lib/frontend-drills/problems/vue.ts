@@ -167,8 +167,7 @@ handleClick(); handleClick(); handleClick();
     setupCode: `let lastEmit = null;
 const emit = (eventName, payload) => { lastEmit = { eventName, payload }; };`,
     expected: { eventName: 'update', payload: { value: 100 } },
-    sample: `emit("update", {value:100});
-lastEmit`,
+    sample: `(emit("update", {value:100}), lastEmit)`,
     hints: [
       'Call emit() with event name and payload',
       'The function stores the event data',
@@ -281,8 +280,7 @@ const message = "Hello";`,
     setup: 'A mock event with a stopPropagation flag is provided.',
     setupCode: `const event = { stopped: false, stopPropagation() { this.stopped = true; } };`,
     expected: { stopped: true },
-    sample: `event.stopPropagation();
-({ stopped: event.stopped })`,
+    sample: `(event.stopPropagation(), { stopped: event.stopped })`,
     hints: ['.stop modifier calls event.stopPropagation()', 'Call the method on the event object'],
     tags: ['events', 'modifiers', 'stop-propagation'],
   },
@@ -297,8 +295,7 @@ const message = "Hello";`,
     setup: 'A mock event with a preventDefault flag is provided.',
     setupCode: `const event = { prevented: false, preventDefault() { this.prevented = true; } };`,
     expected: { prevented: true },
-    sample: `event.preventDefault();
-({ prevented: event.prevented })`,
+    sample: `(event.preventDefault(), { prevented: event.prevented })`,
     hints: [
       '.prevent modifier calls event.preventDefault()',
       'Call the method on the event object',
@@ -506,8 +503,7 @@ handler("a"); handler("b"); handler("c");
     setupCode: `let parentValue = "old";
 const onUpdateModelValue = (val) => { parentValue = val; };`,
     expected: { parentValue: 'new' },
-    sample: `onUpdateModelValue("new");
-({ parentValue })`,
+    sample: `(onUpdateModelValue("new"), { parentValue })`,
     hints: [
       'Vue uses update:modelValue event for v-model on components',
       'The parent handler receives the new value',
@@ -980,11 +976,7 @@ const onMounted = (fn) => { order.push("mounted"); fn(); };
 const onBeforeUpdate = (fn) => { order.push("beforeUpdate"); fn(); };
 const onUpdated = (fn) => { order.push("updated"); fn(); };`,
     expected: ['beforeMount', 'mounted', 'beforeUpdate', 'updated'],
-    sample: `onBeforeMount(() => {});
-onMounted(() => {});
-onBeforeUpdate(() => {});
-onUpdated(() => {});
-order`,
+    sample: `(onBeforeMount(() => {}), onMounted(() => {}), onBeforeUpdate(() => {}), onUpdated(() => {}), order)`,
     hints: [
       'Vue lifecycle hooks run in a specific order',
       'beforeMount -> mounted -> beforeUpdate -> updated',
@@ -2125,7 +2117,7 @@ controller.execute(() => "data")`,
   const cache = {};
   let fetchCount = 0;
   return {
-    fetch(url, fetchFn) {
+    getData(url, fetchFn) {
       if (cache[url]) return { data: cache[url], fromCache: true };
       fetchCount++;
       const data = fetchFn();
@@ -2136,9 +2128,9 @@ controller.execute(() => "data")`,
   };
 }`,
     expected: { first: false, second: true, fetchCount: 1 },
-    sample: `const cached = createCachedFetch();
-const r1 = cached.fetch("/api/users", () => ["Alice"]);
-const r2 = cached.fetch("/api/users", () => ["Alice"]);
+    sample: `const cached = createCachedFetch()
+const r1 = cached.getData("/api/users", () => ["Alice"])
+const r2 = cached.getData("/api/users", () => ["Alice"])
 ({ first: r1.fromCache, second: r2.fromCache, fetchCount: cached.fetchCount })`,
     hints: ['Cache responses by URL', 'Return cached data on subsequent requests'],
     tags: ['data-fetching', 'caching', 'performance'],
@@ -2274,12 +2266,9 @@ function useConditionalFetch(enabled, fetchFn) {
       enabled: { data: 'result', fetched: true },
       disabled: { data: null, fetched: false },
     },
-    sample: `const on = useConditionalFetch(true, () => "result");
-const off = useConditionalFetch(false, () => "result");
-({
-  enabled: { data: on.data.value, fetched: on.fetched.value },
-  disabled: { data: off.data.value, fetched: off.fetched.value }
-})`,
+    sample: `const on = useConditionalFetch(true, () => "result")
+const off = useConditionalFetch(false, () => "result")
+({ enabled: { data: on.data.value, fetched: on.fetched.value }, disabled: { data: off.data.value, fetched: off.fetched.value } })`,
     hints: ['Only execute fetch when condition is truthy', 'Return empty state when disabled'],
     tags: ['data-fetching', 'conditional', 'composable'],
   },
@@ -2295,7 +2284,7 @@ const off = useConditionalFetch(false, () => "result");
     setupCode: `function createSWR() {
   const cache = {};
   return {
-    fetch(key, fetchFn) {
+    getData(key, fetchFn) {
       const stale = cache[key] || null;
       const fresh = fetchFn();
       cache[key] = fresh;
@@ -2307,9 +2296,9 @@ const off = useConditionalFetch(false, () => "result");
       first: { stale: null, fresh: 'v1', hadCache: false },
       second: { stale: 'v1', fresh: 'v2', hadCache: true },
     },
-    sample: `const swr = createSWR();
-const first = swr.fetch("key", () => "v1");
-const second = swr.fetch("key", () => "v2");
+    sample: `const swr = createSWR()
+const first = swr.getData("key", () => "v1")
+const second = swr.getData("key", () => "v2")
 ({ first, second })`,
     hints: [
       'SWR returns stale data immediately for fast UX',
