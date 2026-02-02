@@ -125,8 +125,11 @@ function generateTrainingStarter(problem: FrontendDrillProblem): string {
         break;
       }
     }
-    // Append everything after the function body (invocation lines)
-    const invocationLines = sampleLines.slice(bodyEnd + 1).filter((l) => l.trim().length > 0);
+    // Append simple invocation lines after the function body — skip lines
+    // containing arrow functions (=>) since those hold answer logic.
+    const invocationLines = sampleLines
+      .slice(bodyEnd + 1)
+      .filter((l) => l.trim().length > 0 && !l.includes('=>'));
     if (invocationLines.length > 0) {
       lines.push(...invocationLines);
     }
@@ -136,8 +139,11 @@ function generateTrainingStarter(problem: FrontendDrillProblem): string {
     lines.push(`${keyword} ${name} = (${params}) => {`);
     lines.push('  // Your code here');
     lines.push('};');
-    // Invocation lines are everything after the first line
-    const invocationLines = sampleLines.slice(1).filter((l) => l.trim().length > 0);
+    // Invocation lines are everything after the first line — skip lines
+    // containing arrow functions (=>) since those hold answer logic.
+    const invocationLines = sampleLines
+      .slice(1)
+      .filter((l) => l.trim().length > 0 && !l.includes('=>'));
     if (invocationLines.length > 0) {
       lines.push(...invocationLines);
     }
@@ -160,7 +166,9 @@ function generateTrainingStarter(problem: FrontendDrillProblem): string {
         break;
       }
     }
-    const invocationLines = sampleLines.slice(bodyEnd + 1).filter((l) => l.trim().length > 0);
+    const invocationLines = sampleLines
+      .slice(bodyEnd + 1)
+      .filter((l) => l.trim().length > 0 && !l.includes('=>'));
     if (invocationLines.length > 0) {
       lines.push(...invocationLines);
     }
