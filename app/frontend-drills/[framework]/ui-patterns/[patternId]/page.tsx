@@ -25,21 +25,6 @@ const CodeEditor = dynamic(
 );
 const ExerciseTutor = dynamic(() => import('@/components/ExerciseTutor'), { ssr: false });
 
-function formatCSSForDisplay(raw: string): string {
-  return raw
-    .replace(/\{([^}]+)\}/g, (_match, body: string) => {
-      const props = body
-        .split(';')
-        .map((p: string) => p.trim())
-        .filter(Boolean)
-        .map((p: string) => `  ${p};`)
-        .join('\n');
-      return `{\n${props}\n}`;
-    })
-    .replace(/\}\s*/g, '}\n\n')
-    .trim();
-}
-
 function getImplementationHint(concept: string, framework: string): string {
   const hints: Record<string, string> = {
     'form validation':
@@ -1285,18 +1270,20 @@ try {
                     monacoLanguageOverride={monacoLanguage}
                   />
                 ) : (
-                  <div
-                    className="rounded-lg overflow-auto bg-zinc-900/50 border border-zinc-700/30"
-                    style={{ height: 320 }}
-                  >
-                    <pre className="p-4 text-sm text-zinc-300 font-mono leading-relaxed whitespace-pre overflow-x-auto">
-                      <code>
-                        {editorTab === 'html'
-                          ? pattern.demoCode?.html || '<!-- No HTML -->'
-                          : formatCSSForDisplay(pattern.demoCode?.css || '/* No CSS */')}
-                      </code>
-                    </pre>
-                  </div>
+                  <CodeEditor
+                    code={
+                      editorTab === 'html'
+                        ? pattern.demoCode?.html || '<!-- No HTML -->'
+                        : pattern.demoCode?.css || '/* No CSS */'
+                    }
+                    onChange={() => {}}
+                    language="javascript"
+                    monacoLanguageOverride={editorTab === 'html' ? 'html' : 'css'}
+                    readOnly={true}
+                    lineNumbers={false}
+                    height={320}
+                    minHeight={100}
+                  />
                 )}
               </div>
             </div>

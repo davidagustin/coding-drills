@@ -1,6 +1,12 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
+
+const CodeEditor = dynamic(
+  () => import('@/components/CodeEditor').then((mod) => mod.default || mod),
+  { ssr: false },
+);
 
 /** Simple CSS formatter: expands single-line rules into readable multi-line */
 function formatCSS(raw: string): string {
@@ -159,7 +165,7 @@ export function LivePreview({
           style={{ height }}
         />
       ) : (
-        <div className="relative overflow-auto" style={{ height }}>
+        <div className="relative" style={{ height }}>
           <button
             type="button"
             onClick={() => {
@@ -171,9 +177,25 @@ export function LivePreview({
           >
             {copied ? 'Copied!' : 'Copy'}
           </button>
-          <pre className="p-4 text-sm text-slate-300 font-mono leading-relaxed whitespace-pre overflow-x-auto">
-            <code>{codeContent[activeTab]}</code>
-          </pre>
+          <CodeEditor
+            code={codeContent[activeTab]}
+            onChange={() => {}}
+            language="javascript"
+            monacoLanguageOverride={
+              activeTab === 'html'
+                ? 'html'
+                : activeTab === 'css'
+                  ? 'css'
+                  : framework === 'react'
+                    ? 'typescript'
+                    : 'javascript'
+            }
+            readOnly={true}
+            lineNumbers={false}
+            height={height}
+            minHeight={100}
+            className="border-0 !rounded-none"
+          />
         </div>
       )}
     </div>
