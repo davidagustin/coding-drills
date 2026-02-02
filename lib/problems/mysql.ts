@@ -87,7 +87,8 @@ export const mysqlProblems: Problem[] = [
     setupCode:
       "CREATE TABLE orders (id INT, status VARCHAR(20));\nINSERT INTO orders VALUES (1, 'shipped');",
     expected: 3,
-    sample: "SELECT FIELD(status, 'pending', 'processing', 'shipped', 'delivered') FROM orders;",
+    sample:
+      "SELECT FIELD(status, 'pending', 'processing', 'shipped', 'delivered') FROM orders;",
     hints: [
       'FIELD returns the index position of the first argument in the list',
       'Returns 0 if not found',
@@ -192,7 +193,8 @@ export const mysqlProblems: Problem[] = [
     setupCode:
       "CREATE TABLE articles (id INT, tags VARCHAR(200));\nINSERT INTO articles VALUES (1, 'php,mysql,javascript');",
     expected: 3,
-    sample: "SELECT LENGTH(tags) - LENGTH(REPLACE(tags, ',', '')) + 1 AS tag_count FROM articles;",
+    sample:
+      "SELECT LENGTH(tags) - LENGTH(REPLACE(tags, ',', '')) + 1 AS tag_count FROM articles;",
     hints: [
       'Count commas and add 1 to get the number of items',
       'Use LENGTH and REPLACE to count occurrences',
@@ -238,7 +240,11 @@ export const mysqlProblems: Problem[] = [
       "CREATE TABLE events (id INT, event_date DATE);\nINSERT INTO events VALUES (1, '2024-01-15');",
     expected: 'January 15, 2024',
     sample: "SELECT DATE_FORMAT(event_date, '%M %d, %Y') FROM events;",
-    hints: ['%M = full month name', '%d = day with leading zero', '%Y = 4-digit year'],
+    hints: [
+      '%M = full month name',
+      '%d = day with leading zero',
+      '%Y = 4-digit year',
+    ],
     validPatterns: [/DATE_FORMAT\s*\(\s*event_date\s*,\s*['"]%M\s+%d,\s+%Y['"]\s*\)/i],
     tags: ['date', 'format', 'mysql-specific'],
   },
@@ -247,7 +253,7 @@ export const mysqlProblems: Problem[] = [
     category: 'Date Functions',
     difficulty: 'easy',
     title: 'Format Date as DD/MM/YYYY',
-    text: 'Use DATE_FORMAT to display a date in European format (DD/MM/YYYY).',
+    text: "Use DATE_FORMAT to display a date in European format (DD/MM/YYYY).",
     setup: 'SELECT from orders table with order_date column',
     setupCode:
       "CREATE TABLE orders (id INT, order_date DATE);\nINSERT INTO orders VALUES (1, '2024-03-25');",
@@ -372,7 +378,10 @@ export const mysqlProblems: Problem[] = [
       "CREATE TABLE employees (id INT, hire_date DATE);\nINSERT INTO employees VALUES (1, '2022-06-15');",
     expected: '19 (varies by current date)',
     sample: 'SELECT TIMESTAMPDIFF(MONTH, hire_date, CURDATE()) AS months_worked FROM employees;',
-    hints: ['MONTH unit counts complete months', 'Partial months are not counted'],
+    hints: [
+      'MONTH unit counts complete months',
+      'Partial months are not counted',
+    ],
     validPatterns: [/TIMESTAMPDIFF\s*\(\s*MONTH\s*,\s*hire_date\s*,\s*CURDATE\s*\(\s*\)\s*\)/i],
     tags: ['date', 'timestampdiff', 'tenure', 'mysql-specific'],
   },
@@ -406,12 +415,16 @@ export const mysqlProblems: Problem[] = [
     title: 'Simple IF Expression',
     text: "Use IF() to return 'Active' if status = 1, otherwise 'Inactive'.",
     setup: 'SELECT from users table with status column',
-    setupCode:
-      "CREATE TABLE users (id INT, name VARCHAR(50), status INT);\nINSERT INTO users VALUES (1, 'John', 1);",
+    setupCode: 'CREATE TABLE users (id INT, name VARCHAR(50), status INT);\nINSERT INTO users VALUES (1, \'John\', 1);',
     expected: 'Active',
     sample: "SELECT IF(status = 1, 'Active', 'Inactive') FROM users;",
-    hints: ['IF(condition, true_value, false_value)', 'Similar to ternary operator in programming'],
-    validPatterns: [/IF\s*\(\s*status\s*=\s*1\s*,\s*['"]Active['"]\s*,\s*['"]Inactive['"]\s*\)/i],
+    hints: [
+      'IF(condition, true_value, false_value)',
+      'Similar to ternary operator in programming',
+    ],
+    validPatterns: [
+      /IF\s*\(\s*status\s*=\s*1\s*,\s*['"]Active['"]\s*,\s*['"]Inactive['"]\s*\)/i,
+    ],
     tags: ['control-flow', 'if', 'mysql-specific'],
   },
   {
@@ -460,7 +473,8 @@ export const mysqlProblems: Problem[] = [
     setupCode:
       "CREATE TABLE contacts (id INT, mobile_phone VARCHAR(20), home_phone VARCHAR(20), work_phone VARCHAR(20));\nINSERT INTO contacts VALUES (1, NULL, NULL, '555-0100');",
     expected: '555-0100',
-    sample: "SELECT COALESCE(mobile_phone, home_phone, work_phone, 'No phone') FROM contacts;",
+    sample:
+      "SELECT COALESCE(mobile_phone, home_phone, work_phone, 'No phone') FROM contacts;",
     hints: [
       'COALESCE returns the first non-NULL argument',
       'Can have any number of arguments',
@@ -479,7 +493,7 @@ export const mysqlProblems: Problem[] = [
     text: "Use CASE to convert numeric score to letter grade: >= 90 = 'A', >= 80 = 'B', >= 70 = 'C', >= 60 = 'D', else 'F'.",
     setup: 'SELECT from students table',
     setupCode:
-      "CREATE TABLE students (id INT, name VARCHAR(50), score INT);\nINSERT INTO students VALUES (1, 'Alice', 85);",
+      'CREATE TABLE students (id INT, name VARCHAR(50), score INT);\nINSERT INTO students VALUES (1, \'Alice\', 85);',
     expected: 'B',
     sample:
       "SELECT CASE WHEN score >= 90 THEN 'A' WHEN score >= 80 THEN 'B' WHEN score >= 70 THEN 'C' WHEN score >= 60 THEN 'D' ELSE 'F' END FROM students;",
@@ -521,12 +535,17 @@ export const mysqlProblems: Problem[] = [
     text: "Use nested IF to categorize price: < 10 = 'Budget', < 50 = 'Standard', < 100 = 'Premium', else 'Luxury'.",
     setup: 'SELECT from products table',
     setupCode:
-      "CREATE TABLE products (id INT, name VARCHAR(50), price DECIMAL(10,2));\nINSERT INTO products VALUES (1, 'Widget', 75.00);",
+      'CREATE TABLE products (id INT, name VARCHAR(50), price DECIMAL(10,2));\nINSERT INTO products VALUES (1, \'Widget\', 75.00);',
     expected: 'Premium',
     sample:
       "SELECT IF(price < 10, 'Budget', IF(price < 50, 'Standard', IF(price < 100, 'Premium', 'Luxury'))) FROM products;",
-    hints: ['Nest IF() calls for multiple conditions', 'CASE is often cleaner for many conditions'],
-    validPatterns: [/IF\s*\(\s*price\s*<\s*10\s*,\s*['"]Budget['"]\s*,\s*IF\s*\(/i],
+    hints: [
+      'Nest IF() calls for multiple conditions',
+      'CASE is often cleaner for many conditions',
+    ],
+    validPatterns: [
+      /IF\s*\(\s*price\s*<\s*10\s*,\s*['"]Budget['"]\s*,\s*IF\s*\(/i,
+    ],
     tags: ['control-flow', 'if', 'nested', 'mysql-specific'],
   },
   {
@@ -538,13 +557,16 @@ export const mysqlProblems: Problem[] = [
     setup: 'SELECT from order_items table',
     setupCode:
       'CREATE TABLE order_items (id INT, quantity INT, regular_price DECIMAL(10,2), discount_price DECIMAL(10,2));\nINSERT INTO order_items VALUES (1, 3, 100.00, 80.00);',
-    expected: 240.0,
-    sample: 'SELECT quantity * COALESCE(discount_price, regular_price) AS total FROM order_items;',
+    expected: 240.00,
+    sample:
+      'SELECT quantity * COALESCE(discount_price, regular_price) AS total FROM order_items;',
     hints: [
       'COALESCE picks the first non-NULL value',
       'Use discount_price if available, otherwise regular_price',
     ],
-    validPatterns: [/quantity\s*\*\s*COALESCE\s*\(\s*discount_price\s*,\s*regular_price\s*\)/i],
+    validPatterns: [
+      /quantity\s*\*\s*COALESCE\s*\(\s*discount_price\s*,\s*regular_price\s*\)/i,
+    ],
     tags: ['control-flow', 'coalesce', 'calculation', 'mysql-specific'],
   },
 
@@ -556,10 +578,10 @@ export const mysqlProblems: Problem[] = [
     category: 'JSON Functions',
     difficulty: 'easy',
     title: 'Extract JSON Value',
-    text: 'Use JSON_EXTRACT to get the \'name\' field from a JSON column data = \'{"name": "John", "age": 30}\'.',
+    text: "Use JSON_EXTRACT to get the 'name' field from a JSON column data = '{\"name\": \"John\", \"age\": 30}'.",
     setup: 'SELECT from profiles table with data JSON column',
     setupCode:
-      'CREATE TABLE profiles (id INT, data JSON);\nINSERT INTO profiles VALUES (1, \'{"name": "John", "age": 30}\');',
+      "CREATE TABLE profiles (id INT, data JSON);\nINSERT INTO profiles VALUES (1, '{\"name\": \"John\", \"age\": 30}');",
     expected: '"John"',
     sample: "SELECT JSON_EXTRACT(data, '$.name') FROM profiles;",
     hints: [
@@ -581,10 +603,13 @@ export const mysqlProblems: Problem[] = [
     text: "Use the -> operator shorthand to extract 'email' from JSON column.",
     setup: 'SELECT from users table with info JSON column',
     setupCode:
-      'CREATE TABLE users (id INT, info JSON);\nINSERT INTO users VALUES (1, \'{"email": "john@example.com"}\');',
+      "CREATE TABLE users (id INT, info JSON);\nINSERT INTO users VALUES (1, '{\"email\": \"john@example.com\"}');",
     expected: '"john@example.com"',
     sample: "SELECT info->'$.email' FROM users;",
-    hints: ['-> is shorthand for JSON_EXTRACT', 'MySQL 5.7+ supports this syntax'],
+    hints: [
+      '-> is shorthand for JSON_EXTRACT',
+      'MySQL 5.7+ supports this syntax',
+    ],
     validPatterns: [
       /info\s*->\s*['"]?\$\.email['"]?/i,
       /JSON_EXTRACT\s*\(\s*info\s*,\s*['"]?\$\.email['"]?\s*\)/i,
@@ -599,10 +624,13 @@ export const mysqlProblems: Problem[] = [
     text: "Use ->> operator to extract 'city' as unquoted text from JSON column.",
     setup: 'SELECT from customers table',
     setupCode:
-      'CREATE TABLE customers (id INT, address JSON);\nINSERT INTO customers VALUES (1, \'{"city": "Boston", "zip": "02101"}\');',
+      "CREATE TABLE customers (id INT, address JSON);\nINSERT INTO customers VALUES (1, '{\"city\": \"Boston\", \"zip\": \"02101\"}');",
     expected: 'Boston',
     sample: "SELECT address->>'$.city' FROM customers;",
-    hints: ['->> extracts and unquotes the value', 'Equivalent to JSON_UNQUOTE(JSON_EXTRACT(...))'],
+    hints: [
+      '->> extracts and unquotes the value',
+      'Equivalent to JSON_UNQUOTE(JSON_EXTRACT(...))',
+    ],
     validPatterns: [
       /address\s*->>\s*['"]?\$\.city['"]?/i,
       /JSON_UNQUOTE\s*\(\s*JSON_EXTRACT\s*\(\s*address\s*,\s*['"]?\$\.city['"]?\s*\)\s*\)/i,
@@ -655,9 +683,9 @@ export const mysqlProblems: Problem[] = [
     text: "Use JSON_CONTAINS to check if a JSON array column 'tags' contains the value 'urgent'.",
     setup: 'SELECT from tickets table',
     setupCode:
-      'CREATE TABLE tickets (id INT, tags JSON);\nINSERT INTO tickets VALUES (1, \'["support", "urgent", "billing"]\');',
+      "CREATE TABLE tickets (id INT, tags JSON);\nINSERT INTO tickets VALUES (1, '[\"support\", \"urgent\", \"billing\"]');",
     expected: 1,
-    sample: 'SELECT JSON_CONTAINS(tags, \'"urgent"\') FROM tickets;',
+    sample: "SELECT JSON_CONTAINS(tags, '\"urgent\"') FROM tickets;",
     hints: [
       'Second argument must be valid JSON (quoted for strings)',
       'Returns 1 if contained, 0 if not',
@@ -670,10 +698,10 @@ export const mysqlProblems: Problem[] = [
     category: 'JSON Functions',
     difficulty: 'hard',
     title: 'Extract Nested JSON',
-    text: 'Use JSON_EXTRACT to get the city from nested JSON: \'{"address": {"city": "Boston", "state": "MA"}}\'.',
+    text: "Use JSON_EXTRACT to get the city from nested JSON: '{\"address\": {\"city\": \"Boston\", \"state\": \"MA\"}}'.",
     setup: 'SELECT from customers table',
     setupCode:
-      'CREATE TABLE customers (id INT, data JSON);\nINSERT INTO customers VALUES (1, \'{"address": {"city": "Boston", "state": "MA"}}\');',
+      "CREATE TABLE customers (id INT, data JSON);\nINSERT INTO customers VALUES (1, '{\"address\": {\"city\": \"Boston\", \"state\": \"MA\"}}');",
     expected: '"Boston"',
     sample: "SELECT JSON_EXTRACT(data, '$.address.city') FROM customers;",
     hints: [
@@ -691,10 +719,10 @@ export const mysqlProblems: Problem[] = [
     category: 'JSON Functions',
     difficulty: 'hard',
     title: 'Extract Array Element',
-    text: 'Use JSON_EXTRACT to get the second item (index 1) from JSON array \'["apple", "banana", "cherry"]\'.',
+    text: "Use JSON_EXTRACT to get the second item (index 1) from JSON array '[\"apple\", \"banana\", \"cherry\"]'.",
     setup: 'SELECT from baskets table',
     setupCode:
-      'CREATE TABLE baskets (id INT, fruits JSON);\nINSERT INTO baskets VALUES (1, \'["apple", "banana", "cherry"]\');',
+      "CREATE TABLE baskets (id INT, fruits JSON);\nINSERT INTO baskets VALUES (1, '[\"apple\", \"banana\", \"cherry\"]');",
     expected: '"banana"',
     sample: "SELECT JSON_EXTRACT(fruits, '$[1]') FROM baskets;",
     hints: ['Use $[index] for array elements', 'Arrays are 0-indexed'],
@@ -712,14 +740,16 @@ export const mysqlProblems: Problem[] = [
     text: "Use JSON_SEARCH to find the path to value 'premium' in JSON object.",
     setup: 'SELECT from subscriptions table',
     setupCode:
-      'CREATE TABLE subscriptions (id INT, details JSON);\nINSERT INTO subscriptions VALUES (1, \'{"plan": "premium", "status": "active"}\');',
+      "CREATE TABLE subscriptions (id INT, details JSON);\nINSERT INTO subscriptions VALUES (1, '{\"plan\": \"premium\", \"status\": \"active\"}');",
     expected: '"$.plan"',
     sample: "SELECT JSON_SEARCH(details, 'one', 'premium') FROM subscriptions;",
     hints: [
-      'JSON_SEARCH returns the path to the value',
+      "JSON_SEARCH returns the path to the value",
       "'one' returns first match, 'all' returns all matches",
     ],
-    validPatterns: [/JSON_SEARCH\s*\(\s*details\s*,\s*['"]one['"]\s*,\s*['"]premium['"]\s*\)/i],
+    validPatterns: [
+      /JSON_SEARCH\s*\(\s*details\s*,\s*['"]one['"]\s*,\s*['"]premium['"]\s*\)/i,
+    ],
     tags: ['json', 'search', 'mysql-specific'],
   },
   {
@@ -730,7 +760,7 @@ export const mysqlProblems: Problem[] = [
     text: "Use JSON_LENGTH to count the number of items in a JSON array column 'items'.",
     setup: 'SELECT from orders table',
     setupCode:
-      'CREATE TABLE orders (id INT, items JSON);\nINSERT INTO orders VALUES (1, \'[{"sku": "A1"}, {"sku": "B2"}, {"sku": "C3"}]\');',
+      "CREATE TABLE orders (id INT, items JSON);\nINSERT INTO orders VALUES (1, '[{\"sku\": \"A1\"}, {\"sku\": \"B2\"}, {\"sku\": \"C3\"}]');",
     expected: 3,
     sample: 'SELECT JSON_LENGTH(items) FROM orders;',
     hints: [
@@ -774,9 +804,10 @@ export const mysqlProblems: Problem[] = [
     text: 'Use RANK() to rank products by sales, allowing for ties (same rank for equal values).',
     setup: 'SELECT from products table',
     setupCode:
-      "CREATE TABLE products (id INT, name VARCHAR(50), sales INT);\nINSERT INTO products VALUES (1, 'A', 100), (2, 'B', 100), (3, 'C', 80);",
+      'CREATE TABLE products (id INT, name VARCHAR(50), sales INT);\nINSERT INTO products VALUES (1, \'A\', 100), (2, \'B\', 100), (3, \'C\', 80);',
     expected: 'A=1, B=1, C=3',
-    sample: 'SELECT name, sales, RANK() OVER (ORDER BY sales DESC) AS sales_rank FROM products;',
+    sample:
+      'SELECT name, sales, RANK() OVER (ORDER BY sales DESC) AS sales_rank FROM products;',
     hints: [
       'RANK() assigns same rank for equal values',
       'Leaves gaps after ties (1, 1, 3 not 1, 1, 2)',
@@ -792,11 +823,14 @@ export const mysqlProblems: Problem[] = [
     text: 'Use DENSE_RANK() to rank products without gaps after ties.',
     setup: 'SELECT from products table',
     setupCode:
-      "CREATE TABLE products (id INT, name VARCHAR(50), sales INT);\nINSERT INTO products VALUES (1, 'A', 100), (2, 'B', 100), (3, 'C', 80);",
+      'CREATE TABLE products (id INT, name VARCHAR(50), sales INT);\nINSERT INTO products VALUES (1, \'A\', 100), (2, \'B\', 100), (3, \'C\', 80);',
     expected: 'A=1, B=1, C=2',
     sample:
       'SELECT name, sales, DENSE_RANK() OVER (ORDER BY sales DESC) AS sales_rank FROM products;',
-    hints: ['DENSE_RANK() does not leave gaps after ties', 'Results: 1, 1, 2 instead of 1, 1, 3'],
+    hints: [
+      'DENSE_RANK() does not leave gaps after ties',
+      'Results: 1, 1, 2 instead of 1, 1, 3',
+    ],
     validPatterns: [/DENSE_RANK\s*\(\s*\)\s+OVER\s*\(\s*ORDER\s+BY\s+sales\s+DESC\s*\)/i],
     tags: ['window', 'dense-rank', 'mysql-8', 'mysql-specific'],
   },
@@ -816,7 +850,9 @@ export const mysqlProblems: Problem[] = [
       'Aggregate functions can be used as window functions',
       'ORDER BY without PARTITION BY creates running aggregates',
     ],
-    validPatterns: [/SUM\s*\(\s*order_amount\s*\)\s+OVER\s*\(\s*ORDER\s+BY\s+order_date\s*\)/i],
+    validPatterns: [
+      /SUM\s*\(\s*order_amount\s*\)\s+OVER\s*\(\s*ORDER\s+BY\s+order_date\s*\)/i,
+    ],
     tags: ['window', 'sum', 'running-total', 'mysql-8', 'mysql-specific'],
   },
   {
@@ -824,7 +860,7 @@ export const mysqlProblems: Problem[] = [
     category: 'Window Functions',
     difficulty: 'hard',
     title: 'LAG - Previous Row Value',
-    text: "Use LAG() to get the previous day's closing price for stock comparison.",
+    text: 'Use LAG() to get the previous day\'s closing price for stock comparison.',
     setup: 'SELECT from stock_prices table',
     setupCode:
       "CREATE TABLE stock_prices (id INT, trade_date DATE, close_price DECIMAL(10,2));\nINSERT INTO stock_prices VALUES (1, '2024-01-01', 100.00), (2, '2024-01-02', 105.00);",
@@ -869,9 +905,11 @@ export const mysqlProblems: Problem[] = [
     title: 'NTILE Distribution',
     text: 'Use NTILE(4) to divide products into 4 quartiles based on price.',
     setup: 'SELECT from products table',
-    setupCode: 'CREATE TABLE products (id INT, name VARCHAR(50), price DECIMAL(10,2));',
+    setupCode:
+      'CREATE TABLE products (id INT, name VARCHAR(50), price DECIMAL(10,2));',
     expected: 'Each product assigned to quartile 1-4',
-    sample: 'SELECT name, price, NTILE(4) OVER (ORDER BY price) AS price_quartile FROM products;',
+    sample:
+      'SELECT name, price, NTILE(4) OVER (ORDER BY price) AS price_quartile FROM products;',
     hints: [
       'NTILE(n) divides rows into n roughly equal groups',
       'Useful for percentile/quartile analysis',
@@ -886,11 +924,15 @@ export const mysqlProblems: Problem[] = [
     title: 'Moving Average',
     text: 'Calculate a 3-day moving average of sales using window frame specification.',
     setup: 'SELECT from daily_sales table',
-    setupCode: 'CREATE TABLE daily_sales (id INT, sale_date DATE, amount DECIMAL(10,2));',
+    setupCode:
+      "CREATE TABLE daily_sales (id INT, sale_date DATE, amount DECIMAL(10,2));",
     expected: 'Rolling 3-day average for each row',
     sample:
       'SELECT sale_date, amount, AVG(amount) OVER (ORDER BY sale_date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS moving_avg FROM daily_sales;',
-    hints: ['ROWS BETWEEN defines the window frame', '2 PRECEDING AND CURRENT ROW = last 3 rows'],
+    hints: [
+      'ROWS BETWEEN defines the window frame',
+      '2 PRECEDING AND CURRENT ROW = last 3 rows',
+    ],
     validPatterns: [
       /AVG\s*\(\s*amount\s*\)\s+OVER\s*\(\s*ORDER\s+BY\s+sale_date\s+ROWS\s+BETWEEN\s+2\s+PRECEDING\s+AND\s+CURRENT\s+ROW\s*\)/i,
     ],
@@ -910,7 +952,8 @@ export const mysqlProblems: Problem[] = [
     setupCode:
       "CREATE TABLE articles (id INT, title VARCHAR(200), content TEXT, FULLTEXT(content));\nINSERT INTO articles VALUES (1, 'DB Tips', 'database optimization techniques');",
     expected: 'Matching articles returned',
-    sample: "SELECT * FROM articles WHERE MATCH(content) AGAINST('database optimization');",
+    sample:
+      "SELECT * FROM articles WHERE MATCH(content) AGAINST('database optimization');",
     hints: [
       'MATCH AGAINST performs full-text search',
       'Requires FULLTEXT index on the column',
@@ -928,7 +971,8 @@ export const mysqlProblems: Problem[] = [
     title: 'Boolean Mode Search',
     text: "Use BOOLEAN MODE to find articles that must contain 'mysql' but not 'oracle'.",
     setup: 'SELECT from articles table with FULLTEXT index',
-    setupCode: 'CREATE TABLE articles (id INT, content TEXT, FULLTEXT(content));',
+    setupCode:
+      'CREATE TABLE articles (id INT, content TEXT, FULLTEXT(content));',
     expected: 'Articles with mysql but not oracle',
     sample:
       "SELECT * FROM articles WHERE MATCH(content) AGAINST('+mysql -oracle' IN BOOLEAN MODE);",
@@ -959,7 +1003,9 @@ export const mysqlProblems: Problem[] = [
       'Higher score = more relevant',
       'Need to repeat MATCH AGAINST in WHERE and SELECT',
     ],
-    validPatterns: [/SELECT\s+.*MATCH\s*\(\s*content\s*\)\s+AGAINST\s*\(.*\)\s+AS\s+relevance/i],
+    validPatterns: [
+      /SELECT\s+.*MATCH\s*\(\s*content\s*\)\s+AGAINST\s*\(.*\)\s+AS\s+relevance/i,
+    ],
     tags: ['fulltext', 'relevance', 'mysql-specific'],
   },
   {
@@ -969,7 +1015,8 @@ export const mysqlProblems: Problem[] = [
     title: 'Phrase Search',
     text: "Use Boolean mode to search for the exact phrase 'query optimization' using double quotes.",
     setup: 'SELECT from tutorials table',
-    setupCode: 'CREATE TABLE tutorials (id INT, content TEXT, FULLTEXT(content));',
+    setupCode:
+      'CREATE TABLE tutorials (id INT, content TEXT, FULLTEXT(content));',
     expected: 'Only articles with exact phrase',
     sample:
       'SELECT * FROM tutorials WHERE MATCH(content) AGAINST(\'"query optimization"\' IN BOOLEAN MODE);',
@@ -990,9 +1037,11 @@ export const mysqlProblems: Problem[] = [
     title: 'Wildcard Search',
     text: "Use Boolean mode with * wildcard to find words starting with 'optim' (optimization, optimize, etc.).",
     setup: 'SELECT from articles table',
-    setupCode: 'CREATE TABLE articles (id INT, content TEXT, FULLTEXT(content));',
+    setupCode:
+      'CREATE TABLE articles (id INT, content TEXT, FULLTEXT(content));',
     expected: 'Articles containing words starting with optim',
-    sample: "SELECT * FROM articles WHERE MATCH(content) AGAINST('optim*' IN BOOLEAN MODE);",
+    sample:
+      "SELECT * FROM articles WHERE MATCH(content) AGAINST('optim*' IN BOOLEAN MODE);",
     hints: [
       '* is a wildcard for any characters',
       'Only works as suffix (word*), not prefix (*word)',
@@ -1015,7 +1064,7 @@ export const mysqlProblems: Problem[] = [
     text: 'Set a user variable @tax_rate to 0.08 and use it to calculate tax on price.',
     setup: 'SELECT from products table',
     setupCode:
-      "CREATE TABLE products (id INT, name VARCHAR(50), price DECIMAL(10,2));\nINSERT INTO products VALUES (1, 'Widget', 100.00);",
+      'CREATE TABLE products (id INT, name VARCHAR(50), price DECIMAL(10,2));\nINSERT INTO products VALUES (1, \'Widget\', 100.00);',
     expected: 'tax = 8.00',
     sample: 'SET @tax_rate = 0.08;\nSELECT name, price, price * @tax_rate AS tax FROM products;',
     hints: [
@@ -1036,7 +1085,8 @@ export const mysqlProblems: Problem[] = [
     setupCode:
       "CREATE TABLE employees (id INT, name VARCHAR(50));\nINSERT INTO employees VALUES (1, 'Alice'), (2, 'Bob');",
     expected: 'row_num: 1, 2',
-    sample: 'SET @row_num = 0;\nSELECT @row_num := @row_num + 1 AS row_num, name FROM employees;',
+    sample:
+      'SET @row_num = 0;\nSELECT @row_num := @row_num + 1 AS row_num, name FROM employees;',
     hints: [
       ':= is the assignment operator in SELECT',
       'Variable is incremented for each row',
@@ -1052,7 +1102,8 @@ export const mysqlProblems: Problem[] = [
     title: 'Capture Value in Variable',
     text: 'Capture the maximum salary into a variable and use it to find all employees with that salary.',
     setup: 'SELECT from employees table',
-    setupCode: 'CREATE TABLE employees (id INT, name VARCHAR(50), salary DECIMAL(10,2));',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), salary DECIMAL(10,2));",
     expected: 'Employees with max salary',
     sample:
       'SELECT @max_salary := MAX(salary) FROM employees;\nSELECT name, salary FROM employees WHERE salary = @max_salary;',
@@ -1071,10 +1122,11 @@ export const mysqlProblems: Problem[] = [
     title: 'Variable in LIMIT',
     text: 'Set page size and page number variables for pagination.',
     setup: 'SELECT from products table',
-    setupCode: 'CREATE TABLE products (id INT, name VARCHAR(50));',
+    setupCode:
+      'CREATE TABLE products (id INT, name VARCHAR(50));',
     expected: 'Paginated results using variables',
     sample:
-      "SET @page_size = 10;\nSET @page_num = 2;\nSET @offset = (@page_num - 1) * @page_size;\nPREPARE stmt FROM 'SELECT * FROM products LIMIT ?, ?';\nEXECUTE stmt USING @offset, @page_size;",
+      'SET @page_size = 10;\nSET @page_num = 2;\nSET @offset = (@page_num - 1) * @page_size;\nPREPARE stmt FROM \'SELECT * FROM products LIMIT ?, ?\';\nEXECUTE stmt USING @offset, @page_size;',
     hints: [
       'LIMIT does not accept variables directly',
       'Use PREPARE/EXECUTE for dynamic LIMIT',
@@ -1113,7 +1165,8 @@ export const mysqlProblems: Problem[] = [
     title: 'GROUP_CONCAT with Custom Separator',
     text: "Use GROUP_CONCAT with ' | ' as separator to list employee names by department.",
     setup: 'SELECT from employees table',
-    setupCode: 'CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50));',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50));",
     expected: "Engineering: 'Alice | Bob | Carol'",
     sample:
       "SELECT department, GROUP_CONCAT(name SEPARATOR ' | ') AS team FROM employees GROUP BY department;",
@@ -1131,11 +1184,15 @@ export const mysqlProblems: Problem[] = [
     title: 'GROUP_CONCAT with ORDER BY',
     text: 'Use GROUP_CONCAT to list product names alphabetically within each category.',
     setup: 'SELECT from products table',
-    setupCode: 'CREATE TABLE products (id INT, name VARCHAR(50), category VARCHAR(50));',
+    setupCode:
+      "CREATE TABLE products (id INT, name VARCHAR(50), category VARCHAR(50));",
     expected: 'Names sorted alphabetically per category',
     sample:
       'SELECT category, GROUP_CONCAT(name ORDER BY name ASC) AS products FROM products GROUP BY category;',
-    hints: ['ORDER BY goes inside GROUP_CONCAT', 'Controls order of concatenated values'],
+    hints: [
+      'ORDER BY goes inside GROUP_CONCAT',
+      'Controls order of concatenated values',
+    ],
     validPatterns: [/GROUP_CONCAT\s*\(\s*name\s+ORDER\s+BY\s+name(\s+ASC)?\s*\)/i],
     tags: ['group-concat', 'order', 'mysql-specific'],
   },
@@ -1146,11 +1203,15 @@ export const mysqlProblems: Problem[] = [
     title: 'GROUP_CONCAT with DISTINCT',
     text: 'Use GROUP_CONCAT with DISTINCT to list unique tags per article.',
     setup: 'SELECT from article_tags table',
-    setupCode: 'CREATE TABLE article_tags (article_id INT, tag VARCHAR(50));',
+    setupCode:
+      "CREATE TABLE article_tags (article_id INT, tag VARCHAR(50));",
     expected: 'Unique tags only, no duplicates',
     sample:
       'SELECT article_id, GROUP_CONCAT(DISTINCT tag ORDER BY tag) AS tags FROM article_tags GROUP BY article_id;',
-    hints: ['DISTINCT removes duplicate values', 'Place DISTINCT after opening parenthesis'],
+    hints: [
+      'DISTINCT removes duplicate values',
+      'Place DISTINCT after opening parenthesis',
+    ],
     validPatterns: [/GROUP_CONCAT\s*\(\s*DISTINCT\s+tag/i],
     tags: ['group-concat', 'distinct', 'mysql-specific'],
   },
@@ -1161,8 +1222,9 @@ export const mysqlProblems: Problem[] = [
     title: 'GROUP_CONCAT Complete Example',
     text: "Combine DISTINCT, ORDER BY, and custom SEPARATOR in GROUP_CONCAT to list unique product names by category, sorted, separated by ' - '.",
     setup: 'SELECT from products table',
-    setupCode: 'CREATE TABLE products (id INT, name VARCHAR(50), category VARCHAR(50));',
-    expected: 'Sorted unique names with custom separator',
+    setupCode:
+      "CREATE TABLE products (id INT, name VARCHAR(50), category VARCHAR(50));",
+    expected: "Sorted unique names with custom separator",
     sample:
       "SELECT category, GROUP_CONCAT(DISTINCT name ORDER BY name SEPARATOR ' - ') AS products FROM products GROUP BY category;",
     hints: [
@@ -1215,7 +1277,9 @@ export const mysqlProblems: Problem[] = [
       'Reference the existing column value in UPDATE',
       'view_count + 1 adds to existing value',
     ],
-    validPatterns: [/ON\s+DUPLICATE\s+KEY\s+UPDATE\s+view_count\s*=\s*view_count\s*\+\s*1/i],
+    validPatterns: [
+      /ON\s+DUPLICATE\s+KEY\s+UPDATE\s+view_count\s*=\s*view_count\s*\+\s*1/i,
+    ],
     tags: ['upsert', 'counter', 'mysql-specific'],
   },
   {
@@ -1229,9 +1293,14 @@ export const mysqlProblems: Problem[] = [
       'CREATE TABLE user_stats (user_id INT PRIMARY KEY, last_login DATETIME, login_count INT);',
     expected: 'Update both columns on conflict',
     sample:
-      'INSERT INTO user_stats (user_id, last_login, login_count) VALUES (1, NOW(), 1) ON DUPLICATE KEY UPDATE last_login = NOW(), login_count = login_count + 1;',
-    hints: ['Separate multiple column updates with commas', 'Can use NOW() for current timestamp'],
-    validPatterns: [/ON\s+DUPLICATE\s+KEY\s+UPDATE\s+last_login\s*=.*,\s*login_count\s*=/i],
+      "INSERT INTO user_stats (user_id, last_login, login_count) VALUES (1, NOW(), 1) ON DUPLICATE KEY UPDATE last_login = NOW(), login_count = login_count + 1;",
+    hints: [
+      'Separate multiple column updates with commas',
+      'Can use NOW() for current timestamp',
+    ],
+    validPatterns: [
+      /ON\s+DUPLICATE\s+KEY\s+UPDATE\s+last_login\s*=.*,\s*login_count\s*=/i,
+    ],
     tags: ['upsert', 'multiple-columns', 'mysql-specific'],
   },
   {
@@ -1246,7 +1315,10 @@ export const mysqlProblems: Problem[] = [
     expected: 'Only update if new price is lower',
     sample:
       "INSERT INTO products (sku, name, price) VALUES ('ABC123', 'Widget', 19.99) ON DUPLICATE KEY UPDATE price = IF(VALUES(price) < price, VALUES(price), price);",
-    hints: ['Use IF() to conditionally set the value', 'Compare VALUES(price) with existing price'],
+    hints: [
+      'Use IF() to conditionally set the value',
+      'Compare VALUES(price) with existing price',
+    ],
     validPatterns: [
       /ON\s+DUPLICATE\s+KEY\s+UPDATE\s+price\s*=\s*IF\s*\(\s*VALUES\s*\(\s*price\s*\)\s*<\s*price/i,
     ],
@@ -1266,7 +1338,8 @@ export const mysqlProblems: Problem[] = [
     setupCode:
       'CREATE TABLE orders (id INT PRIMARY KEY, status VARCHAR(20), order_date DATE, INDEX idx_status(status), INDEX idx_date(order_date));',
     expected: 'Query using idx_status index',
-    sample: "SELECT * FROM orders USE INDEX (idx_status) WHERE status = 'pending';",
+    sample:
+      "SELECT * FROM orders USE INDEX (idx_status) WHERE status = 'pending';",
     hints: [
       'USE INDEX suggests which index to consider',
       'Goes after table name in FROM clause',
@@ -1285,7 +1358,8 @@ export const mysqlProblems: Problem[] = [
     setupCode:
       'CREATE TABLE orders (id INT PRIMARY KEY, customer_id INT, order_date DATE, INDEX idx_customer_date(customer_id, order_date));',
     expected: 'Query forced to use specific index',
-    sample: 'SELECT * FROM orders FORCE INDEX (idx_customer_date) WHERE customer_id = 100;',
+    sample:
+      'SELECT * FROM orders FORCE INDEX (idx_customer_date) WHERE customer_id = 100;',
     hints: [
       'FORCE INDEX is stronger than USE INDEX',
       'Forces optimizer to use index or do table scan',
@@ -1345,7 +1419,10 @@ export const mysqlProblems: Problem[] = [
     expected: 'Join using forced index',
     sample:
       'SELECT c.name, o.id FROM customers c JOIN orders o FORCE INDEX (idx_customer) ON c.id = o.customer_id;',
-    hints: ['Place FORCE INDEX after table name/alias', 'Affects how JOIN is executed'],
+    hints: [
+      'Place FORCE INDEX after table name/alias',
+      'Affects how JOIN is executed',
+    ],
     validPatterns: [/orders\s+\w*\s*FORCE\s+INDEX\s*\(\s*idx_customer\s*\)/i],
     tags: ['index', 'hint', 'join', 'mysql-specific'],
   },
