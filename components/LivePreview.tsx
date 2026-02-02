@@ -191,7 +191,7 @@ export function LivePreview({
                     : 'javascript'
             }
             readOnly={true}
-            lineNumbers={false}
+            lineNumbers={true}
             height={height}
             minHeight={100}
             className="border-0 !rounded-none"
