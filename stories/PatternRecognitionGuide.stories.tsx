@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { fn } from '@storybook/test';
 import { useState } from 'react';
+import { fn } from 'storybook/test';
 import { PatternRecognitionGuide } from '../components/PatternRecognitionGuide';
 
 const meta = {

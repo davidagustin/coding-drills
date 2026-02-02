@@ -292,3 +292,10 @@ export function isDatabaseLanguage(language: string): boolean {
 export function getTrainingLabel(language: string): string {
   return isDatabaseLanguage(language) ? 'Query Training' : 'Method Training';
 }
+
+/** Description for the training mode based on language type. */
+export function getTrainingDescription(language: string): string {
+  return isDatabaseLanguage(language)
+    ? 'Practice writing queries and working with database operations.'
+    : 'Practice common methods and patterns used in everyday coding.';
+}
