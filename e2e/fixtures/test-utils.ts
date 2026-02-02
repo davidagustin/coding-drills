@@ -616,6 +616,167 @@ export function generateUnicodeArrowVariations(baseCode: string): string[] {
   return variations;
 }
 
+// ============================================================================
+// Frontend Drills Constants & Utilities
+// ============================================================================
+
+/**
+ * Supported frontend frameworks
+ */
+export const FRONTEND_FRAMEWORKS = ['native-js', 'react', 'angular', 'vue'] as const;
+export type FrameworkSlug = (typeof FRONTEND_FRAMEWORKS)[number];
+
+/**
+ * Framework display names mapping
+ */
+export const FRAMEWORK_NAMES: Record<FrameworkSlug, string> = {
+  'native-js': 'Native JavaScript',
+  react: 'React',
+  angular: 'Angular',
+  vue: 'Vue',
+};
+
+/**
+ * Frontend Drills test utility class
+ */
+export class FrontendDrillsUtils {
+  constructor(private page: Page) {}
+
+  /**
+   * Navigate to the frontend drills landing page
+   */
+  async goToLanding(): Promise<void> {
+    await this.page.goto('/frontend-drills');
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to a specific framework hub
+   */
+  async goToFrameworkHub(framework: FrameworkSlug): Promise<void> {
+    await this.page.goto(`/frontend-drills/${framework}`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to drill mode for a framework
+   */
+  async goToDrill(framework: FrameworkSlug): Promise<void> {
+    await this.page.goto(`/frontend-drills/${framework}/drill`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to quiz mode for a framework
+   */
+  async goToQuiz(framework: FrameworkSlug): Promise<void> {
+    await this.page.goto(`/frontend-drills/${framework}/quiz`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to training page for a framework
+   */
+  async goToTraining(framework: FrameworkSlug): Promise<void> {
+    await this.page.goto(`/frontend-drills/${framework}/training`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to UI patterns catalog for a framework
+   */
+  async goToUIPatterns(framework: FrameworkSlug): Promise<void> {
+    await this.page.goto(`/frontend-drills/${framework}/ui-patterns`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to a specific UI pattern detail
+   */
+  async goToUIPatternDetail(framework: FrameworkSlug, patternId: string): Promise<void> {
+    await this.page.goto(`/frontend-drills/${framework}/ui-patterns/${patternId}`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to cheatsheet for a framework
+   */
+  async goToCheatsheet(framework: FrameworkSlug): Promise<void> {
+    await this.page.goto(`/frontend-drills/${framework}/cheatsheet`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Click "Start Drilling" to begin a drill session
+   */
+  async startDrill(): Promise<void> {
+    await this.page.getByRole('button', { name: /Start Drilling/i }).click();
+  }
+
+  /**
+   * Click "Start Quiz" to begin a quiz session
+   */
+  async startQuiz(): Promise<void> {
+    await this.page.getByRole('button', { name: /Start Quiz/i }).click();
+  }
+
+  /**
+   * Skip a question in drill mode
+   */
+  async skipQuestion(): Promise<void> {
+    await this.page.getByRole('button', { name: /Skip/i }).click();
+  }
+
+  /**
+   * Click End button in drill mode
+   */
+  async endDrill(): Promise<void> {
+    await this.page.getByRole('button', { name: /^End$/i }).click();
+  }
+
+  /**
+   * Wait for Monaco editor to load (15s timeout for dynamic import)
+   */
+  async waitForMonaco(): Promise<Locator> {
+    const editor = this.page.locator('.monaco-editor');
+    await editor.waitFor({ state: 'visible', timeout: 15000 });
+    return editor;
+  }
+
+  /**
+   * Get all framework cards on the landing page
+   */
+  getFrameworkCards(): Locator {
+    return this.page.locator('a[href^="/frontend-drills/"]').filter({
+      has: this.page.locator('h3'),
+    });
+  }
+
+  /**
+   * Select a difficulty filter
+   */
+  async selectDifficulty(difficulty: 'All' | 'Easy' | 'Medium' | 'Hard'): Promise<void> {
+    await this.page.getByRole('button', { name: difficulty }).click();
+  }
+
+  /**
+   * Get the search input on pages that have one
+   */
+  getSearchInput(): Locator {
+    return this.page.locator('input[placeholder*="Search"], input[type="search"]');
+  }
+
+  /**
+   * Wait for results phase to appear (drill or quiz complete)
+   */
+  async waitForResults(): Promise<void> {
+    await this.page
+      .getByText(/Complete!|Results/i)
+      .first()
+      .waitFor({ state: 'visible', timeout: 30000 });
+  }
+}
+
 /**
  * Generate syntax variations for arrow functions
  */
