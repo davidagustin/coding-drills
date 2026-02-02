@@ -1,7 +1,10 @@
 /**
- * Hand-crafted starter code for Angular UI patterns.
- * Each entry provides syntactically valid boilerplate with state declarations,
- * TODO steps, and framework wrappers so users focus on business logic.
+ * Auto-generated scaffolded starter code.
+ * Each starter provides the full UI structure (JSX/template with correct class names)
+ * and empty function stubs. Users only implement business logic inside the function bodies.
+ *
+ * Generated from reference demoCode — DO NOT manually edit individual entries.
+ * To regenerate, run: npx tsx scripts/generate-starters.ts
  */
 export const angularStarters: Record<string, string> = {
   'ng-reactive-forms': `// Simulating Angular Reactive Forms behavior
@@ -9,22 +12,29 @@ const form = document.getElementById('ng-form');
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 
-// Step 1: Create a validate() function
-// It should accept an input element, an error element ID, and an array of rule objects
-// Each rule has a test(value) function and a msg string
-// Loop through rules, if any test fails, display the msg in the error element and return false
-// If all pass, clear the error text and return true
+function validate(input, errorId, rules) {
+  // TODO: Validate — validate input, update DOM content
+}
 
-// Step 2: Define validation rules for each field
-// nameRules: require non-empty trimmed value
-// emailRules: require non-empty value AND must contain '@'
+const nameRules = [{ test: v => v.trim().length > 0, msg: 'Name is required' }];
+const emailRules = [
+  { test: v => v.length > 0, msg: 'Email is required' },
+  { test: v => v.includes('@'), msg: 'Must be a valid email' }
+];
 
-// Step 3: Add 'input' event listeners on nameInput and emailInput
-// Each should call validate() with the appropriate rules
+nameInput.addEventListener('input', () => validate(nameInput, 'name-error', nameRules));
+emailInput.addEventListener('input', () => validate(emailInput, 'email-error', emailRules));
 
-// Step 4: Add 'submit' event listener on the form
-// Prevent default, validate both fields
-// If both valid, show the #result element with a welcome message`,
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const v1 = validate(nameInput, 'name-error', nameRules);
+  const v2 = validate(emailInput, 'email-error', emailRules);
+  if (v1 && v2) {
+    const result = document.getElementById('result');
+    result.style.display = 'block';
+    result.textContent = 'Welcome, ' + nameInput.value + '!';
+  }
+});`,
 
   'ng-template-forms': `// Simulating Angular template-driven forms with two-way binding
 const username = document.getElementById('username');
@@ -34,52 +44,50 @@ const btn = document.getElementById('submit-btn');
 const form = document.getElementById('tpl-form');
 const hint = document.getElementById('username-hint');
 
-// Step 1: Create a syncState() function
-// Check if username has >= 2 chars, color is selected, and agree is checked
-// Enable/disable the submit button based on validity
-// Show hint text 'Min 2 characters' if username is non-empty but too short
+function syncState() {
+  // TODO: Sync state — update DOM content
+}
 
-// Step 2: Add 'input' listener on username, 'change' on color and agree
-// All three should call syncState()
+username.addEventListener('input', syncState);
+color.addEventListener('change', syncState);
+agree.addEventListener('change', syncState);
 
-// Step 3: Add 'submit' listener on the form
-// Prevent default, show #output element with a greeting that includes username and color`,
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.textContent = 'Hello ' + username.value + '! You picked ' + color.value + '.';
+});`,
 
   'ng-custom-validators': `// Simulating Angular custom validators (sync + cross-field)
 const pw = document.getElementById('password');
 const cf = document.getElementById('confirm');
 const form = document.getElementById('val-form');
 
-// Password validation rules - each has an element reference and a test function
 const rules = {
-  len: { el: document.getElementById('rule-len'), test: null },
-  upper: { el: document.getElementById('rule-upper'), test: null },
-  num: { el: document.getElementById('rule-num'), test: null },
-  special: { el: document.getElementById('rule-special'), test: null },
+  len: { el: document.getElementById('rule-len'), test: v => v.length >= 8 },
+  upper: { el: document.getElementById('rule-upper'), test: v => /[A-Z]/.test(v) },
+  num: { el: document.getElementById('rule-num'), test: v => /[0-9]/.test(v) },
+  special: { el: document.getElementById('rule-special'), test: v => /[!@#$%^&*]/.test(v) },
 };
 
-// Step 1: Fill in each rule's test function
-// len: value.length >= 8
-// upper: /[A-Z]/.test(value)
-// num: /[0-9]/.test(value)
-// special: /[!@#$%^&*]/.test(value)
+function validatePw() {
+  // TODO: Validate pw — validate input, update DOM content
+}
 
-// Step 2: Create validatePw() function
-// Loop through rules, toggle 'pass' class on each rule element
-// Show error in #pw-error if password has value but not all rules pass
-// Return boolean indicating all rules pass
+function validateMatch() {
+  // TODO: Validate match — update state, validate input, update DOM content
+}
 
-// Step 3: Create validateMatch() function
-// Compare pw.value with cf.value
-// Show error in #cf-error if confirm has value but doesn't match
-// Return boolean
+pw.addEventListener('input', () => { validatePw(); if (cf.value) validateMatch(); });
+cf.addEventListener('input', validateMatch);
 
-// Step 4: Add 'input' listeners on pw and cf
-// pw input should call validatePw(), and also validateMatch() if cf has a value
-// cf input should call validateMatch()
-
-// Step 5: Add 'submit' listener on form
-// Prevent default, if both validatePw() and validateMatch() pass, show #result`,
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (validatePw() && validateMatch()) {
+    document.getElementById('result').style.display = 'block';
+  }
+});`,
 
   'ng-autocomplete': `// Simulating Angular autocomplete with RxJS debounceTime + switchMap
 const fruits = ['Apple','Apricot','Avocado','Banana','Blueberry','Cherry','Coconut','Cranberry','Dragon Fruit','Fig','Grape','Guava','Kiwi','Lemon','Lime','Mango','Melon','Nectarine','Orange','Papaya','Peach','Pear','Pineapple','Plum','Pomegranate','Raspberry','Strawberry','Watermelon'];
@@ -88,48 +96,55 @@ const list = document.getElementById('results');
 const spinner = document.getElementById('spinner');
 let timer = null;
 
-// Step 1: Create a highlight(text, query) function
-// Find the query substring within text (case-insensitive)
-// Wrap the matching portion in <mark> tags and return the result
+function highlight(text, query) {
+  // TODO: Implement highlight
+}
 
-// Step 2: Create a search(query) function
-// Show the spinner, then use setTimeout (300ms) to simulate an async API call
-// Filter fruits that include the query (case-insensitive)
-// Render matches as <li> elements using highlight(), or show 'No results'
-// Hide the spinner when done
+function search(query) {
+  // TODO: Search — update state, filter items, remove item
+}
 
-// Step 3: Add 'input' listener on the input element
-// Clear any existing timer (clearTimeout) and clear the results list
-// If input is empty, hide spinner and return
-// Set a new timer with 250ms delay (debounce) that calls search()
+input.addEventListener('input', () => {
+  clearTimeout(timer);
+  list.innerHTML = '';
+  if (!input.value.trim()) { spinner.style.display = 'none'; return; }
+  // debounceTime simulation
+  timer = setTimeout(() => search(input.value.trim()), 250);
+});
 
-// Step 4: Add 'click' listener on the results list
-// When a <li> is clicked, set input.value to the clicked text and clear the list`,
+list.addEventListener('click', (e) => {
+  if (e.target.tagName === 'LI') {
+    input.value = e.target.textContent;
+    list.innerHTML = '';
+  }
+});`,
 
   'ng-file-upload': `// Simulating Angular HttpClient file upload with progress
 const zone = document.getElementById('drop-zone');
 const input = document.getElementById('file-input');
 const list = document.getElementById('file-list');
 
-// Step 1: Create a formatSize(bytes) function
-// Return human-readable size: bytes as 'B', kilobytes as 'KB', megabytes as 'MB'
+zone.addEventListener('click', () => input.click());
+zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+zone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  zone.classList.remove('over');
+  handleFiles(e.dataTransfer.files);
+});
+input.addEventListener('change', () => handleFiles(input.files));
 
-// Step 2: Add event listeners on the drop zone
-// 'click' -> trigger input.click()
-// 'dragover' -> preventDefault, add 'over' class
-// 'dragleave' -> remove 'over' class
-// 'drop' -> preventDefault, remove 'over' class, call handleFiles(e.dataTransfer.files)
-// Also add 'change' listener on input to call handleFiles(input.files)
+function formatSize(bytes) {
+  // TODO: Implement formatSize
+}
 
-// Step 3: Create handleFiles(files) function
-// For each file, create a div.file-item with:
-//   - file name, formatted size, a progress bar (.fill at width:0%), and a status div
-// Append to list, then call simulateUpload(item)
+function handleFiles(files) {
+  // TODO: Handle files — update DOM content
+}
 
-// Step 4: Create simulateUpload(item) function
-// Use setInterval (200ms) to increment a percentage by random 5-20 each tick
-// Update the .fill element width
-// When >= 100%, clearInterval, set status to 'Upload complete'`,
+function simulateUpload(item) {
+  // TODO: Simulate upload — update state, update DOM content, update styles
+}`,
 
   'ng-date-picker': `// Simulating Angular Material Datepicker
 const input = document.getElementById('date-input');
@@ -141,29 +156,28 @@ const days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
 let current = new Date();
 let selectedDate = null;
 
-// Step 1: Create a toggle() function
-// Toggle cal display between 'none' and 'block'
-// If showing, call render()
+document.getElementById('cal-btn').addEventListener('click', toggle);
+input.addEventListener('click', toggle);
 
-// Step 2: Add click listeners on #cal-btn and input to call toggle()
-// Add click listeners on #prev-month and #next-month
-// prev-month: decrement current month, call render()
-// next-month: increment current month, call render()
+function toggle() {
+  // TODO: Toggle — update styles
+}
 
-// Step 3: Create render() function
-// Set label text to "Month Year"
-// Render day-of-week labels (Su Mo Tu ... Sa) as .day-label divs
-// Calculate first day of month and total days
-// Add empty divs for offset, then .day divs for each date
-// Mark today with 'today' class, selected date with 'selected' class
-
-// Step 4: Add click listener on grid
-// When a .day is clicked, set selectedDate, update input value (MM/DD/YYYY)
-// Update #selected text, hide calendar
+document.getElementById('prev-month').addEventListener('click', () => { current.setMonth(current.getMonth() - 1); render(); });
+document.getElementById('next-month').addEventListener('click', () => { current.setMonth(current.getMonth() + 1); render(); });
 
 function render() {
-  // Update the calendar grid based on current month/year
+  // TODO: Render — update DOM content
 }
+
+grid.addEventListener('click', (e) => {
+  if (!e.target.classList.contains('day')) return;
+  const d = parseInt(e.target.dataset.day);
+  selectedDate = new Date(current.getFullYear(), current.getMonth(), d);
+  input.value = (selectedDate.getMonth()+1) + '/' + d + '/' + selectedDate.getFullYear();
+  document.getElementById('selected').textContent = 'Selected: ' + input.value;
+  cal.style.display = 'none';
+});
 
 render();`,
 
@@ -172,23 +186,26 @@ const form = document.getElementById('dynamic-form');
 const submitBtn = document.getElementById('submit-btn');
 let fieldId = 0;
 
-// Step 1: Add click listener on .schema-bar
-// Read e.target.dataset.type to determine field type (text, email, select, checkbox)
-// Call addField(type) if a valid type is found
+document.querySelector('.schema-bar').addEventListener('click', (e) => {
+  const type = e.target.dataset.type;
+  if (!type) return;
+  addField(type);
+});
 
-// Step 2: Create addField(type) function
-// Increment fieldId, create a div.field element
-// Based on type, generate appropriate HTML:
-//   'select' -> <select> with placeholder and options A, B, C
-//   'checkbox' -> <label> with <input type="checkbox">
-//   'text'/'email' -> <input type="...">
-// Add a .remove button, append to form, show submitBtn
-// Add click listener on .remove to remove the field div
+function addField(type) {
+  // TODO: Add field — update state, update DOM content, update styles
+}
 
-// Step 3: Add click listener on submitBtn
-// Iterate all inputs/selects in the form
-// Collect values (checkbox -> .checked, others -> .value)
-// Display JSON in #output`,
+submitBtn.addEventListener('click', () => {
+  const data = {};
+  form.querySelectorAll('input, select').forEach(el => {
+    if (el.type === 'checkbox') data[el.name] = el.checked;
+    else data[el.name] = el.value;
+  });
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.textContent = JSON.stringify(data, null, 2);
+});`,
 
   'ng-input-mask': `// Simulating Angular input mask directives via HostListener
 const phone = document.getElementById('phone');
@@ -196,24 +213,37 @@ const card = document.getElementById('card');
 const currency = document.getElementById('currency');
 const vals = document.getElementById('values');
 
-// Helper: strip all non-digit characters
-function digits(v) { return v.replace(/\\D/g, ''); }
+function digits(v) {
+  // TODO: Implement digits
+}
 
-// Step 1: Add 'input' listener on phone
-// Extract digits (max 10), format as (XXX) XXX-XXXX
-// Set phone.value to the formatted string, call updateValues()
+phone.addEventListener('input', () => {
+  const d = digits(phone.value).slice(0, 10);
+  let f = '';
+  if (d.length > 0) f = '(' + d.slice(0, 3);
+  if (d.length >= 3) f += ') ' + d.slice(3, 6);
+  if (d.length >= 6) f += '-' + d.slice(6);
+  phone.value = f;
+  updateValues();
+});
 
-// Step 2: Add 'input' listener on card
-// Extract digits (max 16), group into chunks of 4 separated by spaces
-// Set card.value to the formatted string, call updateValues()
+card.addEventListener('input', () => {
+  const d = digits(card.value).slice(0, 16);
+  card.value = d.match(/.{1,4}/g)?.join(' ') || '';
+  updateValues();
+});
 
-// Step 3: Add 'input' listener on currency
-// Extract digits, divide by 100 to get dollar amount
-// Format with $ prefix, 2 decimal places, and comma separators
-// Set currency.value to the formatted string, call updateValues()
+currency.addEventListener('input', () => {
+  const d = digits(currency.value);
+  if (!d) { currency.value = ''; updateValues(); return; }
+  const num = parseInt(d, 10) / 100;
+  currency.value = '$' + num.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',');
+  updateValues();
+});
 
-// Step 4: Create updateValues() function
-// Display raw digit values for all three fields in the #values element`,
+function updateValues() {
+  // TODO: Update values — update DOM content
+}`,
 
   'ng-select-dropdown': `// Simulating Angular custom select with ControlValueAccessor
 const items = ['Angular','React','Vue','Svelte','Solid','Ember','Next.js','Nuxt','Remix','Astro'];
@@ -225,28 +255,40 @@ const selText = document.getElementById('selected-text');
 let selectedVal = '';
 let activeIdx = -1;
 
-// Step 1: Create renderOptions(query) function
-// Filter items by query (case-insensitive)
-// Render as <li> elements with data-value attribute
-// Add 'selected' class if item matches selectedVal
-// Add 'active' class if index matches activeIdx
+function renderOptions(query) {
+  // TODO: Render options — filter items, remove item, update DOM content
+}
 
-// Step 2: Create open() and close() functions
-// open: show dropdown, reset filter and activeIdx, call renderOptions(''), focus filter
-// close: hide dropdown
+function open() {
+  // TODO: Implement open
+}
+function close() {
+  // TODO: Implement close
+}
 
-// Step 3: Add click listener on trigger to toggle open/close
-// Add input listener on filter to reset activeIdx and re-render options
+trigger.addEventListener('click', () => dropdown.style.display === 'none' ? open() : close());
+filter.addEventListener('input', () => { activeIdx = -1; renderOptions(filter.value); });
 
-// Step 4: Add click listener on optionsList
-// When an option is clicked, set selectedVal, update selText, update #value-display, close()
+optionsList.addEventListener('click', (e) => {
+  if (e.target.dataset.value) {
+    selectedVal = e.target.dataset.value;
+    selText.textContent = selectedVal;
+    document.getElementById('value-display').textContent = 'Value: ' + selectedVal;
+    close();
+  }
+});
 
-// Step 5: Add keydown listener on document for keyboard navigation
-// ArrowDown/ArrowUp: adjust activeIdx within bounds
-// Enter: click the active option
-// Escape: close the dropdown
+document.addEventListener('keydown', (e) => {
+  if (dropdown.style.display === 'none') return;
+  const lis = optionsList.querySelectorAll('li[data-value]');
+  if (e.key === 'ArrowDown') { activeIdx = Math.min(activeIdx + 1, lis.length - 1); }
+  else if (e.key === 'ArrowUp') { activeIdx = Math.max(activeIdx - 1, 0); }
+  else if (e.key === 'Enter' && lis[activeIdx]) { lis[activeIdx].click(); }
+  else if (e.key === 'Escape') { close(); }
+  lis.forEach((li, i) => li.classList.toggle('active', i === activeIdx));
+});
 
-// Step 6: Add click listener on document to close when clicking outside #select-wrap`,
+document.addEventListener('click', (e) => { if (!document.getElementById('select-wrap').contains(e.target)) close(); });`,
 
   'ng-inline-edit': `// Simulating Angular inline editing with ControlValueAccessor
 const data = [
@@ -256,25 +298,35 @@ const data = [
 ];
 const tbody = document.getElementById('table-body');
 
-// Step 1: Create render() function
-// Generate table rows from data array
-// Each <td> should have data-row (index) and data-col (field name) attributes
-
-// Step 2: Add click listener on tbody
-// Find the clicked <td>, skip if already editing
-// Get the row index and column name from data attributes
-// Store the original value
-// Replace cell content with an <input> pre-filled with the original value
-// Add 'editing' class, focus and select the input
-
-// Step 3: Implement save and cancel behavior on the input
-// 'Enter' key -> save: update data[row][col] with input value, re-render
-// 'Escape' key -> cancel: restore original value, re-render
-// 'blur' event -> save
-
 function render() {
-  // Render table rows from data
+  // TODO: Render — update DOM content
 }
+
+tbody.addEventListener('click', (e) => {
+  const td = e.target.closest('td');
+  if (!td || td.classList.contains('editing')) return;
+  const row = parseInt(td.dataset.row);
+  const col = td.dataset.col;
+  const original = data[row][col];
+  td.classList.add('editing');
+  td.innerHTML = '<input value="' + original + '" />';
+  const input = td.querySelector('input');
+  input.focus();
+  input.select();
+  function save() {
+    data[row][col] = input.value || original;
+    render();
+  }
+  function cancel() {
+    data[row][col] = original;
+    render();
+  }
+  input.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter') save();
+    if (ev.key === 'Escape') cancel();
+  });
+  input.addEventListener('blur', save);
+});
 
 render();`,
 
@@ -282,23 +334,25 @@ render();`,
 const backdrop = document.getElementById('backdrop');
 const status = document.getElementById('status');
 
-// Step 1: Create openModal() function
-// Set backdrop display to 'flex'
+function openModal() {
+  // TODO: Implement openModal
+}
+function closeModal(msg) {
+  // TODO: Close modal — update DOM content, update styles
+}
 
-// Step 2: Create closeModal(msg) function
-// Hide the backdrop, if msg is provided set status.textContent
+document.getElementById('open-btn').addEventListener('click', openModal);
+document.getElementById('close-x').addEventListener('click', () => closeModal('Modal dismissed'));
+document.getElementById('cancel-btn').addEventListener('click', () => closeModal('Cancelled'));
+document.getElementById('confirm-btn').addEventListener('click', () => closeModal('Confirmed!'));
 
-// Step 3: Add click listeners
-// #open-btn -> openModal()
-// #close-x -> closeModal('Modal dismissed')
-// #cancel-btn -> closeModal('Cancelled')
-// #confirm-btn -> closeModal('Confirmed!')
+backdrop.addEventListener('click', (e) => {
+  if (e.target === backdrop) closeModal('Dismissed (backdrop click)');
+});
 
-// Step 4: Add click listener on backdrop
-// If the click target is the backdrop itself (not modal content), dismiss
-
-// Step 5: Add keydown listener on document
-// If Escape is pressed while modal is visible, dismiss`,
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && backdrop.style.display === 'flex') closeModal('Dismissed (ESC)');
+});`,
 
   'ng-drag-drop': `// Simulating Angular CDK DragDrop
 const tasks = [
@@ -309,29 +363,35 @@ const tasks = [
   { text: 'Unit tests', tag: 'testing', col: 'done' },
 ];
 
+function render() {
+  // TODO: Render — update state, filter items, remove item
+}
+
 let dragIdx = null;
 
-// Step 1: Create render() function
-// For each column ('todo', 'progress', 'done'), get the zone element by ID
-// Clear it, then create .card elements for tasks in that column
-// Set draggable=true and data-idx to the task's index in the tasks array
-// Each card shows the task text and a .tag span
+document.addEventListener('dragstart', (e) => {
+  if (!e.target.classList.contains('card')) return;
+  dragIdx = parseInt(e.target.dataset.idx);
+  e.target.style.opacity = '0.4';
+});
 
-// Step 2: Add dragstart listener on document
-// If the dragged element is a .card, store its index in dragIdx
-// Set opacity to 0.4 for visual feedback
+document.addEventListener('dragend', (e) => {
+  e.target.style.opacity = '1';
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('over'));
+});
 
-// Step 3: Add dragend listener on document
-// Restore opacity, remove 'over' class from all drop zones
-
-// Step 4: For each .drop-zone element, add:
-// 'dragover' -> preventDefault, add 'over' class
-// 'dragleave' -> remove 'over' class
-// 'drop' -> preventDefault, remove 'over', update tasks[dragIdx].col to zone.id, re-render
-
-function render() {
-  // Render task cards into their respective columns
-}
+document.querySelectorAll('.drop-zone').forEach(zone => {
+  zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('over');
+    if (dragIdx !== null) {
+      tasks[dragIdx].col = zone.id;
+      render();
+    }
+  });
+});
 
 render();`,
 
@@ -349,29 +409,26 @@ let page = 0;
 let sortCol = null;
 let sortDir = 'asc';
 
-// Step 1: Create sorted() function
-// If no sortCol, return a copy of data
-// Otherwise sort by sortCol: numbers use subtraction, strings use localeCompare
-// Flip comparison based on sortDir ('asc' vs 'desc')
-
-// Step 2: Create render() function
-// Get sorted data, slice for current page (page * pageSize)
-// Render rows into #tbody
-// Update #page-info text ("Page X of Y")
-// Enable/disable #prev-btn and #next-btn
-// Show sort indicator (triangle) in the active column's sort span
-
-// Step 3: Add click listeners on th.sortable elements
-// Toggle sortDir if same column, otherwise set new sortCol with 'asc'
-// Reset page to 0, re-render
-
-// Step 4: Add click listeners on #prev-btn and #next-btn
-// Decrement/increment page, re-render
-
-function render() {
-  // Display current page of sorted data
+function sorted() {
+  // TODO: Implement sorted
 }
 
+function render() {
+  // TODO: Render — update DOM content, calculate values
+}
+
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    else { sortCol = col; sortDir = 'asc'; }
+    page = 0;
+    render();
+  });
+});
+
+document.getElementById('prev-btn').addEventListener('click', () => { page--; render(); });
+document.getElementById('next-btn').addEventListener('click', () => { page++; render(); });
 render();`,
 
   'ng-tabs': `// Simulating Angular tab navigation with lazy loading
@@ -385,32 +442,36 @@ const tabBar = document.getElementById('tab-bar');
 const panel = document.getElementById('panel');
 const loading = document.getElementById('loading');
 
-// Step 1: Create switchTab(tabId) function
-// Toggle 'active' class on tab buttons based on tabId
-// Clear the panel content
-// Show the loading indicator
-// After a 300ms delay (simulating lazy load), hide loading and set panel HTML from panels object
+function switchTab(tabId) {
+  // TODO: Switch tab — update state, toggle CSS classes, update DOM content
+}
 
-// Step 2: Add click listener on tabBar
-// When a .tab button is clicked, call switchTab with the tab's data-tab value
+tabBar.addEventListener('click', (e) => {
+  if (e.target.classList.contains('tab')) switchTab(e.target.dataset.tab);
+});
 
-// Step 3: Initialize by calling switchTab('overview')`,
+switchTab('overview');`,
 
   'ng-accordion': `// Simulating Angular animations API accordion
 const accordion = document.getElementById('accordion');
 let openIdx = -1;
 
-// Step 1: Add click listener on the accordion container
-// Find the closest .panel-header from the click target
-// Get the panel index from data-idx attribute
-// Check if this panel was already open
-
-// Step 2: Close all panels
-// Remove 'open' class from all .panel-header and .panel-body elements
-
-// Step 3: If the clicked panel was NOT already open, open it
-// Add 'open' class to the header and its next sibling (.panel-body)
-// Update openIdx accordingly (set to clicked index, or -1 if closing)`,
+accordion.addEventListener('click', (e) => {
+  const header = e.target.closest('.panel-header');
+  if (!header) return;
+  const idx = parseInt(header.dataset.idx);
+  const wasOpen = openIdx === idx;
+  // Close all
+  accordion.querySelectorAll('.panel-header').forEach(h => h.classList.remove('open'));
+  accordion.querySelectorAll('.panel-body').forEach(b => b.classList.remove('open'));
+  if (!wasOpen) {
+    header.classList.add('open');
+    header.nextElementSibling.classList.add('open');
+    openIdx = idx;
+  } else {
+    openIdx = -1;
+  }
+});`,
 
   'ng-stepper': `// Simulating Angular MatStepper wizard
 const formData = { email: '', password: '', name: '', bio: '' };
@@ -418,34 +479,30 @@ const content = document.getElementById('step-content');
 const stepsEl = document.getElementById('steps');
 let current = 0;
 
-// Step templates - each returns HTML for its step
 const stepTemplates = [
-  function() { return '<label>Email</label><input id="f-email" placeholder="you@example.com" value="' + formData.email + '" /><label>Password</label><input id="f-password" type="password" placeholder="Password" value="' + formData.password + '" />'; },
-  function() { return '<label>Full Name</label><input id="f-name" placeholder="Your name" value="' + formData.name + '" /><label>Bio</label><input id="f-bio" placeholder="Short bio" value="' + formData.bio + '" />'; },
-  function() { return '<div class="review-item"><strong>Email:</strong> ' + (formData.email || '(empty)') + '</div><div class="review-item"><strong>Name:</strong> ' + (formData.name || '(empty)') + '</div><div class="review-item"><strong>Bio:</strong> ' + (formData.bio || '(empty)') + '</div>'; }
+  () => '<label>Email</label><input id="f-email" placeholder="you@example.com" value="' + formData.email + '" /><label>Password</label><input id="f-password" type="password" placeholder="Password" value="' + formData.password + '" />',
+  () => '<label>Full Name</label><input id="f-name" placeholder="Your name" value="' + formData.name + '" /><label>Bio</label><input id="f-bio" placeholder="Short bio" value="' + formData.bio + '" />',
+  () => '<div class="review-item"><strong>Email:</strong> ' + (formData.email || '(empty)') + '</div><div class="review-item"><strong>Name:</strong> ' + (formData.name || '(empty)') + '</div><div class="review-item"><strong>Bio:</strong> ' + (formData.bio || '(empty)') + '</div>'
 ];
 
-// Step 1: Create saveStep() function
-// Based on current step index, read input values and save to formData
-// Step 0: read f-email and f-password
-// Step 1: read f-name and f-bio
-
-// Step 2: Create render() function
-// Set content.innerHTML from stepTemplates[current]()
-// Update step indicators: 'active' for current, 'done' for completed steps
-// Show/hide #prev-step button (hide on first step)
-// Change #next-step text to 'Finish' on last step
-
-// Step 3: Add click listener on #next-step
-// Call saveStep(), advance to next step and render
-// On final step, show completion message
-
-// Step 4: Add click listener on #prev-step
-// Call saveStep(), go back one step and render
+function saveStep() {
+  // TODO: Implement saveStep
+}
 
 function render() {
-  // Display current step content and update step indicators
+  // TODO: Render — update DOM content, update styles
 }
+
+document.getElementById('next-step').addEventListener('click', () => {
+  saveStep();
+  if (current < 2) { current++; render(); }
+  else { content.innerHTML = '<div style="text-align:center;color:#22c55e;padding:20px">Registration complete!</div>'; }
+});
+
+document.getElementById('prev-step').addEventListener('click', () => {
+  saveStep();
+  if (current > 0) { current--; render(); }
+});
 
 render();`,
 
@@ -463,26 +520,27 @@ let current = 0;
 let playing = true;
 let timer;
 
-// Step 1: Build the slide HTML
-// Render slides into the track as .slide divs with background color, title, and description
-// Render indicator dots into the indicators container, first dot active
+track.innerHTML = slides.map(s => '<div class="slide" style="background:' + s.bg + '"><h4>' + s.title + '</h4><p>' + s.desc + '</p></div>').join('');
+indicators.innerHTML = slides.map((_, i) => '<div class="dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '"></div>').join('');
 
-// Step 2: Create goTo(idx) function
-// Wrap index with modulo for looping
-// Set track transform to translateX(-N%) where N = current * 100
-// Toggle 'active' class on the corresponding indicator dot
+function goTo(idx) {
+  // TODO: Go to — toggle CSS classes, update styles
+}
 
-// Step 3: Add click listeners
-// #prev-btn -> goTo(current - 1)
-// #next-btn -> goTo(current + 1)
-// indicators -> when a .dot is clicked, goTo its data-idx
+document.getElementById('prev-btn').addEventListener('click', () => goTo(current - 1));
+document.getElementById('next-btn').addEventListener('click', () => goTo(current + 1));
+indicators.addEventListener('click', (e) => { if (e.target.dataset.idx !== undefined) goTo(parseInt(e.target.dataset.idx)); });
 
-// Step 4: Create autoPlay() function
-// Use setInterval (3000ms) to advance to next slide
+function autoPlay() {
+  // TODO: Implement autoPlay
+}
+autoPlay();
 
-// Step 5: Add click listener on #play-btn
-// Toggle playing state, update button text ('Pause' / 'Play')
-// Start or stop autoplay accordingly`,
+document.getElementById('play-btn').addEventListener('click', (e) => {
+  playing = !playing;
+  e.target.textContent = playing ? 'Pause' : 'Play';
+  if (playing) autoPlay(); else clearInterval(timer);
+});`,
 
   'ng-virtual-scroll': `// Simulating Angular CDK Virtual Scrolling
 const TOTAL = 10000;
@@ -491,46 +549,43 @@ const viewport = document.getElementById('viewport');
 const scrollContent = document.getElementById('scroll-content');
 const renderedEl = document.getElementById('rendered');
 
-// Set the scroll content height to TOTAL * ROW_HEIGHT
 scrollContent.style.height = TOTAL * ROW_HEIGHT + 'px';
 
-// Label generator for variety
 function getLabel(i) {
-  var names = ['Component','Service','Module','Directive','Pipe','Guard','Resolver','Interceptor'];
-  return names[i % names.length] + ' #' + (i + 1);
+  // TODO: Implement getLabel
 }
 
-// Step 1: Create renderVisible() function
-// Calculate the visible range based on viewport.scrollTop and viewport.clientHeight
-// startIdx = Math.floor(scrollTop / ROW_HEIGHT)
-// endIdx = startIdx + Math.ceil(viewHeight / ROW_HEIGHT) + 2 (buffer), capped at TOTAL
-// Generate .row divs with position:absolute and top set to i * ROW_HEIGHT
-// Each row shows its index number and label
-// Update renderedEl text with "Rendered: X of 10,000"
+function renderVisible() {
+  // TODO: Render visible — update DOM content, calculate values
+}
 
-// Step 2: Add 'scroll' listener on viewport to call renderVisible()
-
-// Step 3: Call renderVisible() on init`,
+viewport.addEventListener('scroll', renderVisible);
+renderVisible();`,
 
   'ng-context-menu': `// Simulating Angular CDK Overlay context menu
 const menu = document.getElementById('context-menu');
 const log = document.getElementById('log');
 let targetItem = null;
 
-// Step 1: Add 'contextmenu' listener on #items container
-// Find the closest .item element from the event target
-// Prevent default browser context menu
-// Store the item's text in targetItem
-// Show the custom menu, position it at the click coordinates
-// Clamp position so menu doesn't overflow the viewport
+document.getElementById('items').addEventListener('contextmenu', (e) => {
+  const item = e.target.closest('.item');
+  if (!item) return;
+  e.preventDefault();
+  targetItem = item.textContent;
+  menu.style.display = 'block';
+  menu.style.left = Math.min(e.clientX, window.innerWidth - 160) + 'px';
+  menu.style.top = Math.min(e.clientY, window.innerHeight - 160) + 'px';
+});
 
-// Step 2: Add click listener on the menu
-// Read data-action from the clicked .menu-item
-// Capitalize the action name and display it with the target item name in the log
-// Hide the menu
+menu.addEventListener('click', (e) => {
+  const action = e.target.dataset.action;
+  if (!action) return;
+  log.textContent = action.charAt(0).toUpperCase() + action.slice(1) + ': ' + targetItem;
+  menu.style.display = 'none';
+});
 
-// Step 3: Add click listener on document to hide the menu
-// Step 4: Add keydown listener for Escape to hide the menu`,
+document.addEventListener('click', () => menu.style.display = 'none');
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') menu.style.display = 'none'; });`,
 
   'ng-toast-notifications': `// Simulating Angular toast notification service with DI
 const container = document.getElementById('toast-container');
@@ -542,19 +597,18 @@ const messages = {
 };
 const icons = { success: '\\u2713', error: '\\u2717', warning: '\\u26A0', info: '\\u2139' };
 
-// Step 1: Create showToast(type) function
-// Create a div.toast with the type as a class
-// Set innerHTML with icon, message, and a .close button
-// Append to container
-// Add click listener on .close to call removeToast()
-// Set a 3500ms timeout to auto-remove the toast
+function showToast(type) {
+  // TODO: Show toast — update state, update DOM content, handle timing
+}
 
-// Step 2: Create removeToast(toast) function
-// If toast is no longer in the DOM, return early
-// Apply fadeOut animation, then remove element after 300ms
+function removeToast(toast) {
+  // TODO: Remove toast — update state, update styles, handle timing
+}
 
-// Step 3: Add click listener on .btn-row
-// Read data-type from the clicked button, call showToast(type)`,
+document.querySelector('.btn-row').addEventListener('click', (e) => {
+  const type = e.target.dataset.type;
+  if (type) showToast(type);
+});`,
 
   'ng-data-visualization': `// Simulating Angular data visualization (bar, line, pie charts)
 const canvas = document.getElementById('chart');
@@ -563,31 +617,36 @@ const labels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const colors = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899'];
 let chartType = 'bar';
 
-function randData() { return labels.map(function() { return Math.floor(Math.random() * 80) + 20; }); }
+function randData() {
+  // TODO: Implement randData
+}
 let data = randData();
 
-// Step 1: Create drawBar() function
-// Calculate bar width and positions with padding
-// For each data point, draw a filled rectangle using ctx.fillRect
-// Draw labels below and values above each bar
+function drawBar() {
+  // TODO: Draw bar — calculate values
+}
 
-// Step 2: Create drawLine() function
-// Plot data points connected by a line using ctx.beginPath/moveTo/lineTo/stroke
-// Draw circles at each data point using ctx.arc
-// Draw labels below each point
+function drawLine() {
+  // TODO: Draw line — calculate values
+}
 
-// Step 3: Create drawPie() function
-// Calculate total, draw arcs proportional to each value using ctx.arc
-// Label each slice around the outside of the pie
+function drawPie() {
+  // TODO: Draw pie — calculate values
+}
 
-// Step 4: Create draw() function
-// Clear the canvas with ctx.clearRect
-// Call the appropriate drawing function based on chartType
+function draw() {
+  // TODO: Implement draw
+}
 
-// Step 5: Add click listener on .chart-tabs
-// Update chartType from data-chart attribute, toggle 'active' class, call draw()
+document.querySelector('.chart-tabs').addEventListener('click', (e) => {
+  if (!e.target.dataset.chart) return;
+  chartType = e.target.dataset.chart;
+  document.querySelectorAll('.ct').forEach(b => b.classList.toggle('active', b.dataset.chart === chartType));
+  draw();
+});
 
-// Step 6: Add click listener on #refresh to regenerate data and redraw`,
+document.getElementById('refresh').addEventListener('click', () => { data = randData(); draw(); });
+draw();`,
 
   'ng-search-filter': `// Simulating Angular custom pipe for search filtering
 const items = [
@@ -603,21 +662,22 @@ const list = document.getElementById('list');
 const countEl = document.getElementById('count');
 let activeCat = 'all';
 
-// Step 1: Create highlight(text, query) function
-// Find query within text (case-insensitive)
-// Wrap the matching portion in <mark> tags
+function highlight(text, q) {
+  // TODO: Implement highlight
+}
 
-// Step 2: Create render() function
-// Get search query from input, filter items by:
-//   - activeCat matches item.cat (or 'all' shows everything)
-//   - query matches item.name (case-insensitive)
-// Render as <li> with highlighted name and category badge
-// Update countEl with "X of Y items"
+function render() {
+  // TODO: Render — filter items, remove item, update DOM content
+}
 
-// Step 3: Add 'input' listener on input to call render()
+input.addEventListener('input', render);
 
-// Step 4: Add click listener on .tags container
-// Read data-cat from clicked tag, set activeCat, toggle 'active' class, render()
+document.querySelector('.tags').addEventListener('click', (e) => {
+  if (!e.target.dataset.cat) return;
+  activeCat = e.target.dataset.cat;
+  document.querySelectorAll('.tag').forEach(t => t.classList.toggle('active', t.dataset.cat === activeCat));
+  render();
+});
 
 render();`,
 
@@ -632,24 +692,20 @@ let loading = false;
 const BATCH = 8;
 const MAX = 50;
 
-// Step 1: Create genItems(start, count) function
-// Generate HTML for item cards from start index
-// Each card has a colored avatar with a letter, a name, and a description
-// Stop at MAX items
+function genItems(start, count) {
+  // TODO: Gen items — calculate values
+}
 
-// Step 2: Create loadMore() function
-// If already loading or all items loaded, return
-// Set loading flag, show loader element
-// After a 500ms delay (simulating API call):
-//   - Append generated HTML to container
-//   - Increment page, clear loading flag, hide loader
-//   - Update status text with "Loaded: X of 50 items"
+function loadMore() {
+  // TODO: Load more — update state, update DOM content, update styles
+}
 
-// Step 3: Set up IntersectionObserver
-// Observe the sentinel element within #scroll-area
-// When sentinel is visible (isIntersecting), call loadMore()
+const observer = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) loadMore();
+}, { root: document.getElementById('scroll-area'), threshold: 0.1 });
 
-// Step 4: Trigger initial loadMore()`,
+observer.observe(sentinel);
+loadMore();`,
 
   'ng-gallery': `// Simulating Angular image gallery with lightbox overlay
 const images = [
@@ -665,33 +721,38 @@ const images = [
 ];
 
 const gallery = document.getElementById('gallery');
+gallery.innerHTML = images.map((img, i) =>
+  '<div class="thumb" style="background:' + img.bg + '" data-idx="' + i + '">' + img.emoji + '</div>'
+).join('');
+
 const lightbox = document.getElementById('lightbox');
 const lbImg = document.getElementById('lb-img');
 const lbCaption = document.getElementById('lb-caption');
 let currentIdx = 0;
 
-// Step 1: Render gallery thumbnails
-// Create .thumb divs with background color, emoji, and data-idx attribute
+function showLightbox(idx) {
+  // TODO: Show lightbox — update DOM content, update styles
+}
 
-// Step 2: Create showLightbox(idx) function
-// Set currentIdx, update lbImg background and text content (emoji)
-// Update lbCaption with label and position (e.g., "Sunrise (1/9)")
-// Show lightbox
+function closeLightbox() {
+  // TODO: Implement closeLightbox
+}
 
-// Step 3: Create closeLightbox() function
-// Hide the lightbox
+gallery.addEventListener('click', (e) => {
+  const t = e.target.closest('.thumb');
+  if (t) showLightbox(parseInt(t.dataset.idx));
+});
 
-// Step 4: Add click listener on gallery
-// When a .thumb is clicked, call showLightbox with its data-idx
-
-// Step 5: Add click listeners on lightbox controls
-// #lb-close -> closeLightbox()
-// #lb-prev -> show previous image (wrap around)
-// #lb-next -> show next image (wrap around)
-// Clicking lightbox backdrop -> closeLightbox()
-
-// Step 6: Add keydown listener for keyboard navigation
-// Escape -> close, ArrowLeft -> prev, ArrowRight -> next`,
+document.getElementById('lb-close').addEventListener('click', closeLightbox);
+document.getElementById('lb-prev').addEventListener('click', () => showLightbox((currentIdx - 1 + images.length) % images.length));
+document.getElementById('lb-next').addEventListener('click', () => showLightbox((currentIdx + 1) % images.length));
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => {
+  if (lightbox.style.display !== 'flex') return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') showLightbox((currentIdx - 1 + images.length) % images.length);
+  if (e.key === 'ArrowRight') showLightbox((currentIdx + 1) % images.length);
+});`,
 
   'ng-cards-grid': `// Simulating Angular Flex Layout responsive card grid
 const cards = [
@@ -705,20 +766,16 @@ const cards = [
 
 const grid = document.getElementById('grid');
 
-// Step 1: Create render() function
-// Generate .card elements from the cards array
-// Each card has .card-icon, .card-title, .card-desc, and .card-tag sections
-
-// Step 2: Add click listener on .toolbar
-// Read data-cols from the clicked button
-// Toggle 'active' class on column buttons
-// Update grid.style.gridTemplateColumns to "repeat(N, 1fr)"
-
-// Step 3: Call render() on init
-
 function render() {
-  // Render cards into the grid
+  // TODO: Render — update DOM content
 }
+
+document.querySelector('.toolbar').addEventListener('click', (e) => {
+  const cols = e.target.dataset.cols;
+  if (!cols) return;
+  document.querySelectorAll('.cols-btn').forEach(b => b.classList.toggle('active', b.dataset.cols === cols));
+  grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+});
 
 render();`,
 
@@ -739,26 +796,26 @@ const searchEl = document.getElementById('search');
 const deptEl = document.getElementById('filter-dept');
 const levelEl = document.getElementById('filter-level');
 
-// Step 1: Create filtered() function
-// Read search query, department filter, and level filter
-// Filter data matching all active criteria (name search is case-insensitive)
-// If sortCol is set, sort the results (numbers by subtraction, strings by localeCompare)
-// Flip comparison based on sortDir
-
-// Step 2: Create render() function
-// Call filtered() to get the visible rows
-// Render into #tbody, or show "No results" if empty
-// Update #result-count with "X of Y records"
-
-// Step 3: Add input/change listeners on searchEl, deptEl, levelEl to call render()
-
-// Step 4: Add click listeners on th.sortable elements
-// Toggle sort direction if same column, otherwise reset to 'asc'
-// Call render()
+function filtered() {
+  // TODO: Filtered — filter items, remove item
+}
 
 function render() {
-  // Display filtered and sorted data
+  // TODO: Render — filter items, remove item, update DOM content
 }
+
+searchEl.addEventListener('input', render);
+deptEl.addEventListener('change', render);
+levelEl.addEventListener('change', render);
+
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    else { sortCol = col; sortDir = 'asc'; }
+    render();
+  });
+});
 
 render();`,
 
@@ -770,37 +827,31 @@ const widgetTypes = [
   { title: 'Uptime', value: '99.9%', label: 'Last 30 days' },
 ];
 
-let widgets = JSON.parse(localStorage.getItem('ng-dash') || 'null') || widgetTypes.slice(0, 4).map(function(w, i) { return Object.assign({}, w, { id: i }); });
+let widgets = JSON.parse(localStorage.getItem('ng-dash') || 'null') || widgetTypes.slice(0, 4).map((w, i) => ({ ...w, id: i }));
 let nextId = widgets.length;
 
-function save() { localStorage.setItem('ng-dash', JSON.stringify(widgets)); }
-
-// Step 1: Create render() function
-// Build .widget elements from the widgets array, each with:
-//   - draggable="true" and data-id attribute
-//   - .widget-header with title and .remove button
-//   - .widget-body with .big-num (value) and .label
-// If no widgets, show a placeholder message
-// Call setupDrag() after rendering
-
-// Step 2: Create setupDrag() function
-// For each .widget, add drag event listeners:
-//   dragstart: store the widget id, add 'dragging' class
-//   dragend: remove 'dragging' and 'over' classes
-//   dragover: preventDefault, add 'over' class
-//   dragleave: remove 'over' class
-//   drop: swap positions in the widgets array, save and re-render
-// For each .remove button, add click listener to remove widget from array
-
-// Step 3: Add click listener on #add-widget
-// Add a new widget from widgetTypes (cycling), save and render
-
-// Step 4: Add click listener on #reset-btn
-// Reset widgets to initial 4, save and render
+function save() {
+  // TODO: Implement save
+}
 
 function render() {
-  // Render widgets into the dashboard grid
+  // TODO: Render — update state, update DOM content
 }
+
+function setupDrag() {
+  // TODO: Setup drag — update state, filter items, remove item
+}
+
+document.getElementById('add-widget').addEventListener('click', () => {
+  const t = widgetTypes[nextId % widgetTypes.length];
+  widgets.push({ ...t, id: nextId++ });
+  save(); render();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  widgets = widgetTypes.slice(0, 4).map((w, i) => ({ ...w, id: i }));
+  nextId = 4; save(); render();
+});
 
 render();`,
 
@@ -810,14 +861,24 @@ const navList = document.getElementById('nav-list');
 const subMenu = document.getElementById('sub-settings');
 const pageTitle = document.getElementById('page-title');
 
-// Step 1: Add click listener on #toggle-btn
-// Toggle 'collapsed' class on the sidebar element
+document.getElementById('toggle-btn').addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+});
 
-// Step 2: Add click listener on navList
-// Find the clicked .nav-item
-// If it has 'has-sub' class, toggle the sub-menu visibility and arrow rotation
-// Otherwise, remove 'active' from all nav items, add 'active' to the clicked one
-// Update pageTitle text to the route name (capitalized)`,
+navList.addEventListener('click', (e) => {
+  const item = e.target.closest('.nav-item');
+  if (!item) return;
+  const route = item.dataset.route;
+  if (item.classList.contains('has-sub')) {
+    const open = subMenu.style.display !== 'none';
+    subMenu.style.display = open ? 'none' : 'block';
+    item.querySelector('.arrow').classList.toggle('open', !open);
+    return;
+  }
+  navList.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  item.classList.add('active');
+  pageTitle.textContent = route.charAt(0).toUpperCase() + route.slice(1);
+});`,
 
   'ng-navbar': `// Simulating Angular responsive navbar with route guards
 let loggedIn = false;
@@ -828,49 +889,51 @@ const loginBtn = document.getElementById('login-btn');
 const mobileMenu = document.getElementById('mobile-menu');
 const hamburger = document.getElementById('hamburger');
 
-// Step 1: Create navigate(route, el) function
-// If route is 'pricing' and user is not logged in, show "Access Denied" message
-// Otherwise, remove 'active' from all .nav-link elements
-// If el is provided, add 'active' class to it
-// Update pageName text (capitalize route name)
-// Hide mobile menu
+function navigate(route, el) {
+  // TODO: Navigate — toggle CSS classes, update DOM content, update styles
+}
 
-// Step 2: Add click listener on links container
-// Call navigate with the clicked element's data-route
+links.addEventListener('click', (e) => {
+  if (e.target.dataset.route) navigate(e.target.dataset.route, e.target);
+});
 
-// Step 3: Add click listener on mobileMenu
-// Call navigate with the clicked element's data-route
+mobileMenu.addEventListener('click', (e) => {
+  if (e.target.dataset.route) navigate(e.target.dataset.route);
+});
 
-// Step 4: Add click listener on hamburger
-// Toggle mobile menu display between 'none' and 'flex'
+hamburger.addEventListener('click', () => {
+  mobileMenu.style.display = mobileMenu.style.display === 'none' ? 'flex' : 'none';
+});
 
-// Step 5: Add click listener on loginBtn
-// Toggle loggedIn state
-// Update button text ('Login' / 'Logout') and badge text ('Guest' / 'Admin')`,
+loginBtn.addEventListener('click', () => {
+  loggedIn = !loggedIn;
+  loginBtn.textContent = loggedIn ? 'Logout' : 'Login';
+  userBadge.textContent = loggedIn ? 'Admin' : 'Guest';
+});`,
 
   'ng-breadcrumbs': `// Simulating Angular auto-generated breadcrumbs from router config
 const crumbsEl = document.getElementById('breadcrumbs');
 let currentPath = 'home';
 
-// Step 1: Create renderBreadcrumbs(path) function
-// Split path by '/' into parts
-// For each part, build a .crumb span with:
-//   - data-path set to the full path up to that point
-//   - 'current' class on the last part
-//   - Separator '/' between crumbs
-// Capitalize each part name
+function renderBreadcrumbs(path) {
+  // TODO: Render breadcrumbs — update DOM content
+}
 
-// Step 2: Create navigate(path) function
-// Set currentPath, call renderBreadcrumbs(path)
-// Toggle 'active' class on .route-item elements matching the path
+function navigate(path) {
+  // TODO: Navigate — update state, toggle CSS classes
+}
 
-// Step 3: Add click listener on .route-tree
-// When a .route-item is clicked, call navigate with its data-path
+document.querySelector('.route-tree').addEventListener('click', (e) => {
+  const item = e.target.closest('.route-item');
+  if (item) navigate(item.dataset.path);
+});
 
-// Step 4: Add click listener on crumbsEl
-// When a non-current .crumb is clicked, navigate to its data-path
+crumbsEl.addEventListener('click', (e) => {
+  const crumb = e.target.closest('.crumb:not(.current)');
+  if (crumb) navigate(crumb.dataset.path);
+});
 
-// Step 5: Initialize with navigate('home')`,
+navigate('home');`,
 
   'ng-bottom-nav': `// Simulating Angular mobile bottom navigation with routerLinkActive
 const nav = document.getElementById('bottom-nav');
@@ -885,12 +948,15 @@ const screens = {
   profile: 'View and edit your profile settings.',
 };
 
-// Step 1: Add click listener on nav
-// Find the clicked .bnav-item
-// Get the route from data-route attribute
-// Remove 'active' from all .bnav-item elements, add 'active' to clicked
-// Update title text (capitalize route name)
-// Update body text from the screens object`,
+nav.addEventListener('click', (e) => {
+  const item = e.target.closest('.bnav-item');
+  if (!item) return;
+  const route = item.dataset.route;
+  nav.querySelectorAll('.bnav-item').forEach(i => i.classList.remove('active'));
+  item.classList.add('active');
+  title.textContent = route.charAt(0).toUpperCase() + route.slice(1);
+  body.textContent = screens[route];
+});`,
 
   'ng-mega-menu': `// Simulating Angular multi-level mega menu
 const menus = {
@@ -915,47 +981,57 @@ const bar = document.getElementById('menu-bar');
 const panel = document.getElementById('mega-panel');
 let activeMenu = null;
 
-// Step 1: Add click listener on bar
-// Find the clicked .menu-trigger, get its data-menu value
-// If same menu is already open, call closeMenu() and return
-// Set activeMenu, toggle 'active' class on triggers
-// Build mega panel HTML with .mega-columns grid
-// Each column has an <h4> title and links from items array
-// Show the panel
+bar.addEventListener('click', (e) => {
+  const trigger = e.target.closest('.menu-trigger');
+  if (!trigger) return;
+  const menuKey = trigger.dataset.menu;
+  if (activeMenu === menuKey) {
+    closeMenu();
+    return;
+  }
+  activeMenu = menuKey;
+  bar.querySelectorAll('.menu-trigger').forEach(t => t.classList.toggle('active', t.dataset.menu === menuKey));
+  const cols = menus[menuKey];
+  panel.innerHTML = '<div class="mega-columns">' + cols.map(col =>
+    '<div class="mega-col"><h4>' + col.title + '</h4>' + col.items.map(item => '<a>' + item + '</a>').join('') + '</div>'
+  ).join('') + '</div>';
+  panel.style.display = 'block';
+});
 
-// Step 2: Create closeMenu() function
-// Set activeMenu to null, hide panel, remove 'active' from all triggers
+function closeMenu() {
+  // TODO: Close menu — toggle CSS classes, update styles
+}
 
-// Step 3: Add click listener on document
-// If click is outside menu-bar and mega-panel, close menu
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#menu-bar') && !e.target.closest('#mega-panel')) closeMenu();
+});
 
-// Step 4: Add keydown listener for Escape to close menu`,
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });`,
 
   'ng-pagination': `// Simulating Angular pagination with router query params
-const allItems = Array.from({ length: 23 }, function(_, i) { return 'Item ' + (i + 1); });
+const allItems = Array.from({ length: 23 }, (_, i) => 'Item ' + (i + 1));
 let page = 1;
 let pageSize = 5;
 
-function totalPages() { return Math.ceil(allItems.length / pageSize); }
-
-// Step 1: Create render() function
-// Slice allItems for current page
-// Render items as <li> elements in #item-list
-// Build paginator HTML with prev button, numbered page buttons, and next button
-// Add 'active' class to current page button
-// Disable prev on first page, next on last page
-// Update #url-bar with simulated URL "/items?page=X&size=Y"
-
-// Step 2: Add click listener on #paginator (event delegation)
-// Handle prev button, next button, and numbered page buttons
-// Update page and re-render
-
-// Step 3: Add change listener on #page-size select
-// Update pageSize, reset page to 1, re-render
+function totalPages() {
+  // TODO: Implement totalPages
+}
 
 function render() {
-  // Display current page of items with pagination controls
+  // TODO: Render — update DOM content
 }
+
+document.getElementById('paginator').addEventListener('click', (e) => {
+  if (e.target.id === 'pg-prev' && page > 1) { page--; render(); }
+  else if (e.target.id === 'pg-next' && page < totalPages()) { page++; render(); }
+  else if (e.target.dataset.page) { page = parseInt(e.target.dataset.page); render(); }
+});
+
+document.getElementById('page-size').addEventListener('change', (e) => {
+  pageSize = parseInt(e.target.value);
+  page = 1;
+  render();
+});
 
 render();`,
 
@@ -964,52 +1040,76 @@ const log = document.getElementById('log');
 const overlay = document.getElementById('search-overlay');
 let itemCount = 0;
 
-// Shortcut definitions - each key maps to a handler function
 const shortcuts = {
-  'n': function() { itemCount++; return 'Created new item #' + itemCount; },
-  's': function() { return 'Saved successfully!'; },
-  'f': function() { overlay.style.display = 'block'; document.getElementById('search-input').focus(); return 'Search opened'; },
-  'd': function() { return 'Item deleted'; },
+  'n': () => { itemCount++; return 'Created new item #' + itemCount; },
+  's': () => 'Saved successfully!',
+  'f': () => { overlay.style.display = 'block'; document.getElementById('search-input').focus(); return 'Search opened'; },
+  'd': () => 'Item deleted',
 };
 
-// Step 1: Add keydown listener on document
-// If Escape is pressed, hide the search overlay and show 'Cancelled' in log
-// If Ctrl (or Meta on Mac) + key matches a shortcut:
-//   - Prevent default browser behavior
-//   - Execute the shortcut handler
-//   - Display the returned message in the log`,
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    overlay.style.display = 'none';
+    log.textContent = 'Cancelled';
+    return;
+  }
+  if ((e.ctrlKey || e.metaKey) && shortcuts[e.key]) {
+    e.preventDefault();
+    const msg = shortcuts[e.key]();
+    log.textContent = msg;
+    log.style.animation = 'none';
+    void log.offsetWidth;
+    log.style.animation = '';
+  }
+});`,
 
   'ng-settings-panel': `// Simulating Angular settings panel with localStorage persistence
 let settings = JSON.parse(localStorage.getItem('ng-settings') || '{}');
 settings = { theme: 'dark', accent: '#ef4444', fontSize: 14, notifications: false, ...settings };
 const preview = document.getElementById('preview');
 
-// Step 1: Create applySettings() function
-// Update preview font size from settings.fontSize
-// Update preview left border color from settings.accent
-// Update #fs-value text display
+function applySettings() {
+  // TODO: Apply settings — update state, update DOM content, update styles
+}
 
-// Step 2: Add click listener on .toggle-group (theme)
-// Read data-theme from clicked .tg button
-// Update settings.theme, toggle 'active' class on theme buttons
+// Theme toggle
+document.querySelector('.toggle-group').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('tg')) return;
+  settings.theme = e.target.dataset.theme;
+  document.querySelectorAll('.tg').forEach(t => t.classList.toggle('active', t.dataset.theme === settings.theme));
+});
 
-// Step 3: Add click listener on #color-options (accent color)
-// Read data-color from clicked .color-dot
-// Update settings.accent, toggle 'active' class, call applySettings()
+// Accent color
+document.getElementById('color-options').addEventListener('click', (e) => {
+  const dot = e.target.closest('.color-dot');
+  if (!dot) return;
+  settings.accent = dot.dataset.color;
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.toggle('active', d.dataset.color === settings.accent));
+  applySettings();
+});
 
-// Step 4: Add input listener on #font-size range slider
-// Update settings.fontSize, call applySettings()
+// Font size
+document.getElementById('font-size').addEventListener('input', (e) => {
+  settings.fontSize = parseInt(e.target.value);
+  applySettings();
+});
 
-// Step 5: Add click listener on #notif-switch
-// Toggle settings.notifications, toggle 'on' class on the switch
+// Notifications toggle
+document.getElementById('notif-switch').addEventListener('click', function() {
+  settings.notifications = !settings.notifications;
+  this.classList.toggle('on', settings.notifications);
+});
 
-// Step 6: Add click listener on #save-btn
-// Save settings to localStorage as JSON
-// Show #saved-msg briefly (2 seconds)
+// Save
+document.getElementById('save-btn').addEventListener('click', () => {
+  localStorage.setItem('ng-settings', JSON.stringify(settings));
+  const msg = document.getElementById('saved-msg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 2000);
+});
 
-// Step 7: Initialize
-// Call applySettings()
-// Set initial 'on' class on notif-switch based on settings.notifications`,
+applySettings();
+document.getElementById('notif-switch').classList.toggle('on', settings.notifications);`,
 
   'ng-notifications-center': `// Simulating Angular notification center with RxJS Subject
 const notifications = [
@@ -1022,30 +1122,41 @@ let nextId = 5;
 let filter = 'all';
 const badge = document.getElementById('badge');
 
-// Step 1: Create render() function
-// Filter notifications based on current filter value:
-//   'all' -> show all, 'unread' -> !read, 'info'/'alert' -> match type
-// Render .notif divs with 'unread' class, colored dot, text, and time
-// Update badge count (unread notifications), show/hide badge
-
-// Step 2: Add click listener on #notif-list
-// When a .notif is clicked, find the notification by data-id and mark it as read
-// Re-render
-
-// Step 3: Add click listener on .filter-tabs
-// Update filter value, toggle 'active' class on filter buttons, render()
-
-// Step 4: Add click listener on #mark-all
-// Set all notifications to read, render()
-
-// Step 5: Add click listener on #simulate-btn
-// Add a random new notification to the beginning of the array
-// Increment nextId, set read to false and time to 'now'
-// Re-render
-
 function render() {
-  // Display filtered notifications and update badge
+  // TODO: Render — filter items, remove item, update DOM content
 }
+
+document.getElementById('notif-list').addEventListener('click', (e) => {
+  const el = e.target.closest('.notif');
+  if (!el) return;
+  const notif = notifications.find(n => n.id === parseInt(el.dataset.id));
+  if (notif) { notif.read = true; render(); }
+});
+
+document.querySelector('.filter-tabs').addEventListener('click', (e) => {
+  if (!e.target.dataset.filter) return;
+  filter = e.target.dataset.filter;
+  document.querySelectorAll('.ft').forEach(f => f.classList.toggle('active', f.dataset.filter === filter));
+  render();
+});
+
+document.getElementById('mark-all').addEventListener('click', () => {
+  notifications.forEach(n => n.read = true);
+  render();
+});
+
+document.getElementById('simulate-btn').addEventListener('click', () => {
+  const msgs = ['Build completed','New comment on PR','Alert: disk space low','User invited to team'];
+  const types = ['info','alert'];
+  notifications.unshift({
+    id: nextId++,
+    text: msgs[Math.floor(Math.random() * msgs.length)],
+    type: types[Math.floor(Math.random() * 2)],
+    read: false,
+    time: 'now'
+  });
+  render();
+});
 
 render();`,
 
@@ -1053,26 +1164,32 @@ render();`,
 const items = ['Angular','React','Vue','Svelte','TypeScript','RxJS','NgRx','Tailwind'];
 let favorites = JSON.parse(localStorage.getItem('ng-favs') || '[]');
 
-function save() { localStorage.setItem('ng-favs', JSON.stringify(favorites)); }
-
-// Step 1: Create render() function
-// Render items grid: each .item-card has a name span and a .fav-btn button
-// Button shows heart icon: filled (active) if in favorites, outline if not
-// Render favorites list: each .fav-item has a name and a .remove-btn
-// Update #fav-count with the number of favorites
-// Show placeholder text if no favorites
-
-// Step 2: Add click listener on #items container
-// When a .fav-btn is clicked, toggle the item in/out of favorites array
-// Save and re-render
-
-// Step 3: Add click listener on #favorites container
-// When a .remove-btn is clicked, remove the item from favorites
-// Save and re-render
+function save() {
+  // TODO: Implement save
+}
 
 function render() {
-  // Display items with favorite toggles and favorites list
+  // TODO: Render — update DOM content
 }
+
+document.getElementById('items').addEventListener('click', (e) => {
+  const btn = e.target.closest('.fav-btn');
+  if (!btn) return;
+  const item = btn.dataset.item;
+  if (favorites.includes(item)) {
+    favorites = favorites.filter(f => f !== item);
+  } else {
+    favorites.push(item);
+  }
+  save(); render();
+});
+
+document.getElementById('favorites').addEventListener('click', (e) => {
+  const btn = e.target.closest('.remove-btn');
+  if (!btn) return;
+  favorites = favorites.filter(f => f !== btn.dataset.item);
+  save(); render();
+});
 
 render();`,
 
@@ -1083,36 +1200,51 @@ let undoStack = [];
 let redoStack = [];
 const historyLog = document.getElementById('history-log');
 
-function snapshot() { return JSON.parse(JSON.stringify(state)); }
+function snapshot() {
+  // TODO: Implement snapshot
+}
 
-// Step 1: Create execute(action, desc) function
-// Push current state snapshot and description onto undoStack
-// Clear redoStack (new action invalidates redo history)
-// Execute the action function
-// Update the UI and append description to history log
+function execute(action, desc) {
+  // TODO: Execute — add item, update DOM content
+}
 
-// Step 2: Add click listener on #add-btn
-// Call execute with an action that pushes a random color to state
+document.getElementById('add-btn').addEventListener('click', () => {
+  execute(() => {
+    state.push(colors[Math.floor(Math.random() * colors.length)]);
+  }, 'Add box');
+});
 
-// Step 3: Add click listener on #color-btn
-// If state is empty, return. Otherwise execute an action that changes the last item's color
+document.getElementById('color-btn').addEventListener('click', () => {
+  if (state.length === 0) return;
+  execute(() => {
+    const idx = state.length - 1;
+    state[idx] = colors[Math.floor(Math.random() * colors.length)];
+  }, 'Change color');
+});
 
-// Step 4: Add click listener on #remove-btn
-// If state is empty, return. Otherwise execute an action that pops the last item
+document.getElementById('remove-btn').addEventListener('click', () => {
+  if (state.length === 0) return;
+  execute(() => { state.pop(); }, 'Remove last');
+});
 
-// Step 5: Add click listener on #undo-btn
-// Pop from undoStack, push current state to redoStack, restore the popped state
+document.getElementById('undo-btn').addEventListener('click', () => {
+  if (undoStack.length === 0) return;
+  const entry = undoStack.pop();
+  redoStack.push({ state: snapshot(), desc: 'Undo: ' + entry.desc });
+  state = entry.state;
+  updateUI();
+});
 
-// Step 6: Add click listener on #redo-btn
-// Pop from redoStack, push current state to undoStack, restore the popped state
-
-// Step 7: Create updateUI() function
-// Render colored .box divs from state array into #item-row
-// Enable/disable undo and redo buttons based on stack lengths
-// Update #history-info with stack counts
+document.getElementById('redo-btn').addEventListener('click', () => {
+  if (redoStack.length === 0) return;
+  const entry = redoStack.pop();
+  undoStack.push({ state: snapshot(), desc: 'Redo' });
+  state = entry.state;
+  updateUI();
+});
 
 function updateUI() {
-  // Render state boxes and update button states
+  // TODO: Update u i — update DOM content
 }
 
 updateUI();`,
@@ -1127,16 +1259,27 @@ const people = [
 
 let loaded = false;
 
-// Step 1: Add click listener on btn
-// If already loaded, reset to skeleton state:
-//   - Replace content with skeleton-card HTML (shimmer animation placeholders)
-//   - Set loaded = false, update button text to 'Load Data'
-//   - Return early
-// If not loaded:
-//   - Disable button, set text to 'Loading...'
-//   - After 1500ms delay, replace skeletons with real data cards
-//   - Each .loaded-card has an .avatar (colored circle with initial), name, role, and email
-//   - Re-enable button, set text to 'Reset', set loaded = true`,
+btn.addEventListener('click', () => {
+  if (loaded) {
+    // Reset to skeleton
+    content.innerHTML = Array(2).fill(0).map(() =>
+      '<div class="skeleton-card"><div class="skeleton skeleton-avatar"></div><div class="skeleton-text"><div class="skeleton skeleton-line w-60"></div><div class="skeleton skeleton-line w-80"></div><div class="skeleton skeleton-line w-40"></div></div></div>'
+    ).join('');
+    loaded = false;
+    btn.textContent = 'Load Data';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Loading...';
+  setTimeout(() => {
+    content.innerHTML = people.map(p =>
+      '<div class="loaded-card"><div class="avatar" style="background:' + p.color + '">' + p.name[0] + '</div><div><div class="name">' + p.name + '</div><div class="role">' + p.role + '</div><div class="email">' + p.email + '</div></div></div>'
+    ).join('');
+    btn.disabled = false;
+    btn.textContent = 'Reset';
+    loaded = true;
+  }, 1500);
+});`,
 
   'ng-empty-states': `// Simulating Angular empty state with ng-content projection
 const container = document.getElementById('empty-state');
@@ -1145,36 +1288,33 @@ const states = {
     icon: '\\u{1F4E6}',
     title: 'No items yet',
     desc: 'Get started by creating your first item. It only takes a few seconds.',
-    actionLabel: 'Create First Item'
+    actions: '<button class="empty-action" onclick="alert(\\'Create clicked\\')">Create First Item</button>'
   },
   'no-results': {
     icon: '\\u{1F50D}',
     title: 'No results found',
     desc: 'Try adjusting your search or filters to find what you are looking for.',
-    actionLabel: 'Clear Filters'
+    actions: '<button class="empty-action" onclick="alert(\\'Filters cleared\\')">Clear Filters</button><button class="empty-action secondary" onclick="alert(\\'Help opened\\')">Get Help</button>'
   },
   'error': {
     icon: '\\u{26A0}',
     title: 'Something went wrong',
     desc: 'We had trouble loading your data. Please check your connection and try again.',
-    actionLabel: 'Retry'
+    actions: '<button class="empty-action" onclick="alert(\\'Retrying...\\')">Retry</button>'
   }
 };
 
-// Step 1: Create render(stateKey) function
-// Look up the state object from states
-// Set container innerHTML with:
-//   - .empty-icon (the emoji)
-//   - .empty-title
-//   - .empty-desc
-//   - .empty-action button(s) with appropriate label and click handler
+function render(stateKey) {
+  // TODO: Render — update DOM content
+}
 
-// Step 2: Add click listener on .tabs container
-// Read data-state from clicked .tab
-// Toggle 'active' class on tabs
-// Call render() with the new state key
+document.querySelector('.tabs').addEventListener('click', (e) => {
+  if (!e.target.dataset.state) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.state === e.target.dataset.state));
+  render(e.target.dataset.state);
+});
 
-// Step 3: Initialize with render('no-data')`,
+render('no-data');`,
 
   'ng-image-viewer': `// Simulating Angular CDK image viewer with zoom and pan
 const viewer = document.getElementById('viewer');
@@ -1184,2555 +1324,1880 @@ let panX = 0, panY = 0;
 let dragging = false;
 let startX, startY, startPanX, startPanY;
 
-// Step 1: Create applyTransform() function
-// Set container.style.transform using translate(panX, panY) and scale(scale)
-// Update #zoom-level text with percentage (e.g., "100%")
+function applyTransform() {
+  // TODO: Apply transform — update DOM content, update styles, calculate values
+}
 
-// Step 2: Add mousedown listener on viewer
-// Set dragging = true, record startX/Y (clientX/Y) and startPanX/Y
+viewer.addEventListener('mousedown', (e) => {
+  dragging = true;
+  startX = e.clientX; startY = e.clientY;
+  startPanX = panX; startPanY = panY;
+});
 
-// Step 3: Add mousemove listener on document
-// If dragging, update panX/panY based on mouse movement delta
-// Call applyTransform()
+document.addEventListener('mousemove', (e) => {
+  if (!dragging) return;
+  panX = startPanX + (e.clientX - startX);
+  panY = startPanY + (e.clientY - startY);
+  applyTransform();
+});
 
-// Step 4: Add mouseup listener on document
-// Set dragging = false
+document.addEventListener('mouseup', () => { dragging = false; });
 
-// Step 5: Add wheel listener on viewer (with passive: false)
-// Prevent default, calculate zoom delta from e.deltaY
-// Clamp scale between 0.5 and 5
-// Call applyTransform()
+viewer.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -0.1 : 0.1;
+  scale = Math.max(0.5, Math.min(5, scale + delta));
+  applyTransform();
+}, { passive: false });
 
-// Step 6: Add click listeners on zoom controls
-// #zoom-in -> increase scale by 0.25 (max 5)
-// #zoom-out -> decrease scale by 0.25 (min 0.5)
-// #reset-btn -> reset scale=1, panX=0, panY=0
-// Call applyTransform() after each
+document.getElementById('zoom-in').addEventListener('click', () => {
+  scale = Math.min(5, scale + 0.25);
+  applyTransform();
+});
+
+document.getElementById('zoom-out').addEventListener('click', () => {
+  scale = Math.max(0.5, scale - 0.25);
+  applyTransform();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  scale = 1; panX = 0; panY = 0;
+  applyTransform();
+});
 
 applyTransform();`,
 
   'ng-toggle-switch': `// Simulating Angular toggle switch with ControlValueAccessor
 const state = { dark: false, notif: false, auto: true, premium: false };
 
-// Step 1: Create updateDisplay() function
-// For each key in state (except 'premium'):
-//   - Find the .toggle element with matching data-key
-//   - Toggle 'on' class based on state value
-//   - Set aria-checked attribute
-//   - Update the .status span text ('On' / 'Off')
-// Update #form-value with JSON.stringify of state
+function updateDisplay() {
+  // TODO: Update display — update state, toggle CSS classes, update DOM content
+}
 
-// Step 2: Add click listeners on all .toggle:not(.disabled) elements
-// Toggle the corresponding state value
-// Call updateDisplay()
+document.querySelectorAll('.toggle:not(.disabled)').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const key = toggle.dataset.key;
+    state[key] = !state[key];
+    updateDisplay();
+  });
+  toggle.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      toggle.click();
+    }
+  });
+});
 
-// Step 3: Add keydown listeners on the same toggle elements
-// Space or Enter key should trigger a click (with preventDefault)
+updateDisplay();`,
 
-// Step 4: Call updateDisplay() on init`,
-
-  // ---------------------------------------------------------------------------
-  // forms-input starters
-  // ---------------------------------------------------------------------------
-
-  'ng-rating-stars': `// Simulating Angular star-rating component with ControlValueAccessor
-const container = document.getElementById('stars');
-const valueEl = document.getElementById('rating-value');
+  'ng-rating-stars': `// Simulating Angular star rating behavior
 let rating = 0;
-let hoverRating = 0;
+const stars = document.querySelectorAll('.star');
+const text = document.getElementById('rating-text');
 
-// Step 1: Create render() function
-// Generate 5 star spans inside the container
-// Each star has data-val (1-5) and shows filled or empty depending on rating / hoverRating
-// Update valueEl text with current rating
+stars.forEach(star => {
+  star.addEventListener('click', () => {
+    rating = parseInt(star.dataset.value);
+    updateStars();
+  });
+  star.addEventListener('mouseenter', () => {
+    const val = parseInt(star.dataset.value);
+    stars.forEach(s => s.classList.toggle('hovered', parseInt(s.dataset.value) <= val));
+  });
+  star.addEventListener('mouseleave', () => {
+    stars.forEach(s => s.classList.remove('hovered'));
+  });
+  star.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); star.click(); }
+  });
+});
 
-// Step 2: Add mouseover listener on the container
-// Read data-val from hovered star, set hoverRating, re-render with hover highlight
+function updateStars() {
+  // TODO: Update stars — update state, toggle CSS classes, update DOM content
+}`,
 
-// Step 3: Add mouseout listener on the container
-// Reset hoverRating to 0 and re-render to show only the committed rating
-
-// Step 4: Add click listener on the container
-// Set rating to the clicked star's data-val, re-render
-// Dispatch a custom 'ratingchange' event on the container`,
-
-  'ng-tag-input': `// Simulating Angular tag/chip input with reactive forms
+  'ng-tag-input': `// Simulating Angular tag input behavior
+const tags = [];
 const input = document.getElementById('tag-input');
 const tagsEl = document.getElementById('tags');
-const suggestions = ['Angular','React','Vue','Svelte','TypeScript','JavaScript','RxJS','NgRx','Tailwind','Node'];
-let tags = [];
+const countEl = document.getElementById('count');
 
-// Step 1: Create render() function
-// Render each tag as a .tag span with text and a .remove-btn
-// Update #tag-count with current tag count
+function render() {
+  // TODO: Render — update state, remove item, update DOM content
+}
 
-// Step 2: Add keydown listener on input for Enter and Backspace
-// Enter: trim value, reject duplicates and empty, add to tags, clear input, re-render
-// Backspace on empty input: remove last tag, re-render
+input.addEventListener('keydown', (e) => {
+  if ((e.key === 'Enter' || e.key === ',') && input.value.trim()) {
+    e.preventDefault();
+    const val = input.value.trim().replace(',', '');
+    if (val && !tags.includes(val)) { tags.push(val); input.value = ''; render(); }
+  }
+  if (e.key === 'Backspace' && !input.value && tags.length) { tags.pop(); render(); }
+});
+render();`,
 
-// Step 3: Create showSuggestions(query) function
-// Filter suggestions that start with query (case-insensitive) and are not already tags
-// Render matching items in #suggestion-list as clickable <li> elements
+  'ng-multi-select': `// Simulating Angular multi-select behavior
+const items = ['TypeScript', 'JavaScript', 'Python', 'Rust', 'Go', 'Java', 'C++', 'Swift'];
+const chosen = new Set();
+const box = document.getElementById('select-box');
+const dd = document.getElementById('dropdown');
+const selEl = document.getElementById('selected');
+const optEl = document.getElementById('options');
+const search = document.getElementById('search');
 
-// Step 4: Add input listener on the input to call showSuggestions
-// Add click listener on #suggestion-list to add clicked suggestion as a tag
+function render() {
+  // TODO: Render — update state, filter items, remove item
+}
 
-// Step 5: Add click listener on tagsEl to handle .remove-btn clicks
-// Remove the corresponding tag from the array, re-render`,
+box.addEventListener('click', () => { dd.style.display = dd.style.display === 'none' ? 'block' : 'none'; });
+search.addEventListener('input', render);
+render();`,
 
-  'ng-multi-select': `// Simulating Angular multi-select dropdown with checkboxes
-const options = ['Engineering','Design','Marketing','Sales','Support','Legal','Finance','HR'];
-const trigger = document.getElementById('ms-trigger');
-const dropdown = document.getElementById('ms-dropdown');
-let selected = [];
+  'ng-otp-input': `// Simulating Angular OTP input behavior
+const inputs = document.querySelectorAll('.otp');
+const result = document.getElementById('otp-result');
 
-// Step 1: Create renderDropdown() function
-// Render each option as a .ms-option div with a checkbox and label
-// Check the checkbox if the option is in the selected array
+inputs.forEach((inp, i) => {
+  inp.addEventListener('input', () => {
+    inp.value = inp.value.replace(/[^0-9]/g, '');
+    if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
+    inp.classList.toggle('filled', !!inp.value);
+    checkComplete();
+  });
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !inp.value && i > 0) inputs[i - 1].focus();
+  });
+  inp.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const data = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+    data.split('').forEach((ch, j) => { if (inputs[j]) { inputs[j].value = ch; inputs[j].classList.add('filled'); } });
+    if (data.length > 0) inputs[Math.min(data.length, 5)].focus();
+    checkComplete();
+  });
+});
 
-// Step 2: Create updateTrigger() function
-// If no selections, show placeholder text
-// Otherwise show count ("N selected") or first two names + "+N more"
+function checkComplete() {
+  // TODO: Check complete — update DOM content
+}
+inputs[0].focus();`,
 
-// Step 3: Add click listener on trigger to toggle dropdown visibility
+  'ng-credit-card-input': `// Simulating Angular credit card input behavior
+const ccNum = document.getElementById('cc-number');
+const ccExp = document.getElementById('cc-exp');
+const ccName = document.getElementById('cc-name');
 
-// Step 4: Add change listener on dropdown (event delegation on checkboxes)
-// Toggle the option in/out of the selected array, call updateTrigger()
+ccNum.addEventListener('input', () => {
+  let v = ccNum.value.replace(/\\D/g, '').slice(0, 16);
+  ccNum.value = v.replace(/(\\d{4})(?=\\d)/g, '$1 ');
+  document.getElementById('card-display').textContent = ccNum.value || '**** **** **** ****';
+  const type = v.startsWith('4') ? 'Visa' : v.startsWith('5') ? 'MasterCard' : v.startsWith('3') ? 'Amex' : 'Card';
+  document.getElementById('card-type').textContent = type;
+});
 
-// Step 5: Add click listener on document to close dropdown when clicking outside`,
+ccExp.addEventListener('input', () => {
+  let v = ccExp.value.replace(/\\D/g, '').slice(0, 4);
+  if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2);
+  ccExp.value = v;
+  document.getElementById('card-exp').textContent = v || 'MM/YY';
+});
 
-  'ng-otp-input': `// Simulating Angular OTP input component
-const otpContainer = document.getElementById('otp-container');
-const resultEl = document.getElementById('otp-result');
-const LENGTH = 6;
+ccName.addEventListener('input', () => {
+  document.getElementById('card-name').textContent = ccName.value.toUpperCase() || 'CARDHOLDER';
+});`,
 
-// Step 1: Create init() function
-// Generate LENGTH input elements (type="text", maxlength="1") inside otpContainer
-// Each input has a data-idx attribute
+  'ng-address-form': `// Simulating Angular address form behavior
+const states = { US: ['California', 'New York', 'Texas'], CA: ['Ontario', 'Quebec', 'BC'], UK: ['England', 'Scotland', 'Wales'] };
+const country = document.getElementById('country');
+const state = document.getElementById('state');
 
-// Step 2: Add input listener on otpContainer (event delegation)
-// When a digit is entered, auto-focus the next input
-// If all inputs are filled, combine values and display in resultEl
+country.addEventListener('change', () => {
+  const opts = states[country.value] || [];
+  state.innerHTML = opts.length ? opts.map(s => '<option>' + s + '</option>').join('') : '<option>Select country first</option>';
+  updateSummary();
+});
 
-// Step 3: Add keydown listener on otpContainer
-// Backspace: clear current input and focus previous
-// ArrowLeft/ArrowRight: navigate between inputs
+document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', updateSummary));
 
-// Step 4: Add paste listener on the first input
-// Distribute pasted string across all inputs, focus the last filled input
+function updateSummary() {
+  // TODO: Update summary — update DOM content, update styles
+}`,
 
-// Step 5: Call init()`,
-
-  'ng-credit-card-input': `// Simulating Angular credit card form with input masks
-const cardNum = document.getElementById('cc-number');
-const expiry = document.getElementById('cc-expiry');
-const cvc = document.getElementById('cc-cvc');
-const preview = document.getElementById('card-preview');
-
-function digits(v) { return v.replace(/\\D/g, ''); }
-
-// Step 1: Add input listener on cardNum
-// Extract digits (max 16), format as groups of 4 separated by spaces
-// Update the preview card number display
-// Detect card type (Visa starts with 4, Mastercard 51-55) and update icon
-
-// Step 2: Add input listener on expiry
-// Extract digits (max 4), format as MM/YY
-// Validate month is 01-12, update preview expiry
-
-// Step 3: Add input listener on cvc
-// Extract digits (max 4), update preview CVC
-
-// Step 4: Create validate() function
-// Check card number length (16 digits), expiry is valid future date, CVC is 3-4 digits
-// Show/hide error messages for each field, return overall validity`,
-
-  'ng-address-form': `// Simulating Angular address form with dependent dropdowns
-const countryEl = document.getElementById('country');
-const stateEl = document.getElementById('state');
-const cityEl = document.getElementById('city');
-const output = document.getElementById('address-output');
-
-const data = {
-  US: { states: ['California','New York','Texas'], cities: { California: ['LA','SF','SD'], 'New York': ['NYC','Buffalo'], Texas: ['Houston','Austin','Dallas'] }},
-  UK: { states: ['England','Scotland','Wales'], cities: { England: ['London','Manchester'], Scotland: ['Edinburgh','Glasgow'], Wales: ['Cardiff','Swansea'] }},
-};
-
-// Step 1: Add change listener on countryEl
-// Populate stateEl with states for the selected country
-// Reset cityEl to empty, clear output
-
-// Step 2: Add change listener on stateEl
-// Populate cityEl with cities for the selected state within the chosen country
-
-// Step 3: Add change listener on cityEl
-// Display formatted address in output (city, state, country)
-
-// Step 4: Add submit listener on #address-form
-// Prevent default, validate all three selects have values, show complete address or error`,
-
-  'ng-survey-form': `// Simulating Angular multi-step survey form
-const steps = document.querySelectorAll('.survey-step');
-const progress = document.getElementById('survey-progress');
-const answers = {};
-let currentStep = 0;
-
-// Step 1: Create showStep(idx) function
-// Hide all steps, show the step at idx
-// Update progress bar width to (idx / total) * 100 percent
-// Update step counter text "Step X of Y"
-
-// Step 2: Add click listener on .survey-next buttons
-// Collect answer from current step's input/select/radio
-// Store in answers object keyed by question name
-// Advance to next step or show summary if on last step
-
-// Step 3: Add click listener on .survey-prev buttons
-// Go back one step, re-populate the input with saved answer
-
-// Step 4: Create showSummary() function
-// Display all collected answers in #survey-summary as a formatted list
-// Show a submit button that logs the answers object`,
-
-  'ng-textarea-autogrow': `// Simulating Angular auto-growing textarea directive
-const textarea = document.getElementById('auto-textarea');
-const charCount = document.getElementById('char-count');
-const MAX_CHARS = 500;
-
-// Step 1: Create resize() function
-// Reset textarea height to 'auto'
-// Set height to scrollHeight + 'px' to fit content
-// Clamp to a max-height of 300px, enable overflow-y scroll if exceeded
-
-// Step 2: Add input listener on textarea
-// Call resize()
-// Update charCount text with "N / 500" characters
-// Add 'warning' class if over 450 chars, 'error' class if over 500
-
-// Step 3: Add keydown listener on textarea
-// If at MAX_CHARS and key is not Backspace/Delete/arrow, prevent default
-
-// Step 4: Call resize() on init to handle pre-filled content`,
-
-  'ng-phone-input': `// Simulating Angular international phone input with country codes
-const countrySelect = document.getElementById('phone-country');
-const phoneInput = document.getElementById('phone-number');
-const formatted = document.getElementById('phone-formatted');
-const countries = [
-  { code: '+1', name: 'US', format: '(XXX) XXX-XXXX' },
-  { code: '+44', name: 'UK', format: 'XXXX XXX XXXX' },
-  { code: '+91', name: 'IN', format: 'XXXXX XXXXX' },
+  'ng-survey-form': `// Simulating Angular survey form behavior
+const questions = [
+  { id: 'q1', text: 'What is your name?', type: 'text' },
+  { id: 'q2', text: 'How do you rate Angular?', type: 'radio', options: ['Excellent', 'Good', 'Fair', 'Poor'] },
+  { id: 'q3', text: 'Which features do you use?', type: 'checkbox', options: ['Components', 'Services', 'Pipes', 'Directives'] }
 ];
 
-// Step 1: Populate countrySelect with country options
-// Each option shows flag emoji placeholder, name, and dial code
+const qEl = document.getElementById('questions');
+questions.forEach(q => {
+  let html = '<div class="question"><label>' + q.text + '</label>';
+  if (q.type === 'text') html += '<input type="text" id="' + q.id + '" />';
+  else if (q.type === 'radio') html += '<div class="radio-group">' + q.options.map(o => '<label><input type="radio" name="' + q.id + '" value="' + o + '" /> ' + o + '</label>').join('') + '</div>';
+  else if (q.type === 'checkbox') html += '<div class="check-group">' + q.options.map(o => '<label><input type="checkbox" name="' + q.id + '" value="' + o + '" /> ' + o + '</label>').join('') + '</div>';
+  html += '</div>';
+  qEl.innerHTML += html;
+});
 
-// Step 2: Create formatPhone(digits, pattern) function
-// Replace each X in the pattern with the next digit
-// Return the partially or fully formatted string
+window.submitSurvey = function() {
+  const answers = {};
+  questions.forEach(q => {
+    if (q.type === 'text') answers[q.id] = document.getElementById(q.id).value;
+    else if (q.type === 'radio') { const c = document.querySelector('input[name="' + q.id + '"]:checked'); answers[q.id] = c ? c.value : 'N/A'; }
+    else if (q.type === 'checkbox') answers[q.id] = [...document.querySelectorAll('input[name="' + q.id + '"]:checked')].map(c => c.value);
+  });
+  const el = document.getElementById('results');
+  el.style.display = 'block';
+  el.innerHTML = '<strong>Responses:</strong><br/>' + Object.entries(answers).map(([k, v]) => k + ': ' + (Array.isArray(v) ? v.join(', ') : v)).join('<br/>');
+};`,
 
-// Step 3: Add input listener on phoneInput
-// Strip non-digits, limit to max digits for selected country format
-// Apply formatPhone and set phoneInput.value
-// Update formatted display with full international number
+  'ng-textarea-autogrow': `// Simulating Angular cdkTextareaAutosize behavior
+const textarea = document.getElementById('auto-textarea');
+const counter = document.getElementById('char-count');
+const MAX = 500;
 
-// Step 4: Add change listener on countrySelect
-// Update placeholder to show the format, re-format existing digits`,
+textarea.addEventListener('input', () => {
+  if (textarea.value.length > MAX) textarea.value = textarea.value.slice(0, MAX);
+  textarea.style.height = 'auto';
+  textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+  counter.textContent = textarea.value.length + ' / ' + MAX;
+  counter.classList.toggle('warn', textarea.value.length > MAX * 0.9);
+});`,
 
-  'ng-currency-input': `// Simulating Angular currency input with locale formatting
-const input = document.getElementById('currency-input');
-const display = document.getElementById('currency-display');
-const localeSelect = document.getElementById('locale-select');
-let rawCents = 0;
+  'ng-phone-input': `// Simulating Angular phone input behavior
+const phone = document.getElementById('phone');
+const code = document.getElementById('country-code');
+const display = document.getElementById('phone-display');
 
-const locales = {
-  'en-US': { symbol: '$', sep: ',', dec: '.', prefix: true },
-  'de-DE': { symbol: '\\u20AC', sep: '.', dec: ',', prefix: false },
-  'ja-JP': { symbol: '\\u00A5', sep: ',', dec: '.', prefix: true },
-};
+phone.addEventListener('input', () => {
+  let v = phone.value.replace(/\\D/g, '').slice(0, 10);
+  if (v.length >= 6) v = '(' + v.slice(0,3) + ') ' + v.slice(3,6) + '-' + v.slice(6);
+  else if (v.length >= 3) v = '(' + v.slice(0,3) + ') ' + v.slice(3);
+  phone.value = v;
+  updateDisplay();
+});
 
-// Step 1: Create formatCurrency(cents, locale) function
-// Convert cents to major units (divide by 100)
-// Format with thousands separators and decimal point per locale
-// Prepend or append currency symbol based on locale config
+code.addEventListener('change', updateDisplay);
 
-// Step 2: Add input listener on the input
-// Strip all non-digit characters, parse as integer cents
-// Set rawCents, format and display in both input and display elements
+function updateDisplay() {
+  // TODO: Update display — update DOM content
+}`,
 
-// Step 3: Add change listener on localeSelect
-// Re-format the current rawCents value with the new locale settings
+  'ng-currency-input': `// Simulating Angular currency input behavior
+const amount = document.getElementById('amount');
+const curr = document.getElementById('currency-sel');
+const formatted = document.getElementById('formatted');
 
-// Step 4: Initialize with rawCents = 0 and render`,
+amount.addEventListener('input', () => {
+  amount.value = amount.value.replace(/[^0-9.]/g, '');
+  updateFormatted();
+});
 
-  'ng-slider-range': `// Simulating Angular range slider with dual thumbs
-const track = document.getElementById('slider-track');
-const thumbMin = document.getElementById('thumb-min');
-const thumbMax = document.getElementById('thumb-max');
-const fill = document.getElementById('slider-fill');
-const minVal = document.getElementById('min-value');
-const maxVal = document.getElementById('max-value');
-let min = 20, max = 80;
-let dragging = null;
+curr.addEventListener('change', updateFormatted);
 
-// Step 1: Create updateUI() function
-// Position thumbMin and thumbMax as percentages along the track
-// Set fill element left and width to span between min and max
-// Update minVal and maxVal text displays
+function updateFormatted() {
+  // TODO: Update formatted — update DOM content
+}`,
 
-// Step 2: Add mousedown listeners on both thumbs
-// Set dragging to 'min' or 'max', add 'active' class
+  'ng-slider-range': `// Simulating Angular range slider behavior
+document.getElementById('slider').addEventListener('input', (e) => {
+  document.getElementById('slider-val').textContent = e.target.value;
+});
+document.getElementById('slider2').addEventListener('input', (e) => {
+  document.getElementById('slider2-val').textContent = '$' + e.target.value;
+});`,
 
-// Step 3: Add mousemove listener on document
-// If dragging, calculate new percentage from mouse position relative to track
-// Clamp value 0-100, ensure min <= max with at least 5% gap
-// Update min or max, call updateUI()
+  'ng-toggle-group': `// Simulating Angular toggle group behavior
+const btns = document.querySelectorAll('.toggle-btn');
+const val = document.getElementById('toggle-val');
 
-// Step 4: Add mouseup listener on document
-// Clear dragging state, remove 'active' class
+btns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    btns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-checked', 'false'); });
+    btn.classList.add('active');
+    btn.setAttribute('aria-checked', 'true');
+    val.textContent = 'Selected: ' + btn.dataset.value;
+  });
+});`,
 
-// Step 5: Call updateUI() on init`,
+  'ng-segmented-control': `// Simulating Angular segmented control behavior
+const segs = document.querySelectorAll('.segment');
+const indicator = document.getElementById('indicator');
+const segVal = document.getElementById('seg-val');
 
-  'ng-toggle-group': `// Simulating Angular toggle button group component
-const group = document.getElementById('toggle-group');
-const output = document.getElementById('toggle-output');
-let selected = [];
-const mode = group.dataset.mode || 'multi'; // 'single' or 'multi'
+segs.forEach(seg => {
+  seg.addEventListener('click', () => {
+    segs.forEach(s => s.classList.remove('active'));
+    seg.classList.add('active');
+    const idx = parseInt(seg.dataset.index);
+    indicator.style.transform = 'translateX(' + (idx * 100) + '%)';
+    segVal.textContent = 'View: ' + seg.textContent;
+  });
+});`,
 
-// Step 1: Add click listener on group (event delegation)
-// Find the clicked .toggle-btn
-// In single mode: deselect all others, select clicked
-// In multi mode: toggle clicked button's selected state
-
-// Step 2: Create updateState() function
-// Read all .toggle-btn elements, build selected array from those with 'active' class
-// Update output text with selected values joined by comma
-// Update aria-pressed attribute on each button
-
-// Step 3: Add keydown listener on group
-// Space/Enter on focused button toggles its state
-// ArrowLeft/ArrowRight moves focus between buttons
-
-// Step 4: Initialize by reading any pre-selected buttons`,
-
-  'ng-segmented-control': `// Simulating Angular segmented control component
-const control = document.getElementById('segmented-control');
-const indicator = document.getElementById('segment-indicator');
-const content = document.getElementById('segment-content');
-const segments = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
-let activeIdx = 0;
-
-// Step 1: Create render() function
-// Generate segment buttons inside the control
-// Position the indicator element behind the active segment using translateX
-// Update content area with data for the selected segment
-
-// Step 2: Add click listener on control (event delegation)
-// Find clicked segment button, get its index
-// Animate indicator to new position using CSS transition
-// Update activeIdx, re-render content
-
-// Step 3: Add keydown listener for arrow key navigation
-// ArrowLeft/ArrowRight moves active segment, wrapping at edges
-
-// Step 4: Initialize with render()`,
-
-  'ng-combobox': `// Simulating Angular combobox with typeahead and custom values
+  'ng-combobox': `// Simulating Angular combobox behavior
+const items = ['Angular', 'React', 'Vue', 'Svelte', 'Next.js', 'Nuxt', 'Remix', 'Astro', 'SolidJS', 'Qwik'];
 const input = document.getElementById('combo-input');
-const listbox = document.getElementById('combo-listbox');
-const options = ['Apple','Banana','Cherry','Date','Elderberry','Fig','Grape','Honeydew','Kiwi','Lemon'];
-let filteredOptions = [];
-let activeIdx = -1;
-let selectedValue = '';
+const list = document.getElementById('combo-list');
+const valEl = document.getElementById('combo-val');
+let highlighted = -1;
 
-// Step 1: Create filter(query) function
-// Filter options that contain query (case-insensitive)
-// Render matches in listbox as .combo-option elements with data-idx
-// Highlight active option, show "No matches" or "Press Enter to add" if empty
+input.addEventListener('input', () => {
+  const q = input.value.toLowerCase();
+  const filtered = items.filter(i => i.toLowerCase().includes(q));
+  list.innerHTML = filtered.map((i, idx) => '<div class="combo-item" data-idx="' + idx + '">' + i + '</div>').join('');
+  list.style.display = filtered.length ? 'block' : 'none';
+  input.setAttribute('aria-expanded', filtered.length ? 'true' : 'false');
+  highlighted = -1;
+  list.querySelectorAll('.combo-item').forEach(el => {
+    el.addEventListener('click', () => { input.value = el.textContent; list.style.display = 'none'; valEl.textContent = 'Selected: ' + el.textContent; });
+  });
+});
 
-// Step 2: Add input listener on the input
-// Call filter with current value, show listbox, reset activeIdx
+input.addEventListener('keydown', (e) => {
+  const items = list.querySelectorAll('.combo-item');
+  if (e.key === 'ArrowDown') { e.preventDefault(); highlighted = Math.min(highlighted + 1, items.length - 1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); highlighted = Math.max(highlighted - 1, 0); }
+  else if (e.key === 'Enter' && highlighted >= 0 && items[highlighted]) { input.value = items[highlighted].textContent; list.style.display = 'none'; valEl.textContent = 'Selected: ' + input.value; }
+  items.forEach((el, i) => el.classList.toggle('highlighted', i === highlighted));
+});
 
-// Step 3: Add keydown listener on input
-// ArrowDown/ArrowUp: navigate filteredOptions, update activeIdx and scroll into view
-// Enter: select active option or use typed custom value, close listbox
-// Escape: close listbox, restore previous selectedValue
+input.addEventListener('blur', () => { setTimeout(() => { list.style.display = 'none'; }, 200); });`,
 
-// Step 4: Add click listener on listbox to select clicked option
+  'ng-mentions-input': `// Simulating Angular mentions input behavior
+const users = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'];
+const editor = document.getElementById('editor');
+const sugs = document.getElementById('suggestions');
+const mentionsList = document.getElementById('mentions-list');
 
-// Step 5: Add blur listener on input to close listbox after short delay`,
+editor.addEventListener('input', () => {
+  const text = editor.textContent;
+  const match = text.match(/@(\\w*)$/);
+  if (match) {
+    const q = match[1].toLowerCase();
+    const filtered = users.filter(u => u.toLowerCase().startsWith(q));
+    sugs.innerHTML = filtered.map(u => '<div class="sug-item">' + u + '</div>').join('');
+    sugs.style.display = filtered.length ? 'block' : 'none';
+    sugs.querySelectorAll('.sug-item').forEach(el => {
+      el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        const before = text.slice(0, text.lastIndexOf('@'));
+        editor.innerHTML = before + '<span class="mention">@' + el.textContent + '</span>&nbsp;';
+        sugs.style.display = 'none';
+        placeCaretAtEnd();
+        updateMentions();
+      });
+    });
+  } else { sugs.style.display = 'none'; }
+  updateMentions();
+});
 
-  'ng-mentions-input': `// Simulating Angular mentions input (@user) component
-const editor = document.getElementById('mentions-editor');
-const dropdown = document.getElementById('mentions-dropdown');
-const users = ['Alice','Bob','Carol','Dave','Eve','Frank','Grace','Hank'];
-let mentionStart = -1;
+function updateMentions() {
+  // TODO: Update mentions — update DOM content
+}
 
-// Step 1: Add input listener on the editor
-// Detect @ symbol followed by letters in the current text
-// Extract the query after @, filter matching users
-// Show dropdown positioned near the cursor with filtered user list
+function placeCaretAtEnd() {
+  // TODO: Implement placeCaretAtEnd
+}`,
 
-// Step 2: Add click listener on dropdown
-// Insert selected username after the @ symbol
-// Wrap the @username in a <span class="mention"> tag
-// Close dropdown, reset mentionStart
+  'ng-code-input': `// Simulating Angular code input behavior
+const editor = document.getElementById('code-editor');
+const lineNums = document.getElementById('line-numbers');
+const lineCount = document.getElementById('line-count');
 
-// Step 3: Add keydown listener on editor
-// ArrowDown/ArrowUp to navigate dropdown options
-// Enter to select highlighted user
-// Escape to close dropdown
+editor.addEventListener('input', updateLines);
+editor.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const start = editor.selectionStart;
+    editor.value = editor.value.slice(0, start) + '  ' + editor.value.slice(editor.selectionEnd);
+    editor.selectionStart = editor.selectionEnd = start + 2;
+    updateLines();
+  }
+});
 
-// Step 4: Create getMentions() function
-// Parse editor content and return array of mentioned usernames
-// Display mentions list in #mentions-output`,
+function updateLines() {
+  // TODO: Update lines — update DOM content
+}
 
-  'ng-code-input': `// Simulating Angular code/PIN input component
-const codeContainer = document.getElementById('code-inputs');
-const resultEl = document.getElementById('code-result');
-const LENGTH = 4;
+editor.addEventListener('scroll', () => { lineNums.scrollTop = editor.scrollTop; });`,
 
-// Step 1: Create init() function
-// Generate LENGTH input boxes (type="text", maxlength="1") in codeContainer
-// Style each as a large centered character box
-
-// Step 2: Add input listener on codeContainer (event delegation)
-// Accept only alphanumeric characters, convert to uppercase
-// Auto-focus next input after entry
-// When all filled, combine and display in resultEl with a verify animation
-
-// Step 3: Add keydown listener for navigation
-// Backspace: clear and focus previous
-// ArrowLeft/ArrowRight: move focus between inputs
-// Delete: clear current input
-
-// Step 4: Add paste listener to distribute pasted text across inputs
-
-// Step 5: Call init()`,
-
-  'ng-signature-pad': `// Simulating Angular signature pad with canvas drawing
+  'ng-signature-pad': `// Simulating Angular signature pad behavior
 const canvas = document.getElementById('sig-canvas');
 const ctx = canvas.getContext('2d');
-const output = document.getElementById('sig-output');
 let drawing = false;
-let paths = [];
-let currentPath = [];
+ctx.strokeStyle = '#e2e8f0';
+ctx.lineWidth = 2;
+ctx.lineCap = 'round';
 
-// Step 1: Configure canvas context
-// Set strokeStyle, lineWidth, lineCap, lineJoin for smooth drawing
+canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+canvas.addEventListener('mousemove', (e) => { if (drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
+canvas.addEventListener('mouseup', () => { drawing = false; });
+canvas.addEventListener('mouseleave', () => { drawing = false; });
 
-// Step 2: Add mousedown/touchstart listener on canvas
-// Set drawing = true, start a new path, record starting point
+canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; const r = canvas.getBoundingClientRect(); const t = e.touches[0]; ctx.beginPath(); ctx.moveTo(t.clientX - r.left, t.clientY - r.top); });
+canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (drawing) { const r = canvas.getBoundingClientRect(); const t = e.touches[0]; ctx.lineTo(t.clientX - r.left, t.clientY - r.top); ctx.stroke(); } });
+canvas.addEventListener('touchend', () => { drawing = false; });
 
-// Step 3: Add mousemove/touchmove listener on canvas
-// If drawing, get coordinates relative to canvas
-// Draw line segment from last point to current point using ctx.lineTo/stroke
-// Push point to currentPath
+document.getElementById('clear-btn').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById('saved-sig').style.display = 'none'; });
+document.getElementById('save-btn').addEventListener('click', () => {
+  const img = document.getElementById('sig-img');
+  img.src = canvas.toDataURL();
+  document.getElementById('saved-sig').style.display = 'block';
+});`,
 
-// Step 4: Add mouseup/touchend listener
-// Set drawing = false, push currentPath to paths, reset currentPath
+  'ng-tooltip': `// Simulating Angular tooltip directive behavior
+document.querySelectorAll('.tip-trigger').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    const tip = document.createElement('div');
+    tip.className = 'tooltip ' + el.dataset.pos;
+    tip.textContent = el.dataset.tip;
+    el.appendChild(tip);
+  });
+  el.addEventListener('mouseleave', () => {
+    const tip = el.querySelector('.tooltip');
+    if (tip) tip.remove();
+  });
+  el.addEventListener('focus', () => el.dispatchEvent(new Event('mouseenter')));
+  el.addEventListener('blur', () => el.dispatchEvent(new Event('mouseleave')));
+});`,
 
-// Step 5: Add click listener on #sig-clear
-// Clear canvas with ctx.clearRect, reset paths array
-
-// Step 6: Add click listener on #sig-save
-// Convert canvas to data URL with canvas.toDataURL()
-// Display the base64 string preview in output element`,
-
-  // ---------------------------------------------------------------------------
-  // interactive starters
-  // ---------------------------------------------------------------------------
-
-  'ng-tooltip': `// Simulating Angular tooltip directive with CDK Overlay
-const triggers = document.querySelectorAll('[data-tooltip]');
-const tooltip = document.getElementById('tooltip');
-
-// Step 1: Create showTooltip(el) function
-// Read tooltip text from el.dataset.tooltip
-// Set tooltip textContent, make it visible
-// Position tooltip above the element, centered horizontally
-
-// Step 2: Create hideTooltip() function
-// Hide the tooltip element
-
-// Step 3: Add mouseenter and mouseleave listeners on each trigger element
-// mouseenter: call showTooltip(el)
-// mouseleave: call hideTooltip()
-
-// Step 4: Add focus and blur listeners for keyboard accessibility
-// focus: show tooltip, blur: hide tooltip
-
-// Step 5: Handle edge cases - reposition if tooltip overflows viewport edges`,
-
-  'ng-popover': `// Simulating Angular popover component with CDK Overlay positioning
+  'ng-popover': `// Simulating Angular popover behavior
+const trigger = document.getElementById('pop-trigger');
 const popover = document.getElementById('popover');
-const arrow = document.getElementById('popover-arrow');
-let activeTrigger = null;
 
-// Step 1: Create showPopover(triggerEl, content, placement) function
-// Set popover innerHTML with content
-// Position relative to triggerEl based on placement (top, bottom, left, right)
-// Position the arrow element pointing toward the trigger
+trigger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  popover.style.display = popover.style.display === 'none' ? 'block' : 'none';
+});
 
-// Step 2: Create hidePopover() function
-// Hide the popover and arrow, reset activeTrigger
+document.addEventListener('click', (e) => {
+  if (!popover.contains(e.target) && e.target !== trigger) popover.style.display = 'none';
+});`,
 
-// Step 3: Add click listeners on all [data-popover] elements
-// Toggle popover: if same trigger clicked, hide; otherwise show with new content
+  'ng-lightbox': `// Simulating Angular lightbox behavior
+const colors = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b'];
+let current = 0;
+const lb = document.getElementById('lightbox');
+const lbImage = document.getElementById('lb-image');
+const lbCounter = document.getElementById('lb-counter');
 
-// Step 4: Add click listener on document to close popover when clicking outside
+function show(idx) {
+  // TODO: Show — update DOM content, update styles
+}
 
-// Step 5: Add keydown listener for Escape to close popover`,
+document.querySelectorAll('.thumb').forEach(t => t.addEventListener('click', () => show(parseInt(t.dataset.index))));
+document.querySelector('.lb-close').addEventListener('click', () => { lb.style.display = 'none'; });
+document.querySelector('.lb-backdrop').addEventListener('click', () => { lb.style.display = 'none'; });
+document.querySelector('.lb-prev').addEventListener('click', () => show((current - 1 + colors.length) % colors.length));
+document.querySelector('.lb-next').addEventListener('click', () => show((current + 1) % colors.length));
+document.addEventListener('keydown', (e) => {
+  if (lb.style.display === 'none') return;
+  if (e.key === 'Escape') lb.style.display = 'none';
+  if (e.key === 'ArrowLeft') show((current - 1 + colors.length) % colors.length);
+  if (e.key === 'ArrowRight') show((current + 1) % colors.length);
+});`,
 
-  'ng-lightbox': `// Simulating Angular lightbox overlay for image/media viewing
-const items = document.querySelectorAll('.lightbox-item');
-const overlay = document.getElementById('lightbox-overlay');
-const lbContent = document.getElementById('lb-content');
-const lbCaption = document.getElementById('lb-caption');
-const counter = document.getElementById('lb-counter');
-let currentIdx = 0;
-let itemList = [];
-
-// Step 1: Create init() function
-// Build itemList array from .lightbox-item elements (src, caption, type)
-
-// Step 2: Create open(idx) function
-// Set currentIdx, show overlay, render current item content
-// Update caption and counter text ("1 of N")
-// Trap focus within the overlay
-
-// Step 3: Create navigate(direction) function
-// Move currentIdx by direction (-1 or +1), wrap around
-// Update content, caption, and counter
-
-// Step 4: Add click listeners on items to open at their index
-// Add click listeners on prev/next buttons and close button
-
-// Step 5: Add keydown listener for Escape (close), ArrowLeft/Right (navigate)`,
-
-  'ng-sortable-list': `// Simulating Angular CDK DragDrop sortable list
-const list = document.getElementById('sortable-list');
-const items = ['Configure CI/CD pipeline','Write unit tests','Deploy to staging','Code review','Update documentation'];
-let dragIdx = null;
-let dragOverIdx = null;
-
-// Step 1: Create render() function
-// Generate .sortable-item elements with drag handle, text, and data-idx
-// Set draggable="true" on each item
-
-// Step 2: Add dragstart listener on list (event delegation)
-// Store dragged item index in dragIdx, set opacity and drag image
-
-// Step 3: Add dragover listener on list
-// Find the item being dragged over, add visual insertion indicator
-// Determine if inserting above or below based on mouse Y position
-
-// Step 4: Add drop listener on list
-// Remove dragged item from array and insert at new position
-// Re-render the list
-
-// Step 5: Add dragend listener to clean up visual states`,
-
-  'ng-resizable-panels': `// Simulating Angular resizable split panels
-const container = document.getElementById('panel-container');
-const leftPanel = document.getElementById('left-panel');
-const rightPanel = document.getElementById('right-panel');
-const divider = document.getElementById('panel-divider');
-let dragging = false;
-let startX, startLeftWidth;
-
-// Step 1: Add mousedown listener on divider
-// Set dragging = true, record startX and leftPanel width
-// Add 'dragging' class for visual feedback
-
-// Step 2: Add mousemove listener on document
-// If dragging, calculate delta from startX
-// Set leftPanel width to startLeftWidth + delta
-// Clamp between min (150px) and max (container width - 150px)
-// rightPanel takes remaining space
-
-// Step 3: Add mouseup listener on document
-// Set dragging = false, remove 'dragging' class
-
-// Step 4: Add double-click listener on divider to reset to 50/50 split`,
-
-  'ng-split-view': `// Simulating Angular split view with multiple panes
-const splitContainer = document.getElementById('split-container');
-const panes = [];
-let activeDivider = null;
-let startPos = 0;
-
-// Step 1: Create initPanes() function
-// Query all .split-pane elements, store references and initial sizes
-// Create divider elements between panes
-
-// Step 2: Add mousedown listener on dividers
-// Record which divider is active and the starting mouse position
-// Store sizes of adjacent panes
-
-// Step 3: Add mousemove listener on document
-// If activeDivider, calculate position delta
-// Resize the two adjacent panes proportionally
-// Enforce minimum pane size of 100px
-
-// Step 4: Add mouseup listener to release the active divider
-
-// Step 5: Add double-click on divider to distribute space equally among all panes`,
-
-  'ng-kanban-board': `// Simulating Angular CDK DragDrop Kanban board
-const columns = {
-  backlog: ['Research competitors','Define user stories'],
-  todo: ['Setup database','Design API schema'],
-  progress: ['Implement auth'],
-  review: ['Landing page'],
-  done: ['Project setup']
-};
+  'ng-sortable-list': `// Simulating Angular CdkDragDrop sortable behavior
 let dragItem = null;
-let sourceCol = null;
+const list = document.getElementById('sortable');
 
-// Step 1: Create render() function
-// For each column, render task cards with draggable="true"
-// Show column task count in header
-// Each card has data-col and data-idx attributes
+list.querySelectorAll('.sort-item').forEach(item => {
+  item.addEventListener('dragstart', () => { dragItem = item; item.classList.add('dragging'); });
+  item.addEventListener('dragend', () => { item.classList.remove('dragging'); list.querySelectorAll('.sort-item').forEach(i => i.classList.remove('over')); });
+  item.addEventListener('dragover', (e) => { e.preventDefault(); if (item !== dragItem) item.classList.add('over'); });
+  item.addEventListener('dragleave', () => item.classList.remove('over'));
+  item.addEventListener('drop', (e) => {
+    e.preventDefault();
+    item.classList.remove('over');
+    if (dragItem && dragItem !== item) {
+      const items = [...list.children];
+      const fromIdx = items.indexOf(dragItem);
+      const toIdx = items.indexOf(item);
+      if (fromIdx < toIdx) item.after(dragItem);
+      else item.before(dragItem);
+    }
+  });
+});`,
 
-// Step 2: Add dragstart listener (event delegation)
-// Store dragged item text and source column, set visual feedback
+  'ng-resizable-panels': `// Simulating Angular resizable panels behavior
+const divider = document.getElementById('divider');
+const left = document.getElementById('left-panel');
+const right = document.getElementById('right-panel');
+const container = document.querySelector('.panels');
+let dragging = false;
 
-// Step 3: Add dragover/dragleave on .kanban-column elements
-// Show drop indicator line, highlight valid drop zone
+divider.addEventListener('mousedown', () => { dragging = true; divider.classList.add('active'); });
+document.addEventListener('mousemove', (e) => {
+  if (!dragging) return;
+  const rect = container.getBoundingClientRect();
+  const pct = ((e.clientX - rect.left) / rect.width) * 100;
+  const clamped = Math.max(20, Math.min(80, pct));
+  left.style.flex = clamped + '';
+  right.style.flex = (100 - clamped) + '';
+});
+document.addEventListener('mouseup', () => { dragging = false; divider.classList.remove('active'); });`,
 
-// Step 4: Add drop listener on columns
-// Remove item from source column array, insert into target column
-// Re-render the board
-
-// Step 5: Add click listener on #add-task button
-// Prompt for task text, add to backlog column, re-render`,
-
-  'ng-timeline': `// Simulating Angular timeline component with animations
-const timelineEl = document.getElementById('timeline');
-const events = [
-  { date: '2024-01', title: 'Project Kickoff', desc: 'Initial planning and team formation', type: 'milestone' },
-  { date: '2024-02', title: 'Design Phase', desc: 'UI/UX design and prototyping', type: 'task' },
-  { date: '2024-03', title: 'Alpha Release', desc: 'First internal release for testing', type: 'milestone' },
-  { date: '2024-04', title: 'Beta Testing', desc: 'Public beta with feedback collection', type: 'task' },
-  { date: '2024-05', title: 'Launch', desc: 'Production release v1.0', type: 'milestone' },
+  'ng-split-view': `// Simulating Angular split view behavior
+const data = [
+  { title: 'Inbox', body: 'You have 3 unread messages in your inbox.' },
+  { title: 'Drafts', body: 'You have 1 draft waiting to be sent.' },
+  { title: 'Sent', body: 'All sent messages appear here.' },
+  { title: 'Archive', body: 'Archived messages are stored here for reference.' }
 ];
+const items = document.querySelectorAll('.master-item');
+const detail = document.getElementById('detail');
 
-// Step 1: Create render() function
-// Generate .timeline-item elements alternating left/right
-// Each has a .timeline-dot (colored by type), date, title, and description
+items.forEach(item => {
+  item.addEventListener('click', () => {
+    items.forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    const d = data[parseInt(item.dataset.id)];
+    detail.innerHTML = '<div class="detail-title">' + d.title + '</div><div class="detail-body">' + d.body + '</div>';
+  });
+});`,
 
-// Step 2: Create animateOnScroll() function
-// Use IntersectionObserver to add 'visible' class when items enter viewport
-// Apply staggered fade-in animation
+  'ng-kanban-board': `// Simulating Angular Kanban board behavior
+let dragCard = null;
 
-// Step 3: Add click listener on timeline items to expand/collapse description
+document.querySelectorAll('.card').forEach(initCard);
 
-// Step 4: Call render() and animateOnScroll() on init`,
+function initCard(card) {
+  // TODO: Init card — toggle CSS classes, attach event listeners
+}
 
-  'ng-tree-view': `// Simulating Angular nested tree component with CDK Tree
+document.querySelectorAll('.cards').forEach(col => {
+  col.addEventListener('dragover', (e) => { e.preventDefault(); col.closest('.column').classList.add('drag-over'); });
+  col.addEventListener('dragleave', () => col.closest('.column').classList.remove('drag-over'));
+  col.addEventListener('drop', (e) => {
+    e.preventDefault();
+    col.closest('.column').classList.remove('drag-over');
+    if (dragCard) { col.appendChild(dragCard); }
+  });
+});`,
+
+  'ng-timeline': `// Simulating Angular timeline behavior
+document.querySelectorAll('.tl-item').forEach((item, i) => {
+  item.style.opacity = '0';
+  item.style.transform = 'translateY(10px)';
+  item.style.transition = 'all 0.3s ease ' + (i * 0.15) + 's';
+  setTimeout(() => { item.style.opacity = '1'; item.style.transform = 'translateY(0)'; }, 50);
+});`,
+
+  'ng-tree-view': `// Simulating Angular tree view behavior
 const treeData = [
   { name: 'src', children: [
     { name: 'app', children: [
-      { name: 'components', children: [{ name: 'header.ts' }, { name: 'footer.ts' }] },
-      { name: 'services', children: [{ name: 'auth.ts' }, { name: 'api.ts' }] },
-      { name: 'app.module.ts' }
+      { name: 'app.component.ts' },
+      { name: 'app.module.ts' },
+      { name: 'components', children: [{ name: 'header.ts' }, { name: 'footer.ts' }] }
     ]},
-    { name: 'assets', children: [{ name: 'logo.svg' }] },
+    { name: 'assets', children: [{ name: 'logo.svg' }, { name: 'styles.css' }] },
     { name: 'main.ts' }
   ]},
   { name: 'package.json' },
   { name: 'tsconfig.json' }
 ];
-const treeEl = document.getElementById('tree');
 
-// Step 1: Create renderNode(node, depth) function
-// Create a .tree-node div with indentation based on depth
-// If node has children, add an expand/collapse arrow icon
-// Show folder or file icon based on whether node has children
-// Return the HTML string
+function renderTree(nodes, container) {
+  // TODO: Render tree — toggle CSS classes, update DOM content, attach event listeners
+}
+renderTree(treeData, document.getElementById('tree'));`,
 
-// Step 2: Create renderTree(nodes, depth) function
-// Recursively render all nodes, children wrapped in a collapsible .tree-children div
-// Initially collapse all children beyond depth 1
+  'ng-collapsible-panel': `// Simulating Angular collapsible panel behavior
+document.querySelectorAll('.panel-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const content = document.getElementById(header.dataset.target);
+    const expanded = header.getAttribute('aria-expanded') === 'true';
+    header.setAttribute('aria-expanded', !expanded);
+    content.classList.toggle('collapsed');
+    header.querySelector('.chevron').innerHTML = expanded ? '&#9654;' : '&#9660;';
+  });
+});`,
 
-// Step 3: Add click listener on treeEl (event delegation)
-// Toggle .tree-children visibility when arrow is clicked
-// Rotate arrow icon and toggle 'expanded' class
-
-// Step 4: Add double-click listener to select a file node
-// Highlight selected node, display file path in #selected-file`,
-
-  'ng-collapsible-panel': `// Simulating Angular collapsible/expandable panel with animations
-const panelContainer = document.getElementById('panel-container');
-const panels = [
-  { title: 'Getting Started', content: 'Install the CLI with npm install -g @angular/cli, then run ng new my-app to create a new project.', icon: '\\u{1F680}' },
-  { title: 'Components', content: 'Components are the building blocks of Angular applications. Each has a template, styles, and a class.', icon: '\\u{1F9E9}' },
-  { title: 'Services', content: 'Services provide shared logic and data access. Use dependency injection to provide them to components.', icon: '\\u{2699}' },
-  { title: 'Routing', content: 'The Angular Router enables navigation between views. Configure routes in a routing module.', icon: '\\u{1F517}' },
-];
-
-// Step 1: Create render() function
-// Generate .collapsible-panel elements with header (icon, title, chevron) and body
-// Body starts hidden with max-height: 0
-
-// Step 2: Add click listener on panelContainer (event delegation on .panel-header)
-// Toggle 'open' class on the panel
-// Animate body height using max-height transition
-// Rotate chevron icon
-
-// Step 3: Implement accordion mode option
-// If data-accordion="true" on container, close other panels when one opens`,
-
-  'ng-drawer': `// Simulating Angular Material Sidenav / Drawer component
+  'ng-drawer': `// Simulating Angular drawer behavior
 const drawer = document.getElementById('drawer');
-const backdrop = document.getElementById('drawer-backdrop');
-const content = document.getElementById('drawer-content');
-let isOpen = false;
+const overlay = document.getElementById('drawer-overlay');
 
-// Step 1: Create openDrawer(side) function
-// Set drawer position (left or right) based on side parameter
-// Add 'open' class to drawer, show backdrop
-// Set isOpen = true, set aria-hidden="false"
-// Trap focus within the drawer
+document.getElementById('open-drawer').addEventListener('click', () => {
+  drawer.classList.add('open');
+  overlay.style.display = 'block';
+});
 
-// Step 2: Create closeDrawer() function
-// Remove 'open' class, hide backdrop after transition
-// Set isOpen = false, set aria-hidden="true"
-// Return focus to the trigger element
+function closeDrawer() {
+  // TODO: Implement closeDrawer
+}
+document.getElementById('close-drawer').addEventListener('click', closeDrawer);
+overlay.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });`,
 
-// Step 3: Add click listeners on #open-left-btn and #open-right-btn
-// Each calls openDrawer with the appropriate side
-
-// Step 4: Add click listener on backdrop and #drawer-close to close
-// Add keydown listener for Escape to close`,
-
-  'ng-bottom-sheet': `// Simulating Angular Material Bottom Sheet component
+  'ng-bottom-sheet': `// Simulating Angular bottom sheet behavior
 const sheet = document.getElementById('bottom-sheet');
-const sheetBackdrop = document.getElementById('sheet-backdrop');
-const sheetContent = document.getElementById('sheet-content');
-let isDragging = false;
-let startY = 0;
-let currentY = 0;
+const sheetOverlay = document.getElementById('sheet-overlay');
 
-// Step 1: Create openSheet(contentHtml) function
-// Set sheetContent innerHTML, show sheet and backdrop
-// Animate sheet sliding up from bottom using transform
+document.getElementById('open-sheet').addEventListener('click', () => {
+  sheet.classList.add('open');
+  sheetOverlay.style.display = 'block';
+});
 
-// Step 2: Create closeSheet() function
-// Animate sheet sliding down, then hide sheet and backdrop
+function closeSheet() {
+  // TODO: Implement closeSheet
+}
+sheetOverlay.addEventListener('click', closeSheet);
+document.querySelector('.sheet-handle').addEventListener('click', closeSheet);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });`,
 
-// Step 3: Add touch/mouse listeners on sheet header for drag-to-dismiss
-// Track drag distance, if dragged down past threshold (40% of height), close
-// Otherwise snap back to open position
-
-// Step 4: Add click listeners on trigger buttons to open with different content
-// Add click listener on backdrop to close
-
-// Step 5: Handle snap points (half-open and full-open positions)`,
-
-  'ng-command-palette': `// Simulating Angular command palette (Ctrl+K) component
-const palette = document.getElementById('command-palette');
-const paletteInput = document.getElementById('palette-input');
-const paletteList = document.getElementById('palette-list');
+  'ng-command-palette': `// Simulating Angular command palette behavior
 const commands = [
-  { name: 'Go to Dashboard', shortcut: 'G D', category: 'Navigation' },
-  { name: 'Go to Settings', shortcut: 'G S', category: 'Navigation' },
-  { name: 'Create New File', shortcut: 'Ctrl+N', category: 'Actions' },
-  { name: 'Toggle Dark Mode', shortcut: 'Ctrl+D', category: 'Preferences' },
-  { name: 'Search Users', shortcut: '/', category: 'Search' },
-  { name: 'Open Terminal', shortcut: 'Ctrl+\\u0060', category: 'Actions' },
-  { name: 'Show Keyboard Shortcuts', shortcut: '?', category: 'Help' },
+  { name: 'New File', shortcut: 'Ctrl+N' }, { name: 'Open File', shortcut: 'Ctrl+O' },
+  { name: 'Save', shortcut: 'Ctrl+S' }, { name: 'Find', shortcut: 'Ctrl+F' },
+  { name: 'Replace', shortcut: 'Ctrl+H' }, { name: 'Toggle Sidebar', shortcut: 'Ctrl+B' },
+  { name: 'Terminal', shortcut: 'Ctrl+\`' }, { name: 'Settings', shortcut: 'Ctrl+,' }
 ];
-let activeIdx = 0;
+const overlay = document.getElementById('cmd-overlay');
+const search = document.getElementById('cmd-search');
+const list = document.getElementById('cmd-list');
+const result = document.getElementById('cmd-result');
+let hl = -1;
 
-// Step 1: Create openPalette() function
-// Show palette overlay, focus input, render all commands, reset activeIdx
+function open() {
+  // TODO: Implement open
+}
+function close() {
+  // TODO: Implement close
+}
+function render() {
+  // TODO: Render — update state, filter items, remove item
+}
 
-// Step 2: Create closePalette() function
-// Hide overlay, clear input
+document.getElementById('open-cmd').addEventListener('click', open);
+overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+search.addEventListener('input', () => { hl = -1; render(); });
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); overlay.style.display === 'none' ? open() : close(); }
+  if (e.key === 'Escape') close();
+});`,
 
-// Step 3: Create renderCommands(query) function
-// Filter commands by name matching query (case-insensitive)
-// Group by category, render as sections with .command-item elements
-// Highlight active item
-
-// Step 4: Add keydown listener on document for Ctrl+K / Cmd+K to toggle palette
-// Add input listener on paletteInput to filter commands
-// Add keydown listener on input for ArrowUp/Down navigation, Enter to execute, Escape to close`,
-
-  'ng-spotlight-search': `// Simulating Angular spotlight search overlay
-const spotlight = document.getElementById('spotlight');
+  'ng-spotlight-search': `// Simulating Angular spotlight search behavior
+const data = {
+  Pages: ['Dashboard', 'Settings', 'Profile', 'Analytics'],
+  Actions: ['Create Project', 'Invite User', 'Export Data'],
+  Settings: ['Theme', 'Language', 'Notifications', 'Privacy']
+};
+const spotOverlay = document.getElementById('spot-overlay');
 const spotInput = document.getElementById('spot-input');
 const spotResults = document.getElementById('spot-results');
-const sections = {
-  pages: ['Dashboard','Settings','Profile','Analytics','Reports'],
-  actions: ['Create Project','Invite User','Export Data','Toggle Theme'],
-  docs: ['Getting Started','API Reference','Changelog','FAQ'],
-};
-let activeIdx = 0;
 
-// Step 1: Create open() and close() functions
-// open: show spotlight, focus input, render all sections
-// close: hide spotlight, clear input
-
-// Step 2: Create search(query) function
-// Filter items across all sections matching query
-// Render grouped results with section headers and .spot-item elements
-// Highlight the active item, show "No results" if empty
-
-// Step 3: Add keydown listener on document for Ctrl+K or / to open
-// Escape to close
-
-// Step 4: Add input listener on spotInput to call search
-// Add keydown on spotInput for ArrowUp/Down and Enter
-
-// Step 5: Add click listener on spotResults to execute clicked item`,
-
-  'ng-floating-action-btn': `// Simulating Angular floating action button (FAB) with speed dial
-const fab = document.getElementById('fab-main');
-const menu = document.getElementById('fab-menu');
-const actions = [
-  { icon: '\\u{1F4DD}', label: 'New Note', color: '#3b82f6' },
-  { icon: '\\u{1F4F7}', label: 'Upload Photo', color: '#22c55e' },
-  { icon: '\\u{1F4E7}', label: 'Send Email', color: '#f59e0b' },
-];
-let isOpen = false;
-
-// Step 1: Create renderMenu() function
-// Generate mini FAB buttons from actions array
-// Position them in a vertical stack above the main FAB
-// Each has icon, tooltip label, and data-action attribute
-
-// Step 2: Create toggle() function
-// Toggle isOpen state
-// Animate menu items appearing/disappearing with stagger delay
-// Rotate the main FAB icon (+ to x)
-
-// Step 3: Add click listener on fab to call toggle()
-// Add click listener on menu items to execute action and close menu
-
-// Step 4: Add click listener on document to close menu when clicking outside`,
-
-  'ng-skeleton-loader': `// Simulating Angular skeleton loading placeholder component
-const container = document.getElementById('skeleton-container');
-const loadBtn = document.getElementById('skeleton-load-btn');
-let loaded = false;
-
-// Step 1: Create renderSkeleton(type) function
-// Based on type ('card', 'list', 'profile', 'table'), generate appropriate skeleton HTML
-// Use .skeleton-line, .skeleton-circle, .skeleton-rect with shimmer animation class
-
-// Step 2: Create renderContent(type) function
-// Replace skeleton with real content based on type
-// Cards show title, description, image placeholder
-// Lists show items with avatars, profiles show user details
-
-// Step 3: Add click listener on loadBtn
-// If not loaded, show skeleton first, then after 1500ms delay replace with content
-// If loaded, toggle back to skeleton state
-
-// Step 4: Add click listener on .skeleton-type-btns to switch between types
-// Re-render skeleton or content based on current loaded state`,
-
-  'ng-progress-bar': `// Simulating Angular Material progress bar component
-const progressBar = document.getElementById('progress-bar');
-const fill = document.getElementById('progress-fill');
-const label = document.getElementById('progress-label');
-const valueEl = document.getElementById('progress-value');
-let progress = 0;
-let mode = 'determinate'; // 'determinate', 'indeterminate', 'buffer'
-
-// Step 1: Create updateProgress(value) function
-// Clamp value between 0 and 100
-// Set fill width to value percent, update label text
-// Add color classes: green (>66), yellow (33-66), red (<33)
-
-// Step 2: Create setMode(newMode) function
-// Switch between determinate, indeterminate, and buffer modes
-// Indeterminate: add CSS animation class for sliding bar
-// Buffer: show secondary buffer fill behind main fill
-
-// Step 3: Add click listeners on control buttons
-// +10, -10 to adjust progress, Reset to set to 0
-// Mode toggle buttons to switch between modes
-
-// Step 4: Create simulateProgress() function
-// Increment progress by random amounts on interval
-// Stop at 100 and show completion state`,
-
-  // ---------------------------------------------------------------------------
-  // data-display starters
-  // ---------------------------------------------------------------------------
-
-  'ng-badge': `// Simulating Angular badge/chip component
-const badgeContainer = document.getElementById('badge-container');
-const controls = document.getElementById('badge-controls');
-let count = 3;
-
-// Step 1: Create renderBadge(value, type) function
-// Generate a .badge element with type class (info, success, warning, error)
-// If value > 99, show "99+"
-// If value is 0, hide the badge or show a dot variant
-// Support 'dot' mode for notification indicators without numbers
-
-// Step 2: Create updateBadge() function
-// Re-render all badge instances with current count
-// Animate badge when count changes (pulse effect)
-
-// Step 3: Add click listeners on increment/decrement/clear buttons
-// Update count and call updateBadge()
-
-// Step 4: Add click listener on type selector to change badge color/style`,
-
-  'ng-avatar': `// Simulating Angular avatar component with fallbacks
-const avatarGrid = document.getElementById('avatar-grid');
-const users = [
-  { name: 'Alice Johnson', image: null, status: 'online' },
-  { name: 'Bob Smith', image: null, status: 'offline' },
-  { name: 'Carol White', image: null, status: 'busy' },
-  { name: 'Dave Brown', image: null, status: 'away' },
-];
-
-// Step 1: Create renderAvatar(user, size) function
-// If user has image, show image in circular container
-// If no image, show initials (first letter of first and last name) on colored background
-// Generate consistent color from name using simple hash
-// Add status indicator dot (green/gray/red/yellow based on status)
-
-// Step 2: Create render() function
-// Show avatars in different sizes (sm, md, lg, xl)
-// Show avatar group with overlapping style and "+N more" indicator
-
-// Step 3: Add click listener on size toggle buttons to re-render at different sizes
-
-// Step 4: Call render() on init`,
-
-  'ng-stat-card': `// Simulating Angular statistics card component
-const statsGrid = document.getElementById('stats-grid');
-const stats = [
-  { label: 'Total Revenue', value: 48250, prefix: '$', change: 12.5, icon: '\\u{1F4B0}' },
-  { label: 'Active Users', value: 2847, prefix: '', change: -3.2, icon: '\\u{1F465}' },
-  { label: 'Conversion Rate', value: 4.3, prefix: '', suffix: '%', change: 0.8, icon: '\\u{1F4C8}' },
-  { label: 'Avg Response Time', value: 245, prefix: '', suffix: 'ms', change: -15.0, icon: '\\u{26A1}' },
-];
-
-// Step 1: Create formatNumber(num) function
-// Format large numbers with K/M suffix, add commas for thousands
-// Handle decimal places appropriately
-
-// Step 2: Create renderCard(stat) function
-// Generate .stat-card with icon, label, formatted value with prefix/suffix
-// Show change indicator with arrow up/down and green/red coloring
-// Add sparkline mini-chart placeholder
-
-// Step 3: Create animateValue(el, start, end, duration) function
-// Animate the value counting up from start to end over duration ms
-
-// Step 4: Create render() function
-// Render all stat cards, trigger count-up animation on each`,
-
-  'ng-timeline-feed': `// Simulating Angular activity timeline/feed component
-const feed = document.getElementById('timeline-feed');
-const events = [
-  { user: 'Alice', action: 'pushed to', target: 'main branch', time: '2 min ago', type: 'commit' },
-  { user: 'Bob', action: 'opened', target: 'Issue #42', time: '15 min ago', type: 'issue' },
-  { user: 'Carol', action: 'merged', target: 'PR #38', time: '1 hour ago', type: 'merge' },
-  { user: 'Dave', action: 'commented on', target: 'Issue #35', time: '2 hours ago', type: 'comment' },
-  { user: 'Eve', action: 'deployed to', target: 'production', time: '3 hours ago', type: 'deploy' },
-];
-
-// Step 1: Create renderEvent(event) function
-// Generate .feed-item with avatar initial, action description, timestamp
-// Color-code the dot/icon by event type
-
-// Step 2: Create render() function
-// Render all events connected by a vertical line
-// Add 'new' animation class to recent items
-
-// Step 3: Add click listener on #load-more to append new random events
-// Generate random events and prepend with slide-in animation
-
-// Step 4: Add click listener on .feed-filter buttons to filter by event type`,
-
-  'ng-activity-log': `// Simulating Angular activity log with virtual scrolling
-const logContainer = document.getElementById('activity-log');
-const filterEl = document.getElementById('log-filter');
-const levels = ['info', 'warn', 'error', 'debug'];
-const entries = [];
-
-function generateEntry(i) {
-  var level = levels[i % levels.length];
-  return { id: i, level: level, message: 'Event ' + (i+1) + ': ' + level + ' level activity recorded', timestamp: new Date(Date.now() - i * 60000).toISOString() };
+function openSpot() {
+  // TODO: Implement openSpot
 }
-for (var i = 0; i < 100; i++) entries.push(generateEntry(i));
+function closeSpot() {
+  // TODO: Implement closeSpot
+}
 
-// Step 1: Create render(filter) function
-// Filter entries by level if filter is not 'all'
-// Render visible entries as .log-entry elements with level badge, timestamp, message
-// Color-code by level (blue=info, yellow=warn, red=error, gray=debug)
+function renderResults(q) {
+  // TODO: Render results — filter items, remove item, update DOM content
+}
 
-// Step 2: Add input listener on #log-search to filter entries by message text
-// Combine with level filter
+document.getElementById('open-spot').addEventListener('click', openSpot);
+spotOverlay.addEventListener('click', (e) => { if (e.target === spotOverlay) closeSpot(); });
+spotInput.addEventListener('input', () => renderResults(spotInput.value));
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === '/') { e.preventDefault(); openSpot(); }
+  if (e.key === 'Escape') closeSpot();
+});
+renderResults('');`,
 
-// Step 3: Add click listener on filterEl buttons to set level filter and re-render
+  'ng-floating-action-btn': `// Simulating Angular FAB behavior
+const fab = document.getElementById('fab');
+const menu = document.getElementById('fab-menu');
+const result = document.getElementById('fab-result');
 
-// Step 4: Add click listener on #clear-log to clear all entries
-// Add click listener on #export-log to output entries as JSON`,
+fab.addEventListener('click', () => {
+  fab.classList.toggle('open');
+  menu.classList.toggle('open');
+});
 
-  'ng-diff-viewer': `// Simulating Angular diff viewer component
-const diffOutput = document.getElementById('diff-output');
-const oldText = document.getElementById('old-text');
-const newText = document.getElementById('new-text');
+menu.querySelectorAll('.fab-mini').forEach(btn => {
+  btn.addEventListener('click', () => {
+    result.textContent = 'Action: ' + btn.dataset.action;
+    fab.classList.remove('open');
+    menu.classList.remove('open');
+  });
+});`,
 
-// Step 1: Create computeDiff(oldLines, newLines) function
-// Split texts by newline, compare line by line
-// Mark lines as 'added' (in new only), 'removed' (in old only), or 'unchanged'
-// Return array of { type, content, lineNum } objects
+  'ng-skeleton-loader': `// Simulating Angular skeleton loader behavior
+const area = document.getElementById('content-area');
+const skeletonHTML = area.innerHTML;
+const realHTML = [
+  { name: 'Alice Johnson', desc: 'Senior Angular Developer at TechCorp', initials: 'AJ' },
+  { name: 'Bob Smith', desc: 'Full-stack engineer working on microservices', initials: 'BS' }
+].map(u => '<div class="real-card"><div class="real-avatar">' + u.initials + '</div><div class="real-text"><div class="name">' + u.name + '</div><div class="desc">' + u.desc + '</div></div></div>').join('');
 
-// Step 2: Create renderDiff(diffLines, mode) function
-// In 'unified' mode: show all lines with +/- prefixes, colored backgrounds
-// In 'split' mode: show old and new side by side in two columns
-// Add line numbers to each line
+document.getElementById('reload-btn').addEventListener('click', () => {
+  area.innerHTML = skeletonHTML;
+  setTimeout(() => { area.innerHTML = realHTML; }, 2000);
+});`,
 
-// Step 3: Add click listener on #diff-btn to compute and render diff
-// Add click listener on mode toggle (unified/split) to re-render
+  'ng-progress-bar': `// Simulating Angular progress bar behavior
+const fill = document.getElementById('progress-fill');
+const pct = document.getElementById('pct');
+const bufferFill = document.getElementById('buffer-fill');
+const primaryFill = document.getElementById('primary-fill');
+let progress = 0;
 
-// Step 4: Add click listener on .diff-line to highlight and show context`,
+document.getElementById('start-btn').addEventListener('click', () => {
+  progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 8;
+    if (progress >= 100) { progress = 100; clearInterval(interval); }
+    fill.style.width = progress + '%';
+    fill.setAttribute('aria-valuenow', Math.round(progress));
+    pct.textContent = Math.round(progress);
+    primaryFill.style.width = Math.max(0, progress - 10) + '%';
+    bufferFill.style.width = Math.min(100, progress + 15) + '%';
+  }, 200);
+});`,
 
-  'ng-code-block': `// Simulating Angular syntax-highlighted code block component
-const codeEl = document.getElementById('code-block');
-const langSelect = document.getElementById('lang-select');
-const codeInput = document.getElementById('code-input');
-const lineNums = document.getElementById('line-numbers');
+  'ng-badge': `// Simulating Angular badge behavior
+let count = 3;
+const badge = document.getElementById('count-badge');
+document.getElementById('add-btn').addEventListener('click', () => { count++; badge.textContent = count; });
+document.getElementById('clear-btn').addEventListener('click', () => { count = 0; badge.textContent = '0'; });`,
 
-const keywords = {
-  js: ['const','let','var','function','return','if','else','for','while','class','import','export','async','await'],
-  html: ['div','span','p','a','h1','h2','h3','ul','li','input','button','form'],
-  css: ['color','background','margin','padding','display','flex','grid','border','font','position'],
+  'ng-avatar': `// Simulating Angular avatar behavior
+// Avatars are purely CSS-driven, no JS needed for static display
+document.querySelectorAll('.avatar').forEach(a => {
+  a.style.cursor = 'pointer';
+  a.addEventListener('click', () => {
+    a.style.transform = a.style.transform === 'scale(1.2)' ? 'scale(1)' : 'scale(1.2)';
+    a.style.transition = 'transform 0.2s';
+  });
+});`,
+
+  'ng-stat-card': `// Simulating Angular stat card behavior
+document.querySelectorAll('.stat-value').forEach(el => {
+  const target = el.textContent;
+  el.textContent = '...';
+  setTimeout(() => { el.textContent = target; el.style.transition = 'opacity 0.3s'; el.style.opacity = '1'; }, 500);
+});`,
+
+  'ng-timeline-feed': `// Simulating Angular timeline feed behavior
+const events = [
+  { user: 'Alice', initials: 'AJ', color: '#ef4444', type: 'post', text: 'published a new article', time: '2 min ago' },
+  { user: 'Bob', initials: 'BS', color: '#3b82f6', type: 'comment', text: 'commented on your post', time: '15 min ago' },
+  { user: 'Charlie', initials: 'CD', color: '#22c55e', type: 'like', text: 'liked your photo', time: '1 hour ago' },
+  { user: 'Diana', initials: 'DE', color: '#f59e0b', type: 'post', text: 'shared a project update', time: '3 hours ago' },
+  { user: 'Eve', initials: 'EF', color: '#8b5cf6', type: 'comment', text: 'replied to the thread', time: '5 hours ago' },
+];
+
+document.getElementById('feed').innerHTML = events.map(e =>
+  '<div class="feed-item"><div class="feed-avatar" style="background:' + e.color + '">' + e.initials + '</div><div class="feed-body"><div class="feed-text"><span class="username">' + e.user + '</span> ' + e.text + '<span class="feed-type type-' + e.type + '">' + e.type + '</span></div><div class="feed-time">' + e.time + '</div></div></div>'
+).join('');`,
+
+  'ng-activity-log': `// Simulating Angular activity log behavior
+const logs = [
+  { type: 'info', text: 'User Alice logged in', time: '10:32 AM' },
+  { type: 'warn', text: 'API rate limit approaching (85%)', time: '10:28 AM' },
+  { type: 'error', text: 'Failed to connect to database', time: '10:15 AM' },
+  { type: 'info', text: 'Deployment v2.1.0 completed', time: '09:45 AM' },
+  { type: 'warn', text: 'Disk usage above 70%', time: '09:30 AM' },
+  { type: 'info', text: 'Backup completed successfully', time: '08:00 AM' },
+];
+
+const listEl = document.getElementById('log-list');
+const searchEl = document.getElementById('log-search');
+const filterEl = document.getElementById('log-filter');
+
+function renderLogs() {
+  // TODO: Render logs — filter items, remove item, update DOM content
+}
+
+searchEl.addEventListener('input', renderLogs);
+filterEl.addEventListener('change', renderLogs);
+renderLogs();`,
+
+  'ng-diff-viewer': `// Simulating Angular diff viewer behavior
+const original = ['function greet(name) {', '  console.log("Hello, " + name);', '  return name;', '}'];
+const modified = ['function greet(name, title) {', '  const greeting = "Hello, " + title + " " + name;', '  console.log(greeting);', '  return greeting;', '}'];
+
+function renderDiff(lines, el, changes) {
+  // TODO: Render diff — update DOM content
+}
+
+renderDiff(original, document.getElementById('diff-left'), { 0: 'removed', 1: 'removed', 2: 'normal', 3: 'normal' });
+renderDiff(modified, document.getElementById('diff-right'), { 0: 'added', 1: 'added', 2: 'normal', 3: 'added', 4: 'normal' });`,
+
+  'ng-code-block': `// Simulating Angular code block behavior
+document.getElementById('copy-btn').addEventListener('click', () => {
+  const code = document.getElementById('code-content').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const fb = document.getElementById('copy-feedback');
+    fb.textContent = 'Copied to clipboard!';
+    setTimeout(() => { fb.textContent = ''; }, 2000);
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  });
+});`,
+
+  'ng-markdown-preview': `// Simulating Angular markdown preview behavior
+const mdInput = document.getElementById('md-input');
+const mdPreview = document.getElementById('md-preview');
+
+function renderMarkdown(text) {
+  // TODO: Implement renderMarkdown
+}
+
+mdInput.addEventListener('input', () => { mdPreview.innerHTML = renderMarkdown(mdInput.value); });
+mdPreview.innerHTML = renderMarkdown(mdInput.value);`,
+
+  'ng-json-viewer': `// Simulating Angular JSON viewer behavior
+const data = {
+  name: "Angular App",
+  version: "17.0.0",
+  features: ["signals", "standalone", "SSR"],
+  config: { strict: true, production: false, port: 4200 },
+  metadata: null
 };
 
-// Step 1: Create highlight(code, lang) function
-// Apply simple keyword highlighting by wrapping keywords in colored spans
-// Highlight strings (quotes), comments (// and /* */), numbers
-// Return the highlighted HTML string
+function renderJSON(obj, container, depth) {
+  // TODO: Render j s o n — update DOM content
+}
 
-// Step 2: Create render() function
-// Get code from codeInput, highlight it, display in codeEl
-// Generate line numbers in lineNums element
-// Sync scroll between line numbers and code
+const tree = document.getElementById('json-tree');
+renderJSON(data, tree, 0);
 
-// Step 3: Add click listener on #copy-btn to copy code to clipboard
-// Show brief "Copied!" feedback
+tree.addEventListener('click', (e) => {
+  if (e.target.classList.contains('json-toggle')) {
+    const d = e.target.dataset.depth;
+    const node = e.target.nextElementSibling;
+    node.classList.toggle('collapsed');
+    e.target.textContent = node.classList.contains('collapsed') ? '+' : '-';
+  }
+});`,
 
-// Step 4: Add change listener on langSelect and input listener on codeInput to re-render`,
+  'ng-comparison-table': `// Simulating Angular comparison table behavior
+document.querySelectorAll('.comp-table th').forEach((th, i) => {
+  if (i === 0) return;
+  th.style.cursor = 'pointer';
+  th.addEventListener('click', () => {
+    document.querySelectorAll('.comp-table th, .comp-table td').forEach(cell => cell.classList.remove('highlight'));
+    document.querySelectorAll('.comp-table tr').forEach(row => {
+      const cells = row.querySelectorAll('th, td');
+      if (cells[i]) cells[i].classList.add('highlight');
+    });
+  });
+});`,
 
-  'ng-markdown-preview': `// Simulating Angular markdown preview with live editing
-const editor = document.getElementById('md-editor');
-const preview = document.getElementById('md-preview');
+  'ng-pricing-table': `// Simulating Angular pricing table behavior
+document.querySelectorAll('.plan-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.textContent = 'Selected!';
+    btn.style.background = '#22c55e';
+    btn.style.borderColor = '#22c55e';
+    setTimeout(() => {
+      btn.textContent = btn.closest('.featured') ? 'Get Started' : btn.textContent === 'Selected!' ? 'Get Started' : btn.textContent;
+      btn.style.background = '';
+      btn.style.borderColor = '';
+    }, 1500);
+  });
+});`,
 
-// Step 1: Create parseMarkdown(text) function
-// Convert markdown syntax to HTML:
-// # headings (h1-h3), **bold**, *italic*, \`code\`
-// - unordered lists, 1. ordered lists
-// [links](url), ![images](url)
-// --- horizontal rules, > blockquotes
-// \`\`\` code blocks
-
-// Step 2: Create render() function
-// Get editor value, parse markdown, set preview innerHTML
-// Sanitize output to prevent XSS (strip script tags)
-
-// Step 3: Add input listener on editor to call render with debounce (200ms)
-
-// Step 4: Add click listener on toolbar buttons to insert markdown syntax at cursor
-// Bold, italic, heading, link, code, list buttons
-
-// Step 5: Initialize with sample markdown content and render`,
-
-  'ng-json-viewer': `// Simulating Angular JSON tree viewer component
-const jsonInput = document.getElementById('json-input');
-const treeOutput = document.getElementById('json-tree');
-
-// Step 1: Create renderNode(key, value, depth) function
-// For objects/arrays: show collapsible node with key name, type badge, and item count
-// For primitives: show key-value pair with type-colored value
-// Strings in green, numbers in blue, booleans in orange, null in gray
-// Indent based on depth level
-
-// Step 2: Create renderTree(data, depth) function
-// Recursively render all nodes, wrap children in collapsible containers
-// Initially expand first two levels, collapse deeper levels
-
-// Step 3: Add click listener on treeOutput for expand/collapse toggling
-// Rotate arrow icon and show/hide children
-
-// Step 4: Add input listener on jsonInput (debounced)
-// Try to parse JSON, render tree on success, show parse error on failure
-
-// Step 5: Add buttons to expand all, collapse all, and copy formatted JSON`,
-
-  'ng-comparison-table': `// Simulating Angular comparison table component
-const tableEl = document.getElementById('comparison-table');
-const plans = [
-  { name: 'Free', price: 0, features: { Users: '1', Storage: '1 GB', API: false, Support: 'Community', Analytics: false } },
-  { name: 'Pro', price: 29, features: { Users: '10', Storage: '50 GB', API: true, Support: 'Email', Analytics: true }, popular: true },
-  { name: 'Enterprise', price: 99, features: { Users: 'Unlimited', Storage: '500 GB', API: true, Support: '24/7 Phone', Analytics: true } },
-];
-
-// Step 1: Create render() function
-// Generate table with plans as columns and features as rows
-// Show checkmarks for boolean true, X for false, text for strings
-// Highlight the "popular" plan column
-
-// Step 2: Add hover effect on columns to highlight entire column
-
-// Step 3: Add click listener on plan headers to select/highlight a plan
-// Show "Selected" badge on the chosen plan
-
-// Step 4: Add sticky header behavior so plan names remain visible on scroll`,
-
-  'ng-pricing-table': `// Simulating Angular pricing table with toggle and animations
-const pricingGrid = document.getElementById('pricing-grid');
-const billingToggle = document.getElementById('billing-toggle');
-let annual = false;
-
-const tiers = [
-  { name: 'Starter', monthly: 9, features: ['5 Projects','1 GB Storage','Email Support'], cta: 'Start Free' },
-  { name: 'Professional', monthly: 29, features: ['Unlimited Projects','50 GB Storage','Priority Support','API Access','Analytics'], cta: 'Start Trial', popular: true },
-  { name: 'Enterprise', monthly: 79, features: ['Everything in Pro','500 GB Storage','24/7 Phone Support','SSO','Custom Integrations','SLA'], cta: 'Contact Sales' },
-];
-
-// Step 1: Create renderTier(tier) function
-// Generate .pricing-card with name, price, feature list, and CTA button
-// Calculate annual price as monthly * 10 (2 months free)
-// Show savings badge for annual billing
-// Add 'popular' class and badge to highlighted tier
-
-// Step 2: Create render() function
-// Render all tiers into pricingGrid, animate price change on toggle
-
-// Step 3: Add click listener on billingToggle to switch annual/monthly and re-render
-
-// Step 4: Add hover effects and click handlers on CTA buttons`,
-
-  'ng-feature-list': `// Simulating Angular feature list/comparison component
-const featureList = document.getElementById('feature-list');
+  'ng-feature-list': `// Simulating Angular feature list behavior
 const features = [
-  { name: 'Real-time Sync', desc: 'Automatic syncing across all devices', status: 'available', icon: '\\u{1F504}' },
-  { name: 'Offline Mode', desc: 'Work without internet connection', status: 'available', icon: '\\u{1F4F4}' },
-  { name: 'AI Assistant', desc: 'Smart suggestions and automation', status: 'beta', icon: '\\u{1F916}' },
-  { name: 'Custom Themes', desc: 'Personalize your workspace', status: 'coming', icon: '\\u{1F3A8}' },
-  { name: 'Plugin System', desc: 'Extend with community plugins', status: 'coming', icon: '\\u{1F9E9}' },
+  { icon: '&#9889;', color: '#ef4444', title: 'Fast Performance', desc: 'Optimized rendering with change detection strategies.' },
+  { icon: '&#128274;', color: '#3b82f6', title: 'Type Safety', desc: 'Full TypeScript support with strict mode.' },
+  { icon: '&#128640;', color: '#22c55e', title: 'Scalable', desc: 'Modular architecture for large applications.' },
+  { icon: '&#128736;', color: '#f59e0b', title: 'CLI Tools', desc: 'Powerful CLI for scaffolding and builds.' },
 ];
 
-// Step 1: Create renderFeature(feature) function
-// Generate .feature-item with icon, name, description, and status badge
-// Color status badge: green (available), yellow (beta), gray (coming soon)
+document.getElementById('features').innerHTML = features.map(f =>
+  '<div class="feature-item"><div class="feature-icon" style="background:' + f.color + '20;color:' + f.color + '">' + f.icon + '</div><div class="feature-title">' + f.title + '</div><div class="feature-desc">' + f.desc + '</div></div>'
+).join('');`,
 
-// Step 2: Create render() function
-// Render all features, group by status if grouped mode is on
-
-// Step 3: Add click listener on .filter-btns to filter by status
-// Add click listener on #group-toggle to toggle grouped/flat view
-
-// Step 4: Add expand/collapse on feature items to show full description`,
-
-  'ng-testimonials': `// Simulating Angular testimonials carousel component
-const testimonialsEl = document.getElementById('testimonials');
-const dots = document.getElementById('testimonial-dots');
+  'ng-testimonials': `// Simulating Angular testimonials behavior
 const testimonials = [
-  { name: 'Sarah Chen', role: 'CTO at TechCorp', text: 'This tool transformed our development workflow. Highly recommended!', rating: 5 },
-  { name: 'Mike Ross', role: 'Lead Developer', text: 'The best developer experience I have ever had. Clean, fast, and intuitive.', rating: 5 },
-  { name: 'Lisa Park', role: 'Product Manager', text: 'Our team productivity increased by 40% after adopting this solution.', rating: 4 },
+  { text: 'Angular has transformed how we build enterprise apps. The tooling is incredible.', name: 'Alice Chen', role: 'CTO at TechCo', stars: 5, initials: 'AC', color: '#ef4444' },
+  { text: 'The dependency injection system makes testing so much easier.', name: 'Bob Williams', role: 'Lead Dev at StartupX', stars: 5, initials: 'BW', color: '#3b82f6' },
+  { text: 'Switching to signals improved our app performance dramatically.', name: 'Carol Davis', role: 'Frontend Architect', stars: 4, initials: 'CD', color: '#22c55e' },
 ];
-let currentIdx = 0;
-let autoTimer = null;
+let current = 0;
 
-// Step 1: Create renderTestimonial(idx) function
-// Show testimonial at idx with quote text, star rating, author name and role
-// Add fade-in animation class
+function showTestimonial(idx) {
+  // TODO: Show testimonial — toggle CSS classes, update DOM content, update styles
+}
 
-// Step 2: Create renderDots() function
-// Generate dot indicators, highlight active dot
+document.getElementById('dots').innerHTML = testimonials.map((_, i) => '<div class="dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '"></div>').join('');
+document.querySelectorAll('.dot').forEach(d => d.addEventListener('click', () => { current = parseInt(d.dataset.idx); showTestimonial(current); }));
+showTestimonial(0);
+setInterval(() => { current = (current + 1) % testimonials.length; showTestimonial(current); }, 4000);`,
 
-// Step 3: Add click listeners on prev/next buttons and dots to navigate
-// Reset auto-rotation timer on manual navigation
-
-// Step 4: Create autoRotate() function
-// Set interval to advance every 5 seconds, call renderTestimonial`,
-
-  'ng-team-grid': `// Simulating Angular team member grid component
-const grid = document.getElementById('team-grid');
-const modal = document.getElementById('member-modal');
-const members = [
-  { name: 'Alice Johnson', role: 'Engineering Lead', bio: 'Full-stack developer with 10 years experience.', skills: ['Angular','Node','Python'], color: '#ef4444' },
-  { name: 'Bob Smith', role: 'UI Designer', bio: 'Passionate about creating beautiful user interfaces.', skills: ['Figma','CSS','React'], color: '#3b82f6' },
-  { name: 'Carol White', role: 'DevOps Engineer', bio: 'Infrastructure and deployment automation expert.', skills: ['Docker','K8s','AWS'], color: '#22c55e' },
-  { name: 'Dave Brown', role: 'QA Lead', bio: 'Ensuring quality through automated testing strategies.', skills: ['Cypress','Jest','Selenium'], color: '#f59e0b' },
+  'ng-team-grid': `// Simulating Angular team grid behavior
+const team = [
+  { name: 'Alice', role: 'Lead Engineer', initials: 'AJ', color: '#ef4444' },
+  { name: 'Bob', role: 'Designer', initials: 'BS', color: '#3b82f6' },
+  { name: 'Carol', role: 'PM', initials: 'CD', color: '#22c55e' },
+  { name: 'Dave', role: 'DevOps', initials: 'DE', color: '#f59e0b' },
+  { name: 'Eve', role: 'QA Lead', initials: 'EF', color: '#8b5cf6' },
+  { name: 'Frank', role: 'Backend', initials: 'FG', color: '#ec4899' },
 ];
 
-// Step 1: Create renderGrid() function
-// Generate .member-card elements with avatar (initials + color), name, role
-// Add hover effect showing brief bio preview
+document.getElementById('team-grid').innerHTML = team.map(m =>
+  '<div class="team-card"><div class="team-avatar" style="background:' + m.color + '">' + m.initials + '</div><div class="team-name">' + m.name + '</div><div class="team-role">' + m.role + '</div><div class="team-links"><span class="team-link">GitHub</span><span class="team-link">LinkedIn</span></div></div>'
+).join('');`,
 
-// Step 2: Create openModal(member) function
-// Populate modal with full profile: avatar, name, role, bio, skills as tags
-// Show modal with fade-in animation
-
-// Step 3: Add click listener on grid to open modal for clicked member
-// Add click listeners to close modal (X button, backdrop, Escape key)
-
-// Step 4: Add search input to filter members by name or role`,
-
-  'ng-changelog': `// Simulating Angular changelog/release notes component
-const changelogEl = document.getElementById('changelog');
+  'ng-changelog': `// Simulating Angular changelog behavior
 const releases = [
-  { version: '2.1.0', date: '2024-03-15', type: 'minor', changes: [
-    { type: 'feat', text: 'Added dark mode support' },
-    { type: 'feat', text: 'New dashboard widgets' },
-    { type: 'fix', text: 'Fixed memory leak in data table' },
-  ]},
-  { version: '2.0.1', date: '2024-03-01', type: 'patch', changes: [
-    { type: 'fix', text: 'Corrected timezone handling' },
-    { type: 'fix', text: 'Fixed pagination off-by-one error' },
-  ]},
-  { version: '2.0.0', date: '2024-02-15', type: 'major', changes: [
-    { type: 'feat', text: 'Complete UI redesign' },
-    { type: 'breaking', text: 'Removed deprecated v1 API endpoints' },
-    { type: 'feat', text: 'New plugin architecture' },
-  ]},
+  { ver: 'v2.1.0', date: 'Jan 15, 2024', changes: { added: ['Signals support', 'New CLI commands'], changed: ['Improved build performance'], fixed: ['Router navigation bug'] }},
+  { ver: 'v2.0.0', date: 'Dec 1, 2023', changes: { added: ['Standalone components default', 'Deferrable views'], fixed: ['Memory leak in forms', 'SSR hydration'] }},
 ];
 
-// Step 1: Create renderRelease(release) function
-// Generate .release-block with version badge (colored by type), date
-// List changes with type badges (feat=green, fix=blue, breaking=red)
+document.getElementById('changelog').innerHTML = releases.map(r => {
+  let body = '';
+  Object.entries(r.changes).forEach(([cat, items]) => {
+    body += '<span class="change-cat cat-' + cat + '">' + cat.charAt(0).toUpperCase() + cat.slice(1) + '</span>';
+    body += items.map(i => '<div class="change-item">' + i + '</div>').join('');
+  });
+  return '<div class="release"><div class="release-header"><span class="release-ver">' + r.ver + '</span><span class="release-date">' + r.date + '</span></div><div class="release-body">' + body + '</div></div>';
+}).join('');`,
 
-// Step 2: Create render() function
-// Render all releases connected by a timeline line
-
-// Step 3: Add click listener on filter buttons to show only feat/fix/breaking changes
-
-// Step 4: Add expand/collapse on release blocks, latest expanded by default`,
-
-  'ng-status-page': `// Simulating Angular status page component
-const statusGrid = document.getElementById('status-grid');
-const overallStatus = document.getElementById('overall-status');
+  'ng-status-page': `// Simulating Angular status page behavior
 const services = [
-  { name: 'API Server', status: 'operational', uptime: 99.98 },
-  { name: 'Web App', status: 'operational', uptime: 99.95 },
-  { name: 'Database', status: 'degraded', uptime: 99.5 },
-  { name: 'CDN', status: 'operational', uptime: 99.99 },
-  { name: 'Email Service', status: 'outage', uptime: 97.2 },
-  { name: 'Background Jobs', status: 'operational', uptime: 99.9 },
+  { name: 'API Server', status: 'up', uptime: 99.98 },
+  { name: 'Database', status: 'up', uptime: 99.95 },
+  { name: 'CDN', status: 'degraded', uptime: 98.5 },
+  { name: 'Auth Service', status: 'up', uptime: 99.99 },
+  { name: 'Email Service', status: 'up', uptime: 99.9 },
 ];
 
-// Step 1: Create renderService(service) function
-// Generate .status-card with name, status indicator dot, status text, uptime bar
-// Color by status: green (operational), yellow (degraded), red (outage)
-// Render uptime as a mini bar chart showing last 30 days
+const allUp = services.every(s => s.status === 'up');
+document.getElementById('overall').className = 'overall operational';
+document.getElementById('overall').textContent = allUp ? '&#10003; All Systems Operational' : '&#9888; Some Systems Degraded';
 
-// Step 2: Create updateOverall() function
-// Determine overall status from worst individual status
-// Update overallStatus banner with appropriate color and message
+document.getElementById('services').innerHTML = services.map(s => {
+  const bars = Array.from({ length: 30 }, () => {
+    const r = Math.random();
+    const color = s.status === 'up' ? '#22c55e' : (r > 0.9 ? '#eab308' : '#22c55e');
+    return '<span style="background:' + color + '"></span>';
+  }).join('');
+  return '<div class="service"><div class="service-dot ' + s.status + '"></div><div class="service-name">' + s.name + '</div><div class="service-uptime">' + s.uptime + '%</div><div class="uptime-bar">' + bars + '</div></div>';
+}).join('');`,
 
-// Step 3: Create render() function
-// Render all services and update overall status
-// Show incident log section below
+  'ng-metric-dashboard': `// Simulating Angular metric dashboard behavior
+function drawSpark(id, color) {
+  // TODO: Draw spark — calculate values
+}
 
-// Step 4: Add click listener on #simulate-btn to randomly change a service status`,
+drawSpark('spark1', '#22c55e');
+drawSpark('spark2', '#3b82f6');
+drawSpark('spark3', '#ef4444');
+drawSpark('spark4', '#f59e0b');
 
-  'ng-metric-dashboard': `// Simulating Angular metrics dashboard with live updates
-const metricsEl = document.getElementById('metrics-dashboard');
-const chartArea = document.getElementById('metric-chart');
-let metrics = {
-  requests: { value: 1247, history: [], label: 'Requests/min' },
-  latency: { value: 45, history: [], label: 'Avg Latency (ms)' },
-  errors: { value: 3, history: [], label: 'Error Rate (%)' },
-  cpu: { value: 62, history: [], label: 'CPU Usage (%)' },
-};
-let activeMetric = 'requests';
-let updateTimer = null;
+document.querySelectorAll('.range-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['spark1','spark2','spark3','spark4'].forEach((id,i) => {
+      const canvas = document.getElementById(id);
+      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      drawSpark(id, ['#22c55e','#3b82f6','#ef4444','#f59e0b'][i]);
+    });
+  });
+});`,
 
-// Step 1: Create renderCards() function
-// Generate .metric-card for each metric with value, label, and trend indicator
-// Highlight the active (selected) metric card
+  'ng-command-menu': `// Simulating Angular command menu behavior
+const menuOverlay = document.getElementById('menu-overlay');
+const menuSearch = document.getElementById('menu-search');
+const navResult = document.getElementById('nav-result');
 
-// Step 2: Create renderChart(metricKey) function
-// Draw a simple line chart in chartArea using the metric's history array
-// Show axes, labels, and current value marker
+function openMenu() {
+  // TODO: Implement openMenu
+}
+function closeMenu() {
+  // TODO: Implement closeMenu
+}
 
-// Step 3: Create simulateUpdate() function
-// Add slight random variation to each metric value
-// Push new value to history (keep last 60 points)
-// Re-render cards and chart
+document.getElementById('open-menu').addEventListener('click', openMenu);
+menuOverlay.addEventListener('click', (e) => { if (e.target === menuOverlay) closeMenu(); });
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'm') { e.preventDefault(); openMenu(); }
+  if (e.key === 'Escape') closeMenu();
+});
 
-// Step 4: Add click listeners on metric cards to select and display their chart
-// Add click listener on #toggle-live to start/stop live updates
+document.querySelectorAll('.menu-item').forEach(item => {
+  item.addEventListener('click', () => { navResult.textContent = 'Navigated to: ' + item.dataset.page; closeMenu(); });
+});
 
-// Step 5: Start live updates with setInterval(simulateUpdate, 1000)`,
+menuSearch.addEventListener('input', () => {
+  const q = menuSearch.value.toLowerCase();
+  document.querySelectorAll('.menu-item').forEach(item => {
+    item.style.display = item.dataset.page.toLowerCase().includes(q) ? 'block' : 'none';
+  });
+});`,
 
-  // ---------------------------------------------------------------------------
-  // navigation starters
-  // ---------------------------------------------------------------------------
-
-  'ng-command-menu': `// Simulating Angular command menu with nested submenus
-const menu = document.getElementById('cmd-menu');
-const menuInput = document.getElementById('cmd-input');
-const menuItems = document.getElementById('cmd-items');
-const breadcrumb = document.getElementById('cmd-breadcrumb');
-const menuData = {
-  root: [
-    { label: 'File', icon: '\\u{1F4C4}', submenu: 'file' },
-    { label: 'Edit', icon: '\\u{270F}', submenu: 'edit' },
-    { label: 'View', icon: '\\u{1F441}', submenu: 'view' },
-    { label: 'Go to Line...', icon: '\\u{1F522}', action: 'goto-line' },
-  ],
-  file: [
-    { label: 'New File', shortcut: 'Ctrl+N', action: 'new' },
-    { label: 'Open File', shortcut: 'Ctrl+O', action: 'open' },
-    { label: 'Save', shortcut: 'Ctrl+S', action: 'save' },
-  ],
-  edit: [
-    { label: 'Undo', shortcut: 'Ctrl+Z', action: 'undo' },
-    { label: 'Redo', shortcut: 'Ctrl+Y', action: 'redo' },
-    { label: 'Find', shortcut: 'Ctrl+F', action: 'find' },
-  ],
-  view: [
-    { label: 'Toggle Sidebar', action: 'sidebar' },
-    { label: 'Toggle Terminal', action: 'terminal' },
-  ],
-};
-let menuStack = ['root'];
-let activeIdx = 0;
-
-// Step 1: Create renderMenu(sectionKey, query) function
-// Get items for the section, filter by query if provided
-// Render .cmd-item elements with icon, label, shortcut or submenu arrow
-// Update breadcrumb trail from menuStack
-
-// Step 2: Add keydown listener for Ctrl+K / Cmd+K to toggle menu open/close
-
-// Step 3: Add input listener on menuInput to filter current menu items
-
-// Step 4: Add keydown listener on menuInput for navigation
-// ArrowUp/Down: navigate items, Enter: execute action or enter submenu
-// Backspace on empty input: go back to parent menu, Escape: close
-
-// Step 5: Add click listener on menuItems for item selection`,
-
-  'ng-mini-map': `// Simulating Angular document minimap navigation component
-const content = document.getElementById('minimap-content');
+  'ng-mini-map': `// Simulating Angular minimap behavior
+const content = document.getElementById('editor-content');
 const minimap = document.getElementById('minimap');
-const viewport = document.getElementById('minimap-viewport');
-const SCALE = 0.1;
+const viewport = document.getElementById('viewport');
 
-// Step 1: Create renderMinimap() function
-// Clone content structure into minimap at reduced scale
-// Represent headings, paragraphs, and code blocks as colored bars
-// Calculate proportional heights
+const lines = Array.from({ length: 80 }, (_, i) => 'Line ' + (i + 1) + ': ' + 'const x = ' + Math.random().toFixed(4) + ';');
+content.innerHTML = lines.map(l => '<div>' + l + '</div>').join('');
+minimap.innerHTML = lines.map(l => '<div>' + l + '</div>').join('');
 
-// Step 2: Create updateViewport() function
-// Calculate viewport indicator position and height based on scroll position
-// Viewport height = (visible area / total content height) * minimap height
-// Viewport top = (scrollTop / total content height) * minimap height
+content.addEventListener('scroll', () => {
+  const ratio = content.scrollTop / (content.scrollHeight - content.clientHeight);
+  const maxTop = 200 - 30;
+  viewport.style.top = (ratio * maxTop) + 'px';
+});
 
-// Step 3: Add scroll listener on the content container
-// Call updateViewport() to sync minimap indicator position
+document.querySelector('.minimap-wrap').addEventListener('click', (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const ratio = (e.clientY - rect.top) / rect.height;
+  content.scrollTop = ratio * (content.scrollHeight - content.clientHeight);
+});`,
 
-// Step 4: Add click listener on minimap
-// Scroll content to the proportional position where user clicked
-
-// Step 5: Add drag listener on viewport indicator for smooth scroll navigation`,
-
-  'ng-scroll-to-top': `// Simulating Angular scroll-to-top button with smooth scrolling
-const scrollBtn = document.getElementById('scroll-top-btn');
-const scrollContainer = document.getElementById('scroll-container');
-let isVisible = false;
-
-// Step 1: Add scroll listener on scrollContainer
-// Show button when scrolled past 300px, hide when near top
-// Add fade-in/fade-out transition classes
-// Update isVisible state
-
-// Step 2: Add click listener on scrollBtn
-// Smooth scroll to top using scrollTo with behavior: 'smooth'
-// Add a brief spinning animation to the button icon during scroll
-
-// Step 3: Create progress indicator on the button
-// Show a circular progress ring indicating scroll percentage
-// Update on each scroll event
-
-// Step 4: Add keyboard shortcut (Home key) to trigger scroll to top`,
-
-  'ng-anchor-links': `// Simulating Angular anchor link navigation with active tracking
-const navLinks = document.getElementById('anchor-nav');
-const sections = document.querySelectorAll('.anchor-section');
-let activeSection = '';
-
-// Step 1: Create renderNav() function
-// Generate navigation links from .anchor-section elements
-// Each link has href="#section-id" and shows the section title
-// Highlight the active section link
-
-// Step 2: Create setupObserver() function
-// Use IntersectionObserver with threshold and rootMargin
-// When a section enters the viewport, update activeSection
-// Toggle 'active' class on the corresponding nav link
-
-// Step 3: Add click listener on navLinks (event delegation)
-// Prevent default, smooth scroll to the target section
-// Update URL hash without jumping
-
-// Step 4: Handle initial hash in URL to scroll to linked section on load`,
-
-  'ng-table-of-contents': `// Simulating Angular table of contents auto-generated from headings
-const tocEl = document.getElementById('toc');
-const article = document.getElementById('article-content');
-let headings = [];
-let activeId = '';
-
-// Step 1: Create generateTOC() function
-// Query all h2 and h3 elements in article
-// Build hierarchical structure (h3 nested under preceding h2)
-// Render as nested <ul> lists with links to heading IDs
-// Add IDs to headings that lack them
-
-// Step 2: Create highlightActive() function
-// Use IntersectionObserver to track which heading is in view
-// Add 'active' class to the corresponding TOC link
-// Auto-scroll TOC to keep active link visible
-
-// Step 3: Add click listener on tocEl for smooth scrolling to headings
-// Prevent default jump, use scrollIntoView with smooth behavior
-
-// Step 4: Add resize listener to recalculate heading positions
-// Handle dynamic content changes`,
-
-  'ng-step-indicator': `// Simulating Angular step/progress indicator component
-const stepsEl = document.getElementById('step-indicator');
-const stepContent = document.getElementById('step-content');
-const steps = ['Account', 'Profile', 'Preferences', 'Review', 'Complete'];
-let currentStep = 0;
-
-// Step 1: Create renderSteps() function
-// Generate step circles connected by lines
-// Mark steps as 'completed' (before current), 'active' (current), or 'pending'
-// Completed steps show checkmark, active shows step number with pulse
-// Animate the connecting line fill based on progress
-
-// Step 2: Create renderContent(stepIdx) function
-// Show appropriate form/content for the current step
-// Animate content transition (slide or fade)
-
-// Step 3: Add click listener on step circles to navigate to a step
-// Only allow navigating to completed or current steps
-
-// Step 4: Add click listeners on Next/Previous buttons
-// Validate current step before advancing
-// Update step states and content`,
-
-  'ng-app-shell': `// Simulating Angular application shell with lazy-loaded regions
-const header = document.getElementById('shell-header');
-const sidebar = document.getElementById('shell-sidebar');
-const main = document.getElementById('shell-main');
-const footer = document.getElementById('shell-footer');
-let sidebarOpen = true;
-
-// Step 1: Create renderShell() function
-// Render header with logo, nav links, and user menu
-// Render sidebar with navigation items and collapse button
-// Main area shows placeholder content
-// Footer shows version and status
-
-// Step 2: Create toggleSidebar() function
-// Toggle sidebarOpen state, add/remove 'collapsed' class
-// Animate sidebar width transition
-// Adjust main content area width accordingly
-
-// Step 3: Create loadContent(route) function
-// Simulate lazy loading with skeleton placeholder, then replace with content after delay
-// Update active states in sidebar and header navigation
-
-// Step 4: Add click listeners for sidebar toggle, nav items, and responsive breakpoint
-// Auto-collapse sidebar on small screens`,
-
-  'ng-header-scroll-hide': `// Simulating Angular header that hides on scroll down, shows on scroll up
-const header = document.getElementById('hide-header');
+  'ng-scroll-to-top': `// Simulating Angular scroll-to-top behavior
 const scrollArea = document.getElementById('scroll-area');
+const scrollBtn = document.getElementById('scroll-top-btn');
+
+scrollArea.addEventListener('scroll', () => {
+  const show = scrollArea.scrollTop > 100;
+  scrollBtn.style.opacity = show ? '1' : '0';
+  scrollBtn.style.pointerEvents = show ? 'auto' : 'none';
+});
+
+scrollBtn.addEventListener('click', () => {
+  scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
+});`,
+
+  'ng-anchor-links': `// Simulating Angular anchor links behavior
+const scrollContainer = document.getElementById('anchor-scroll');
+const links = document.querySelectorAll('.anchor-link');
+
+links.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) scrollContainer.scrollTo({ top: target.offsetTop - scrollContainer.offsetTop, behavior: 'smooth' });
+  });
+});
+
+scrollContainer.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('.section');
+  let activeId = '';
+  sections.forEach(s => {
+    if (s.offsetTop - scrollContainer.offsetTop <= scrollContainer.scrollTop + 40) activeId = s.id;
+  });
+  links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + activeId));
+});`,
+
+  'ng-table-of-contents': `// Simulating Angular table of contents behavior
+const toc = document.getElementById('toc');
+const content = document.getElementById('toc-content');
+const headings = content.querySelectorAll('.heading');
+
+headings.forEach(h => {
+  const item = document.createElement('a');
+  item.className = 'toc-item' + (h.classList.contains('sub') ? ' sub' : '');
+  item.textContent = h.textContent;
+  item.addEventListener('click', () => { content.scrollTo({ top: h.offsetTop - content.offsetTop, behavior: 'smooth' }); });
+  toc.appendChild(item);
+});
+
+content.addEventListener('scroll', () => {
+  const items = toc.querySelectorAll('.toc-item');
+  let activeIdx = 0;
+  headings.forEach((h, i) => { if (h.offsetTop - content.offsetTop <= content.scrollTop + 30) activeIdx = i; });
+  items.forEach((item, i) => item.classList.toggle('active', i === activeIdx));
+});`,
+
+  'ng-step-indicator': `// Simulating Angular step indicator behavior
+let currentStep = 1;
+const steps = document.querySelectorAll('.step');
+const lines = document.querySelectorAll('.step-line');
+
+function updateSteps() {
+  // TODO: Update steps — toggle CSS classes, update DOM content
+}
+
+document.getElementById('next-step').addEventListener('click', () => { if (currentStep < 3) { currentStep++; updateSteps(); } });
+document.getElementById('prev-step').addEventListener('click', () => { if (currentStep > 0) { currentStep--; updateSteps(); } });`,
+
+  'ng-app-shell': `// Simulating Angular app shell behavior
+const sidebar = document.getElementById('sidebar');
+document.getElementById('toggle-sidebar').addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelector('.topbar-title').textContent = item.textContent.trim();
+    document.querySelector('.content-area p').textContent = 'Viewing: ' + item.textContent.trim();
+  });
+});`,
+
+  'ng-header-scroll-hide': `// Simulating Angular header scroll hide behavior
+const container = document.getElementById('scroll-container');
+const header = document.getElementById('hide-header');
 let lastScrollTop = 0;
-let headerVisible = true;
-const THRESHOLD = 5;
 
-// Step 1: Add scroll listener on scrollArea
-// Calculate scroll direction by comparing current scrollTop to lastScrollTop
-// If scrolling down past THRESHOLD and header is visible, hide it (transform translateY -100%)
-// If scrolling up past THRESHOLD and header is hidden, show it (transform translateY 0)
-// Update lastScrollTop
+container.addEventListener('scroll', () => {
+  const st = container.scrollTop;
+  header.classList.toggle('hidden', st > lastScrollTop && st > 50);
+  lastScrollTop = st;
+});`,
 
-// Step 2: Add CSS transition for smooth slide in/out animation
-// Set transition on transform property
-
-// Step 3: Handle edge cases
-// Always show header when at top of page (scrollTop < 50)
-// Add shadow to header when not at top
-
-// Step 4: Add debounce to avoid excessive updates during fast scrolling`,
-
-  'ng-sticky-header': `// Simulating Angular sticky header with intersection observer
+  'ng-sticky-header': `// Simulating Angular sticky header behavior
+const stickyScroll = document.getElementById('sticky-scroll');
 const stickyHeader = document.getElementById('sticky-header');
-const sentinel = document.getElementById('sticky-sentinel');
-const headerContent = document.getElementById('header-content');
-let isStuck = false;
 
-// Step 1: Create setupObserver() function
-// Place sentinel element just above the header position
-// Create IntersectionObserver watching the sentinel
-// When sentinel leaves viewport (not intersecting), header becomes sticky
-// When sentinel enters viewport, header unsticks
+stickyScroll.addEventListener('scroll', () => {
+  stickyHeader.classList.toggle('compact', stickyScroll.scrollTop > 30);
+});`,
 
-// Step 2: Create updateHeader(stuck) function
-// Toggle 'stuck' class on stickyHeader
-// When stuck: add shadow, compact padding, show minimal version
-// When unstuck: remove shadow, restore full padding
+  'ng-page-transitions': `// Simulating Angular page transitions behavior
+const pageLinks = document.querySelectorAll('.page-link');
+const pages = document.querySelectorAll('.page');
 
-// Step 3: Add scroll listener as fallback for browsers without IntersectionObserver
+pageLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    pageLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    pages.forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + link.dataset.page).classList.add('active');
+  });
+});`,
 
-// Step 4: Handle resize events to recalculate sentinel position`,
+  'ng-route-guard': `// Simulating Angular route guard behavior
+const authCheck = document.getElementById('auth-check');
+const dirtyCheck = document.getElementById('dirty-check');
+const content = document.getElementById('guard-content');
+const log = document.getElementById('guard-log');
+let currentPage = 'public';
 
-  'ng-page-transitions': `// Simulating Angular route transition animations
-const pageContainer = document.getElementById('page-container');
-const pages = {
-  home: { title: 'Home', content: 'Welcome to the home page with featured content and announcements.' },
-  about: { title: 'About', content: 'Learn more about our mission, team, and values.' },
-  contact: { title: 'Contact', content: 'Get in touch with us through email, phone, or our contact form.' },
+document.querySelectorAll('.guard-link').forEach(link => {
+  link.addEventListener('click', () => {
+    const page = link.dataset.page;
+    // canDeactivate check
+    if (dirtyCheck.checked && currentPage === 'editor') {
+      log.innerHTML += '<div class="blocked">Blocked: Unsaved changes in editor!</div>';
+      return;
+    }
+    // canActivate check
+    if (page === 'protected' && !authCheck.checked) {
+      log.innerHTML += '<div class="blocked">Blocked: Login required for ' + page + '</div>';
+      return;
+    }
+    log.innerHTML += '<div class="allowed">Navigated to: ' + page + '</div>';
+    currentPage = page;
+    content.innerHTML = '<p>You are on the <strong>' + page + '</strong> page.</p>';
+  });
+});`,
+
+  'ng-nested-routes': `// Simulating Angular nested routes behavior
+const childRoutes = {
+  dashboard: ['overview', 'stats'],
+  settings: ['profile', 'security']
 };
-let currentPage = 'home';
-let transitioning = false;
+let parentRoute = 'dashboard';
+let childRoute = 'overview';
 
-// Step 1: Create transition(fromPage, toPage, type) function
-// If already transitioning, return
-// Set transitioning = true
-// Apply exit animation to current content (fade-out, slide-out, or scale-down)
-// After exit animation completes, swap content and apply enter animation
-// Set transitioning = false when complete
+document.querySelectorAll('.parent-link').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelectorAll('.parent-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    parentRoute = link.dataset.parent;
+    const children = childRoutes[parentRoute];
+    childRoute = children[0];
+    document.getElementById('child-nav').innerHTML = children.map((c, i) => '<button class="child-link' + (i === 0 ? ' active' : '') + '" data-child="' + c + '">' + c.charAt(0).toUpperCase() + c.slice(1) + '</button>').join('');
+    updateChildView();
+    bindChildLinks();
+  });
+});
 
-// Step 2: Create renderPage(pageKey) function
-// Set pageContainer innerHTML with page title and content
-// Apply enter animation class
+function bindChildLinks() {
+  // TODO: Bind child links — update state, toggle CSS classes, attach event listeners
+}
 
-// Step 3: Add click listener on nav links to trigger transitions
-// Determine transition type based on navigation direction (left/right slide)
+function updateChildView() {
+  // TODO: Update child view — update DOM content
+}
 
-// Step 4: Add transition type selector (fade, slide, scale, flip)`,
+bindChildLinks();`,
 
-  'ng-route-guard': `// Simulating Angular route guards (canActivate, canDeactivate)
-const pageEl = document.getElementById('guarded-page');
-const statusEl = document.getElementById('guard-status');
-const logEl = document.getElementById('guard-log');
-let isAuthenticated = false;
-let hasUnsavedChanges = false;
+  'ng-tab-router': `// Simulating Angular tab router behavior
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.tab-panel');
+const indicator = document.getElementById('tab-indicator');
+
+tabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    indicator.style.left = (i * 25) + '%';
+  });
+});`,
+
+  'ng-deep-linking': `// Simulating Angular deep linking behavior
+const urlEl = document.getElementById('current-url');
+const deepContent = document.getElementById('deep-content');
 
 const routes = {
-  home: { guard: null, content: 'Public home page' },
-  dashboard: { guard: 'auth', content: 'Protected dashboard content' },
-  admin: { guard: 'admin', content: 'Admin-only settings panel' },
-  editor: { guard: null, content: 'Editor with unsaved changes tracking', deactivateGuard: true },
+  '#/': 'Home page. Click links above to navigate via deep links.',
+  '#/products': 'Product listing with filters and search.',
+  '#/products/42': 'Product #42: Angular Framework - The complete platform.',
+  '#/settings': 'Application settings and preferences.'
 };
 
-// Step 1: Create canActivate(route) function
-// Check guard type: null (allow), 'auth' (require login), 'admin' (require admin role)
-// Return { allowed: boolean, reason: string }
-// Log the guard check result
+function navigate(hash) {
+  // TODO: Navigate — update DOM content
+}
 
-// Step 2: Create canDeactivate(route) function
-// If route has deactivateGuard and hasUnsavedChanges, show confirmation dialog
-// Return boolean based on user choice
+document.querySelectorAll('.deep-link').forEach(link => {
+  link.addEventListener('click', () => navigate(link.dataset.hash));
+});
 
-// Step 3: Create navigate(routeKey) function
-// Run canDeactivate on current route, then canActivate on target route
-// If both pass, render the new page content
-// If blocked, show reason in statusEl
+navigate('#/');`,
 
-// Step 4: Add click listeners on nav links to trigger navigation
-// Add click listener on login/logout toggle to change auth state`,
+  'ng-url-state': `// Simulating Angular URL state management behavior
+const cat = document.getElementById('state-category');
+const sort = document.getElementById('state-sort');
+const search = document.getElementById('state-search');
+const urlEl = document.getElementById('state-url');
+const results = document.getElementById('state-results');
 
-  'ng-nested-routes': `// Simulating Angular nested/child routes
-const mainContent = document.getElementById('nested-main');
-const childContent = document.getElementById('nested-child');
-const mainNav = document.getElementById('main-nav');
-const childNav = document.getElementById('child-nav');
+function updateState() {
+  // TODO: Update state — update state, update DOM content
+}
 
-const routeTree = {
-  settings: {
-    label: 'Settings',
-    children: {
-      profile: { label: 'Profile', content: 'Edit your name, email, and avatar.' },
-      security: { label: 'Security', content: 'Manage passwords and two-factor authentication.' },
-      notifications: { label: 'Notifications', content: 'Configure email and push notification preferences.' },
-    }
-  },
-  team: {
-    label: 'Team',
-    children: {
-      members: { label: 'Members', content: 'View and manage team members.' },
-      roles: { label: 'Roles', content: 'Define roles and permissions.' },
-    }
-  },
-};
-let activePath = ['settings', 'profile'];
+cat.addEventListener('change', updateState);
+sort.addEventListener('change', updateState);
+search.addEventListener('input', updateState);
+updateState();`,
 
-// Step 1: Create renderMainNav() function
-// Render top-level route links, highlight active parent route
+  'ng-back-to-top': `// Simulating Angular back-to-top with progress behavior
+const bttScroll = document.getElementById('btt-scroll');
+const bttBtn = document.getElementById('btt-btn');
+const ring = document.getElementById('btt-ring');
+const circumference = 113;
 
-// Step 2: Create renderChildNav(parentKey) function
-// Render child route links for the active parent, highlight active child
+bttScroll.addEventListener('scroll', () => {
+  const pct = bttScroll.scrollTop / (bttScroll.scrollHeight - bttScroll.clientHeight);
+  ring.style.strokeDashoffset = circumference - (pct * circumference);
+  bttBtn.style.opacity = pct > 0.1 ? '1' : '0';
+  bttBtn.style.pointerEvents = pct > 0.1 ? 'auto' : 'none';
+});
 
-// Step 3: Create navigate(parent, child) function
-// Update activePath, render both nav levels, show child content
-// Update URL display with "/parent/child" path
+bttBtn.addEventListener('click', () => bttScroll.scrollTo({ top: 0, behavior: 'smooth' }));`,
 
-// Step 4: Add click listeners on mainNav and childNav for navigation`,
-
-  'ng-tab-router': `// Simulating Angular tab-based routing with preserved state
-const tabBar = document.getElementById('tab-router-bar');
-const tabContent = document.getElementById('tab-router-content');
-const tabs = ['Dashboard', 'Analytics', 'Settings'];
-let activeTab = 'Dashboard';
-const tabState = {};
-
-// Step 1: Create renderTabBar() function
-// Generate tab buttons with close (x) icon, highlight active tab
-// Show "+" button to add new tab
-
-// Step 2: Create renderContent(tabName) function
-// If tabState has saved content for this tab, restore it
-// Otherwise render fresh default content
-// Each tab has a text input so state preservation is testable
-
-// Step 3: Create saveState(tabName) function
-// Capture current input values and scroll position in tabState
-
-// Step 4: Add click listener on tabBar for tab switching
-// Save current tab state before switching, restore new tab state
-// Handle close button to remove tabs (prevent closing last tab)
-
-// Step 5: Update URL hash with active tab name`,
-
-  'ng-deep-linking': `// Simulating Angular deep linking with query parameters
-const contentEl = document.getElementById('deep-content');
-const urlBar = document.getElementById('url-bar');
-const filters = { category: 'all', sort: 'name', page: 1, search: '' };
-
-const items = [
-  { name: 'Angular', category: 'framework' },
-  { name: 'React', category: 'framework' },
-  { name: 'TypeScript', category: 'language' },
-  { name: 'Webpack', category: 'tool' },
-  { name: 'ESLint', category: 'tool' },
-  { name: 'Python', category: 'language' },
-];
-
-// Step 1: Create parseURL() function
-// Read hash fragment and extract query parameters
-// Update filters object from URL parameters
-
-// Step 2: Create updateURL() function
-// Build URL hash string from current filters
-// Only include non-default values
-// Update urlBar display
-
-// Step 3: Create render() function
-// Filter and sort items based on current filters
-// Render item list and active filter indicators
-// Call updateURL() to keep URL in sync
-
-// Step 4: Add change/input listeners on filter controls to update filters and re-render
-// Add hashchange listener to handle browser back/forward navigation`,
-
-  'ng-url-state': `// Simulating Angular URL-driven state management
-const stateDisplay = document.getElementById('url-state-display');
-const urlDisplay = document.getElementById('current-url');
-
-const defaults = { view: 'grid', theme: 'light', collapsed: false, selected: null };
-let state = Object.assign({}, defaults);
-
-// Step 1: Create syncToURL() function
-// Serialize state to URL search params, omitting default values
-// Update browser hash (simulated via urlDisplay element)
-
-// Step 2: Create syncFromURL() function
-// Parse URL hash parameters
-// Merge with defaults, update state object
-// Return the parsed state
-
-// Step 3: Create render() function
-// Display current state as formatted key-value pairs
-// Show which values differ from defaults
-// Render content based on state (grid/list view, theme, etc.)
-
-// Step 4: Add click listeners on control buttons to modify state
-// Each change updates state, calls syncToURL() and render()
-
-// Step 5: Add hashchange listener to call syncFromURL() and render()`,
-
-  'ng-back-to-top': `// Simulating Angular back-to-top component with progress ring
-const backBtn = document.getElementById('back-to-top');
-const ring = document.getElementById('progress-ring');
-const scrollArea = document.getElementById('btt-scroll-area');
-const SHOW_AFTER = 200;
-
-// Step 1: Create updateProgress() function
-// Calculate scroll percentage (scrollTop / (scrollHeight - clientHeight))
-// Update SVG circle stroke-dashoffset to show progress ring fill
-// Show/hide button based on scroll position (visible after SHOW_AFTER px)
-
-// Step 2: Add scroll listener on scrollArea
-// Call updateProgress() on each scroll event
-// Use requestAnimationFrame for smooth updates
-
-// Step 3: Add click listener on backBtn
-// Smooth scroll to top
-// Add rotation animation to the button during scroll
-
-// Step 4: Add CSS transitions for fade-in/fade-out of the button`,
-
-  'ng-scroll-spy': `// Simulating Angular scroll spy directive for navigation highlighting
-const spyNav = document.getElementById('spy-nav');
+  'ng-scroll-spy': `// Simulating Angular scroll spy behavior
+const spyContent = document.getElementById('spy-content');
+const spyLinks = document.querySelectorAll('.spy-link');
 const spySections = document.querySelectorAll('.spy-section');
-const scrollContainer = document.getElementById('spy-scroll');
-let activeId = '';
 
-// Step 1: Create buildNav() function
-// Generate navigation links from spy-section elements
-// Each link shows section title and has data-target attribute
+spyLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    const target = document.getElementById(link.dataset.section);
+    if (target) spyContent.scrollTo({ top: target.offsetTop - spyContent.offsetTop, behavior: 'smooth' });
+  });
+});
 
-// Step 2: Create setupScrollSpy() function
-// Create IntersectionObserver with rootMargin to trigger slightly before section tops
-// When a section enters the viewport, update activeId
-// Toggle 'active' class on corresponding nav link
-// Add smooth indicator animation (sliding underline or highlight bar)
+spyContent.addEventListener('scroll', () => {
+  let activeId = '';
+  spySections.forEach(s => {
+    if (s.offsetTop - spyContent.offsetTop <= spyContent.scrollTop + 40) activeId = s.id;
+  });
+  spyLinks.forEach(l => l.classList.toggle('active', l.dataset.section === activeId));
+});`,
 
-// Step 3: Add click listener on spyNav
-// Smooth scroll to target section on link click
-// Temporarily disable observer to prevent flickering during programmatic scroll
+  'ng-theme-switcher': `// Simulating Angular theme switcher behavior
+const demo = document.getElementById('theme-demo');
+const toggle = document.getElementById('theme-toggle');
 
-// Step 4: Handle edge cases
-// First and last sections at page boundaries
-// Rapid scrolling that skips sections`,
+toggle.addEventListener('click', () => {
+  const isDark = demo.dataset.theme === 'dark';
+  demo.dataset.theme = isDark ? 'light' : 'dark';
+  toggle.innerHTML = isDark ? '&#9790; Dark' : '&#9788; Light';
+});`,
 
-  // ---------------------------------------------------------------------------
-  // advanced starters
-  // ---------------------------------------------------------------------------
-
-  'ng-theme-switcher': `// Simulating Angular theme switcher service with CSS variables
-const root = document.documentElement;
-const themeBtn = document.getElementById('theme-toggle');
-const themeSelect = document.getElementById('theme-select');
-const preview = document.getElementById('theme-preview');
-
-const themes = {
-  light: { '--bg': '#ffffff', '--text': '#1a1a2e', '--primary': '#3b82f6', '--surface': '#f1f5f9' },
-  dark: { '--bg': '#0f172a', '--text': '#e2e8f0', '--primary': '#60a5fa', '--surface': '#1e293b' },
-  ocean: { '--bg': '#0c1222', '--text': '#c7d2fe', '--primary': '#06b6d4', '--surface': '#1a2744' },
-};
-let currentTheme = localStorage.getItem('ng-theme') || 'light';
-
-// Step 1: Create applyTheme(themeName) function
-// Read theme object, set each CSS variable on root element
-// Update currentTheme, save to localStorage
-// Toggle 'dark' class on document body for system-level dark mode
-
-// Step 2: Create render() function
-// Update themeSelect to highlight the current theme
-// Update preview card to show the current theme colors
-
-// Step 3: Add click listener on themeBtn to cycle through themes
-// Add click listener on themeSelect options to switch directly
-
-// Step 4: Check prefers-color-scheme media query on init
-// Use matchMedia to detect system preference and apply on first visit`,
-
-  'ng-i18n-locale': `// Simulating Angular i18n/locale switching
+  'ng-i18n-locale': `// Simulating Angular i18n locale behavior
 const translations = {
-  en: { greeting: 'Hello', welcome: 'Welcome to our app', submit: 'Submit', cancel: 'Cancel', items: '{count} item(s)', lang: 'English' },
-  es: { greeting: 'Hola', welcome: 'Bienvenido a nuestra app', submit: 'Enviar', cancel: 'Cancelar', items: '{count} elemento(s)', lang: 'Espanol' },
-  ja: { greeting: '\\u3053\\u3093\\u306B\\u3061\\u306F', welcome: '\\u30A2\\u30D7\\u30EA\\u3078\\u3088\\u3046\\u3053\\u305D', submit: '\\u9001\\u4FE1', cancel: '\\u30AD\\u30E3\\u30F3\\u30BB\\u30EB', items: '{count} \\u30A2\\u30A4\\u30C6\\u30E0', lang: '\\u65E5\\u672C\\u8A9E' },
+  en: { title: 'Internationalization', greeting: 'Hello! Welcome to our app.', btn: 'Get Started', locale: 'en-US' },
+  es: { title: 'Internacionalizaci\\u00f3n', greeting: '\\u00a1Hola! Bienvenido a nuestra app.', btn: 'Comenzar', locale: 'es-ES' },
+  ja: { title: '\\u56fd\\u969b\\u5316', greeting: '\\u3053\\u3093\\u306b\\u3061\\u306f\\uff01\\u30a2\\u30d7\\u30ea\\u3078\\u3088\\u3046\\u3053\\u305d\\u3002', btn: '\\u59cb\\u3081\\u308b', locale: 'ja-JP' }
 };
-let locale = 'en';
 
-// Step 1: Create t(key, params) function
-// Look up key in current locale translations
-// Replace {param} placeholders with values from params object
-// Fall back to English if key not found in current locale
+const sel = document.getElementById('locale-select');
+function updateLocale() {
+  // TODO: Update locale — update state, update DOM content
+}
+sel.addEventListener('change', updateLocale);
+updateLocale();`,
 
-// Step 2: Create render() function
-// Update all elements with data-i18n attribute using t() function
-// Update lang selector to show current locale
-// Update document direction (ltr/rtl) based on locale
+  'ng-a11y-focus-trap': `// Simulating Angular focus trap behavior
+const overlay = document.getElementById('trap-overlay');
+const dialog = document.getElementById('trap-dialog');
 
-// Step 3: Add change listener on locale selector to switch language and re-render
+function openTrap() {
+  // TODO: Open trap — prevent default, handle keyboard events, update styles
+}
 
-// Step 4: Save locale preference to localStorage, restore on page load`,
+function closeTrap() {
+  // TODO: Implement closeTrap
+}
 
-  'ng-a11y-focus-trap': `// Simulating Angular CDK FocusTrap directive
-const modal = document.getElementById('trap-modal');
-const openBtn = document.getElementById('trap-open');
-let previousFocus = null;
+document.getElementById('open-trap').addEventListener('click', openTrap);
+document.getElementById('trap-cancel').addEventListener('click', closeTrap);
+document.getElementById('trap-confirm').addEventListener('click', () => {
+  document.getElementById('trap-result').textContent = 'Confirmed: ' + document.getElementById('trap-input').value;
+  closeTrap();
+});`,
 
-// Step 1: Create getFocusableElements(container) function
-// Query all focusable elements: buttons, inputs, links, selects, textareas
-// Filter out disabled and hidden elements
-// Return ordered array of focusable elements
+  'ng-a11y-live-region': `// Simulating Angular LiveAnnouncer behavior
+let counter = 0;
+const polite = document.getElementById('polite-region');
+const assertive = document.getElementById('assertive-region');
+const log = document.getElementById('log');
 
-// Step 2: Create trapFocus(container) function
-// Get first and last focusable elements
-// Add keydown listener for Tab key
-// If Tab on last element, focus first element (wrap forward)
-// If Shift+Tab on first element, focus last element (wrap backward)
+document.getElementById('polite-btn').addEventListener('click', () => {
+  counter++;
+  const msg = 'Update #' + counter + ': Data refreshed successfully at ' + new Date().toLocaleTimeString();
+  polite.textContent = msg;
+  polite.classList.add('flash');
+  setTimeout(() => polite.classList.remove('flash'), 500);
+  log.innerHTML += '<div>Polite: ' + msg + '</div>';
+});
 
-// Step 3: Create openModal() function
-// Store document.activeElement as previousFocus
-// Show modal, call trapFocus(modal)
-// Focus the first focusable element inside the modal
+document.getElementById('assertive-btn').addEventListener('click', () => {
+  const msg = 'Alert: Immediate attention required!';
+  assertive.textContent = msg;
+  assertive.classList.add('flash');
+  setTimeout(() => assertive.classList.remove('flash'), 500);
+  log.innerHTML += '<div>Assertive: ' + msg + '</div>';
+});
 
-// Step 4: Create closeModal() function
-// Hide modal, remove Tab trap listener
-// Restore focus to previousFocus element
+document.getElementById('clear-btn').addEventListener('click', () => {
+  polite.textContent = '';
+  assertive.textContent = '';
+  log.innerHTML = '';
+});`,
 
-// Step 5: Add click listener on openBtn and close buttons, Escape key to close`,
-
-  'ng-a11y-live-region': `// Simulating Angular ARIA live region announcements
-const liveRegion = document.getElementById('live-region');
-const statusEl = document.getElementById('status-message');
-const logEl = document.getElementById('announcement-log');
-let announcements = [];
-
-// Step 1: Create announce(message, priority) function
-// Set liveRegion textContent to message
-// priority 'polite' -> aria-live="polite" (waits for pause in speech)
-// priority 'assertive' -> aria-live="assertive" (interrupts current speech)
-// Log announcement with timestamp
-
-// Step 2: Create clearAnnouncement() function
-// Clear liveRegion after a delay to allow screen reader to finish
-// Use setTimeout of 1000ms then set textContent to empty string
-
-// Step 3: Add click listeners on action buttons
-// Each triggers a different announcement with appropriate priority
-// "Save" -> polite "Changes saved", "Error" -> assertive "Error occurred"
-
-// Step 4: Render announcement log showing all past announcements with timestamps`,
-
-  'ng-offline-indicator': `// Simulating Angular offline detection service
-const indicator = document.getElementById('offline-indicator');
-const statusText = document.getElementById('connection-status');
-const queueEl = document.getElementById('offline-queue');
+  'ng-offline-indicator': `// Simulating Angular offline indicator behavior
+const banner = document.getElementById('status-banner');
+const icon = document.getElementById('status-icon');
+const text = document.getElementById('status-text');
+const pending = document.getElementById('pending-actions');
 let isOnline = true;
-let pendingActions = [];
+const queue = [];
 
-// Step 1: Create updateStatus(online) function
-// Set isOnline state, update indicator appearance
-// Online: green dot, "Connected" text
-// Offline: red dot, "Offline" text, show queued actions count
+function setOnline(online) {
+  // TODO: Set online — update state, update DOM content, handle timing
+}
 
-// Step 2: Create queueAction(action) function
-// If offline, add action to pendingActions array with timestamp
-// Update queue display showing pending action count and descriptions
+document.getElementById('go-offline').addEventListener('click', () => {
+  setOnline(false);
+  queue.push('action-' + Date.now());
+  pending.innerHTML = '<div class="item">' + queue.length + ' action(s) queued for sync</div>';
+});
+document.getElementById('go-online').addEventListener('click', () => setOnline(true));`,
 
-// Step 3: Create flushQueue() function
-// Process all pendingActions (simulate sending them)
-// Show progress as actions are processed
-// Clear queue when complete
+  'ng-websocket-chat': `// Simulating Angular WebSocket chat behavior
+const messages = document.getElementById('chat-messages');
+const input = document.getElementById('chat-input');
+const typing = document.getElementById('typing');
+const replies = ['That sounds great!', 'Tell me more about it.', 'Interesting approach!', 'I agree with that.', 'Let me think about it...'];
 
-// Step 4: Add click listener on #toggle-connection to simulate online/offline
-// When going online, automatically call flushQueue()
-// Add click listeners on action buttons that queue when offline`,
+function addMsg(text, type) {
+  // TODO: Add msg — update DOM content
+}
 
-  'ng-websocket-chat': `// Simulating Angular WebSocket chat with RxJS
-const messagesEl = document.getElementById('chat-messages');
-const chatInput = document.getElementById('chat-input');
-const sendBtn = document.getElementById('chat-send');
-const statusEl = document.getElementById('chat-status');
-let messages = [];
-let connected = false;
-const users = ['Alice', 'Bob', 'System'];
+function send() {
+  // TODO: Send — update state, update styles, handle timing
+}
 
-// Step 1: Create connect() function
-// Simulate WebSocket connection with setTimeout
-// Update statusEl to "Connected"
-// Start simulating incoming messages every 3-5 seconds
+document.getElementById('send-btn').addEventListener('click', send);
+input.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+addMsg('Welcome! How can I help you today?', 'received');`,
 
-// Step 2: Create sendMessage(text) function
-// Add message to messages array with sender "You", timestamp
-// Render the new message, scroll to bottom
-// Simulate echo response after short delay
-
-// Step 3: Create renderMessage(msg) function
-// Generate .chat-message element with sender avatar, name, text, and timestamp
-// Style differently based on sender (own messages right-aligned)
-
-// Step 4: Add click listener on sendBtn and Enter key on chatInput to send
-// Add click listener on #connect-btn to toggle connection
-
-// Step 5: Create typing indicator that shows when simulated user is "typing"`,
-
-  'ng-optimistic-update': `// Simulating Angular optimistic UI update pattern
-const listEl = document.getElementById('optimistic-list');
-const addBtn = document.getElementById('optimistic-add');
-let items = [
-  { id: 1, text: 'First item', status: 'synced' },
-  { id: 2, text: 'Second item', status: 'synced' },
-];
+  'ng-optimistic-update': `// Simulating Angular optimistic update behavior
+const items = [{ id: 1, text: 'Learn Angular', saved: true }, { id: 2, text: 'Build app', saved: true }];
 let nextId = 3;
+const listEl = document.getElementById('todo-list');
+const logEl = document.getElementById('opt-log');
 
-// Step 1: Create render() function
-// Render items with status indicator (synced=green check, pending=spinner, failed=red x)
-// Pending items shown with reduced opacity
-// Failed items show retry button
+function render() {
+  // TODO: Render — validate input, update DOM content
+}
 
-// Step 2: Create addItem(text) function
-// Immediately add item to list with status 'pending' and render (optimistic)
-// Simulate API call with setTimeout (1-2s delay)
-// On success (80% chance): update status to 'synced'
-// On failure (20% chance): update status to 'failed'
+document.getElementById('add-btn').addEventListener('click', () => {
+  const text = document.getElementById('new-todo').value.trim();
+  if (!text) return;
+  const item = { id: nextId++, text, saved: false };
+  items.push(item);
+  render();
+  logEl.innerHTML += '<div>Optimistically added: ' + text + '</div>';
+  document.getElementById('new-todo').value = '';
 
-// Step 3: Create retryItem(id) function
-// Set item status back to 'pending', re-render
-// Retry the simulated API call
+  setTimeout(() => {
+    if (document.getElementById('fail-toggle').checked) {
+      item.error = true;
+      logEl.innerHTML += '<div style="color:#ef4444">Failed! Rolling back: ' + text + '</div>';
+      setTimeout(() => { items.splice(items.indexOf(item), 1); render(); }, 1500);
+    } else {
+      item.saved = true;
+      logEl.innerHTML += '<div style="color:#22c55e">Saved: ' + text + '</div>';
+    }
+    render();
+  }, 1500);
+});
+render();`,
 
-// Step 4: Create deleteItem(id) function
-// Optimistically remove from list, attempt simulated API delete
-// On failure, restore the item with 'failed' status
-
-// Step 5: Add click listeners for add, delete, and retry actions`,
-
-  'ng-undo-manager': `// Simulating Angular undo/redo manager service
-const canvas = document.getElementById('undo-canvas');
-const historyEl = document.getElementById('undo-history');
+  'ng-undo-manager': `// Simulating Angular undo manager behavior
+const colors = ['#334155', '#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6'];
+const grid = Array(18).fill('#334155');
+const undoStack = [];
+const redoStack = [];
+const gridEl = document.getElementById('color-grid');
 const undoBtn = document.getElementById('undo-btn');
 const redoBtn = document.getElementById('redo-btn');
-let stateStack = [[]];
-let redoStack = [];
-let currentState = [];
-
-// Step 1: Create pushState(description) function
-// Deep-clone currentState and push to stateStack with description
-// Clear redoStack (new action invalidates future states)
-// Update history display and button states
-
-// Step 2: Create undo() function
-// If stateStack has more than 1 entry, pop last state
-// Push current state to redoStack
-// Restore the previous state, re-render canvas
-
-// Step 3: Create redo() function
-// If redoStack has entries, pop last entry
-// Push current state to stateStack
-// Restore the popped state, re-render canvas
-
-// Step 4: Create renderHistory() function
-// Show list of actions with timestamps in historyEl
-// Highlight the current position in the history
-
-// Step 5: Add keyboard shortcuts Ctrl+Z (undo) and Ctrl+Shift+Z (redo)
-// Add click listeners on undo/redo buttons and action buttons`,
-
-  'ng-clipboard-manager': `// Simulating Angular clipboard service with history
-const clipInput = document.getElementById('clip-input');
-const clipHistory = document.getElementById('clip-history');
-const clipPreview = document.getElementById('clip-preview');
-let history = JSON.parse(localStorage.getItem('ng-clipboard') || '[]');
-
-// Step 1: Create copyToClipboard(text) function
-// Use navigator.clipboard.writeText if available, fallback to execCommand
-// Add entry to history with text, timestamp, and type detection (url, email, code, text)
-// Save history to localStorage (keep last 20 entries)
-// Show brief "Copied!" notification
-
-// Step 2: Create render() function
-// Render history entries with type icon, truncated text preview, and timestamp
-// Add copy-again and delete buttons on each entry
-
-// Step 3: Add click listener on #copy-btn to copy input text
-// Add click listener on history items to re-copy or preview full text
-// Add click listener on #clear-history to clear all entries
-
-// Step 4: Add keyboard shortcut Ctrl+C detection to auto-capture clipboard content`,
-
-  'ng-hotkey-manager': `// Simulating Angular hotkey/keyboard shortcut manager
-const hotkeyList = document.getElementById('hotkey-list');
-const logEl = document.getElementById('hotkey-log');
-const shortcuts = [
-  { keys: 'Ctrl+S', action: 'Save', category: 'File' },
-  { keys: 'Ctrl+N', action: 'New File', category: 'File' },
-  { keys: 'Ctrl+F', action: 'Find', category: 'Edit' },
-  { keys: 'Ctrl+Shift+P', action: 'Command Palette', category: 'View' },
-  { keys: 'Alt+1', action: 'Tab 1', category: 'Navigation' },
-  { keys: 'Alt+2', action: 'Tab 2', category: 'Navigation' },
-];
-let recording = false;
-let recordTarget = null;
-
-// Step 1: Create renderShortcuts() function
-// Group shortcuts by category
-// Render each with key badges, action name, and an "Edit" button
-// Show visual key combo representation
-
-// Step 2: Create parseKeyEvent(e) function
-// Build key string from event (e.g., "Ctrl+Shift+S")
-// Handle Ctrl, Alt, Shift, Meta modifiers
-// Return the formatted key string
-
-// Step 3: Add keydown listener on document
-// Match pressed keys against registered shortcuts
-// Execute action and log to logEl with timestamp
-// Prevent default browser behavior for matched shortcuts
-
-// Step 4: Implement shortcut recording mode
-// When "Edit" is clicked, enter recording mode
-// Next key combo replaces that shortcut's keys
-// Show visual feedback during recording`,
-
-  'ng-idle-detector': `// Simulating Angular idle detection service
-const statusEl = document.getElementById('idle-status');
-const timerEl = document.getElementById('idle-timer');
-const logEl = document.getElementById('idle-log');
-const IDLE_TIMEOUT = 10000; // 10 seconds for demo
-const WARNING_BEFORE = 5000; // 5 second warning
-let idleTimer = null;
-let warningTimer = null;
-let isIdle = false;
-
-// Step 1: Create resetTimer() function
-// Clear existing timers
-// Set warning timer at (IDLE_TIMEOUT - WARNING_BEFORE)
-// Set idle timer at IDLE_TIMEOUT
-// Update status to "Active" with green indicator
-
-// Step 2: Create showWarning() function
-// Update status to "Warning - Idle soon" with yellow indicator
-// Start countdown display in timerEl
-
-// Step 3: Create onIdle() function
-// Set isIdle = true, update status to "Idle" with red indicator
-// Log idle event with timestamp
-// Show "Are you still there?" prompt
-
-// Step 4: Add activity listeners (mousemove, keydown, click, scroll) to reset timer
-// Throttle the reset calls to avoid excessive timer resets
-
-// Step 5: Add click listener on the prompt button to dismiss idle state`,
-
-  'ng-media-query-hook': `// Simulating Angular responsive breakpoint service
-const bpDisplay = document.getElementById('breakpoint-display');
-const bpIndicator = document.getElementById('bp-indicator');
-const layoutEl = document.getElementById('responsive-layout');
-
-const breakpoints = {
-  xs: { min: 0, max: 575, label: 'Extra Small', icon: '\\u{1F4F1}' },
-  sm: { min: 576, max: 767, label: 'Small', icon: '\\u{1F4F1}' },
-  md: { min: 768, max: 991, label: 'Medium', icon: '\\u{1F4BB}' },
-  lg: { min: 992, max: 1199, label: 'Large', icon: '\\u{1F5A5}' },
-  xl: { min: 1200, max: Infinity, label: 'Extra Large', icon: '\\u{1F5A5}' },
-};
-let currentBp = '';
-
-// Step 1: Create getCurrentBreakpoint() function
-// Read window.innerWidth
-// Find which breakpoint range contains the current width
-// Return the breakpoint key
-
-// Step 2: Create updateDisplay() function
-// Get current breakpoint, update indicator with name and icon
-// Highlight the active breakpoint in the breakpoint bar
-// Render layout content appropriate for the breakpoint
-
-// Step 3: Add resize listener with debounce to call updateDisplay
-// Use requestAnimationFrame or setTimeout for throttling
-
-// Step 4: Create manual width simulator with slider
-// Allow testing different breakpoints without resizing the browser`,
-
-  'ng-portal-demo': `// Simulating Angular CDK Portal for rendering content in different containers
-const portalOutlet1 = document.getElementById('outlet-1');
-const portalOutlet2 = document.getElementById('outlet-2');
-const sourceContent = document.getElementById('portal-source');
-let activeOutlet = null;
-
-// Step 1: Create attachPortal(content, outlet) function
-// Move or clone content into the target outlet
-// Add entrance animation
-// Track activeOutlet reference
-
-// Step 2: Create detachPortal() function
-// Remove content from current outlet with exit animation
-// Set activeOutlet to null
-
-// Step 3: Create transferPortal(fromOutlet, toOutlet) function
-// Animate content leaving fromOutlet
-// After animation, move content to toOutlet with entrance animation
-
-// Step 4: Add click listeners on outlet selector buttons
-// Attach to outlet 1, attach to outlet 2, detach, transfer
-// Show visual indicator of which outlet is active`,
-
-  'ng-error-boundary': `// Simulating Angular ErrorHandler service with error boundary
-const appContent = document.getElementById('app-content');
-const errorDisplay = document.getElementById('error-display');
-const errorLog = document.getElementById('error-log');
-let errors = [];
-
-// Step 1: Create handleError(error, context) function
-// Capture error details: message, stack trace, component context, timestamp
-// Add to errors array
-// Determine severity (warning, error, fatal) based on error type
-// Show appropriate UI: inline warning, error banner, or full error boundary
-
-// Step 2: Create renderErrorBoundary(error) function
-// Replace appContent with friendly error message
-// Show error details in collapsible section
-// Provide "Retry" and "Report" buttons
-
-// Step 3: Create renderErrorLog() function
-// Display all captured errors in errorLog with severity badges
-// Allow filtering by severity, clearing the log
-
-// Step 4: Add click listeners on trigger buttons to simulate different error types
-// Add click listener on "Retry" to reset error state and re-render app content`,
-
-  'ng-retry-mechanism': `// Simulating Angular HTTP retry/backoff interceptor
-const resultEl = document.getElementById('retry-result');
-const logEl = document.getElementById('retry-log');
-const progressEl = document.getElementById('retry-progress');
-let failRate = 0.7; // 70% chance of failure for demo
-
-// Step 1: Create simulateRequest(url) function
-// Return a Promise that resolves or rejects randomly based on failRate
-// Add artificial delay (200-500ms) to simulate network latency
-
-// Step 2: Create retryWithBackoff(fn, maxRetries, baseDelay) function
-// Call fn, if it fails:
-//   - Log the attempt number and error
-//   - Wait for baseDelay * 2^attempt ms (exponential backoff)
-//   - Retry up to maxRetries times
-//   - Show progress bar and attempt counter
-// If all retries exhausted, throw final error
-
-// Step 3: Create render(result) function
-// Show success/failure state with details
-// Display timing information (total time, attempts)
-// Show backoff timeline visualization
-
-// Step 4: Add click listener on #retry-btn to initiate a request with retry
-// Add slider to adjust failRate for testing different scenarios`,
-
-  'ng-virtual-list-advanced': `// Simulating Angular CDK advanced virtual scroll with variable height items
-const viewport = document.getElementById('adv-viewport');
-const scrollContent = document.getElementById('adv-scroll-content');
-const statsEl = document.getElementById('adv-stats');
-const TOTAL = 5000;
-let items = [];
-let scrollTop = 0;
-let totalHeight = 0;
-let positions = [];
-
-// Step 1: Create generateItems() function
-// Generate TOTAL items with variable heights (40-120px based on content)
-// Pre-calculate positions array with { top, height } for each item
-// Set totalHeight to sum of all heights
-
-// Step 2: Create getVisibleRange() function
-// Binary search positions array to find first visible item for current scrollTop
-// Calculate last visible item based on viewport height plus buffer
-// Return { start, end } indices
-
-// Step 3: Create render() function
-// Get visible range, generate HTML only for visible items
-// Position items absolutely using pre-calculated top values
-// Update scrollContent height to totalHeight
-// Update stats display with visible count and range
-
-// Step 4: Add scroll listener on viewport with requestAnimationFrame throttling
-// Call render on each scroll frame
-
-// Step 5: Call generateItems() and render() on init`,
-
-  // ---------------------------------------------------------------------------
-  // ui-components starters
-  // ---------------------------------------------------------------------------
-
-  'ng-spinner': `// Simulating Angular loading spinner component with variants
-const spinnerArea = document.getElementById('spinner-area');
-const sizeSelect = document.getElementById('spinner-size');
-const typeSelect = document.getElementById('spinner-type');
-
-// Step 1: Create renderSpinner(type, size, color) function
-// Based on type, generate different spinner HTML:
-//   'circle': rotating circle with arc gap (border-based)
-//   'dots': three bouncing dots with staggered animation
-//   'pulse': pulsing circle that grows and fades
-//   'bars': vertical bars with wave animation
-// Apply size (sm=20px, md=40px, lg=60px) and color
-
-// Step 2: Create render() function
-// Get current type and size from selects
-// Render spinner in spinnerArea with label text below
-
-// Step 3: Add change listeners on sizeSelect and typeSelect to re-render
-
-// Step 4: Add click listener on #toggle-overlay to show spinner as full overlay
-// Dismiss overlay on click or after 3 seconds`,
-
-  'ng-chip': `// Simulating Angular Material chip/tag component
-const chipContainer = document.getElementById('chip-container');
-const chipInput = document.getElementById('chip-input');
-let chips = ['Angular', 'TypeScript', 'RxJS'];
-const presets = ['Angular','React','Vue','Svelte','TypeScript','JavaScript','Node','Deno'];
-
-// Step 1: Create render() function
-// Render each chip as a .chip span with text and remove (x) button
-// Add 'selected' class to any chip that matches a preset
-// Show chip count
-
-// Step 2: Add keydown listener on chipInput
-// Enter: add new chip if non-empty and not duplicate
-// Backspace on empty input: remove last chip
-// Comma or Tab: add chip and prevent default
-
-// Step 3: Add click listener on chipContainer (event delegation)
-// Click on .remove-btn removes that chip
-// Click on chip itself toggles 'selected' class
-
-// Step 4: Add input listener for autocomplete suggestions from presets
-// Show dropdown of matching presets below input`,
-
-  'ng-divider': `// Simulating Angular Material divider component with variants
-const dividerDemo = document.getElementById('divider-demo');
-const controls = document.getElementById('divider-controls');
-
-// Step 1: Create renderDivider(options) function
-// options: { type, orientation, inset, label }
-// type 'solid': standard horizontal or vertical line
-// type 'dashed': dashed line pattern
-// type 'dotted': dotted line pattern
-// orientation 'horizontal' or 'vertical'
-// If inset, add left/right margins
-// If label provided, show text centered on the divider
-
-// Step 2: Create render() function
-// Show examples of all divider variants in dividerDemo
-// Horizontal dividers between content blocks
-// Vertical divider between side-by-side columns
-// Labeled dividers ("OR", "Section Break", etc.)
-
-// Step 3: Add click listeners on control toggles to update divider options and re-render
-
-// Step 4: Show responsive behavior - vertical dividers become horizontal on narrow screens`,
-
-  'ng-alert-banner': `// Simulating Angular alert/banner notification component
-const bannerArea = document.getElementById('banner-area');
-const bannerTypes = ['info', 'success', 'warning', 'error'];
-
-// Step 1: Create showBanner(type, message, options) function
-// Generate .alert-banner with type class (info=blue, success=green, warning=yellow, error=red)
-// Include icon based on type, message text, and optional action button
-// options: { dismissible, autoClose, duration, position }
-// If dismissible, show close (x) button
-// If autoClose, hide after duration ms
-
-// Step 2: Create dismissBanner(bannerEl) function
-// Add exit animation (slide up or fade out)
-// Remove element after animation completes
-
-// Step 3: Add click listener on #show-banner-btn to create a new banner
-// Read type and message from form inputs
-// Stack multiple banners vertically
-
-// Step 4: Add click listener on #dismiss-all to remove all active banners`,
-
-  'ng-callout': `// Simulating Angular callout/admonition component
-const calloutArea = document.getElementById('callout-area');
-const callouts = [
-  { type: 'info', title: 'Information', text: 'This feature requires Angular 16 or later.' },
-  { type: 'tip', title: 'Tip', text: 'Use trackBy with ngFor for better performance with large lists.' },
-  { type: 'warning', title: 'Warning', text: 'This API is deprecated and will be removed in the next major version.' },
-  { type: 'danger', title: 'Danger', text: 'Never expose API keys in client-side code.' },
-];
-
-// Step 1: Create renderCallout(callout) function
-// Generate .callout element with type-specific styling
-// info=blue, tip=green, warning=amber, danger=red
-// Include icon, title, and text content
-// Add optional collapsible behavior for long content
-
-// Step 2: Create render() function
-// Render all callout examples in calloutArea
-
-// Step 3: Add click listener on callout headers to toggle expanded/collapsed state
-
-// Step 4: Add click listener on #add-callout to create custom callout from form inputs`,
-
-  'ng-empty-state-v2': `// Simulating Angular empty state component with illustrations and actions
-const emptyContainer = document.getElementById('empty-v2');
-const templates = {
-  'no-results': { icon: '\\u{1F50D}', title: 'No results found', desc: 'Try adjusting your filters or search terms.', actions: ['Clear Filters', 'Browse All'] },
-  'no-data': { icon: '\\u{1F4E6}', title: 'No items yet', desc: 'Create your first item to get started.', actions: ['Create Item'] },
-  'error': { icon: '\\u{26A0}', title: 'Something went wrong', desc: 'We encountered an error loading your data.', actions: ['Retry', 'Contact Support'] },
-  'empty-cart': { icon: '\\u{1F6D2}', title: 'Your cart is empty', desc: 'Browse our products and add items to your cart.', actions: ['Browse Products'] },
-  'offline': { icon: '\\u{1F4F4}', title: 'You are offline', desc: 'Check your connection and try again.', actions: ['Retry'] },
-};
-
-// Step 1: Create renderEmpty(templateKey) function
-// Get template data, generate empty state with large icon, title, description
-// Render action buttons styled appropriately (primary/secondary)
-// Add subtle animation (float or fade-in)
-
-// Step 2: Add click listener on template selector to switch between empty states
-
-// Step 3: Add click listener on action buttons
-// Each action simulates its behavior (clear filters, retry, etc.)
-// Show brief loading state, then transition to content or same empty state
-
-// Step 4: Support custom empty state via form inputs (icon, title, desc, actions)`,
-
-  'ng-avatar-group': `// Simulating Angular avatar group/stack component
-const groupEl = document.getElementById('avatar-group');
-const controls = document.getElementById('group-controls');
-const users = [
-  { name: 'Alice', color: '#ef4444' },
-  { name: 'Bob', color: '#3b82f6' },
-  { name: 'Carol', color: '#22c55e' },
-  { name: 'Dave', color: '#f59e0b' },
-  { name: 'Eve', color: '#a855f7' },
-  { name: 'Frank', color: '#ec4899' },
-  { name: 'Grace', color: '#06b6d4' },
-  { name: 'Hank', color: '#84cc16' },
-];
-let maxVisible = 4;
-
-// Step 1: Create render() function
-// Show first maxVisible avatars overlapping (negative margin)
-// If more users than maxVisible, show "+N" overflow indicator
-// Each avatar shows initial letter on colored circle background
-// Add hover effect to spread avatars apart
-
-// Step 2: Add hover listener on the overflow indicator
-// Show tooltip or dropdown listing remaining hidden users
-
-// Step 3: Add click listener on controls to change maxVisible (3, 4, 5, all)
-// Re-render with new visibility setting
-
-// Step 4: Add click listener on individual avatars to select/highlight them`,
-
-  'ng-breadcrumb-overflow': `// Simulating Angular breadcrumb with overflow handling
-const breadcrumbEl = document.getElementById('breadcrumb-overflow');
-const paths = ['Home', 'Documents', 'Projects', 'Web Development', 'Angular', 'Components', 'UI Library', 'Current Page'];
-let maxItems = 4;
-
-// Step 1: Create render() function
-// If paths length <= maxItems, show all breadcrumb items
-// If paths length > maxItems, show first item, "..." dropdown, and last (maxItems-2) items
-// Each item is clickable, last item is styled as current (non-clickable)
-// Add separator (/ or >) between items
-
-// Step 2: Create renderOverflowMenu(hiddenItems) function
-// Show dropdown menu listing the hidden middle items
-// Each item in the dropdown navigates when clicked
-
-// Step 3: Add click listener on breadcrumb items to navigate
-// Update the paths array to truncate at clicked position
-// Re-render breadcrumbs
-
-// Step 4: Add resize observer to dynamically adjust maxItems based on container width`,
-
-  'ng-truncated-text': `// Simulating Angular text truncation directive with expand/collapse
-const textItems = document.querySelectorAll('.truncate-item');
-const CHAR_LIMIT = 100;
-const LINE_LIMIT = 3;
-
-// Step 1: Create truncateText(el, mode) function
-// mode 'chars': truncate text at CHAR_LIMIT characters, add ellipsis
-// mode 'lines': use CSS line-clamp to limit visible lines
-// Add "Read more" button if text exceeds limit
-// Store full text in data attribute
-
-// Step 2: Create expandText(el) function
-// Show full text content with smooth height transition
-// Change button to "Read less"
-
-// Step 3: Create collapseText(el) function
-// Re-truncate text with reverse transition
-// Change button to "Read more"
-
-// Step 4: Add click listener on "Read more/less" buttons to toggle expansion
-// Initialize all .truncate-item elements on page load`,
-
-  'ng-responsive-grid': `// Simulating Angular responsive grid layout component
-const gridEl = document.getElementById('responsive-grid');
-const gridItems = Array.from({ length: 12 }, function(_, i) { return { id: i + 1, title: 'Item ' + (i + 1), height: Math.floor(Math.random() * 100) + 80 }; });
-let columns = 3;
-let gap = 16;
-
-// Step 1: Create render() function
-// Set grid-template-columns to "repeat(columns, 1fr)" with gap
-// Render items as colored cards with title and varying heights
-// Add responsive behavior: 4 cols on xl, 3 on lg, 2 on md, 1 on sm
-
-// Step 2: Create updateLayout(cols) function
-// Animate transition between column layouts
-// Re-render grid with new column count
-
-// Step 3: Add click listener on column selector buttons (1-4) to set columns
-// Add range slider for gap adjustment
-
-// Step 4: Add resize listener to auto-adjust columns based on container width`,
-
-  'ng-masonry-layout': `// Simulating Angular masonry/waterfall layout component
-const masonryEl = document.getElementById('masonry-grid');
-const items = Array.from({ length: 15 }, function(_, i) {
-  return { id: i + 1, title: 'Card ' + (i + 1), height: Math.floor(Math.random() * 150) + 100, color: ['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7'][i % 5] };
+const info = document.getElementById('stack-info');
+
+function render() {
+  // TODO: Render — update state, add item, update DOM content
+}
+
+undoBtn.addEventListener('click', () => {
+  const action = undoStack.pop();
+  if (action) { redoStack.push(action); grid[action.idx] = action.oldColor; render(); }
 });
-let columnCount = 3;
 
-// Step 1: Create layout() function
-// Calculate column widths based on container width and columnCount
-// Distribute items across columns, placing each item in the shortest column
-// Position items absolutely with calculated top and left values
+redoBtn.addEventListener('click', () => {
+  const action = redoStack.pop();
+  if (action) { undoStack.push(action); grid[action.idx] = action.newColor; render(); }
+});
 
-// Step 2: Create render() function
-// Generate .masonry-item elements with title and colored background
-// Set each item's height from data
-// Call layout() to position items
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undoBtn.click(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redoBtn.click(); }
+});
 
-// Step 3: Add resize listener to recalculate layout
-// Use requestAnimationFrame for smooth repositioning
+render();`,
 
-// Step 4: Add click listener on column buttons to change columnCount and re-layout
-// Animate items moving to new positions`,
+  'ng-clipboard-manager': `// Simulating Angular clipboard manager behavior
+const history = [];
+const historyEl = document.getElementById('clip-history');
+const clipInput = document.getElementById('clip-input');
 
-  'ng-aspect-ratio-box': `// Simulating Angular aspect ratio container component
-const demoArea = document.getElementById('aspect-demo');
-const ratios = ['1:1', '4:3', '16:9', '21:9', '3:4', '2:3'];
-let activeRatio = '16:9';
+function addToHistory(text) {
+  // TODO: Implement addToHistory
+}
 
-// Step 1: Create renderBox(ratio) function
-// Parse ratio string into width and height values
-// Use padding-top percentage trick: (height/width) * 100%
-// Render content inside the aspect ratio container
-// Show the ratio label and calculated percentage
+function renderHistory() {
+  // TODO: Render history — update state, update DOM content, attach event listeners
+}
 
-// Step 2: Create render() function
-// Show the active ratio box with sample content (image placeholder, video frame)
-// Display all ratio options as small preview thumbnails
+document.getElementById('clip-copy').addEventListener('click', () => {
+  const text = clipInput.value;
+  if (text) {
+    navigator.clipboard.writeText(text);
+    addToHistory(text);
+    clipInput.value = '';
+  }
+});`,
 
-// Step 3: Add click listener on ratio selector buttons to change active ratio
-// Animate the box transitioning between ratios
+  'ng-hotkey-manager': `// Simulating Angular hotkey manager behavior
+const shortcuts = [
+  { keys: 'Ctrl+S', action: 'Save', handler: () => 'Document saved!' },
+  { keys: 'Ctrl+N', action: 'New File', handler: () => 'New file created!' },
+  { keys: 'Ctrl+F', action: 'Find', handler: () => 'Find panel opened!' },
+  { keys: 'Ctrl+P', action: 'Print', handler: () => 'Print dialog opened!' },
+  { keys: '?', action: 'Show shortcuts', handler: null },
+];
 
-// Step 4: Add resize listener to demonstrate responsive behavior
-// Box maintains aspect ratio at any container width`,
+const panel = document.getElementById('hotkey-panel');
+const list = document.getElementById('hotkey-list');
+const output = document.getElementById('hotkey-output');
 
-  'ng-scroll-snap': `// Simulating Angular scroll snap container component
+list.innerHTML = shortcuts.map(s => '<div class="hotkey-item"><span class="action">' + s.action + '</span><span class="keys">' + s.keys + '</span></div>').join('');
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === '?') { panel.style.display = panel.style.display === 'none' ? 'block' : 'none'; return; }
+  for (const s of shortcuts) {
+    const parts = s.keys.split('+');
+    const key = parts[parts.length - 1];
+    const needCtrl = parts.includes('Ctrl');
+    if ((needCtrl ? (e.ctrlKey || e.metaKey) : true) && e.key.toUpperCase() === key) {
+      e.preventDefault();
+      if (s.handler) output.textContent = s.handler();
+      return;
+    }
+  }
+});`,
+
+  'ng-idle-detector': `// Simulating Angular idle detector behavior
+let idleTime = 0;
+let sessionTime = 30;
+const stateEl = document.getElementById('idle-state');
+const idleTimerEl = document.getElementById('idle-timer');
+const sessionTimerEl = document.getElementById('session-timer');
+const warning = document.getElementById('idle-warning');
+
+function resetIdle() {
+  // TODO: Reset idle — update DOM content, update styles
+}
+
+const timer = setInterval(() => {
+  idleTime++;
+  sessionTime = Math.max(0, sessionTime - 1);
+  idleTimerEl.textContent = idleTime + 's';
+  sessionTimerEl.textContent = sessionTime + 's';
+  if (idleTime >= 10) {
+    stateEl.textContent = 'Idle';
+    stateEl.className = 'state idle';
+    warning.style.display = 'block';
+  }
+  if (sessionTime <= 0) {
+    stateEl.textContent = 'Expired';
+    stateEl.className = 'state expired';
+    clearInterval(timer);
+  }
+}, 1000);
+
+['mousemove', 'keydown', 'click'].forEach(e => document.addEventListener(e, resetIdle));
+document.getElementById('extend-btn').addEventListener('click', resetIdle);`,
+
+  'ng-media-query-hook': `// Simulating Angular BreakpointObserver behavior
+function updateBreakpoint() {
+  // TODO: Update breakpoint — toggle CSS classes, update DOM content
+}
+
+window.addEventListener('resize', updateBreakpoint);
+updateBreakpoint();`,
+
+  'ng-portal-demo': `// Simulating Angular CDK Portal behavior
+const outlet = document.getElementById('portal-outlet');
+const state = document.getElementById('portal-state');
+let isPortalActive = false;
+const originalContent = outlet.innerHTML;
+
+document.getElementById('portal-btn').addEventListener('click', () => {
+  isPortalActive = !isPortalActive;
+  if (isPortalActive) {
+    outlet.innerHTML = '<div class="portal-content">This content was teleported from the source component via a Portal!</div>';
+    state.textContent = 'visible in target';
+    state.style.color = '#22c55e';
+  } else {
+    outlet.innerHTML = originalContent;
+    state.textContent = 'hidden';
+    state.style.color = '#ef4444';
+  }
+});`,
+
+  'ng-error-boundary': `// Simulating Angular error boundary behavior
+const boundary = document.getElementById('error-boundary');
+const normal = document.getElementById('normal-content');
+const fallback = document.getElementById('error-fallback');
+const logEl = document.getElementById('error-log');
+
+document.getElementById('trigger-error').addEventListener('click', () => {
+  const error = 'TypeError: Cannot read property "data" of undefined';
+  boundary.classList.add('error');
+  normal.style.display = 'none';
+  fallback.style.display = 'block';
+  document.getElementById('error-msg').textContent = error;
+  logEl.innerHTML += '<div>Error caught: ' + error + '</div>';
+});
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  boundary.classList.remove('error');
+  fallback.style.display = 'none';
+  normal.style.display = 'block';
+  document.getElementById('risky-widget').textContent = 'Recovered!';
+  logEl.innerHTML += '<div style="color:#22c55e">Component recovered after retry</div>';
+});`,
+
+  'ng-retry-mechanism': `// Simulating Angular retry mechanism with exponential backoff
+const logEl = document.getElementById('retry-log');
+const resultEl = document.getElementById('retry-result');
+const MAX_RETRIES = 5;
+
+document.getElementById('start-retry').addEventListener('click', () => {
+  logEl.innerHTML = '';
+  resultEl.textContent = '';
+  resultEl.className = 'retry-result';
+  const failRate = parseInt(document.getElementById('fail-rate').value) / 100;
+  let attempt = 0;
+
+  function tryRequest() {
+    attempt++;
+    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 8000);
+    logEl.innerHTML += '<div class="attempt">Attempt ' + attempt + '/' + MAX_RETRIES + '...</div>';
+
+    setTimeout(() => {
+      const success = Math.random() > failRate;
+      if (success) {
+        logEl.innerHTML += '<div class="success">&#10003; Success! Data received.</div>';
+        resultEl.textContent = 'Request succeeded on attempt ' + attempt;
+        resultEl.className = 'retry-result ok';
+      } else if (attempt < MAX_RETRIES) {
+        logEl.innerHTML += '<div class="fail">&#10007; Failed. Retrying in ' + (delay * 2 / 1000) + 's...</div>';
+        setTimeout(tryRequest, delay);
+      } else {
+        logEl.innerHTML += '<div class="fail">&#10007; All retries exhausted.</div>';
+        resultEl.textContent = 'Request failed after ' + MAX_RETRIES + ' attempts';
+        resultEl.className = 'retry-result fail';
+      }
+      logEl.scrollTop = logEl.scrollHeight;
+    }, 500);
+  }
+
+  tryRequest();
+});`,
+
+  'ng-virtual-list-advanced': `// Simulating Angular advanced virtual list behavior
+const TOTAL = 10000;
+const ITEM_HEIGHT = 38;
+const container = document.getElementById('vl-container');
+const spacer = document.getElementById('vl-spacer');
+const content = document.getElementById('vl-content');
+const renderedEl = document.getElementById('vl-rendered');
+const scrollEl = document.getElementById('vl-scroll');
+
+spacer.style.height = TOTAL * ITEM_HEIGHT + 'px';
+
+function renderVisible() {
+  // TODO: Render visible — update DOM content, update styles, calculate values
+}
+
+container.addEventListener('scroll', renderVisible);
+renderVisible();
+
+document.getElementById('vl-top').addEventListener('click', () => container.scrollTo({ top: 0, behavior: 'smooth' }));
+document.getElementById('vl-bottom').addEventListener('click', () => container.scrollTo({ top: TOTAL * ITEM_HEIGHT, behavior: 'smooth' }));`,
+
+  'ng-spinner': `// Simulating Angular spinner behavior
+// Spinners are purely CSS animation-driven
+document.querySelectorAll('.spinner-card').forEach(card => {
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', () => {
+    const spinner = card.querySelector('.spinner');
+    spinner.style.animationPlayState = spinner.style.animationPlayState === 'paused' ? 'running' : 'paused';
+    if (spinner.querySelectorAll('span').length) {
+      spinner.querySelectorAll('span').forEach(s => s.style.animationPlayState = spinner.style.animationPlayState);
+    }
+  });
+});`,
+
+  'ng-chip': `// Simulating Angular chip behavior
+const deletableItems = ['Removable', 'Click X', 'To Delete', 'Me Too'];
+const container = document.getElementById('deletable-chips');
+
+function renderDeletable() {
+  // TODO: Render deletable — update state, remove item, update DOM content
+}
+renderDeletable();`,
+
+  'ng-divider': `// Simulating Angular divider behavior
+// Dividers are purely CSS-driven
+document.querySelectorAll('.divider, .divider-labeled, .divider-vertical').forEach(d => {
+  d.style.transition = 'background 0.3s';
+  d.addEventListener('mouseenter', () => {
+    if (d.classList.contains('divider')) d.style.background = '#ef4444';
+    else if (d.classList.contains('divider-vertical')) d.style.background = '#ef4444';
+  });
+  d.addEventListener('mouseleave', () => {
+    if (d.classList.contains('divider')) d.style.background = '#334155';
+    else if (d.classList.contains('divider-vertical')) d.style.background = '#334155';
+  });
+});`,
+
+  'ng-alert-banner': `// Simulating Angular alert banner behavior
+const alertsHTML = document.getElementById('alerts').innerHTML;
+
+document.querySelectorAll('.alert-close').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const alert = btn.closest('.alert');
+    alert.style.opacity = '0';
+    alert.style.maxHeight = '0';
+    alert.style.padding = '0';
+    alert.style.margin = '0';
+    setTimeout(() => alert.remove(), 300);
+  });
+});
+
+document.getElementById('reset-alerts').addEventListener('click', () => {
+  document.getElementById('alerts').innerHTML = alertsHTML;
+  document.querySelectorAll('.alert-close').forEach(btn => {
+    btn.addEventListener('click', () => { const a = btn.closest('.alert'); a.style.opacity='0'; setTimeout(() => a.remove(), 300); });
+  });
+});`,
+
+  'ng-callout': `// Simulating Angular callout behavior
+document.querySelectorAll('.callout').forEach(c => {
+  c.style.cursor = 'pointer';
+  c.style.transition = 'transform 0.15s';
+  c.addEventListener('click', () => {
+    c.style.transform = c.style.transform === 'scale(1.02)' ? 'scale(1)' : 'scale(1.02)';
+  });
+});`,
+
+  'ng-empty-state-v2': `// Simulating Angular empty state behavior
+const states = {
+  inbox: { icon: '&#128235;', title: 'Your inbox is empty', desc: 'When you receive messages, they will appear here.', cta: 'Compose Message' },
+  search: { icon: '&#128269;', title: 'No results found', desc: 'Try adjusting your search terms or filters.', cta: 'Clear Filters' },
+  error: { icon: '&#9888;', title: 'Something went wrong', desc: 'We could not load the data. Please try again.', cta: 'Retry' }
+};
+
+const display = document.getElementById('empty-display');
+
+function showEmpty(type) {
+  // TODO: Show empty — update DOM content
+}
+
+document.querySelectorAll('.empty-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.empty-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    showEmpty(tab.dataset.type);
+  });
+});
+showEmpty('inbox');`,
+
+  'ng-avatar-group': `// Simulating Angular avatar group behavior
+const users = [
+  { initials: 'AJ', color: '#ef4444' }, { initials: 'BS', color: '#3b82f6' },
+  { initials: 'CD', color: '#22c55e' }, { initials: 'DE', color: '#f59e0b' },
+  { initials: 'EF', color: '#8b5cf6' }, { initials: 'GH', color: '#ec4899' },
+  { initials: 'IJ', color: '#06b6d4' }, { initials: 'KL', color: '#84cc16' },
+];
+
+function renderGroup(elId, maxShow) {
+  // TODO: Render group — update DOM content
+}
+
+renderGroup('ag-small', 5);
+renderGroup('ag-medium', 4);
+renderGroup('ag-large', 3);`,
+
+  'ng-breadcrumb-overflow': `// Simulating Angular breadcrumb overflow behavior
+let path = ['Home', 'Projects', 'Angular', 'Components'];
+const MAX_VISIBLE = 3;
+const bcEl = document.getElementById('breadcrumb');
+
+function renderBreadcrumb() {
+  // TODO: Render breadcrumb — update state, update DOM content, handle timing
+}
+
+document.getElementById('add-level').addEventListener('click', () => { path.push('Level ' + path.length); renderBreadcrumb(); });
+document.getElementById('reset-bc').addEventListener('click', () => { path = ['Home', 'Projects', 'Angular', 'Components']; renderBreadcrumb(); });
+renderBreadcrumb();`,
+
+  'ng-truncated-text': `// Simulating Angular truncated text behavior
+const text = document.getElementById('trunc-text');
+const toggle = document.getElementById('trunc-toggle');
+let expanded = false;
+
+toggle.addEventListener('click', () => {
+  expanded = !expanded;
+  text.classList.toggle('clamped', !expanded);
+  toggle.textContent = expanded ? 'Read less' : 'Read more';
+});`,
+
+  'ng-responsive-grid': `// Simulating Angular responsive grid behavior
+const grid = document.getElementById('grid-demo');
+const colSelect = document.getElementById('col-select');
+const gapSelect = document.getElementById('gap-select');
+
+colSelect.addEventListener('change', updateGrid);
+gapSelect.addEventListener('change', updateGrid);
+
+function updateGrid() {
+  // TODO: Update grid — update styles
+}`,
+
+  'ng-masonry-layout': `// Simulating Angular masonry layout behavior
+const items = [
+  { title: 'Getting Started', text: 'Set up your Angular development environment with the CLI.', tag: 'beginner' },
+  { title: 'Components', text: 'Build reusable UI components with templates, styles, and logic encapsulated together.', tag: 'core' },
+  { title: 'Services', text: 'Create injectable services for shared business logic and data access.', tag: 'core' },
+  { title: 'Routing', text: 'Navigate between views with the Angular Router. Configure lazy loading for optimal bundle sizes and set up route guards for access control.', tag: 'navigation' },
+  { title: 'Forms', text: 'Reactive and template-driven forms.', tag: 'forms' },
+  { title: 'HTTP', text: 'Use HttpClient to communicate with backend APIs. Handle request/response interceptors and error handling patterns.', tag: 'data' },
+  { title: 'Testing', text: 'Unit test with Jasmine and Karma.', tag: 'testing' },
+  { title: 'Signals', text: 'Fine-grained reactivity with Angular Signals for better performance.', tag: 'advanced' },
+  { title: 'SSR', text: 'Server-side rendering with Angular Universal.', tag: 'advanced' },
+];
+
+document.getElementById('masonry').innerHTML = items.map(i =>
+  '<div class="masonry-item"><h4>' + i.title + '</h4><p>' + i.text + '</p><span class="tag">' + i.tag + '</span></div>'
+).join('');`,
+
+  'ng-aspect-ratio-box': `// Simulating Angular aspect ratio box behavior
+document.querySelectorAll('.ar-box').forEach(box => {
+  box.addEventListener('mouseenter', () => { box.style.borderColor = '#ef4444'; });
+  box.addEventListener('mouseleave', () => { box.style.borderColor = '#334155'; });
+});`,
+
+  'ng-scroll-snap': `// Simulating Angular scroll snap behavior
 const snapContainer = document.getElementById('snap-container');
-const indicators = document.getElementById('snap-indicators');
-const slides = [
-  { title: 'Welcome', content: 'Discover our features', bg: '#1e293b' },
-  { title: 'Features', content: 'Built for performance', bg: '#172135' },
-  { title: 'Pricing', content: 'Plans for every team', bg: '#1a2332' },
-  { title: 'Get Started', content: 'Try it free today', bg: '#1e293b' },
-];
-let activeSlide = 0;
+const snapItems = snapContainer.querySelectorAll('.snap-item');
+const dotsEl = document.getElementById('snap-dots');
 
-// Step 1: Create render() function
-// Generate .snap-slide elements with scroll-snap-align: start
-// Set snapContainer with scroll-snap-type: x mandatory
-// Render dot indicators below
+dotsEl.innerHTML = [...snapItems].map((_, i) => '<div class="snap-dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '"></div>').join('');
 
-// Step 2: Add scroll listener on snapContainer
-// Detect which slide is in view based on scrollLeft and slide width
-// Update activeSlide and indicator dots
+dotsEl.querySelectorAll('.snap-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    snapItems[parseInt(dot.dataset.idx)].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  });
+});
 
-// Step 3: Add click listener on indicators to scroll to specific slide
-// Use scrollTo with smooth behavior
+snapContainer.addEventListener('scroll', () => {
+  const idx = Math.round(snapContainer.scrollLeft / snapContainer.clientWidth);
+  dotsEl.querySelectorAll('.snap-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+});`,
 
-// Step 4: Add touch/swipe gesture detection for mobile navigation`,
+  'ng-parallax': `// Simulating Angular parallax scroll behavior
+const pxContainer = document.getElementById('parallax-container');
+const pxBg = document.getElementById('parallax-bg');
 
-  'ng-parallax': `// Simulating Angular parallax scrolling effect directive
-const parallaxContainer = document.getElementById('parallax-container');
-const layers = [
-  { speed: 0.2, content: 'Background Layer', bg: '#0f172a' },
-  { speed: 0.5, content: 'Middle Layer', bg: '#1e293b' },
-  { speed: 0.8, content: 'Foreground Layer', bg: '#334155' },
-];
+pxContainer.addEventListener('scroll', () => {
+  const speed = 0.4;
+  pxBg.style.transform = 'translateY(' + (-pxContainer.scrollTop * speed) + 'px)';
+});`,
 
-// Step 1: Create render() function
-// Generate parallax layer elements with different z-index values
-// Each layer has content and background color
+  'ng-animated-counter': `// Simulating Angular animated counter behavior
+function animateCounter(el) {
+  // TODO: Animate counter — update state, update DOM content, calculate values
+}
 
-// Step 2: Create updateParallax() function
-// Read current scrollTop of the container
-// For each layer, calculate translateY based on scrollTop * layer.speed
-// Apply the transform to create depth illusion
+function startAll() {
+  // TODO: Start all — update state, update DOM content
+}
 
-// Step 3: Add scroll listener on parallaxContainer
-// Call updateParallax() on each scroll event using requestAnimationFrame
+document.getElementById('restart-counters').addEventListener('click', startAll);
+startAll();`,
 
-// Step 4: Add toggle to switch between scroll-based and mouse-based parallax
-// Mouse-based: layers respond to cursor position instead of scroll`,
-
-  'ng-animated-counter': `// Simulating Angular animated number counter component
-const counters = document.querySelectorAll('.counter');
-const triggerBtn = document.getElementById('counter-trigger');
-let hasAnimated = false;
-
-// Step 1: Create animateCounter(el, start, end, duration, format) function
-// Animate number from start to end over duration ms using requestAnimationFrame
-// Apply easing function (ease-out) for natural deceleration
-// Format: 'number' (plain), 'currency' ($X,XXX), 'percent' (X%)
-// Update el.textContent on each frame
-
-// Step 2: Create formatValue(value, format) function
-// Apply thousands separators, currency symbol, or percent sign
-// Handle decimal places appropriately
-
-// Step 3: Create setupObserver() function
-// Use IntersectionObserver to trigger animation when counters enter viewport
-// Only animate once per counter (or re-animate on each scroll-in)
-
-// Step 4: Add click listener on triggerBtn to manually re-trigger all counter animations
-// Reset all counters to 0 first, then animate to target values`,
-
-  'ng-confetti': `// Simulating Angular confetti celebration effect component
+  'ng-confetti': `// Simulating Angular confetti effect behavior
 const canvas = document.getElementById('confetti-canvas');
 const ctx = canvas.getContext('2d');
-const triggerBtn = document.getElementById('confetti-trigger');
+const colors = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
 let particles = [];
-let animationId = null;
+let animId = null;
 
-canvas.width = canvas.parentElement.clientWidth;
-canvas.height = canvas.parentElement.clientHeight;
+function createParticles() {
+  // TODO: Create particles — add item, calculate values
+}
 
-const COLORS = ['#ef4444','#f59e0b','#22c55e','#3b82f6','#a855f7','#ec4899','#06b6d4'];
+function animate() {
+  // TODO: Animate — calculate values
+}
 
-// Step 1: Create createParticle(x, y) function
-// Return object with: x, y, vx (random -5 to 5), vy (random -15 to -5)
-// color (random from COLORS), size (random 4-10), rotation, rotationSpeed
-// shape: randomly choose 'circle', 'square', or 'strip'
-
-// Step 2: Create burst(x, y, count) function
-// Generate count particles at position (x, y)
-// Add all to particles array
-// Start animation loop if not running
-
-// Step 3: Create animate() function
-// Clear canvas, update each particle:
-//   Apply gravity (vy += 0.3), air resistance (vx *= 0.99)
-//   Update position, rotation
-//   Draw particle shape with color
-// Remove particles that fall below canvas
-// Stop animation when no particles remain
-
-// Step 4: Add click listener on triggerBtn to burst from center top
-// Add click listener on canvas to burst at click position
-// Add different burst patterns: fountain, explosion, rain`,
+document.getElementById('confetti-btn').addEventListener('click', () => {
+  if (animId) cancelAnimationFrame(animId);
+  createParticles();
+  animate();
+});`,
 };

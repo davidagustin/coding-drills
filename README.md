@@ -105,12 +105,12 @@ Framework-specific training for **React**, **Angular**, **Vue**, and **Native Ja
 - **Quiz Mode** — Multiple-choice questions testing framework concepts and API knowledge.
 - **UI Patterns** — Catalog of 616+ UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, key concepts, starter code, and behavioral test suites. Each pattern detail page features:
   - **Building Blocks** — Numbered concept checklist at the top showing what to master.
-  - **Tabbed Code Editor** — HTML and CSS tabs (read-only reference) plus an editable JS tab with auto-generated starter skeletons.
+  - **Tabbed Code Editor** — HTML and CSS tabs (read-only reference) plus an editable JS tab with scaffolded starter code (full UI structure with correct class names and empty function stubs — users only implement business logic).
   - **Your Preview** — Live iframe that re-executes your code as you type, using the pattern's HTML/CSS.
   - **Live Demo** — Reference implementation running in a sandboxed iframe.
   - **AI Tutor** — In-browser AI for guidance, hints, and code review.
   - **Reset Button** — One-click reset to regenerate the starter skeleton.
-  - All 216 patterns across 4 frameworks have interactive `demoCode` (HTML + CSS + JS) for Live Demo and starter code generation.
+  - All 616 patterns across 4 frameworks have interactive `demoCode` (HTML + CSS + JS) for Live Demo and scaffolded starter code auto-generated from reference implementations.
 - **Cheatsheet** — Comprehensive quick-reference with 6 sections: Overview, Core Concepts, Key APIs, Common Patterns, Code Examples (interactive Monaco editors), and Ecosystem & Tools. Two-column layout with scroll spy, collapsible sections, SVG section icons, and material-inspired visual polish.
 
 ---
@@ -193,6 +193,9 @@ pnpm test:coverage    # Unit with coverage report
 pnpm test:e2e        # E2E (Playwright)
 pnpm test:e2e:ui     # Playwright UI
 npx vitest run lib/__tests__/frontend-drills-validation.test.ts  # Validate all 460 frontend drill samples
+
+# UI Pattern Starters
+npx tsx scripts/generate-starters.ts  # Regenerate all 616 scaffolded starters from reference demoCode
 
 # Visualizations (agent tooling)
 pnpm viz:list         # List progress
