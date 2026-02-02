@@ -8,11 +8,8 @@ export const dartMethods: Method[] = [
     name: 'add',
     category: 'List Methods',
     syntax: 'list.add(value)',
-    description:
-      'Adds a value to the end of the list, extending the length by one.',
-    arguments: [
-      { name: 'value', type: 'E', description: 'The element to add to the list' },
-    ],
+    description: 'Adds a value to the end of the list, extending the length by one.',
+    arguments: [{ name: 'value', type: 'E', description: 'The element to add to the list' }],
     returns: { type: 'void', description: 'Nothing; the list is modified in place' },
     examples: [
       {
@@ -51,7 +48,7 @@ export const dartMethods: Method[] = [
         explanation: 'Only the first occurrence of "green" is removed.',
       },
       {
-        code: "var nums = [1, 2, 3];\nprint(nums.remove(5));",
+        code: 'var nums = [1, 2, 3];\nprint(nums.remove(5));',
         output: 'false',
       },
     ],
@@ -64,11 +61,8 @@ export const dartMethods: Method[] = [
     name: 'contains',
     category: 'List Methods',
     syntax: 'list.contains(element)',
-    description:
-      'Returns true if the list contains an element equal to the given element.',
-    arguments: [
-      { name: 'element', type: 'Object?', description: 'The element to search for' },
-    ],
+    description: 'Returns true if the list contains an element equal to the given element.',
+    arguments: [{ name: 'element', type: 'Object?', description: 'The element to search for' }],
     returns: { type: 'bool', description: 'true if the element is found in the list' },
     examples: [
       {
@@ -229,8 +223,7 @@ export const dartMethods: Method[] = [
     name: 'trim',
     category: 'String Methods',
     syntax: 'string.trim()',
-    description:
-      'Returns a new string without any leading or trailing whitespace.',
+    description: 'Returns a new string without any leading or trailing whitespace.',
     arguments: [],
     returns: {
       type: 'String',
@@ -256,8 +249,7 @@ export const dartMethods: Method[] = [
     name: 'replaceAll',
     category: 'String Methods',
     syntax: 'string.replaceAll(from, replace)',
-    description:
-      'Replaces all occurrences of a pattern in the string with a replacement string.',
+    description: 'Replaces all occurrences of a pattern in the string with a replacement string.',
     arguments: [
       { name: 'from', type: 'Pattern', description: 'The pattern to match' },
       { name: 'replace', type: 'String', description: 'The replacement string' },
@@ -382,7 +374,8 @@ export const dartMethods: Method[] = [
       {
         code: "var scores = {'alice': 100};\nvar existing = scores.putIfAbsent('alice', () => 50);\nprint(existing);",
         output: '100',
-        explanation: 'Since "alice" already exists, the factory is not called and the existing value is returned.',
+        explanation:
+          'Since "alice" already exists, the factory is not called and the existing value is returned.',
       },
     ],
     timeComplexity: 'O(1) average for HashMap',
@@ -394,11 +387,8 @@ export const dartMethods: Method[] = [
     name: 'containsKey',
     category: 'Map Methods',
     syntax: 'map.containsKey(key)',
-    description:
-      'Returns true if the map contains the given key.',
-    arguments: [
-      { name: 'key', type: 'Object?', description: 'The key to check for' },
-    ],
+    description: 'Returns true if the map contains the given key.',
+    arguments: [{ name: 'key', type: 'Object?', description: 'The key to check for' }],
     returns: {
       type: 'bool',
       description: 'true if the key exists in the map',
@@ -422,8 +412,7 @@ export const dartMethods: Method[] = [
     name: 'forEach',
     category: 'Map Methods',
     syntax: 'map.forEach((key, value) { ... })',
-    description:
-      'Applies the given function to each key-value pair in the map.',
+    description: 'Applies the given function to each key-value pair in the map.',
     arguments: [
       {
         name: 'action',
@@ -445,7 +434,9 @@ export const dartMethods: Method[] = [
     spaceComplexity: 'O(1)',
     relatedMethods: ['entries', 'keys', 'values', 'map'],
     sinceVersion: '1.0',
-    notes: ['The iteration order depends on the map implementation (insertion-order for LinkedHashMap, the default).'],
+    notes: [
+      'The iteration order depends on the map implementation (insertion-order for LinkedHashMap, the default).',
+    ],
   },
   {
     name: 'update',
@@ -495,8 +486,7 @@ export const dartMethods: Method[] = [
     name: 'union',
     category: 'Set Methods',
     syntax: 'set.union(other)',
-    description:
-      'Returns a new set containing all elements from this set and the other set.',
+    description: 'Returns a new set containing all elements from this set and the other set.',
     arguments: [
       { name: 'other', type: 'Set<E>', description: 'The other set to form a union with' },
     ],
@@ -548,11 +538,8 @@ export const dartMethods: Method[] = [
     name: 'difference',
     category: 'Set Methods',
     syntax: 'set.difference(other)',
-    description:
-      'Returns a new set containing elements in this set that are not in the other set.',
-    arguments: [
-      { name: 'other', type: 'Set<Object?>', description: 'The other set to subtract' },
-    ],
+    description: 'Returns a new set containing elements in this set that are not in the other set.',
+    arguments: [{ name: 'other', type: 'Set<Object?>', description: 'The other set to subtract' }],
     returns: {
       type: 'Set<E>',
       description: 'A new set containing elements only in this set',
@@ -609,8 +596,7 @@ export const dartMethods: Method[] = [
     name: 'where',
     category: 'Iterable Methods',
     syntax: 'iterable.where(bool test(E element))',
-    description:
-      'Returns a new lazy iterable with all elements that satisfy the given predicate.',
+    description: 'Returns a new lazy iterable with all elements that satisfy the given predicate.',
     arguments: [
       {
         name: 'test',
@@ -776,7 +762,9 @@ export const dartMethods: Method[] = [
     spaceComplexity: 'O(1)',
     relatedMethods: ['int.tryParse', 'double.parse', 'toString'],
     sinceVersion: '1.0',
-    notes: ['Throws FormatException if the source is not a valid integer string. Use int.tryParse for a null-safe alternative.'],
+    notes: [
+      'Throws FormatException if the source is not a valid integer string. Use int.tryParse for a null-safe alternative.',
+    ],
   },
   {
     name: 'double.parse',
@@ -784,9 +772,7 @@ export const dartMethods: Method[] = [
     syntax: 'double.parse(source)',
     description:
       'Parses a string as a double-precision floating-point literal and returns the value.',
-    arguments: [
-      { name: 'source', type: 'String', description: 'The string to parse' },
-    ],
+    arguments: [{ name: 'source', type: 'String', description: 'The string to parse' }],
     returns: {
       type: 'double',
       description: 'The parsed double value',
@@ -806,7 +792,9 @@ export const dartMethods: Method[] = [
     spaceComplexity: 'O(1)',
     relatedMethods: ['double.tryParse', 'int.parse', 'toString'],
     sinceVersion: '1.0',
-    notes: ['Throws FormatException if the source is not a valid double string. Use double.tryParse for a null-safe alternative.'],
+    notes: [
+      'Throws FormatException if the source is not a valid double string. Use double.tryParse for a null-safe alternative.',
+    ],
   },
   {
     name: 'toList',
@@ -902,7 +890,8 @@ export const dartMethods: Method[] = [
       {
         name: 'eagerError',
         type: 'bool',
-        description: 'If true, completes with the first error immediately instead of waiting for all futures',
+        description:
+          'If true, completes with the first error immediately instead of waiting for all futures',
         optional: true,
         defaultValue: 'false',
       },
@@ -913,7 +902,7 @@ export const dartMethods: Method[] = [
     },
     examples: [
       {
-        code: "var f1 = Future.value(1);\nvar f2 = Future.value(2);\nvar f3 = Future.value(3);\nFuture.wait([f1, f2, f3]).then((values) {\n  print(values);\n});",
+        code: 'var f1 = Future.value(1);\nvar f2 = Future.value(2);\nvar f3 = Future.value(3);\nFuture.wait([f1, f2, f3]).then((values) {\n  print(values);\n});',
         output: '[1, 2, 3]',
       },
     ],
@@ -926,7 +915,8 @@ export const dartMethods: Method[] = [
   {
     name: 'Stream.listen',
     category: 'Async',
-    syntax: 'stream.listen(void onData(T event)?, {Function? onError, void onDone()?, bool? cancelOnError})',
+    syntax:
+      'stream.listen(void onData(T event)?, {Function? onError, void onDone()?, bool? cancelOnError})',
     description:
       'Adds a subscription to this stream. Each time a data event is received, the onData handler is called. Returns a StreamSubscription that can be used to cancel the subscription.',
     arguments: [
@@ -960,7 +950,7 @@ export const dartMethods: Method[] = [
     },
     examples: [
       {
-        code: "var stream = Stream.fromIterable([1, 2, 3]);\nstream.listen((value) {\n  print(value);\n});",
+        code: 'var stream = Stream.fromIterable([1, 2, 3]);\nstream.listen((value) {\n  print(value);\n});',
         output: '1\n2\n3',
       },
       {

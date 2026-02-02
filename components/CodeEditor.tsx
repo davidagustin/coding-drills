@@ -284,6 +284,7 @@ export default function CodeEditor({
             2552, // Cannot find name (too strict while typing)
             2304, // Cannot find name (variable not defined - too strict while typing)
             2874, // JSX tag requires 'React' in scope (handled by automatic runtime)
+            2875, // JSX tag requires module path 'react/jsx-runtime' (not available in Monaco virtual FS)
           ];
 
           monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({

@@ -9,7 +9,11 @@ export const elixirMethods: Method[] = [
     description:
       'Returns a list where each element is the result of invoking fun on each corresponding element of the enumerable.',
     arguments: [
-      { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure (list, map, range, etc.)' },
+      {
+        name: 'enumerable',
+        type: 'Enumerable',
+        description: 'Any enumerable data structure (list, map, range, etc.)',
+      },
       { name: 'fun', type: 'function', description: 'A function applied to each element' },
     ],
     returns: { type: 'list', description: 'A new list with the transformed elements' },
@@ -34,7 +38,10 @@ export const elixirMethods: Method[] = [
     spaceComplexity: 'O(n)',
     relatedMethods: ['Enum.each', 'Enum.flat_map', 'Stream.map'],
     sinceVersion: 'Elixir 1.0',
-    notes: ['Works with any enumerable, including ranges and maps', 'Eagerly evaluates the entire enumerable'],
+    notes: [
+      'Works with any enumerable, including ranges and maps',
+      'Eagerly evaluates the entire enumerable',
+    ],
   },
   {
     name: 'Enum.filter',
@@ -44,7 +51,11 @@ export const elixirMethods: Method[] = [
       'Filters the enumerable, returning only those elements for which fun returns a truthy value.',
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
-      { name: 'fun', type: 'function', description: 'A function that returns a boolean-like value' },
+      {
+        name: 'fun',
+        type: 'function',
+        description: 'A function that returns a boolean-like value',
+      },
     ],
     returns: { type: 'list', description: 'A filtered list of elements' },
     examples: [
@@ -73,7 +84,11 @@ export const elixirMethods: Method[] = [
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
       { name: 'acc', type: 'any', description: 'The initial accumulator value' },
-      { name: 'fun', type: 'function', description: 'A function receiving element and accumulator, returns new accumulator' },
+      {
+        name: 'fun',
+        type: 'function',
+        description: 'A function receiving element and accumulator, returns new accumulator',
+      },
     ],
     returns: { type: 'any', description: 'The final accumulator value' },
     examples: [
@@ -102,7 +117,13 @@ export const elixirMethods: Method[] = [
       'Sorts the enumerable according to Erlang term ordering or a given sorter function.',
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
-      { name: 'sorter', type: 'function or :asc or :desc', description: 'Sorting direction or comparison function', optional: true, defaultValue: ':asc' },
+      {
+        name: 'sorter',
+        type: 'function or :asc or :desc',
+        description: 'Sorting direction or comparison function',
+        optional: true,
+        defaultValue: ':asc',
+      },
     ],
     returns: { type: 'list', description: 'A sorted list' },
     examples: [
@@ -136,8 +157,18 @@ export const elixirMethods: Method[] = [
       'Returns the first element for which fun returns a truthy value. If no such element is found, returns default.',
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
-      { name: 'default', type: 'any', description: 'Default value if not found', optional: true, defaultValue: 'nil' },
-      { name: 'fun', type: 'function', description: 'A function that returns a boolean-like value' },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Default value if not found',
+        optional: true,
+        defaultValue: 'nil',
+      },
+      {
+        name: 'fun',
+        type: 'function',
+        description: 'A function that returns a boolean-like value',
+      },
     ],
     returns: { type: 'any', description: 'The first matching element or default' },
     examples: [
@@ -165,7 +196,11 @@ export const elixirMethods: Method[] = [
       'Returns true if fun returns a truthy value for at least one element in the enumerable.',
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
-      { name: 'fun', type: 'function', description: 'A function that returns a boolean-like value' },
+      {
+        name: 'fun',
+        type: 'function',
+        description: 'A function that returns a boolean-like value',
+      },
     ],
     returns: { type: 'boolean', description: 'true if any element matches, false otherwise' },
     examples: [
@@ -193,8 +228,20 @@ export const elixirMethods: Method[] = [
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
       { name: 'count', type: 'pos_integer', description: 'Size of each chunk' },
-      { name: 'step', type: 'pos_integer', description: 'Step between chunk starts', optional: true, defaultValue: 'count' },
-      { name: 'leftover', type: 'list or :discard', description: 'How to handle remaining elements', optional: true, defaultValue: '[]' },
+      {
+        name: 'step',
+        type: 'pos_integer',
+        description: 'Step between chunk starts',
+        optional: true,
+        defaultValue: 'count',
+      },
+      {
+        name: 'leftover',
+        type: 'list or :discard',
+        description: 'How to handle remaining elements',
+        optional: true,
+        defaultValue: '[]',
+      },
     ],
     returns: { type: 'list of lists', description: 'A list of chunks' },
     examples: [
@@ -225,7 +272,12 @@ export const elixirMethods: Method[] = [
     arguments: [
       { name: 'string', type: 'String.t()', description: 'The string to split' },
       { name: 'pattern', type: 'String.t() | Regex.t()', description: 'The delimiter pattern' },
-      { name: 'options', type: 'keyword list', description: 'Options such as trim: true or parts: n', optional: true },
+      {
+        name: 'options',
+        type: 'keyword list',
+        description: 'Options such as trim: true or parts: n',
+        optional: true,
+      },
     ],
     returns: { type: 'list of strings', description: 'A list of substrings' },
     examples: [
@@ -253,10 +305,9 @@ export const elixirMethods: Method[] = [
     name: 'String.trim',
     category: 'String Module',
     syntax: 'String.trim(string)',
-    description: 'Returns a string where all leading and trailing Unicode whitespace has been removed.',
-    arguments: [
-      { name: 'string', type: 'String.t()', description: 'The string to trim' },
-    ],
+    description:
+      'Returns a string where all leading and trailing Unicode whitespace has been removed.',
+    arguments: [{ name: 'string', type: 'String.t()', description: 'The string to trim' }],
     returns: { type: 'String.t()', description: 'The trimmed string' },
     examples: [
       {
@@ -282,8 +333,17 @@ export const elixirMethods: Method[] = [
     arguments: [
       { name: 'subject', type: 'String.t()', description: 'The original string' },
       { name: 'pattern', type: 'String.t() | Regex.t()', description: 'The pattern to match' },
-      { name: 'replacement', type: 'String.t() | function', description: 'The replacement string or function' },
-      { name: 'options', type: 'keyword list', description: 'Options such as global: false', optional: true },
+      {
+        name: 'replacement',
+        type: 'String.t() | function',
+        description: 'The replacement string or function',
+      },
+      {
+        name: 'options',
+        type: 'keyword list',
+        description: 'Options such as global: false',
+        optional: true,
+      },
     ],
     returns: { type: 'String.t()', description: 'The modified string' },
     examples: [
@@ -311,10 +371,17 @@ export const elixirMethods: Method[] = [
     name: 'String.upcase',
     category: 'String Module',
     syntax: 'String.upcase(string, mode \\\\ :default)',
-    description: 'Converts all characters in the given string to uppercase according to Unicode rules.',
+    description:
+      'Converts all characters in the given string to uppercase according to Unicode rules.',
     arguments: [
       { name: 'string', type: 'String.t()', description: 'The string to convert' },
-      { name: 'mode', type: ':default | :ascii | :greek | :turkic', description: 'The mode for case conversion', optional: true, defaultValue: ':default' },
+      {
+        name: 'mode',
+        type: ':default | :ascii | :greek | :turkic',
+        description: 'The mode for case conversion',
+        optional: true,
+        defaultValue: ':default',
+      },
     ],
     returns: { type: 'String.t()', description: 'The uppercased string' },
     examples: [
@@ -339,7 +406,11 @@ export const elixirMethods: Method[] = [
     description: 'Checks if string contains any of the given contents.',
     arguments: [
       { name: 'string', type: 'String.t()', description: 'The string to search in' },
-      { name: 'contents', type: 'String.t() | list', description: 'A string or list of strings to search for' },
+      {
+        name: 'contents',
+        type: 'String.t() | list',
+        description: 'A string or list of strings to search for',
+      },
     ],
     returns: { type: 'boolean', description: 'true if string contains the contents' },
     examples: [
@@ -371,7 +442,13 @@ export const elixirMethods: Method[] = [
     description: 'Returns the first element in the list, or default if the list is empty.',
     arguments: [
       { name: 'list', type: 'list', description: 'The list to get the first element from' },
-      { name: 'default', type: 'any', description: 'Default value if list is empty', optional: true, defaultValue: 'nil' },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Default value if list is empty',
+        optional: true,
+        defaultValue: 'nil',
+      },
     ],
     returns: { type: 'any', description: 'The first element or default' },
     examples: [
@@ -397,7 +474,13 @@ export const elixirMethods: Method[] = [
     description: 'Returns the last element in the list, or default if the list is empty.',
     arguments: [
       { name: 'list', type: 'list', description: 'The list to get the last element from' },
-      { name: 'default', type: 'any', description: 'Default value if list is empty', optional: true, defaultValue: 'nil' },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Default value if list is empty',
+        optional: true,
+        defaultValue: 'nil',
+      },
     ],
     returns: { type: 'any', description: 'The last element or default' },
     examples: [
@@ -465,7 +548,10 @@ export const elixirMethods: Method[] = [
     spaceComplexity: 'O(n)',
     relatedMethods: ['List.flatten', 'Enum.concat', '--'],
     sinceVersion: 'Elixir 1.0',
-    notes: ['Performance depends on the length of the left operand', 'The right list is shared, not copied'],
+    notes: [
+      'Performance depends on the length of the left operand',
+      'The right list is shared, not copied',
+    ],
   },
 
   // Map Module
@@ -473,11 +559,18 @@ export const elixirMethods: Method[] = [
     name: 'Map.get',
     category: 'Map Module',
     syntax: 'Map.get(map, key, default \\\\ nil)',
-    description: 'Gets the value for a specific key in the map. Returns default if key is not present.',
+    description:
+      'Gets the value for a specific key in the map. Returns default if key is not present.',
     arguments: [
       { name: 'map', type: 'map', description: 'The map to look up' },
       { name: 'key', type: 'any', description: 'The key to look up' },
-      { name: 'default', type: 'any', description: 'Default value if key not found', optional: true, defaultValue: 'nil' },
+      {
+        name: 'default',
+        type: 'any',
+        description: 'Default value if key not found',
+        optional: true,
+        defaultValue: 'nil',
+      },
     ],
     returns: { type: 'any', description: 'The value for the key or default' },
     examples: [
@@ -500,7 +593,8 @@ export const elixirMethods: Method[] = [
     name: 'Map.put',
     category: 'Map Module',
     syntax: 'Map.put(map, key, value)',
-    description: 'Puts the given value under key in the map. If the key already exists, it is overwritten.',
+    description:
+      'Puts the given value under key in the map. If the key already exists, it is overwritten.',
     arguments: [
       { name: 'map', type: 'map', description: 'The map to update' },
       { name: 'key', type: 'any', description: 'The key to set' },
@@ -528,7 +622,8 @@ export const elixirMethods: Method[] = [
     name: 'Map.delete',
     category: 'Map Module',
     syntax: 'Map.delete(map, key)',
-    description: 'Deletes the entry for a specific key from the map. If the key does not exist, returns the map unchanged.',
+    description:
+      'Deletes the entry for a specific key from the map. If the key does not exist, returns the map unchanged.',
     arguments: [
       { name: 'map', type: 'map', description: 'The map to delete from' },
       { name: 'key', type: 'any', description: 'The key to delete' },
@@ -586,7 +681,13 @@ export const elixirMethods: Method[] = [
     syntax: 'IO.puts(device \\\\ :stdio, item)',
     description: 'Writes the given item to the device, followed by a newline. Returns :ok.',
     arguments: [
-      { name: 'device', type: 'IO.device()', description: 'The IO device to write to', optional: true, defaultValue: ':stdio' },
+      {
+        name: 'device',
+        type: 'IO.device()',
+        description: 'The IO device to write to',
+        optional: true,
+        defaultValue: ':stdio',
+      },
       { name: 'item', type: 'chardata | String.t()', description: 'The content to print' },
     ],
     returns: { type: ':ok', description: 'Always returns :ok' },
@@ -612,7 +713,12 @@ export const elixirMethods: Method[] = [
       'Inspects and writes the given item to the device, then returns the item itself. Extremely useful for debugging because it can be inserted into pipelines without breaking them.',
     arguments: [
       { name: 'item', type: 'any', description: 'The value to inspect' },
-      { name: 'opts', type: 'keyword list', description: 'Options such as label, pretty, limit', optional: true },
+      {
+        name: 'opts',
+        type: 'keyword list',
+        description: 'Options such as label, pretty, limit',
+        optional: true,
+      },
     ],
     returns: { type: 'any', description: 'Returns the item unchanged (pass-through)' },
     examples: [
@@ -685,7 +791,9 @@ export const elixirMethods: Method[] = [
     spaceComplexity: 'O(1)',
     relatedMethods: ['Enum.map', 'Stream.filter', 'Stream.flat_map'],
     sinceVersion: 'Elixir 1.0',
-    notes: ['Streams are lazy; they compose transformations without executing until consumed by an Enum function'],
+    notes: [
+      'Streams are lazy; they compose transformations without executing until consumed by an Enum function',
+    ],
   },
   {
     name: 'Stream.filter',
@@ -695,7 +803,11 @@ export const elixirMethods: Method[] = [
       'Creates a stream that filters elements according to the given function on enumeration. Lazy counterpart of Enum.filter.',
     arguments: [
       { name: 'enum', type: 'Enumerable', description: 'Any enumerable data structure' },
-      { name: 'fun', type: 'function', description: 'A function that returns a boolean-like value' },
+      {
+        name: 'fun',
+        type: 'function',
+        description: 'A function that returns a boolean-like value',
+      },
     ],
     returns: { type: 'Stream.t()', description: 'A lazy stream' },
     examples: [
@@ -714,10 +826,13 @@ export const elixirMethods: Method[] = [
     name: 'Stream.cycle',
     category: 'Stream Module',
     syntax: 'Stream.cycle(enumerable)',
-    description:
-      'Creates a stream that cycles the given enumerable infinitely.',
+    description: 'Creates a stream that cycles the given enumerable infinitely.',
     arguments: [
-      { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure to cycle' },
+      {
+        name: 'enumerable',
+        type: 'Enumerable',
+        description: 'Any enumerable data structure to cycle',
+      },
     ],
     returns: { type: 'Stream.t()', description: 'An infinite lazy stream' },
     examples: [
@@ -747,7 +862,11 @@ export const elixirMethods: Method[] = [
       'Matches the given expression against multiple patterns and executes the corresponding block for the first match. Supports guard clauses with when.',
     arguments: [
       { name: 'expression', type: 'any', description: 'The value to match against' },
-      { name: 'clauses', type: 'pattern -> expression', description: 'One or more pattern-matching clauses' },
+      {
+        name: 'clauses',
+        type: 'pattern -> expression',
+        description: 'One or more pattern-matching clauses',
+      },
     ],
     returns: { type: 'any', description: 'The result of the matched clause' },
     examples: [
@@ -776,7 +895,11 @@ export const elixirMethods: Method[] = [
     description:
       'Evaluates a series of conditions and executes the block for the first condition that evaluates to a truthy value. Similar to else-if chains in other languages.',
     arguments: [
-      { name: 'clauses', type: 'condition -> expression', description: 'One or more condition clauses' },
+      {
+        name: 'clauses',
+        type: 'condition -> expression',
+        description: 'One or more condition clauses',
+      },
     ],
     returns: { type: 'any', description: 'The result of the first truthy clause' },
     examples: [
@@ -788,20 +911,40 @@ export const elixirMethods: Method[] = [
     ],
     relatedMethods: ['case', 'if', 'with'],
     sinceVersion: 'Elixir 1.0',
-    notes: ['A true -> clause at the end acts as a catch-all default', 'Raises CondClauseError if no condition is truthy'],
+    notes: [
+      'A true -> clause at the end acts as a catch-all default',
+      'Raises CondClauseError if no condition is truthy',
+    ],
   },
   {
     name: 'with',
     category: 'Pattern Matching',
-    syntax: 'with pattern1 <- expr1,\n     pattern2 <- expr2 do\n  result\nelse\n  error_pattern -> error_handling\nend',
+    syntax:
+      'with pattern1 <- expr1,\n     pattern2 <- expr2 do\n  result\nelse\n  error_pattern -> error_handling\nend',
     description:
       'Chains pattern matches together. If all patterns match, the do block is executed. If any pattern fails to match, the chain stops and the non-matching value is returned (or handled by the else block).',
     arguments: [
-      { name: 'clauses', type: 'pattern <- expression', description: 'A sequence of pattern match clauses' },
-      { name: 'do_block', type: 'expression', description: 'The expression to execute when all patterns match' },
-      { name: 'else_block', type: 'pattern -> expression', description: 'Optional error handling clauses', optional: true },
+      {
+        name: 'clauses',
+        type: 'pattern <- expression',
+        description: 'A sequence of pattern match clauses',
+      },
+      {
+        name: 'do_block',
+        type: 'expression',
+        description: 'The expression to execute when all patterns match',
+      },
+      {
+        name: 'else_block',
+        type: 'pattern -> expression',
+        description: 'Optional error handling clauses',
+        optional: true,
+      },
     ],
-    returns: { type: 'any', description: 'The result of the do block, or the non-matching value / else clause result' },
+    returns: {
+      type: 'any',
+      description: 'The result of the do block, or the non-matching value / else clause result',
+    },
     examples: [
       {
         code: 'with {:ok, user} <- fetch_user(id),\n     {:ok, email} <- fetch_email(user) do\n  send_welcome(email)\nelse\n  {:error, reason} -> {:error, reason}\nend',
@@ -831,8 +974,17 @@ export const elixirMethods: Method[] = [
       'Splits the enumerable into groups based on key_fun. Returns a map where each key is the grouping value and each value is a list of elements in that group.',
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
-      { name: 'key_fun', type: 'function', description: 'A function that determines the group key' },
-      { name: 'value_fun', type: 'function', description: 'A function to transform group values', optional: true },
+      {
+        name: 'key_fun',
+        type: 'function',
+        description: 'A function that determines the group key',
+      },
+      {
+        name: 'value_fun',
+        type: 'function',
+        description: 'A function to transform group values',
+        optional: true,
+      },
     ],
     returns: { type: 'map', description: 'A map of grouped elements' },
     examples: [
@@ -859,7 +1011,11 @@ export const elixirMethods: Method[] = [
     description: 'Maps the given fun over the enumerable and flattens the result by one level.',
     arguments: [
       { name: 'enumerable', type: 'Enumerable', description: 'Any enumerable data structure' },
-      { name: 'fun', type: 'function', description: 'A function that returns a list for each element' },
+      {
+        name: 'fun',
+        type: 'function',
+        description: 'A function that returns a list for each element',
+      },
     ],
     returns: { type: 'list', description: 'A flattened list of results' },
     examples: [
@@ -886,9 +1042,7 @@ export const elixirMethods: Method[] = [
     category: 'Map Module',
     syntax: 'Map.keys(map)',
     description: 'Returns all keys from the map.',
-    arguments: [
-      { name: 'map', type: 'map', description: 'The map to extract keys from' },
-    ],
+    arguments: [{ name: 'map', type: 'map', description: 'The map to extract keys from' }],
     returns: { type: 'list', description: 'A list of all keys' },
     examples: [
       {
@@ -912,9 +1066,7 @@ export const elixirMethods: Method[] = [
     category: 'Kernel Functions',
     syntax: 'is_nil(term)',
     description: 'Returns true if term is nil, false otherwise. This is a guard-safe function.',
-    arguments: [
-      { name: 'term', type: 'any', description: 'The value to check' },
-    ],
+    arguments: [{ name: 'term', type: 'any', description: 'The value to check' }],
     returns: { type: 'boolean', description: 'true if the value is nil' },
     examples: [
       {

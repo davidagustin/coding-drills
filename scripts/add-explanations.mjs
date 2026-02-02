@@ -385,7 +385,7 @@ console.log(`Expected: ${Object.keys(explanations).length}`);
 
 // Check for any missing
 const missing = Object.keys(explanations).filter(id =>
-  !insertions.some(ins => result.includes(`id: '${id}'`))
+  !insertions.some(() => result.includes(`id: '${id}'`))
 );
 if (missing.length > 0) {
   console.log(`IDs not found in file: ${missing.join(', ')}`);
