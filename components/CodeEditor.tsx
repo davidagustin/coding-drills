@@ -211,6 +211,7 @@ export default function CodeEditor({
           preserveConstEnums: false,
           strict: false,
           skipLibCheck: true,
+          experimentalDecorators: true, // Required for Angular @Component, @Injectable, etc.
         });
 
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -272,7 +273,10 @@ export default function CodeEditor({
         }
 
         // Configure diagnostics - be less strict during typing
-        if (isTypeScript) {
+        // Also apply when the Monaco model is TypeScript via monacoLanguageOverride
+        // (e.g. Angular cheatsheet: language='javascript' + monacoLanguageOverride='typescript')
+        const isTypeScriptModel = isTypeScript || monacoLanguage === 'typescript';
+        if (isTypeScriptModel) {
           const diagnosticCodesToIgnore = [
             8006, // enum declarations
             2451, // Cannot redeclare block-scoped variable
