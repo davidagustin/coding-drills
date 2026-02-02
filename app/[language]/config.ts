@@ -23,11 +23,16 @@ export const SUPPORTED_LANGUAGES = [
   'elixir',
   'dart',
   'clojure',
+  // Database languages
+  'sql',
+  'postgresql',
+  'mysql',
+  'mongodb',
 ] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
-// Language display configuration with colors and names
+// Language display configuration with colors, versions, and documentation links
 export const LANGUAGE_CONFIG: Record<
   SupportedLanguage,
   {
@@ -36,6 +41,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: string;
     borderColor: string;
     hoverBg: string;
+    version: string;
+    docsUrl: string;
   }
 > = {
   javascript: {
@@ -44,6 +51,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-yellow-500/10',
     borderColor: 'border-yellow-500/30',
     hoverBg: 'hover:bg-yellow-500/20',
+    version: 'ES2024',
+    docsUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
   },
   typescript: {
     name: 'TypeScript',
@@ -51,6 +60,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     hoverBg: 'hover:bg-blue-500/20',
+    version: '5.x',
+    docsUrl: 'https://www.typescriptlang.org/docs/',
   },
   python: {
     name: 'Python',
@@ -58,6 +69,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     hoverBg: 'hover:bg-green-500/20',
+    version: '3.12',
+    docsUrl: 'https://docs.python.org/3/',
   },
   java: {
     name: 'Java',
@@ -65,6 +78,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-orange-500/10',
     borderColor: 'border-orange-500/30',
     hoverBg: 'hover:bg-orange-500/20',
+    version: '21 LTS',
+    docsUrl: 'https://docs.oracle.com/en/java/',
   },
   cpp: {
     name: 'C++',
@@ -72,6 +87,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     hoverBg: 'hover:bg-purple-500/20',
+    version: 'C++23',
+    docsUrl: 'https://en.cppreference.com/w/',
   },
   csharp: {
     name: 'C#',
@@ -79,6 +96,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-violet-500/10',
     borderColor: 'border-violet-500/30',
     hoverBg: 'hover:bg-violet-500/20',
+    version: '12.0',
+    docsUrl: 'https://learn.microsoft.com/en-us/dotnet/csharp/',
   },
   go: {
     name: 'Go',
@@ -86,6 +105,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-cyan-500/10',
     borderColor: 'border-cyan-500/30',
     hoverBg: 'hover:bg-cyan-500/20',
+    version: '1.22',
+    docsUrl: 'https://go.dev/doc/',
   },
   ruby: {
     name: 'Ruby',
@@ -93,6 +114,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     hoverBg: 'hover:bg-red-500/20',
+    version: '3.3',
+    docsUrl: 'https://ruby-doc.org/',
   },
   c: {
     name: 'C',
@@ -100,6 +123,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-gray-500/10',
     borderColor: 'border-gray-500/30',
     hoverBg: 'hover:bg-gray-500/20',
+    version: 'C23',
+    docsUrl: 'https://en.cppreference.com/w/c',
   },
   php: {
     name: 'PHP',
@@ -107,6 +132,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-indigo-500/10',
     borderColor: 'border-indigo-500/30',
     hoverBg: 'hover:bg-indigo-500/20',
+    version: '8.3',
+    docsUrl: 'https://www.php.net/docs.php',
   },
   kotlin: {
     name: 'Kotlin',
@@ -114,6 +141,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     hoverBg: 'hover:bg-purple-500/20',
+    version: '2.0',
+    docsUrl: 'https://kotlinlang.org/docs/home.html',
   },
   // New languages
   rust: {
@@ -122,6 +151,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-orange-500/10',
     borderColor: 'border-orange-500/30',
     hoverBg: 'hover:bg-orange-500/20',
+    version: '1.77',
+    docsUrl: 'https://doc.rust-lang.org/book/',
   },
   swift: {
     name: 'Swift',
@@ -129,6 +160,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-orange-400/10',
     borderColor: 'border-orange-400/30',
     hoverBg: 'hover:bg-orange-400/20',
+    version: '5.10',
+    docsUrl: 'https://swift.org/documentation/',
   },
   scala: {
     name: 'Scala',
@@ -136,6 +169,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     hoverBg: 'hover:bg-red-500/20',
+    version: '3.4',
+    docsUrl: 'https://docs.scala-lang.org/',
   },
   r: {
     name: 'R',
@@ -143,6 +178,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-blue-400/10',
     borderColor: 'border-blue-400/30',
     hoverBg: 'hover:bg-blue-400/20',
+    version: '4.4',
+    docsUrl: 'https://www.r-project.org/other-docs.html',
   },
   perl: {
     name: 'Perl',
@@ -150,6 +187,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-indigo-400/10',
     borderColor: 'border-indigo-400/30',
     hoverBg: 'hover:bg-indigo-400/20',
+    version: '5.38',
+    docsUrl: 'https://perldoc.perl.org/',
   },
   lua: {
     name: 'Lua',
@@ -157,6 +196,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-blue-600/10',
     borderColor: 'border-blue-600/30',
     hoverBg: 'hover:bg-blue-600/20',
+    version: '5.4',
+    docsUrl: 'https://www.lua.org/docs.html',
   },
   haskell: {
     name: 'Haskell',
@@ -164,6 +205,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     hoverBg: 'hover:bg-purple-500/20',
+    version: 'GHC 9.8',
+    docsUrl: 'https://www.haskell.org/documentation/',
   },
   elixir: {
     name: 'Elixir',
@@ -171,6 +214,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-purple-400/10',
     borderColor: 'border-purple-400/30',
     hoverBg: 'hover:bg-purple-400/20',
+    version: '1.16',
+    docsUrl: 'https://elixir-lang.org/docs.html',
   },
   dart: {
     name: 'Dart',
@@ -178,6 +223,8 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-cyan-400/10',
     borderColor: 'border-cyan-400/30',
     hoverBg: 'hover:bg-cyan-400/20',
+    version: '3.3',
+    docsUrl: 'https://dart.dev/guides',
   },
   clojure: {
     name: 'Clojure',
@@ -185,6 +232,45 @@ export const LANGUAGE_CONFIG: Record<
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     hoverBg: 'hover:bg-green-500/20',
+    version: '1.11',
+    docsUrl: 'https://clojure.org/reference/documentation',
+  },
+  // Database languages
+  sql: {
+    name: 'SQL',
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    hoverBg: 'hover:bg-blue-400/20',
+    version: 'SQL:2023',
+    docsUrl: 'https://www.w3schools.com/sql/',
+  },
+  postgresql: {
+    name: 'PostgreSQL',
+    color: 'text-sky-500',
+    bgColor: 'bg-sky-500/10',
+    borderColor: 'border-sky-500/30',
+    hoverBg: 'hover:bg-sky-500/20',
+    version: '16',
+    docsUrl: 'https://www.postgresql.org/docs/',
+  },
+  mysql: {
+    name: 'MySQL',
+    color: 'text-orange-400',
+    bgColor: 'bg-orange-400/10',
+    borderColor: 'border-orange-400/30',
+    hoverBg: 'hover:bg-orange-400/20',
+    version: '8.3',
+    docsUrl: 'https://dev.mysql.com/doc/',
+  },
+  mongodb: {
+    name: 'MongoDB',
+    color: 'text-green-500',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    hoverBg: 'hover:bg-green-500/20',
+    version: '7.0',
+    docsUrl: 'https://www.mongodb.com/docs/',
   },
 };
 
