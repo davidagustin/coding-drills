@@ -40,9 +40,12 @@ export function generateFrontendQuiz(config: FrontendQuizConfig): FrontendQuizQu
     pool = pool.filter((q) => config.categories.includes(q.category));
   }
 
-  // Shuffle and take the requested count
+  // Shuffle question order and take the requested count
   const shuffled = shuffleArray(pool);
-  return shuffled.slice(0, config.questionCount);
+  const selected = shuffled.slice(0, config.questionCount);
+
+  // Shuffle options within each question so the correct answer isn't always first
+  return selected.map((q) => ({ ...q, options: shuffleArray(q.options) }));
 }
 
 // ============================================================================
