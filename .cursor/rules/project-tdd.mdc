@@ -1,0 +1,15 @@
+---
+description: TDD for new features – tests first, implement to pass, fix failures
+alwaysApply: true
+---
+
+# TDD for New Features
+
+When adding **new features**:
+
+1. **Write tests first** – Before implementation, add or update tests that define the expected behavior (unit, integration, or e2e as appropriate).
+2. **Implement to pass** – Write the minimal code needed to make those tests pass.
+3. **Run the tests** – Execute the test suite (e.g. `pnpm test`, `pnpm test:e2e`) and confirm all new and existing tests pass before considering the feature done.
+4. **Fix failures** – If any test fails, fix the code or the test until the suite is green; do not leave failing tests.
+
+For small fixes or refactors, add or update tests when behavior changes, and always run the relevant tests before finishing.
