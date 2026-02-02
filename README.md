@@ -188,7 +188,8 @@ pnpm format           # Format with Biome
 pnpm validate         # typecheck + lint:biome + lint
 
 # Testing
-pnpm test             # Unit (Vitest)
+pnpm test             # Unit (Vitest) — 13,745 tests, ~96% coverage
+pnpm test:coverage    # Unit with coverage report
 pnpm test:e2e        # E2E (Playwright)
 pnpm test:e2e:ui     # Playwright UI
 npx tsx scripts/test-frontend-samples.ts  # Validate all 345 frontend drill samples

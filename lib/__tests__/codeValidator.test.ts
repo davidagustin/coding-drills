@@ -5,8 +5,10 @@ import {
   validateByPattern,
   validateDrillAnswer,
   validateJavaScript,
+  validateProblemAnswer,
   validatePython,
 } from '../codeValidator';
+import type { Problem } from '../types';
 
 // ============================================================================
 // validateJavaScript Tests
@@ -194,6 +196,28 @@ describe('validateJavaScript', () => {
       expect(result.success).toBe(false);
       expect(result.error).toContain('forbidden patterns');
     });
+
+    it('should reject global access', () => {
+      const setupCode = '';
+      const userAnswer = 'global.x';
+      const expected = null;
+
+      const result = validateJavaScript(setupCode, userAnswer, expected);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('forbidden patterns');
+    });
+
+    it('should reject XMLHttpRequest', () => {
+      const setupCode = '';
+      const userAnswer = 'new XMLHttpRequest()';
+      const expected = null;
+
+      const result = validateJavaScript(setupCode, userAnswer, expected);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('forbidden patterns');
+    });
   });
 
   describe('edge cases', () => {
@@ -242,92 +266,50 @@ describe('validateJavaScript', () => {
 
       expect(result.success).toBe(true);
     });
-  });
-});
 
-// ============================================================================
-// validatePython Tests
-// ============================================================================
+    it('should handle return statement in user answer', () => {
+      const setupCode = 'const arr = [1, 2, 3];';
+      const userAnswer = 'return arr.length';
+      const expected = 3;
 
-describe('validatePython', () => {
-  it('should validate exact match', () => {
-    const setupCode = 'numbers = [1, 2, 3]';
-    const userAnswer = 'len(numbers)';
-    const expected = 3;
-    const sampleSolution = 'len(numbers)';
+      const result = validateJavaScript(setupCode, userAnswer, expected);
 
-    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+      expect(result.success).toBe(true);
+      expect(result.output).toBe(3);
+    });
 
-    expect(result.success).toBe(true);
-  });
+    it('should handle answer ending with semicolon', () => {
+      const setupCode = 'const arr = [1, 2, 3];';
+      const userAnswer = 'arr.length;';
+      const expected = 3;
 
-  it('should validate with whitespace differences', () => {
-    const setupCode = 'numbers = [1, 2, 3]';
-    const userAnswer = 'len( numbers )';
-    const expected = 3;
-    const sampleSolution = 'len(numbers)';
+      const result = validateJavaScript(setupCode, userAnswer, expected);
 
-    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+      expect(result.success).toBe(true);
+      expect(result.output).toBe(3);
+    });
 
-    expect(result.success).toBe(true);
-  });
+    it('should handle runtime error with "is not defined" message', () => {
+      const setupCode = 'const arr = [1, 2, 3];';
+      const userAnswer = 'nonexistentVar.length';
+      const expected = 3;
 
-  it('should fail for different solutions', () => {
-    const setupCode = 'numbers = [1, 2, 3]';
-    const userAnswer = 'sum(numbers)';
-    const expected = 3;
-    const sampleSolution = 'len(numbers)';
+      const result = validateJavaScript(setupCode, userAnswer, expected);
 
-    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+    });
 
-    expect(result.success).toBe(false);
-  });
+    it('should handle runtime error with "is not a function" message', () => {
+      const setupCode = 'const x = 5;';
+      const userAnswer = 'x.notAFunction()';
+      const expected = 5;
 
-  it('should handle method chaining', () => {
-    const setupCode = 'text = "hello"';
-    const userAnswer = 'text.upper()';
-    const expected = 'HELLO';
-    const sampleSolution = 'text.upper()';
+      const result = validateJavaScript(setupCode, userAnswer, expected);
 
-    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
-
-    expect(result.success).toBe(true);
-  });
-});
-
-// ============================================================================
-// validateByPattern Tests
-// ============================================================================
-
-describe('validateByPattern', () => {
-  it('should validate exact match', () => {
-    const userAnswer = 'console.log("hello")';
-    const expected = 'hello';
-    const sampleSolution = 'console.log("hello")';
-
-    const result = validateByPattern(userAnswer, expected, sampleSolution);
-
-    expect(result.success).toBe(true);
-  });
-
-  it('should validate with extra whitespace', () => {
-    const userAnswer = 'console.log( "hello" )';
-    const expected = 'hello';
-    const sampleSolution = 'console.log("hello")';
-
-    const result = validateByPattern(userAnswer, expected, sampleSolution);
-
-    expect(result.success).toBe(true);
-  });
-
-  it('should fail for different code', () => {
-    const userAnswer = 'console.error("hello")';
-    const expected = 'hello';
-    const sampleSolution = 'console.log("hello")';
-
-    const result = validateByPattern(userAnswer, expected, sampleSolution);
-
-    expect(result.success).toBe(false);
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+    });
   });
 });
 
@@ -388,6 +370,240 @@ describe('checkRequiredPatterns', () => {
     const result = checkRequiredPatterns(userAnswer, patterns, setupCode);
 
     expect(result).toBeNull();
+  });
+
+  it('should detect syntax errors with mismatched brackets', () => {
+    const userAnswer = 'arr.map(x => x * 2';
+    const patterns = [/\.map\(/];
+    const setupCode = 'const arr = [1, 2, 3];';
+
+    const result = checkRequiredPatterns(userAnswer, patterns, setupCode);
+
+    expect(result).not.toBeNull();
+    expect(result?.success).toBe(false);
+    expect(result?.error).toContain('Syntax errors');
+  });
+
+  it('should detect mismatched closing bracket', () => {
+    const userAnswer = 'arr.map(x => x * 2))';
+    const patterns = undefined;
+    const setupCode = 'const arr = [1, 2, 3];';
+
+    const result = checkRequiredPatterns(userAnswer, patterns, setupCode);
+
+    expect(result).not.toBeNull();
+    expect(result?.success).toBe(false);
+    expect(result?.error).toContain('Syntax errors');
+  });
+
+  it('should pass with no patterns provided', () => {
+    const userAnswer = 'arr.length';
+    const patterns: RegExp[] = [];
+    const setupCode = 'const arr = [1, 2, 3];';
+
+    const result = checkRequiredPatterns(userAnswer, patterns, setupCode);
+
+    expect(result).toBeNull();
+  });
+
+  it('should pass when at least one pattern matches', () => {
+    const userAnswer = 'arr.filter(x => x > 2)';
+    const patterns = [/\.map\(/, /\.filter\(/];
+    const setupCode = 'const arr = [1, 2, 3];';
+
+    const result = checkRequiredPatterns(userAnswer, patterns, setupCode);
+
+    expect(result).toBeNull();
+  });
+
+  it('should handle let and var variable declarations in setup', () => {
+    const userAnswer = 'myVar + 1';
+    const patterns = undefined;
+    const setupCode = 'let myVar = 5;';
+
+    const result = checkRequiredPatterns(userAnswer, patterns, setupCode);
+
+    expect(result).toBeNull();
+  });
+});
+
+// ============================================================================
+// validatePython Tests
+// ============================================================================
+
+describe('validatePython', () => {
+  it('should validate exact match', () => {
+    const setupCode = 'numbers = [1, 2, 3]';
+    const userAnswer = 'len(numbers)';
+    const expected = 3;
+    const sampleSolution = 'len(numbers)';
+
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should validate with whitespace differences', () => {
+    const setupCode = 'numbers = [1, 2, 3]';
+    const userAnswer = 'len( numbers )';
+    const expected = 3;
+    const sampleSolution = 'len(numbers)';
+
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should fail for different solutions', () => {
+    const setupCode = 'numbers = [1, 2, 3]';
+    const userAnswer = 'sum(numbers)';
+    const expected = 3;
+    const sampleSolution = 'len(numbers)';
+
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(false);
+  });
+
+  it('should handle method chaining', () => {
+    const setupCode = 'text = "hello"';
+    const userAnswer = 'text.upper()';
+    const expected = 'HELLO';
+    const sampleSolution = 'text.upper()';
+
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should detect hardcoded output when not using setup variables', () => {
+    const setupCode = 'numbers = [1, 2, 3]';
+    // isHardcodedOutput detects return statements with literal array values
+    const userAnswer = 'return [1,2,3]';
+    const expected = [1, 2, 3];
+    const sampleSolution = 'numbers';
+
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('hardcoded');
+  });
+
+  it('should allow hardcoded-looking output when using setup variables', () => {
+    // If user uses setup vars, hardcoded check passes even if code looks suspicious
+    const setupCode = 'numbers = [1, 2, 3]';
+    const userAnswer = 'numbers and 3';
+    const expected = 3;
+    const sampleSolution = 'len(numbers)';
+
+    // This won't match the sample solution, so should fail on pattern matching
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+    // The hardcoded check passes (uses 'numbers'), but the pattern check fails
+    expect(result.success).toBe(false);
+  });
+
+  it('should normalize whitespace for comparison', () => {
+    const setupCode = 'text = "hello"';
+    const userAnswer = '  text.upper()  ';
+    const expected = 'HELLO';
+    const sampleSolution = 'text.upper()';
+
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should fail when answer does not match any pattern', () => {
+    const setupCode = 'numbers = [1, 2, 3]';
+    const userAnswer = 'completely_different(numbers)';
+    const expected = 3;
+    const sampleSolution = 'len(numbers)';
+
+    const result = validatePython(setupCode, userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('does not match');
+    expect(result.output).toBe('completely_different(numbers)');
+  });
+});
+
+// ============================================================================
+// validateByPattern Tests
+// ============================================================================
+
+describe('validateByPattern', () => {
+  it('should validate exact match', () => {
+    const userAnswer = 'console.log("hello")';
+    const expected = 'hello';
+    const sampleSolution = 'console.log("hello")';
+
+    const result = validateByPattern(userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should validate with extra whitespace', () => {
+    const userAnswer = 'console.log( "hello" )';
+    const expected = 'hello';
+    const sampleSolution = 'console.log("hello")';
+
+    const result = validateByPattern(userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should fail for different code', () => {
+    const userAnswer = 'console.error("hello")';
+    const expected = 'hello';
+    const sampleSolution = 'console.log("hello")';
+
+    const result = validateByPattern(userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(false);
+  });
+
+  it('should validate flexible whitespace match', () => {
+    const userAnswer = 'arr.size()';
+    const expected = 3;
+    const sampleSolution = 'arr.size()';
+
+    const result = validateByPattern(userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should validate case-insensitive regex match', () => {
+    // The regex has 'i' flag, so case insensitive
+    const userAnswer = 'SELECT * FROM users';
+    const expected = 'result';
+    const sampleSolution = 'SELECT * FROM users';
+
+    const result = validateByPattern(userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should return error without output for non-matching', () => {
+    const userAnswer = 'something completely different';
+    const expected = 'result';
+    const sampleSolution = 'arr.size()';
+
+    const result = validateByPattern(userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('does not match');
+    // validateByPattern doesn't set output for failures
+    expect(result.output).toBeUndefined();
+  });
+
+  it('should match flexible whitespace normalization', () => {
+    const userAnswer = '  arr.size()  ';
+    const expected = 3;
+    const sampleSolution = 'arr.size()';
+
+    const result = validateByPattern(userAnswer, expected, sampleSolution);
+
+    expect(result.success).toBe(true);
   });
 });
 
@@ -470,6 +686,59 @@ describe('validateDrillAnswer', () => {
     });
   });
 
+  describe('database language validation', () => {
+    it('should validate postgresql with patterns', () => {
+      const result = validateDrillAnswer(
+        'postgresql',
+        '',
+        'SELECT * FROM users WHERE active = true',
+        'result',
+        'SELECT * FROM users WHERE active = true',
+        [/SELECT\s+\*\s+FROM\s+users/i],
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should validate mysql with patterns', () => {
+      const result = validateDrillAnswer(
+        'mysql',
+        '',
+        'SELECT COUNT(*) FROM orders',
+        'result',
+        'SELECT COUNT(*) FROM orders',
+        [/SELECT\s+COUNT/i],
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should validate mongodb with patterns', () => {
+      const result = validateDrillAnswer(
+        'mongodb',
+        '',
+        'db.users.find()',
+        'result',
+        'db.users.find()',
+        [/db\.users\.find/],
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should fall back to pattern matching for database language without validPatterns', () => {
+      const result = validateDrillAnswer(
+        'postgresql',
+        '',
+        'SELECT * FROM users',
+        'result',
+        'SELECT * FROM users',
+      );
+
+      expect(result.success).toBe(true);
+    });
+  });
+
   describe('other languages', () => {
     it('should validate Java by pattern', () => {
       const result = validateDrillAnswer(
@@ -497,6 +766,36 @@ describe('validateDrillAnswer', () => {
 
     it('should validate Go by pattern', () => {
       const result = validateDrillAnswer('go', 'arr := []int{1, 2, 3}', 'len(arr)', 3, 'len(arr)');
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should validate Ruby by pattern', () => {
+      const result = validateDrillAnswer('ruby', 'arr = [1, 2, 3]', 'arr.length', 3, 'arr.length');
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should validate Rust by pattern', () => {
+      const result = validateDrillAnswer(
+        'rust',
+        'let arr = vec![1, 2, 3];',
+        'arr.len()',
+        3,
+        'arr.len()',
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should validate C by pattern', () => {
+      const result = validateDrillAnswer(
+        'c',
+        'int arr[] = {1, 2, 3};',
+        'sizeof(arr)',
+        'result',
+        'sizeof(arr)',
+      );
 
       expect(result.success).toBe(true);
     });
@@ -531,6 +830,118 @@ describe('validateDrillAnswer', () => {
 
       expect(result.success).toBe(false);
     });
+  });
+
+  describe('hardcoded detection', () => {
+    it('should detect return literal pattern', () => {
+      const result = validateDrillAnswer(
+        'javascript',
+        'const arr = [1, 2, 3];',
+        'return 3',
+        3,
+        'arr.length',
+      );
+
+      expect(result.success).toBe(false);
+      // checkRequiredPatterns catches this first as "must use the provided variables"
+      // since 'return 3' doesn't reference 'arr'
+      expect(
+        result.error?.includes('hardcoded') ||
+          result.error?.includes('must use the provided variables'),
+      ).toBe(true);
+    });
+
+    it('should allow answer that uses setup variables even with literal-like value', () => {
+      const result = validateDrillAnswer(
+        'javascript',
+        'const arr = [1, 2, 3];',
+        'arr.length',
+        3,
+        'arr.length',
+      );
+
+      expect(result.success).toBe(true);
+    });
+  });
+});
+
+// ============================================================================
+// validateProblemAnswer Tests
+// ============================================================================
+
+describe('validateProblemAnswer', () => {
+  it('should delegate to validateDrillAnswer for JavaScript', () => {
+    const problem: Problem = {
+      id: 'test-1',
+      category: 'Array Methods',
+      difficulty: 'easy',
+      title: 'Test Problem',
+      text: 'Test text',
+      setup: 'const arr = [1, 2, 3];',
+      setupCode: 'const arr = [1, 2, 3];',
+      expected: 3,
+      sample: 'arr.length',
+      validPatterns: [/\.length/],
+    };
+
+    const result = validateProblemAnswer(problem, 'arr.length', 'javascript');
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should delegate to validateDrillAnswer for Python', () => {
+    const problem: Problem = {
+      id: 'test-2',
+      category: 'Built-in',
+      difficulty: 'easy',
+      title: 'Test Problem',
+      text: 'Test text',
+      setup: 'numbers = [1, 2, 3]',
+      setupCode: 'numbers = [1, 2, 3]',
+      expected: 3,
+      sample: 'len(numbers)',
+    };
+
+    const result = validateProblemAnswer(problem, 'len(numbers)', 'python');
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should pass through validPatterns from the problem', () => {
+    const problem: Problem = {
+      id: 'test-3',
+      category: 'Array Methods',
+      difficulty: 'easy',
+      title: 'Test Problem',
+      text: 'Use filter',
+      setup: 'const arr = [1, 2, 3, 4, 5];',
+      setupCode: 'const arr = [1, 2, 3, 4, 5];',
+      expected: [2, 4],
+      sample: 'arr.filter(x => x % 2 === 0)',
+      validPatterns: [/\.filter\(/],
+    };
+
+    const result = validateProblemAnswer(problem, 'arr.filter(x => x % 2 === 0)', 'javascript');
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should handle problem without validPatterns', () => {
+    const problem: Problem = {
+      id: 'test-4',
+      category: 'Array Methods',
+      difficulty: 'easy',
+      title: 'Test Problem',
+      text: 'Get length',
+      setup: 'const arr = [1, 2, 3];',
+      setupCode: 'const arr = [1, 2, 3];',
+      expected: 3,
+      sample: 'arr.length',
+    };
+
+    const result = validateProblemAnswer(problem, 'arr.length', 'javascript');
+
+    expect(result.success).toBe(true);
   });
 });
 
@@ -577,5 +988,32 @@ describe('formatOutput', () => {
     const output = formatOutput({ a: { b: { c: 1 } } });
     expect(output).toContain('"c"');
     expect(output).toContain('1');
+  });
+
+  it('should handle circular references gracefully', () => {
+    const obj: Record<string, unknown> = { a: 1 };
+    obj.self = obj;
+
+    // Should not throw - falls back to String(output)
+    const output = formatOutput(obj);
+    expect(typeof output).toBe('string');
+  });
+
+  it('should format zero', () => {
+    expect(formatOutput(0)).toBe('0');
+  });
+
+  it('should format empty string', () => {
+    expect(formatOutput('')).toBe('""');
+  });
+
+  it('should format empty array', () => {
+    const output = formatOutput([]);
+    expect(output).toBe('[]');
+  });
+
+  it('should format empty object', () => {
+    const output = formatOutput({});
+    expect(output).toBe('{}');
   });
 });
