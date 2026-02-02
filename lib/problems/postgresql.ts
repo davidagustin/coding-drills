@@ -57,8 +57,7 @@ INSERT INTO users (data) VALUES ('{"name": "John", "address": {"city": "NYC", "z
     difficulty: 'medium',
     title: 'JSONB Containment Query',
     text: 'Find all users where the data column contains {"active": true}',
-    setup:
-      'Table: users (id, data JSONB) with various user records containing an "active" field',
+    setup: 'Table: users (id, data JSONB) with various user records containing an "active" field',
     setupCode: `CREATE TABLE users (id SERIAL PRIMARY KEY, data JSONB);
 INSERT INTO users (data) VALUES
   ('{"name": "John", "active": true}'),
@@ -68,7 +67,7 @@ INSERT INTO users (data) VALUES
       { id: 1, data: { name: 'John', active: true } },
       { id: 3, data: { name: 'Bob', active: true } },
     ],
-    sample: "SELECT * FROM users WHERE data @> '{\"active\": true}';",
+    sample: 'SELECT * FROM users WHERE data @> \'{"active": true}\';',
     hints: [
       'Use the @> containment operator',
       '@> checks if the left JSONB contains the right JSONB',
@@ -86,7 +85,8 @@ INSERT INTO users (data) VALUES
     difficulty: 'medium',
     title: 'Expand JSONB Array',
     text: 'Extract each tag from a JSONB array column as separate rows',
-    setup: 'Table: posts (id, tags JSONB) where tags is an array like ["sql", "postgres", "database"]',
+    setup:
+      'Table: posts (id, tags JSONB) where tags is an array like ["sql", "postgres", "database"]',
     setupCode: `CREATE TABLE posts (id SERIAL PRIMARY KEY, tags JSONB);
 INSERT INTO posts (tags) VALUES ('["sql", "postgres", "database"]');`,
     expected: ['sql', 'postgres', 'database'],
@@ -95,7 +95,10 @@ INSERT INTO posts (tags) VALUES ('["sql", "postgres", "database"]');`,
       'Use jsonb_array_elements_text() to expand a JSONB array into rows',
       'This returns each array element as a text value',
     ],
-    validPatterns: [/jsonb_array_elements_text\s*\(\s*tags\s*\)/i, /jsonb_array_elements\s*\(\s*tags\s*\)/i],
+    validPatterns: [
+      /jsonb_array_elements_text\s*\(\s*tags\s*\)/i,
+      /jsonb_array_elements\s*\(\s*tags\s*\)/i,
+    ],
     tags: ['jsonb', 'array', 'expand'],
   },
   {
@@ -128,7 +131,8 @@ INSERT INTO users (data) VALUES
     difficulty: 'medium',
     title: 'Update JSONB Field',
     text: 'Update the "status" field in the JSONB data column to "active" for user id 1',
-    setup: 'Table: users (id, data JSONB) where data contains {"name": "John", "status": "pending"}',
+    setup:
+      'Table: users (id, data JSONB) where data contains {"name": "John", "status": "pending"}',
     setupCode: `CREATE TABLE users (id SERIAL PRIMARY KEY, data JSONB);
 INSERT INTO users (data) VALUES ('{"name": "John", "status": "pending"}');`,
     expected: { name: 'John', status: 'active' },
@@ -349,10 +353,7 @@ INSERT INTO products (name, categories) VALUES
       { id: 3, name: 'Desk' },
     ],
     sample: "SELECT id, name FROM products WHERE categories && ARRAY['electronics', 'furniture'];",
-    hints: [
-      'Use the && overlap operator',
-      'Returns true if arrays have any elements in common',
-    ],
+    hints: ['Use the && overlap operator', 'Returns true if arrays have any elements in common'],
     validPatterns: [/categories\s*&&\s*ARRAY\['electronics'\s*,\s*'furniture'\]/i],
     tags: ['array', 'overlap', 'filter'],
   },
@@ -390,10 +391,7 @@ INSERT INTO posts (title, tags) VALUES
 INSERT INTO products (name, categories) VALUES ('Laptop', ARRAY['electronics', 'computers', 'tech', 'gadgets']);`,
     expected: ['electronics', 'computers'],
     sample: 'SELECT categories[1:2] FROM products;',
-    hints: [
-      'Use array slice notation [start:end]',
-      'PostgreSQL arrays are 1-indexed by default',
-    ],
+    hints: ['Use array slice notation [start:end]', 'PostgreSQL arrays are 1-indexed by default'],
     validPatterns: [/categories\s*\[\s*1\s*:\s*2\s*\]/i, /categories\s*\[\s*:\s*2\s*\]/i],
     tags: ['array', 'slice', 'index'],
   },
@@ -412,7 +410,10 @@ INSERT INTO posts (old_tags, new_tags) VALUES (ARRAY['sql', 'db'], ARRAY['postgr
       'Use the || operator to concatenate arrays',
       'This works similarly to string concatenation',
     ],
-    validPatterns: [/old_tags\s*\|\|\s*new_tags/i, /array_cat\s*\(\s*old_tags\s*,\s*new_tags\s*\)/i],
+    validPatterns: [
+      /old_tags\s*\|\|\s*new_tags/i,
+      /array_cat\s*\(\s*old_tags\s*,\s*new_tags\s*\)/i,
+    ],
     tags: ['array', 'concatenate', 'combine'],
   },
 
@@ -437,10 +438,7 @@ INSERT INTO employees (name, salary) VALUES
   SELECT AVG(salary) AS avg_salary FROM employees
 )
 SELECT name, salary FROM employees, avg_sal WHERE salary > avg_salary;`,
-    hints: [
-      'Use WITH clause to define a CTE',
-      'The CTE can be referenced in the main query',
-    ],
+    hints: ['Use WITH clause to define a CTE', 'The CTE can be referenced in the main query'],
     validPatterns: [/WITH\s+\w+\s+AS\s*\(/i, /WITH\s+.*\s+SELECT\s+AVG\s*\(\s*salary\s*\)/i],
     tags: ['cte', 'with', 'subquery'],
   },
@@ -587,10 +585,7 @@ SELECT id, path FROM cat_path;`,
       'Start from root categories (parent_id IS NULL)',
       'Accumulate the path in each recursive step',
     ],
-    validPatterns: [
-      /WITH\s+RECURSIVE.*\|\|.*\|\|/i,
-      /path\s*\|\|\s*'.*'\s*\|\|\s*\w+\.name/i,
-    ],
+    validPatterns: [/WITH\s+RECURSIVE.*\|\|.*\|\|/i, /path\s*\|\|\s*'.*'\s*\|\|\s*\w+\.name/i],
     tags: ['cte', 'recursive', 'path', 'tree'],
   },
   {
@@ -619,10 +614,7 @@ SELECT EXISTS(SELECT 1 FROM paths WHERE has_cycle) AS has_cycle;`,
       'Check if next node is already in the path (cycle)',
       'Use ANY() to check array membership',
     ],
-    validPatterns: [
-      /WITH\s+RECURSIVE.*ARRAY\[/i,
-      /=\s*ANY\s*\(\s*\w+\.path\s*\)/i,
-    ],
+    validPatterns: [/WITH\s+RECURSIVE.*ARRAY\[/i, /=\s*ANY\s*\(\s*\w+\.path\s*\)/i],
     tags: ['cte', 'recursive', 'graph', 'cycle-detection', 'advanced'],
   },
 
@@ -680,9 +672,7 @@ INSERT INTO sales (sale_date, amount) VALUES
       'Use SUM() as a window function with OVER',
       'ORDER BY in the OVER clause creates cumulative behavior',
     ],
-    validPatterns: [
-      /SUM\s*\(\s*amount\s*\)\s*OVER\s*\(\s*ORDER\s+BY\s+sale_date\s*\)/i,
-    ],
+    validPatterns: [/SUM\s*\(\s*amount\s*\)\s*OVER\s*\(\s*ORDER\s+BY\s+sale_date\s*\)/i],
     tags: ['window', 'running-total', 'sum'],
   },
   {
@@ -831,10 +821,7 @@ INSERT INTO employees (name, salary) VALUES
   RANK() OVER (ORDER BY salary DESC) AS rank,
   DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rank
 FROM employees;`,
-    hints: [
-      'RANK() leaves gaps after ties (1,2,2,4)',
-      'DENSE_RANK() has no gaps (1,2,2,3)',
-    ],
+    hints: ['RANK() leaves gaps after ties (1,2,2,4)', 'DENSE_RANK() has no gaps (1,2,2,3)'],
     validPatterns: [
       /RANK\s*\(\s*\)\s*OVER\s*\(\s*ORDER\s+BY/i,
       /DENSE_RANK\s*\(\s*\)\s*OVER\s*\(\s*ORDER\s+BY/i,
@@ -863,9 +850,7 @@ FROM transactions;`,
       'FILTER clause can be used with window functions',
       'It filters which rows contribute to the aggregate',
     ],
-    validPatterns: [
-      /SUM\s*\(\s*amount\s*\)\s*FILTER\s*\(\s*WHERE\s+amount\s*>\s*0\s*\)\s*OVER/i,
-    ],
+    validPatterns: [/SUM\s*\(\s*amount\s*\)\s*FILTER\s*\(\s*WHERE\s+amount\s*>\s*0\s*\)\s*OVER/i],
     tags: ['window', 'filter', 'conditional-aggregate'],
   },
 
@@ -915,10 +900,7 @@ INSERT INTO articles (title, content) VALUES
     expected: [{ id: 1, title: 'PostgreSQL Guide' }],
     sample:
       "SELECT id, title FROM articles WHERE to_tsvector(content) @@ to_tsquery('postgresql & database');",
-    hints: [
-      'Use & for AND in tsquery',
-      'Both terms must be present for a match',
-    ],
+    hints: ['Use & for AND in tsquery', 'Both terms must be present for a match'],
     validPatterns: [
       /to_tsquery\s*\(\s*'postgresql\s*&\s*database'\s*\)/i,
       /plainto_tsquery.*postgresql.*database/i,
@@ -943,14 +925,8 @@ INSERT INTO articles (title, content) VALUES
     ],
     sample:
       "SELECT id, title FROM articles WHERE to_tsvector(content) @@ to_tsquery('(postgresql | mysql) & !deprecated');",
-    hints: [
-      'Use | for OR in tsquery',
-      'Use ! for NOT in tsquery',
-      'Parentheses group conditions',
-    ],
-    validPatterns: [
-      /to_tsquery\s*\(\s*'\(postgresql\s*\|\s*mysql\)\s*&\s*!deprecated'\s*\)/i,
-    ],
+    hints: ['Use | for OR in tsquery', 'Use ! for NOT in tsquery', 'Parentheses group conditions'],
+    validPatterns: [/to_tsquery\s*\(\s*'\(postgresql\s*\|\s*mysql\)\s*&\s*!deprecated'\s*\)/i],
     tags: ['full-text', 'tsquery', 'boolean-operators'],
   },
   {
@@ -1005,9 +981,7 @@ INSERT INTO articles (title, content) VALUES
       '<-> means immediately adjacent',
       '<2> means within 2 words',
     ],
-    validPatterns: [
-      /to_tsquery\s*\(\s*'postgresql\s*<\d+>\s*performance'\s*\)/i,
-    ],
+    validPatterns: [/to_tsquery\s*\(\s*'postgresql\s*<\d+>\s*performance'\s*\)/i],
     tags: ['full-text', 'phrase-search', 'proximity'],
   },
   {
@@ -1060,9 +1034,7 @@ INSERT INTO users (email, name) VALUES ('john@example.com', 'John');`,
       'ON CONFLICT specifies the unique constraint',
       'DO NOTHING skips the insert if conflict occurs',
     ],
-    validPatterns: [
-      /INSERT\s+INTO\s+users.*ON\s+CONFLICT\s*\(\s*email\s*\)\s*DO\s+NOTHING/i,
-    ],
+    validPatterns: [/INSERT\s+INTO\s+users.*ON\s+CONFLICT\s*\(\s*email\s*\)\s*DO\s+NOTHING/i],
     tags: ['upsert', 'on-conflict', 'do-nothing'],
   },
   {
@@ -1108,9 +1080,7 @@ WHERE records.updated_at < EXCLUDED.updated_at;`,
       'Reference the existing row with the table name',
       'Reference the new values with EXCLUDED',
     ],
-    validPatterns: [
-      /DO\s+UPDATE\s+SET.*WHERE\s+records\.updated_at\s*<\s*EXCLUDED\.updated_at/i,
-    ],
+    validPatterns: [/DO\s+UPDATE\s+SET.*WHERE\s+records\.updated_at\s*<\s*EXCLUDED\.updated_at/i],
     tags: ['upsert', 'conditional-update', 'where'],
   },
   {
@@ -1119,7 +1089,8 @@ WHERE records.updated_at < EXCLUDED.updated_at;`,
     difficulty: 'hard',
     title: 'Upsert with Increment',
     text: 'Insert page view or increment the count if the page already exists',
-    setup: 'Table: page_views (page_url TEXT PRIMARY KEY, view_count INTEGER, last_viewed TIMESTAMP)',
+    setup:
+      'Table: page_views (page_url TEXT PRIMARY KEY, view_count INTEGER, last_viewed TIMESTAMP)',
     setupCode: `CREATE TABLE page_views (page_url TEXT PRIMARY KEY, view_count INTEGER DEFAULT 1, last_viewed TIMESTAMP);
 INSERT INTO page_views VALUES ('/home', 10, '2024-01-01');`,
     expected: { page_url: '/home', view_count: 11 },
@@ -1159,9 +1130,7 @@ DO UPDATE SET price = EXCLUDED.price;`,
       'Multiple VALUES can be provided in one INSERT',
       'ON CONFLICT applies to each row individually',
     ],
-    validPatterns: [
-      /INSERT\s+INTO\s+products.*VALUES\s*\([^)]+\)\s*,\s*\([^)]+\).*ON\s+CONFLICT/i,
-    ],
+    validPatterns: [/INSERT\s+INTO\s+products.*VALUES\s*\([^)]+\)\s*,\s*\([^)]+\).*ON\s+CONFLICT/i],
     tags: ['upsert', 'bulk', 'multiple-rows'],
   },
 
@@ -1177,7 +1146,8 @@ DO UPDATE SET price = EXCLUDED.price;`,
     setup: 'Table: users (id SERIAL PRIMARY KEY, name TEXT, email TEXT)',
     setupCode: 'CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT, email TEXT);',
     expected: { id: 1, name: 'Alice' },
-    sample: "INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com') RETURNING id, name;",
+    sample:
+      "INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com') RETURNING id, name;",
     hints: [
       'RETURNING clause returns specified columns from inserted rows',
       'Useful for getting auto-generated values like SERIAL ids',
@@ -1205,9 +1175,7 @@ RETURNING id, name, price - price/1.10 AS old_price, price AS new_price;`,
       'RETURNING can include expressions and calculations',
       'The returned values are from AFTER the update',
     ],
-    validPatterns: [
-      /UPDATE\s+products.*SET\s+price.*RETURNING/i,
-    ],
+    validPatterns: [/UPDATE\s+products.*SET\s+price.*RETURNING/i],
     tags: ['returning', 'update', 'expression'],
   },
   {
@@ -1254,9 +1222,7 @@ FROM new_order JOIN customers ON new_order.customer_id = customers.id;`,
       'Use CTE to capture RETURNING output',
       'Then join with other tables for additional data',
     ],
-    validPatterns: [
-      /WITH\s+\w+\s+AS\s*\(\s*INSERT.*RETURNING\s*\*?\s*\)\s*SELECT/i,
-    ],
+    validPatterns: [/WITH\s+\w+\s+AS\s*\(\s*INSERT.*RETURNING\s*\*?\s*\)\s*SELECT/i],
     tags: ['returning', 'cte', 'join'],
   },
 
@@ -1303,7 +1269,7 @@ CROSS JOIN LATERAL (
     category: 'Lateral Joins',
     difficulty: 'medium',
     title: 'LATERAL with Set-Returning Function',
-    text: 'Expand each user\'s array of roles into separate rows using LATERAL unnest',
+    text: "Expand each user's array of roles into separate rows using LATERAL unnest",
     setup: 'Table: users (id, name TEXT, roles TEXT[])',
     setupCode: `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT, roles TEXT[]);
 INSERT INTO users (name, roles) VALUES
@@ -1405,10 +1371,7 @@ JOIN products p ON p.id = (item->>'product_id')::int;`,
     expected: { name: 'Project A', duration: '[2024-01-01,2024-06-30]' },
     sample:
       "INSERT INTO projects (name, duration) VALUES ('Project A', '[2024-01-01, 2024-06-30]') RETURNING *;",
-    hints: [
-      'DATERANGE stores a range of dates',
-      'Use square brackets for inclusive bounds',
-    ],
+    hints: ['DATERANGE stores a range of dates', 'Use square brackets for inclusive bounds'],
     validPatterns: [
       /'\[2024-01-01\s*,\s*2024-06-30\]'/i,
       /daterange\s*\(\s*'2024-01-01'\s*,\s*'2024-06-30'/i,
@@ -1433,10 +1396,7 @@ INSERT INTO reservations (room_id, dates) VALUES
     ],
     sample:
       "SELECT id, room_id FROM reservations WHERE dates && '[2024-03-01, 2024-03-15]'::daterange;",
-    hints: [
-      'Use && operator to check for range overlap',
-      'Cast string to daterange type',
-    ],
+    hints: ['Use && operator to check for range overlap', 'Cast string to daterange type'],
     validPatterns: [
       /dates\s*&&\s*'\[2024-03-01\s*,\s*2024-03-15\]'::daterange/i,
       /dates\s*&&\s*daterange\s*\(/i,
@@ -1457,14 +1417,8 @@ INSERT INTO schedules (event, dates) VALUES
   ('Meeting', '[2024-06-01, 2024-06-05]');`,
     expected: [{ id: 1, event: 'Conference' }],
     sample: "SELECT id, event FROM schedules WHERE dates @> '2024-05-15'::date;",
-    hints: [
-      'Use @> to check if range contains a value',
-      'Cast the date string to date type',
-    ],
-    validPatterns: [
-      /dates\s*@>\s*'2024-05-15'::date/i,
-      /'2024-05-15'::date\s*<@\s*dates/i,
-    ],
+    hints: ['Use @> to check if range contains a value', 'Cast the date string to date type'],
+    validPatterns: [/dates\s*@>\s*'2024-05-15'::date/i, /'2024-05-15'::date\s*<@\s*dates/i],
     tags: ['range', 'contains', 'daterange'],
   },
   {
@@ -1491,10 +1445,7 @@ INSERT INTO seat_assignments (event_id, seats) VALUES (1, '[1, 10)');
       'Prevents rows where conditions are all true',
       '&& checks for overlap, = checks for equality',
     ],
-    validPatterns: [
-      /EXCLUDE\s+USING\s+GIST\s*\(/i,
-      /int4range\s*\(\s*\d+\s*,\s*\d+/i,
-    ],
+    validPatterns: [/EXCLUDE\s+USING\s+GIST\s*\(/i, /int4range\s*\(\s*\d+\s*,\s*\d+/i],
     tags: ['range', 'int4range', 'exclusion-constraint'],
   },
   {
@@ -1514,10 +1465,7 @@ INSERT INTO seat_assignments (event_id, seats) VALUES (1, '[1, 10)');
       'Use + operator for range union',
       'Intersection returns the overlapping portion',
     ],
-    validPatterns: [
-      /'\[.*\]'::daterange\s*\*\s*'\[.*\]'::daterange/i,
-      /daterange_intersect\s*\(/i,
-    ],
+    validPatterns: [/'\[.*\]'::daterange\s*\*\s*'\[.*\]'::daterange/i, /daterange_intersect\s*\(/i],
     tags: ['range', 'intersection', 'daterange'],
   },
 
@@ -1543,9 +1491,7 @@ FROM employees;`,
       'FILTER clause applies a condition to aggregate functions',
       'More readable than CASE WHEN inside COUNT',
     ],
-    validPatterns: [
-      /COUNT\s*\(\s*\*\s*\)\s*FILTER\s*\(\s*WHERE\s+active\s*\)/i,
-    ],
+    validPatterns: [/COUNT\s*\(\s*\*\s*\)\s*FILTER\s*\(\s*WHERE\s+active\s*\)/i],
     tags: ['aggregate', 'filter', 'conditional'],
   },
   {
@@ -1612,13 +1558,8 @@ INSERT INTO employees (name, department) VALUES
     expected: { most_common_dept: 'Engineering' },
     sample: `SELECT mode() WITHIN GROUP (ORDER BY department) AS most_common_dept
 FROM employees;`,
-    hints: [
-      'mode() returns the most frequent value',
-      'Uses WITHIN GROUP for ordering',
-    ],
-    validPatterns: [
-      /mode\s*\(\s*\)\s*WITHIN\s+GROUP\s*\(\s*ORDER\s+BY\s+department\s*\)/i,
-    ],
+    hints: ['mode() returns the most frequent value', 'Uses WITHIN GROUP for ordering'],
+    validPatterns: [/mode\s*\(\s*\)\s*WITHIN\s+GROUP\s*\(\s*ORDER\s+BY\s+department\s*\)/i],
     tags: ['aggregate', 'mode', 'within-group'],
   },
   {
@@ -1634,13 +1575,8 @@ INSERT INTO products (name, price) VALUES
     expected: { products_by_price: ['Gadget', 'Tool', 'Widget'] },
     sample: `SELECT array_agg(name ORDER BY price DESC) AS products_by_price
 FROM products;`,
-    hints: [
-      'array_agg() can include ORDER BY',
-      'This orders elements within the resulting array',
-    ],
-    validPatterns: [
-      /array_agg\s*\(\s*name\s+ORDER\s+BY\s+price\s+DESC\s*\)/i,
-    ],
+    hints: ['array_agg() can include ORDER BY', 'This orders elements within the resulting array'],
+    validPatterns: [/array_agg\s*\(\s*name\s+ORDER\s+BY\s+price\s+DESC\s*\)/i],
     tags: ['aggregate', 'array_agg', 'ordering'],
   },
   {
