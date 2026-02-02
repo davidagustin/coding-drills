@@ -33,7 +33,7 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 const LANGUAGE_SOURCES: { id: FlashcardSource; label: string }[] = [
-  { id: 'method', label: 'Language Methods' },
+  { id: 'method', label: 'Drill Mode Methods' },
   { id: 'time-complexity', label: 'Time Complexity' },
   { id: 'space-complexity', label: 'Space Complexity' },
   { id: 'pattern', label: 'Algorithm Patterns' },

@@ -36,7 +36,7 @@ function shuffle<T>(arr: T[]): T[] {
 function getFrameworkSources(framework: string): { id: FlashcardSource; label: string }[] {
   const name = FRAMEWORK_CONFIG[framework as FrameworkId]?.name ?? framework;
   return [
-    { id: 'frontend' as FlashcardSource, label: `${name} Knowledge` },
+    { id: 'frontend' as FlashcardSource, label: `${name} Quiz Questions` },
     { id: 'pattern' as FlashcardSource, label: 'Algorithm Patterns' },
   ];
 }

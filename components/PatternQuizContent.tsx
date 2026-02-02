@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PatternRecognitionGuide } from '@/components/PatternRecognitionGuide';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
@@ -51,6 +52,8 @@ interface PatternQuizConfig {
 export interface PatternQuizContentProps {
   /** Where "Back to Menu" navigates (e.g. "/" for standalone, "/typescript" for language page) */
   backHref: string;
+  /** Optional link to study mode for inline mode tabs */
+  studyHref?: string;
 }
 
 // ============================================================================
@@ -91,11 +94,19 @@ interface SetupPhaseProps {
   onStart: () => void;
   onShowGuide?: () => void;
   categories: string[];
+  studyHref?: string;
 }
 
 const TIME_OPTIONS = [10, 15, 20, 30, 0] as const;
 
-function SetupPhase({ config, onConfigChange, onStart, onShowGuide, categories }: SetupPhaseProps) {
+function SetupPhase({
+  config,
+  onConfigChange,
+  onStart,
+  onShowGuide,
+  categories,
+  studyHref,
+}: SetupPhaseProps) {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const availableCount = getPatternProblems(
     config.difficulty === 'all' ? undefined : config.difficulty,
@@ -115,6 +126,49 @@ function SetupPhase({ config, onConfigChange, onStart, onShowGuide, categories }
             Test your ability to recognize algorithm patterns from LeetCode-style problems
           </p>
         </div>
+
+        {/* Inline mode tabs */}
+        {studyHref && (
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <span className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-purple-500/15 text-purple-300 border border-purple-500/30">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                />
+              </svg>
+              Quiz
+            </span>
+            <Link
+              href={studyHref}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all duration-200"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
+                />
+              </svg>
+              Study
+            </Link>
+          </div>
+        )}
 
         {/* Pattern Recognition Guide */}
         {onShowGuide && (
@@ -692,7 +746,7 @@ function ReviewPhase({ state, onBackToResults, onBackToMenu }: ReviewPhaseProps)
 // Main Content Component
 // ============================================================================
 
-export function PatternQuizContent({ backHref }: PatternQuizContentProps) {
+export function PatternQuizContent({ backHref, studyHref }: PatternQuizContentProps) {
   const categories = getPatternCategories();
 
   // Read URL params for configuration
@@ -901,6 +955,7 @@ export function PatternQuizContent({ backHref }: PatternQuizContentProps) {
           onStart={handleStart}
           onShowGuide={() => setState((prev) => ({ ...prev, showGuide: true }))}
           categories={categories}
+          studyHref={studyHref}
         />
       )}
 

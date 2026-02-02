@@ -5,12 +5,42 @@
  * based on source type and content.
  *
  * - Methods: Curated per-language sets of commonly tested method names
- * - Complexity: ALL marked (complexity analysis is core interview skill)
- * - Patterns: ALL marked (algorithm patterns ARE interview prep)
- * - Frontend: ALL marked (framework knowledge is standard interview fare)
+ * - Complexity: Easy and medium difficulty (hard is less common in interviews)
+ * - Patterns: Core algorithm categories frequently tested
+ * - Frontend: Core frontend categories frequently tested
  */
 
 import type { FlashcardSource } from './types';
+
+// Core algorithm pattern categories frequently tested in interviews
+const INTERVIEW_PATTERN_CATEGORIES = new Set([
+  'Array',
+  'Binary Search',
+  'Dynamic Programming',
+  'Graph',
+  'Linked List',
+  'Stack',
+  'String',
+  'Tree',
+  'Sorting',
+  'Backtracking',
+  'Heap',
+  'Two Pointers',
+  'Sliding Window',
+  'Hash Map',
+]);
+
+// Core frontend categories frequently tested in interviews
+const INTERVIEW_FRONTEND_CATEGORIES = new Set([
+  'DOM & Events',
+  'State & Lifecycle',
+  'Rendering',
+  'Data Fetching',
+  'Component Patterns',
+  'Performance',
+  'Hooks',
+  'Virtual DOM',
+]);
 
 // JavaScript methods commonly tested in interviews
 const JS_INTERVIEW_METHODS = new Set([
@@ -183,13 +213,13 @@ export function isMethodInterviewRecommended(language: string, methodName: strin
 /**
  * Returns true if a flashcard should be marked as interview-recommended.
  * - method: checks against curated per-language method sets
- * - complexity: always true (core interview skill)
- * - pattern: always true (algorithm patterns = interview prep)
- * - frontend: always true (framework knowledge = interview standard)
+ * - complexity: easy and medium difficulty (hard is less common)
+ * - pattern: checks against curated core algorithm categories
+ * - frontend: checks against curated core frontend categories
  */
 export function isFlashcardInterviewRecommended(
   source: FlashcardSource,
-  context: { language?: string; methodName?: string },
+  context: { language?: string; methodName?: string; category?: string; difficulty?: string },
 ): boolean {
   switch (source) {
     case 'method':
@@ -199,8 +229,11 @@ export function isFlashcardInterviewRecommended(
       );
     case 'time-complexity':
     case 'space-complexity':
+      // Easy and medium complexity questions are core interview material
+      return context.difficulty !== 'hard';
     case 'pattern':
+      return context.category ? INTERVIEW_PATTERN_CATEGORIES.has(context.category) : true;
     case 'frontend':
-      return true;
+      return context.category ? INTERVIEW_FRONTEND_CATEGORIES.has(context.category) : true;
   }
 }

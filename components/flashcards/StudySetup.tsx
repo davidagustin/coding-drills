@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useMemo, useState } from 'react';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import {
@@ -22,9 +23,16 @@ interface StudySetupProps {
   context: { language?: string; framework?: string };
   weakCardCount: number;
   onStart: (config: StudySessionConfig) => void;
+  quizHref?: string;
 }
 
-export function StudySetup({ availableSources, context, weakCardCount, onStart }: StudySetupProps) {
+export function StudySetup({
+  availableSources,
+  context,
+  weakCardCount,
+  onStart,
+  quizHref,
+}: StudySetupProps) {
   const [selectedSources, setSelectedSources] = useState<FlashcardSource[]>(() =>
     availableSources.map((s) => s.id),
   );
@@ -253,9 +261,53 @@ export function StudySetup({ availableSources, context, weakCardCount, onStart }
             Study Mode
           </h1>
           <p className="text-zinc-400 text-lg">
-            Review questions at your own pace. No timers, no scoring — just focused recall.
+            Study questions from Quiz and Drill Mode as flashcards. No timers, no scoring — just
+            focused recall.
           </p>
         </div>
+
+        {/* Inline mode tabs */}
+        {quizHref && (
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <Link
+              href={quizHref}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all duration-200"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                />
+              </svg>
+              Quiz
+            </Link>
+            <span className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-purple-500/15 text-purple-300 border border-purple-500/30">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
+                />
+              </svg>
+              Study
+            </span>
+          </div>
+        )}
 
         {/* What to Study */}
         <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">

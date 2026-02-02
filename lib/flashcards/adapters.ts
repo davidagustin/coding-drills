@@ -60,6 +60,7 @@ function complexityToFlashcard(
   type: 'time-complexity' | 'space-complexity',
 ): Flashcard {
   const isTime = type === 'time-complexity';
+  const difficulty = inferComplexityDifficulty(isTime ? q.timeComplexity : q.spaceComplexity);
   return {
     id: `${type}:${q.id}`,
     source: type,
@@ -73,9 +74,9 @@ function complexityToFlashcard(
       answer: isTime ? q.timeComplexity : q.spaceComplexity,
       explanation: q.explanation,
     },
-    difficulty: inferComplexityDifficulty(isTime ? q.timeComplexity : q.spaceComplexity),
+    difficulty,
     category: q.category,
-    interviewRecommended: true,
+    interviewRecommended: isFlashcardInterviewRecommended(type, { difficulty }),
   };
 }
 
@@ -104,7 +105,7 @@ function patternToFlashcard(p: AlgorithmPatternProblem): Flashcard {
     },
     difficulty: p.difficulty,
     category: p.category,
-    interviewRecommended: true,
+    interviewRecommended: isFlashcardInterviewRecommended('pattern', { category: p.category }),
   };
 }
 
@@ -123,7 +124,7 @@ function frontendToFlashcard(q: FrontendQuizQuestion): Flashcard {
     },
     difficulty: q.difficulty,
     category: q.category,
-    interviewRecommended: true,
+    interviewRecommended: isFlashcardInterviewRecommended('frontend', { category: q.category }),
   };
 }
 

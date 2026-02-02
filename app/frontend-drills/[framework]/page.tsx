@@ -277,7 +277,7 @@ export default function FrameworkPage() {
           href={`/frontend-drills/${framework}/study`}
           icon={<StudyIcon className="w-8 h-8" />}
           title="Study Mode"
-          description={`Review ${config.name} questions at your own pace. No timers, no scoring — just focused recall with flashcards.`}
+          description="Study questions from Quiz and Drill Mode as flashcards. No timers, no scoring — just focused recall."
           buttonText="Start Studying"
           config={config}
           badge={studyCardCount > 0 ? `${studyCardCount} cards` : undefined}

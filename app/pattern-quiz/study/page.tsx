@@ -32,7 +32,7 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 const SOURCES: { id: FlashcardSource; label: string }[] = [
-  { id: 'pattern', label: 'Algorithm Patterns' },
+  { id: 'pattern', label: 'Quiz Questions' },
 ];
 
 export default function PatternStudyPage() {
@@ -152,6 +152,7 @@ export default function PatternStudyPage() {
         context={{}}
         weakCardCount={weakCardCount}
         onStart={handleStart}
+        quizHref="/pattern-quiz"
       />
     );
   }

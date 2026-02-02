@@ -531,7 +531,7 @@ export default function LanguagePage() {
               href={`/${language}/study`}
               icon={<StudyIcon className="w-8 h-8" />}
               title="Study Mode"
-              description="Review questions at your own pace with flashcards. No timers, no scoring — just focused recall."
+              description="Study the same questions from Quiz and Drill Mode as flashcards. No timers, no scoring — just focused recall."
               buttonText="Start Studying"
               config={config}
               badge={studyCardCount > 0 ? `${studyCardCount} cards` : undefined}
