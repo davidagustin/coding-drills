@@ -806,7 +806,13 @@ export default function UIPatternDetail() {
   const framework = params.framework as string;
   const patternId = params.patternId as string;
   const [mounted, setMounted] = useState(false);
-  const [userCode, setUserCode] = useState('');
+  // Initialize with starter code synchronously to avoid race condition with
+  // the dynamically-imported CodeEditor mounting before the useEffect fires.
+  const [userCode, setUserCode] = useState(() => {
+    if (!isValidFramework(framework)) return '';
+    const p = getUIPatternById(framework as FrameworkId, patternId);
+    return p ? generateStarterCode(p, framework) : '';
+  });
   const [editorTab, setEditorTab] = useState<'html' | 'css' | 'js'>('js');
   const [previewKey, setPreviewKey] = useState(0);
   const [hintsOpen, setHintsOpen] = useState(false);
@@ -827,8 +833,8 @@ export default function UIPatternDetail() {
   useEffect(() => {
     const handler = (e: MessageEvent) => {
       if (e.data?.type === 'pattern-test-results') {
-        setTestResults(e.data.results);  
-        setTestsRunning(false);  
+        setTestResults(e.data.results);
+        setTestsRunning(false);
       }
     };
     window.addEventListener('message', handler);
@@ -849,15 +855,20 @@ export default function UIPatternDetail() {
     }
   }, []);
 
-  // Initialize editor with framework-specific starter code
+  // Re-initialize starter code when navigating between patterns.
+  // The initial value is set synchronously in useState above;
+  // this effect handles subsequent pattern/framework changes.
+  const starterCodeKey = `${framework}:${patternId}`;
+  const prevStarterKeyRef = useRef(starterCodeKey);
   useEffect(() => {
-    if (!mounted) return;
+    if (prevStarterKeyRef.current === starterCodeKey) return;
+    prevStarterKeyRef.current = starterCodeKey;
     if (!isValidFramework(framework)) return;
     const p = getUIPatternById(framework as FrameworkId, patternId);
     if (p) {
-      setUserCode(generateStarterCode(p, framework)); // eslint-disable-line react-hooks/set-state-in-effect -- Initialize starter code for pattern
+      setUserCode(generateStarterCode(p, framework)); // eslint-disable-line react-hooks/set-state-in-effect -- Reset code on pattern navigation
     }
-  }, [mounted, framework, patternId]);
+  }, [starterCodeKey, framework, patternId]);
 
   // Build a preview document from the user's code + pattern HTML/CSS
   // Must be before early returns to satisfy rules of hooks
