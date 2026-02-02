@@ -26,6 +26,7 @@ export type LanguageId =
   | 'dart'
   | 'clojure'
   // Database languages
+  | 'sql'
   | 'postgresql'
   | 'mysql'
   | 'mongodb';

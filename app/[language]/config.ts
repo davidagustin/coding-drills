@@ -24,6 +24,7 @@ export const SUPPORTED_LANGUAGES = [
   'dart',
   'clojure',
   // Database languages
+  'sql',
   'postgresql',
   'mysql',
   'mongodb',
@@ -235,6 +236,15 @@ export const LANGUAGE_CONFIG: Record<
     docsUrl: 'https://clojure.org/reference/documentation',
   },
   // Database languages
+  sql: {
+    name: 'SQL',
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    hoverBg: 'hover:bg-blue-400/20',
+    version: 'SQL:2023',
+    docsUrl: 'https://www.w3schools.com/sql/',
+  },
   postgresql: {
     name: 'PostgreSQL',
     color: 'text-sky-500',
@@ -266,22 +276,4 @@ export const LANGUAGE_CONFIG: Record<
 
 export function isValidLanguage(language: string): language is SupportedLanguage {
   return SUPPORTED_LANGUAGES.includes(language as SupportedLanguage);
-}
-
-const DATABASE_LANGUAGES: ReadonlySet<string> = new Set(['postgresql', 'mysql', 'mongodb']);
-
-export function isDatabaseLanguage(language: string): boolean {
-  return DATABASE_LANGUAGES.has(language);
-}
-
-/** Returns "Query Training" for database languages, "Method Training" for programming languages. */
-export function getTrainingLabel(language: string): string {
-  return DATABASE_LANGUAGES.has(language) ? 'Query Training' : 'Method Training';
-}
-
-/** Returns a description appropriate for the language type. */
-export function getTrainingDescription(language: string): string {
-  return DATABASE_LANGUAGES.has(language)
-    ? 'Train your ability to write queries, use operators, and master database patterns. Build muscle memory for common operations.'
-    : 'Train your ability to use methods, transform data, and write clean solutions. Build muscle memory for common patterns.';
 }
