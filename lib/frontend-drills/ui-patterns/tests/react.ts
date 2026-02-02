@@ -14,15 +14,15 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-forms': [
     {
       name: 'Submitting empty form shows validation errors',
-      test: "(async function() { var form = document.querySelector('form'); if (!form) return false; var btn = document.querySelector('button[type=\"submit\"]') || document.querySelector('form button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('required') || document.body.textContent.toLowerCase().includes('empty') || !!document.querySelector('.error'); })()",
+      test: "(async function() { var form = document.querySelector('form'); if (!form) return false; var btn = document.querySelector('button[type=\"submit\"]') || document.querySelector('form button'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.innerText.toLowerCase().includes('required') || document.body.innerText.toLowerCase().includes('empty') || !!document.querySelector('.error'); })()",
     },
     {
       name: 'Typing in name field clears its error',
-      test: "(async function() { var input = document.querySelector('input[placeholder*=\"name\" i]') || document.querySelectorAll('input')[0]; if (!input) return false; var btn = document.querySelector('button[type=\"submit\"]'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var hadError = !!document.querySelector('.error') || document.body.textContent.toLowerCase().includes('required'); var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'John Doe'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var errorCount = document.querySelectorAll('.error').length; return hadError && errorCount < 3; })()",
+      test: "(async function() { var input = document.querySelector('input[placeholder*=\"name\" i]') || document.querySelectorAll('input')[0]; if (!input) return false; var btn = document.querySelector('button[type=\"submit\"]'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var hadError = !!document.querySelector('.error') || document.body.innerText.toLowerCase().includes('required'); var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'John Doe'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var errorCount = document.querySelectorAll('.error').length; return hadError && errorCount < 3; })()",
     },
     {
       name: 'Valid submission shows success message',
-      test: "(async function() { var inputs = document.querySelectorAll('input'); if (inputs.length < 3) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(inputs[0], 'John Doe'); inputs[0].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); nativeInputValueSetter.call(inputs[1], 'john@example.com'); inputs[1].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); nativeInputValueSetter.call(inputs[2], 'password123'); inputs[2].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); var btn = document.querySelector('button[type=\"submit\"]'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('success') || document.body.textContent.toLowerCase().includes('thank'); })()",
+      test: "(async function() { var inputs = document.querySelectorAll('input'); if (inputs.length < 3) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(inputs[0], 'John Doe'); inputs[0].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); nativeInputValueSetter.call(inputs[1], 'john@example.com'); inputs[1].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); nativeInputValueSetter.call(inputs[2], 'password123'); inputs[2].dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); var btn = document.querySelector('button[type=\"submit\"]'); if (btn) btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.success') || document.body.innerText.toLowerCase().includes('welcome') || document.body.innerText.toLowerCase().includes('thank'); })()",
     },
   ],
 
@@ -44,33 +44,33 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-autosave': [
     {
       name: 'Status changes to saving when typing',
-      test: "(async function() { var input = document.querySelector('input') || document.querySelector('textarea'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'New content'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); return document.body.textContent.toLowerCase().includes('saving'); })()",
+      test: "(async function() { var input = document.querySelector('input') || document.querySelector('textarea'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'New content'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 50); }); return document.body.innerText.toLowerCase().includes('saving'); })()",
     },
     {
       name: 'Status changes to saved after delay',
-      test: "(async function() { var input = document.querySelector('input') || document.querySelector('textarea'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'Auto-saved content'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 1200); }); return document.body.textContent.toLowerCase().includes('saved'); })()",
+      test: "(async function() { var input = document.querySelector('input') || document.querySelector('textarea'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'Auto-saved content'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 1200); }); return document.body.innerText.toLowerCase().includes('saved'); })()",
     },
   ],
 
   'react-input-feedback': [
     {
       name: 'Invalid email shows error icon and message',
-      test: "(async function() { var input = document.querySelector('input[type=\"email\"]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'invalid'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return (!!document.querySelector('.invalid') || !!document.querySelector('.error')) && (document.body.textContent.toLowerCase().includes('invalid') || document.body.textContent.toLowerCase().includes('email')); })()",
+      test: "(async function() { var input = document.querySelector('input[type=\"email\"]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'invalid'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return (!!document.querySelector('.invalid') || !!document.querySelector('.error')) && (document.body.innerText.toLowerCase().includes('invalid') || document.body.innerText.toLowerCase().includes('email')); })()",
     },
     {
       name: 'Valid email shows success icon',
-      test: "(async function() { var input = document.querySelector('input[type=\"email\"]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'user@example.com'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.valid') || !!document.querySelector('.success') || document.body.textContent.includes('✓'); })()",
+      test: "(async function() { var input = document.querySelector('input[type=\"email\"]') || document.querySelectorAll('input')[1]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'user@example.com'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.valid') || !!document.querySelector('.success') || document.body.innerText.includes('✓'); })()",
     },
   ],
 
   'react-password-strength': [
     {
       name: 'Weak password shows low strength',
-      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'abc'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); return (fill && parseFloat(fill.style.width) < 50) || document.body.textContent.toLowerCase().includes('weak'); })()",
+      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'abc'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); return (fill && parseFloat(fill.style.width) < 50) || document.body.innerText.toLowerCase().includes('weak'); })()",
     },
     {
       name: 'Strong password shows high strength',
-      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'MyP@ssw0rd123'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); return (fill && parseFloat(fill.style.width) > 60) || document.body.textContent.toLowerCase().includes('strong'); })()",
+      test: "(async function() { var input = document.querySelector('input[type=\"password\"]'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'MyP@ssw0rd123'); input.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); var fill = document.querySelector('.meter-fill'); return (fill && parseFloat(fill.style.width) > 60) || document.body.innerText.toLowerCase().includes('strong'); })()",
     },
     {
       name: 'Password rules update based on input',
@@ -114,7 +114,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-range-slider': [
     {
       name: 'Price slider updates display value',
-      test: "(async function() { var slider = document.querySelector('input[type=\"range\"]'); if (!slider) return false; slider.value = '75'; slider.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.includes('75'); })()",
+      test: "(async function() { var slider = document.querySelector('input[type=\"range\"]'); if (!slider) return false; slider.value = '75'; slider.dispatchEvent(new Event('input', {bubbles: true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.innerText.includes('75'); })()",
     },
     {
       name: 'Min slider cannot exceed max',
@@ -184,7 +184,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Pressing Enter saves changes',
-      test: "(async function() { var editable = document.querySelector('.editable'); if (!editable) return false; var originalText = editable.textContent.trim(); editable.click(); await new Promise(function(r) { setTimeout(r, 150); }); var input = document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'New Value'); input.dispatchEvent(new Event('input', {bubbles: true})); var enterEvent = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}); input.dispatchEvent(enterEvent); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.includes('New Value'); })()",
+      test: "(async function() { var editable = document.querySelector('.editable'); if (!editable) return false; var originalText = editable.textContent.trim(); editable.click(); await new Promise(function(r) { setTimeout(r, 150); }); var input = document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, 'New Value'); input.dispatchEvent(new Event('input', {bubbles: true})); var enterEvent = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}); input.dispatchEvent(enterEvent); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.innerText.includes('New Value'); })()",
     },
   ],
 
@@ -310,7 +310,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-pull-refresh': [
     {
       name: 'Refresh button updates feed items',
-      test: "(async function() { var btn = document.querySelector('button'); if (!btn) return false; var beforeCount = document.querySelectorAll('.feed-item').length; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.feed-item').length; return afterCount !== beforeCount || document.body.textContent.toLowerCase().includes('refresh'); })()",
+      test: "(async function() { var btn = document.querySelector('button'); if (!btn) return false; var beforeCount = document.querySelectorAll('.feed-item').length; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var afterCount = document.querySelectorAll('.feed-item').length; return afterCount !== beforeCount || document.body.innerText.toLowerCase().includes('refresh'); })()",
     },
   ],
 
@@ -360,7 +360,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Undo button reverts last action',
-      test: "(async function() { var cell = document.querySelector('.cell'); if (!cell) return false; cell.click(); await new Promise(function(r) { setTimeout(r, 150); }); var undoBtn = document.querySelector('.tool-btn'); if (!undoBtn) return false; var painted = cell.style.backgroundColor; undoBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !undoBtn.disabled || document.body.textContent.toLowerCase().includes('undo'); })()",
+      test: "(async function() { var cell = document.querySelector('.cell'); if (!cell) return false; cell.click(); await new Promise(function(r) { setTimeout(r, 150); }); var undoBtn = document.querySelector('.tool-btn'); if (!undoBtn) return false; var painted = cell.style.backgroundColor; undoBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !undoBtn.disabled || document.body.innerText.toLowerCase().includes('undo'); })()",
     },
   ],
 
@@ -745,7 +745,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Correct answer shows success',
-      test: "(async function() { var input = document.querySelector('.captcha-input'); if (!input) return false; var problem = document.querySelector('.math-problem'); if (!problem) return false; var match = problem.textContent.match(/(\\d+)\\s*\\+\\s*(\\d+)/); if (!match) return false; var answer = parseInt(match[1]) + parseInt(match[2]); var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, answer.toString()); input.dispatchEvent(new Event('input', {bubbles: true})); var verifyBtn = document.querySelector('.verify-btn'); if (verifyBtn) verifyBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('correct') || document.body.textContent.includes('✓'); })()",
+      test: "(async function() { var input = document.querySelector('.captcha-input'); if (!input) return false; var problem = document.querySelector('.math-problem'); if (!problem) return false; var match = problem.textContent.match(/(\\d+)\\s*\\+\\s*(\\d+)/); if (!match) return false; var answer = parseInt(match[1]) + parseInt(match[2]); var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, answer.toString()); input.dispatchEvent(new Event('input', {bubbles: true})); var verifyBtn = document.querySelector('.verify-btn'); if (verifyBtn) verifyBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.innerText.toLowerCase().includes('correct') || document.body.innerText.includes('✓'); })()",
     },
   ],
 
@@ -808,7 +808,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-fill-blanks': [
     {
       name: 'Check button validates answers',
-      test: "(async function() { var checkBtn = document.querySelector('.check-btn'); if (!checkBtn) return false; checkBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.score') || document.body.textContent.toLowerCase().includes('score'); })()",
+      test: "(async function() { var checkBtn = document.querySelector('.check-btn'); if (!checkBtn) return false; checkBtn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.score') || document.body.innerText.toLowerCase().includes('score'); })()",
     },
   ],
 
@@ -844,7 +844,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Selecting options shows selected count or chips',
-      test: "(async function() { var trigger = document.querySelector('.multi-select-trigger') || document.querySelector('.select-trigger') || document.querySelector('button'); if (!trigger) return false; trigger.click(); await new Promise(function(r) { setTimeout(r, 150); }); var option = document.querySelector('.option') || document.querySelector('.dropdown li'); if (!option) return false; option.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.chip') || !!document.querySelector('.selected-count') || document.body.textContent.includes('1 selected'); })()",
+      test: "(async function() { var trigger = document.querySelector('.multi-select-trigger') || document.querySelector('.select-trigger') || document.querySelector('button'); if (!trigger) return false; trigger.click(); await new Promise(function(r) { setTimeout(r, 150); }); var option = document.querySelector('.option') || document.querySelector('.dropdown li'); if (!option) return false; option.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.chip') || !!document.querySelector('.selected-count') || document.body.innerText.includes('1 selected'); })()",
     },
   ],
 
@@ -855,7 +855,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'All boxes filled triggers verification',
-      test: "(async function() { var inputs = document.querySelectorAll('.otp-input input, .otp input, input'); if (inputs.length < 4) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; for (var i = 0; i < inputs.length; i++) { nativeInputValueSetter.call(inputs[i], String(i+1)); inputs[i].dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 50); }); } await new Promise(function(r) { setTimeout(r, 200); }); return document.body.textContent.toLowerCase().includes('verif') || document.body.textContent.toLowerCase().includes('success') || !!document.querySelector('.verified'); })()",
+      test: "(async function() { var inputs = document.querySelectorAll('.otp-input input, .otp input, input'); if (inputs.length < 4) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; for (var i = 0; i < inputs.length; i++) { nativeInputValueSetter.call(inputs[i], String(i+1)); inputs[i].dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 50); }); } await new Promise(function(r) { setTimeout(r, 200); }); return document.body.innerText.toLowerCase().includes('verif') || document.body.innerText.toLowerCase().includes('success') || !!document.querySelector('.verified'); })()",
     },
   ],
 
@@ -866,7 +866,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Card type icon updates based on number',
-      test: "(async function() { var input = document.querySelector('input[placeholder*=\"card\" i]') || document.querySelector('.card-number input') || document.querySelectorAll('input')[0]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '4111'); input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.card-icon') || !!document.querySelector('.card-type') || document.body.textContent.toLowerCase().includes('visa'); })()",
+      test: "(async function() { var input = document.querySelector('input[placeholder*=\"card\" i]') || document.querySelector('.card-number input') || document.querySelectorAll('input')[0]; if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '4111'); input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.card-icon') || !!document.querySelector('.card-type') || document.body.innerText.toLowerCase().includes('visa'); })()",
     },
   ],
 
@@ -877,7 +877,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Submitting with empty required fields shows errors',
-      test: "(async function() { var btn = document.querySelector('button[type=\"submit\"]') || document.querySelector('.submit-btn'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.error') || document.body.textContent.toLowerCase().includes('required'); })()",
+      test: "(async function() { var btn = document.querySelector('button[type=\"submit\"]') || document.querySelector('.submit-btn'); if (!btn) return false; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.error') || document.body.innerText.toLowerCase().includes('required'); })()",
     },
   ],
 
@@ -910,14 +910,14 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Invalid phone number shows error',
-      test: "(async function() { var input = document.querySelector('input[type=\"tel\"]') || document.querySelector('.phone-input input') || document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '123'); input.dispatchEvent(new Event('input', {bubbles:true})); input.dispatchEvent(new Event('blur', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.error') || document.body.textContent.toLowerCase().includes('invalid'); })()",
+      test: "(async function() { var input = document.querySelector('input[type=\"tel\"]') || document.querySelector('.phone-input input') || document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '123'); input.dispatchEvent(new Event('input', {bubbles:true})); input.dispatchEvent(new Event('blur', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.error') || document.body.innerText.toLowerCase().includes('invalid'); })()",
     },
   ],
 
   'react-currency-input': [
     {
       name: 'Input formats value with currency symbol and commas',
-      test: "(async function() { var input = document.querySelector('.currency-input input') || document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '1234567'); input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return input.value.includes(',') || input.value.includes('$') || document.body.textContent.includes('$'); })()",
+      test: "(async function() { var input = document.querySelector('.currency-input input') || document.querySelector('input'); if (!input) return false; var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set; nativeInputValueSetter.call(input, '1234567'); input.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return input.value.includes(',') || input.value.includes('$') || document.body.innerText.includes('$'); })()",
     },
     {
       name: 'Non-numeric characters are rejected',
@@ -928,7 +928,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-slider-range': [
     {
       name: 'Moving min slider updates displayed min value',
-      test: "(async function() { var sliders = document.querySelectorAll('input[type=\"range\"]'); if (sliders.length < 2) return false; var minSlider = sliders[0]; minSlider.value = '25'; minSlider.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.includes('25'); })()",
+      test: "(async function() { var sliders = document.querySelectorAll('input[type=\"range\"]'); if (sliders.length < 2) return false; var minSlider = sliders[0]; minSlider.value = '25'; minSlider.dispatchEvent(new Event('input', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.innerText.includes('25'); })()",
     },
     {
       name: 'Min slider cannot exceed max slider value',
@@ -1494,11 +1494,11 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-route-guard': [
     {
       name: 'Protected route redirects to login when unauthenticated',
-      test: "(async function() { var protectedLink = document.querySelector('[href*=\"protected\"], [href*=\"dashboard\"], .protected-link'); if (!protectedLink) return false; protectedLink.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('login') || document.body.textContent.toLowerCase().includes('sign in') || !!document.querySelector('.login-form'); })()",
+      test: "(async function() { var protectedLink = document.querySelector('[href*=\"protected\"], [href*=\"dashboard\"], .protected-link'); if (!protectedLink) return false; protectedLink.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.innerText.toLowerCase().includes('login') || document.body.innerText.toLowerCase().includes('sign in') || !!document.querySelector('.login-form'); })()",
     },
     {
       name: 'Login form is displayed for unauthorized access',
-      test: "(async function() { return !!document.querySelector('.login-form, .auth-form') || document.body.textContent.toLowerCase().includes('please log in'); })()",
+      test: "(async function() { return !!document.querySelector('.login-form, .auth-form') || document.body.innerText.toLowerCase().includes('please log in'); })()",
     },
   ],
 
@@ -1661,7 +1661,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-hotkey-manager': [
     {
       name: 'Pressing registered hotkey triggers action',
-      test: "(async function() { document.dispatchEvent(new KeyboardEvent('keydown', {key:'s', ctrlKey:true, bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.textContent.toLowerCase().includes('saved') || !!document.querySelector('.toast') || !!document.querySelector('.notification'); })()",
+      test: "(async function() { document.dispatchEvent(new KeyboardEvent('keydown', {key:'s', ctrlKey:true, bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return document.body.innerText.toLowerCase().includes('saved') || !!document.querySelector('.toast') || !!document.querySelector('.notification'); })()",
     },
     {
       name: 'Hotkey list displays registered shortcuts',
@@ -1687,7 +1687,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Window width information is shown',
-      test: "(async function() { return document.body.textContent.includes('px') || document.body.textContent.match(/\\d{3,4}/) !== null; })()",
+      test: "(async function() { return document.body.innerText.includes('px') || document.body.innerText.match(/\\d{3,4}/) !== null; })()",
     },
   ],
 
@@ -1716,11 +1716,11 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-retry-mechanism': [
     {
       name: 'Failed request shows retry button',
-      test: "(async function() { await new Promise(function(r) { setTimeout(r, 300); }); var retryBtn = document.querySelector('.retry-btn, .retry, button'); var errorMsg = document.querySelector('.error, .error-message'); return (!!retryBtn && !!errorMsg) || document.body.textContent.toLowerCase().includes('retry'); })()",
+      test: "(async function() { await new Promise(function(r) { setTimeout(r, 300); }); var retryBtn = document.querySelector('.retry-btn, .retry, button'); var errorMsg = document.querySelector('.error, .error-message'); return (!!retryBtn && !!errorMsg) || document.body.innerText.toLowerCase().includes('retry'); })()",
     },
     {
       name: 'Retry count or attempt number is displayed',
-      test: "(async function() { return document.body.textContent.toLowerCase().includes('attempt') || document.body.textContent.toLowerCase().includes('retry') || document.body.textContent.match(/\\d+\\s*\\/\\s*\\d+/) !== null; })()",
+      test: "(async function() { return document.body.innerText.toLowerCase().includes('attempt') || document.body.innerText.toLowerCase().includes('retry') || document.body.innerText.match(/\\d+\\s*\\/\\s*\\d+/) !== null; })()",
     },
   ],
 
@@ -1822,7 +1822,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Long breadcrumbs show ellipsis overflow',
-      test: "(async function() { var ellipsis = document.querySelector('.breadcrumb-ellipsis, .overflow, .more'); return !!ellipsis || document.body.textContent.includes('...'); })()",
+      test: "(async function() { var ellipsis = document.querySelector('.breadcrumb-ellipsis, .overflow, .more'); return !!ellipsis || document.body.innerText.includes('...'); })()",
     },
   ],
 

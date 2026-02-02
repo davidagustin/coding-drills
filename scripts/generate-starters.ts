@@ -104,6 +104,7 @@ function blankFunctionBodies(
     let funcName: string | null = null;
     let isMultiLine = false;
     let isSingleLine = false;
+    let isCurried = false;
     let arrowSingleExpr: string | undefined;
 
     if (shouldAttemptBlank) {
@@ -123,7 +124,27 @@ function blankFunctionBodies(
         /^(const|let|var)\s+(\w+)\s*=\s*(?:\([^)]*\)|(\w+))\s*=>\s*(?!\{)(.+);$/,
       );
 
-      if (arrowMultiMatch) {
+      // Pattern 5: const name = (params) => (params) => {  (curried multi-line arrow)
+      const curriedMultiMatch = trimmed.match(
+        /^(const|let|var)\s+(\w+)\s*=\s*(?:\([^)]*\)|\w+)\s*=>\s*(?:\([^)]*\)|\w+)\s*=>\s*\{/,
+      );
+
+      // Pattern 6: const name = (params) => (params) => expression;  (curried single-line)
+      const curriedSingleMatch = trimmed.match(
+        /^(const|let|var)\s+(\w+)\s*=\s*(?:\([^)]*\)|\w+)\s*=>\s*(?:\([^)]*\)|\w+)\s*=>\s*(?!\{)(.+);$/,
+      );
+
+      // Check curried patterns BEFORE non-curried (curried is more specific)
+      if (curriedMultiMatch) {
+        funcName = curriedMultiMatch[2];
+        isMultiLine = true;
+        isCurried = true;
+      } else if (curriedSingleMatch) {
+        funcName = curriedSingleMatch[2];
+        isSingleLine = true;
+        isCurried = true;
+        arrowSingleExpr = curriedSingleMatch[3];
+      } else if (arrowMultiMatch) {
         funcName = arrowMultiMatch[2];
         isMultiLine = true;
       } else if (fnExprMatch) {
@@ -211,7 +232,12 @@ function blankFunctionBodies(
       const todo = generateTodo(funcName!, arrowSingleExpr);
       const indent = line.match(/^(\s*)/)?.[1] || '';
 
-      const arrowIdx = trimmed.indexOf('=>');
+      // For curried functions (a => b => expr), keep the full curried signature
+      // by finding the second =>. For regular functions, use the first =>.
+      let arrowIdx = trimmed.indexOf('=>');
+      if (isCurried) {
+        arrowIdx = trimmed.indexOf('=>', arrowIdx + 2);
+      }
       const sigPart = trimmed.substring(0, arrowIdx + 2);
       result.push(indent + sigPart + ' {');
       result.push(indent + '  ' + todo);

@@ -19,8 +19,7 @@ function SignupForm() {
   };
 
   const handleChange = (field) => (e) => {
-    setForm(prev => ({ ...prev, [field]: e.target.value }));
-    setErrors(prev => ({ ...prev, [field]: undefined }));
+    // TODO: Handle change — update state
   };
 
   const handleSubmit = (e) => {
@@ -114,10 +113,7 @@ function App() {
   }, []);
 
   const handleChange = (setter) => (e) => {
-    setter(e.target.value);
-    setStatus('saving');
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(save, 1000);
+    // TODO: Handle change — update state, handle timing
   };
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
@@ -582,7 +578,7 @@ function EditableField({ label, value, onSave }) {
 
 function App() {
   const [data, setData] = useState({ name: 'John Doe', email: 'john@example.com', bio: '' });
-  const update = (key) => {
+  const update = (key) => (val) => {
     // TODO: Update — update state
   };
 
@@ -1375,7 +1371,7 @@ function App() {
   const [data, setData] = useState({ email: '', password: '', name: '', bio: '' });
   const [done, setDone] = useState(false);
 
-  const update = (k) => {
+  const update = (k) => (e) => {
     // TODO: Update — update state
   };
 
@@ -4135,8 +4131,8 @@ function App() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
-  const upd = (k) => {
-    // TODO: Upd — update state, validate input
+  const upd = (k) => (e) => {
+    // TODO: Implement upd
   };
 
   const submit = (e) => {

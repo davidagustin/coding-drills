@@ -49,6 +49,21 @@ export function buildTestRunnerScript(tests: PatternTestCase[]): string {
     .join(',\n    ');
 
   return `
+// Intercept submit-button clicks so form submission works in sandbox="allow-scripts"
+// iframes (which block native form submission). Converts btn.click() into a synthetic
+// submit event that frameworks (React, Vue, Angular) handle normally.
+document.addEventListener('click', function(e) {
+  var el = e.target;
+  while (el && el !== document) {
+    if ((el.type === 'submit' || (el.tagName === 'BUTTON' && !el.type)) && el.form) {
+      e.preventDefault();
+      e.stopPropagation();
+      el.form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      return;
+    }
+    el = el.parentElement;
+  }
+}, true);
 window.__tests = [
     ${testDefs}
 ];
