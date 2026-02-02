@@ -101,6 +101,7 @@ Language cheatsheets: syntax, data structures, common patterns, and best practic
 
 Framework-specific training for **React**, **Angular**, **Vue**, and **Native JavaScript**. A persistent navigation bar (breadcrumbs + mode tabs) appears on all framework pages for easy switching between modes. Each framework offers four modes:
 
+- **Training** — 460 framework-specific problems, each with hints, a real-world context example, and **auto-generated starter code** (function signatures, invocation lines, and hint comments are scaffolded from the sample solution so users start with structure instead of a blank editor).
 - **Drill Mode** — Write code solutions to framework-specific challenges in a Monaco Editor.
 - **Quiz Mode** — Multiple-choice questions testing framework concepts and API knowledge.
 - **UI Patterns** — Catalog of 616+ UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, key concepts, starter code, and behavioral test suites. Each pattern detail page features:

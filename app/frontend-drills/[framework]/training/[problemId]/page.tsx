@@ -79,6 +79,102 @@ function saveProgress(framework: string, map: ProgressMap): void {
   }
 }
 
+/**
+ * Generate starter/scaffold code from a problem's sample solution and hints.
+ * Parses the sample to detect structural patterns and produces a skeleton
+ * that gives students a head-start without revealing the answer.
+ */
+function generateTrainingStarter(problem: FrontendDrillProblem): string {
+  const lines: string[] = [];
+
+  // 1. Add hints as numbered comments
+  if (problem.hints && problem.hints.length > 0) {
+    for (let i = 0; i < problem.hints.length; i++) {
+      lines.push(`// ${i + 1}. ${problem.hints[i]}`);
+    }
+    lines.push('');
+  }
+
+  // 2. Parse sample to detect pattern
+  const sampleLines = problem.sample.split('\n');
+  const firstLine = sampleLines[0];
+
+  // Pattern: arrow function declaration  — const name = (params) => { ... }
+  const arrowMatch = firstLine.match(/^(const|let)\s+(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*\{?\s*$/);
+  // Pattern: arrow function single-line  — const name = (params) => expr  (no brace, body on same line)
+  const arrowInlineMatch = !arrowMatch
+    ? firstLine.match(/^(const|let)\s+(\w+)\s*=\s*\(([^)]*)\)\s*=>/)
+    : null;
+  // Pattern: traditional function        — function name(params) {
+  const funcMatch = firstLine.match(/^function\s+(\w+)\s*\(([^)]*)\)/);
+
+  if (arrowMatch) {
+    // Multi-line arrow function with body block
+    const [, keyword, name, params] = arrowMatch;
+    lines.push(`${keyword} ${name} = (${params}) => {`);
+    lines.push('  // Your code here');
+    lines.push('};');
+
+    // Find invocation lines (lines after the function body closes)
+    let braceDepth = 0;
+    let bodyEnd = 0;
+    for (let i = 0; i < sampleLines.length; i++) {
+      for (const ch of sampleLines[i]) {
+        if (ch === '{') braceDepth++;
+        if (ch === '}') braceDepth--;
+      }
+      if (braceDepth === 0 && i > 0) {
+        bodyEnd = i;
+        break;
+      }
+    }
+    // Append everything after the function body (invocation lines)
+    const invocationLines = sampleLines.slice(bodyEnd + 1).filter((l) => l.trim().length > 0);
+    if (invocationLines.length > 0) {
+      lines.push(...invocationLines);
+    }
+  } else if (arrowInlineMatch) {
+    // Single-line arrow function  — const name = (params) => expr;\nname(args)
+    const [, keyword, name, params] = arrowInlineMatch;
+    lines.push(`${keyword} ${name} = (${params}) => {`);
+    lines.push('  // Your code here');
+    lines.push('};');
+    // Invocation lines are everything after the first line
+    const invocationLines = sampleLines.slice(1).filter((l) => l.trim().length > 0);
+    if (invocationLines.length > 0) {
+      lines.push(...invocationLines);
+    }
+  } else if (funcMatch) {
+    // Traditional function declaration
+    const [, name, params] = funcMatch;
+    lines.push(`function ${name}(${params}) {`);
+    lines.push('  // Your code here');
+    lines.push('}');
+    // Find invocation lines after function body
+    let braceDepth = 0;
+    let bodyEnd = 0;
+    for (let i = 0; i < sampleLines.length; i++) {
+      for (const ch of sampleLines[i]) {
+        if (ch === '{') braceDepth++;
+        if (ch === '}') braceDepth--;
+      }
+      if (braceDepth === 0 && i > 0) {
+        bodyEnd = i;
+        break;
+      }
+    }
+    const invocationLines = sampleLines.slice(bodyEnd + 1).filter((l) => l.trim().length > 0);
+    if (invocationLines.length > 0) {
+      lines.push(...invocationLines);
+    }
+  } else {
+    // Expression, decorator, HTML template, object literal, or other
+    lines.push('// Your answer here');
+  }
+
+  return lines.join('\n');
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -101,14 +197,14 @@ export default function TrainingProblemDetailPage() {
 
   // Hydration safety
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Required for hydration safety
+     
     setMounted(true);
   }, []);
 
   // Load progress from localStorage after mount
   useEffect(() => {
     if (mounted && isValidFramework(framework)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncing from localStorage (external system)
+       
       setProgress(loadProgress(framework));
     }
   }, [mounted, framework]);
@@ -129,14 +225,15 @@ export default function TrainingProblemDetailPage() {
   const prevProblem = problemIndex > 0 ? problems[problemIndex - 1] : null;
   const nextProblem = problemIndex < problems.length - 1 ? problems[problemIndex + 1] : null;
 
-  // Reset state when problem changes
+  // Reset state when problem changes & pre-populate with starter code
   // biome-ignore lint/correctness/useExhaustiveDependencies: problemId needed to reset state on navigation
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional reset on problem change
-    setUserCode('');
+     
+    setUserCode(problem ? generateTrainingStarter(problem) : '');
     setFeedback(null);
     setShowHints(false);
     setShowSolution(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- problem is derived from problemId; including it would fire on every render
   }, [problemId]);
 
   // Submit handler
@@ -169,9 +266,9 @@ export default function TrainingProblemDetailPage() {
 
   // Reset handler
   const handleReset = useCallback(() => {
-    setUserCode('');
+    setUserCode(problem ? generateTrainingStarter(problem) : '');
     setFeedback(null);
-  }, []);
+  }, [problem]);
 
   // ── Loading / Not-found states ──────────────────────────────────────────
 
