@@ -34,15 +34,24 @@ export function StudySetup({ availableSources, context, weakCardCount, onStart }
   const [prioritizeWeak, setPrioritizeWeak] = useState(false);
   const [interviewOnly, setInterviewOnly] = useState(false);
 
-  // Compute available categories from selected sources
-  const categories = useMemo(() => {
+  // Compute available categories + per-category card counts
+  const { categories, categoryCounts } = useMemo(() => {
     const cats = new Set<string>();
     for (const src of selectedSources) {
       for (const cat of getAvailableCategories(src, context)) {
         cats.add(cat);
       }
     }
-    return [...cats].sort();
+    const sorted = [...cats].sort();
+
+    // Count cards per category
+    const allCards = getAllFlashcards({ sources: selectedSources, ...context });
+    const counts: Record<string, number> = {};
+    for (const card of allCards) {
+      counts[card.category] = (counts[card.category] ?? 0) + 1;
+    }
+
+    return { categories: sorted, categoryCounts: counts };
   }, [selectedSources, context]);
 
   // Preview cards matching current filters
@@ -160,80 +169,74 @@ export function StudySetup({ availableSources, context, weakCardCount, onStart }
             </div>
           </div>
 
-          {/* Full table */}
-          <div className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="sticky top-0 bg-zinc-800 z-10">
-                  <tr className="border-b border-zinc-700/50">
-                    <th className="text-left px-4 py-3 text-zinc-400 font-medium w-12">#</th>
-                    <th className="text-left px-4 py-3 text-zinc-400 font-medium min-w-[200px]">
-                      Question
-                    </th>
-                    <th className="text-left px-4 py-3 text-zinc-400 font-medium min-w-[160px]">
-                      Answer
-                    </th>
-                    <th className="text-left px-4 py-3 text-zinc-400 font-medium w-28">Category</th>
-                    <th className="text-left px-4 py-3 text-zinc-400 font-medium w-24">
-                      Difficulty
-                    </th>
-                    <th className="text-left px-4 py-3 text-zinc-400 font-medium w-28">Source</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {previewCards.map((card, i) => (
-                    <tr
-                      key={card.id}
-                      className="border-b border-zinc-700/30 hover:bg-zinc-700/20 transition-colors"
+          {/* Card list */}
+          <div className="flex flex-col gap-4">
+            {previewCards.map((card, i) => (
+              <div
+                key={card.id}
+                className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 p-6 hover:border-zinc-600/50 transition-colors"
+              >
+                {/* Top row: number + badges */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-medium text-zinc-500 tabular-nums">#{i + 1}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-700/50 text-zinc-300 capitalize">
+                      {card.category}
+                    </span>
+                    <span
+                      className={`text-xs px-2.5 py-1 rounded-full capitalize ${
+                        card.difficulty === 'easy'
+                          ? 'bg-emerald-500/20 text-emerald-400'
+                          : card.difficulty === 'medium'
+                            ? 'bg-amber-500/20 text-amber-400'
+                            : 'bg-red-500/20 text-red-400'
+                      }`}
                     >
-                      <td className="px-4 py-3 text-zinc-500 tabular-nums align-top">{i + 1}</td>
-                      <td className="px-4 py-3 text-zinc-200 align-top">
-                        <div>{card.front.prompt}</div>
-                        {card.front.detail && (
-                          <div className="text-xs text-zinc-500 mt-1">{card.front.detail}</div>
-                        )}
-                        {card.front.code && (
-                          <pre className="mt-2 text-xs bg-zinc-900 rounded px-2 py-1.5 text-blue-300 whitespace-pre-wrap break-words max-h-24 overflow-y-auto font-mono">
-                            {card.front.code}
-                          </pre>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-emerald-400 font-medium align-top">
-                        {card.back.answer}
-                        {card.back.explanation && (
-                          <div className="text-xs text-zinc-500 mt-1 font-normal">
-                            {card.back.explanation.length > 120
-                              ? `${card.back.explanation.slice(0, 120)}...`
-                              : card.back.explanation}
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 align-top">
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-700/50 text-zinc-300 capitalize">
-                          {card.category}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 align-top">
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-full capitalize ${
-                            card.difficulty === 'easy'
-                              ? 'bg-emerald-500/20 text-emerald-400'
-                              : card.difficulty === 'medium'
-                                ? 'bg-amber-500/20 text-amber-400'
-                                : 'bg-red-500/20 text-red-400'
-                          }`}
-                        >
-                          {card.difficulty}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 align-top">
-                        <span className="text-xs text-zinc-500">{card.source}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      {card.difficulty}
+                    </span>
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-700/30 text-zinc-500 capitalize">
+                      {card.source}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Question + Answer side by side on large screens, stacked on small */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {/* Question */}
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+                      Question
+                    </div>
+                    <div className="text-base text-zinc-200 font-medium">{card.front.prompt}</div>
+                    {card.front.detail && (
+                      <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                        {card.front.detail}
+                      </div>
+                    )}
+                    {card.front.code && (
+                      <pre className="mt-3 text-sm bg-zinc-900/80 rounded-lg px-4 py-3 text-blue-300 whitespace-pre-wrap break-words font-mono border border-zinc-700/30 leading-relaxed">
+                        {card.front.code}
+                      </pre>
+                    )}
+                  </div>
+
+                  {/* Answer */}
+                  <div className="lg:border-l lg:border-zinc-700/30 lg:pl-5">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+                      Answer
+                    </div>
+                    <div className="text-lg text-emerald-400 font-semibold">{card.back.answer}</div>
+                    {card.back.explanation && (
+                      <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                        {card.back.explanation.length > 200
+                          ? `${card.back.explanation.slice(0, 200)}...`
+                          : card.back.explanation}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -330,6 +333,17 @@ export function StudySetup({ availableSources, context, weakCardCount, onStart }
                   }`}
                 >
                   {cat}
+                  {categoryCounts[cat] != null && (
+                    <span
+                      className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
+                        selectedCategories.includes(cat)
+                          ? 'bg-blue-400/30 text-blue-100'
+                          : 'bg-zinc-600 text-zinc-400'
+                      }`}
+                    >
+                      {categoryCounts[cat]}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>

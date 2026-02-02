@@ -147,31 +147,12 @@ export default function PatternStudyPage() {
 
   if (phase === 'setup') {
     return (
-      <div className="min-h-screen bg-zinc-950 text-white">
-        {/* Mode tabs */}
-        <div className="bg-zinc-950 border-b border-zinc-800/50">
-          <div className="max-w-4xl mx-auto px-4 flex gap-1 py-2">
-            <Link
-              href="/pattern-quiz"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-colors"
-            >
-              Quiz
-            </Link>
-            <Link
-              href="/pattern-quiz/study"
-              className="px-4 py-2 rounded-lg text-sm font-medium bg-zinc-800 text-white"
-            >
-              Study
-            </Link>
-          </div>
-        </div>
-        <StudySetup
-          availableSources={SOURCES}
-          context={{}}
-          weakCardCount={weakCardCount}
-          onStart={handleStart}
-        />
-      </div>
+      <StudySetup
+        availableSources={SOURCES}
+        context={{}}
+        weakCardCount={weakCardCount}
+        onStart={handleStart}
+      />
     );
   }
 
