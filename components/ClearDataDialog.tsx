@@ -92,6 +92,13 @@ const CATEGORY_DEFS: CategoryDef[] = [
     mode: 'exact',
     keyPattern: 'coding-drills-theme',
   },
+  {
+    id: 'flashcards',
+    label: 'Study Mode Progress',
+    description: 'Card ratings, mastery tracking, and study session history',
+    mode: 'exact',
+    keyPattern: 'coding-drills-flashcards',
+  },
 ];
 
 // Represents a single localStorage entry detected

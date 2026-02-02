@@ -37,6 +37,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
 const MODE_NAMES: Record<string, string> = {
   drill: 'Drill Mode',
   quiz: 'Quiz Mode',
+  study: 'Study Mode',
   reference: 'Reference',
   'ui-patterns': 'UI Patterns',
   cheatsheet: 'Cheatsheet',

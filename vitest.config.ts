@@ -33,6 +33,7 @@ export default defineConfig({
       },
       {
         // Regular unit tests (Node.js environment)
+        extends: true,
         test: {
           name: 'unit',
           include: [

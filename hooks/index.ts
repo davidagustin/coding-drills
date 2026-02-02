@@ -13,6 +13,9 @@ export type {
 } from './useDrill';
 // Drill hooks
 export { useDrill } from './useDrill';
+export type { UseFlashcardStudyReturn } from './useFlashcardStudy';
+// Study mode hooks
+export { useFlashcardStudy } from './useFlashcardStudy';
 export type { UseAllProgressReturn, UseProgressReturn } from './useProgress';
 // Progress hooks
 export { useAllProgress, useProgress } from './useProgress';

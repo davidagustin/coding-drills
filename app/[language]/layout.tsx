@@ -50,6 +50,18 @@ const BASE_MODES: { slug: string; label: string; icon: ReactNode }[] = [
     ),
   },
   {
+    slug: 'study',
+    label: 'Study',
+    // Stacked cards / layers icon
+    icon: (
+      <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
+        <rect x="4" y="2" width="16" height="16" rx="2" {...s} />
+        <path d="M8 22h8a2 2 0 002-2" {...s} />
+        <path d="M6 18h12a2 2 0 002-2" {...s} />
+      </svg>
+    ),
+  },
+  {
     slug: 'problems',
     label: 'Method Training',
     // Code brackets icon

@@ -35,6 +35,7 @@ An interactive learning platform for mastering programming languages through han
 
 - **Drill** — Type solutions in a full Monaco Editor with real-time execution (JS/TS) or pattern validation.
 - **Quiz** — Timed multiple-choice: methods, time/space complexity, and **algorithm pattern recognition** (170 LeetCode-style problems).
+- **Study** — Self-paced flashcard review for focused recall. Flip through questions, reveal answers, and rate your confidence (Missed / Shaky / Knew It). Preview all Q&A before starting. Persistent progress via localStorage.
 - **Method / Query Training** — Browse and solve problems by language; database languages use query training.
 - **Building Blocks** — Structured algorithm exercises (traversal, recursion, DP, data structures) across **9 languages** (JavaScript, TypeScript, Python, Java, C++, C#, Go, Ruby, C) with **Learn** and **Practice** modes and **interactive visualizations**.
 - **AI Exercise Tutor** — In-browser AI (WebLLM) for explanations, hints, and visualization walkthroughs; no API keys, privacy-first.
@@ -81,6 +82,16 @@ Runs in the browser via WebLLM (Llama-3.1-8B-Instruct, WebGPU). No API keys; mod
 
 Supports offline (WebLLM) and cloud (OpenAI) inference.
 
+### Study Mode
+
+Self-paced flashcard experience — no timers, no scoring, just focused recall. Available for both language routes (`/{language}/study`) and frontend routes (`/frontend-drills/{framework}/study`).
+
+- **Setup** — Choose sources (methods, time/space complexity, patterns, frontend knowledge), filter by category and difficulty, set deck size, shuffle or sequential order, and optionally prioritize weak cards.
+- **Preview Table** — Collapsible Q&A table showing all matching questions and answers before you start, so you can browse the deck content.
+- **Studying** — Flip through cards: read the prompt, reveal the answer, then self-rate as **Missed**, **Shaky**, or **Knew It**. Keyboard shortcuts: `Space`/`Enter` to reveal, `1`/`2`/`3` to rate, `←` for previous card, `Esc` to exit.
+- **Summary** — Session stats (cards reviewed, recall rate, time) with a breakdown chart and a "Review These Again" list of weak cards.
+- **Persistence** — Ratings and session history are stored in localStorage (`coding-drills-flashcards`). Weak cards surface first in future sessions when "Focus on cards I'm still learning" is enabled.
+
 ### Algorithm Pattern Quiz
 
 Standalone pattern-recognition quiz: read LeetCode-style problem descriptions and choose the correct algorithm pattern. Configurable difficulty, category, number of questions, and time per question. **170 problems**. Accessible from the home page or from Quiz Mode (Pattern Quiz) with config passed via URL so the quiz starts immediately.
@@ -104,6 +115,7 @@ Framework-specific training for **React**, **Angular**, **Vue**, and **Native Ja
 - **Training** — 460 framework-specific problems, each with hints, a real-world context example, and **auto-generated starter code** (function signatures and hint comments are scaffolded from the sample solution so users start with structure instead of a blank editor). All problem descriptions have been audited to accurately describe what the user should do, and the validator always wraps return expressions in parentheses to handle object literals safely.
 - **Drill Mode** — Write code solutions to framework-specific challenges in a Monaco Editor.
 - **Quiz Mode** — Multiple-choice questions testing framework concepts and API knowledge.
+- **Study Mode** — Self-paced flashcard review for framework knowledge and algorithm patterns with confidence-based self-rating and persistent progress.
 - **UI Patterns** — Catalog of 616+ UI patterns (forms, navigation, interactive elements, data display, advanced features, reusable components) with descriptions, difficulty ratings, key concepts, starter code, and behavioral test suites. Each pattern detail page features:
   - **Building Blocks** — Numbered concept checklist at the top showing what to master.
   - **Tabbed Code Editor** — HTML and CSS tabs (read-only reference) plus an editable JS tab with scaffolded starter code (full UI structure with correct class names and empty function stubs — users only implement business logic).
