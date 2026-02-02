@@ -873,15 +873,6 @@ interface DrillPhaseProps {
   language: LanguageId;
   onAnswer: (answer: string) => void;
   onSkip: () => void;
-  questionStartTime: number;
-}
-
-interface DrillPhaseProps {
-  problems: ProblemWithLanguage[];
-  state: DrillState;
-  language: LanguageId;
-  onAnswer: (answer: string) => void;
-  onSkip: () => void;
   onEnd: () => void;
   questionStartTime: number;
   currentAnswer: AnswerRecord | null; // Add current answer for snackbar

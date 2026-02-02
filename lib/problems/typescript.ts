@@ -9682,6 +9682,7 @@ export const typescriptProblems: Problem[] = [
     text: 'Access a static property on the class itself',
     setup: 'class MathUtils { static PI: number = 3.14159; }',
     setupCode: 'class MathUtils { static PI: number = 3.14159; }',
+    // biome-ignore lint/suspicious/noApproximativeNumericConstant: literal value of the static property, not Math.PI
     expected: 3.14159,
     sample: 'MathUtils.PI',
     hints: [

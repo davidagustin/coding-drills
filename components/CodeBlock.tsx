@@ -457,6 +457,7 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
                 )}
                 <span
                   className="flex-1 text-gray-100"
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: rendering syntax-highlighted HTML from trusted source
                   dangerouslySetInnerHTML={{ __html: line || '&nbsp;' }}
                 />
               </div>

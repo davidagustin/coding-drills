@@ -239,7 +239,9 @@ function createProgressStore(storageKey: string) {
   const listeners = new Set<ProgressListener>();
 
   const notifyListeners = () => {
-    listeners.forEach((listener) => listener());
+    listeners.forEach((listener) => {
+      listener();
+    });
   };
 
   return {

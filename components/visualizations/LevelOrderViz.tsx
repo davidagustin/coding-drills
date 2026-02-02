@@ -164,8 +164,9 @@ export default function LevelOrderViz() {
   const visited = useMemo(() => {
     const v = new Set<number>();
     for (let i = 0; i <= step && i < STEPS.length; i++) {
-      if (STEPS[i].current !== null) {
-        v.add(STEPS[i].current!);
+      const currentVal = STEPS[i].current;
+      if (currentVal !== null) {
+        v.add(currentVal);
       }
     }
     return v;

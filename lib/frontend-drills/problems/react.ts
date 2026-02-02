@@ -256,7 +256,6 @@ const handleChange = "function";`,
     setup: 'A props object with name and age.',
     setupCode: `const props = { name: 'Alice', age: 30 };`,
     expected: 'Alice is 30 years old',
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
     sample: `(() => {
   const { name, age } = props;
   return \`\${name} is \${age} years old\`;

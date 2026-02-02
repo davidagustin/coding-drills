@@ -34,7 +34,7 @@
       "suspicious": {
         "noExplicitAny": "warn",
         "noArrayIndexKey": "off",
-        "noTemplateCurlyInString": "warn",
+        "noTemplateCurlyInString": "off",
         "noImplicitAnyLet": "warn",
         "noAssignInExpressions": "warn",
         "noGlobalIsNan": "warn",
@@ -51,6 +51,18 @@
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ],
   "javascript": {
     "formatter": {
       "quoteStyle": "single",

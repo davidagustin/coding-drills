@@ -168,8 +168,9 @@ export default function BalancedTreeViz() {
   const nodeBalanced = useMemo(() => {
     const map = new Map<number, boolean>();
     for (let i = 0; i <= step && i < STEPS.length; i++) {
-      if (STEPS[i].node !== null) {
-        map.set(STEPS[i].node!, STEPS[i].isBalanced);
+      const nodeVal = STEPS[i].node;
+      if (nodeVal !== null) {
+        map.set(nodeVal, STEPS[i].isBalanced);
       }
     }
     return map;

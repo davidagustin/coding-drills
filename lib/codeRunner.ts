@@ -496,10 +496,12 @@ function checkPythonSyntax(code: string): string[] {
 function extractPythonVariables(setupCode: string): string[] {
   const varPattern = /^(\w+)\s*=/gm;
   const variables: string[] = [];
-  let match;
+  let match: RegExpExecArray | null;
 
-  while ((match = varPattern.exec(setupCode)) !== null) {
+  match = varPattern.exec(setupCode);
+  while (match !== null) {
     variables.push(match[1]);
+    match = varPattern.exec(setupCode);
   }
 
   return variables;
@@ -1317,14 +1319,16 @@ function extractSetupVariables(setupCode: string): string[] {
   const jsPatterns = [/(?:const|let|var)\s+(\w+)/g, /(\w+)\s*=/g];
 
   for (const pattern of jsPatterns) {
-    let match;
-    while ((match = pattern.exec(setupCode)) !== null) {
+    let match: RegExpExecArray | null;
+    match = pattern.exec(setupCode);
+    while (match !== null) {
       if (
         !variables.includes(match[1]) &&
         !['const', 'let', 'var', 'function'].includes(match[1])
       ) {
         variables.push(match[1]);
       }
+      match = pattern.exec(setupCode);
     }
   }
 

@@ -180,7 +180,9 @@ export default function PathSum2Viz() {
   const pathNodes = useMemo(() => {
     const set = new Set<number>();
     if (currentStep.path.length > 0) {
-      currentStep.path.forEach((n) => set.add(n));
+      currentStep.path.forEach((n) => {
+        set.add(n);
+      });
     }
     return set;
   }, [currentStep]);

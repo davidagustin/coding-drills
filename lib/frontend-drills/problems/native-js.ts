@@ -153,7 +153,6 @@ typeof throttle(increment, 100)`,
     setup: 'An array of fruit names.',
     setupCode: `const items = ["Apple", "Banana", "Cherry"];`,
     expected: '<li>Apple</li><li>Banana</li><li>Cherry</li>',
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
     sample: 'items.map(item => `<li>${item}</li>`).join("")',
     realWorldExample:
       'Amazon product listing pages render search results by mapping product data arrays into HTML card elements, dynamically building the page content.',
@@ -1417,7 +1416,6 @@ checkPasswordStrength(testPassword)`,
     setupCode: `const headers = ["Name", "Age"];\nconst rows = [["Alice", "30"], ["Bob", "25"]];`,
     expected:
       '<table><tr><th>Name</th><th>Age</th></tr><tr><td>Alice</td><td>30</td></tr><tr><td>Bob</td><td>25</td></tr></table>',
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
     sample:
       '`<table><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</table>`',
     realWorldExample:
@@ -1703,7 +1701,6 @@ checkPasswordStrength(testPassword)`,
     setup: 'An array of user objects.',
     setupCode: `const users = [\n  { name: "Alice", active: true },\n  { name: "Bob", active: false },\n  { name: "Charlie", active: true }\n];`,
     expected: '<li>Alice</li><li>Charlie</li>',
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: sample holds user solution code containing template literals
     sample: 'users.filter(u => u.active).map(u => `<li>${u.name}</li>`).join("")',
     realWorldExample:
       'Discord shows only online friends in the sidebar by filtering the full friends list for active status before rendering the member list.',

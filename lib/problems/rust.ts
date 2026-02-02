@@ -2027,6 +2027,7 @@ let avg = if count > 0 { sum / count as i32 } else { 0 };
     text: 'Parse the string as a f64 floating point number.',
     setup: 'let text = "3.14159";',
     setupCode: 'let text = "3.14159";',
+    // biome-ignore lint/suspicious/noApproximativeNumericConstant: literal parsed value, not Math.PI
     expected: 3.14159,
     sample: 'text.parse::<f64>().unwrap()',
     hints: [

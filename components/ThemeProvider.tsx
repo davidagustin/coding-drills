@@ -81,11 +81,15 @@ function createThemeStore(storageKey: string, defaultTheme: Theme) {
     setTheme: (theme: Theme) => {
       currentTheme = theme;
       setStoredTheme(storageKey, theme);
-      listeners.forEach((listener) => listener());
+      listeners.forEach((listener) => {
+        listener();
+      });
     },
     initialize: () => {
       currentTheme = getStoredTheme(storageKey, defaultTheme);
-      listeners.forEach((listener) => listener());
+      listeners.forEach((listener) => {
+        listener();
+      });
     },
   };
 }

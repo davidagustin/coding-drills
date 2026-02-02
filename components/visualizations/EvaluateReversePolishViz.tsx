@@ -39,8 +39,8 @@ function computeSteps(): RPNStep[] {
     });
 
     if (['+', '-', '*', '/'].includes(token)) {
-      const b = stack.pop()!;
-      const a = stack.pop()!;
+      const b = stack.pop() ?? 0;
+      const a = stack.pop() ?? 0;
       let result = 0;
 
       if (token === '+') {

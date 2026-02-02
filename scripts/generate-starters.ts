@@ -200,7 +200,7 @@ function blankFunctionBodies(
 
       // Extract body for TODO hint generation
       const bodyContent = lines.slice(i + 1, bodyEnd).join('\n');
-      const todo = generateTodo(funcName!, bodyContent);
+      const todo = generateTodo(funcName ?? '', bodyContent);
 
       // Signature: everything up to and including the first {
       const openBraceIdx = line.indexOf('{');
@@ -229,7 +229,7 @@ function blankFunctionBodies(
       continue;
     } else if (shouldBlank && isSingleLine && arrowSingleExpr) {
       // Single-line arrow function — convert to multi-line with TODO
-      const todo = generateTodo(funcName!, arrowSingleExpr);
+      const todo = generateTodo(funcName ?? '', arrowSingleExpr);
       const indent = line.match(/^(\s*)/)?.[1] || '';
 
       // For curried functions (a => b => expr), keep the full curried signature

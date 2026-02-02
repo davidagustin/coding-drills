@@ -47,7 +47,7 @@ function computeSteps(): DequeStep[] {
         explanation: `pushBack(${op[1]}): Add ${op[1]} to back`,
       });
     } else if (op[0] === 'popFront') {
-      const result = deque.length > 0 ? deque.shift()! : -1;
+      const result = deque.shift() ?? -1;
       steps.push({
         deque: [...deque],
         operation: 'popFront',
@@ -56,7 +56,7 @@ function computeSteps(): DequeStep[] {
         explanation: `popFront(): Remove from front → ${result}`,
       });
     } else if (op[0] === 'popBack') {
-      const result = deque.length > 0 ? deque.pop()! : -1;
+      const result = deque.pop() ?? -1;
       steps.push({
         deque: [...deque],
         operation: 'popBack',

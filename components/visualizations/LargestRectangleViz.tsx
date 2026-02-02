@@ -43,7 +43,7 @@ function computeSteps(): RectangleStep[] {
     });
 
     while (stack.length > 0 && (i === HEIGHTS.length || HEIGHTS[stack[stack.length - 1]] > h)) {
-      const height = HEIGHTS[stack.pop()!];
+      const height = HEIGHTS[stack.pop() ?? 0];
       const width = stack.length === 0 ? i : i - stack[stack.length - 1] - 1;
       const area = height * width;
       maxArea = Math.max(maxArea, area);

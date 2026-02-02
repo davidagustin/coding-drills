@@ -99,9 +99,9 @@ describe('Problem Data Structure Validation', () => {
 
       for (const problem of problems) {
         if (ids.has(problem.id)) {
-          const existing = ids.get(problem.id)!;
+          const existing = ids.get(problem.id);
           throw new Error(
-            `Duplicate problem ID "${problem.id}" found in both ${existing.language} and ${language}`,
+            `Duplicate problem ID "${problem.id}" found in both ${existing?.language} and ${language}`,
           );
         }
         ids.set(problem.id, { problem, language: language as string });

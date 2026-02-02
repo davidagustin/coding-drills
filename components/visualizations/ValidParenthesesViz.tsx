@@ -52,7 +52,7 @@ function computeSteps(): ParenStep[] {
         return steps;
       }
 
-      const top = stack.pop()!;
+      const top = stack.pop() ?? '';
       const expected = pairs[char];
 
       if (top !== expected) {

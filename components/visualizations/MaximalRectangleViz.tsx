@@ -53,7 +53,7 @@ function computeSteps(): MaxRectStep[] {
     for (let i = 0; i <= heights.length; i++) {
       const h = i < heights.length ? heights[i] : 0;
       while (stack.length > 0 && heights[stack[stack.length - 1]] > h) {
-        const height = heights[stack.pop()!];
+        const height = heights[stack.pop() ?? 0];
         const width = stack.length === 0 ? i : i - stack[stack.length - 1] - 1;
         const area = height * width;
         maxArea = Math.max(maxArea, area);

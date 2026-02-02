@@ -38,7 +38,7 @@ function computeSteps(): DailyTempStep[] {
     });
 
     while (stack.length > 0 && TEMPERATURES[stack[stack.length - 1]] < TEMPERATURES[i]) {
-      const prevIdx = stack.pop()!;
+      const prevIdx = stack.pop() ?? 0;
       result[prevIdx] = i - prevIdx;
       steps.push({
         temps: [...TEMPERATURES],

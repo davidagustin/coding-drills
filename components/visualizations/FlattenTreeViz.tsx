@@ -145,8 +145,9 @@ export default function FlattenTreeViz() {
   const visited = useMemo(() => {
     const v = new Set<number>();
     for (let i = 0; i <= step && i < STEPS.length; i++) {
-      if (STEPS[i].node !== null) {
-        v.add(STEPS[i].node!);
+      const nodeVal = STEPS[i].node;
+      if (nodeVal !== null) {
+        v.add(nodeVal);
       }
     }
     return v;

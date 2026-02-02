@@ -321,7 +321,12 @@ test.describe('All Problems - Validation Logic (E2E)', () => {
     test(`should reject hardcoded answer for: ${problem.id}`, async ({ page }) => {
       await clearLocalStorage(page);
 
-      const navigated = await navigateToProblemPage(page, language!, problem.id);
+      if (!language) {
+        test.skip();
+        return;
+      }
+
+      const navigated = await navigateToProblemPage(page, language, problem.id);
 
       if (!navigated) {
         test.skip();

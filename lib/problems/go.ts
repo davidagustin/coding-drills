@@ -1441,6 +1441,7 @@ export const goProblems: Problem[] = [
     text: 'Use `strconv.ParseFloat()` to parse "3.14159" as a float64.',
     setup: 'import "strconv"\ns := "3.14159"',
     setupCode: 'import "strconv"\ns := "3.14159"',
+    // biome-ignore lint/suspicious/noApproximativeNumericConstant: literal parsed value, not Math.PI
     expected: 3.14159,
     sample: 'f, err := strconv.ParseFloat(s, 64); if err != nil { panic(err) }; f',
     hints: ['ParseFloat(str, bitSize)', '64 for float64'],
