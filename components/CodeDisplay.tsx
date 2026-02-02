@@ -58,6 +58,8 @@ interface CodeDisplayProps {
   showAccent?: boolean;
   /** Accent color for the top border (CSS color value) */
   accentColor?: string;
+  /** Override the Monaco language (e.g. 'html', 'css' for non-LanguageId languages) */
+  monacoLanguageOverride?: string;
 }
 
 /**
@@ -89,8 +91,9 @@ export default function CodeDisplay({
   className = '',
   showAccent = false,
   accentColor,
+  monacoLanguageOverride,
 }: CodeDisplayProps) {
-  const monacoLanguage = LANGUAGE_TO_MONACO[language] || 'plaintext';
+  const monacoLanguage = monacoLanguageOverride || LANGUAGE_TO_MONACO[language] || 'plaintext';
   const theme = darkMode ? 'vs-dark' : 'vs';
 
   // Calculate height based on content if not specified

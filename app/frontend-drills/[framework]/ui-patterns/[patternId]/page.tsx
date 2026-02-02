@@ -23,7 +23,26 @@ const CodeEditor = dynamic(
   () => import('@/components/CodeEditor').then((mod) => mod.default || mod),
   { ssr: false },
 );
+const CodeDisplay = dynamic(
+  () => import('@/components/CodeDisplay').then((mod) => mod.default || mod),
+  { ssr: false },
+);
 const ExerciseTutor = dynamic(() => import('@/components/ExerciseTutor'), { ssr: false });
+
+function formatCSSForDisplay(raw: string): string {
+  return raw
+    .replace(/\{([^}]+)\}/g, (_match, body: string) => {
+      const props = body
+        .split(';')
+        .map((p: string) => p.trim())
+        .filter(Boolean)
+        .map((p: string) => `  ${p};`)
+        .join('\n');
+      return `{\n${props}\n}`;
+    })
+    .replace(/\}\s*/g, '}\n\n')
+    .trim();
+}
 
 function getImplementationHint(concept: string, framework: string): string {
   const hints: Record<string, string> = {
@@ -1270,19 +1289,17 @@ try {
                     monacoLanguageOverride={monacoLanguage}
                   />
                 ) : (
-                  <CodeEditor
+                  <CodeDisplay
                     code={
                       editorTab === 'html'
                         ? pattern.demoCode?.html || '<!-- No HTML -->'
-                        : pattern.demoCode?.css || '/* No CSS */'
+                        : formatCSSForDisplay(pattern.demoCode?.css || '/* No CSS */')
                     }
-                    onChange={() => {}}
                     language="javascript"
                     monacoLanguageOverride={editorTab === 'html' ? 'html' : 'css'}
-                    readOnly={true}
-                    lineNumbers={false}
                     height={320}
-                    minHeight={100}
+                    maxHeight={320}
+                    lineNumbers={true}
                   />
                 )}
               </div>

@@ -70,6 +70,17 @@ const LANGUAGE_EXTENSIONS: Record<LanguageId, string> = {
   mongodb: '.js',
 };
 
+/**
+ * Map non-standard language overrides to valid Monaco language IDs.
+ * Monaco doesn't recognize 'typescriptreact' or 'javascriptreact' —
+ * those are VS Code-specific. JSX support comes from the compiler
+ * options + file extension (.tsx/.jsx), not the language ID.
+ */
+const LANGUAGE_OVERRIDE_NORMALIZE: Record<string, { language: string; extension: string }> = {
+  typescriptreact: { language: 'typescript', extension: '.tsx' },
+  javascriptreact: { language: 'javascript', extension: '.jsx' },
+};
+
 interface CodeEditorProps {
   /** The code content to display/edit */
   code: string;
@@ -145,9 +156,18 @@ export default function CodeEditor({
   }, [onSubmitShortcut]);
 
   // Get Monaco language from our language ID (allow override for e.g. Angular HTML templates)
-  const monacoLanguage = monacoLanguageOverride || LANGUAGE_TO_MONACO[language] || 'plaintext';
+  // Normalize non-standard language IDs (e.g. 'typescriptreact' → 'typescript')
+  const normalizedOverride = monacoLanguageOverride
+    ? LANGUAGE_OVERRIDE_NORMALIZE[monacoLanguageOverride]
+    : undefined;
+  const monacoLanguage =
+    normalizedOverride?.language ||
+    monacoLanguageOverride ||
+    LANGUAGE_TO_MONACO[language] ||
+    'plaintext';
   const fileExtension =
-    monacoLanguageOverride === 'html' ? '.html' : LANGUAGE_EXTENSIONS[language] || '.txt';
+    normalizedOverride?.extension ||
+    (monacoLanguageOverride === 'html' ? '.html' : LANGUAGE_EXTENSIONS[language] || '.txt');
 
   const handleEditorDidMount: OnMount = useCallback(
     (editor, monaco) => {
