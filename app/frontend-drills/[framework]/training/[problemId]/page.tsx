@@ -111,67 +111,18 @@ function generateTrainingStarter(problem: FrontendDrillProblem): string {
     lines.push(`${keyword} ${name} = (${params}) => {`);
     lines.push('  // Your code here');
     lines.push('};');
-
-    // Find invocation lines (lines after the function body closes)
-    let braceDepth = 0;
-    let bodyEnd = 0;
-    for (let i = 0; i < sampleLines.length; i++) {
-      for (const ch of sampleLines[i]) {
-        if (ch === '{') braceDepth++;
-        if (ch === '}') braceDepth--;
-      }
-      if (braceDepth === 0 && i > 0) {
-        bodyEnd = i;
-        break;
-      }
-    }
-    // Append simple invocation lines after the function body — skip lines
-    // containing arrow functions (=>) since those hold answer logic.
-    const invocationLines = sampleLines
-      .slice(bodyEnd + 1)
-      .filter((l) => l.trim().length > 0 && !l.includes('=>'));
-    if (invocationLines.length > 0) {
-      lines.push(...invocationLines);
-    }
   } else if (arrowInlineMatch) {
-    // Single-line arrow function  — const name = (params) => expr;\nname(args)
+    // Single-line arrow function — expanded to block form
     const [, keyword, name, params] = arrowInlineMatch;
     lines.push(`${keyword} ${name} = (${params}) => {`);
     lines.push('  // Your code here');
     lines.push('};');
-    // Invocation lines are everything after the first line — skip lines
-    // containing arrow functions (=>) since those hold answer logic.
-    const invocationLines = sampleLines
-      .slice(1)
-      .filter((l) => l.trim().length > 0 && !l.includes('=>'));
-    if (invocationLines.length > 0) {
-      lines.push(...invocationLines);
-    }
   } else if (funcMatch) {
     // Traditional function declaration
     const [, name, params] = funcMatch;
     lines.push(`function ${name}(${params}) {`);
     lines.push('  // Your code here');
     lines.push('}');
-    // Find invocation lines after function body
-    let braceDepth = 0;
-    let bodyEnd = 0;
-    for (let i = 0; i < sampleLines.length; i++) {
-      for (const ch of sampleLines[i]) {
-        if (ch === '{') braceDepth++;
-        if (ch === '}') braceDepth--;
-      }
-      if (braceDepth === 0 && i > 0) {
-        bodyEnd = i;
-        break;
-      }
-    }
-    const invocationLines = sampleLines
-      .slice(bodyEnd + 1)
-      .filter((l) => l.trim().length > 0 && !l.includes('=>'));
-    if (invocationLines.length > 0) {
-      lines.push(...invocationLines);
-    }
   } else {
     // Expression, decorator, HTML template, object literal, or other
     lines.push('// Your answer here');
