@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { SettingsMenu } from '@/app/[language]/SettingsMenu';
 import {
   FRAMEWORK_CONFIG,
   FRAMEWORK_IDS,
@@ -220,6 +221,7 @@ export default async function FrameworkLayout({ children, params }: LayoutProps)
                 </svg>
                 Docs
               </a>
+              <SettingsMenu />
             </div>
           </div>
         </div>
