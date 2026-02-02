@@ -20,6 +20,15 @@ const StackViz = dynamic(() => import('./StackViz'), { ssr: false });
 const TwoPointerViz = dynamic(() => import('./TwoPointerViz'), { ssr: false });
 const LinkedListViz = dynamic(() => import('./LinkedListViz'), { ssr: false });
 
+// Agent 1: Two Pointers & Sliding Window & Binary Search & Stack/Queue
+const MoveZeroesViz = dynamic(() => import('./MoveZeroesViz'), { ssr: false });
+const ThreeSumZeroViz = dynamic(() => import('./ThreeSumZeroViz'), { ssr: false });
+const ContainerMostWaterViz = dynamic(() => import('./ContainerMostWaterViz'), { ssr: false });
+const SlidingWindowMinSubarrayViz = dynamic(() => import('./SlidingWindowMinSubarrayViz'), {
+  ssr: false,
+});
+const SearchRotatedViz = dynamic(() => import('./SearchRotatedViz'), { ssr: false });
+
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
   'binary-search': BinarySearchViz,
@@ -37,6 +46,15 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'two-pointer-remove-dupes': TwoPointerViz,
   'linked-list-traverse': LinkedListViz,
   'linked-list-reverse': LinkedListViz,
+
+  // Agent 1: Two Pointers
+  'move-zeroes': MoveZeroesViz,
+  'three-sum-zero': ThreeSumZeroViz,
+  'container-most-water': ContainerMostWaterViz,
+  // Agent 1: Sliding Window
+  'sliding-window-min-subarray': SlidingWindowMinSubarrayViz,
+  // Agent 1: Binary Search
+  'search-rotated': SearchRotatedViz,
 };
 
 /**
