@@ -192,7 +192,7 @@ pnpm test             # Unit (Vitest) — 13,745 tests, ~96% coverage
 pnpm test:coverage    # Unit with coverage report
 pnpm test:e2e        # E2E (Playwright)
 pnpm test:e2e:ui     # Playwright UI
-npx tsx scripts/test-frontend-samples.ts  # Validate all 345 frontend drill samples
+npx vitest run lib/__tests__/frontend-drills-validation.test.ts  # Validate all 460 frontend drill samples
 
 # Visualizations (agent tooling)
 pnpm viz:list         # List progress
@@ -263,7 +263,7 @@ coding-drills/
 
 The code runner (`lib/codeRunner.ts`) and validator (`lib/codeValidator.ts`) execute user-submitted JavaScript in a sandboxed `new Function()` environment. The validator supports both single-expression answers (e.g. `arr.map(x => x * 2)`) and multi-statement code (e.g. `const result = arr.filter(...); result`), automatically detecting statements and capturing the return value. TypeScript type annotations are stripped before execution without corrupting object literals or arrow function bodies.
 
-All 345 frontend drill sample solutions are validated on every run of `scripts/test-frontend-samples.ts` to ensure they produce the expected output when pasted as-is.
+All 460 frontend drill sample solutions are validated via `lib/__tests__/frontend-drills-validation.test.ts` (runs as part of the Vitest suite) to ensure they produce the expected output when pasted as-is.
 
 ## Anti-Hardcoding Validation
 
