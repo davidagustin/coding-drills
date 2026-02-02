@@ -24,7 +24,12 @@ export type LanguageId =
   | 'haskell'
   | 'elixir'
   | 'dart'
-  | 'clojure';
+  | 'clojure'
+  // Database languages
+  | 'sql'
+  | 'postgresql'
+  | 'mysql'
+  | 'mongodb';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
