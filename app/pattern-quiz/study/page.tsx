@@ -1,8 +1,7 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Breadcrumb } from '@/components/Breadcrumb';
 import {
   ConfidenceRater,
   FlashcardCard,
@@ -32,17 +31,11 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-const LANGUAGE_SOURCES: { id: FlashcardSource; label: string }[] = [
-  { id: 'method', label: 'Language Methods' },
-  { id: 'time-complexity', label: 'Time Complexity' },
-  { id: 'space-complexity', label: 'Space Complexity' },
+const SOURCES: { id: FlashcardSource; label: string }[] = [
   { id: 'pattern', label: 'Algorithm Patterns' },
 ];
 
-export default function LanguageStudyPage() {
-  const params = useParams();
-  const language = (params?.language as string) || 'javascript';
-
+export default function PatternStudyPage() {
   const { studyState, getWeakCardIds, rateCard, completeSession, prioritiseWeak } =
     useFlashcardStudy();
 
@@ -63,10 +56,8 @@ export default function LanguageStudyPage() {
       setLastConfig(config);
       let cards = getAllFlashcards({
         sources: config.sources,
-        language,
         categories: config.categories.length > 0 ? config.categories : undefined,
         difficulties: config.difficulties,
-        interviewOnly: config.interviewOnly || undefined,
       });
 
       if (config.prioritizeWeak) {
@@ -95,7 +86,7 @@ export default function LanguageStudyPage() {
       sessionStartRef.current = Date.now();
       setPhase('studying');
     },
-    [language, prioritiseWeak, getWeakCardIds, studyState.ratings],
+    [prioritiseWeak, getWeakCardIds, studyState.ratings],
   );
 
   // ── Card interaction ────────────────────────────────────
@@ -156,12 +147,31 @@ export default function LanguageStudyPage() {
 
   if (phase === 'setup') {
     return (
-      <StudySetup
-        availableSources={LANGUAGE_SOURCES}
-        context={{ language }}
-        weakCardCount={weakCardCount}
-        onStart={handleStart}
-      />
+      <div className="min-h-screen bg-zinc-950 text-white">
+        {/* Mode tabs */}
+        <div className="bg-zinc-950 border-b border-zinc-800/50">
+          <div className="max-w-4xl mx-auto px-4 flex gap-1 py-2">
+            <Link
+              href="/pattern-quiz"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-colors"
+            >
+              Quiz
+            </Link>
+            <Link
+              href="/pattern-quiz/study"
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-zinc-800 text-white"
+            >
+              Study
+            </Link>
+          </div>
+        </div>
+        <StudySetup
+          availableSources={SOURCES}
+          context={{}}
+          weakCardCount={weakCardCount}
+          onStart={handleStart}
+        />
+      </div>
     );
   }
 
@@ -205,17 +215,17 @@ export default function LanguageStudyPage() {
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <Breadcrumb
-            items={[
-              { label: 'Home', href: '/' },
-              {
-                label: language.charAt(0).toUpperCase() + language.slice(1),
-                href: `/${language}`,
-              },
-              { label: 'Study Mode' },
-            ]}
-            className="text-sm"
-          />
+          <div className="flex items-center gap-2 text-sm text-zinc-400">
+            <Link href="/" className="hover:text-white transition-colors">
+              Home
+            </Link>
+            <span>/</span>
+            <Link href="/pattern-quiz" className="hover:text-white transition-colors">
+              Pattern Quiz
+            </Link>
+            <span>/</span>
+            <span className="text-white">Study Mode</span>
+          </div>
           <button
             type="button"
             onClick={() => setPhase('setup')}

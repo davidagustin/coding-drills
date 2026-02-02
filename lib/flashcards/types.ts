@@ -36,6 +36,7 @@ export interface Flashcard {
   };
   difficulty: 'easy' | 'medium' | 'hard';
   category: string;
+  interviewRecommended: boolean;
 }
 
 // ── Persisted State (localStorage) ───────────────────────────
@@ -65,6 +66,7 @@ export interface StudySessionConfig {
   deckSize: number;
   prioritizeWeak: boolean;
   shuffle: boolean;
+  interviewOnly: boolean;
 }
 
 export interface SessionRatingTally {
@@ -90,4 +92,5 @@ export interface GetFlashcardsOptions {
   framework?: string;
   categories?: string[];
   difficulties?: ('easy' | 'medium' | 'hard')[];
+  interviewOnly?: boolean;
 }

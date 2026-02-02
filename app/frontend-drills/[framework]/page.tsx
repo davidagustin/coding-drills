@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { getSourceCardCount } from '@/lib/flashcards/adapters';
 import {
   FRAMEWORK_CONFIG,
   type FrameworkId,
@@ -104,6 +105,26 @@ function BookIcon({ className = 'w-8 h-8' }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+      />
+    </svg>
+  );
+}
+
+function StudyIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
       />
     </svg>
   );
@@ -214,6 +235,8 @@ export default function FrameworkPage() {
   const quizQuestionCount = getQuizQuestionCount(framework);
   const cheatsheetSectionCount = getCheatsheetSectionCount(framework);
   const uiPatternCount = getUIPatternCount(framework);
+  const studyCardCount =
+    getSourceCardCount('frontend', { framework }) + getSourceCardCount('pattern', {});
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -248,6 +271,16 @@ export default function FrameworkPage() {
           buttonText="Start Quiz"
           config={config}
           badge={quizQuestionCount > 0 ? `${quizQuestionCount} questions` : undefined}
+        />
+
+        <ModeCard
+          href={`/frontend-drills/${framework}/study`}
+          icon={<StudyIcon className="w-8 h-8" />}
+          title="Study Mode"
+          description={`Review ${config.name} questions at your own pace. No timers, no scoring — just focused recall with flashcards.`}
+          buttonText="Start Studying"
+          config={config}
+          badge={studyCardCount > 0 ? `${studyCardCount} cards` : undefined}
         />
 
         <ModeCard

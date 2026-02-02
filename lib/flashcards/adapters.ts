@@ -20,6 +20,7 @@ import { getQuizQuestions } from '@/lib/frontend-drills/quiz';
 import type { FrameworkId, FrontendQuizQuestion } from '@/lib/frontend-drills/types';
 import { getCategoriesForLanguage, getMethodsByLanguage } from '@/lib/problems';
 import type { LanguageId, Method } from '@/lib/types';
+import { isFlashcardInterviewRecommended } from './interview-recommended';
 import type { Flashcard, FlashcardSource, GetFlashcardsOptions } from './types';
 
 // ── Individual Adapters ──────────────────────────────────────
@@ -47,6 +48,10 @@ function methodToFlashcard(method: Method, language: string): Flashcard {
     },
     difficulty: categoriseDifficulty(method),
     category: method.category,
+    interviewRecommended: isFlashcardInterviewRecommended('method', {
+      language,
+      methodName: method.name,
+    }),
   };
 }
 
@@ -70,6 +75,7 @@ function complexityToFlashcard(
     },
     difficulty: inferComplexityDifficulty(isTime ? q.timeComplexity : q.spaceComplexity),
     category: q.category,
+    interviewRecommended: true,
   };
 }
 
@@ -98,6 +104,7 @@ function patternToFlashcard(p: AlgorithmPatternProblem): Flashcard {
     },
     difficulty: p.difficulty,
     category: p.category,
+    interviewRecommended: true,
   };
 }
 
@@ -116,6 +123,7 @@ function frontendToFlashcard(q: FrontendQuizQuestion): Flashcard {
     },
     difficulty: q.difficulty,
     category: q.category,
+    interviewRecommended: true,
   };
 }
 
@@ -197,6 +205,11 @@ export function getAllFlashcards(options: GetFlashcardsOptions): Flashcard[] {
     filtered = filtered.filter((c) => diffSet.has(c.difficulty));
   }
 
+  // Apply interview filter
+  if (options.interviewOnly) {
+    filtered = filtered.filter((c) => c.interviewRecommended);
+  }
+
   return filtered;
 }
 
@@ -243,4 +256,15 @@ export function getSourceCardCount(
       return getQuizQuestions(fw).length;
     }
   }
+}
+
+/**
+ * Returns the count of interview-recommended cards for the given sources and context.
+ */
+export function getInterviewRecommendedCount(
+  sources: FlashcardSource[],
+  context?: { language?: string; framework?: string },
+): number {
+  const all = getAllFlashcards({ sources, ...context });
+  return all.filter((c) => c.interviewRecommended).length;
 }

@@ -68,6 +68,7 @@ export default function FrontendStudyPage() {
         framework,
         categories: config.categories.length > 0 ? config.categories : undefined,
         difficulties: config.difficulties,
+        interviewOnly: config.interviewOnly || undefined,
       });
 
       if (config.prioritizeWeak) {

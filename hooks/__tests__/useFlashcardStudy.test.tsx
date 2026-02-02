@@ -15,6 +15,7 @@ function makeCard(id: string): Flashcard {
     back: { answer: 'test' },
     difficulty: 'easy',
     category: 'test',
+    interviewRecommended: false,
   };
 }
 

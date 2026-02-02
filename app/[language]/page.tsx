@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { complexityQuestions } from '@/lib/complexityProblems';
 import { getExerciseCount } from '@/lib/exercises/index';
+import { getSourceCardCount } from '@/lib/flashcards/adapters';
 import {
   getTotalProblemCount as getFrontendDrillCount,
   getTotalQuizQuestionCount as getFrontendQuizCount,
@@ -201,6 +202,26 @@ function RegexIcon({ className = 'w-8 h-8' }: { className?: string }) {
       <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M8 9h6" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M8 13h4" />
+    </svg>
+  );
+}
+
+function StudyIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
+      />
     </svg>
   );
 }
@@ -412,6 +433,12 @@ export default function LanguagePage() {
   const complexityCount = complexityQuestions.length;
   const quizTotalCount = methodCount + complexityCount;
   const regexProblemCount = getRegexProblemCount();
+  const studyCardCount = !isDatabaseLanguage
+    ? getSourceCardCount('method', { language }) +
+      getSourceCardCount('time-complexity', {}) +
+      getSourceCardCount('space-complexity', {}) +
+      getSourceCardCount('pattern', {})
+    : 0;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -490,15 +517,26 @@ export default function LanguagePage() {
         />
 
         {!isDatabaseLanguage && (
-          <ModeCard
-            href={`/${language}/quiz`}
-            icon={<LightbulbIcon className="w-8 h-8" />}
-            title="Quiz Mode"
-            description="Match inputs and outputs to methods, plus time & space complexity challenges. Test your knowledge and learn new patterns."
-            buttonText="Start Quiz"
-            config={config}
-            badge={quizTotalCount > 0 ? `${quizTotalCount} questions` : undefined}
-          />
+          <>
+            <ModeCard
+              href={`/${language}/quiz`}
+              icon={<LightbulbIcon className="w-8 h-8" />}
+              title="Quiz Mode"
+              description="Match inputs and outputs to methods, plus time & space complexity challenges. Test your knowledge and learn new patterns."
+              buttonText="Start Quiz"
+              config={config}
+              badge={quizTotalCount > 0 ? `${quizTotalCount} questions` : undefined}
+            />
+            <ModeCard
+              href={`/${language}/study`}
+              icon={<StudyIcon className="w-8 h-8" />}
+              title="Study Mode"
+              description="Review questions at your own pace with flashcards. No timers, no scoring — just focused recall."
+              buttonText="Start Studying"
+              config={config}
+              badge={studyCardCount > 0 ? `${studyCardCount} cards` : undefined}
+            />
+          </>
         )}
 
         <ModeCard

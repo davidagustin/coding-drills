@@ -1,4 +1,13 @@
-export { getAllFlashcards, getAvailableCategories, getSourceCardCount } from './adapters';
+export {
+  getAllFlashcards,
+  getAvailableCategories,
+  getInterviewRecommendedCount,
+  getSourceCardCount,
+} from './adapters';
+export {
+  isFlashcardInterviewRecommended,
+  isMethodInterviewRecommended,
+} from './interview-recommended';
 export type {
   CardRating,
   ConfidenceRating,
