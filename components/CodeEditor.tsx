@@ -205,8 +205,7 @@ export default function CodeEditor({
           module: monaco.languages.typescript.ModuleKind.ESNext,
           noEmit: true,
           esModuleInterop: true,
-          jsx: monaco.languages.typescript.JsxEmit.React,
-          reactNamespace: 'React',
+          jsx: monaco.languages.typescript.JsxEmit.ReactJSX,
           allowJs: !isTypeScript,
           typeRoots: ['node_modules/@types'],
           preserveConstEnums: false,
@@ -284,6 +283,7 @@ export default function CodeEditor({
             2345, // Argument of type X is not assignable (too strict while typing)
             2552, // Cannot find name (too strict while typing)
             2304, // Cannot find name (variable not defined - too strict while typing)
+            2874, // JSX tag requires 'React' in scope (handled by automatic runtime)
           ];
 
           monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
