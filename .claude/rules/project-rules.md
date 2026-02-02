@@ -58,10 +58,12 @@ Do this as the final step before telling the user the task is complete. If the u
 
 ---
 
-## No Extra Markdown Files
+## No Extra Markdown Files – Consolidate to README
 
-- **Do not** create additional `.md` files (e.g. CONTRIBUTING.md, CHANGELOG.md, docs/*.md) unless they have **functional value** for the app.
+- **Do not** create additional `.md` files (e.g. CONTRIBUTING.md, CHANGELOG.md, docs/*.md, task plans, assignment lists) unless they have **functional value** for the app.
 - **Consolidate** all informational documentation into **README.md**.
+- **Delete stale planning files** – Task breakdowns, generation plans, assignment lists, and other one-time planning documents must be deleted once completed. Do not leave them in the repo.
+- **Audit on every commit** – Before committing, run `git ls-files '*.md'` and verify the only tracked markdown files are `README.md` and `.claude/rules/*.md`. If any other `.md` files exist, either delete them (if stale/informational) or consolidate their useful content into README.md.
 - **Exception:** Create a separate markdown file only when the app or tooling **uses it at runtime** (e.g. a template, config schema doc consumed by code, or required by a tool). Purely informational content belongs in README.md.
 
 ---
