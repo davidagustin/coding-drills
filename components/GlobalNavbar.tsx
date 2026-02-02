@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
+import { SettingsMenu } from '@/app/[language]/SettingsMenu';
 
 export function GlobalNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -201,6 +202,10 @@ export function GlobalNavbar() {
               <span className="sr-only">GitHub</span>
             </a>
 
+            <div className="hidden sm:block">
+              <SettingsMenu />
+            </div>
+
             {/* Mobile menu button */}
             <button
               type="button"
@@ -278,6 +283,9 @@ export function GlobalNavbar() {
                 </svg>
                 <span>GitHub</span>
               </a>
+              <div className="px-4 py-2">
+                <SettingsMenu />
+              </div>
             </div>
           </div>
         )}
