@@ -11,7 +11,7 @@ When adding **new features**:
 
 1. **Write tests first** – Before implementation, add or update tests that define the expected behavior (unit, integration, or e2e as appropriate).
 2. **Implement to pass** – Write the minimal code needed to make those tests pass.
-3. **Run the tests** – Execute the test suite (e.g. `npm test`, `pytest`, `cargo test`) and confirm all new and existing tests pass before considering the feature done.
+3. **Run the tests** – Execute the test suite (e.g. `pnpm test`, `pnpm test:ci`, `pnpm test:e2e`) and confirm all new and existing tests pass before considering the feature done.
 4. **Fix failures** – If any test fails, fix the code or the test until the suite is green; do not leave failing tests.
 
 For small fixes or refactors, add or update tests when behavior changes, and always run the relevant tests before finishing.
@@ -63,7 +63,7 @@ Do this as the final step before telling the user the task is complete. If the u
 - **Do not** create additional `.md` files (e.g. CONTRIBUTING.md, CHANGELOG.md, docs/*.md, task plans, assignment lists) unless they have **functional value** for the app.
 - **Consolidate** all informational documentation into **README.md**.
 - **Delete stale planning files** – Task breakdowns, generation plans, assignment lists, and other one-time planning documents must be deleted once completed. Do not leave them in the repo.
-- **Audit on every commit** – Before committing, run `git ls-files '*.md'` and verify the only tracked markdown files are `README.md`, `.claude/rules/*.md`, and `.cursor/rules/*.mdc`. If any other `.md`/`.mdc` files exist (outside those paths), either delete them (if stale/informational) or consolidate their useful content into README.md.
+- **Audit on every commit** – Before committing, run `git ls-files '*.md'` and verify the only tracked markdown files are `README.md`, `.claude/rules/*.md`, and `.cursor/rules/*.mdc`. If any other `.md` files exist, either delete them (if stale/informational) or consolidate their useful content into README.md.
 - **Exception:** Create a separate markdown file only when the app or tooling **uses it at runtime** (e.g. a template, config schema doc consumed by code, or required by a tool). Purely informational content belongs in README.md.
 
 ---
@@ -74,7 +74,7 @@ When spawning or orchestrating multiple agents (e.g. parallel workers, swarm, au
 
 1. **Assign distinct work** – Each agent must have a clearly different responsibility. No two agents should be given the same task, file, or subtask.
 2. **Partition by scope** – Split work by file, feature, layer, or step so there is no overlap (e.g. one agent on frontend, one on backend; or one per file/component).
-3. **Avoid duplicate effort** – Before spawning, confirm the task list has no duplicate entries. If using a shared task list, use atomic claiming or similar so one agent takes each item.
+3. **Avoid duplicate effort** – Before spawning, confirm the task list has no duplicate entries. If using a shared task list, use atomic claiming or similar so only one agent takes each item.
 4. **Name or tag tasks** – When creating tasks for multiple agents, label them so it's obvious which agent does what (e.g. "Agent A: auth API", "Agent B: login UI").
 
 If you are about to spawn N agents, ensure there are at least N unique tasks (or N non-overlapping scopes); never assign the same task to more than one agent.
