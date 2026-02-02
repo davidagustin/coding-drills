@@ -34,6 +34,7 @@ export default defineConfig({
       {
         // Regular unit tests (Node.js environment)
         test: {
+          name: 'unit',
           include: [
             'lib/**/*.test.ts',
             'lib/**/__tests__/**/*.ts',

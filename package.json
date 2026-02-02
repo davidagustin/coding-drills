@@ -18,7 +18,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "test:ci": "vitest run --coverage --reporter=verbose",
+    "test:ci": "vitest run --project=unit --coverage --reporter=verbose",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
