@@ -12,14 +12,18 @@ export const vueProblems: FrontendDrillProblem[] = [
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'Create a Reactive Ref',
-    text: 'Use the ref() function to create a reactive reference with initial value 42.',
-    setup: 'A mock ref function that wraps a value in { value: ... }.',
-    setupCode: `const ref = (val) => ({ value: val });`,
+    text: 'Write a function called ref that takes a value and wraps it in a reactive container object with a .value property. Call it with initialValue and return the result.',
+    setup: 'An initial value is provided.',
+    setupCode: `// The initial value to wrap in a ref
+const initialValue = 42;`,
     expected: { value: 42 },
-    sample: 'ref(42)',
+    sample: `function ref(val) {
+  return { value: val };
+}
+ref(initialValue)`,
     hints: [
       'ref() wraps a value in an object with a .value property',
-      'Pass the initial value as an argument',
+      'Return an object literal with value set to the argument',
     ],
     tags: ['reactivity', 'ref', 'basics'],
   },
@@ -30,15 +34,18 @@ export const vueProblems: FrontendDrillProblem[] = [
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'Create Reactive Object',
-    text: 'Use reactive() to create a reactive object with properties: name = "Alice", age = 25.',
-    setup:
-      'A mock reactive function that returns a proxy-like object (simplified as the same object).',
-    setupCode: `const reactive = (obj) => obj;`,
+    text: 'Write a function called reactive that takes a plain object and returns it as a reactive proxy (for this mock, just return the object). Then call it with an object containing name="Alice" and age=25, using the provided data.',
+    setup: 'Initial data for the reactive object is provided.',
+    setupCode: `// Data to make reactive
+const userData = { name: "Alice", age: 25 };`,
     expected: { name: 'Alice', age: 25 },
-    sample: 'reactive({ name: "Alice", age: 25 })',
+    sample: `function reactive(obj) {
+  return obj;
+}
+reactive(userData)`,
     hints: [
-      'reactive() takes an object and returns it (in our mock)',
-      'Create an object literal with the two properties',
+      'reactive() takes a plain object and returns a reactive version',
+      'In this simplified mock, returning the object itself is sufficient',
     ],
     tags: ['reactivity', 'reactive', 'objects'],
   },
@@ -98,17 +105,20 @@ watch(counter, (newVal) => { captured = newVal; });
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'Lifecycle Hook: onMounted',
-    text: 'Use onMounted() to set a message to "Component mounted". Return an object with the message.',
-    setup: 'Mock onMounted() immediately executes the callback.',
-    setupCode: `const onMounted = (callback) => callback();`,
+    text: 'Write a function called onMounted that takes a callback and immediately executes it (simulating the hook firing). Then use it: declare a message variable, call onMounted with a callback that sets message to "Component mounted", and return { message }.',
+    setup: 'No external setup needed.',
+    setupCode: `// (empty - you implement onMounted yourself)`,
     expected: { message: 'Component mounted' },
-    sample: `let message;
+    sample: `function onMounted(callback) {
+  callback();
+}
+let message;
 onMounted(() => { message = "Component mounted"; });
 ({ message })`,
     hints: [
-      'onMounted() takes a callback function',
-      'Execute code inside the callback',
-      'Store the result and return it',
+      'onMounted() takes a callback function and calls it when the component mounts',
+      'In this mock, just call the callback immediately',
+      'Set a variable inside the callback and return it after',
     ],
     tags: ['lifecycle', 'onMounted', 'hooks'],
   },
@@ -209,17 +219,20 @@ increment(); increment();
     category: 'Forms & Validation',
     difficulty: 'medium',
     title: 'Two-Way Binding Pattern',
-    text: 'Simulate v-model: create a ref for inputValue starting at "hello", update it to "world", and return the new value.',
-    setup: 'Mock ref function provided.',
-    setupCode: `const ref = (val) => ({ value: val });`,
+    text: 'Implement a simple ref function, then simulate v-model two-way binding: create a ref for inputValue with initial value "hello", update its .value to "world" (simulating user input), and return { inputValue: inputValue.value }.',
+    setup: 'Initial and updated values are provided.',
+    setupCode: `// Values for the v-model simulation
+const initialText = "hello";
+const updatedText = "world";`,
     expected: { inputValue: 'world' },
-    sample: `const inputValue = ref("hello");
-inputValue.value = "world";
+    sample: `function ref(val) { return { value: val }; }
+const inputValue = ref(initialText);
+inputValue.value = updatedText;
 ({ inputValue: inputValue.value })`,
     hints: [
-      'v-model creates two-way binding with a ref',
-      'Create a ref with initial value',
-      'Update .value property to simulate input change',
+      'ref() wraps a value in an object with a .value property',
+      'v-model creates two-way binding: the ref updates when input changes',
+      'Assign to .value to simulate the input changing',
     ],
     tags: ['v-model', 'forms', 'two-way-binding'],
   },
@@ -230,20 +243,22 @@ inputValue.value = "world";
     category: 'Data Fetching',
     difficulty: 'hard',
     title: 'Async Data Fetching Pattern',
-    text: 'Simulate async data fetching: create a ref for data starting at null, then set it to {id:1,name:"Product"}. Return the final data value.',
-    setup: 'Mock ref and a simulated async fetch function.',
-    setupCode: `const ref = (val) => ({ value: val });
-const fetchData = () => Promise.resolve({id:1,name:"Product"});`,
+    text: 'Simulate the async setup pattern for data fetching. Write a ref function. Create a ref for data starting at null. Write a loadData function that sets data.value to the result of calling fetchFn. Call loadData and return { data: data.value }.',
+    setup: 'A mock fetch function that returns product data is provided.',
+    setupCode: `// Simulated API call (synchronous for testing)
+const fetchFn = () => ({id:1,name:"Product"});`,
     expected: { data: { id: 1, name: 'Product' } },
-    sample: `const data = ref(null);
-fetchData().then(result => { data.value = result; });
-// In real async we'd await, but for sync validation:
-data.value = {id:1,name:"Product"};
+    sample: `function ref(val) { return { value: val }; }
+const data = ref(null);
+function loadData() {
+  data.value = fetchFn();
+}
+loadData();
 ({ data: data.value })`,
     hints: [
-      'Create a ref initialized to null',
-      'Simulate fetching by setting data.value to the result',
-      'Return the final data value',
+      'Create a ref function that returns { value: val }',
+      'Initialize data ref as null, then set it after "fetching"',
+      'Call your loadData function to trigger the data assignment',
     ],
     tags: ['async', 'data-fetching', 'promises'],
   },
@@ -254,16 +269,19 @@ data.value = {id:1,name:"Product"};
     category: 'Rendering',
     difficulty: 'easy',
     title: 'Conditional Rendering Logic',
-    text: 'Simulate v-if: given isVisible = true and message = "Hello", return the message only if isVisible is true. If false, return null.',
-    setup: 'Variables isVisible and message provided.',
-    setupCode: `const isVisible = true;
+    text: "Write a function called renderIf that takes a boolean condition and a content string. If the condition is true, return the content. If false, return null. This simulates Vue's v-if directive. Test it with the provided isVisible flag and message.",
+    setup: 'A visibility flag and message are provided.',
+    setupCode: `// v-if condition and content
+const isVisible = true;
 const message = "Hello";`,
     expected: 'Hello',
-    sample: 'isVisible ? message : null',
+    sample: `function renderIf(condition, content) {
+  return condition ? content : null;
+}
+renderIf(isVisible, message)`,
     hints: [
-      'Use a ternary operator',
       'v-if conditionally renders based on truthiness',
-      'Return message if true, null if false',
+      'Use a ternary operator to return content or null',
     ],
     tags: ['v-if', 'conditional-rendering', 'ternary'],
   },
@@ -276,12 +294,20 @@ const message = "Hello";`,
     category: 'DOM & Events',
     difficulty: 'easy',
     title: 'Event Modifier: Stop Propagation',
-    text: 'Simulate the .stop modifier by creating a handler that marks an event as stopped. Given a mock event object, call stopPropagation and return whether it was called.',
-    setup: 'A mock event with a stopPropagation flag is provided.',
-    setupCode: `const event = { stopped: false, stopPropagation() { this.stopped = true; } };`,
+    text: 'Write a function called handleWithStop that takes an event object and simulates the Vue .stop modifier. It should call stopPropagation() on the event and return an object with { stopped: event.stopped }.',
+    setup: 'A mock event object with a stopped flag and stopPropagation method is provided.',
+    setupCode: `// Mock event object - stopPropagation() sets stopped to true
+const event = { stopped: false, stopPropagation() { this.stopped = true; } };`,
     expected: { stopped: true },
-    sample: `(event.stopPropagation(), { stopped: event.stopped })`,
-    hints: ['.stop modifier calls event.stopPropagation()', 'Call the method on the event object'],
+    sample: `function handleWithStop(evt) {
+  evt.stopPropagation();
+  return { stopped: evt.stopped };
+}
+handleWithStop(event)`,
+    hints: [
+      'The .stop modifier calls event.stopPropagation() to prevent event bubbling',
+      'Define a function that takes an event, calls stopPropagation, and returns the result',
+    ],
     tags: ['events', 'modifiers', 'stop-propagation'],
   },
 
@@ -291,14 +317,19 @@ const message = "Hello";`,
     category: 'DOM & Events',
     difficulty: 'easy',
     title: 'Event Modifier: Prevent Default',
-    text: 'Simulate the .prevent modifier. Given a mock event, call preventDefault and return whether it was called.',
-    setup: 'A mock event with a preventDefault flag is provided.',
-    setupCode: `const event = { prevented: false, preventDefault() { this.prevented = true; } };`,
+    text: 'Write a function called handleWithPrevent that takes an event object and simulates the Vue .prevent modifier. It should call preventDefault() on the event and return an object with { prevented: event.prevented }.',
+    setup: 'A mock event object with a prevented flag and preventDefault method is provided.',
+    setupCode: `// Mock event object - preventDefault() sets prevented to true
+const event = { prevented: false, preventDefault() { this.prevented = true; } };`,
     expected: { prevented: true },
-    sample: `(event.preventDefault(), { prevented: event.prevented })`,
+    sample: `function handleWithPrevent(evt) {
+  evt.preventDefault();
+  return { prevented: evt.prevented };
+}
+handleWithPrevent(event)`,
     hints: [
-      '.prevent modifier calls event.preventDefault()',
-      'Call the method on the event object',
+      'The .prevent modifier calls event.preventDefault() to stop the default browser action',
+      'Define a function that takes an event, calls preventDefault, and returns the result',
     ],
     tags: ['events', 'modifiers', 'prevent-default'],
   },
@@ -330,12 +361,19 @@ handler(); handler(); handler();
     category: 'DOM & Events',
     difficulty: 'easy',
     title: 'Keyboard Event Modifier',
-    text: 'Simulate @keyup.enter: given a mock keyboard event with key "Enter", check if the key matches and return a result.',
+    text: 'Write a function called checkKeyModifier that takes a keyboard event and a target key name (like "Enter"). It should return an object { isMatch: boolean } indicating whether the event key matches the target. Test it with the provided keyEvent and target "Enter".',
     setup: 'A mock keyboard event is provided.',
-    setupCode: `const keyEvent = { key: "Enter" };`,
-    expected: { isEnter: true },
-    sample: `({ isEnter: keyEvent.key === "Enter" })`,
-    hints: ['Vue key modifiers check event.key', 'Compare the key property to "Enter"'],
+    setupCode: `// Mock keyboard event
+const keyEvent = { key: "Enter" };`,
+    expected: { isMatch: true },
+    sample: `function checkKeyModifier(evt, targetKey) {
+  return { isMatch: evt.key === targetKey };
+}
+checkKeyModifier(keyEvent, "Enter")`,
+    hints: [
+      'Vue key modifiers like @keyup.enter check event.key against a target key name',
+      'Compare event.key to the target string to see if they match',
+    ],
     tags: ['events', 'keyboard', 'key-modifiers'],
   },
 
@@ -498,15 +536,23 @@ handler("a"); handler("b"); handler("c");
     category: 'DOM & Events',
     difficulty: 'medium',
     title: 'Parent-Child Communication via Events',
-    text: 'Simulate parent-child communication: child emits "update:modelValue" with a new value, parent captures it. Return the value received by parent.',
-    setup: 'Mock emit and parent handler.',
-    setupCode: `let parentValue = "old";
-const onUpdateModelValue = (val) => { parentValue = val; };`,
+    text: 'Simulate parent-child communication with Vue\'s v-model pattern. Create an emit function that calls the parent handler for "update:modelValue". Then create a child component function that uses emit to send the value "new" to the parent. Call it and return { parentValue }.',
+    setup: 'A parentValue variable is provided to capture the emitted value.',
+    setupCode: `// Parent state to receive emitted value
+let parentValue = "old";`,
     expected: { parentValue: 'new' },
-    sample: `(onUpdateModelValue("new"), { parentValue })`,
+    sample: `const emit = (eventName, val) => {
+  if (eventName === "update:modelValue") parentValue = val;
+};
+function childUpdate(newVal) {
+  emit("update:modelValue", newVal);
+}
+childUpdate("new");
+({ parentValue })`,
     hints: [
-      'Vue uses update:modelValue event for v-model on components',
-      'The parent handler receives the new value',
+      'Vue uses "update:modelValue" event for v-model on components',
+      'Create an emit function that updates parentValue when the right event fires',
+      'The child calls emit with the event name and new value',
     ],
     tags: ['events', 'parent-child', 'v-model'],
   },
@@ -539,16 +585,19 @@ handler({ target: "child", currentTarget: "btn" });
     category: 'DOM & Events',
     difficulty: 'easy',
     title: 'Inline Handler Expression',
-    text: 'Simulate an inline handler expression that toggles a boolean. Start with isOpen = false, toggle it, and return the result.',
-    setup: 'Mock ref provided.',
-    setupCode: `const ref = (val) => ({ value: val });`,
+    text: 'Implement a ref function, create a ref called isOpen starting at false, then write an inline toggle expression that flips isOpen.value using the ! operator. Return { isOpen: isOpen.value }.',
+    setup: 'The initial toggle state is provided.',
+    setupCode: `// Initial state for the toggle
+const initialState = false;`,
     expected: { isOpen: true },
-    sample: `const isOpen = ref(false);
+    sample: `function ref(val) { return { value: val }; }
+const isOpen = ref(initialState);
 isOpen.value = !isOpen.value;
 ({ isOpen: isOpen.value })`,
     hints: [
-      'Inline handlers in Vue can contain simple expressions',
-      'Toggle a boolean with !value',
+      'ref() wraps a value in { value: val }',
+      'Toggle a boolean by assigning !currentValue back to the ref',
+      'Vue inline handlers like @click="isOpen = !isOpen" use this pattern',
     ],
     tags: ['events', 'inline-handler', 'toggle'],
   },
@@ -614,15 +663,20 @@ handler({ modifiers: { ctrl: true, shift: true } });
     category: 'DOM & Events',
     difficulty: 'easy',
     title: 'Mouse Button Modifiers',
-    text: 'Simulate mouse button modifiers (.left, .right, .middle). Given a click event with button=2 (right click), determine which button was pressed.',
-    setup: 'Mock mouse event provided.',
-    setupCode: `const mouseEvent = { button: 2 };
-const buttonMap = { 0: "left", 1: "middle", 2: "right" };`,
+    text: 'Write a function called identifyMouseButton that takes a mouse event object and returns { button: name } where name is "left", "middle", or "right" based on the event.button number (0=left, 1=middle, 2=right). Test it with the provided mouseEvent.',
+    setup: 'A mock mouse event object is provided.',
+    setupCode: `// Mock mouse event with button property (0=left, 1=middle, 2=right)
+const mouseEvent = { button: 2 };`,
     expected: { button: 'right' },
-    sample: `({ button: buttonMap[mouseEvent.button] })`,
+    sample: `function identifyMouseButton(evt) {
+  const names = { 0: "left", 1: "middle", 2: "right" };
+  return { button: names[evt.button] };
+}
+identifyMouseButton(mouseEvent)`,
     hints: [
-      'Mouse button 0 = left, 1 = middle, 2 = right',
-      'Vue provides .left, .right, .middle modifiers',
+      'Mouse button codes: 0 = left, 1 = middle, 2 = right',
+      'Create a mapping object from button numbers to names',
+      'Vue provides .left, .right, .middle modifiers that check these codes',
     ],
     tags: ['events', 'mouse', 'modifiers'],
   },
@@ -662,10 +716,15 @@ emit("submit", { name: "" })`,
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'Ref Unwrapping in Reactive',
-    text: 'When a ref is nested inside a reactive object, it auto-unwraps. Simulate this: create a reactive object containing a ref, and access the value without .value.',
-    setup: 'Mock ref and reactive with auto-unwrap behavior.',
-    setupCode: `const ref = (val) => ({ value: val, __isRef: true });
-const reactive = (obj) => {
+    text: 'Implement two functions: ref(val) creates { value, __isRef: true }, and reactive(obj) returns a new object where properties that are refs auto-unwrap (accessing them returns .value directly instead of the ref wrapper). Use Object.defineProperty with a getter. Test by creating reactive({ count: ref(10) }) and return { count: state.count }.',
+    setup: 'The initial count value is provided.',
+    setupCode: `// Value to wrap in a ref inside a reactive object
+const initialCount = 10;`,
+    expected: { count: 10 },
+    sample: `function ref(val) {
+  return { value: val, __isRef: true };
+}
+function reactive(obj) {
   const result = {};
   for (const key of Object.keys(obj)) {
     const val = obj[key];
@@ -675,13 +734,13 @@ const reactive = (obj) => {
     });
   }
   return result;
-};`,
-    expected: { count: 10 },
-    sample: `const state = reactive({ count: ref(10) });
+}
+const state = reactive({ count: ref(initialCount) });
 ({ count: state.count })`,
     hints: [
-      'Refs auto-unwrap when nested inside reactive objects',
-      'You access the value directly without .value',
+      'ref() should mark the object with __isRef: true',
+      'reactive() should use Object.defineProperty with a getter',
+      'In the getter, check __isRef to decide whether to unwrap',
     ],
     tags: ['reactivity', 'ref', 'unwrapping'],
   },
@@ -740,17 +799,22 @@ state.name = "Bob";
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'Readonly Reactive State',
-    text: 'Create a readonly wrapper around a reactive object. Attempt to mutate it and return whether the mutation was blocked.',
-    setup: 'Mock readonly that freezes the object.',
-    setupCode: `const readonly = (obj) => Object.freeze({ ...obj });`,
+    text: 'Write a function called readonly that takes an object and returns a frozen copy (use Object.freeze). Then create a readonly state from the sourceData, try to mutate it (which should throw), and return { name: state.name, frozen: true/false } indicating whether the mutation was blocked.',
+    setup: 'Source data for the readonly state is provided.',
+    setupCode: `// Data to make readonly
+const sourceData = { name: "Alice" };`,
     expected: { name: 'Alice', frozen: true },
-    sample: `const state = readonly({ name: "Alice" });
+    sample: `function readonly(obj) {
+  return Object.freeze({ ...obj });
+}
+const state = readonly(sourceData);
 let frozen = false;
 try { state.name = "Bob"; } catch(e) { frozen = true; }
 ({ name: state.name, frozen })`,
     hints: [
-      'readonly() creates a read-only proxy of a reactive object',
-      'Mutations should be blocked or warned against',
+      'readonly() should return a frozen copy of the input object',
+      'Object.freeze prevents property modifications',
+      'Use try/catch to detect if the mutation was blocked',
     ],
     tags: ['reactivity', 'readonly', 'immutability'],
   },
@@ -817,16 +881,23 @@ name.value = "Bob";
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'unref Utility',
-    text: 'Use unref to safely get the value from a ref or a plain value. Test with both a ref and a plain number.',
-    setup: 'Mock ref and unref.',
-    setupCode: `const ref = (val) => ({ value: val, __isRef: true });
-const unref = (val) => (val && val.__isRef) ? val.value : val;`,
+    text: "Implement three functions: ref(val) creates { value, __isRef: true }, and unref(val) returns val.value if it's a ref (has __isRef), otherwise returns val as-is. Test unref with both a ref wrapping testValue and the plain testValue. Return { fromRef, fromPlain }.",
+    setup: 'A test value is provided.',
+    setupCode: `// Value to test with both ref and plain access
+const testValue = 42;`,
     expected: { fromRef: 42, fromPlain: 42 },
-    sample: `const r = ref(42);
-({ fromRef: unref(r), fromPlain: unref(42) })`,
+    sample: `function ref(val) {
+  return { value: val, __isRef: true };
+}
+function unref(val) {
+  return (val && val.__isRef) ? val.value : val;
+}
+const r = ref(testValue);
+({ fromRef: unref(r), fromPlain: unref(testValue) })`,
     hints: [
-      'unref returns .value if given a ref, otherwise the value itself',
-      'It is a safe way to handle both ref and non-ref values',
+      'ref() creates an object with value and __isRef: true',
+      'unref() checks if the value has __isRef and unwraps it',
+      'For plain values, unref just returns them unchanged',
     ],
     tags: ['reactivity', 'unref', 'utility'],
   },
@@ -837,17 +908,24 @@ const unref = (val) => (val && val.__isRef) ? val.value : val;`,
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'isRef Type Guard',
-    text: 'Use isRef to check if a value is a ref. Test with a ref and a plain object.',
-    setup: 'Mock ref and isRef.',
-    setupCode: `const ref = (val) => ({ value: val, __isRef: true });
-const isRef = (val) => !!(val && val.__isRef);`,
+    text: 'Implement three functions: ref(val) creates { value, __isRef: true }, and isRef(val) returns true only if the value has __isRef set to true. Test isRef with a ref created from refValue and with the plainObject. Return { refCheck, plainCheck }.',
+    setup: 'Test values are provided.',
+    setupCode: `// A ref value and a plain object that looks similar but is not a ref
+const refValue = 10;
+const plainObject = { value: 10 };`,
     expected: { refCheck: true, plainCheck: false },
-    sample: `const r = ref(10);
-const plain = { value: 10 };
-({ refCheck: isRef(r), plainCheck: isRef(plain) })`,
+    sample: `function ref(val) {
+  return { value: val, __isRef: true };
+}
+function isRef(val) {
+  return !!(val && val.__isRef);
+}
+const r = ref(refValue);
+({ refCheck: isRef(r), plainCheck: isRef(plainObject) })`,
     hints: [
-      'isRef returns true only for objects created by ref()',
-      'Plain objects with a value property are not refs',
+      'ref() should tag the object with __isRef: true',
+      'isRef() checks for the __isRef flag using double negation for a boolean',
+      'Plain objects with a value property should return false',
     ],
     tags: ['reactivity', 'isRef', 'type-guard'],
   },
@@ -928,16 +1006,20 @@ const v = myRef.value;
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'Lifecycle Hook: onUnmounted',
-    text: 'Use onUnmounted to register a cleanup function. Simulate unmounting and return whether cleanup ran.',
-    setup: 'Mock onUnmounted that stores and immediately runs the callback.',
-    setupCode: `const onUnmounted = (fn) => fn();`,
+    text: 'Write a function called onUnmounted that takes a cleanup callback and immediately executes it (simulating component teardown). Then use it: declare a cleaned variable set to false, call onUnmounted with a callback that sets cleaned to true, and return { cleaned }.',
+    setup: 'No external setup needed.',
+    setupCode: `// (empty - you implement onUnmounted yourself)`,
     expected: { cleaned: true },
-    sample: `let cleaned = false;
+    sample: `function onUnmounted(fn) {
+  fn();
+}
+let cleaned = false;
 onUnmounted(() => { cleaned = true; });
 ({ cleaned })`,
     hints: [
       'onUnmounted runs when the component is removed from the DOM',
-      'Use it for cleanup: remove listeners, clear timers',
+      'In this mock, call the cleanup function immediately',
+      'Use it for cleanup tasks like removing event listeners or clearing timers',
     ],
     tags: ['lifecycle', 'onUnmounted', 'cleanup'],
   },
@@ -948,16 +1030,20 @@ onUnmounted(() => { cleaned = true; });
     category: 'State & Lifecycle',
     difficulty: 'easy',
     title: 'Lifecycle Hook: onBeforeMount',
-    text: 'Use onBeforeMount to set initial data before the component mounts. Return the prepared data.',
-    setup: 'Mock onBeforeMount that immediately runs the callback.',
-    setupCode: `const onBeforeMount = (fn) => fn();`,
+    text: 'Write a function called onBeforeMount that takes a callback and immediately runs it (simulating the pre-mount phase). Then use it: declare a status variable set to "idle", call onBeforeMount with a callback that sets status to "preparing", and return { status }.',
+    setup: 'No external setup needed.',
+    setupCode: `// (empty - you implement onBeforeMount yourself)`,
     expected: { status: 'preparing' },
-    sample: `let status = "idle";
+    sample: `function onBeforeMount(fn) {
+  fn();
+}
+let status = "idle";
 onBeforeMount(() => { status = "preparing"; });
 ({ status })`,
     hints: [
-      'onBeforeMount runs right before the component is mounted',
-      'Use it for last-minute data preparation',
+      'onBeforeMount runs right before the component is mounted to the DOM',
+      'In this mock, call the callback immediately to simulate the hook',
+      'Update the status variable inside the callback',
     ],
     tags: ['lifecycle', 'onBeforeMount', 'hooks'],
   },
@@ -968,18 +1054,28 @@ onBeforeMount(() => { status = "preparing"; });
     category: 'State & Lifecycle',
     difficulty: 'medium',
     title: 'Lifecycle Hook Execution Order',
-    text: 'Register onBeforeMount, onMounted, onBeforeUpdate, and onUpdated hooks. Track their execution order and return it.',
-    setup: 'Mock lifecycle hooks that run in Vue order.',
-    setupCode: `const order = [];
+    text: 'Given four lifecycle hook registration functions, register callbacks for each in the correct Vue lifecycle order: beforeMount, mounted, beforeUpdate, updated. Each callback should push its hook name to the order array. Register them in order and return the order array.',
+    setup:
+      'Mock lifecycle hooks and an order-tracking array are provided. Each hook pushes its name to the array when registered.',
+    setupCode: `// Tracks the order hooks are registered
+const order = [];
+// Each mock hook records its name when called
 const onBeforeMount = (fn) => { order.push("beforeMount"); fn(); };
 const onMounted = (fn) => { order.push("mounted"); fn(); };
 const onBeforeUpdate = (fn) => { order.push("beforeUpdate"); fn(); };
 const onUpdated = (fn) => { order.push("updated"); fn(); };`,
     expected: ['beforeMount', 'mounted', 'beforeUpdate', 'updated'],
-    sample: `(onBeforeMount(() => {}), onMounted(() => {}), onBeforeUpdate(() => {}), onUpdated(() => {}), order)`,
+    sample: `let result = null;
+onBeforeMount(() => {});
+onMounted(() => {});
+onBeforeUpdate(() => {});
+onUpdated(() => {});
+result = order;
+result`,
     hints: [
-      'Vue lifecycle hooks run in a specific order',
-      'beforeMount -> mounted -> beforeUpdate -> updated',
+      'Vue lifecycle hooks run in a specific order during the component lifecycle',
+      'The order is: beforeMount, mounted, beforeUpdate, updated',
+      'Register each hook by calling its function with a callback',
     ],
     tags: ['lifecycle', 'order', 'hooks'],
   },
@@ -990,19 +1086,21 @@ const onUpdated = (fn) => { order.push("updated"); fn(); };`,
     category: 'State & Lifecycle',
     difficulty: 'medium',
     title: 'KeepAlive Lifecycle: onActivated',
-    text: 'Simulate onActivated and onDeactivated hooks for a KeepAlive component. Track activation state.',
-    setup: 'Mock KeepAlive lifecycle hooks.',
-    setupCode: `const hooks = { activated: false, deactivated: false };
-const onActivated = (fn) => { hooks.activated = true; fn(); };
-const onDeactivated = (fn) => { hooks.deactivated = true; fn(); };`,
+    text: 'Write two functions: onActivated(fn) and onDeactivated(fn) that simulate KeepAlive lifecycle hooks. Each should record its hook in the hooks object (set hooks.activated or hooks.deactivated to true) then call the callback. Register an onActivated callback that increments visits, and an onDeactivated callback. Return { activated, deactivated, visits }.',
+    setup: 'A hooks tracking object is provided.',
+    setupCode: `// Tracks which hooks have fired
+const hooks = { activated: false, deactivated: false };`,
     expected: { activated: true, deactivated: true, visits: 1 },
-    sample: `let visits = 0;
+    sample: `function onActivated(fn) { hooks.activated = true; fn(); }
+function onDeactivated(fn) { hooks.deactivated = true; fn(); }
+let visits = 0;
 onActivated(() => { visits++; });
 onDeactivated(() => {});
 ({ activated: hooks.activated, deactivated: hooks.deactivated, visits })`,
     hints: [
-      'onActivated fires when a KeepAlive component becomes active',
-      'onDeactivated fires when it is cached but no longer visible',
+      'onActivated fires when a KeepAlive component becomes visible again',
+      'onDeactivated fires when it is cached but hidden',
+      'Both should set their flag on hooks and call the callback',
     ],
     tags: ['lifecycle', 'KeepAlive', 'onActivated'],
   },
@@ -1369,17 +1467,20 @@ flush();
     category: 'Common Patterns',
     difficulty: 'easy',
     title: 'defineProps - Declare Props',
-    text: 'Use defineProps to declare component props with types. Return the prop schema.',
-    setup: 'Mock defineProps.',
-    setupCode: `const defineProps = (schema) => schema;`,
+    text: 'Build a prop schema object for a component that accepts two props: "title" (type "String", required: true) and "count" (type "Number", default: 0). Pass this schema to defineProps and return the result.',
+    setup: 'A mock defineProps function is provided that returns whatever schema you pass.',
+    setupCode: `// Mock defineProps - returns the schema object
+const defineProps = (schema) => schema;`,
     expected: { title: { type: 'String', required: true }, count: { type: 'Number', default: 0 } },
-    sample: `defineProps({
+    sample: `const schema = {
   title: { type: "String", required: true },
   count: { type: "Number", default: 0 }
-})`,
+};
+defineProps(schema)`,
     hints: [
       'defineProps declares which props a component accepts',
-      'Each prop can have type, required, and default',
+      'Each prop is an object with type, and optionally required or default',
+      'Required props have required: true, optional props have a default value',
     ],
     tags: ['props', 'defineProps', 'composition-api'],
   },
@@ -1614,15 +1715,22 @@ update("c");
     category: 'Rendering',
     difficulty: 'easy',
     title: 'v-show vs v-if Logic',
-    text: 'Simulate the difference between v-show and v-if. v-show toggles display, v-if removes from DOM. Return both element states when hidden.',
-    setup: 'Mock element representations.',
-    setupCode: `const vShow = (visible) => ({ inDOM: true, display: visible ? "block" : "none" });
-const vIf = (condition) => condition ? { inDOM: true, display: "block" } : { inDOM: false, display: null };`,
+    text: 'Write two functions: vShow(visible) and vIf(condition). vShow always keeps the element in the DOM (inDOM: true) but toggles display between "block" and "none". vIf removes the element entirely when false (inDOM: false, display: null) and shows it when true (inDOM: true, display: "block"). Call both with false and return { vShow: ..., vIf: ... }.',
+    setup: 'A visibility flag is provided.',
+    setupCode: `// Both elements should be hidden (false)
+const isVisible = false;`,
     expected: { vShow: { inDOM: true, display: 'none' }, vIf: { inDOM: false, display: null } },
-    sample: `({ vShow: vShow(false), vIf: vIf(false) })`,
+    sample: `function vShow(visible) {
+  return { inDOM: true, display: visible ? "block" : "none" };
+}
+function vIf(condition) {
+  return condition ? { inDOM: true, display: "block" } : { inDOM: false, display: null };
+}
+({ vShow: vShow(isVisible), vIf: vIf(isVisible) })`,
     hints: [
-      'v-show keeps the element in DOM but hides it with CSS',
-      'v-if completely removes the element from DOM',
+      'v-show always keeps the element in the DOM but toggles CSS display',
+      'v-if completely adds/removes the element from the DOM',
+      'When hidden: v-show has inDOM: true + display: "none", v-if has inDOM: false + display: null',
     ],
     tags: ['v-show', 'v-if', 'rendering'],
   },
@@ -1633,19 +1741,20 @@ const vIf = (condition) => condition ? { inDOM: true, display: "block" } : { inD
     category: 'Rendering',
     difficulty: 'medium',
     title: 'Default Slot Content',
-    text: 'Simulate a component with a default slot. If no content is provided, use fallback text. Return the rendered content.',
-    setup: 'Mock slot rendering.',
-    setupCode: `function renderSlot(slotContent, fallback) {
-  return slotContent !== undefined ? slotContent : fallback;
-}`,
+    text: 'Write a function called renderSlot that takes slotContent and a fallback string. If slotContent is not undefined, return it. Otherwise return the fallback. Then test it: call with "Custom" as content and with undefined as content, using "Default text" as fallback for both. Return { withContent, withFallback }.',
+    setup: 'Fallback text is provided.',
+    setupCode: `// Default fallback text when no slot content is provided
+const fallbackText = "Default text";`,
     expected: { withContent: 'Custom', withFallback: 'Default text' },
-    sample: `({
-  withContent: renderSlot("Custom", "Default text"),
-  withFallback: renderSlot(undefined, "Default text")
-})`,
+    sample: `function renderSlot(slotContent, fallback) {
+  return slotContent !== undefined ? slotContent : fallback;
+}
+const result = { withContent: renderSlot("Custom", fallbackText), withFallback: renderSlot(undefined, fallbackText) };
+result`,
     hints: [
-      'Slots allow parent to inject content into child components',
-      'Default slot has fallback content when nothing is provided',
+      'Slots allow parents to inject content into child components',
+      'Check if slotContent is undefined to decide whether to use fallback',
+      'The ternary operator works well for this check',
     ],
     tags: ['slots', 'default', 'rendering'],
   },
@@ -1656,20 +1765,23 @@ const vIf = (condition) => condition ? { inDOM: true, display: "block" } : { inD
     category: 'Rendering',
     difficulty: 'medium',
     title: 'Named Slots',
-    text: 'Simulate named slots: a layout component with "header", "default", and "footer" slots. Render all three.',
-    setup: 'Mock named slot system.',
-    setupCode: `function renderLayout(slots) {
+    text: 'Write a function called renderLayout that takes a slots object with optional keys: header, default, footer. For each slot, use the provided content or fall back to defaults ("Default Header", "Default Content", "Default Footer"). Return { header, content, footer }. Test with header="My Header", default="Body text", and no footer.',
+    setup: 'Slot content values are provided.',
+    setupCode: `// Slot content provided by parent component
+const slotData = { header: "My Header", default: "Body text" };`,
+    expected: { header: 'My Header', content: 'Body text', footer: 'Default Footer' },
+    sample: `function renderLayout(slots) {
   return {
     header: slots.header || "Default Header",
     content: slots.default || "Default Content",
     footer: slots.footer || "Default Footer"
   };
-}`,
-    expected: { header: 'My Header', content: 'Body text', footer: 'Default Footer' },
-    sample: `renderLayout({ header: "My Header", default: "Body text" })`,
+}
+renderLayout(slotData)`,
     hints: [
-      'Named slots use the #slotName syntax in templates',
-      'Each slot can have its own fallback content',
+      'Named slots use the #slotName syntax in Vue templates',
+      'Use the || operator to provide fallback values for missing slots',
+      'The "default" key represents the default (unnamed) slot',
     ],
     tags: ['slots', 'named', 'layout'],
   },
@@ -1703,19 +1815,26 @@ const vIf = (condition) => condition ? { inDOM: true, display: "block" } : { inD
     category: 'Rendering',
     difficulty: 'medium',
     title: 'Dynamic Component Rendering',
-    text: 'Simulate the <component :is="..."> pattern. Given a component map and a current component name, render the appropriate component.',
-    setup: 'Mock component map.',
-    setupCode: `const components = {
+    text: 'Write a function called renderDynamic that takes a component name string and a components registry object. It should look up the component by name and call its render function. Return the render result. The registry maps names to functions that return { type, content }. Test with currentComponent and the registry.',
+    setup: 'A component registry and the target component name are provided.',
+    setupCode: `// Component registry - each component is a function returning its vnode
+const registry = {
   Home: () => ({ type: "Home", content: "Welcome" }),
   About: () => ({ type: "About", content: "About us" }),
   Contact: () => ({ type: "Contact", content: "Get in touch" })
-};`,
+};
+// Currently selected component
+const currentComponent = "About";`,
     expected: { type: 'About', content: 'About us' },
-    sample: `const currentComponent = "About";
-components[currentComponent]()`,
+    sample: `function renderDynamic(name, components) {
+  const component = components[name];
+  return component();
+}
+renderDynamic(currentComponent, registry)`,
     hints: [
-      '<component :is="name"> renders different components dynamically',
-      'Map component names to their render functions',
+      'Vue\'s <component :is="name"> renders different components dynamically',
+      'Look up the component function by name in the registry object',
+      'Call the function to get the rendered output',
     ],
     tags: ['dynamic-component', 'is', 'rendering'],
   },
@@ -1726,18 +1845,10 @@ components[currentComponent]()`,
     category: 'Rendering',
     difficulty: 'medium',
     title: 'Transition Classes',
-    text: 'Simulate Vue transition classes. Given a transition name "fade", generate the six transition class names.',
-    setup: 'No external setup needed.',
-    setupCode: `function transitionClasses(name) {
-  return {
-    enterFrom: name + "-enter-from",
-    enterActive: name + "-enter-active",
-    enterTo: name + "-enter-to",
-    leaveFrom: name + "-leave-from",
-    leaveActive: name + "-leave-active",
-    leaveTo: name + "-leave-to"
-  };
-}`,
+    text: 'Write a function called transitionClasses that takes a transition name (like "fade") and returns an object with all six Vue transition class names: enterFrom, enterActive, enterTo, leaveFrom, leaveActive, leaveTo. Each class follows the pattern: name + "-enter-from", name + "-enter-active", etc. Call it with "fade".',
+    setup: 'The transition name "fade" is provided as a constant.',
+    setupCode: `// Transition name to generate classes for
+const transitionName = "fade";`,
     expected: {
       enterFrom: 'fade-enter-from',
       enterActive: 'fade-enter-active',
@@ -1746,10 +1857,21 @@ components[currentComponent]()`,
       leaveActive: 'fade-leave-active',
       leaveTo: 'fade-leave-to',
     },
-    sample: `transitionClasses("fade")`,
+    sample: `function transitionClasses(name) {
+  return {
+    enterFrom: name + "-enter-from",
+    enterActive: name + "-enter-active",
+    enterTo: name + "-enter-to",
+    leaveFrom: name + "-leave-from",
+    leaveActive: name + "-leave-active",
+    leaveTo: name + "-leave-to"
+  };
+}
+transitionClasses(transitionName)`,
     hints: [
-      'Vue transitions apply 6 classes during enter/leave',
-      'Each is prefixed with the transition name',
+      'Vue transitions apply 6 classes: 3 for enter and 3 for leave',
+      'The pattern is: name + "-enter-from", name + "-enter-active", name + "-enter-to" (and same for leave)',
+      'Concatenate the transition name with each suffix',
     ],
     tags: ['transition', 'classes', 'animation'],
   },
@@ -1801,21 +1923,26 @@ components[currentComponent]()`,
     category: 'Rendering',
     difficulty: 'medium',
     title: 'Conditional List Rendering',
-    text: 'Simulate rendering a list only when it has items. If empty, render a "No items" message. Test with both cases.',
-    setup: 'Mock rendering functions.',
-    setupCode: `function renderListOrEmpty(items) {
-  if (items.length === 0) return { type: "empty", text: "No items" };
-  return { type: "list", items: items.map(i => i.name) };
-}`,
+    text: 'Write a function called renderListOrEmpty that takes an array of items (each with a name property). If the array is empty, return { type: "empty", text: "No items" }. If it has items, return { type: "list", items: [...names] } with just the name strings extracted. Test with both the filledItems and emptyItems arrays.',
+    setup: 'Two test arrays are provided.',
+    setupCode: `// Test data: one filled list, one empty
+const filledItems = [{ name: "A" }, { name: "B" }];
+const emptyItems = [];`,
     expected: {
       filled: { type: 'list', items: ['A', 'B'] },
       empty: { type: 'empty', text: 'No items' },
     },
-    sample: `({
-  filled: renderListOrEmpty([{ name: "A" }, { name: "B" }]),
-  empty: renderListOrEmpty([])
-})`,
-    hints: ['Check array length before rendering', 'Show fallback content when list is empty'],
+    sample: `function renderListOrEmpty(items) {
+  if (items.length === 0) return { type: "empty", text: "No items" };
+  return { type: "list", items: items.map(i => i.name) };
+}
+const result = { filled: renderListOrEmpty(filledItems), empty: renderListOrEmpty(emptyItems) };
+result`,
+    hints: [
+      'Check items.length to decide which branch to render',
+      'Use .map() to extract the name property from each item',
+      'Return different object shapes for empty vs filled lists',
+    ],
     tags: ['rendering', 'conditional', 'list'],
   },
 
@@ -1825,16 +1952,19 @@ components[currentComponent]()`,
     category: 'Rendering',
     difficulty: 'medium',
     title: 'Teleport Simulation',
-    text: 'Simulate Teleport: render content at a target location outside the component tree. Return the teleported content and target.',
-    setup: 'Mock Teleport.',
-    setupCode: `function teleport(to, content) {
-  return { target: to, content, teleported: true };
-}`,
+    text: 'Write a function called teleport that takes a CSS selector string (the target location) and content string, and returns an object with { target, content, teleported: true }. This simulates Vue\'s Teleport component. Call it with target "#modal" and content "Modal content".',
+    setup: 'Target selector and content values are provided.',
+    setupCode: `// Target DOM selector and content for teleport
+const targetSelector = "#modal";
+const teleportContent = "Modal content";`,
     expected: { target: '#modal', content: 'Modal content', teleported: true },
-    sample: `teleport("#modal", "Modal content")`,
+    sample: `function teleport(to, content) {
+  return { target: to, content, teleported: true };
+}
+teleport(targetSelector, teleportContent)`,
     hints: [
-      'Teleport renders content at a different DOM location',
-      'The "to" prop specifies the target selector',
+      'Teleport renders content at a different DOM location specified by a CSS selector',
+      'Return an object with target, content, and a teleported flag set to true',
     ],
     tags: ['teleport', 'rendering', 'portal'],
   },
@@ -1845,17 +1975,23 @@ components[currentComponent]()`,
     category: 'Rendering',
     difficulty: 'easy',
     title: 'Fragment - Multiple Root Nodes',
-    text: 'Vue 3 supports multiple root nodes (fragments). Simulate returning multiple elements from a component render.',
-    setup: 'Mock fragment rendering.',
-    setupCode: `const h = (tag, props, children) => ({ tag, props: props || {}, children: children || null });`,
+    text: 'Write an h() function that creates a vnode: h(tag, props, children) returns { tag, props, children }. Props defaults to {} and children defaults to null. Then simulate a Vue 3 fragment by returning an array of two vnodes: an h1 with content from heading and a p with content from body.',
+    setup: 'Content strings for the fragment elements are provided.',
+    setupCode: `// Content for the two root elements
+const heading = "Title";
+const body = "Body";`,
     expected: [
       { tag: 'h1', props: {}, children: 'Title' },
       { tag: 'p', props: {}, children: 'Body' },
     ],
-    sample: `[h("h1", {}, "Title"), h("p", {}, "Body")]`,
+    sample: `function h(tag, props, children) {
+  return { tag, props: props || {}, children: children || null };
+}
+[h("h1", {}, heading), h("p", {}, body)]`,
     hints: [
-      'Vue 3 components can have multiple root elements',
-      'Return an array of vnodes for fragments',
+      'h() creates virtual DOM nodes with tag, props, and children',
+      'Vue 3 fragments are simply arrays of multiple vnodes',
+      'Return an array with both elements to simulate multi-root',
     ],
     tags: ['fragment', 'multi-root', 'rendering'],
   },
@@ -1898,12 +2034,20 @@ const restored = keepAlive.activate("CompA", { count: 0 });
     category: 'Rendering',
     difficulty: 'easy',
     title: 'v-for with Range',
-    text: 'Simulate v-for with a numeric range: generate numbers 1 through 5.',
-    setup: 'No external setup needed.',
-    setupCode: `const range = (n) => Array.from({ length: n }, (_, i) => i + 1);`,
+    text: 'Write a function called range that takes a number n and returns an array of numbers from 1 to n (inclusive). This simulates Vue\'s v-for="i in n" which iterates from 1 to n. Call it with rangeSize.',
+    setup: 'The range size is provided.',
+    setupCode: `// Number of items to generate
+const rangeSize = 5;`,
     expected: [1, 2, 3, 4, 5],
-    sample: `range(5)`,
-    hints: ['v-for="n in 5" iterates from 1 to 5', 'Use Array.from to generate the range'],
+    sample: `function range(n) {
+  return Array.from({ length: n }, (_, i) => i + 1);
+}
+range(rangeSize)`,
+    hints: [
+      'Vue\'s v-for="i in 5" generates numbers 1 through 5',
+      'Use Array.from() with a length and a mapping function',
+      'The index starts at 0, so add 1 to get 1-based numbers',
+    ],
     tags: ['v-for', 'range', 'rendering'],
   },
 
@@ -1913,22 +2057,24 @@ const restored = keepAlive.activate("CompA", { count: 0 });
     category: 'Rendering',
     difficulty: 'easy',
     title: 'Dynamic Class Binding',
-    text: 'Simulate Vue class binding with object and array syntax. Given isActive=true and hasError=false, compute the class string.',
-    setup: 'Mock class binding helpers.',
-    setupCode: `function objectClass(obj) {
+    text: 'Write two functions: objectClass(obj) takes an object where keys are class names and values are booleans, and returns a space-joined string of truthy class names. arrayClass(arr) takes an array of strings/falsy values and returns a space-joined string of truthy entries. Test objectClass with { active: true, error: false } and arrayClass with ["base", isActive && "active", hasError && "error"]. Return { objectResult, arrayResult }.',
+    setup: 'Boolean flags for class conditions are provided.',
+    setupCode: `// Condition flags for dynamic class binding
+const isActive = true;
+const hasError = false;`,
+    expected: { objectResult: 'active', arrayResult: 'base active' },
+    sample: `function objectClass(obj) {
   return Object.entries(obj).filter(([, v]) => v).map(([k]) => k).join(" ");
 }
 function arrayClass(arr) {
   return arr.filter(Boolean).join(" ");
-}`,
-    expected: { objectResult: 'active', arrayResult: 'base active' },
-    sample: `({
-  objectResult: objectClass({ active: true, error: false }),
-  arrayResult: arrayClass(["base", true && "active", false && "error"])
-})`,
+}
+const result = { objectResult: objectClass({ active: isActive, error: hasError }), arrayResult: arrayClass(["base", isActive && "active", hasError && "error"]) };
+result`,
     hints: [
-      'Object syntax: truthy values include the class name',
-      'Array syntax: falsy entries are filtered out',
+      'Object syntax: iterate entries, keep only truthy values, join the keys',
+      'Array syntax: filter out falsy values, then join with spaces',
+      'Object.entries() gives [key, value] pairs you can filter',
     ],
     tags: ['rendering', 'class-binding', 'dynamic'],
   },
@@ -1941,19 +2087,22 @@ function arrayClass(arr) {
     category: 'Data Fetching',
     difficulty: 'easy',
     title: 'Loading State Pattern',
-    text: 'Create a data fetching pattern with loading state. Start loading, set data, stop loading. Return the final state.',
-    setup: 'Mock ref provided.',
-    setupCode: `const ref = (val) => ({ value: val });`,
+    text: 'Implement a ref function. Then simulate a data fetching lifecycle: create three refs (loading=true, data=null, error=null). Simulate the fetch completing by setting data to fetchResult and loading to false. Return { loading, data, error } with their .value properties.',
+    setup: 'The fetched data result is provided.',
+    setupCode: `// Simulated fetch result
+const fetchResult = "fetched";`,
     expected: { loading: false, data: 'fetched', error: null },
-    sample: `const loading = ref(true);
+    sample: `function ref(val) { return { value: val }; }
+const loading = ref(true);
 const data = ref(null);
 const error = ref(null);
-data.value = "fetched";
+data.value = fetchResult;
 loading.value = false;
 ({ loading: loading.value, data: data.value, error: error.value })`,
     hints: [
-      'Track loading, data, and error states separately',
-      'Set loading to false when data arrives',
+      'Create ref() to wrap values in { value: val }',
+      'Start with loading=true, then set data and flip loading to false',
+      'Error stays null on a successful fetch',
     ],
     tags: ['data-fetching', 'loading', 'state'],
   },
@@ -1964,17 +2113,23 @@ loading.value = false;
     category: 'Data Fetching',
     difficulty: 'easy',
     title: 'Error State Pattern',
-    text: 'Simulate a failed data fetch. Set the error state and ensure loading is false. Return the final state.',
-    setup: 'Mock ref provided.',
-    setupCode: `const ref = (val) => ({ value: val });`,
+    text: 'Implement a ref function. Then simulate a failed data fetch: create three refs (loading=true, data=null, error=null). Simulate the error by setting error to errorMessage and loading to false. Data stays null on failure. Return { loading, data, error } with their .value properties.',
+    setup: 'The error message is provided.',
+    setupCode: `// Error message from a failed fetch
+const errorMessage = "Network error";`,
     expected: { loading: false, data: null, error: 'Network error' },
-    sample: `const loading = ref(true);
+    sample: `function ref(val) { return { value: val }; }
+const loading = ref(true);
 const data = ref(null);
 const error = ref(null);
-error.value = "Network error";
+error.value = errorMessage;
 loading.value = false;
 ({ loading: loading.value, data: data.value, error: error.value })`,
-    hints: ['On error, set the error ref and stop loading', 'Data should remain null on failure'],
+    hints: [
+      'On error, set the error ref to the message and stop loading',
+      'Data should remain null when the fetch fails',
+      'Always set loading to false when the operation completes (success or error)',
+    ],
     tags: ['data-fetching', 'error', 'state'],
   },
 
@@ -2142,9 +2297,14 @@ const r2 = cached.getData("/api/users", () => ["Alice"])
     category: 'Data Fetching',
     difficulty: 'hard',
     title: 'Suspense Pattern',
-    text: 'Simulate the Suspense pattern: render a loading fallback while async data loads, then show content.',
-    setup: 'Mock Suspense rendering.',
-    setupCode: `function suspense(asyncFn, fallback) {
+    text: 'Write a function called suspense that takes an asyncFn (a function that returns data or throws) and a fallback string. Try calling asyncFn. If it succeeds, return { resolved: true, content: data, fallback: null }. If it throws, return { resolved: false, content: null, fallback: fallbackText }. Test with the provided loadData function and fallback.',
+    setup: 'A data loader function and fallback text are provided.',
+    setupCode: `// Simulated async data loader (succeeds synchronously for testing)
+const loadData = () => "Loaded data";
+// Fallback text shown while loading
+const fallbackText = "Loading...";`,
+    expected: { resolved: true, content: 'Loaded data', fallback: null },
+    sample: `function suspense(asyncFn, fallback) {
   let resolved = false;
   let data = null;
   try {
@@ -2158,12 +2318,12 @@ const r2 = cached.getData("/api/users", () => ["Alice"])
     content: resolved ? data : null,
     fallback: resolved ? null : fallback
   };
-}`,
-    expected: { resolved: true, content: 'Loaded data', fallback: null },
-    sample: `suspense(() => "Loaded data", "Loading...")`,
+}
+suspense(loadData, fallbackText)`,
     hints: [
-      'Suspense shows fallback content while waiting for async setup',
-      'Once resolved, it shows the actual content',
+      'Suspense shows fallback content while waiting for async data',
+      'Wrap the async call in try/catch to handle loading vs error states',
+      'When resolved, content has data and fallback is null; when not resolved, it is reversed',
     ],
     tags: ['Suspense', 'async', 'data-fetching'],
   },
@@ -2229,17 +2389,22 @@ poller.poll(); poller.poll(); poller.poll();
     category: 'Data Fetching',
     difficulty: 'easy',
     title: 'Transform Fetched Data',
-    text: 'Fetch raw data and transform it before storing. Map user objects to just names. Return the transformed data.',
-    setup: 'Mock fetch and transform.',
-    setupCode: `const ref = (val) => ({ value: val });
+    text: 'Write a function called transformUsers that takes an array of user objects (each with id, name, age) and returns just their names as an array. Implement a ref function, store the transformed result in a data ref, and return { names: data.value }.',
+    setup: 'Raw API response data is provided.',
+    setupCode: `// Raw API response with user objects
 const rawData = [{ id: 1, name: "Alice", age: 30 }, { id: 2, name: "Bob", age: 25 }];`,
     expected: { names: ['Alice', 'Bob'] },
-    sample: `const data = ref(null);
-data.value = rawData.map(u => u.name);
+    sample: `function ref(val) { return { value: val }; }
+function transformUsers(users) {
+  return users.map(u => u.name);
+}
+const data = ref(null);
+data.value = transformUsers(rawData);
 ({ names: data.value })`,
     hints: [
       'Transform API responses to the shape your component needs',
-      'Use .map() to extract specific fields',
+      'Use .map() to extract the name property from each user',
+      'Store the result in a ref for reactive state management',
     ],
     tags: ['data-fetching', 'transform', 'mapping'],
   },
@@ -2313,17 +2478,24 @@ const second = swr.getData("key", () => "v2")
     category: 'Data Fetching',
     difficulty: 'medium',
     title: 'Dependent Fetches',
-    text: 'Simulate dependent fetches: first fetch a user, then use their id to fetch their posts. Return both results.',
-    setup: 'Mock dependent fetch functions.',
-    setupCode: `const fetchUser = () => ({ id: 42, name: "Alice" });
-const fetchPosts = (userId) => [{ id: 1, userId, title: "Post 1" }];`,
+    text: "Write a function called fetchUserWithPosts that chains two dependent data fetches. It should: (1) call getUserById with the given userId to get a user object, (2) use that user's id to call getPostsByUser, (3) return { user, posts }. Test with userId 42.",
+    setup: 'Mock data-fetching functions and a user ID are provided.',
+    setupCode: `// Mock API functions
+const getUserById = (id) => ({ id: id, name: "Alice" });
+const getPostsByUser = (userId) => [{ id: 1, userId, title: "Post 1" }];
+// Target user
+const userId = 42;`,
     expected: { user: { id: 42, name: 'Alice' }, posts: [{ id: 1, userId: 42, title: 'Post 1' }] },
-    sample: `const user = fetchUser();
-const posts = fetchPosts(user.id);
-({ user, posts })`,
+    sample: `function fetchUserWithPosts(uid) {
+  const user = getUserById(uid);
+  const posts = getPostsByUser(user.id);
+  return { user, posts };
+}
+fetchUserWithPosts(userId)`,
     hints: [
-      'Dependent fetches use the result of one fetch in another',
-      'First fetch the user, then use their id for posts',
+      'Dependent fetches chain: the second fetch needs data from the first',
+      'First get the user, then use user.id to fetch their posts',
+      'Return both results in a single object',
     ],
     tags: ['data-fetching', 'dependent', 'chained'],
   },
@@ -2334,19 +2506,22 @@ const posts = fetchPosts(user.id);
     category: 'Data Fetching',
     difficulty: 'medium',
     title: 'Parallel Data Fetching',
-    text: 'Fetch multiple resources in parallel (simulated). Combine results from fetching users and products.',
-    setup: 'Mock parallel fetch.',
-    setupCode: `const fetchUsers = () => ["Alice", "Bob"];
-const fetchProducts = () => ["Widget", "Gadget"];
-function fetchAll(...fns) {
-  return fns.map(fn => fn());
-}`,
+    text: 'Write a function called fetchAll that takes any number of fetch functions as arguments, calls each one, and returns an array of their results (simulating Promise.all). Then use it to fetch from both fetchUsers and fetchProducts, destructure the results, and return { users, products }.',
+    setup: 'Mock data-fetching functions are provided.',
+    setupCode: `// Mock API endpoints
+const fetchUsers = () => ["Alice", "Bob"];
+const fetchProducts = () => ["Widget", "Gadget"];`,
     expected: { users: ['Alice', 'Bob'], products: ['Widget', 'Gadget'] },
-    sample: `const [users, products] = fetchAll(fetchUsers, fetchProducts);
+    sample: `function fetchAll() {
+  const fns = Array.from(arguments);
+  return fns.map(fn => fn());
+}
+const [users, products] = fetchAll(fetchUsers, fetchProducts);
 ({ users, products })`,
     hints: [
-      'Use Promise.all for parallel fetches in real code',
-      'Here we simulate with synchronous calls',
+      'In real Vue code you would use Promise.all for parallel fetches',
+      'fetchAll should call each function and collect results in an array',
+      'Destructure the array result to get named variables',
     ],
     tags: ['data-fetching', 'parallel', 'Promise.all'],
   },
@@ -2633,17 +2808,19 @@ field.validate();
     category: 'Forms & Validation',
     difficulty: 'easy',
     title: 'Select Input Binding',
-    text: 'Simulate v-model on a select input. Bind to a ref and change the selected option. Return the selected value.',
-    setup: 'Mock ref and options.',
-    setupCode: `const ref = (val) => ({ value: val });
+    text: 'Implement a ref function. Simulate v-model on a select: create a ref called selected initialized to the first option in the options array, then change it to "banana" (simulating user selection). Return { selected: selected.value, options }.',
+    setup: 'Select options are provided.',
+    setupCode: `// Available options for the select input
 const options = ["apple", "banana", "cherry"];`,
     expected: { selected: 'banana', options: ['apple', 'banana', 'cherry'] },
-    sample: `const selected = ref("apple");
+    sample: `function ref(val) { return { value: val }; }
+const selected = ref(options[0]);
 selected.value = "banana";
 ({ selected: selected.value, options })`,
     hints: [
-      'v-model on select binds to the selected option value',
-      'Changing the ref updates the selection',
+      'ref() wraps a value in { value: val } for reactive state',
+      'Initialize the ref with the first option from the array',
+      'Update .value to simulate the user changing the select',
     ],
     tags: ['forms', 'select', 'v-model'],
   },
@@ -2679,14 +2856,21 @@ toggleItem(selected, "react");
     category: 'Forms & Validation',
     difficulty: 'easy',
     title: 'Radio Button Binding',
-    text: 'Simulate v-model on radio buttons. Only one option can be selected. Change selection and return the result.',
-    setup: 'Mock ref.',
-    setupCode: `const ref = (val) => ({ value: val });`,
+    text: 'Implement a ref function. Simulate v-model on radio buttons: create a ref called size starting at the initialSize, then change it to newSize (simulating user clicking a different radio). Return { selected: size.value }.',
+    setup: 'Radio button values are provided.',
+    setupCode: `// Radio group values
+const initialSize = "small";
+const newSize = "medium";`,
     expected: { selected: 'medium' },
-    sample: `const size = ref("small");
-size.value = "medium";
+    sample: `function ref(val) { return { value: val }; }
+const size = ref(initialSize);
+size.value = newSize;
 ({ selected: size.value })`,
-    hints: ['Radio buttons bind to a single value', 'Only one option is active at a time'],
+    hints: [
+      'Radio buttons bind to a single value via v-model',
+      'Only one radio option is active at a time',
+      'Changing the ref value simulates clicking a different radio button',
+    ],
     tags: ['forms', 'radio', 'v-model'],
   },
 
@@ -2696,24 +2880,24 @@ size.value = "medium";
     category: 'Forms & Validation',
     difficulty: 'hard',
     title: 'Async Form Validation',
-    text: 'Create an async validation that checks username availability. Simulate a check where "admin" is taken. Return the validation result.',
-    setup: 'Mock async validator.',
-    setupCode: `const takenUsernames = ["admin", "root", "test"];
-function checkUsername(name) {
-  const available = !takenUsernames.includes(name);
-  return { username: name, available, error: available ? null : "Username taken" };
-}`,
+    text: 'Write a function called checkUsername that takes a username string and checks it against the takenUsernames list. Return an object { username, available, error } where available is true if the name is NOT in the taken list, and error is "Username taken" if unavailable or null if available. Test with both "admin" (taken) and "alice" (free).',
+    setup: 'A list of taken usernames is provided.',
+    setupCode: `// Simulated database of taken usernames
+const takenUsernames = ["admin", "root", "test"];`,
     expected: {
       taken: { username: 'admin', available: false, error: 'Username taken' },
       free: { username: 'alice', available: true, error: null },
     },
-    sample: `({
-  taken: checkUsername("admin"),
-  free: checkUsername("alice")
-})`,
+    sample: `function checkUsername(name) {
+  const available = !takenUsernames.includes(name);
+  return { username: name, available, error: available ? null : "Username taken" };
+}
+const result = { taken: checkUsername("admin"), free: checkUsername("alice") };
+result`,
     hints: [
-      'Async validation checks against a server/database',
-      'Return availability status and error message',
+      'Use Array.includes() to check if the username is in the taken list',
+      'Return an object with the username, availability boolean, and error message',
+      'Error should be null when available, "Username taken" when not',
     ],
     tags: ['forms', 'async-validation', 'username'],
   },
