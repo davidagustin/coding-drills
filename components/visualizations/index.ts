@@ -19,6 +19,15 @@ const SpiralMatrixViz = dynamic(() => import('./SpiralMatrixViz'), { ssr: false 
 const StackViz = dynamic(() => import('./StackViz'), { ssr: false });
 const TwoPointerViz = dynamic(() => import('./TwoPointerViz'), { ssr: false });
 const LinkedListViz = dynamic(() => import('./LinkedListViz'), { ssr: false });
+const ThreeSumViz = dynamic(() => import('./ThreeSumViz'), { ssr: false });
+const ContainerMostWaterViz = dynamic(() => import('./ContainerMostWaterViz'), { ssr: false });
+const TrappingRainWaterViz = dynamic(() => import('./TrappingRainWaterViz'), { ssr: false });
+const MoveZeroesViz = dynamic(() => import('./MoveZeroesViz'), { ssr: false });
+const DutchNationalFlagViz = dynamic(() => import('./DutchNationalFlagViz'), { ssr: false });
+const SlidingWindowMinSubarrayViz = dynamic(() => import('./SlidingWindowMinSubarrayViz'), { ssr: false });
+const LongestNoRepeatViz = dynamic(() => import('./LongestNoRepeatViz'), { ssr: false });
+const MinWindowSubstrViz = dynamic(() => import('./MinWindowSubstrViz'), { ssr: false });
+const SlidingWindowMaxViz = dynamic(() => import('./SlidingWindowMaxViz'), { ssr: false });
 
 // Map exercise base ID (without js-/ts- prefix) to visualization component
 export const VISUALIZATIONS: Record<string, ComponentType> = {
@@ -31,10 +40,19 @@ export const VISUALIZATIONS: Record<string, ComponentType> = {
   'dfs-inorder': DFSTreeViz,
   'sliding-window': SlidingWindowViz,
   'sliding-window-max-sum': SlidingWindowViz,
+  'sliding-window-min-subarray': SlidingWindowMinSubarrayViz,
+  'sliding-window-max': SlidingWindowMaxViz,
   'spiral-matrix': SpiralMatrixViz,
   'stack-operations': StackViz,
   'two-pointer-palindrome': TwoPointerViz,
   'two-pointer-remove-dupes': TwoPointerViz,
+  'three-sum-zero': ThreeSumViz,
+  'container-most-water': ContainerMostWaterViz,
+  'trapping-rain-water': TrappingRainWaterViz,
+  'move-zeroes': MoveZeroesViz,
+  'dutch-national-flag': DutchNationalFlagViz,
+  'longest-no-repeat': LongestNoRepeatViz,
+  'min-window-substr': MinWindowSubstrViz,
   'linked-list-traverse': LinkedListViz,
   'linked-list-reverse': LinkedListViz,
 };
