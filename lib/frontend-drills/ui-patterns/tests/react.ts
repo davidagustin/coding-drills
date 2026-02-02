@@ -234,7 +234,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-drag-drop': [
     {
       name: 'Cards have draggable attribute',
-      test: 'document.querySelectorAll(\'.card[draggable="true"]\').length >= 3',
+      test: "document.querySelectorAll('.card[draggable=\"true\"]').length >= 3 && document.querySelectorAll('.column').length === 3 && (document.querySelector('.column h2, .column h3') !== null)",
     },
     {
       name: 'Columns have drop zones',
@@ -289,7 +289,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-swipe-actions': [
     {
       name: 'Swipe items render with content',
-      test: "document.querySelectorAll('.swipe-item').length >= 3 && document.querySelectorAll('.swipe-content').length >= 3",
+      test: "document.querySelectorAll('.swipe-item').length >= 3 && document.querySelectorAll('.swipe-content').length >= 3 && document.querySelectorAll('.swipe-actions, .action-btn, [class*=\"action\"]').length >= 1",
     },
   ],
 
@@ -317,7 +317,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-drag-reorder': [
     {
       name: 'Items have drag handles',
-      test: "document.querySelectorAll('.handle').length >= 4",
+      test: "document.querySelectorAll('.handle').length >= 4 && document.querySelectorAll('[draggable=\"true\"]').length >= 4",
     },
     {
       name: 'Items are numbered sequentially',
@@ -473,7 +473,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-continuous-scrolling': [
     {
       name: 'Items display with avatars',
-      test: "document.querySelectorAll('.scroll-item').length >= 5 && document.querySelectorAll('.avatar').length >= 5",
+      test: "document.querySelectorAll('.scroll-item').length >= 5 && document.querySelectorAll('.avatar').length >= 5 && document.querySelector('.scroll-item').textContent.trim().length > 5",
     },
   ],
 
@@ -614,7 +614,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
   'react-fat-footer': [
     {
       name: 'Footer displays columns with links',
-      test: "document.querySelectorAll('.footer-col').length >= 3 && document.querySelectorAll('.footer-col a').length >= 8",
+      test: "var links = document.querySelectorAll('.footer-col a[href]'); links.length >= 8 && Array.from(links).some(function(a) { return a.href && !a.href.endsWith('#'); })",
     },
   ],
 
@@ -801,7 +801,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Toggle switch animates',
-      test: "(async function() { var toggle = document.querySelector('.toggle-track'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return toggle.classList.contains('on') || !!document.querySelector('.toggle-thumb'); })()",
+      test: "(async function() { var toggle = document.querySelector('.toggle-track'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return toggle.classList.contains('on'); })()",
     },
   ],
 
@@ -1202,7 +1202,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Badge hides when count is zero',
-      test: "(async function() { var badges = document.querySelectorAll('.badge'); var zeroBadges = Array.from(badges).filter(function(b) { return parseInt(b.textContent) === 0; }); return zeroBadges.length === 0 || zeroBadges.every(function(b) { return b.classList.contains('hidden') || b.style.display === 'none'; }); })()",
+      test: "(async function() { var badges = document.querySelectorAll('.badge'); var zeroBadges = Array.from(badges).filter(function(b) { return parseInt(b.textContent) === 0; }); return zeroBadges.length > 0 && zeroBadges.every(function(b) { return b.classList.contains('hidden') || b.style.display === 'none'; }); })()",
     },
   ],
 
@@ -1570,7 +1570,7 @@ export const reactTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Theme persists the selected mode',
-      test: "(async function() { var toggle = document.querySelector('.theme-toggle, .theme-switch, .dark-mode-toggle'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); var isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark') || document.documentElement.getAttribute('data-theme') === 'dark'; return typeof isDark === 'boolean'; })()",
+      test: "(async function() { var toggle = document.querySelector('.theme-toggle, .theme-switch, .dark-mode-toggle'); if (!toggle) return false; toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); return localStorage.getItem('theme') !== null || localStorage.getItem('darkMode') !== null || localStorage.getItem('mode') !== null; })()",
     },
   ],
 

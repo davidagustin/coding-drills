@@ -2017,7 +2017,7 @@ export const nativeJsTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Dismissible callout can be closed',
-      test: "(function() { var callout = document.querySelector('.callout.dismissible, .callout[data-dismissible]'); if (!callout) return true; var btn = callout.querySelector('.callout-close'); if (!btn) return false; btn.click(); return callout.style.display === 'none' || !document.body.contains(callout); })()",
+      test: "(function() { var callout = document.querySelector('.callout.dismissible, .callout[data-dismissible]'); if (!callout) return false; var btn = callout.querySelector('.callout-close'); if (!btn) return false; btn.click(); return callout.style.display === 'none' || !document.body.contains(callout); })()",
     },
   ],
 

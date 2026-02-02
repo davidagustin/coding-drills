@@ -1184,7 +1184,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Loading more adds entries',
-      test: "(async function() { var btn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Load') || b.textContent.includes('More'); }); if (!btn) return true; var initial = document.querySelectorAll('.feed-item, .entry, .activity').length; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.feed-item, .entry, .activity').length >= initial; })()",
+      test: "(async function() { var btn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Load') || b.textContent.includes('More'); }); if (!btn) return false; var initial = document.querySelectorAll('.feed-item, .entry, .activity').length; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); return document.querySelectorAll('.feed-item, .entry, .activity').length >= initial; })()",
     },
   ],
 
@@ -1267,7 +1267,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Toggle switches between monthly and yearly pricing',
-      test: "(async function() { var toggle = document.querySelector('.toggle, input[type=\"checkbox\"], button'); if (!toggle) return true; var prices = Array.from(document.querySelectorAll('.price, .amount')).map(function(p) { return p.textContent; }); toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newPrices = Array.from(document.querySelectorAll('.price, .amount')).map(function(p) { return p.textContent; }); return newPrices.some(function(p, i) { return p !== prices[i]; }); })()",
+      test: "(async function() { var toggle = document.querySelector('.toggle, input[type=\"checkbox\"], button'); if (!toggle) return false; var prices = Array.from(document.querySelectorAll('.price, .amount')).map(function(p) { return p.textContent; }); toggle.click(); await new Promise(function(r) { setTimeout(r, 150); }); var newPrices = Array.from(document.querySelectorAll('.price, .amount')).map(function(p) { return p.textContent; }); return newPrices.some(function(p, i) { return p !== prices[i]; }); })()",
     },
   ],
 
@@ -1289,7 +1289,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Navigation cycles through testimonials',
-      test: "(async function() { var btn = document.querySelector('.next, button, .arrow'); if (!btn) return true; var initial = document.querySelector('.testimonial, .quote, .review').textContent; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var current = document.querySelector('.testimonial, .quote, .review'); return current && current.textContent !== initial; })()",
+      test: "(async function() { var btn = document.querySelector('.next, button, .arrow'); if (!btn) return false; var initial = document.querySelector('.testimonial, .quote, .review').textContent; btn.click(); await new Promise(function(r) { setTimeout(r, 150); }); var current = document.querySelector('.testimonial, .quote, .review'); return current && current.textContent !== initial; })()",
     },
   ],
 
@@ -1398,7 +1398,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Active heading highlighted on scroll',
-      test: "(async function() { var content = document.querySelector('.content, main, article'); if (!content) return true; content.scrollTop = 300; content.dispatchEvent(new Event('scroll', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.toc .active, .toc-item.active'); })()",
+      test: "(async function() { var content = document.querySelector('.content, main, article'); if (!content) return false; content.scrollTop = 300; content.dispatchEvent(new Event('scroll', {bubbles:true})); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector('.toc .active, .toc-item.active'); })()",
     },
   ],
 
@@ -1455,7 +1455,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
   'vue-page-transitions': [
     {
       name: 'Navigation triggers page transition animation',
-      test: '(async function() { var links = document.querySelectorAll(\'a, .nav-link, button\'); if (links.length < 2) return false; links[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector(\'.fade-enter-active, .slide-enter-active, [class*="transition"], [class*="enter"]\') || true; })()',
+      test: '(async function() { var links = document.querySelectorAll(\'a, .nav-link, button\'); if (links.length < 2) return false; links[1].click(); await new Promise(function(r) { setTimeout(r, 150); }); return !!document.querySelector(\'.fade-enter-active, .slide-enter-active, [class*="transition"], [class*="enter"]\'); })()',
     },
     {
       name: 'Content changes after transition',
@@ -1713,7 +1713,7 @@ export const vueTests: Record<string, PatternTestCase[]> = {
     },
     {
       name: 'Retry attempt count increments',
-      test: "(async function() { var retryBtn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Retry') || b.textContent.includes('Try Again'); }); if (!retryBtn) return true; retryBtn.click(); await new Promise(function(r) { setTimeout(r, 300); }); var counter = document.querySelector('.attempts, .count, .retry-count'); return counter ? counter.textContent.match(/\\d/) !== null : true; })()",
+      test: "(async function() { var retryBtn = Array.from(document.querySelectorAll('button')).find(function(b) { return b.textContent.includes('Retry') || b.textContent.includes('Try Again'); }); if (!retryBtn) return false; retryBtn.click(); await new Promise(function(r) { setTimeout(r, 300); }); var counter = document.querySelector('.attempts, .count, .retry-count'); return counter ? counter.textContent.match(/\\d/) !== null : false; })()",
     },
   ],
 
