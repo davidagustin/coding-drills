@@ -282,11 +282,16 @@ export default function CodeEditor({
             2451, // Cannot redeclare block-scoped variable
             2300, // Duplicate identifier
             2393, // Duplicate function implementation (expected across exercise editors)
-            2551, // Property does not exist (too strict for incomplete code)
+            2339, // Property 'X' does not exist on type 'Y' (e.g. .value on HTMLElement)
+            2551, // Property does not exist — did you mean? (too strict for incomplete code)
             2554, // Expected X arguments but got Y (too strict while typing)
             2345, // Argument of type X is not assignable (too strict while typing)
             2552, // Cannot find name (too strict while typing)
             2304, // Cannot find name (variable not defined - too strict while typing)
+            2531, // Object is possibly 'null' (e.g. document.getElementById())
+            18047, // 'X' is possibly 'null' (strict null checks on DOM APIs)
+            18046, // 'X' is of type 'unknown' (catch block variables)
+            7006, // Parameter 'X' implicitly has an 'any' type (untyped function params)
             2874, // JSX tag requires 'React' in scope (handled by automatic runtime)
             2875, // JSX tag requires module path 'react/jsx-runtime' (not available in Monaco virtual FS)
           ];

@@ -109,3 +109,76 @@ test.describe('UI Pattern Detail — Cross-framework smoke', () => {
     });
   }
 });
+
+test.describe('UI Pattern Detail — Starter code has no Monaco errors', () => {
+  // Representative patterns per framework covering common error-prone constructs:
+  // - Angular/React use TypeScript mode → strict checking
+  // - Native JS/Vue use JavaScript mode → only syntax checking
+  const patternsToCheck = [
+    // Angular: vanilla JS displayed as TypeScript — most likely to have TS errors
+    { framework: 'angular', patternId: 'ng-reactive-forms' },
+    { framework: 'angular', patternId: 'ng-input-mask' },
+    { framework: 'angular', patternId: 'ng-autocomplete' },
+    // React: TypeScript + JSX mode
+    { framework: 'react', patternId: 'react-forms' },
+    { framework: 'react', patternId: 'react-autocomplete' },
+    // Native JS: JavaScript mode (semantic validation disabled)
+    { framework: 'native-js', patternId: 'js-form-validation' },
+    // Vue: JavaScript mode (semantic validation disabled)
+    { framework: 'vue', patternId: 'vue-form-validation' },
+  ];
+
+  for (const { framework, patternId } of patternsToCheck) {
+    test(`${framework}/${patternId} starter code has no error markers`, async ({ page }) => {
+      await page.goto(`/frontend-drills/${framework}/ui-patterns/${patternId}`);
+      await page.waitForLoadState('networkidle');
+
+      // Wait for Monaco editor to load
+      const editor = page.locator('.monaco-editor');
+      await expect(editor.first()).toBeVisible({ timeout: 15000 });
+
+      // Wait for TypeScript/JavaScript diagnostics to complete (async)
+      // Monaco runs diagnostics asynchronously after the model is set
+      await page.waitForTimeout(3000);
+
+      // Query Monaco API for error-severity markers on the active model
+      const errorMarkers: Array<{ message: string; line: number; code: string }> =
+        await page.evaluate(() => {
+          const w = window as Record<string, unknown>;
+          const m = w.monaco as Record<string, Record<string, (...args: unknown[]) => unknown>>;
+          if (!m) return [];
+          const editors = m.editor.getEditors() as Array<{
+            getModel: () => { uri: unknown } | null;
+          }>;
+          if (!editors || editors.length === 0) return [];
+          const model = editors[0].getModel();
+          if (!model) return [];
+          const markers = m.editor.getModelMarkers({ resource: model.uri }) as Array<{
+            severity: number;
+            message: string;
+            startLineNumber: number;
+            code: string | { value: string };
+          }>;
+          // MarkerSeverity.Error = 8
+          return markers
+            .filter((marker) => marker.severity === 8)
+            .map((marker) => ({
+              message: marker.message,
+              line: marker.startLineNumber,
+              code: typeof marker.code === 'object' ? marker.code?.value : String(marker.code),
+            }));
+        });
+
+      // Assert no error markers in the starter code
+      if (errorMarkers.length > 0) {
+        const details = errorMarkers
+          .map((e) => `  Line ${e.line}: [${e.code}] ${e.message}`)
+          .join('\n');
+        expect(
+          errorMarkers,
+          `Monaco error markers found in ${framework}/${patternId}:\n${details}`,
+        ).toHaveLength(0);
+      }
+    });
+  }
+});
