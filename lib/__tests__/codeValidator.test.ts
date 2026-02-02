@@ -430,10 +430,24 @@ describe('validateDrillAnswer', () => {
 
   describe('TypeScript validation', () => {
     it('should validate TypeScript the same as JavaScript', () => {
+      // setupCode is developer-authored JS (no TS annotations);
+      // the user's answer may have TS which gets stripped automatically
       const result = validateDrillAnswer(
         'typescript',
-        'const arr: number[] = [1, 2, 3];',
+        'const arr = [1, 2, 3];',
         'arr.length',
+        3,
+        'arr.length',
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should strip TypeScript annotations from the user answer', () => {
+      const result = validateDrillAnswer(
+        'typescript',
+        'const arr = [1, 2, 3];',
+        'arr.length as number',
         3,
         'arr.length',
       );

@@ -92,6 +92,10 @@ export function validateJavaScript(
     // Strip TypeScript type annotations before execution
     // TypeScript syntax is not valid JavaScript, so we need to remove type annotations
     const sanitizedAnswer = stripTypeScriptAnnotations(normalizedAnswer);
+    // Don't strip types from setupCode — it's developer-authored JavaScript
+    // that should never contain TypeScript annotations. The stripper's return-type
+    // regex can corrupt ternary operators after function calls (e.g.
+    // `init() : init` looks like `) : ReturnType`), so skipping is safest.
     const sanitizedSetupCode = setupCode;
 
     // Construct the code that returns the user's expression result

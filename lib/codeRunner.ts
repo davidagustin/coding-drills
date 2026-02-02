@@ -1633,9 +1633,13 @@ function stripTypeScriptAnnotations(code: string): string {
   sanitized = sanitized.replace(/\(([^)]*)\)/g, (match, params) => {
     const trimmedParams = params.trim();
 
-    // Skip if this looks like an object literal being passed as argument
-    // e.g., ({ key: value, key2: value2 }) — the content starts with {
-    if (trimmedParams.startsWith('{')) {
+    // Skip if the content contains any object literal or destructuring syntax.
+    // Since [^)]* in the outer regex guarantees no ')' inside the capture,
+    // any '{' must be from an object literal (e.g., ({ key: val })) or
+    // destructuring, not a function body. Splitting such content by comma
+    // would create fragments like "type: e.type" that look identical to
+    // TypeScript type annotations but are actually object properties.
+    if (trimmedParams.includes('{')) {
       return match;
     }
 
