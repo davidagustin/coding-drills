@@ -277,3 +277,18 @@ export const LANGUAGE_CONFIG: Record<
 export function isValidLanguage(language: string): language is SupportedLanguage {
   return SUPPORTED_LANGUAGES.includes(language as SupportedLanguage);
 }
+
+/** Database languages use "Query Training" instead of "Method Training". */
+export function isDatabaseLanguage(language: string): boolean {
+  return (
+    language === 'sql' ||
+    language === 'postgresql' ||
+    language === 'mysql' ||
+    language === 'mongodb'
+  );
+}
+
+/** Label for the training mode (Query vs Method) for a language. */
+export function getTrainingLabel(language: string): string {
+  return isDatabaseLanguage(language) ? 'Query Training' : 'Method Training';
+}

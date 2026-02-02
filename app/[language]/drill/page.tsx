@@ -143,6 +143,7 @@ const problemLoaders: Record<
   dart: () => import('@/lib/problems/dart'),
   clojure: () => import('@/lib/problems/clojure'),
   // Database languages
+  sql: () => import('@/lib/problems/mysql'), // Generic SQL uses MySQL problem set
   postgresql: () => import('@/lib/problems/postgresql'),
   mysql: () => import('@/lib/problems/mysql'),
   mongodb: () => Promise.resolve({ default: [] }), // MongoDB problems can be added later

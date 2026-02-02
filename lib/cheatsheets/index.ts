@@ -60,6 +60,7 @@ export const cheatsheetsByLanguage: Record<LanguageId, CheatsheetEntry[]> = {
   dart: dartCheatsheet,
   clojure: clojureCheatsheet,
   // Database languages
+  sql: mysqlCheatsheet, // Generic SQL uses MySQL cheatsheet
   postgresql: postgresqlCheatsheet,
   mysql: mysqlCheatsheet,
   mongodb: mongodbCheatsheet,

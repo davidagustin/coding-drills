@@ -384,6 +384,16 @@ export const languages: Record<LanguageId, Language> = {
     ],
   },
   // Database languages
+  sql: {
+    id: 'sql',
+    name: 'SQL',
+    icon: 'SQL',
+    color: '#00758F',
+    secondaryColor: '#F29111',
+    fileExtension: '.sql',
+    monacoLanguage: 'sql',
+    categories: ['DDL', 'DML', 'Queries', 'Functions', 'Joins'],
+  },
   postgresql: {
     id: 'postgresql',
     name: 'PostgreSQL',
