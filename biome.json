@@ -22,7 +22,8 @@
       "complexity": {
         "noUselessFragments": "warn",
         "noImportantStyles": "off",
-        "useLiteralKeys": "warn"
+        "useLiteralKeys": "warn",
+        "useOptionalChain": "warn"
       },
       "correctness": {
         "noUnusedVariables": "warn",
@@ -45,7 +46,8 @@
       },
       "style": {
         "noNonNullAssertion": "warn",
-        "useTemplate": "warn"
+        "useTemplate": "warn",
+        "useNodejsImportProtocol": "warn"
       }
     }
   },

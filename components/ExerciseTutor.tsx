@@ -122,7 +122,6 @@ export default function ExerciseTutor({
   }, []);
 
   // Focus input when ready
-  // biome-ignore lint/correctness/useExhaustiveDependencies: focus on phase change
   useEffect(() => {
     if (phase === 'ready') {
       inputRef.current?.focus();
