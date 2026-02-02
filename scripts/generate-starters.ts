@@ -10,8 +10,8 @@
  * The user only needs to implement business logic inside the empty function bodies.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { angularUIPatterns } from '../lib/frontend-drills/ui-patterns/angular';
 import { nativeJsUIPatterns } from '../lib/frontend-drills/ui-patterns/native-js';
 import { reactUIPatterns } from '../lib/frontend-drills/ui-patterns/react';

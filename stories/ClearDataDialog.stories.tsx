@@ -119,7 +119,7 @@ export const EmptyState: Story = {
       const keysToRemove: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('coding-drills-')) {
+        if (key?.startsWith('coding-drills-')) {
           keysToRemove.push(key);
         }
       }
@@ -143,7 +143,7 @@ export const MinimalData: Story = {
       const keysToRemove: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('coding-drills-')) {
+        if (key?.startsWith('coding-drills-')) {
           keysToRemove.push(key);
         }
       }
