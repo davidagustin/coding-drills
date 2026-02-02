@@ -111,14 +111,16 @@ function blankFunctionBodies(
     if (shouldAttemptBlank) {
       // Pattern 1: const name = (params) => {  (multi-line arrow)
       const arrowMultiMatch = trimmed.match(
-        /^(const|let|var)\s+(\w+)\s*=\s*(?:\([^)]*\)|(\w+))\s*=>\s*\{/,
+        /^(const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:\([^)]*\)|(\w+))\s*=>\s*\{/,
       );
 
       // Pattern 2: const name = function(params) {
-      const fnExprMatch = trimmed.match(/^(const|let|var)\s+(\w+)\s*=\s*function\s*\([^)]*\)\s*\{/);
+      const fnExprMatch = trimmed.match(
+        /^(const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?function\s*\([^)]*\)\s*\{/,
+      );
 
-      // Pattern 3: function name(params) {
-      const fnDeclMatch = trimmed.match(/^function\s+(\w+)\s*\([^)]*\)\s*\{/);
+      // Pattern 3: function name(params) {  or  async function name(params) {
+      const fnDeclMatch = trimmed.match(/^(?:async\s+)?function\s+(\w+)\s*\([^)]*\)\s*\{/);
 
       // Pattern 4: const name = (params) => expression;  (single-line arrow)
       const arrowSingleMatch = trimmed.match(
@@ -173,11 +175,23 @@ function blankFunctionBodies(
           isReactiveWrapper = true;
         }
       }
+
+      // Pattern 8: obj.prop = function() { or obj.prop = () => {  (property assignment functions)
+      if (!funcName) {
+        const propFnMatch = trimmed.match(
+          /^([\w.]+)\s*=\s*(?:async\s+)?(?:function\s*(?:\w+)?\s*\([^)]*\)|(?:\([^)]*\)|\w+)\s*=>)\s*\{/,
+        );
+        if (propFnMatch && !/^(const|let|var)\s/.test(trimmed)) {
+          // Extract the last segment as function name: window.submitSurvey → submitSurvey
+          funcName = propFnMatch[1].split('.').pop() || propFnMatch[1];
+          isMultiLine = true;
+        }
+      }
     }
 
     // ─── Determine if we should skip this function ───
 
-    const isReactComponent = funcName && /^[A-Z]/.test(funcName);
+    const isReactComponent = framework === 'react' && funcName && /^[A-Z]/.test(funcName);
     const isHookOrState =
       funcName &&
       (funcName.startsWith('use') ||
@@ -336,15 +350,67 @@ function blankFunctionBodies(
             /\.\s*forEach\s*\(\s*(?:\w+|\([^)]*\))\s*=>/,
           ];
 
-          if (IMPL_METHODS.some((rx) => rx.test(fullExpr))) {
-            // Determine safe default based on dominant method
+          // Expanded implementation detection patterns
+          const hasMethodChain = IMPL_METHODS.some((rx) => rx.test(fullExpr));
+
+          // Ternary with non-trivial logic (comparisons, method calls, Math)
+          const hasTernaryLogic =
+            /\?[^:]+:/.test(fullExpr) &&
+            /(?:[<>=!]=|\.test\(|\.includes\(|\.match\(|\.length\s*[<>=!]|Math\.|&&|\|\||\.localeCompare\()/.test(
+              fullExpr,
+            ) &&
+            !/^\s*(const|let|var)\s+\w+\s*=\s*\w+\s*\?\?/.test(fullExpr); // skip nullish coalescing
+
+          // Math.* operations combined with arithmetic
+          const hasMathOp =
+            /Math\.(floor|ceil|round|max|min|abs|pow|sqrt|sign|trunc)\s*\(/.test(fullExpr) &&
+            /[+\-*/%]/.test(fullExpr.replace(/['"][^'"]*['"]/g, '')); // has arithmetic outside strings
+
+          // Chained string methods (2+ methods)
+          const hasStringChain =
+            /\.\s*(?:replace|split|slice|substring|charAt|trim|padStart|padEnd)\s*\([^)]*\)\s*\.\s*(?:replace|split|join|slice|substring|charAt|trim|padStart|padEnd|toUpperCase|toLowerCase|map|filter)\s*\(/.test(
+              fullExpr,
+            );
+
+          // Object.keys/values/entries with callbacks
+          const hasObjectMethodChain =
+            /Object\.\s*(?:keys|values|entries)\s*\([^)]*\)\s*\.\s*(?:map|filter|reduce|forEach|some|every|find)\s*\(/.test(
+              fullExpr,
+            );
+
+          // toLocaleString/toFixed/Intl formatting
+          const hasFormatting =
+            /\.\s*(?:toLocaleString|toFixed|toPrecision)\s*\(/.test(fullExpr) &&
+            !/^(const|let|var)\s+\w+\s*=\s*['"]/.test(fullExpr); // not simple string assignment
+
+          const isImplementation =
+            hasMethodChain ||
+            hasTernaryLogic ||
+            hasMathOp ||
+            hasStringChain ||
+            hasObjectMethodChain ||
+            hasFormatting;
+
+          if (isImplementation) {
+            // Determine safe default based on the dominant pattern
             let defaultVal = '[]';
-            const hasArrayMethod = /\.\s*(filter|map|flatMap|sort)\s*\(/.test(fullExpr);
-            if (!hasArrayMethod) {
-              if (/\.\s*find\s*\(/.test(fullExpr)) defaultVal = 'null';
-              else if (/\.\s*findIndex\s*\(/.test(fullExpr)) defaultVal = '-1';
-              else if (/\.\s*(some|every)\s*\(/.test(fullExpr)) defaultVal = 'false';
-              else if (/\.\s*reduce\s*\(/.test(fullExpr)) defaultVal = 'null';
+            if (hasMethodChain) {
+              const hasArrayMethod = /\.\s*(filter|map|flatMap|sort)\s*\(/.test(fullExpr);
+              if (!hasArrayMethod) {
+                if (/\.\s*find\s*\(/.test(fullExpr)) defaultVal = 'null';
+                else if (/\.\s*findIndex\s*\(/.test(fullExpr)) defaultVal = '-1';
+                else if (/\.\s*(some|every)\s*\(/.test(fullExpr)) defaultVal = 'false';
+                else if (/\.\s*reduce\s*\(/.test(fullExpr)) defaultVal = 'null';
+              }
+            } else if (hasTernaryLogic) {
+              defaultVal = 'null';
+            } else if (hasMathOp) {
+              defaultVal = '0';
+            } else if (hasStringChain || hasFormatting) {
+              defaultVal = "''";
+            } else if (hasObjectMethodChain) {
+              if (/\.\s*(map|filter)\s*\(/.test(fullExpr)) defaultVal = '[]';
+              else defaultVal = 'null';
             }
 
             const indent = line.match(/^(\s*)/)?.[1] || '';
@@ -366,55 +432,187 @@ function blankFunctionBodies(
       }
     }
 
-    // ─── Check for anonymous callback bodies that should be blanked ───
-    // Event handler callbacks like addEventListener('event', (e) => { ... })
-    // and bare hook calls like useEffect(() => { ... }) contain implementation
-    // logic that causes false-positive test passes.
-    if (shouldAttemptBlank && !funcName && /=>\s*\{$/.test(trimmed)) {
-      const isEventHandler = /\.addEventListener\s*\(/.test(trimmed);
-      const isBareHookCall =
-        /^(?:useEffect|useLayoutEffect|onMounted|onUnmounted|onUpdated)\s*\(/.test(trimmed);
-      if (isEventHandler || isBareHookCall) {
-        const indent = line.match(/^(\s*)/)?.[1] || '';
-        let braceDepthLocal = 0;
-        let bodyEnd = i;
-        for (let j = i; j < lines.length; j++) {
-          for (const ch of lines[j]) {
-            if (ch === '{') braceDepthLocal++;
-            if (ch === '}') braceDepthLocal--;
+    // ─── Check for callback-containing statements that should be blanked ───
+    // Handles addEventListener, forEach, new Observer, hook calls, etc.
+    // Both single-line ({ logic; }) and multi-line callbacks.
+    if (shouldAttemptBlank && !funcName) {
+      const hasArrowBrace = /=>\s*\{/.test(trimmed);
+      const hasFunctionCallback = /[,(]\s*function\s*\w*\s*\([^)]*\)\s*\{/.test(trimmed);
+
+      if (hasArrowBrace || hasFunctionCallback) {
+        // Determine what kind of callback this is
+        const isEventHandler = /\.addEventListener\s*\(/.test(trimmed);
+        const isBareHookCall =
+          /^(?:useEffect|useLayoutEffect|onMounted|onUnmounted|onUpdated|watch|watchEffect)\s*\(/.test(
+            trimmed,
+          );
+        const isIteratorCallback = /\.\s*(?:forEach)\s*\(/.test(trimmed);
+        const isNewConstructor =
+          /new\s+(?:IntersectionObserver|MutationObserver|ResizeObserver|PerformanceObserver)\s*\(/.test(
+            trimmed,
+          );
+        // Catch non-assignment method calls with callbacks at this depth
+        // e.g., document.querySelectorAll('.btn').forEach(btn => { ... })
+        const isNonAssignmentCallback =
+          !/^(const|let|var)\s/.test(trimmed) &&
+          !/^(function|class)\s/.test(trimmed) &&
+          /\.\w+\s*\([^)]*=>\s*\{/.test(trimmed);
+
+        if (
+          isEventHandler ||
+          isBareHookCall ||
+          isIteratorCallback ||
+          isNewConstructor ||
+          isNonAssignmentCallback
+        ) {
+          const indent = line.match(/^(\s*)/)?.[1] || '';
+
+          // Determine label for TODO
+          let callbackLabel: string;
+          if (isBareHookCall) {
+            const hookMatch = trimmed.match(/^(\w+)\s*\(/);
+            callbackLabel = hookMatch ? hookMatch[1] : 'effect';
+          } else if (isEventHandler) {
+            const eventMatch = trimmed.match(/\.addEventListener\s*\(\s*['"](\w+)['"]/);
+            callbackLabel = `handle ${eventMatch ? eventMatch[1] : 'event'}`;
+          } else if (isIteratorCallback) {
+            const iterMatch = trimmed.match(/\.\s*(forEach|map|reduce|filter)\s*\(/);
+            callbackLabel = iterMatch ? iterMatch[1] : 'iterate';
+          } else if (isNewConstructor) {
+            const ctorMatch = trimmed.match(/new\s+(\w+)/);
+            callbackLabel = ctorMatch ? ctorMatch[1] : 'constructor callback';
+          } else {
+            callbackLabel = 'callback';
           }
-          if (braceDepthLocal === 0) {
-            bodyEnd = j;
-            break;
+
+          // Find the callback body's opening brace
+          let callbackBracePos = -1;
+          if (hasArrowBrace) {
+            const arrowBraceMatch = trimmed.match(/=>\s*\{/);
+            if (arrowBraceMatch && arrowBraceMatch.index !== undefined) {
+              callbackBracePos = arrowBraceMatch.index + arrowBraceMatch[0].length - 1;
+            }
+          } else if (hasFunctionCallback) {
+            const fnBraceMatch = trimmed.match(/function\s*\w*\s*\([^)]*\)\s*\{/);
+            if (fnBraceMatch && fnBraceMatch.index !== undefined) {
+              callbackBracePos = fnBraceMatch.index + fnBraceMatch[0].length - 1;
+            }
+          }
+          if (callbackBracePos >= 0) {
+            // Check if callback closes on same line (single-line callback)
+            let depth = 0;
+            let closesOnSameLine = false;
+            let closePos = -1;
+            for (let c = callbackBracePos; c < trimmed.length; c++) {
+              if (trimmed[c] === '{') depth++;
+              if (trimmed[c] === '}') {
+                depth--;
+                if (depth === 0) {
+                  closesOnSameLine = true;
+                  closePos = c;
+                  break;
+                }
+              }
+            }
+
+            if (closesOnSameLine) {
+              // ── Single-line callback → split to multi-line and blank ──
+              const bodyContent = trimmed.substring(callbackBracePos + 1, closePos).trim();
+              const todo = generateTodo(callbackLabel, bodyContent);
+
+              const before = trimmed.substring(0, callbackBracePos + 1);
+              const after = trimmed.substring(closePos);
+
+              result.push(`${indent}${before}`);
+              result.push(`${indent}  ${todo}`);
+              result.push(`${indent}${after}`);
+
+              // Update global depth (balanced on same line)
+              for (const ch of line) {
+                if (ch === '{') globalDepth++;
+                if (ch === '}') globalDepth--;
+              }
+
+              i++;
+              continue;
+            } else {
+              // ── Multi-line callback → find close brace and blank body ──
+              let braceDepthLocal = 0;
+              let bodyEnd = i;
+              for (let j = i; j < lines.length; j++) {
+                for (const ch of lines[j]) {
+                  if (ch === '{') braceDepthLocal++;
+                  if (ch === '}') braceDepthLocal--;
+                }
+                if (braceDepthLocal === 0) {
+                  bodyEnd = j;
+                  break;
+                }
+              }
+
+              const bodyContent = lines.slice(i + 1, bodyEnd).join('\n');
+              const todo = generateTodo(callbackLabel, bodyContent);
+
+              const openBraceIdx = line.lastIndexOf('{');
+              const sigLine = openBraceIdx >= 0 ? line.substring(0, openBraceIdx + 1) : line;
+
+              const closingLine = lines[bodyEnd];
+              const closingTrimmed = closingLine.trim();
+              const lastBraceIdx = closingTrimmed.lastIndexOf('}');
+              const closingSuffix = closingTrimmed.substring(lastBraceIdx);
+
+              result.push(sigLine);
+              result.push(`${indent}  ${todo}`);
+              result.push(indent + closingSuffix);
+
+              globalDepth = depthAtLineStart;
+              i = bodyEnd + 1;
+              continue;
+            }
           }
         }
+      }
 
-        let callbackLabel: string;
-        if (isBareHookCall) {
-          const hookMatch = trimmed.match(/^(\w+)\s*\(/);
-          callbackLabel = hookMatch ? hookMatch[1] : 'effect';
-        } else {
-          const eventMatch = trimmed.match(/\.addEventListener\s*\(\s*['"](\w+)['"]/);
-          callbackLabel = `handle ${eventMatch ? eventMatch[1] : 'event'}`;
+      // Also handle single-expression arrow callbacks (no braces):
+      // e.g., el.addEventListener('click', () => menu.style.display = 'none');
+      const hasSingleExprArrow = /=>\s*[^{]/.test(trimmed) && !/=>\s*\{/.test(trimmed);
+      if (hasSingleExprArrow) {
+        const isCallbackExpr =
+          /\.addEventListener\s*\(/.test(trimmed) || /\.\s*forEach\s*\(/.test(trimmed);
+        if (isCallbackExpr && !/^(const|let|var)\s/.test(trimmed)) {
+          // Single-expression callback — wrap in braces with TODO
+          const indent = line.match(/^(\s*)/)?.[1] || '';
+
+          let callbackLabel: string;
+          if (/\.addEventListener\s*\(/.test(trimmed)) {
+            const eventMatch = trimmed.match(/\.addEventListener\s*\(\s*['"](\w+)['"]/);
+            callbackLabel = `handle ${eventMatch ? eventMatch[1] : 'event'}`;
+          } else {
+            callbackLabel = 'forEach iteration';
+          }
+
+          // Find the => and replace expression with block + TODO
+          const arrowMatch = trimmed.match(/=>\s*/);
+          if (arrowMatch && arrowMatch.index !== undefined) {
+            const exprStart = arrowMatch.index + arrowMatch[0].length;
+            const expr = trimmed.substring(exprStart);
+            const todo = generateTodo(callbackLabel, expr);
+            const before = trimmed.substring(0, exprStart);
+
+            // Find closing paren/semicolon
+            result.push(`${indent}${before}{`);
+            result.push(`${indent}  ${todo}`);
+            result.push(`${indent}});`);
+
+            for (const ch of line) {
+              if (ch === '{') globalDepth++;
+              if (ch === '}') globalDepth--;
+            }
+
+            i++;
+            continue;
+          }
         }
-        const bodyContent = lines.slice(i + 1, bodyEnd).join('\n');
-        const todo = generateTodo(callbackLabel, bodyContent);
-
-        const openBraceIdx = line.lastIndexOf('{');
-        const sigLine = openBraceIdx >= 0 ? line.substring(0, openBraceIdx + 1) : line;
-
-        const closingLine = lines[bodyEnd];
-        const closingTrimmed = closingLine.trim();
-        const lastBraceIdx = closingTrimmed.lastIndexOf('}');
-        const closingSuffix = closingTrimmed.substring(lastBraceIdx);
-
-        result.push(sigLine);
-        result.push(`${indent}  ${todo}`);
-        result.push(indent + closingSuffix);
-
-        globalDepth = depthAtLineStart;
-        i = bodyEnd + 1;
-        continue;
       }
     }
 
