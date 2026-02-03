@@ -192,7 +192,7 @@ function SetupPhase({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 py-6 sm:py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
           <Breadcrumb
@@ -260,7 +260,7 @@ function SetupPhase({
               </button>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {availableCategories.map((category) => (
               <button
                 type="button"
@@ -436,7 +436,7 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
   return (
     <div className="relative">
       {/* Background circle */}
-      <svg className="w-24 h-24 transform -rotate-90" aria-hidden="true">
+      <svg className="w-16 sm:w-24 h-16 sm:h-24 transform -rotate-90" aria-hidden="true">
         <circle
           cx="48"
           cy="48"
@@ -818,7 +818,7 @@ function PlayingPhase({
         </div>
 
         {/* Option Cards - 2x2 grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {currentQuestion.options.map((option) => (
             <OptionCard
               key={option}
@@ -937,7 +937,7 @@ Try it yourself!`;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 py-6 sm:py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
           <Breadcrumb
@@ -998,7 +998,7 @@ Try it yourself!`;
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
           <div className="bg-zinc-800/50 rounded-xl p-4 text-center border border-zinc-700/50">
             <div className="text-2xl font-bold text-emerald-400">
               {result.correctAnswers}/{result.totalQuestions}

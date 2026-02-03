@@ -936,7 +936,7 @@ function DrillPhaseComponent({
       {/* Snackbar Notification */}
       {currentAnswer && (
         <div
-          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-lg shadow-2xl border px-6 py-4 min-w-[320px] max-w-md animate-in slide-in-from-top-5 fade-in-0 duration-300 ${
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-lg shadow-2xl border px-6 py-4 min-w-[280px] sm:min-w-[320px] max-w-md animate-in slide-in-from-top-5 fade-in-0 duration-300 ${
             currentAnswer.skipped
               ? 'bg-zinc-800 border-zinc-700'
               : currentAnswer.isCorrect
@@ -1038,7 +1038,7 @@ function DrillPhaseComponent({
 
       {/* Header Stats */}
       <div className="flex items-center justify-between bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-800">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <div className="text-center">
             <div className="text-2xl font-bold text-zinc-100">
               {state.currentIndex + 1} / {problems.length}
@@ -1058,7 +1058,7 @@ function DrillPhaseComponent({
             <div className="text-xs text-zinc-500">Score</div>
           </div>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           {/* Per-question stopwatch */}
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-400 font-mono">
@@ -1306,7 +1306,7 @@ function ResultsPhase({
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-zinc-900 rounded-xl p-6 text-center shadow-sm border border-zinc-800">
           <div className="text-3xl font-bold text-green-500">
             {correctAnswers} / {totalQuestions}
@@ -1674,7 +1674,7 @@ export default function DrillPage() {
   }, [phase]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 py-8 px-4">
+    <div className="min-h-screen bg-zinc-950 py-4 sm:py-8 px-4">
       {phase === 'setup' && <SetupPhase language={language} onStart={handleStart} />}
 
       {phase === 'drilling' && problems.length > 0 && (

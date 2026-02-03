@@ -202,7 +202,7 @@ export default function LanguageStudyPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-3xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <Breadcrumb
@@ -219,7 +219,7 @@ export default function LanguageStudyPage() {
           <button
             type="button"
             onClick={() => setPhase('setup')}
-            className="flex items-center gap-2 px-4 py-2 text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50 cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 min-h-[44px] text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50 cursor-pointer"
           >
             <svg
               className="w-4 h-4"

@@ -140,7 +140,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-8">
       <div className="text-center">
         <div className="text-cyan-400 mb-4 flex justify-center">
           <svg
@@ -156,7 +156,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
             <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
           </svg>
         </div>
-        <h1 className="text-3xl font-bold text-zinc-100 mb-2">AI Mock Interview</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 mb-2">AI Mock Interview</h1>
         <p className="text-zinc-400">
           {interviewType === 'algorithm'
             ? 'Practice algorithm problems with an AI interviewer that guides you through the solution'
@@ -265,7 +265,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
 
             {/* Problem List */}
             {showProblemList && (
-              <div className="mt-3 max-h-60 overflow-y-auto rounded-lg border border-zinc-700 bg-zinc-800">
+              <div className="mt-3 max-h-48 sm:max-h-60 overflow-y-auto rounded-lg border border-zinc-700 bg-zinc-800">
                 {availableProblems.map((problem) => (
                   <button
                     key={problem.id}
@@ -401,9 +401,11 @@ interface ModelLoadingPhaseProps {
 
 function ModelLoadingPhase({ progress, statusText }: ModelLoadingPhaseProps) {
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-zinc-100 mb-2">Loading AI Interviewer</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 mb-2">
+          Loading AI Interviewer
+        </h1>
         <p className="text-zinc-400">Downloading and initializing the language model</p>
       </div>
 
@@ -446,7 +448,7 @@ function ChatMessageComponent({ message }: ChatMessageProps) {
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-[80%] rounded-xl px-4 py-3 ${
+        className={`max-w-[80%] rounded-xl px-3 py-2 sm:px-4 sm:py-3 ${
           isUser ? 'bg-cyan-600 text-white' : 'bg-zinc-800 text-zinc-100 border border-zinc-700'
         }`}
       >
@@ -614,7 +616,7 @@ function InterviewPhaseComponent({
           {/* Streaming Message */}
           {isStreaming && streamingContent && (
             <div className="flex justify-start">
-              <div className="max-w-[80%] rounded-xl px-4 py-3 bg-zinc-800 text-zinc-100 border border-zinc-700">
+              <div className="max-w-[80%] rounded-xl px-3 py-2 sm:px-4 sm:py-3 bg-zinc-800 text-zinc-100 border border-zinc-700">
                 <p className="text-sm whitespace-pre-wrap">{streamingContent}</p>
                 <span className="inline-block w-2 h-4 bg-cyan-500 animate-pulse ml-1" />
               </div>
@@ -692,9 +694,9 @@ function CompletedPhase({
   onBackToHome,
 }: CompletedPhaseProps) {
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-zinc-100 mb-2">Interview Complete!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 mb-2">Interview Complete!</h1>
         <p className="text-zinc-400">Great practice session</p>
       </div>
 
@@ -1017,7 +1019,9 @@ export default function InterviewPage() {
   }, [router]);
 
   return (
-    <div className={`min-h-screen bg-zinc-950 ${phase !== 'interviewing' ? 'py-8 px-4' : ''}`}>
+    <div
+      className={`min-h-screen bg-zinc-950 ${phase !== 'interviewing' ? 'py-4 sm:py-8 px-4' : ''}`}
+    >
       {phase === 'setup' && (
         <SetupPhase
           onStart={handleStart}

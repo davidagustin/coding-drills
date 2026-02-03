@@ -170,7 +170,7 @@ Hundreds of algorithm exercises include step-through visualizations: play/pause,
 - **App Router** — `generateStaticParams()` for static generation; client components for interactive drills.
 - **Dynamic imports** for visualizations and heavy UI to keep initial bundle small.
 - **Type-safe** — TypeScript across the codebase.
-- **Responsive** — Mobile to desktop; dark default.
+- **Responsive** — Fully mobile-optimized (375px+) to desktop; adaptive grids, touch-friendly targets (44px min), responsive typography, and compact spacing on small screens; dark default.
 - **SEO** — `sitemap.ts`, `robots.ts`.
 
 ---

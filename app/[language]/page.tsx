@@ -348,22 +348,24 @@ function StatsSection({
         <h3 className="text-lg font-semibold text-white">Your Progress</h3>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         {/* Total Answered */}
         <div className="text-center">
-          <div className={`text-3xl font-bold ${config.color}`}>{stats.totalAnswered}</div>
+          <div className={`text-xl sm:text-3xl font-bold ${config.color}`}>
+            {stats.totalAnswered}
+          </div>
           <div className="text-sm text-zinc-500 mt-1">Questions Answered</div>
         </div>
 
         {/* Accuracy */}
         <div className="text-center">
-          <div className={`text-3xl font-bold ${config.color}`}>{accuracy}%</div>
+          <div className={`text-xl sm:text-3xl font-bold ${config.color}`}>{accuracy}%</div>
           <div className="text-sm text-zinc-500 mt-1">Accuracy</div>
         </div>
 
         {/* Best Streak */}
         <div className="text-center">
-          <div className={`text-3xl font-bold ${config.color}`}>{stats.bestStreak}</div>
+          <div className={`text-xl sm:text-3xl font-bold ${config.color}`}>{stats.bestStreak}</div>
           <div className="text-sm text-zinc-500 mt-1">Best Streak</div>
         </div>
       </div>
@@ -441,7 +443,7 @@ export default function LanguagePage() {
     : 0;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
       {/* Back to home link */}
       <Link
         href="/"
@@ -452,16 +454,18 @@ export default function LanguagePage() {
       </Link>
 
       {/* Language header */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-6 sm:mb-12">
         <div
-          className={`inline-flex items-center justify-center w-24 h-24 rounded-2xl ${config.bgColor} ${config.borderColor} border mb-6`}
+          className={`inline-flex items-center justify-center w-16 h-16 sm:w-24 sm:h-24 rounded-2xl ${config.bgColor} ${config.borderColor} border mb-6`}
         >
-          <LanguageIcon language={language} className="w-16 h-16" />
+          <LanguageIcon language={language} className="w-10 h-10 sm:w-16 sm:h-16" />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{config.name}</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+          {config.name}
+        </h1>
 
         {/* Version and Documentation Link */}
-        <div className="flex items-center justify-center gap-4 mb-4 flex-wrap">
+        <div className="flex items-center justify-center gap-2 sm:gap-4 mb-4 flex-wrap">
           <span
             className={`text-sm px-3 py-1 rounded-full ${config.bgColor} ${config.color} ${config.borderColor} border`}
           >
@@ -501,7 +505,7 @@ export default function LanguagePage() {
       </div>
 
       {/* Mode cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
         <ModeCard
           href={`/${language}/drill`}
           icon={<KeyboardIcon className="w-8 h-8" />}
@@ -633,7 +637,7 @@ export default function LanguagePage() {
       {/* Quick tips section */}
       <div className="mt-12 text-center">
         <h3 className="text-lg font-medium text-zinc-300 mb-4">Quick Tips for {config.name}</h3>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
           {isDatabaseLanguage
             ? [
                 'Start with Drill Mode to practice queries',

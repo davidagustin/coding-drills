@@ -239,20 +239,22 @@ export default function FrameworkPage() {
     getSourceCardCount('frontend', { framework }) + getSourceCardCount('pattern', {});
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
       {/* Framework header */}
       <div className="text-center mb-12">
         <div
-          className={`inline-flex items-center justify-center w-24 h-24 rounded-2xl ${config.bgColor} ${config.borderColor} border mb-6`}
+          className={`inline-flex items-center justify-center w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-2xl ${config.bgColor} ${config.borderColor} border mb-6`}
         >
           <div className={`text-4xl font-bold ${config.color}`}>{config.icon}</div>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{config.name}</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+          {config.name}
+        </h1>
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">{config.description}</p>
       </div>
 
       {/* Mode cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-12">
         <ModeCard
           href={`/frontend-drills/${framework}/drill`}
           icon={<KeyboardIcon className="w-8 h-8" />}

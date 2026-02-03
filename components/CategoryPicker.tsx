@@ -75,7 +75,7 @@ export function CategoryPicker({
       </div>
 
       {/* Category chips */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {categories.map((category) => {
           const isSelected = selected.includes(category.id);
 
@@ -85,7 +85,7 @@ export function CategoryPicker({
               key={category.id}
               onClick={() => handleToggleCategory(category.id)}
               className={`
-                inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium
+                inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium min-h-[36px]
                 rounded-full border-2 transition-all duration-200
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
                 dark:focus:ring-offset-gray-900

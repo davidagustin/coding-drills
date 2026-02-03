@@ -106,7 +106,9 @@ const MethodCard = memo(function MethodCard({
               Syntax
             </h4>
             <pre className="bg-zinc-950 rounded-lg p-3 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-              <code className="text-sm font-mono text-emerald-400 block">{method.syntax}</code>
+              <code className="text-xs sm:text-sm font-mono text-emerald-400 block">
+                {method.syntax}
+              </code>
             </pre>
           </div>
 
@@ -185,14 +187,16 @@ const MethodCard = memo(function MethodCard({
                   <div key={idx} className="bg-zinc-950 rounded-lg overflow-hidden">
                     <div className="p-3 border-b border-zinc-800">
                       <pre className="whitespace-pre-wrap break-words overflow-wrap-anywhere">
-                        <code className="text-sm font-mono text-zinc-100 block">
+                        <code className="text-xs sm:text-sm font-mono text-zinc-100 block">
                           {example.code}
                         </code>
                       </pre>
                     </div>
                     <div className="p-3 bg-zinc-950/50 flex items-center gap-2">
                       <span className="text-zinc-500 text-xs">Output:</span>
-                      <code className="text-sm font-mono text-emerald-400">{example.output}</code>
+                      <code className="text-xs sm:text-sm font-mono text-emerald-400">
+                        {example.output}
+                      </code>
                     </div>
                     {example.explanation && (
                       <div className="px-3 pb-3 text-xs text-zinc-500 italic">
@@ -401,7 +405,7 @@ const QuickNav = memo(function QuickNav({
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="absolute bottom-16 right-0 w-64 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl max-h-80 overflow-y-auto">
+          <div className="absolute bottom-16 right-0 w-56 sm:w-64 max-w-[calc(100vw-2rem)] bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl max-h-80 overflow-y-auto">
             <div className="p-4 space-y-4">
               <div>
                 <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
@@ -431,7 +435,7 @@ const QuickNav = memo(function QuickNav({
                       type="button"
                       key={letter}
                       onClick={() => scrollToLetter(letter)}
-                      className="w-7 h-7 text-xs font-mono text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"
+                      className="w-6 h-6 sm:w-7 sm:h-7 text-xs font-mono text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"
                     >
                       {letter}
                     </button>
@@ -591,7 +595,7 @@ export default function ReferencePage() {
   return (
     <>
       <PrintStyles />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:pr-56">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:pr-56">
         {/* Page Header */}
         <div className="mb-8">
           <div className="flex items-center gap-2 text-sm text-zinc-500 mb-2">
@@ -734,7 +738,7 @@ export default function ReferencePage() {
         </div>
 
         {/* Methods List */}
-        <div className="space-y-8">
+        <div className="space-y-4 lg:space-y-8">
           {Object.entries(methodsByCategory).map(([category, categoryMethods]) => (
             <section key={category} id={`category-${category.replace(/\s+/g, '-')}`}>
               {sortBy !== 'alphabetical' && (

@@ -263,7 +263,7 @@ function SetupPhase({ framework, onStart }: SetupPhaseProps) {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 py-6 sm:py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
           <Breadcrumb
@@ -505,7 +505,7 @@ function DrillPhaseComponent({
         {/* Snackbar Notification */}
         {currentAnswer && (
           <div
-            className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-lg shadow-2xl border px-6 py-4 min-w-[320px] max-w-md animate-in slide-in-from-top-5 fade-in-0 duration-300 ${
+            className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-lg shadow-2xl border px-6 py-4 min-w-[280px] sm:min-w-[320px] max-w-md animate-in slide-in-from-top-5 fade-in-0 duration-300 ${
               currentAnswer.skipped
                 ? 'bg-zinc-800 border-zinc-700'
                 : currentAnswer.isCorrect
@@ -604,7 +604,7 @@ function DrillPhaseComponent({
 
         {/* Header Stats */}
         <div className="flex items-center justify-between bg-zinc-800/50 rounded-2xl p-4 border border-zinc-700/50">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-zinc-100">
                 {state.currentIndex + 1} / {problems.length}
@@ -624,7 +624,7 @@ function DrillPhaseComponent({
               <div className="text-xs text-zinc-500">Score</div>
             </div>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-400 font-mono">
                 {(questionTime / 1000).toFixed(1)}s
@@ -863,7 +863,7 @@ function ResultsPhase({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 py-6 sm:py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
           <Breadcrumb
