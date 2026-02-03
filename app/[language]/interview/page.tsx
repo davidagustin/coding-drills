@@ -140,7 +140,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-8">
       <div className="text-center">
         <div className="text-cyan-400 mb-4 flex justify-center">
           <svg
@@ -188,7 +188,7 @@ function SetupPhase({ onStart, isCompatible, compatibilityError }: SetupPhasePro
           {/* Interview Type Toggle */}
           <div>
             <span className="block text-sm font-medium text-zinc-300 mb-3">Interview Type</span>
-            <div className="flex gap-1 p-1 bg-zinc-800 rounded-lg">
+            <div className="flex gap-1.5 sm:gap-1 p-1 bg-zinc-800 rounded-lg">
               <button
                 type="button"
                 onClick={() => {
@@ -401,7 +401,7 @@ interface ModelLoadingPhaseProps {
 
 function ModelLoadingPhase({ progress, statusText }: ModelLoadingPhaseProps) {
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-zinc-100 mb-2">Loading AI Interviewer</h1>
         <p className="text-zinc-400">Downloading and initializing the language model</p>
@@ -656,7 +656,7 @@ function InterviewPhaseComponent({
               placeholder="Type your response..."
               disabled={isStreaming}
               rows={2}
-              className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent disabled:opacity-50"
+              className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-sm sm:text-base text-zinc-100 placeholder-zinc-500 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent disabled:opacity-50"
             />
             <button
               type="button"
@@ -692,7 +692,7 @@ function CompletedPhase({
   onBackToMenu,
 }: CompletedPhaseProps) {
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-zinc-100 mb-2">Interview Complete!</h1>
         <p className="text-zinc-400">Great practice session</p>
@@ -1019,7 +1019,9 @@ export default function InterviewPage() {
   }, [router, language]);
 
   return (
-    <div className={`min-h-screen bg-zinc-950 ${phase !== 'interviewing' ? 'py-8 px-4' : ''}`}>
+    <div
+      className={`min-h-screen bg-zinc-950 ${phase !== 'interviewing' ? 'py-4 sm:py-8 px-4' : ''}`}
+    >
       {phase === 'setup' && (
         <SetupPhase
           onStart={handleStart}

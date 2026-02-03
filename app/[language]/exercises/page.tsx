@@ -375,7 +375,7 @@ function CategorySection({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
         {exercises.map((exercise) => (
           <ExerciseCard
             key={exercise.id}
@@ -406,21 +406,27 @@ function StatsOverview({
   return (
     <div className={`rounded-2xl border ${languageConfig.borderColor} bg-zinc-900/30 p-6 mb-8`}>
       <h3 className="text-lg font-semibold text-white mb-4">Your Progress</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
         <div className="text-center">
-          <div className={`text-3xl font-bold ${languageConfig.color}`}>{completedCount}</div>
+          <div className={`text-2xl sm:text-3xl font-bold ${languageConfig.color}`}>
+            {completedCount}
+          </div>
           <div className="text-sm text-zinc-500">Completed</div>
         </div>
         <div className="text-center">
-          <div className={`text-3xl font-bold ${languageConfig.color}`}>{stats.total}</div>
+          <div className={`text-2xl sm:text-3xl font-bold ${languageConfig.color}`}>
+            {stats.total}
+          </div>
           <div className="text-sm text-zinc-500">Total Exercises</div>
         </div>
         <div className="text-center">
-          <div className={`text-3xl font-bold ${languageConfig.color}`}>{totalAttempts}</div>
+          <div className={`text-2xl sm:text-3xl font-bold ${languageConfig.color}`}>
+            {totalAttempts}
+          </div>
           <div className="text-sm text-zinc-500">Total Attempts</div>
         </div>
         <div className="text-center">
-          <div className={`text-3xl font-bold ${languageConfig.color}`}>
+          <div className={`text-2xl sm:text-3xl font-bold ${languageConfig.color}`}>
             {stats.total > 0 ? Math.round((completedCount / stats.total) * 100) : 0}%
           </div>
           <div className="text-sm text-zinc-500">Completion</div>
@@ -588,7 +594,7 @@ export default function ExercisesPage() {
   // Check if this language has exercises
   if (allExercises.length === 0) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         <Link
           href={`/${language}`}
           className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 group"
@@ -620,7 +626,7 @@ export default function ExercisesPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
       {/* Back link */}
       <Link
         href={`/${language}`}

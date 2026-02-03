@@ -145,7 +145,7 @@ function ModeNav({
               key={mode.slug}
               href={`/frontend-drills/${framework}/${mode.slug}`}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg
+                flex items-center gap-2 px-4 py-2 rounded-lg min-h-[44px]
                 text-sm font-medium whitespace-nowrap
                 transition-all duration-200 cursor-pointer
                 text-zinc-400 hover:text-white hover:bg-zinc-800

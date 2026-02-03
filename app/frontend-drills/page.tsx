@@ -12,7 +12,7 @@ export default function FrontendDrillsPage() {
   return (
     <div className="min-h-screen bg-mesh">
       {/* Header */}
-      <div className="max-w-6xl mx-auto px-6 pt-12 pb-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-12 pb-8">
         {/* Back to Home Link */}
         <Link
           href="/"
@@ -37,7 +37,7 @@ export default function FrontendDrillsPage() {
 
         {/* Title Section */}
         <div className="text-center space-y-4 mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
             <span className="gradient-text">Frontend Drills</span>
           </h1>
           <p className="text-xl text-zinc-300 font-light max-w-2xl mx-auto">
@@ -51,8 +51,8 @@ export default function FrontendDrillsPage() {
       </div>
 
       {/* Framework Grid */}
-      <section className="max-w-5xl mx-auto px-6 pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
           {FRAMEWORK_IDS.map((frameworkId) => {
             const fw = FRAMEWORK_CONFIG[frameworkId];
             const problemCount = getProblemCount(frameworkId);
@@ -153,12 +153,12 @@ export default function FrontendDrillsPage() {
       </section>
 
       {/* Features Preview */}
-      <section className="max-w-5xl mx-auto px-6 pb-16">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
         <h2 className="text-2xl font-semibold text-center mb-8 text-zinc-100">
           What You&apos;ll Practice
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {[
             {
               icon: (

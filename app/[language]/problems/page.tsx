@@ -243,7 +243,7 @@ function ProblemRow({ problem, number, language, progress, config }: ProblemRowP
       {/* Category */}
       <div className="hidden sm:block w-40">
         <span
-          className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${config.bgColor} ${config.color} border ${config.borderColor}`}
+          className={`inline-flex px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-xs font-medium ${config.bgColor} ${config.color} border ${config.borderColor}`}
         >
           {problem.category}
         </span>
@@ -252,7 +252,7 @@ function ProblemRow({ problem, number, language, progress, config }: ProblemRowP
       {/* Difficulty */}
       <div className="w-20">
         <span
-          className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium border ${DIFFICULTY_BG_COLORS[problem.difficulty]} ${DIFFICULTY_COLORS[problem.difficulty]}`}
+          className={`inline-flex px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-xs font-medium border ${DIFFICULTY_BG_COLORS[problem.difficulty]} ${DIFFICULTY_COLORS[problem.difficulty]}`}
         >
           {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
         </span>
@@ -288,7 +288,7 @@ function ProgressStats({ total, solved, attempted, config }: ProgressStatsProps)
         />
       </div>
 
-      <div className="flex gap-4 text-xs text-zinc-500">
+      <div className="flex gap-2 sm:gap-4 text-xs text-zinc-500">
         <span className="flex items-center gap-1">
           <span className="w-2 h-2 rounded-full bg-green-500" />
           Solved: {solved}
@@ -479,7 +479,7 @@ export default function ProblemsPage() {
   const config = LANGUAGE_CONFIG[language];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
       {/* Back link */}
       <Link
         href={`/${language}`}
@@ -513,7 +513,7 @@ export default function ProblemsPage() {
 
       {/* Filters */}
       <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4 mb-6">
-        <div className="flex flex-col lg:flex-row gap-4">
+        <div className="flex flex-col lg:flex-row gap-2 sm:gap-4">
           {/* Search */}
           <div className="flex-1">
             <label

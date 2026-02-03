@@ -357,10 +357,10 @@ export default function Home() {
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-t from-cyan-500/5 to-transparent blur-2xl" />
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-10 sm:pb-16">
           {/* Main Title */}
           <div className="text-center space-y-6 animate-fade-in-up">
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tight">
               <span className="gradient-text">Coding Drills</span>
             </h1>
 
@@ -398,7 +398,7 @@ export default function Home() {
       </header>
 
       {/* Language Selection Grid */}
-      <section className="max-w-6xl mx-auto px-6 py-12">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100 animate-fade-in-up delay-400">
           Choose Your Language
         </h2>
@@ -410,20 +410,20 @@ export default function Home() {
       </section>
 
       {/* AI Mock Interview Quick Access */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-purple-500/10 p-8 md:p-12">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-purple-500/10 p-5 sm:p-8 md:p-12">
           {/* Background decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
 
           <div className="relative z-10">
-            <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-8">
               {/* Left: Icon and Title */}
               <div className="text-center md:text-left flex-1">
                 <div className="text-cyan-400 mb-4">
                   <svg
                     viewBox="0 0 24 24"
-                    className="w-16 h-16"
+                    className="w-12 sm:w-16 h-12 sm:h-16"
                     aria-hidden="true"
                     fill="none"
                     stroke="currentColor"
@@ -434,7 +434,7 @@ export default function Home() {
                     <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
                   </svg>
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100 mb-3">
                   AI Mock Interview
                 </h2>
                 <p className="text-gray-400 max-w-lg mb-2">
@@ -450,7 +450,7 @@ export default function Home() {
               <div className="flex-shrink-0">
                 <Link
                   href="/interview"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500
+                  className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500
                              text-white font-semibold text-lg transition-all duration-200
                              shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105 cursor-pointer"
                 >
@@ -477,20 +477,20 @@ export default function Home() {
       </section>
 
       {/* Pattern Recognition Quiz Quick Access */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="relative overflow-hidden rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-violet-500/10 p-8 md:p-12">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-violet-500/10 p-5 sm:p-8 md:p-12">
           {/* Background decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl" />
 
           <div className="relative z-10">
-            <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-8">
               {/* Left: Icon and Title */}
               <div className="text-center md:text-left flex-1">
                 <div className="text-purple-400 mb-4">
                   <svg
                     viewBox="0 0 24 24"
-                    className="w-16 h-16"
+                    className="w-12 sm:w-16 h-12 sm:h-16"
                     aria-hidden="true"
                     fill="none"
                     stroke="currentColor"
@@ -503,7 +503,7 @@ export default function Home() {
                     <path d="M2 12l10 5 10-5" />
                   </svg>
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100 mb-3">
                   Algorithm Pattern Quiz
                 </h2>
                 <p className="text-gray-400 max-w-lg mb-2">
@@ -519,7 +519,7 @@ export default function Home() {
               <div className="flex-shrink-0">
                 <Link
                   href="/pattern-quiz"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-purple-600 hover:bg-purple-500
+                  className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-purple-600 hover:bg-purple-500
                              text-white font-semibold text-lg transition-all duration-200
                              shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 cursor-pointer"
                 >
@@ -546,20 +546,20 @@ export default function Home() {
       </section>
 
       {/* Regex Trainer Quick Access */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-green-500/5 to-teal-500/10 p-8 md:p-12">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-green-500/5 to-teal-500/10 p-5 sm:p-8 md:p-12">
           {/* Background decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-500/10 rounded-full blur-3xl" />
 
           <div className="relative z-10">
-            <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-8">
               {/* Left: Icon and Title */}
               <div className="text-center md:text-left flex-1">
                 <div className="text-emerald-400 mb-4">
                   <svg
                     viewBox="0 0 24 24"
-                    className="w-16 h-16"
+                    className="w-12 sm:w-16 h-12 sm:h-16"
                     aria-hidden="true"
                     fill="none"
                     stroke="currentColor"
@@ -573,7 +573,9 @@ export default function Home() {
                     <path d="M8 13h4" />
                   </svg>
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">Regex Trainer</h2>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100 mb-3">
+                  Regex Trainer
+                </h2>
                 <p className="text-gray-400 max-w-lg mb-2">
                   Master regular expressions with interactive challenges. Practice live pattern
                   matching, drill under time pressure, or experiment freely in the playground.
@@ -588,7 +590,7 @@ export default function Home() {
               <div className="flex-shrink-0">
                 <Link
                   href="/regex"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500
+                  className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500
                              text-white font-semibold text-lg transition-all duration-200
                              shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 cursor-pointer"
                 >
@@ -615,20 +617,20 @@ export default function Home() {
       </section>
 
       {/* Frontend Drills Quick Access */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="relative overflow-hidden rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-yellow-500/10 p-8 md:p-12">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+        <div className="relative overflow-hidden rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-yellow-500/10 p-5 sm:p-8 md:p-12">
           {/* Background decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl" />
 
           <div className="relative z-10">
-            <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-8">
               {/* Left: Icon and Title */}
               <div className="text-center md:text-left flex-1">
                 <div className="text-amber-400 mb-4">
                   <svg
                     viewBox="0 0 24 24"
-                    className="w-16 h-16"
+                    className="w-12 sm:w-16 h-12 sm:h-16"
                     aria-hidden="true"
                     fill="none"
                     stroke="currentColor"
@@ -644,7 +646,7 @@ export default function Home() {
                     <path d="M13 17h4" />
                   </svg>
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-3">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100 mb-3">
                   Frontend Drills
                 </h2>
                 <p className="text-gray-400 max-w-lg mb-2">
@@ -661,7 +663,7 @@ export default function Home() {
               <div className="flex-shrink-0 flex flex-col items-center gap-4">
                 <Link
                   href="/frontend-drills"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-amber-600 hover:bg-amber-500
+                  className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-amber-600 hover:bg-amber-500
                              text-white font-semibold text-lg transition-all duration-200
                              shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-105 cursor-pointer"
                 >
@@ -690,7 +692,7 @@ export default function Home() {
                       <Link
                         key={fwId}
                         href={`/frontend-drills/${fwId}`}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 rounded-lg text-sm font-medium
                           border ${fw.borderColor} ${fw.bgColor} ${fw.color}
                           hover:brightness-125 transition-all cursor-pointer`}
                       >
@@ -707,7 +709,7 @@ export default function Home() {
       </section>
 
       {/* Mode Selection Preview */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
         <h2 className="text-2xl md:text-3xl font-semibold text-center mb-3 text-gray-100">
           Learning Modes
         </h2>
@@ -715,7 +717,7 @@ export default function Home() {
           Multiple ways to master your chosen language
         </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {modes.map((mode) => (
             <div
               key={mode.name}
@@ -742,8 +744,8 @@ export default function Home() {
       </section>
 
       {/* Features Preview */}
-      <section className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 text-center">
           {[
             {
               stat: '24',
@@ -824,7 +826,9 @@ export default function Home() {
           ].map((item) => (
             <div key={item.label} className="p-6">
               <div className="text-gray-400 mb-2 flex justify-center">{item.icon}</div>
-              <div className="text-3xl md:text-4xl font-bold text-gray-100">{item.stat}</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100">
+                {item.stat}
+              </div>
               <div className="text-gray-500">{item.label}</div>
             </div>
           ))}
@@ -833,7 +837,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-gray-800/50 mt-12">
-        <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold gradient-text">Coding Drills</span>

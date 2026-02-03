@@ -222,7 +222,7 @@ function StaticCodeBlock({
           <span className="text-xs text-zinc-500">{language}</span>
         </div>
       )}
-      <pre className="overflow-x-auto p-4 bg-zinc-900/80 text-sm leading-relaxed">
+      <pre className="overflow-x-auto p-4 bg-zinc-900/80 text-xs sm:text-sm leading-relaxed">
         <code className="text-zinc-300 font-mono">{code}</code>
       </pre>
     </div>
@@ -434,7 +434,9 @@ function CheatsheetSectionComponent({
       </button>
 
       {isExpanded && (
-        <div className={`mt-3 ml-4 pl-6 border-l-2 ${config.borderColor} space-y-5 pb-4`}>
+        <div
+          className={`mt-3 ml-2 sm:ml-4 pl-3 sm:pl-6 border-l-2 ${config.borderColor} space-y-5 pb-4`}
+        >
           {section.content.map((block, i) => (
             <ContentBlockRenderer key={i} block={block} isExpanded={isExpanded} />
           ))}
@@ -696,7 +698,7 @@ export default function CheatsheetPage() {
   const config = FRAMEWORK_CONFIG[framework as FrameworkId];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
       <CheatsheetHeader
         config={config}
         title={cheatsheet.title}
@@ -707,7 +709,7 @@ export default function CheatsheetPage() {
       <MobileTOC sections={cheatsheet.sections} activeSection={activeSection} config={config} />
 
       {/* Two-column layout */}
-      <div className="flex gap-8">
+      <div className="flex gap-4 lg:gap-8">
         {/* Desktop Sidebar TOC */}
         <aside className="hidden lg:block w-64 flex-shrink-0">
           <div className="sticky top-24">
@@ -739,7 +741,7 @@ export default function CheatsheetPage() {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 space-y-6">
+        <main className="flex-1 min-w-0 space-y-3 sm:space-y-6">
           {cheatsheet.sections.map((section) => (
             <CheatsheetSectionComponent
               key={section.id}

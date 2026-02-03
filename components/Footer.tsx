@@ -18,7 +18,7 @@ export function Footer({ className = '', showFullFooter = true }: FooterProps) {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {showFullFooter && (
-          <div className="py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="py-8 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
             {/* Brand Section */}
             <div className="space-y-4">
               <Link href="/" className="inline-flex items-center gap-2 group">
@@ -138,7 +138,7 @@ export function Footer({ className = '', showFullFooter = true }: FooterProps) {
         {/* Bottom Bar */}
         <div
           className={`
-            py-4 flex flex-col sm:flex-row items-center justify-between gap-4
+            py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-4
             ${showFullFooter ? 'border-t border-border-subtle/50' : ''}
           `}
         >

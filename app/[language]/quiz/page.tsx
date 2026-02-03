@@ -198,7 +198,7 @@ function SetupPhase({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
           <Breadcrumb
@@ -247,7 +247,7 @@ function SetupPhase({
         {/* Quiz Type Selection */}
         <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
           <h2 className="text-xl font-semibold mb-4">Quiz Type</h2>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
               { type: 'methods' as QuizType, label: 'Methods', icon: '📝' },
               { type: 'time-complexity' as QuizType, label: 'Time Complexity', icon: '⏱' },
@@ -260,7 +260,7 @@ function SetupPhase({
                 onClick={() => {
                   onConfigChange({ ...config, quizType: type, categories: [] });
                 }}
-                className={`py-3 px-3 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${
+                className={`py-3 px-3 rounded-lg font-medium min-h-[44px] transition-all duration-200 cursor-pointer text-sm ${
                   config.quizType === type
                     ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
                     : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
@@ -344,7 +344,7 @@ function SetupPhase({
                   type="button"
                   key={category}
                   onClick={() => toggleCategory(category)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize cursor-pointer flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg font-medium min-h-[44px] transition-all duration-200 capitalize cursor-pointer flex items-center gap-2 ${
                     config.categories.includes(category)
                       ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
                       : 'bg-zinc-700/50 text-zinc-300 hover:bg-zinc-700'
@@ -397,7 +397,7 @@ function SetupPhase({
         <div className="bg-zinc-800/50 rounded-2xl p-6 mb-6 border border-zinc-700/50">
           <h2 className="text-xl font-semibold mb-4">Time Per Question</h2>
           {/* Quick Select Buttons */}
-          <div className="flex gap-3 mb-4">
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-4">
             {timeOptions.map((time) => (
               <button
                 type="button"
@@ -520,7 +520,11 @@ function Timer({ timeLeft, totalTime, onTick }: TimerProps) {
   return (
     <div className="relative">
       {/* Background circle */}
-      <svg className="w-24 h-24 transform -rotate-90" aria-hidden="true">
+      <svg
+        className="w-16 sm:w-24 h-16 sm:h-24 transform -rotate-90"
+        viewBox="0 0 96 96"
+        aria-hidden="true"
+      >
         <circle
           cx="48"
           cy="48"
@@ -612,13 +616,15 @@ function ScoreDisplay({ score, streak }: ScoreDisplayProps) {
   const multiplier = streak >= 5 ? 3 : streak >= 3 ? 2 : 1;
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-3 sm:gap-6">
       <div className="text-center">
-        <div className="text-3xl font-bold text-white">{score}</div>
+        <div className="text-2xl sm:text-3xl font-bold text-white">{score}</div>
         <div className="text-xs text-zinc-400 uppercase tracking-wider">Score</div>
       </div>
       <div className="text-center">
-        <div className={`text-3xl font-bold ${streak > 0 ? 'text-orange-400' : 'text-zinc-500'}`}>
+        <div
+          className={`text-2xl sm:text-3xl font-bold ${streak > 0 ? 'text-orange-400' : 'text-zinc-500'}`}
+        >
           {streak}
         </div>
         <div className="text-xs text-zinc-400 uppercase tracking-wider">Streak</div>
@@ -902,7 +908,7 @@ function PlayingPhase({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-3xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-6">
           <Breadcrumb
@@ -960,7 +966,7 @@ function PlayingPhase({
         </div>
 
         {/* Method Cards */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {currentQuestion.options.map((option) => (
             <MethodCard
               key={option}
@@ -1078,7 +1084,7 @@ Try it yourself!`;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-12 max-w-2xl">
         {/* Breadcrumbs and Exit Button */}
         <div className="flex items-center justify-between mb-8">
           <Breadcrumb
