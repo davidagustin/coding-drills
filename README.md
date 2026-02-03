@@ -87,9 +87,9 @@ Supports offline (WebLLM) and cloud (OpenAI) inference.
 Self-paced flashcard experience — no timers, no scoring, just focused recall. Available for both language routes (`/{language}/study`) and frontend routes (`/frontend-drills/{framework}/study`).
 
 - **Setup** — Choose sources (methods, time/space complexity, patterns, frontend knowledge), filter by category and difficulty, set deck size, shuffle or sequential order, and optionally prioritize weak cards.
-- **Preview Table** — Collapsible Q&A table showing all matching questions and answers before you start, so you can browse the deck content.
-- **Studying** — Flip through cards: read the prompt, reveal the answer, then self-rate as **Missed**, **Shaky**, or **Knew It**. Keyboard shortcuts: `Space`/`Enter` to reveal, `1`/`2`/`3` to rate, `←` for previous card, `Esc` to exit.
-- **Summary** — Session stats (cards reviewed, recall rate, time) with a breakdown chart and a "Review These Again" list of weak cards.
+- **Preview Table** — Full-page Q&A browser with search, filter, and sort. Answers are hidden by default with a toggle to reveal them, so you can quiz yourself while browsing.
+- **Studying** — Flip through cards: read the prompt (method name and description hidden), reveal the answer, then self-rate as **Missed**, **Shaky**, or **Knew It**. Keyboard shortcuts: `Space`/`Enter` to reveal, `1`/`2`/`3` to rate, `←` for previous card, `Esc` to exit.
+- **Summary** — Session stats (cards reviewed, recall rate, time) with a breakdown chart and a "Review These Again" list of weak cards (answers hidden by default with a toggle).
 - **Persistence** — Ratings and session history are stored in localStorage (`coding-drills-flashcards`). Weak cards surface first in future sessions when "Focus on cards I'm still learning" is enabled.
 
 ### Algorithm Pattern Quiz

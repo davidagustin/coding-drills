@@ -25,20 +25,36 @@ import type { Flashcard, FlashcardSource, GetFlashcardsOptions } from './types';
 
 // ── Individual Adapters ──────────────────────────────────────
 
+/**
+ * Strip the method call from example code so the card doesn't give away the answer.
+ * e.g. "[3, 1, 2].sort((a, b) => a - b)" → "[3, 1, 2]"
+ */
+function stripMethodCall(code: string, methodName: string): string {
+  const marker = `.${methodName}(`;
+  const idx = code.indexOf(marker);
+  if (idx !== -1) {
+    return code.slice(0, idx);
+  }
+  return code;
+}
+
 function methodToFlashcard(method: Method, language: string): Flashcard {
   const example = method.examples[0];
+
+  // Build code block: show only the input value and the output — never the method name
+  let codeBlock: string | undefined;
+  if (example) {
+    const inputOnly = stripMethodCall(example.code, method.name);
+    codeBlock = `// Input\n${inputOnly}\n\n// Output\n${example.output}`;
+  }
+
   return {
     id: `method:${language}:${method.name}`,
     source: 'method',
     front: {
       prompt: 'What method produces this output?',
-      code: example
-        ? `// Input\n${example.code}\n\n// Output\n${example.output}`
-        : `// ${method.syntax}`,
-      detail:
-        method.description.length > 120
-          ? `${method.description.slice(0, 120)}...`
-          : method.description,
+      code: codeBlock,
+      // detail intentionally omitted — the description reveals the answer
       badge: method.category,
     },
     back: {
