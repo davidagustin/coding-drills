@@ -2611,4 +2611,674 @@ const handleChange = (e) => {
     explanation:
       'Multi-step forms lift all form state to a parent component. Each step receives current data and an update function. Step navigation is controlled by state. Validate per-step before advancing and review all data before final submission.',
   },
+
+  // ============================================================================
+  // React 19 & Modern Features (q113-q122)
+  // ============================================================================
+  {
+    id: 'react-q113',
+    framework: 'react',
+    category: 'State & Lifecycle',
+    difficulty: 'hard',
+    question: 'What is the purpose of the `use()` hook in React 19?',
+    codeSnippet: `function Comments({ commentsPromise }) {
+  const comments = use(commentsPromise);
+  return comments.map(c => <p key={c.id}>{c.text}</p>);
+}`,
+    options: [
+      'It unwraps promises and context values, enabling reading resources during render with Suspense integration',
+      'It replaces useEffect for all side effects',
+      'It creates a new state variable from any value',
+      'It is an alias for useState',
+    ],
+    correctAnswer:
+      'It unwraps promises and context values, enabling reading resources during render with Suspense integration',
+    explanation:
+      'The use() hook in React 19 can read promises (suspending until resolved) and context values. Unlike other hooks, it can be called conditionally. It integrates with Suspense for loading states.',
+  },
+  {
+    id: 'react-q114',
+    framework: 'react',
+    category: 'Forms & Validation',
+    difficulty: 'hard',
+    question: 'What does useActionState (formerly useFormState) do in React 19?',
+    codeSnippet: `async function submitForm(prevState, formData) {
+  const result = await saveToServer(formData);
+  return { success: true, data: result };
+}
+
+function Form() {
+  const [state, formAction, isPending] = useActionState(submitForm, null);
+  return <form action={formAction}>...</form>;
+}`,
+    options: [
+      'It manages form state with server actions, providing previous state, a form action, and pending status',
+      'It validates form fields automatically',
+      'It stores form data in localStorage',
+      'It replaces controlled inputs with uncontrolled ones',
+    ],
+    correctAnswer:
+      'It manages form state with server actions, providing previous state, a form action, and pending status',
+    explanation:
+      'useActionState connects a form to a server action. It returns the current state (from the action return value), a form action to pass to <form action={}>, and isPending boolean for loading UI.',
+  },
+  {
+    id: 'react-q115',
+    framework: 'react',
+    category: 'State & Lifecycle',
+    difficulty: 'hard',
+    question: 'What is useOptimistic used for in React 19?',
+    codeSnippet: `function LikeButton({ likes, onLike }) {
+  const [optimisticLikes, addOptimisticLike] = useOptimistic(
+    likes,
+    (current, newLike) => current + 1
+  );
+
+  async function handleLike() {
+    addOptimisticLike(1);
+    await onLike();
+  }
+
+  return <button onClick={handleLike}>{optimisticLikes} likes</button>;
+}`,
+    options: [
+      'It shows an optimistic UI update immediately while an async action is in progress, reverting if it fails',
+      'It optimizes component rendering performance',
+      'It pre-fetches data before user interaction',
+      'It caches previous state values',
+    ],
+    correctAnswer:
+      'It shows an optimistic UI update immediately while an async action is in progress, reverting if it fails',
+    explanation:
+      'useOptimistic allows you to show a different state while an async action is underway. The optimistic value is shown immediately, and React automatically reverts to the actual value when the action completes or fails.',
+  },
+  {
+    id: 'react-q116',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'medium',
+    question: 'What is the difference between Server Components and Client Components in React?',
+    options: [
+      'Server Components render on the server with zero JS bundle size; Client Components hydrate on the client and can use hooks/state',
+      'Server Components are faster; Client Components are slower',
+      'Server Components cannot fetch data; Client Components can',
+      'There is no difference; they are interchangeable',
+    ],
+    correctAnswer:
+      'Server Components render on the server with zero JS bundle size; Client Components hydrate on the client and can use hooks/state',
+    explanation:
+      'Server Components (RSC) run only on the server, have no JS in the bundle, and can directly access databases/filesystems. Client Components run on both server (SSR) and client, can use useState/useEffect, and handle interactivity.',
+  },
+  {
+    id: 'react-q117',
+    framework: 'react',
+    category: 'Common Patterns',
+    difficulty: 'medium',
+    question: "What does the 'use client' directive do?",
+    codeSnippet: `'use client';
+
+import { useState } from 'react';
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(c => c + 1)}>{count}</button>;
+}`,
+    options: [
+      'It marks a component as a Client Component, enabling hooks and interactivity',
+      'It makes the component render only in the browser',
+      'It disables server-side rendering',
+      'It enables client-side routing',
+    ],
+    correctAnswer: 'It marks a component as a Client Component, enabling hooks and interactivity',
+    explanation:
+      "'use client' at the top of a file marks it as a Client Component boundary. The component and its imports will be included in the JS bundle and can use React features like useState, useEffect, and event handlers.",
+  },
+  {
+    id: 'react-q118',
+    framework: 'react',
+    category: 'Data Fetching',
+    difficulty: 'hard',
+    question: 'How do Server Components handle data fetching differently from Client Components?',
+    codeSnippet: `// Server Component - can be async!
+async function UserProfile({ userId }) {
+  const user = await db.users.find(userId);
+  return <div>{user.name}</div>;
+}`,
+    options: [
+      'Server Components can be async functions that await data directly without useEffect or state',
+      'Server Components must use useEffect for data fetching',
+      'Server Components cannot fetch data at all',
+      'Server Components automatically cache all data forever',
+    ],
+    correctAnswer:
+      'Server Components can be async functions that await data directly without useEffect or state',
+    explanation:
+      'Server Components can be async functions, allowing direct data fetching with await. No loading states, effects, or state management needed - the component simply renders with the data. This simplifies the data fetching pattern significantly.',
+  },
+  {
+    id: 'react-q119',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'medium',
+    question: 'What is React Compiler (formerly React Forget)?',
+    options: [
+      'An automatic optimization tool that adds memoization (useMemo, useCallback, memo) without manual code changes',
+      'A tool that compiles React to native mobile apps',
+      'A bundler replacement for webpack',
+      'A TypeScript type checker for React',
+    ],
+    correctAnswer:
+      'An automatic optimization tool that adds memoization (useMemo, useCallback, memo) without manual code changes',
+    explanation:
+      'React Compiler analyzes your code at build time and automatically inserts memoization where beneficial. It understands React semantics and can optimize without the cognitive overhead of manual useMemo/useCallback placement.',
+  },
+  {
+    id: 'react-q120',
+    framework: 'react',
+    category: 'DOM & Events',
+    difficulty: 'medium',
+    question: 'What does the `ref` callback pattern provide over useRef?',
+    codeSnippet: `function MeasuredBox() {
+  const [height, setHeight] = useState(0);
+
+  const measuredRef = useCallback(node => {
+    if (node !== null) {
+      setHeight(node.getBoundingClientRect().height);
+    }
+  }, []);
+
+  return <div ref={measuredRef}>Content: {height}px tall</div>;
+}`,
+    options: [
+      'It fires a callback when the ref is attached/detached, useful for measuring DOM nodes or triggering effects on mount',
+      'It is faster than useRef',
+      'It allows multiple refs on one element',
+      'It prevents memory leaks automatically',
+    ],
+    correctAnswer:
+      'It fires a callback when the ref is attached/detached, useful for measuring DOM nodes or triggering effects on mount',
+    explanation:
+      'Ref callbacks are called with the DOM node when attached and null when detached. Unlike useRef, this pattern lets you react to the ref being set, measure elements, or run setup/cleanup logic when a DOM node appears.',
+  },
+  {
+    id: 'react-q121',
+    framework: 'react',
+    category: 'Common Patterns',
+    difficulty: 'hard',
+    question: 'What is useImperativeHandle used for?',
+    codeSnippet: `const FancyInput = forwardRef((props, ref) => {
+  const inputRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current.focus(),
+    clear: () => { inputRef.current.value = ''; }
+  }));
+
+  return <input ref={inputRef} />;
+});`,
+    options: [
+      'It customizes the instance value exposed to parent components when using forwardRef',
+      'It creates imperative animations',
+      'It handles form submission imperatively',
+      'It replaces Redux for state management',
+    ],
+    correctAnswer:
+      'It customizes the instance value exposed to parent components when using forwardRef',
+    explanation:
+      'useImperativeHandle lets you define which methods/properties the parent can access via ref. Instead of exposing the raw DOM node, you expose a custom API. Useful for component libraries needing programmatic control.',
+  },
+  {
+    id: 'react-q122',
+    framework: 'react',
+    category: 'State & Lifecycle',
+    difficulty: 'easy',
+    question: 'What does flushSync do in React?',
+    codeSnippet: `import { flushSync } from 'react-dom';
+
+function handleClick() {
+  flushSync(() => {
+    setCount(c => c + 1);
+  });
+  // DOM is updated here
+  console.log(document.getElementById('counter').textContent);
+}`,
+    options: [
+      'It forces React to flush state updates synchronously, updating the DOM immediately',
+      'It syncs state across multiple tabs',
+      'It flushes the browser cache',
+      'It synchronizes client and server state',
+    ],
+    correctAnswer:
+      'It forces React to flush state updates synchronously, updating the DOM immediately',
+    explanation:
+      'flushSync forces React to process state updates and update the DOM synchronously before continuing. Normally React batches updates for performance. Use flushSync sparingly for cases needing immediate DOM measurement.',
+  },
+
+  // ============================================================================
+  // Advanced Patterns & Testing (q123-q132)
+  // ============================================================================
+  {
+    id: 'react-q123',
+    framework: 'react',
+    category: 'Common Patterns',
+    difficulty: 'medium',
+    question: 'What is the Compound Component pattern?',
+    codeSnippet: `<Select value={value} onChange={setValue}>
+  <Select.Trigger>Choose an option</Select.Trigger>
+  <Select.Options>
+    <Select.Option value="a">Option A</Select.Option>
+    <Select.Option value="b">Option B</Select.Option>
+  </Select.Options>
+</Select>`,
+    options: [
+      'A pattern where a parent component shares state with child components implicitly via Context, allowing flexible composition',
+      'A pattern for combining multiple HOCs',
+      'A pattern for composing CSS classes',
+      'A pattern for server-side rendering',
+    ],
+    correctAnswer:
+      'A pattern where a parent component shares state with child components implicitly via Context, allowing flexible composition',
+    explanation:
+      'Compound Components share implicit state through Context, letting users compose flexible UIs without prop drilling. The parent manages state while children access it via Context. Common in component libraries like Radix, Headless UI.',
+  },
+  {
+    id: 'react-q124',
+    framework: 'react',
+    category: 'Common Patterns',
+    difficulty: 'hard',
+    question: 'What problem does the Render Props pattern solve?',
+    codeSnippet: `<Mouse render={({ x, y }) => (
+  <p>Mouse position: {x}, {y}</p>
+)} />`,
+    options: [
+      'It allows sharing stateful logic between components by passing a function that receives the state and returns UI',
+      'It improves rendering performance',
+      'It prevents re-renders',
+      'It replaces the need for CSS',
+    ],
+    correctAnswer:
+      'It allows sharing stateful logic between components by passing a function that receives the state and returns UI',
+    explanation:
+      'Render props is a technique where a component receives a function prop that returns React elements. The component manages state/logic and passes it to the function, allowing code reuse. Custom hooks often replace this pattern now.',
+  },
+  {
+    id: 'react-q125',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'easy',
+    question: 'When does React batch state updates?',
+    options: [
+      'React 18+ automatically batches all state updates, including those in promises, timeouts, and native event handlers',
+      'React only batches updates inside onClick handlers',
+      'React never batches updates',
+      'React only batches updates when using Redux',
+    ],
+    correctAnswer:
+      'React 18+ automatically batches all state updates, including those in promises, timeouts, and native event handlers',
+    explanation:
+      'React 18 introduced automatic batching for all updates. Multiple setState calls in any context (event handlers, promises, timeouts, etc.) are grouped into a single re-render. Previously, only React event handlers were batched.',
+  },
+  {
+    id: 'react-q126',
+    framework: 'react',
+    category: 'Data Fetching',
+    difficulty: 'medium',
+    question: 'What is the stale-while-revalidate pattern in data fetching?',
+    options: [
+      'Show cached (stale) data immediately while fetching fresh data in the background, then update when complete',
+      'Always wait for fresh data before showing anything',
+      'Never cache any data',
+      'Revalidate data only when the user refreshes the page',
+    ],
+    correctAnswer:
+      'Show cached (stale) data immediately while fetching fresh data in the background, then update when complete',
+    explanation:
+      'SWR (stale-while-revalidate) shows cached data instantly for fast UX, then revalidates in the background. Libraries like SWR and React Query implement this pattern. It balances between freshness and perceived performance.',
+  },
+  {
+    id: 'react-q127',
+    framework: 'react',
+    category: 'DOM & Events',
+    difficulty: 'easy',
+    question: 'What is event.currentTarget vs event.target?',
+    codeSnippet: `<div onClick={handleClick}>
+  <button>Click me</button>
+</div>`,
+    options: [
+      'target is the element that triggered the event; currentTarget is the element the handler is attached to',
+      'They are always the same element',
+      'currentTarget is the parent; target is the child',
+      'target is for mouse events; currentTarget is for keyboard events',
+    ],
+    correctAnswer:
+      'target is the element that triggered the event; currentTarget is the element the handler is attached to',
+    explanation:
+      'event.target is the actual element clicked (could be a child). event.currentTarget is always the element with the event listener. In the example, clicking the button: target=button, currentTarget=div.',
+  },
+  {
+    id: 'react-q128',
+    framework: 'react',
+    category: 'Forms & Validation',
+    difficulty: 'easy',
+    question: 'What is the difference between controlled and uncontrolled inputs?',
+    options: [
+      'Controlled inputs have their value managed by React state; uncontrolled inputs manage their own state via DOM',
+      'Controlled inputs are faster; uncontrolled are slower',
+      'Controlled inputs require TypeScript; uncontrolled do not',
+      'There is no difference',
+    ],
+    correctAnswer:
+      'Controlled inputs have their value managed by React state; uncontrolled inputs manage their own state via DOM',
+    explanation:
+      'Controlled: value={state} + onChange={setState}. React owns the source of truth. Uncontrolled: defaultValue + ref.current.value. The DOM owns the value. Controlled gives more control; uncontrolled is simpler for basic forms.',
+  },
+  {
+    id: 'react-q129',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'hard',
+    question: 'What causes an infinite loop in useEffect?',
+    codeSnippet: `useEffect(() => {
+  setData(fetchData());
+}, [data]); // Infinite loop!`,
+    options: [
+      'The effect updates a dependency (data), causing the effect to re-run, which updates the dependency again',
+      'useEffect cannot contain setState calls',
+      'fetchData is called too quickly',
+      'The dependency array syntax is wrong',
+    ],
+    correctAnswer:
+      'The effect updates a dependency (data), causing the effect to re-run, which updates the dependency again',
+    explanation:
+      'When an effect updates state that is in its dependency array, it triggers a re-render, which re-runs the effect, updating state again, creating an infinite loop. Fix: remove from deps, use functional update, or add a condition.',
+  },
+  {
+    id: 'react-q130',
+    framework: 'react',
+    category: 'Common Patterns',
+    difficulty: 'medium',
+    question: 'What is the purpose of Error Boundaries?',
+    codeSnippet: `class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    logErrorToService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) return <h1>Something went wrong.</h1>;
+    return this.props.children;
+  }
+}`,
+    options: [
+      'They catch JavaScript errors in child components and display a fallback UI instead of crashing the whole app',
+      'They handle async errors in promises',
+      'They validate form input errors',
+      'They catch HTTP request errors',
+    ],
+    correctAnswer:
+      'They catch JavaScript errors in child components and display a fallback UI instead of crashing the whole app',
+    explanation:
+      'Error Boundaries catch errors during rendering, lifecycle methods, and constructors of child components. They log errors and show fallback UI. Note: they do NOT catch errors in event handlers, async code, or SSR.',
+  },
+  {
+    id: 'react-q131',
+    framework: 'react',
+    category: 'State & Lifecycle',
+    difficulty: 'medium',
+    question: 'Why should you not call hooks inside loops or conditions?',
+    codeSnippet: `// DON'T do this!
+if (condition) {
+  const [state, setState] = useState(0);
+}`,
+    options: [
+      'React relies on hook call order to associate state with the correct hook; conditional calls break this mapping',
+      'It causes memory leaks',
+      'Hooks are too slow to run conditionally',
+      'JavaScript does not support conditional function calls',
+    ],
+    correctAnswer:
+      'React relies on hook call order to associate state with the correct hook; conditional calls break this mapping',
+    explanation:
+      'React tracks hooks by their call order, not by name. If a hook is called conditionally, the order changes between renders, causing hooks to return wrong state. Always call hooks at the top level unconditionally.',
+  },
+  {
+    id: 'react-q132',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'easy',
+    question: 'What is the purpose of React.Fragment (or <>...</>)?',
+    codeSnippet: `return (
+  <>
+    <Header />
+    <Main />
+    <Footer />
+  </>
+);`,
+    options: [
+      'It lets you group multiple elements without adding an extra DOM node',
+      'It improves rendering performance',
+      'It creates a document fragment in the DOM',
+      'It is required for all JSX',
+    ],
+    correctAnswer: 'It lets you group multiple elements without adding an extra DOM node',
+    explanation:
+      'React components must return a single element. Fragment (<> or <React.Fragment>) groups children without adding a wrapper div to the DOM. Use <React.Fragment key={}> when you need keys in a list.',
+  },
+
+  // ============================================================================
+  // Performance & Best Practices (q133-q142)
+  // ============================================================================
+  {
+    id: 'react-q133',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'hard',
+    question: 'What is reconciliation in React?',
+    options: [
+      'The algorithm React uses to diff the old and new virtual DOM trees and determine the minimum updates needed for the real DOM',
+      'The process of combining multiple components',
+      'The way React handles errors',
+      'The method for syncing state between components',
+    ],
+    correctAnswer:
+      'The algorithm React uses to diff the old and new virtual DOM trees and determine the minimum updates needed for the real DOM',
+    explanation:
+      "Reconciliation is React's diffing algorithm. It compares the new element tree with the previous one, identifies changes, and updates only the necessary DOM nodes. Keys help React identify which items changed in lists.",
+  },
+  {
+    id: 'react-q134',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'medium',
+    question: 'Why should you avoid creating new objects/arrays in render for props?',
+    codeSnippet: `// Causes child to re-render every time!
+<Child style={{ color: 'red' }} items={[1, 2, 3]} />`,
+    options: [
+      'New object/array references are created each render, breaking memoization since props appear to have changed',
+      'It uses too much memory',
+      'React cannot serialize objects',
+      'JavaScript does not support inline objects',
+    ],
+    correctAnswer:
+      'New object/array references are created each render, breaking memoization since props appear to have changed',
+    explanation:
+      'Each render creates new {}/[] with different references. Even with React.memo, the shallow comparison sees different references and re-renders. Solution: useMemo, useCallback, or define constants outside the component.',
+  },
+  {
+    id: 'react-q135',
+    framework: 'react',
+    category: 'Data Fetching',
+    difficulty: 'medium',
+    question: 'How do you prevent race conditions in useEffect data fetching?',
+    codeSnippet: `useEffect(() => {
+  let cancelled = false;
+
+  async function fetchData() {
+    const result = await fetch(\`/api/user/\${userId}\`);
+    if (!cancelled) setUser(result);
+  }
+  fetchData();
+
+  return () => { cancelled = true; };
+}, [userId]);`,
+    options: [
+      'Use a cleanup function with a cancelled flag or AbortController to ignore stale responses',
+      'Always use synchronous fetch',
+      'Disable concurrent requests in React',
+      'Race conditions cannot happen in React',
+    ],
+    correctAnswer:
+      'Use a cleanup function with a cancelled flag or AbortController to ignore stale responses',
+    explanation:
+      'If userId changes quickly, multiple fetches race. Without cleanup, a slow early request could overwrite a fast later one. The cleanup sets cancelled=true or aborts the request, so stale responses are ignored.',
+  },
+  {
+    id: 'react-q136',
+    framework: 'react',
+    category: 'Common Patterns',
+    difficulty: 'easy',
+    question: 'What is prop drilling and how do you solve it?',
+    options: [
+      'Passing props through many component layers; solve with Context, state management, or component composition',
+      'A security vulnerability in React',
+      'A performance optimization technique',
+      'Drilling holes in the virtual DOM',
+    ],
+    correctAnswer:
+      'Passing props through many component layers; solve with Context, state management, or component composition',
+    explanation:
+      'Prop drilling is passing props through intermediate components that don\'t use them. Solutions: React Context for global state, state management libraries, or "composition" by passing components as children instead.',
+  },
+  {
+    id: 'react-q137',
+    framework: 'react',
+    category: 'DOM & Events',
+    difficulty: 'medium',
+    question: 'What is a Portal in React?',
+    codeSnippet: `createPortal(
+  <Modal>Content</Modal>,
+  document.getElementById('modal-root')
+)`,
+    options: [
+      'It renders children into a DOM node outside the parent component hierarchy while preserving React context and event bubbling',
+      'It creates a link between two components',
+      'It teleports users to another page',
+      'It is used for server-side rendering',
+    ],
+    correctAnswer:
+      'It renders children into a DOM node outside the parent component hierarchy while preserving React context and event bubbling',
+    explanation:
+      'Portals render children to a different DOM node (like document.body) while maintaining React tree position. Events still bubble through the React tree, not DOM tree. Useful for modals, tooltips, and dropdowns.',
+  },
+  {
+    id: 'react-q138',
+    framework: 'react',
+    category: 'State & Lifecycle',
+    difficulty: 'hard',
+    question: 'What is the difference between useLayoutEffect and useEffect?',
+    options: [
+      'useLayoutEffect fires synchronously after DOM mutations but before paint; useEffect fires after paint',
+      'useLayoutEffect is for CSS; useEffect is for JavaScript',
+      'useLayoutEffect is faster',
+      'There is no difference',
+    ],
+    correctAnswer:
+      'useLayoutEffect fires synchronously after DOM mutations but before paint; useEffect fires after paint',
+    explanation:
+      'useLayoutEffect blocks the browser from painting until complete - use for DOM measurements or mutations that must happen before the user sees anything. useEffect runs after paint asynchronously - use for most effects to avoid blocking.',
+  },
+  {
+    id: 'react-q139',
+    framework: 'react',
+    category: 'Forms & Validation',
+    difficulty: 'medium',
+    question: 'How do you handle file uploads in React?',
+    codeSnippet: `function FileUpload() {
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    uploadFile(formData);
+  };
+
+  return <input type="file" onChange={handleChange} />;
+}`,
+    options: [
+      'Use an uncontrolled input with onChange, access files via e.target.files, and upload with FormData',
+      'File uploads require a special React library',
+      'Use useState to store the file bytes',
+      'React cannot handle file uploads',
+    ],
+    correctAnswer:
+      'Use an uncontrolled input with onChange, access files via e.target.files, and upload with FormData',
+    explanation:
+      'File inputs are typically uncontrolled (no value prop). Access selected files via e.target.files, create FormData for the upload payload, and send via fetch/axios. For multiple files, iterate over the FileList.',
+  },
+  {
+    id: 'react-q140',
+    framework: 'react',
+    category: 'Rendering',
+    difficulty: 'medium',
+    question: 'What is code splitting in React and how do you implement it?',
+    codeSnippet: `const HeavyComponent = React.lazy(() => import('./HeavyComponent'));
+
+function App() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <HeavyComponent />
+    </Suspense>
+  );
+}`,
+    options: [
+      'Breaking the bundle into smaller chunks loaded on demand using React.lazy and dynamic imports with Suspense fallback',
+      'Splitting code between server and client',
+      'Dividing code into multiple files manually',
+      'Using multiple React versions',
+    ],
+    correctAnswer:
+      'Breaking the bundle into smaller chunks loaded on demand using React.lazy and dynamic imports with Suspense fallback',
+    explanation:
+      'Code splitting reduces initial bundle size. React.lazy() takes a dynamic import and returns a lazy component. Suspense shows a fallback while loading. Split at route level or for heavy components not needed immediately.',
+  },
+  {
+    id: 'react-q141',
+    framework: 'react',
+    category: 'State & Lifecycle',
+    difficulty: 'easy',
+    question: 'What is the functional update form of setState?',
+    codeSnippet: `// Instead of: setCount(count + 1)
+setCount(prevCount => prevCount + 1);`,
+    options: [
+      'Passing a function that receives the previous state and returns the new state, ensuring updates based on the latest value',
+      'A faster version of setState',
+      'A way to update state asynchronously',
+      'A method to batch multiple updates',
+    ],
+    correctAnswer:
+      'Passing a function that receives the previous state and returns the new state, ensuring updates based on the latest value',
+    explanation:
+      'The functional form ensures you always work with the latest state, avoiding stale closure issues. Essential when multiple updates happen before re-render, or when updating in intervals/callbacks.',
+  },
+  {
+    id: 'react-q142',
+    framework: 'react',
+    category: 'DOM & Events',
+    difficulty: 'easy',
+    question: 'What is the difference between onChange in React vs vanilla HTML?',
+    options: [
+      'React onChange fires on every keystroke; HTML onchange fires on blur (when focus is lost)',
+      'There is no difference',
+      'React onChange only works with forms',
+      'HTML onchange is faster',
+    ],
+    correctAnswer:
+      'React onChange fires on every keystroke; HTML onchange fires on blur (when focus is lost)',
+    explanation:
+      "React's onChange behaves like the HTML oninput event, firing for every change. HTML's native onchange only fires when the field loses focus. React chose this behavior for easier controlled input implementation.",
+  },
 ];
