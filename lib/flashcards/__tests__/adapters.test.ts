@@ -56,6 +56,51 @@ describe('getAllFlashcards', () => {
     });
   });
 
+  describe('method cards should not reveal answers', () => {
+    it('should not include the method name in front.code', () => {
+      const cards = getAllFlashcards({ sources: ['method'], language: 'javascript' });
+      for (const card of cards) {
+        if (card.front.code) {
+          // The front code should not contain .methodName( which gives away the answer
+          const marker = `.${card.back.answer}(`;
+          expect(card.front.code).not.toContain(marker);
+        }
+      }
+    });
+
+    it('should not have front.detail (description reveals the answer)', () => {
+      const cards = getAllFlashcards({ sources: ['method'], language: 'javascript' });
+      for (const card of cards) {
+        expect(card.front.detail).toBeUndefined();
+      }
+    });
+
+    it('should still have the answer in back.answer', () => {
+      const cards = getAllFlashcards({ sources: ['method'], language: 'javascript' });
+      for (const card of cards) {
+        expect(card.back.answer).toBeTruthy();
+        expect(card.back.answer.length).toBeGreaterThan(0);
+      }
+    });
+
+    it('should still have explanation in back', () => {
+      const cards = getAllFlashcards({ sources: ['method'], language: 'javascript' });
+      for (const card of cards) {
+        expect(card.back.explanation).toBeTruthy();
+      }
+    });
+
+    it('should show input and output in front.code when example exists', () => {
+      const cards = getAllFlashcards({ sources: ['method'], language: 'javascript' });
+      const withCode = cards.filter((c) => c.front.code);
+      expect(withCode.length).toBeGreaterThan(0);
+      for (const card of withCode) {
+        expect(card.front.code).toContain('// Input');
+        expect(card.front.code).toContain('// Output');
+      }
+    });
+  });
+
   describe('time-complexity source', () => {
     it('should return cards with time-complexity: prefix', () => {
       const cards = getAllFlashcards({ sources: ['time-complexity'] });

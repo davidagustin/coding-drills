@@ -122,6 +122,7 @@ export function StudySetup({
   const [qaCategory, setQaCategory] = useState<string>('all');
   const [qaSource, setQaSource] = useState<string>('all');
   const [qaSort, setQaSort] = useState<string>('default');
+  const [qaShowAnswers, setQaShowAnswers] = useState(false);
 
   // Derive unique values for filter dropdowns from previewCards
   const qaFilterOptions = useMemo(() => {
@@ -196,6 +197,7 @@ export function StudySetup({
     setQaCategory('all');
     setQaSource('all');
     setQaSort('default');
+    setQaShowAnswers(false);
   }, []);
 
   const handleStart = useCallback(() => {
@@ -242,6 +244,39 @@ export function StudySetup({
               </p>
             </div>
             <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setQaShowAnswers(!qaShowAnswers)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                  qaShowAnswers
+                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                    : 'bg-zinc-800 text-zinc-400 border border-zinc-700/50 hover:text-zinc-200 hover:border-zinc-600'
+                }`}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                >
+                  {qaShowAnswers ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                    />
+                  )}
+                </svg>
+                {qaShowAnswers ? 'Answers Visible' : 'Answers Hidden'}
+              </button>
               <button
                 type="button"
                 onClick={handleStart}
@@ -537,15 +572,27 @@ export function StudySetup({
                       <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
                         Answer
                       </div>
-                      <div className="text-lg text-emerald-400 font-semibold">
-                        {card.back.answer}
-                      </div>
-                      {card.back.explanation && (
-                        <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                          {card.back.explanation.length > 200
-                            ? `${card.back.explanation.slice(0, 200)}...`
-                            : card.back.explanation}
-                        </div>
+                      {qaShowAnswers ? (
+                        <>
+                          <div className="text-lg text-emerald-400 font-semibold">
+                            {card.back.answer}
+                          </div>
+                          {card.back.explanation && (
+                            <div className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                              {card.back.explanation.length > 200
+                                ? `${card.back.explanation.slice(0, 200)}...`
+                                : card.back.explanation}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setQaShowAnswers(true)}
+                          className="text-sm text-zinc-600 italic hover:text-zinc-400 transition-colors cursor-pointer"
+                        >
+                          Click to reveal answers
+                        </button>
                       )}
                     </div>
                   </div>
