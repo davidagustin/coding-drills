@@ -254,6 +254,16 @@ const languages = [
     iconBg: 'bg-green-600',
     iconText: 'text-white font-bold',
   },
+  {
+    name: 'Redis',
+    slug: 'redis',
+    icon: 'RD',
+    bgGradient: 'from-red-600/20 to-red-700/10',
+    borderColor: 'border-red-600/30',
+    hoverGlow: 'hover:shadow-[0_0_30px_rgba(220,38,38,0.4)]',
+    iconBg: 'bg-red-600',
+    iconText: 'text-white font-bold',
+  },
 ];
 
 // Shared SVG props for mode icons
@@ -748,7 +758,7 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 text-center">
           {[
             {
-              stat: '24',
+              stat: '25',
               label: 'Languages',
               icon: (
                 <svg

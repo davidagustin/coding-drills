@@ -17,7 +17,7 @@
 <br />
 
 An interactive learning platform for mastering programming languages through hands-on practice.
-**Thousands of problems** across **24 languages** and **4 frontend frameworks**, with real-time code execution, algorithm visualizations, AI mock interviews, regex training, frontend framework drills, and an algorithm pattern quiz.
+**Thousands of problems** across **25 languages** and **4 frontend frameworks**, with real-time code execution, algorithm visualizations, AI mock interviews, regex training, frontend framework drills, and an algorithm pattern quiz.
 
 <br />
 
@@ -110,7 +110,7 @@ Method reference with documentation, examples, and complexity notes for all 21 p
 
 ### Cheatsheet
 
-Language cheatsheets: syntax, data structures, common patterns, and best practices (24 languages).
+Language cheatsheets: syntax, data structures, common patterns, and best practices (25 languages).
 
 ### Frontend Drills
 
@@ -148,8 +148,9 @@ Hundreds of algorithm exercises include step-through visualizations: play/pause,
 | Swift | Scala | R | Perl |
 | Lua | Haskell | Elixir | Dart |
 | Clojure | PostgreSQL | MySQL | MongoDB |
+| Redis | | | |
 
-24 languages total. Database languages (PostgreSQL, MySQL, MongoDB) have Query Training and no method-based Quiz/Reference.
+25 languages total. Database languages (PostgreSQL, MySQL, MongoDB, Redis) have Query Training and no method-based Quiz/Reference.
 
 ---
 
