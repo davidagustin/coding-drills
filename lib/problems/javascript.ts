@@ -8,18 +8,17 @@ export const javascriptProblems: Problem[] = [
     id: 'js-basics-001',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Simple For Loop',
-    text: 'Write a for loop that iterates from 0 to 4 (5 iterations total). Return the final value of i after the loop.',
+    title: 'For Loop',
+    text: 'Write a basic for loop. Any valid for loop works.',
     setup: '',
     setupCode: '',
-    expected: 5,
+    expected: true,
     sample: `
-let i;
-for (i = 0; i < 5; i++) {
+for (let i = 0; i < 3; i++) {
 }
-i
+true
 `,
-    hints: ['Use for (let i = 0; i < 5; i++)', 'Declare i outside the loop to access it after'],
+    hints: ['for (initialization; condition; update)', 'Example: for (let i = 0; i < 3; i++)'],
     validPatterns: [/for\s*\(/],
     tags: ['for-loop', 'basics', 'beginner'],
   },
@@ -27,162 +26,165 @@ i
     id: 'js-basics-002',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Declare a Variable',
-    text: 'Declare a variable called "message" using let and assign it the string "hello".',
+    title: 'While Loop',
+    text: 'Write a basic while loop. Any valid while loop works.',
     setup: '',
     setupCode: '',
-    expected: 'hello',
+    expected: true,
     sample: `
-let message = "hello";
-message
+let i = 0;
+while (i < 3) {
+  i++;
+}
+true
 `,
-    hints: ['Use let to declare', 'Assign a string value'],
-    validPatterns: [/let\s+message\s*=/],
-    tags: ['variables', 'let', 'basics', 'beginner'],
+    hints: ['while (condition) { ... }', 'Make sure to avoid infinite loops'],
+    validPatterns: [/while\s*\(/],
+    tags: ['while-loop', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-003',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Declare a Constant',
-    text: 'Declare a constant called "PI" and assign it the value 3.14.',
+    title: 'Let Variable',
+    text: 'Declare a variable using let.',
     setup: '',
     setupCode: '',
-    expected: 3.14,
+    expected: true,
     sample: `
-const PI = 3.14;
-PI
+let x = 1;
+true
 `,
-    hints: ['Use const for values that should not change', 'Assign 3.14'],
-    validPatterns: [/const\s+PI\s*=/],
-    tags: ['variables', 'const', 'basics', 'beginner'],
+    hints: ['let variableName = value', 'let allows reassignment'],
+    validPatterns: [/let\s+\w+\s*=/],
+    tags: ['variables', 'let', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-004',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Create an Empty Array',
-    text: 'Create an empty array called "items".',
+    title: 'Const Variable',
+    text: 'Declare a constant using const.',
     setup: '',
     setupCode: '',
-    expected: [],
+    expected: true,
     sample: `
-const items = [];
-items
+const x = 1;
+true
 `,
-    hints: ['Use square brackets [] for arrays', 'Empty means no elements inside'],
-    validPatterns: [/(const|let)\s+items\s*=\s*\[\s*\]/],
-    tags: ['arrays', 'basics', 'beginner'],
+    hints: ['const variableName = value', 'const cannot be reassigned'],
+    validPatterns: [/const\s+\w+\s*=/],
+    tags: ['variables', 'const', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-005',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Create an Array with Values',
-    text: 'Create an array called "numbers" containing 1, 2, and 3.',
+    title: 'Array Literal',
+    text: 'Create an array with square brackets.',
     setup: '',
     setupCode: '',
-    expected: [1, 2, 3],
+    expected: true,
     sample: `
-const numbers = [1, 2, 3];
-numbers
+const arr = [1, 2, 3];
+true
 `,
-    hints: ['Put values inside square brackets', 'Separate values with commas'],
-    validPatterns: [/(const|let)\s+numbers\s*=\s*\[\s*1\s*,\s*2\s*,\s*3\s*\]/],
+    hints: ['[element1, element2, ...]', 'Can be empty: []'],
+    validPatterns: [/\[.*\]/],
     tags: ['arrays', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-006',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Create an Empty Object',
-    text: 'Create an empty object called "user".',
+    title: 'Object Literal',
+    text: 'Create an object with curly braces.',
     setup: '',
     setupCode: '',
-    expected: {},
+    expected: true,
     sample: `
-const user = {};
-user
+const obj = { name: "test" };
+true
 `,
-    hints: ['Use curly braces {} for objects', 'Empty means no properties'],
-    validPatterns: [/(const|let)\s+user\s*=\s*\{\s*\}/],
+    hints: ['{ key: value }', 'Can be empty: {}'],
+    validPatterns: [/\{[^}]*\}/],
     tags: ['objects', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-007',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Create an Object with Properties',
-    text: 'Create an object called "person" with properties name set to "Alice" and age set to 25.',
+    title: 'Function Declaration',
+    text: 'Write a function using the function keyword.',
     setup: '',
     setupCode: '',
-    expected: { name: 'Alice', age: 25 },
+    expected: true,
     sample: `
-const person = {
-  name: "Alice",
-  age: 25
-};
-person
+function myFunc() {
+  return 1;
+}
+true
 `,
-    hints: ['Use key: value pairs', 'Separate properties with commas'],
-    validPatterns: [/(const|let)\s+person\s*=\s*\{/],
-    tags: ['objects', 'basics', 'beginner'],
+    hints: ['function name() { ... }', 'Use return to send back a value'],
+    validPatterns: [/function\s+\w+\s*\(/],
+    tags: ['functions', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-008',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Simple While Loop',
-    text: 'Write a while loop that runs while x is less than 3, incrementing x each time. Start x at 0 and return its final value.',
+    title: 'Arrow Function',
+    text: 'Write an arrow function.',
     setup: '',
     setupCode: '',
-    expected: 3,
+    expected: true,
     sample: `
-let x = 0;
-while (x < 3) {
-  x++;
-}
-x
+const fn = () => 1;
+true
 `,
-    hints: ['Initialize x before the loop', 'Use while (condition)', 'Increment x inside the loop'],
-    validPatterns: [/while\s*\(/],
-    tags: ['while-loop', 'basics', 'beginner'],
+    hints: ['const name = () => expression', 'Or: const name = () => { return value; }'],
+    validPatterns: [/=>/],
+    tags: ['arrow-functions', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-009',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Create a Function',
-    text: 'Create a function called "greet" that returns the string "hi".',
+    title: 'If Statement',
+    text: 'Write an if statement.',
     setup: '',
     setupCode: '',
-    expected: 'hi',
+    expected: true,
     sample: `
-function greet() {
-  return "hi";
+if (true) {
+  1;
 }
-greet()
+true
 `,
-    hints: ['Use function keyword or arrow function', 'Must return "hi"'],
-    validPatterns: [/(function\s+greet|const\s+greet\s*=)/],
-    tags: ['functions', 'basics', 'beginner'],
+    hints: ['if (condition) { ... }', 'Condition can be any expression'],
+    validPatterns: [/if\s*\(/],
+    tags: ['conditionals', 'if', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-010',
     category: 'Basics',
     difficulty: 'easy',
-    title: 'Arrow Function',
-    text: 'Create an arrow function called "double" that takes a number and returns it multiplied by 2. Test with 5.',
+    title: 'If-Else Statement',
+    text: 'Write an if-else statement.',
     setup: '',
     setupCode: '',
-    expected: 10,
+    expected: true,
     sample: `
-const double = (n) => n * 2;
-double(5)
+if (false) {
+  1;
+} else {
+  2;
+}
+true
 `,
-    hints: ['Use => for arrow functions', 'Return the number times 2'],
-    validPatterns: [/const\s+double\s*=.*=>/],
-    tags: ['arrow-functions', 'basics', 'beginner'],
+    hints: ['if (condition) { ... } else { ... }', 'Else handles the false case'],
+    validPatterns: [/if\s*\(.*\)\s*\{[\s\S]*\}\s*else/],
+    tags: ['conditionals', 'if-else', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-011',
@@ -287,251 +289,6 @@ nums
     hints: ['Use .pop() to remove the last element', 'Pop mutates the original array'],
     validPatterns: [/nums\s*\.\s*pop\s*\(\s*\)/],
     tags: ['arrays', 'pop', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-018',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Simple If Statement',
-    text: 'Write an if statement that returns "yes" if x is greater than 5.',
-    setup: 'const x = 10;',
-    setupCode: 'const x = 10;',
-    expected: 'yes',
-    sample: `
-if (x > 5) {
-  "yes"
-}
-`,
-    hints: ['Use if (condition)', 'Put the return value inside the block'],
-    validPatterns: [/if\s*\(\s*x\s*>\s*5\s*\)/],
-    tags: ['conditionals', 'if', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-019',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'If-Else Statement',
-    text: 'Write an if-else that returns "big" if n > 10, otherwise "small".',
-    setup: 'const n = 5;',
-    setupCode: 'const n = 5;',
-    expected: 'small',
-    sample: `
-if (n > 10) {
-  "big"
-} else {
-  "small"
-}
-`,
-    hints: ['Use if-else structure', 'Check if n > 10'],
-    validPatterns: [/if\s*\(.*\).*else/],
-    tags: ['conditionals', 'if-else', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-020',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Switch Statement',
-    text: 'Write a switch statement for the day variable that returns "weekend" for "saturday" or "sunday", and "weekday" for anything else.',
-    setup: 'const day = "saturday";',
-    setupCode: 'const day = "saturday";',
-    expected: 'weekend',
-    sample: `
-(() => {
-  switch (day) {
-    case "saturday":
-    case "sunday":
-      return "weekend";
-    default:
-      return "weekday";
-  }
-})()
-`,
-    hints: ['Use switch (day)', 'Cases can fall through', 'Use default for other cases'],
-    validPatterns: [/switch\s*\(\s*day\s*\)/],
-    tags: ['conditionals', 'switch', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-021',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Arithmetic Operations',
-    text: 'Calculate (10 + 5) * 2.',
-    setup: '',
-    setupCode: '',
-    expected: 30,
-    sample: '(10 + 5) * 2',
-    hints: ['Use parentheses for order of operations', 'Add then multiply'],
-    validPatterns: [/\(\s*10\s*\+\s*5\s*\)\s*\*\s*2/],
-    tags: ['math', 'arithmetic', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-022',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Modulo Operator',
-    text: 'Use the modulo operator to get the remainder of 17 divided by 5.',
-    setup: '',
-    setupCode: '',
-    expected: 2,
-    sample: '17 % 5',
-    hints: ['% gives the remainder', '17 / 5 = 3 remainder 2'],
-    validPatterns: [/17\s*%\s*5/],
-    tags: ['math', 'modulo', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-023',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Increment Operator',
-    text: 'Use the increment operator to increase x by 1.',
-    setup: 'let x = 5;',
-    setupCode: 'let x = 5;',
-    expected: 6,
-    sample: `
-x++;
-x
-`,
-    hints: ['x++ adds 1 to x', 'Or use x += 1'],
-    validPatterns: [/x\s*\+\+|x\s*\+=\s*1|\+\+\s*x/],
-    tags: ['operators', 'increment', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-024',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Comparison Operators',
-    text: 'Check if 5 is strictly equal to the string "5" (use ===).',
-    setup: '',
-    setupCode: '',
-    expected: false,
-    sample: '5 === "5"',
-    hints: ['=== checks type and value', '5 is number, "5" is string'],
-    validPatterns: [/5\s*===\s*["']5["']/],
-    tags: ['operators', 'comparison', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-025',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Logical AND',
-    text: 'Use && to check if both a and b are true.',
-    setup: 'const a = true; const b = false;',
-    setupCode: 'const a = true; const b = false;',
-    expected: false,
-    sample: 'a && b',
-    hints: ['&& returns true only if both are true', 'One is false, so result is false'],
-    validPatterns: [/a\s*&&\s*b/],
-    tags: ['operators', 'logical', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-026',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Logical OR',
-    text: 'Use || to check if either a or b is true.',
-    setup: 'const a = true; const b = false;',
-    setupCode: 'const a = true; const b = false;',
-    expected: true,
-    sample: 'a || b',
-    hints: ['|| returns true if at least one is true', 'a is true, so result is true'],
-    validPatterns: [/a\s*\|\|\s*b/],
-    tags: ['operators', 'logical', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-027',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'Logical NOT',
-    text: 'Use ! to get the opposite of true.',
-    setup: '',
-    setupCode: '',
-    expected: false,
-    sample: '!true',
-    hints: ['! flips the boolean', '!true becomes false'],
-    validPatterns: [/!\s*true/],
-    tags: ['operators', 'logical', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-028',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'String Length',
-    text: 'Get the length of the string.',
-    setup: 'const text = "hello";',
-    setupCode: 'const text = "hello";',
-    expected: 5,
-    sample: 'text.length',
-    hints: ['Use .length property', 'Works on strings too'],
-    validPatterns: [/text\s*\.\s*length/],
-    tags: ['strings', 'length', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-029',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'String to Uppercase',
-    text: 'Convert the string to uppercase.',
-    setup: 'const text = "hello";',
-    setupCode: 'const text = "hello";',
-    expected: 'HELLO',
-    sample: 'text.toUpperCase()',
-    hints: ['Use .toUpperCase() method', 'Returns a new string'],
-    validPatterns: [/text\s*\.\s*toUpperCase\s*\(\s*\)/],
-    tags: ['strings', 'toUpperCase', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-030',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'String to Lowercase',
-    text: 'Convert the string to lowercase.',
-    setup: 'const text = "HELLO";',
-    setupCode: 'const text = "HELLO";',
-    expected: 'hello',
-    sample: 'text.toLowerCase()',
-    hints: ['Use .toLowerCase() method', 'Returns a new string'],
-    validPatterns: [/text\s*\.\s*toLowerCase\s*\(\s*\)/],
-    tags: ['strings', 'toLowerCase', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-031',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'For...of Loop',
-    text: 'Use a for...of loop to iterate through the array and build a string with all letters.',
-    setup: 'const letters = ["a", "b", "c"];',
-    setupCode: 'const letters = ["a", "b", "c"];',
-    expected: 'abc',
-    sample: `
-let result = "";
-for (const letter of letters) {
-  result += letter;
-}
-result
-`,
-    hints: ['for...of iterates over values', 'Concatenate each letter to result'],
-    validPatterns: [/for\s*\(\s*(const|let)\s+\w+\s+of\s+letters\s*\)/],
-    tags: ['loops', 'for-of', 'basics', 'beginner'],
-  },
-  {
-    id: 'js-basics-032',
-    category: 'Basics',
-    difficulty: 'easy',
-    title: 'For...in Loop',
-    text: 'Use a for...in loop to get all property names from the object as an array.',
-    setup: 'const obj = { a: 1, b: 2 };',
-    setupCode: 'const obj = { a: 1, b: 2 };',
-    expected: ['a', 'b'],
-    sample: `
-const keys = [];
-for (const key in obj) {
-  keys.push(key);
-}
-keys
-`,
-    hints: ['for...in iterates over keys', 'Push each key to an array'],
-    validPatterns: [/for\s*\(\s*(const|let)\s+\w+\s+in\s+obj\s*\)/],
-    tags: ['loops', 'for-in', 'basics', 'beginner'],
   },
   {
     id: 'js-basics-033',
@@ -12504,451 +12261,6 @@ const logs = [];`,
     sample: 'cancelAnimationFrame(123); frames',
     hints: ['Pass the request ID', 'Prevents callback from being called'],
     tags: ['cancelAnimationFrame', 'animation', 'cleanup'],
-  },
-
-  // ========================================
-  // BEGINNER FUNDAMENTALS
-  // ========================================
-  {
-    id: 'js-beginner-loop-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Sum Numbers with For Loop',
-    text: 'Use a for loop to sum all numbers from 1 to 10.',
-    setup: '',
-    setupCode: '',
-    expected: 55,
-    sample: 'let sum = 0; for (let i = 1; i <= 10; i++) { sum += i; } sum',
-    hints: [
-      'Initialize a sum variable to 0',
-      'Loop from 1 to 10 inclusive',
-      'Add each number to the sum',
-    ],
-    tags: ['beginner', 'for-loop', 'sum'],
-  },
-  {
-    id: 'js-beginner-loop-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Count Even Numbers',
-    text: 'Use a for loop to count how many even numbers are between 1 and 20.',
-    setup: '',
-    setupCode: '',
-    expected: 10,
-    sample: 'let count = 0; for (let i = 1; i <= 20; i++) { if (i % 2 === 0) count++; } count',
-    hints: [
-      'Initialize a count variable to 0',
-      'Check if each number is even using modulo (%)',
-      'Increment count when you find an even number',
-    ],
-    tags: ['beginner', 'for-loop', 'conditionals'],
-  },
-  {
-    id: 'js-beginner-loop-003',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Build a String with Loop',
-    text: 'Use a for loop to build a string "123456789" by concatenating numbers 1 through 9.',
-    setup: '',
-    setupCode: '',
-    expected: '123456789',
-    sample: 'let str = ""; for (let i = 1; i <= 9; i++) { str += i; } str',
-    hints: ['Start with an empty string', 'Loop from 1 to 9', 'Use += to concatenate each number'],
-    tags: ['beginner', 'for-loop', 'strings'],
-  },
-  {
-    id: 'js-beginner-loop-004',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Array Iteration',
-    text: 'Use a for loop to iterate through an array and sum its values.',
-    setup: 'const arr = [5, 10, 15, 20];',
-    setupCode: 'const arr = [5, 10, 15, 20];',
-    expected: 50,
-    sample: 'let sum = 0; for (let i = 0; i < arr.length; i++) { sum += arr[i]; } sum',
-    hints: [
-      'Loop from 0 to arr.length - 1',
-      'Access each element using arr[i]',
-      'Add each element to a running sum',
-    ],
-    tags: ['beginner', 'for-loop', 'arrays'],
-  },
-  {
-    id: 'js-beginner-loop-005',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'While Loop Counter',
-    text: 'Use a while loop to count from 1 to 5 and return the final count.',
-    setup: '',
-    setupCode: '',
-    expected: 6,
-    sample: 'let count = 1; while (count <= 5) { count++; } count',
-    hints: [
-      'Initialize count to 1',
-      'Loop while count is less than or equal to 5',
-      'Increment count inside the loop',
-    ],
-    tags: ['beginner', 'while-loop'],
-  },
-  {
-    id: 'js-beginner-cond-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Simple If-Else',
-    text: 'Write an if-else statement that returns "positive" if a number is greater than 0, otherwise "not positive".',
-    setup: 'const num = 5;',
-    setupCode: 'const num = 5;',
-    expected: 'positive',
-    sample: 'if (num > 0) { "positive" } else { "not positive" }',
-    hints: [
-      'Use > to compare with 0',
-      'Return different strings for true and false cases',
-      'Make sure to return a value',
-    ],
-    tags: ['beginner', 'conditionals', 'if-else'],
-  },
-  {
-    id: 'js-beginner-cond-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Ternary Operator',
-    text: 'Use a ternary operator to return "even" if a number is even, "odd" otherwise.',
-    setup: 'const num = 8;',
-    setupCode: 'const num = 8;',
-    expected: 'even',
-    sample: 'num % 2 === 0 ? "even" : "odd"',
-    hints: [
-      'Use condition ? trueValue : falseValue syntax',
-      'Check if num % 2 equals 0',
-      'Return "even" or "odd" as strings',
-    ],
-    tags: ['beginner', 'conditionals', 'ternary'],
-  },
-  {
-    id: 'js-beginner-cond-003',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Multiple If-Else',
-    text: 'Write if-else-if to return "A" for scores >= 90, "B" for >= 80, "C" for >= 70, otherwise "F".',
-    setup: 'const score = 85;',
-    setupCode: 'const score = 85;',
-    expected: 'B',
-    sample:
-      'if (score >= 90) { "A" } else if (score >= 80) { "B" } else if (score >= 70) { "C" } else { "F" }',
-    hints: [
-      'Check from highest to lowest grade',
-      'Use >= for inclusive comparisons',
-      'Return the appropriate letter grade',
-    ],
-    tags: ['beginner', 'conditionals', 'if-else'],
-  },
-  {
-    id: 'js-beginner-cond-004',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Switch Statement',
-    text: 'Use a switch statement to return the day name for a day number (1 = "Monday", 2 = "Tuesday", etc.).',
-    setup: 'const day = 3;',
-    setupCode: 'const day = 3;',
-    expected: 'Wednesday',
-    sample:
-      'let result; switch(day) { case 1: result = "Monday"; break; case 2: result = "Tuesday"; break; case 3: result = "Wednesday"; break; default: result = "Unknown"; } result',
-    hints: [
-      'Use switch(day) with case statements',
-      'Remember to use break after each case',
-      'Include a default case for unknown values',
-    ],
-    tags: ['beginner', 'conditionals', 'switch'],
-  },
-  {
-    id: 'js-beginner-array-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Array Push',
-    text: 'Create an array with [1, 2, 3], push the number 4 to it, and return the array.',
-    setup: '',
-    setupCode: '',
-    expected: [1, 2, 3, 4],
-    sample: 'const arr = [1, 2, 3]; arr.push(4); arr',
-    hints: [
-      'Use array literal syntax [1, 2, 3]',
-      'Use .push() to add an element',
-      'Return the modified array',
-    ],
-    tags: ['beginner', 'arrays', 'push'],
-  },
-  {
-    id: 'js-beginner-array-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Array Access',
-    text: 'Access the third element (index 2) of the array ["a", "b", "c", "d"].',
-    setup: 'const arr = ["a", "b", "c", "d"];',
-    setupCode: 'const arr = ["a", "b", "c", "d"];',
-    expected: 'c',
-    sample: 'arr[2]',
-    hints: [
-      'Arrays are zero-indexed',
-      'The third element is at index 2',
-      'Use bracket notation arr[index]',
-    ],
-    tags: ['beginner', 'arrays', 'indexing'],
-  },
-  {
-    id: 'js-beginner-array-003',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Array Length',
-    text: 'Return the length of the array [10, 20, 30, 40, 50].',
-    setup: 'const arr = [10, 20, 30, 40, 50];',
-    setupCode: 'const arr = [10, 20, 30, 40, 50];',
-    expected: 5,
-    sample: 'arr.length',
-    hints: [
-      'Use the .length property',
-      'It returns the number of elements',
-      "No parentheses needed, it's a property not a method",
-    ],
-    tags: ['beginner', 'arrays', 'length'],
-  },
-  {
-    id: 'js-beginner-map-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Create a Map',
-    text: 'Create a new Map, set the key "name" to "Alice", and return the value for "name".',
-    setup: '',
-    setupCode: '',
-    expected: 'Alice',
-    sample: 'const map = new Map(); map.set("name", "Alice"); map.get("name")',
-    hints: [
-      'Use new Map() to create a map',
-      'Use .set(key, value) to add entries',
-      'Use .get(key) to retrieve values',
-    ],
-    tags: ['beginner', 'map', 'data-structures'],
-  },
-  {
-    id: 'js-beginner-map-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Create a Set',
-    text: 'Create a new Set with values [1, 2, 2, 3, 3, 3] and return its size.',
-    setup: '',
-    setupCode: '',
-    expected: 3,
-    sample: 'const set = new Set([1, 2, 2, 3, 3, 3]); set.size',
-    hints: [
-      'Use new Set(array) to create a set',
-      'Sets automatically remove duplicates',
-      'Use .size property (not .length)',
-    ],
-    tags: ['beginner', 'set', 'data-structures'],
-  },
-  {
-    id: 'js-beginner-func-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Simple Function',
-    text: 'Define a function that takes two numbers and returns their sum.',
-    setup: '',
-    setupCode: '',
-    expected: 8,
-    sample: 'function add(a, b) { return a + b; } add(3, 5)',
-    hints: ['Use function keyword', 'Take two parameters', 'Use return to send back the result'],
-    tags: ['beginner', 'functions', 'basics'],
-  },
-  {
-    id: 'js-beginner-func-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Arrow Function',
-    text: 'Define an arrow function that takes a number and returns its double.',
-    setup: '',
-    setupCode: '',
-    expected: 20,
-    sample: 'const double = (n) => n * 2; double(10)',
-    hints: [
-      'Use => syntax for arrow functions',
-      'Single parameter can omit parentheses',
-      'Single expression returns automatically',
-    ],
-    tags: ['beginner', 'functions', 'arrow-functions'],
-  },
-  {
-    id: 'js-beginner-string-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'String Concatenation',
-    text: 'Write a function that concatenates two strings with a space between them.',
-    setup: '',
-    setupCode: '',
-    expected: 'Hello World',
-    sample: 'function concat(a, b) { return a + " " + b; } concat("Hello", "World")',
-    hints: [
-      'Use the + operator to join strings',
-      'Add a space " " between them',
-      'Return the result',
-    ],
-    tags: ['beginner', 'strings', 'concatenation'],
-  },
-  {
-    id: 'js-beginner-string-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'String Length',
-    text: 'Write a function that returns the length of a given string.',
-    setup: '',
-    setupCode: '',
-    expected: 11,
-    sample: 'function getLength(str) { return str.length; } getLength("hello world")',
-    hints: [
-      'Use the .length property',
-      'Strings have a .length property that returns the number of characters',
-    ],
-    tags: ['beginner', 'strings', 'length'],
-  },
-  {
-    id: 'js-beginner-string-003',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'String Case Conversion',
-    text: 'Write a function that converts a string to uppercase.',
-    setup: '',
-    setupCode: '',
-    expected: 'JAVASCRIPT',
-    sample: 'function toUpper(str) { return str.toUpperCase(); } toUpper("javascript")',
-    hints: [
-      'Use .toUpperCase() method',
-      'Strings have built-in case conversion methods',
-      'For lowercase, use .toLowerCase()',
-    ],
-    tags: ['beginner', 'strings', 'methods'],
-  },
-  {
-    id: 'js-beginner-while-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Basic While Loop',
-    text: 'Write a function that uses a while loop to sum numbers from 1 to n.',
-    setup: '',
-    setupCode: '',
-    expected: 15,
-    sample:
-      'function sumWhile(n) { let sum = 0; let i = 1; while (i <= n) { sum += i; i++; } return sum; } sumWhile(5)',
-    hints: [
-      'Initialize a counter variable',
-      'Use while (condition) { ... }',
-      'Increment the counter inside the loop',
-      'Sum should be 1 + 2 + 3 + 4 + 5 = 15',
-    ],
-    tags: ['beginner', 'loops', 'while'],
-  },
-  {
-    id: 'js-beginner-while-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'While Loop with Condition',
-    text: 'Write a function that counts how many times you can divide n by 2 until it becomes less than 1.',
-    setup: '',
-    setupCode: '',
-    expected: 3,
-    sample:
-      'function countDivisions(n) { let count = 0; while (n >= 1) { n = n / 2; count++; } return count; } countDivisions(8)',
-    hints: [
-      'Start with count = 0',
-      'While n >= 1, divide n by 2 and increment count',
-      '8 -> 4 -> 2 -> 1 (3 divisions)',
-    ],
-    tags: ['beginner', 'loops', 'while', 'conditions'],
-  },
-  {
-    id: 'js-beginner-nested-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Simple Nested Loop',
-    text: 'Write a function that uses nested loops to count total iterations when outer loop runs n times and inner loop runs m times.',
-    setup: '',
-    setupCode: '',
-    expected: 12,
-    sample:
-      'function nestedCount(n, m) { let count = 0; for (let i = 0; i < n; i++) { for (let j = 0; j < m; j++) { count++; } } return count; } nestedCount(3, 4)',
-    hints: [
-      'Outer loop runs n times',
-      'Inner loop runs m times for each outer iteration',
-      'Total iterations = n * m',
-      '3 * 4 = 12',
-    ],
-    tags: ['beginner', 'loops', 'nested', 'for'],
-  },
-  {
-    id: 'js-beginner-bool-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Boolean AND/OR',
-    text: 'Write a function that returns true if a number is between 10 and 20 (inclusive).',
-    setup: '',
-    setupCode: '',
-    expected: true,
-    sample: 'function isBetween(n) { return n >= 10 && n <= 20; } isBetween(15)',
-    hints: [
-      'Use && (AND) operator',
-      'Check if n >= 10 AND n <= 20',
-      'Both conditions must be true',
-    ],
-    tags: ['beginner', 'boolean', 'conditions', 'operators'],
-  },
-  {
-    id: 'js-beginner-bool-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Boolean NOT',
-    text: 'Write a function that returns true if a number is NOT equal to 0.',
-    setup: '',
-    setupCode: '',
-    expected: true,
-    sample: 'function isNotZero(n) { return n !== 0; } isNotZero(5)',
-    hints: [
-      'Use !== (not equal) operator',
-      'Or use !(n === 0)',
-      'Returns true for any number except 0',
-    ],
-    tags: ['beginner', 'boolean', 'not', 'operators'],
-  },
-  {
-    id: 'js-beginner-arr-adv-001',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Array Reverse',
-    text: 'Write a function that reverses an array.',
-    setup: '',
-    setupCode: '',
-    expected: [3, 2, 1],
-    sample: 'function reverseArray(arr) { return arr.reverse(); } reverseArray([1, 2, 3])',
-    hints: [
-      'Use the .reverse() method',
-      'This modifies the original array',
-      'Returns the reversed array',
-    ],
-    tags: ['beginner', 'array', 'methods', 'reverse'],
-  },
-  {
-    id: 'js-beginner-arr-adv-002',
-    category: 'Beginner Fundamentals',
-    difficulty: 'easy',
-    title: 'Array Find Element',
-    text: 'Write a function that checks if an array contains a specific element.',
-    setup: '',
-    setupCode: '',
-    expected: true,
-    sample:
-      'function hasElement(arr, elem) { return arr.includes(elem); } hasElement([1, 2, 3], 2)',
-    hints: [
-      'Use the .includes() method',
-      'Returns true if element exists in array',
-      'Returns false otherwise',
-    ],
-    tags: ['beginner', 'array', 'methods', 'includes'],
   },
 ];
 
