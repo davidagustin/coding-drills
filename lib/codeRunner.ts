@@ -1620,57 +1620,106 @@ function looksLikeTypeAnnotation(value: string): boolean {
 }
 
 /**
- * Strip TypeScript type annotations from code for JavaScript execution
- * Removes type annotations like `: string[]`, `: number`, etc.
+ * Strip TypeScript type annotations from code for JavaScript execution.
+ * Comprehensive handling of TS-specific syntax that is invalid in strict-mode JS.
  *
- * IMPORTANT: This function must handle nested parentheses correctly.
- * A naive regex like /\(([^)]*)\)/g will break on nested parens such as
- * `items.map(item => ({ key: item.id, value: item.name }))`.
+ * This function handles:
+ * - Import/export statements
+ * - Interface and type alias declarations
+ * - Enum and namespace declarations
+ * - Generic type parameters
+ * - Access modifiers (public/private/protected/readonly)
+ * - Abstract classes and methods
+ * - Decorators
+ * - Type assertions (as Type)
+ * - Constructor parameter properties
+ * - Class property type annotations
+ * - Function parameter and return type annotations
  */
 function stripTypeScriptAnnotations(code: string): string {
   if (!code) return code;
 
-  // Remove type annotations in variable declarations: const x: Type = value
-  let sanitized = code.replace(/(const|let|var)\s+(\w+)\s*:\s*[^=;]+=/g, '$1 $2 =');
+  // ── Phase 1: Remove whole declarations ────────────────────
 
-  // Remove type annotations in function parameters: function(x: Type) or (x: Type) =>
+  // Remove import/export statements (cannot execute in new Function context)
+  let sanitized = code.replace(/^\s*(import|export)\s+.+$/gm, '');
+
+  // Remove decorator syntax: @Decorator or @Decorator(args)
+  // Negative lookbehind avoids matching @ inside strings (e.g. "john@example.com")
+  sanitized = sanitized.replace(/(?<!["\w.])@\w+(?:\([^)]*\))?\s*/g, '');
+
+  // Remove namespace declarations: namespace Foo { ... }
+  sanitized = sanitized.replace(/\bnamespace\s+\w+\s*\{[^}]*\}/g, '');
+
+  // Remove interface declarations with balanced brace handling
+  sanitized = stripInterfaces(sanitized);
+
+  // Remove type alias declarations with balanced body handling
+  sanitized = stripTypeAliases(sanitized);
+
+  // Remove enum declarations: enum Foo { ... }
+  sanitized = sanitized.replace(/\b(?:const\s+)?enum\s+\w+\s*\{[^}]*\}/g, '');
+
+  // ── Phase 2: Constructor parameter properties ──────────────
+  // TypeScript `constructor(public name: string)` auto-generates `this.name = name`.
+  sanitized = expandConstructorParamProperties(sanitized);
+
+  // Remove access modifiers and readonly from class properties/methods
+  sanitized = sanitized.replace(/\b(public|private|protected)\s+(readonly\s+)?/g, '');
+  sanitized = sanitized.replace(/\breadonly\s+/g, '');
+
+  // Remove abstract keyword from class/method declarations
+  sanitized = sanitized.replace(/\babstract\s+/g, '');
+
+  // Remove entire declare statements (ambient declarations produce no runtime code)
+  sanitized = sanitized.replace(/\bdeclare\s+(?:let|const|var|function)\s+[^;]+;/g, '');
+  sanitized = stripDeclareBlocks(sanitized);
+
+  // Remove override keyword from method overrides
+  sanitized = sanitized.replace(/\boverride\s+/g, '');
+
+  // ── Phase 3: Remove class property type annotations ───────
+
+  // Property without assignment: name: string; → name;
+  sanitized = sanitized.replace(
+    /(?<=[{;]\s*)(?:static\s+)?#?\w+\s*[?!]?\s*:\s*[^=;{}\n]+(?=\s*;)/g,
+    (match) => {
+      const idMatch = match.match(/^((?:static\s+)?#?\w+)/);
+      return idMatch ? idMatch[1] : match;
+    },
+  );
+
+  // Property with assignment: uses character-walking for complex types
+  sanitized = stripClassPropertyAnnotations(sanitized);
+
+  // ── Phase 4: Remove generic type parameters ───────────────
+  sanitized = stripGenericTypeParams(sanitized);
+
+  // Remove implements clauses (handles braces in generic args)
+  sanitized = stripImplementsClauses(sanitized);
+
+  // ── Phase 5: Remove inline type annotations ───────────────
+
+  // Variable declarations: const x: Type = value → const x = value
+  sanitized = stripVarTypeAnnotations(sanitized);
+
+  // Function parameters: function(x: Type) or (x: Type) =>
   sanitized = sanitized.replace(/\(([^)]*)\)/g, (match, params) => {
     const trimmedParams = params.trim();
-
-    // Skip if the content contains any object literal or destructuring syntax.
-    // Since [^)]* in the outer regex guarantees no ')' inside the capture,
-    // any '{' must be from an object literal (e.g., ({ key: val })) or
-    // destructuring, not a function body. Splitting such content by comma
-    // would create fragments like "type: e.type" that look identical to
-    // TypeScript type annotations but are actually object properties.
-    if (trimmedParams.includes('{')) {
-      return match;
-    }
+    if (trimmedParams.includes('{')) return match;
 
     const cleanedParams = params
       .split(',')
       .map((param: string) => {
         const trimmed = param.trim();
+        if (trimmed.startsWith('{') || trimmed.endsWith('}')) return param;
 
-        // Skip pieces that are part of object literals (start/end with braces)
-        if (trimmed.startsWith('{') || trimmed.endsWith('}')) {
-          return param;
-        }
-
-        // Check if this looks like a parameter with a type annotation
-        // Pattern: identifier: or ...identifier: or identifier?:
         const paramMatch = trimmed.match(/^(\.{0,3}\w+)\s*(\?)?\s*:\s*([\s\S]*)/);
         if (paramMatch) {
           const afterColon = paramMatch[3].trim();
-          // Only strip if what follows the colon looks like a TypeScript type,
-          // NOT a value expression. This prevents corrupting object properties
-          // like "type: e.type" or "width: 1024" which look similar to "name: string".
           if (looksLikeTypeAnnotation(afterColon)) {
-            // Strip the type annotation, preserving default values
             const defaultMatch = afterColon.match(/^[^=]*=\s*([\s\S]*)/);
-            if (defaultMatch) {
-              return `${paramMatch[1]} = ${defaultMatch[1]}`.trim();
-            }
+            if (defaultMatch) return `${paramMatch[1]} = ${defaultMatch[1]}`.trim();
             return paramMatch[1].trim();
           }
         }
@@ -1680,13 +1729,454 @@ function stripTypeScriptAnnotations(code: string): string {
     return `(${cleanedParams})`;
   });
 
-  // Remove return type annotations: function(): Type { or =>: Type
+  // Return type annotations: ): Type { → ) {
+  sanitized = sanitized.replace(/\)\s*:\s*\w+\s+is\s+[^=]+?(?=\s*=>)/g, ')');
   sanitized = sanitized.replace(/\)\s*:\s*[^{=]+(\{|=>)/g, ') $1');
 
-  // Remove type assertions: as Type
-  sanitized = sanitized.replace(/\s+as\s+[A-Za-z_$][A-Za-z0-9_$<>[\]]*/g, '');
+  // ── Phase 6: Remove type operators and assertions ─────────
+
+  // satisfies: obj satisfies Type → obj
+  sanitized = sanitized.replace(/\s+satisfies\s+[A-Za-z_$]\w*(?:<[^>]*>)?/g, '');
+
+  // Type assertions: as const, as keyof, as Type, as "literal"
+  sanitized = sanitized.replace(/\s+as\s+const\b/g, '');
+  sanitized = sanitized.replace(/\s+as\s+keyof\s+[A-Za-z_$]\w*/g, '');
+  sanitized = sanitized.replace(/\s+as\s+\([^)]+\)(?:\[\s*\])*/g, '');
+  sanitized = sanitized.replace(/\s+as\s+\[[^\]]+\](?:\[\s*\])*/g, '');
+  // Handle "as "literal"" - string literal types in as expressions
+  sanitized = sanitized.replace(/\s+as\s+"[^"]*"(?:\s*\|\s*"[^"]*")*/g, '');
+  sanitized = sanitized.replace(/\s+as\s+[A-Za-z_$][\w$]*(?:<[^>]*>)?(?:\[\s*\])*/g, '');
+
+  // Non-null assertions: value!.prop → value.prop
+  sanitized = sanitized.replace(/(\w)!\./g, '$1.');
 
   return sanitized;
+}
+
+/**
+ * Remove interface declarations with balanced brace handling.
+ */
+function stripInterfaces(code: string): string {
+  const pattern = /\binterface\s+\w+/g;
+  let result = '';
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(code)) !== null) {
+    let i = match.index + match[0].length;
+
+    // Skip optional generic params
+    if (i < code.length && code[i] === '<') {
+      let depth = 1;
+      i++;
+      while (i < code.length && depth > 0) {
+        if (code[i] === '<') depth++;
+        else if (code[i] === '>' && !(i > 0 && code[i - 1] === '=')) depth--;
+        i++;
+      }
+    }
+
+    // Skip optional extends clause
+    const extendsMatch = code.slice(i).match(/^\s+extends\s+/);
+    if (extendsMatch) {
+      i += extendsMatch[0].length;
+      let aDepth = 0;
+      while (i < code.length && !(code[i] === '{' && aDepth === 0)) {
+        if (code[i] === '<') aDepth++;
+        else if (code[i] === '>' && !(i > 0 && code[i - 1] === '=')) aDepth--;
+        i++;
+      }
+    }
+
+    // Skip whitespace
+    while (i < code.length && /\s/.test(code[i])) i++;
+
+    if (i >= code.length || code[i] !== '{') continue;
+
+    // Balanced brace scan
+    let braceDepth = 1;
+    i++;
+    while (i < code.length && braceDepth > 0) {
+      if (code[i] === '{') braceDepth++;
+      else if (code[i] === '}') braceDepth--;
+      i++;
+    }
+
+    result += code.slice(lastIdx, match.index);
+    lastIdx = i;
+  }
+
+  result += code.slice(lastIdx);
+  return result;
+}
+
+/**
+ * Remove `implements Type<...>` clauses, handling braces inside generic args.
+ */
+function stripImplementsClauses(code: string): string {
+  const pattern = /\s+implements\s+/g;
+  let result = '';
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(code)) !== null) {
+    let i = match.index + match[0].length;
+    let angleDepth = 0;
+
+    while (i < code.length) {
+      if (code[i] === '<') angleDepth++;
+      else if (code[i] === '>' && angleDepth > 0 && !(i > 0 && code[i - 1] === '=')) angleDepth--;
+      else if (code[i] === '{' && angleDepth === 0) break;
+      i++;
+    }
+
+    result += code.slice(lastIdx, match.index) + ' ';
+    lastIdx = i;
+  }
+
+  result += code.slice(lastIdx);
+  return result;
+}
+
+/**
+ * Remove `declare class/module/global/namespace { ... }` with balanced braces.
+ */
+function stripDeclareBlocks(code: string): string {
+  const pattern = /\bdeclare\s+(?:class|module|global|namespace)\s+/g;
+  let result = '';
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(code)) !== null) {
+    let i = match.index + match[0].length;
+    while (i < code.length && code[i] !== '{') i++;
+    if (i >= code.length) continue;
+
+    let braceDepth = 1;
+    i++;
+    while (i < code.length && braceDepth > 0) {
+      if (code[i] === '{') braceDepth++;
+      else if (code[i] === '}') braceDepth--;
+      i++;
+    }
+
+    result += code.slice(lastIdx, match.index);
+    lastIdx = i;
+  }
+
+  result += code.slice(lastIdx);
+  return result;
+}
+
+/**
+ * Expand TypeScript constructor parameter properties into explicit assignments.
+ * `constructor(public name: string)` → `constructor(name) { this.name = name; }`
+ */
+function expandConstructorParamProperties(code: string): string {
+  return code.replace(/\bconstructor\s*\(([^)]*)\)\s*\{/g, (match, paramsStr: string) => {
+    if (!/\b(public|private|protected|readonly)\b/.test(paramsStr)) return match;
+
+    const params = paramsStr.split(',').map((p: string) => p.trim());
+    const assignments: string[] = [];
+    const cleanedParams: string[] = [];
+
+    for (const param of params) {
+      const propMatch = param.match(
+        /^(?:public|private|protected)\s+(?:readonly\s+)?(\w+)\s*(?:\??\s*:\s*[^=,]+)?(?:\s*=\s*(.+))?$/,
+      );
+      if (propMatch) {
+        const name = propMatch[1];
+        const defaultVal = propMatch[2];
+        cleanedParams.push(defaultVal ? `${name} = ${defaultVal}` : name);
+        assignments.push(`this.${name} = ${name};`);
+      } else {
+        const simpleMatch = param.match(/^(\.{0,3}\w+)\s*(?:\??\s*:\s*[^=,]+)?(?:\s*=\s*(.+))?$/);
+        if (simpleMatch) {
+          cleanedParams.push(
+            simpleMatch[2] ? `${simpleMatch[1]} = ${simpleMatch[2]}` : simpleMatch[1],
+          );
+        } else {
+          cleanedParams.push(param);
+        }
+      }
+    }
+
+    if (assignments.length === 0) return `constructor(${cleanedParams.join(', ')}) {`;
+    return `constructor(${cleanedParams.join(', ')}) { ${assignments.join(' ')}`;
+  });
+}
+
+/**
+ * Strip class property type annotations that have assignments.
+ */
+function stripClassPropertyAnnotations(code: string): string {
+  const propPattern = /(?<=^|\s|[;{}])((?:static\s+)?#?\w+)\s*[?!]?\s*:\s*/g;
+  let result = '';
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = propPattern.exec(code)) !== null) {
+    const identifier = match[1];
+    const colonEnd = match.index + match[0].length;
+
+    const beforeIdx = match.index - 1;
+    if (beforeIdx >= 0) {
+      let k = beforeIdx;
+      while (k >= 0 && /\s/.test(code[k])) k--;
+      const prevChar = k >= 0 ? code[k] : '';
+      if (prevChar && !'{};\n'.includes(prevChar) && prevChar !== '') continue;
+    }
+
+    const assignIdx = findAssignmentEquals(code, colonEnd);
+    if (assignIdx >= 0) {
+      const typeText = code.slice(colonEnd, assignIdx).trim();
+      if (typeText && /^[A-Za-z_$([{|&<]/.test(typeText)) {
+        result += code.slice(lastIdx, match.index) + `${identifier} `;
+        lastIdx = assignIdx;
+      }
+    }
+  }
+
+  result += code.slice(lastIdx);
+  return result;
+}
+
+/**
+ * Remove type alias declarations with brace-balanced body handling.
+ */
+function stripTypeAliases(code: string): string {
+  const typeKeywordPattern = /\btype\s+[A-Z]\w*/g;
+  let result = '';
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = typeKeywordPattern.exec(code)) !== null) {
+    let i = match.index + match[0].length;
+
+    // Skip optional generic params
+    if (i < code.length && code[i] === '<') {
+      let depth = 1;
+      i++;
+      let parenDepth = 0;
+      while (i < code.length && depth > 0) {
+        if (code[i] === '(') parenDepth++;
+        else if (code[i] === ')') parenDepth--;
+        else if (code[i] === '<' && parenDepth === 0) depth++;
+        else if (code[i] === '>' && parenDepth === 0) {
+          if (i > 0 && code[i - 1] === '=') {
+            i++;
+            continue;
+          }
+          depth--;
+        }
+        i++;
+      }
+    }
+
+    while (i < code.length && /\s/.test(code[i])) i++;
+    if (i >= code.length || code[i] !== '=') continue;
+    i++;
+    while (i < code.length && /\s/.test(code[i])) i++;
+
+    if (i < code.length && code[i] === '{') {
+      let braceDepth = 1;
+      i++;
+      while (i < code.length && braceDepth > 0) {
+        if (code[i] === '{') braceDepth++;
+        else if (code[i] === '}') braceDepth--;
+        i++;
+      }
+      while (i < code.length && code[i] === '[') {
+        i++;
+        while (i < code.length && code[i] !== ']') i++;
+        if (i < code.length) i++;
+      }
+    } else {
+      let parenDepth = 0;
+      let angleDepth = 0;
+      while (i < code.length) {
+        if (code[i] === '(') parenDepth++;
+        else if (code[i] === ')') parenDepth--;
+        else if (code[i] === '<' && parenDepth === 0) angleDepth++;
+        else if (code[i] === '>' && angleDepth > 0 && parenDepth === 0) {
+          if (i > 0 && code[i - 1] === '=') {
+            i++;
+            continue;
+          }
+          angleDepth--;
+        } else if ((code[i] === ';' || code[i] === '\n') && parenDepth === 0 && angleDepth === 0)
+          break;
+        i++;
+      }
+    }
+
+    if (i < code.length && code[i] === ';') i++;
+    result += code.slice(lastIdx, match.index);
+    lastIdx = i;
+  }
+
+  result += code.slice(lastIdx);
+  return result;
+}
+
+/**
+ * Strip generic type parameters: class Foo<T> → class Foo
+ */
+function stripGenericTypeParams(code: string): string {
+  let result = '';
+  let i = 0;
+
+  while (i < code.length) {
+    // Check for string literals - don't process inside them
+    if (code[i] === '"' || code[i] === "'" || code[i] === '`') {
+      const quote = code[i];
+      result += code[i];
+      i++;
+      while (i < code.length && code[i] !== quote) {
+        if (code[i] === '\\' && i + 1 < code.length) {
+          result += code[i] + code[i + 1];
+          i += 2;
+        } else {
+          result += code[i];
+          i++;
+        }
+      }
+      if (i < code.length) {
+        result += code[i];
+        i++;
+      }
+      continue;
+    }
+
+    if (code[i] === '<') {
+      const nextChar = i + 1 < code.length ? code[i + 1] : '';
+      if (/[A-Za-z_$]/.test(nextChar)) {
+        let depth = 1;
+        let j = i + 1;
+        let braceDepth = 0;
+        let parenD = 0;
+        let valid = true;
+
+        while (j < code.length && depth > 0) {
+          const ch = code[j];
+          if (ch === '(') parenD++;
+          else if (ch === ')') parenD--;
+          else if (ch === '{') braceDepth++;
+          else if (ch === '}') braceDepth--;
+          else if (ch === '<' && braceDepth === 0 && parenD === 0) depth++;
+          else if (ch === '>' && braceDepth === 0 && parenD === 0) {
+            if (j > 0 && code[j - 1] === '=') {
+              j++;
+              continue;
+            }
+            depth--;
+          } else if ((ch === ';' || ch === '\n') && braceDepth === 0 && parenD === 0 && depth > 0) {
+            valid = false;
+            break;
+          }
+          j++;
+        }
+
+        if (valid && depth === 0) {
+          const content = code.slice(i + 1, j - 1);
+          if (/^[A-Za-z_$\s,|&<>[\]{}?:=."'`()\-!+*/\\]+$/.test(content)) {
+            i = j;
+            continue;
+          }
+        }
+      }
+    }
+    result += code[i];
+    i++;
+  }
+
+  return result;
+}
+
+/**
+ * Strip variable type annotations: const x: Type = value → const x = value
+ */
+function stripVarTypeAnnotations(code: string): string {
+  const varDeclPattern = /\b(const|let|var)\s+(\w+)\s*:/g;
+  let result = '';
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = varDeclPattern.exec(code)) !== null) {
+    const keyword = match[1];
+    const name = match[2];
+    const colonEnd = match.index + match[0].length;
+    const assignIdx = findAssignmentEquals(code, colonEnd);
+
+    if (assignIdx >= 0) {
+      result += code.slice(lastIdx, match.index) + `${keyword} ${name} `;
+      lastIdx = assignIdx;
+    } else {
+      const semiIdx = code.indexOf(';', colonEnd);
+      const nlIdx = code.indexOf('\n', colonEnd);
+      const endIdx =
+        semiIdx >= 0 && nlIdx >= 0
+          ? Math.min(semiIdx, nlIdx)
+          : semiIdx >= 0
+            ? semiIdx
+            : nlIdx >= 0
+              ? nlIdx
+              : code.length;
+      result += code.slice(lastIdx, match.index) + `${keyword} ${name}`;
+      lastIdx = endIdx;
+    }
+  }
+
+  result += code.slice(lastIdx);
+  return result;
+}
+
+/**
+ * Find assignment `=` in string, skipping `=>`, `==`, `===`, `>=`, `<=`, `!=`, `!==`.
+ * Tracks depth across `()`, `[]`, `<>`, `{}` to skip nested expressions.
+ */
+function findAssignmentEquals(str: string, startIdx: number): number {
+  let parenDepth = 0;
+  let bracketDepth = 0;
+  let angleDepth = 0;
+  let braceDepth = 0;
+
+  for (let i = startIdx; i < str.length; i++) {
+    const ch = str[i];
+    if (ch === '(') parenDepth++;
+    else if (ch === ')') {
+      parenDepth--;
+      if (parenDepth < 0) return -1;
+    } else if (ch === '[') bracketDepth++;
+    else if (ch === ']') {
+      bracketDepth--;
+      if (bracketDepth < 0) return -1;
+    } else if (ch === '{') braceDepth++;
+    else if (ch === '}') {
+      braceDepth--;
+      if (braceDepth < 0) return -1;
+    } else if (ch === '<' && parenDepth === 0 && bracketDepth === 0 && braceDepth === 0) {
+      const rest = str.slice(i + 1, i + 20);
+      if (/^[A-Za-z_$\s,|&[\](){}?]/.test(rest)) angleDepth++;
+    } else if (ch === '>' && angleDepth > 0) {
+      angleDepth--;
+    } else if (
+      ch === '=' &&
+      parenDepth === 0 &&
+      bracketDepth === 0 &&
+      angleDepth === 0 &&
+      braceDepth === 0
+    ) {
+      const prev = i > 0 ? str[i - 1] : '';
+      const next = i < str.length - 1 ? str[i + 1] : '';
+      if (next === '>' || next === '=') continue;
+      if (prev === '!' || prev === '<' || prev === '>') continue;
+      return i;
+    } else if ((ch === ';' || ch === '\n') && parenDepth === 0 && bracketDepth === 0) {
+      return -1;
+    }
+  }
+  return -1;
 }
 
 // ============================================================
