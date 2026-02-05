@@ -2,6 +2,660 @@ import type { Problem } from '../types';
 
 export const javascriptProblems: Problem[] = [
   // ========================================
+  // BASICS - Pure syntax practice
+  // ========================================
+  {
+    id: 'js-basics-001',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Simple For Loop',
+    text: 'Write a for loop that iterates from 0 to 4 (5 iterations total). Return the final value of i after the loop.',
+    setup: '',
+    setupCode: '',
+    expected: 5,
+    sample: `
+let i;
+for (i = 0; i < 5; i++) {
+}
+i
+`,
+    hints: ['Use for (let i = 0; i < 5; i++)', 'Declare i outside the loop to access it after'],
+    validPatterns: [/for\s*\(/],
+    tags: ['for-loop', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-002',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Declare a Variable',
+    text: 'Declare a variable called "message" using let and assign it the string "hello".',
+    setup: '',
+    setupCode: '',
+    expected: 'hello',
+    sample: `
+let message = "hello";
+message
+`,
+    hints: ['Use let to declare', 'Assign a string value'],
+    validPatterns: [/let\s+message\s*=/],
+    tags: ['variables', 'let', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-003',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Declare a Constant',
+    text: 'Declare a constant called "PI" and assign it the value 3.14.',
+    setup: '',
+    setupCode: '',
+    expected: 3.14,
+    sample: `
+const PI = 3.14;
+PI
+`,
+    hints: ['Use const for values that should not change', 'Assign 3.14'],
+    validPatterns: [/const\s+PI\s*=/],
+    tags: ['variables', 'const', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-004',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Create an Empty Array',
+    text: 'Create an empty array called "items".',
+    setup: '',
+    setupCode: '',
+    expected: [],
+    sample: `
+const items = [];
+items
+`,
+    hints: ['Use square brackets [] for arrays', 'Empty means no elements inside'],
+    validPatterns: [/(const|let)\s+items\s*=\s*\[\s*\]/],
+    tags: ['arrays', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-005',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Create an Array with Values',
+    text: 'Create an array called "numbers" containing 1, 2, and 3.',
+    setup: '',
+    setupCode: '',
+    expected: [1, 2, 3],
+    sample: `
+const numbers = [1, 2, 3];
+numbers
+`,
+    hints: ['Put values inside square brackets', 'Separate values with commas'],
+    validPatterns: [/(const|let)\s+numbers\s*=\s*\[\s*1\s*,\s*2\s*,\s*3\s*\]/],
+    tags: ['arrays', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-006',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Create an Empty Object',
+    text: 'Create an empty object called "user".',
+    setup: '',
+    setupCode: '',
+    expected: {},
+    sample: `
+const user = {};
+user
+`,
+    hints: ['Use curly braces {} for objects', 'Empty means no properties'],
+    validPatterns: [/(const|let)\s+user\s*=\s*\{\s*\}/],
+    tags: ['objects', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-007',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Create an Object with Properties',
+    text: 'Create an object called "person" with properties name set to "Alice" and age set to 25.',
+    setup: '',
+    setupCode: '',
+    expected: { name: 'Alice', age: 25 },
+    sample: `
+const person = {
+  name: "Alice",
+  age: 25
+};
+person
+`,
+    hints: ['Use key: value pairs', 'Separate properties with commas'],
+    validPatterns: [/(const|let)\s+person\s*=\s*\{/],
+    tags: ['objects', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-008',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Simple While Loop',
+    text: 'Write a while loop that runs while x is less than 3, incrementing x each time. Start x at 0 and return its final value.',
+    setup: '',
+    setupCode: '',
+    expected: 3,
+    sample: `
+let x = 0;
+while (x < 3) {
+  x++;
+}
+x
+`,
+    hints: ['Initialize x before the loop', 'Use while (condition)', 'Increment x inside the loop'],
+    validPatterns: [/while\s*\(/],
+    tags: ['while-loop', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-009',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Create a Function',
+    text: 'Create a function called "greet" that returns the string "hi".',
+    setup: '',
+    setupCode: '',
+    expected: 'hi',
+    sample: `
+function greet() {
+  return "hi";
+}
+greet()
+`,
+    hints: ['Use function keyword or arrow function', 'Must return "hi"'],
+    validPatterns: [/(function\s+greet|const\s+greet\s*=)/],
+    tags: ['functions', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-010',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Arrow Function',
+    text: 'Create an arrow function called "double" that takes a number and returns it multiplied by 2. Test with 5.',
+    setup: '',
+    setupCode: '',
+    expected: 10,
+    sample: `
+const double = (n) => n * 2;
+double(5)
+`,
+    hints: ['Use => for arrow functions', 'Return the number times 2'],
+    validPatterns: [/const\s+double\s*=.*=>/],
+    tags: ['arrow-functions', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-011',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Access Array Element',
+    text: 'Access the second element of the array (index 1).',
+    setup: 'const colors = ["red", "green", "blue"];',
+    setupCode: 'const colors = ["red", "green", "blue"];',
+    expected: 'green',
+    sample: 'colors[1]',
+    hints: ['Arrays are zero-indexed', 'Use square bracket notation'],
+    validPatterns: [/colors\s*\[\s*1\s*\]/],
+    tags: ['arrays', 'indexing', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-012',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Access Object Property',
+    text: 'Access the "name" property of the user object.',
+    setup: 'const user = { name: "Bob", age: 30 };',
+    setupCode: 'const user = { name: "Bob", age: 30 };',
+    expected: 'Bob',
+    sample: 'user.name',
+    hints: ['Use dot notation: object.property', 'Or bracket notation: object["property"]'],
+    validPatterns: [/user\s*\.\s*name|user\s*\[\s*["']name["']\s*\]/],
+    tags: ['objects', 'property-access', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-013',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'String Concatenation',
+    text: 'Concatenate the two strings with a space in between.',
+    setup: 'const first = "Hello"; const second = "World";',
+    setupCode: 'const first = "Hello"; const second = "World";',
+    expected: 'Hello World',
+    sample: 'first + " " + second',
+    hints: ['Use + to concatenate strings', 'Add a space string in between'],
+    validPatterns: [/first\s*\+.*\+\s*second|`\$\{first\}.*\$\{second\}`/],
+    tags: ['strings', 'concatenation', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-014',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Template Literal',
+    text: 'Use a template literal to create the string "My name is Alice".',
+    setup: 'const name = "Alice";',
+    setupCode: 'const name = "Alice";',
+    expected: 'My name is Alice',
+    sample: '`My name is ${name}`',
+    hints: ['Use backticks ` for template literals', 'Use ${variable} to embed values'],
+    validPatterns: [/`.*\$\{name\}.*`/],
+    tags: ['strings', 'template-literals', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-015',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Array Length',
+    text: 'Get the length of the array.',
+    setup: 'const items = ["a", "b", "c", "d"];',
+    setupCode: 'const items = ["a", "b", "c", "d"];',
+    expected: 4,
+    sample: 'items.length',
+    hints: ['Use the .length property', 'No parentheses needed'],
+    validPatterns: [/items\s*\.\s*length/],
+    tags: ['arrays', 'length', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-016',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Add to Array',
+    text: 'Add the number 4 to the end of the array using push.',
+    setup: 'const nums = [1, 2, 3];',
+    setupCode: 'const nums = [1, 2, 3];',
+    expected: [1, 2, 3, 4],
+    sample: `
+nums.push(4);
+nums
+`,
+    hints: ['Use .push() to add to the end', 'Push mutates the original array'],
+    validPatterns: [/nums\s*\.\s*push\s*\(\s*4\s*\)/],
+    tags: ['arrays', 'push', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-017',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Remove from Array',
+    text: 'Remove the last element from the array using pop.',
+    setup: 'const nums = [1, 2, 3];',
+    setupCode: 'const nums = [1, 2, 3];',
+    expected: [1, 2],
+    sample: `
+nums.pop();
+nums
+`,
+    hints: ['Use .pop() to remove the last element', 'Pop mutates the original array'],
+    validPatterns: [/nums\s*\.\s*pop\s*\(\s*\)/],
+    tags: ['arrays', 'pop', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-018',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Simple If Statement',
+    text: 'Write an if statement that returns "yes" if x is greater than 5.',
+    setup: 'const x = 10;',
+    setupCode: 'const x = 10;',
+    expected: 'yes',
+    sample: `
+if (x > 5) {
+  "yes"
+}
+`,
+    hints: ['Use if (condition)', 'Put the return value inside the block'],
+    validPatterns: [/if\s*\(\s*x\s*>\s*5\s*\)/],
+    tags: ['conditionals', 'if', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-019',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'If-Else Statement',
+    text: 'Write an if-else that returns "big" if n > 10, otherwise "small".',
+    setup: 'const n = 5;',
+    setupCode: 'const n = 5;',
+    expected: 'small',
+    sample: `
+if (n > 10) {
+  "big"
+} else {
+  "small"
+}
+`,
+    hints: ['Use if-else structure', 'Check if n > 10'],
+    validPatterns: [/if\s*\(.*\).*else/],
+    tags: ['conditionals', 'if-else', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-020',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Switch Statement',
+    text: 'Write a switch statement for the day variable that returns "weekend" for "saturday" or "sunday", and "weekday" for anything else.',
+    setup: 'const day = "saturday";',
+    setupCode: 'const day = "saturday";',
+    expected: 'weekend',
+    sample: `
+(() => {
+  switch (day) {
+    case "saturday":
+    case "sunday":
+      return "weekend";
+    default:
+      return "weekday";
+  }
+})()
+`,
+    hints: ['Use switch (day)', 'Cases can fall through', 'Use default for other cases'],
+    validPatterns: [/switch\s*\(\s*day\s*\)/],
+    tags: ['conditionals', 'switch', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-021',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Arithmetic Operations',
+    text: 'Calculate (10 + 5) * 2.',
+    setup: '',
+    setupCode: '',
+    expected: 30,
+    sample: '(10 + 5) * 2',
+    hints: ['Use parentheses for order of operations', 'Add then multiply'],
+    validPatterns: [/\(\s*10\s*\+\s*5\s*\)\s*\*\s*2/],
+    tags: ['math', 'arithmetic', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-022',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Modulo Operator',
+    text: 'Use the modulo operator to get the remainder of 17 divided by 5.',
+    setup: '',
+    setupCode: '',
+    expected: 2,
+    sample: '17 % 5',
+    hints: ['% gives the remainder', '17 / 5 = 3 remainder 2'],
+    validPatterns: [/17\s*%\s*5/],
+    tags: ['math', 'modulo', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-023',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Increment Operator',
+    text: 'Use the increment operator to increase x by 1.',
+    setup: 'let x = 5;',
+    setupCode: 'let x = 5;',
+    expected: 6,
+    sample: `
+x++;
+x
+`,
+    hints: ['x++ adds 1 to x', 'Or use x += 1'],
+    validPatterns: [/x\s*\+\+|x\s*\+=\s*1|\+\+\s*x/],
+    tags: ['operators', 'increment', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-024',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Comparison Operators',
+    text: 'Check if 5 is strictly equal to the string "5" (use ===).',
+    setup: '',
+    setupCode: '',
+    expected: false,
+    sample: '5 === "5"',
+    hints: ['=== checks type and value', '5 is number, "5" is string'],
+    validPatterns: [/5\s*===\s*["']5["']/],
+    tags: ['operators', 'comparison', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-025',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Logical AND',
+    text: 'Use && to check if both a and b are true.',
+    setup: 'const a = true; const b = false;',
+    setupCode: 'const a = true; const b = false;',
+    expected: false,
+    sample: 'a && b',
+    hints: ['&& returns true only if both are true', 'One is false, so result is false'],
+    validPatterns: [/a\s*&&\s*b/],
+    tags: ['operators', 'logical', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-026',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Logical OR',
+    text: 'Use || to check if either a or b is true.',
+    setup: 'const a = true; const b = false;',
+    setupCode: 'const a = true; const b = false;',
+    expected: true,
+    sample: 'a || b',
+    hints: ['|| returns true if at least one is true', 'a is true, so result is true'],
+    validPatterns: [/a\s*\|\|\s*b/],
+    tags: ['operators', 'logical', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-027',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Logical NOT',
+    text: 'Use ! to get the opposite of true.',
+    setup: '',
+    setupCode: '',
+    expected: false,
+    sample: '!true',
+    hints: ['! flips the boolean', '!true becomes false'],
+    validPatterns: [/!\s*true/],
+    tags: ['operators', 'logical', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-028',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'String Length',
+    text: 'Get the length of the string.',
+    setup: 'const text = "hello";',
+    setupCode: 'const text = "hello";',
+    expected: 5,
+    sample: 'text.length',
+    hints: ['Use .length property', 'Works on strings too'],
+    validPatterns: [/text\s*\.\s*length/],
+    tags: ['strings', 'length', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-029',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'String to Uppercase',
+    text: 'Convert the string to uppercase.',
+    setup: 'const text = "hello";',
+    setupCode: 'const text = "hello";',
+    expected: 'HELLO',
+    sample: 'text.toUpperCase()',
+    hints: ['Use .toUpperCase() method', 'Returns a new string'],
+    validPatterns: [/text\s*\.\s*toUpperCase\s*\(\s*\)/],
+    tags: ['strings', 'toUpperCase', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-030',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'String to Lowercase',
+    text: 'Convert the string to lowercase.',
+    setup: 'const text = "HELLO";',
+    setupCode: 'const text = "HELLO";',
+    expected: 'hello',
+    sample: 'text.toLowerCase()',
+    hints: ['Use .toLowerCase() method', 'Returns a new string'],
+    validPatterns: [/text\s*\.\s*toLowerCase\s*\(\s*\)/],
+    tags: ['strings', 'toLowerCase', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-031',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'For...of Loop',
+    text: 'Use a for...of loop to iterate through the array and build a string with all letters.',
+    setup: 'const letters = ["a", "b", "c"];',
+    setupCode: 'const letters = ["a", "b", "c"];',
+    expected: 'abc',
+    sample: `
+let result = "";
+for (const letter of letters) {
+  result += letter;
+}
+result
+`,
+    hints: ['for...of iterates over values', 'Concatenate each letter to result'],
+    validPatterns: [/for\s*\(\s*(const|let)\s+\w+\s+of\s+letters\s*\)/],
+    tags: ['loops', 'for-of', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-032',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'For...in Loop',
+    text: 'Use a for...in loop to get all property names from the object as an array.',
+    setup: 'const obj = { a: 1, b: 2 };',
+    setupCode: 'const obj = { a: 1, b: 2 };',
+    expected: ['a', 'b'],
+    sample: `
+const keys = [];
+for (const key in obj) {
+  keys.push(key);
+}
+keys
+`,
+    hints: ['for...in iterates over keys', 'Push each key to an array'],
+    validPatterns: [/for\s*\(\s*(const|let)\s+\w+\s+in\s+obj\s*\)/],
+    tags: ['loops', 'for-in', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-033',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Typeof Operator',
+    text: 'Use typeof to get the type of the value 42.',
+    setup: '',
+    setupCode: '',
+    expected: 'number',
+    sample: 'typeof 42',
+    hints: ['typeof returns a string', 'Numbers return "number"'],
+    validPatterns: [/typeof\s+42/],
+    tags: ['operators', 'typeof', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-034',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Array isArray',
+    text: 'Check if the value is an array.',
+    setup: 'const value = [1, 2, 3];',
+    setupCode: 'const value = [1, 2, 3];',
+    expected: true,
+    sample: 'Array.isArray(value)',
+    hints: ['Use Array.isArray()', 'Returns true for arrays'],
+    validPatterns: [/Array\s*\.\s*isArray\s*\(\s*value\s*\)/],
+    tags: ['arrays', 'isArray', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-035',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Nullish Coalescing',
+    text: 'Use ?? to return "default" if the value is null or undefined.',
+    setup: 'const value = null;',
+    setupCode: 'const value = null;',
+    expected: 'default',
+    sample: 'value ?? "default"',
+    hints: [
+      '?? returns right side if left is null/undefined',
+      'Different from || which checks falsy',
+    ],
+    validPatterns: [/value\s*\?\?\s*["']default["']/],
+    tags: ['operators', 'nullish-coalescing', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-036',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Optional Chaining',
+    text: 'Use ?. to safely access the nested city property (which does not exist).',
+    setup: 'const user = { name: "Alice" };',
+    setupCode: 'const user = { name: "Alice" };',
+    expected: undefined,
+    sample: 'user.address?.city',
+    hints: ['?. returns undefined if property does not exist', 'Prevents errors on null/undefined'],
+    validPatterns: [/user\s*\.\s*address\s*\?\.\s*city/],
+    tags: ['operators', 'optional-chaining', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-037',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Destructuring Array',
+    text: 'Use array destructuring to get the first and second elements.',
+    setup: 'const nums = [10, 20, 30];',
+    setupCode: 'const nums = [10, 20, 30];',
+    expected: [10, 20],
+    sample: `
+const [first, second] = nums;
+[first, second]
+`,
+    hints: ['Use [a, b] = array syntax', 'Assigns by position'],
+    validPatterns: [/(const|let)\s*\[\s*\w+\s*,\s*\w+\s*\]\s*=\s*nums/],
+    tags: ['destructuring', 'arrays', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-038',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Destructuring Object',
+    text: 'Use object destructuring to get the name and age properties.',
+    setup: 'const person = { name: "Bob", age: 25 };',
+    setupCode: 'const person = { name: "Bob", age: 25 };',
+    expected: { name: 'Bob', age: 25 },
+    sample: `
+const { name, age } = person;
+({ name, age })
+`,
+    hints: ['Use { prop1, prop2 } = object syntax', 'Property names must match'],
+    validPatterns: [/(const|let)\s*\{\s*name\s*,\s*age\s*\}\s*=\s*person/],
+    tags: ['destructuring', 'objects', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-039',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Spread Array',
+    text: 'Use spread to create a new array with all elements from nums plus 4.',
+    setup: 'const nums = [1, 2, 3];',
+    setupCode: 'const nums = [1, 2, 3];',
+    expected: [1, 2, 3, 4],
+    sample: '[...nums, 4]',
+    hints: ['Use ...array to spread elements', 'Add 4 after the spread'],
+    validPatterns: [/\[\s*\.\.\.\s*nums\s*,\s*4\s*\]/],
+    tags: ['spread', 'arrays', 'basics', 'beginner'],
+  },
+  {
+    id: 'js-basics-040',
+    category: 'Basics',
+    difficulty: 'easy',
+    title: 'Spread Object',
+    text: 'Use spread to create a new object with all properties from person plus country: "USA".',
+    setup: 'const person = { name: "Alice" };',
+    setupCode: 'const person = { name: "Alice" };',
+    expected: { name: 'Alice', country: 'USA' },
+    sample: '({ ...person, country: "USA" })',
+    hints: ['Use ...object to spread properties', 'Add new properties after'],
+    validPatterns: [/\{\s*\.\.\.\s*person\s*,\s*country\s*:/],
+    tags: ['spread', 'objects', 'basics', 'beginner'],
+  },
+
+  // ========================================
   // ARRAY METHODS - filter
   // ========================================
   {

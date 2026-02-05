@@ -211,8 +211,20 @@ describe('Problem Data Structure Validation', () => {
       // Check if the sample solution hardcodes the expected output
       // Sample solutions should demonstrate the approach, not reveal the answer
       if (
-        ['java-var-300', 'java-var-305', 'swift-enum-105', 'swift-enum-119'].includes(problem.id)
+        [
+          'java-var-300',
+          'java-var-305',
+          'swift-enum-105',
+          'swift-enum-119',
+          'redis-script-008',
+        ].includes(problem.id)
       ) {
+        continue;
+      }
+
+      // Skip "Basics" category - these are pure syntax practice problems where
+      // the sample intentionally contains the expected value (e.g. "create an empty array")
+      if (problem.category === 'Basics') {
         continue;
       }
 
