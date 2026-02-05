@@ -140,7 +140,9 @@ const BASE_MODES: { slug: string; label: string; icon: ReactNode }[] = [
 function getModes(language: string) {
   const trainingLabel = getTrainingLabel(language);
   const isDb = isDatabaseLanguage(language);
-  return BASE_MODES.filter((mode) => !(isDb && mode.slug === 'interview')).map((mode) =>
+  // Database languages don't have: Building Blocks, Reference, or AI Interview
+  const dbExcludedSlugs = new Set(['exercises', 'reference', 'interview']);
+  return BASE_MODES.filter((mode) => !(isDb && dbExcludedSlugs.has(mode.slug))).map((mode) =>
     mode.slug === 'problems' ? { ...mode, label: trainingLabel } : mode,
   );
 }
