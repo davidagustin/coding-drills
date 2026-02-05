@@ -181,7 +181,7 @@ function PasswordStrength() {
           <div className="rules">
             {rules.map((r, i) => (
               <div key={i} className={'rule ' + (r.test ? 'pass' : 'fail')}>
-                {r.test ? '\\u2713' : '\\u25CB'} {r.label}
+                {r.test ? '\\u2713' : '○'} {r.label}
               </div>
             ))}
           </div>
@@ -303,9 +303,9 @@ function App() {
   return (
     <div className="cal">
       <div className="cal-header">
-        <button onClick={() => nav(-1)}>\\u25C0</button>
+        <button onClick={() => nav(-1)}>◀</button>
         <span className="cal-title">{monthNames[month]} {year}</span>
-        <button onClick={() => nav(1)}>\\u25B6</button>
+        <button onClick={() => nav(1)}>▶</button>
       </div>
       <div className="cal-grid">
         {labels.map(l => <div key={l} className="day-label">{l}</div>)}
@@ -599,7 +599,7 @@ function App() {
           onClick={() => setOpen(!open)} onKeyDown={onKey}
           role="combobox" aria-expanded={open}>
           <span>{selected || 'Select...'}</span>
-          <span>{open ? '\\u25B2' : '\\u25BC'}</span>
+          <span>{open ? '\\u25B2' : '▼'}</span>
         </div>
         {open && (
           <div className="dropdown" role="listbox">
@@ -684,9 +684,9 @@ function App() {
   return (
     <div>
       <div className="cal-header">
-        <button onClick={() => setDate(new Date(y, m-1, 1))}>\\u25C0</button>
+        <button onClick={() => setDate(new Date(y, m-1, 1))}>◀</button>
         <span className="cal-title">{months[m]} {y}</span>
-        <button onClick={() => setDate(new Date(y, m+1, 1))}>\\u25B6</button>
+        <button onClick={() => setDate(new Date(y, m+1, 1))}>▶</button>
       </div>
       <div className="cal-grid">
         {labels.map(l => <div key={l} className="day-hdr">{l}</div>)}
@@ -937,14 +937,14 @@ function App() {
             <div key={i} className="slide" style={{background: s.bg}}>{s.label}</div>
           ))}
         </div>
-        <button className="nav-btn prev" onClick={() => go(idx - 1)}>\\u25C0</button>
-        <button className="nav-btn next" onClick={() => go(idx + 1)}>\\u25B6</button>
+        <button className="nav-btn prev" onClick={() => go(idx - 1)}>◀</button>
+        <button className="nav-btn next" onClick={() => go(idx + 1)}>▶</button>
       </div>
       <div className="dots">
         {slides.map((_, i) => <button key={i} className={'dot' + (i === idx ? ' active' : '')} onClick={() => setIdx(i)} />)}
       </div>
       <div className="controls">
-        <button className="play-btn" onClick={() => setPlaying(!playing)}>{playing ? '\\u23F8 Pause' : '\\u25B6 Play'}</button>
+        <button className="play-btn" onClick={() => setPlaying(!playing)}>{playing ? '⏸ Pause' : '▶ Play'}</button>
       </div>
     </div>
   );
@@ -1264,7 +1264,7 @@ function App() {
         <div key={i} className="expand-card">
           <div className="expand-header" onClick={() => setOpenIdx(openIdx === i ? null : i)}>
             <span className="expand-title">{item.title}</span>
-            <span className={'expand-icon' + (openIdx === i ? ' open' : '')}>\\u25BC</span>
+            <span className={'expand-icon' + (openIdx === i ? ' open' : '')}>▼</span>
           </div>
           <div className={'expand-body' + (openIdx === i ? ' open' : '')}>
             <div className="expand-body-inner">{item.body}</div>
@@ -1292,7 +1292,7 @@ function App() {
         </div>
       </div>
       <button className="toggle-link" onClick={() => setShowAdvanced(!showAdvanced)}>
-        {showAdvanced ? '\\u25B2 Hide' : '\\u25BC Show'} advanced options
+        {showAdvanced ? '\\u25B2 Hide' : '▼ Show'} advanced options
       </button>
       <div className={'advanced' + (showAdvanced ? ' visible' : ' hidden')}>
         <div className="section" style={{marginTop: 8}}>
@@ -1481,8 +1481,8 @@ function App() {
         {pages.map((_, i) => <button key={i} className={'nav-dot' + (i === idx ? ' active' : '')} onClick={() => setIdx(i)} />)}
       </div>
       <div className="nav-arrows">
-        <button className="nav-arr" onClick={() => go(idx-1)} disabled={idx===0}>\\u25C0 Previous</button>
-        <button className="nav-arr" onClick={() => go(idx+1)} disabled={idx===pages.length-1}>Next \\u25B6</button>
+        <button className="nav-arr" onClick={() => go(idx-1)} disabled={idx===0}>◀ Previous</button>
+        <button className="nav-arr" onClick={() => go(idx+1)} disabled={idx===pages.length-1}>Next ▶</button>
       </div>
     </div>
   );
@@ -1884,7 +1884,7 @@ function App() {
         {cols.map(c => (
           <th key={c.key} className={sortKey === c.key ? 'sorted' : ''} onClick={() => toggle(c.key)}>
             {c.label}
-            {sortKey === c.key && <span className="sort-arrow">{asc ? '\\u25B2' : '\\u25BC'}</span>}
+            {sortKey === c.key && <span className="sort-arrow">{asc ? '\\u25B2' : '▼'}</span>}
           </th>
         ))}
       </tr></thead>
@@ -2014,7 +2014,7 @@ function App() {
           <div className="widget-title">{s.label}</div>
           <div className="widget-val" style={{color: s.color}}>{s.value}</div>
           <div className="widget-change" style={{color: s.up ? '#22c55e' : '#ef4444'}}>
-            {s.up ? '\\u25B2' : '\\u25BC'} {s.change}
+            {s.up ? '\\u25B2' : '▼'} {s.change}
           </div>
         </div>
       ))}
@@ -2156,7 +2156,7 @@ function App() {
   return (
     <div className="layout">
       <div className={'sidebar' + (open ? ' open' : ' closed')}>
-        <button className="toggle-btn" onClick={() => setOpen(!open)}>{open ? '\\u25C0' : '\\u25B6'}</button>
+        <button className="toggle-btn" onClick={() => setOpen(!open)}>{open ? '◀' : '▶'}</button>
         {items.map(item => (
           <button key={item.label} className={'nav-item' + (active === item.label ? ' active' : '')}
             onClick={() => setActive(item.label)}>
@@ -2262,7 +2262,7 @@ function App() {
   return (
     <div ref={ref} className="menu-wrap">
       <button className="menu-trigger" onClick={() => setOpen(!open)}>
-        Actions \\u25BC
+        Actions ▼
       </button>
       {open && (
         <div className="menu-dropdown">
@@ -2300,7 +2300,7 @@ function App() {
         <div key={i} className="acc-section">
           <button className="acc-header" onClick={() => setOpenIdx(openIdx === i ? -1 : i)}>
             <span>{sec.title}</span>
-            <span className={'acc-icon' + (openIdx === i ? ' open' : '')}>\\u25BC</span>
+            <span className={'acc-icon' + (openIdx === i ? ' open' : '')}>▼</span>
           </button>
           <div className={'acc-body' + (openIdx === i ? ' open' : '')}>
             {sec.items.map(item => (
@@ -3896,7 +3896,7 @@ function App() {
       <label style={{fontSize:14,color:'#94a3b8',display:'block',marginBottom:6}}>Languages</label>
       <button className="ms-trigger" onClick={() => setOpen(!open)}>
         <span>{selected.length ? \`\${selected.length} selected\` : 'Select...'}</span>
-        <span>{open ? '\\u25B2' : '\\u25BC'}</span>
+        <span>{open ? '\\u25B2' : '▼'}</span>
       </button>
       {open && (
         <div className="ms-dropdown">
@@ -4688,7 +4688,7 @@ function TreeNode({ node, depth = 0 }) {
   return (
     <div>
       <div className={\`tree-label \${hasChildren ? '' : 'tree-leaf'}\`} onClick={() => hasChildren && setOpen(!open)} style={{paddingLeft: depth * 12}}>
-        <span className="tree-icon">{hasChildren ? (open ? '\\u25BC' : '\\u25B6') : '\\u25CB'}</span>
+        <span className="tree-icon">{hasChildren ? (open ? '▼' : '▶') : '○'}</span>
         <span className="tree-name">{hasChildren ? '\\u{1F4C1}' : '\\u{1F4C4}'} {node.name}</span>
       </div>
       {open && hasChildren && (
@@ -4732,7 +4732,7 @@ function Panel({ title, content }) {
     <div className="panel">
       <div className="panel-header" onClick={() => setOpen(!open)}>
         {title}
-        <span className={\`panel-arrow \${open ? 'open' : ''}\`}>\\u25BC</span>
+        <span className={\`panel-arrow \${open ? 'open' : ''}\`}>▼</span>
       </div>
       <div className="panel-body" ref={bodyRef} style={{maxHeight: open ? height : 0}}>
         <div className="panel-content">{content}</div>
@@ -5098,7 +5098,7 @@ function App() {
             <div className="stat-label">{s.label}</div>
             <div className="stat-value">{s.value}</div>
             <div className={\`stat-trend \${s.up ? 'trend-up' : 'trend-down'}\`}>
-              {s.up ? '\\u25B2' : '\\u25BC'} {s.trend}
+              {s.up ? '\\u25B2' : '▼'} {s.trend}
             </div>
           </div>
         ))}
@@ -5324,7 +5324,7 @@ function JsonNode({ data, depth = 0 }) {
 
   return (
     <span>
-      <span className="jv-toggle" onClick={() => setOpen(!open)}>{open ? '\\u25BC' : '\\u25B6'} </span>
+      <span className="jv-toggle" onClick={() => setOpen(!open)}>{open ? '▼' : '▶'} </span>
       {isArr ? '[' : '{'}
       {open ? (
         <div>{entries.map(([k, v]) => (
@@ -5614,7 +5614,7 @@ function App() {
             <div className="md-card-label">{m.label}</div>
             <div className="md-card-val">{m.val}</div>
             <div className={\`md-card-change \${m.change > 0 ? 'up' : 'down'}\`}>
-              {m.change > 0 ? '\\u25B2' : '\\u25BC'} {Math.abs(m.change)}%
+              {m.change > 0 ? '\\u25B2' : '▼'} {Math.abs(m.change)}%
             </div>
             <Sparkline data={m.data} color={m.color} />
           </div>

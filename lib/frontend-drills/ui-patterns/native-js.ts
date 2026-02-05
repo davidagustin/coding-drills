@@ -7524,7 +7524,7 @@ function buildTree(items, parent) {
     if (isFolder) {
       const arrow = document.createElement('span');
       arrow.className = 'arrow';
-      arrow.textContent = '\\u25B6';
+      arrow.textContent = '▶';
       node.appendChild(arrow);
       const icon = document.createElement('span');
       icon.className = 'icon';
@@ -9885,7 +9885,7 @@ function render(obj, parent, depth = 0) {
     const wrap = document.createElement('div');
     const toggle = document.createElement('span');
     toggle.className = 'jv-toggle';
-    toggle.textContent = '\\u25BC ';
+    toggle.textContent = '▼ ';
     const bracket = document.createElement('span');
     bracket.className = 'jv-bracket';
     bracket.textContent = '[';
@@ -9910,7 +9910,7 @@ function render(obj, parent, depth = 0) {
     close.textContent = ']';
     toggle.addEventListener('click', () => {
       const hidden = inner.classList.toggle('jv-hidden');
-      toggle.textContent = hidden ? '\\u25B6 ' : '\\u25BC ';
+      toggle.textContent = hidden ? '▶ ' : '▼ ';
       count.style.display = hidden ? 'inline' : 'none';
     });
     wrap.appendChild(toggle);
@@ -9923,7 +9923,7 @@ function render(obj, parent, depth = 0) {
     const wrap = document.createElement('div');
     const toggle = document.createElement('span');
     toggle.className = 'jv-toggle';
-    toggle.textContent = '\\u25BC ';
+    toggle.textContent = '▼ ';
     const bracket = document.createElement('span');
     bracket.className = 'jv-bracket';
     bracket.textContent = '{';
@@ -9953,7 +9953,7 @@ function render(obj, parent, depth = 0) {
     close.textContent = '}';
     toggle.addEventListener('click', () => {
       const hidden = inner.classList.toggle('jv-hidden');
-      toggle.textContent = hidden ? '\\u25B6 ' : '\\u25BC ';
+      toggle.textContent = hidden ? '▶ ' : '▼ ';
       count.style.display = hidden ? 'inline' : 'none';
     });
     wrap.appendChild(toggle);
@@ -9998,7 +9998,7 @@ document.getElementById('jv-expand').addEventListener('click', () => {
     .forEach((n) => n.classList.remove('jv-hidden'));
   tree
     .querySelectorAll('.jv-toggle')
-    .forEach((t) => (t.textContent = '\\u25BC '));
+    .forEach((t) => (t.textContent = '▼ '));
   tree.querySelectorAll('.jv-count').forEach((c) => (c.style.display = 'none'));
 });
 document.getElementById('jv-collapse').addEventListener('click', () => {
@@ -10007,7 +10007,7 @@ document.getElementById('jv-collapse').addEventListener('click', () => {
     .forEach((n) => n.classList.add('jv-hidden'));
   tree
     .querySelectorAll('.jv-toggle')
-    .forEach((t) => (t.textContent = '\\u25B6 '));
+    .forEach((t) => (t.textContent = '▶ '));
   tree
     .querySelectorAll('.jv-count')
     .forEach((c) => (c.style.display = 'inline'));
@@ -10455,7 +10455,7 @@ features.forEach((f) => {
     f.name +
     '</div><div class="fl-desc">' +
     f.desc +
-    '</div></div><span class="fl-arrow">\\u25B6</span></div><div class="fl-detail"><p>' +
+    '</div></div><span class="fl-arrow">▶</span></div><div class="fl-detail"><p>' +
     f.detail +
     '</p></div>';
   d.querySelector('.fl-header').addEventListener('click', () =>
@@ -11247,7 +11247,7 @@ function render(q) {
     const li = document.createElement('li');
     li.className = 'cmn-item';
     li.innerHTML =
-      i.name + (i.sub ? '<span class="cmn-arrow">\\u25B6</span>' : '');
+      i.name + (i.sub ? '<span class="cmn-arrow">▶</span>' : '');
     li.addEventListener('click', () => {
       if (i.sub) {
         stack.push(i.sub);
