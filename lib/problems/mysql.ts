@@ -1368,4 +1368,176 @@ export const mysqlProblems: Problem[] = [
     validPatterns: [/USE\s+INDEX\s+FOR\s+ORDER\s+BY\s*\(\s*idx_created\s*\)/i],
     tags: ['index', 'hint', 'order-by', 'mysql-specific'],
   },
+
+  // ========================================
+  // BEGINNER FUNDAMENTALS
+  // ========================================
+  {
+    id: 'mysql-beginner-select-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Select All Columns',
+    text: 'Select all columns from the employees table.',
+    setup:
+      'Table: employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2));\nINSERT INTO employees VALUES (1, 'Alice', 'Engineering', 75000.00), (2, 'Bob', 'Sales', 55000.00);",
+    expected: 'All employee rows with all columns',
+    sample: 'SELECT * FROM employees;',
+    hints: ['Use * to select all columns', 'SELECT * retrieves every column in the table'],
+    validPatterns: [/SELECT\s+\*\s+FROM\s+employees/i],
+    tags: ['select', 'beginner', 'all-columns'],
+  },
+  {
+    id: 'mysql-beginner-select-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Select Specific Columns',
+    text: 'Select only the name and department columns from the employees table.',
+    setup:
+      'Table: employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2));\nINSERT INTO employees VALUES (1, 'Alice', 'Engineering', 75000.00);",
+    expected: 'Employee names and departments',
+    sample: 'SELECT name, department FROM employees;',
+    hints: ['List column names separated by commas', 'Only the specified columns will be returned'],
+    validPatterns: [/SELECT\s+name\s*,\s*department\s+FROM\s+employees/i],
+    tags: ['select', 'beginner', 'specific-columns'],
+  },
+  {
+    id: 'mysql-beginner-select-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Select with Column Alias',
+    text: 'Select the name column and give it the alias "employee_name".',
+    setup: 'Table: employees (id INT, name VARCHAR(50), salary DECIMAL(10,2))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), salary DECIMAL(10,2));\nINSERT INTO employees VALUES (1, 'Alice', 75000.00);",
+    expected: 'Names with column header "employee_name"',
+    sample: 'SELECT name AS employee_name FROM employees;',
+    hints: ['Use AS keyword to create an alias', 'Aliases rename columns in the result set'],
+    validPatterns: [/SELECT\s+name\s+AS\s+employee_name\s+FROM\s+employees/i],
+    tags: ['select', 'beginner', 'alias'],
+  },
+  {
+    id: 'mysql-beginner-select-004',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Select Distinct Values',
+    text: 'Select all unique department values from the employees table.',
+    setup: 'Table: employees (id INT, name VARCHAR(50), department VARCHAR(50))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50));\nINSERT INTO employees VALUES (1, 'Alice', 'Engineering'), (2, 'Bob', 'Engineering'), (3, 'Carol', 'Sales');",
+    expected: 'Engineering, Sales',
+    sample: 'SELECT DISTINCT department FROM employees;',
+    hints: ['Use DISTINCT to remove duplicates', 'DISTINCT returns unique values only'],
+    validPatterns: [/SELECT\s+DISTINCT\s+department\s+FROM\s+employees/i],
+    tags: ['select', 'beginner', 'distinct'],
+  },
+  {
+    id: 'mysql-beginner-where-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Where with Equality',
+    text: 'Select all employees from the Engineering department.',
+    setup: 'Table: employees (id INT, name VARCHAR(50), department VARCHAR(50))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50));\nINSERT INTO employees VALUES (1, 'Alice', 'Engineering'), (2, 'Bob', 'Sales');",
+    expected: 'Alice',
+    sample: "SELECT * FROM employees WHERE department = 'Engineering';",
+    hints: ['Use WHERE to filter rows', 'String values need to be in quotes'],
+    validPatterns: [
+      /SELECT\s+\*\s+FROM\s+employees\s+WHERE\s+department\s*=\s*['"]Engineering['"]/i,
+    ],
+    tags: ['where', 'beginner', 'equality'],
+  },
+  {
+    id: 'mysql-beginner-where-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Where with Comparison Operator',
+    text: 'Select all employees with a salary greater than 60000.',
+    setup: 'Table: employees (id INT, name VARCHAR(50), salary DECIMAL(10,2))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), salary DECIMAL(10,2));\nINSERT INTO employees VALUES (1, 'Alice', 75000.00), (2, 'Bob', 55000.00);",
+    expected: 'Alice',
+    sample: 'SELECT * FROM employees WHERE salary > 60000;',
+    hints: ['Use > for greater than comparison', 'Other operators: <, >=, <=, <>, !='],
+    validPatterns: [/SELECT\s+\*\s+FROM\s+employees\s+WHERE\s+salary\s*>\s*60000/i],
+    tags: ['where', 'beginner', 'comparison'],
+  },
+  {
+    id: 'mysql-beginner-where-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Where with AND/OR',
+    text: 'Select employees from Engineering department with salary greater than 70000.',
+    setup:
+      'Table: employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2));\nINSERT INTO employees VALUES (1, 'Alice', 'Engineering', 75000.00), (2, 'Bob', 'Engineering', 65000.00);",
+    expected: 'Alice',
+    sample: "SELECT * FROM employees WHERE department = 'Engineering' AND salary > 70000;",
+    hints: [
+      'Use AND to combine conditions (both must be true)',
+      'Use OR when either condition can be true',
+    ],
+    validPatterns: [/WHERE\s+department\s*=\s*['"]Engineering['"]\s+AND\s+salary\s*>\s*70000/i],
+    tags: ['where', 'beginner', 'and-or'],
+  },
+  {
+    id: 'mysql-beginner-insert-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Insert Single Row',
+    text: 'Insert a new employee named "David" in the "Marketing" department with salary 60000.',
+    setup:
+      'Table: employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2))',
+    setupCode:
+      'CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50), salary DECIMAL(10,2));',
+    expected: 'Row inserted successfully',
+    sample:
+      "INSERT INTO employees (id, name, department, salary) VALUES (1, 'David', 'Marketing', 60000.00);",
+    hints: [
+      'Use INSERT INTO table (columns) VALUES (values)',
+      'Match the order of columns and values',
+    ],
+    validPatterns: [/INSERT\s+INTO\s+employees.*VALUES.*['"]David['"].*['"]Marketing['"]/i],
+    tags: ['insert', 'beginner', 'single-row'],
+  },
+  {
+    id: 'mysql-beginner-insert-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Insert Multiple Rows',
+    text: 'Insert two new employees in a single INSERT statement.',
+    setup: 'Table: employees (id INT, name VARCHAR(50), department VARCHAR(50))',
+    setupCode: 'CREATE TABLE employees (id INT, name VARCHAR(50), department VARCHAR(50));',
+    expected: '2 rows inserted',
+    sample:
+      "INSERT INTO employees (id, name, department) VALUES (1, 'Eve', 'Engineering'), (2, 'Frank', 'Sales');",
+    hints: ['Separate multiple value sets with commas', 'Each set is enclosed in parentheses'],
+    validPatterns: [/INSERT\s+INTO\s+employees.*VALUES\s*\([^)]+\)\s*,\s*\([^)]+\)/i],
+    tags: ['insert', 'beginner', 'multiple-rows'],
+  },
+  {
+    id: 'mysql-beginner-update-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Update with Where',
+    text: 'Update the salary to 80000 for the employee named "Alice".',
+    setup: 'Table: employees (id INT, name VARCHAR(50), salary DECIMAL(10,2))',
+    setupCode:
+      "CREATE TABLE employees (id INT, name VARCHAR(50), salary DECIMAL(10,2));\nINSERT INTO employees VALUES (1, 'Alice', 75000.00);",
+    expected: '1 row updated',
+    sample: "UPDATE employees SET salary = 80000 WHERE name = 'Alice';",
+    hints: [
+      'Use UPDATE table SET column = value WHERE condition',
+      'Always use WHERE to avoid updating all rows!',
+    ],
+    validPatterns: [
+      /UPDATE\s+employees\s+SET\s+salary\s*=\s*80000\s+WHERE\s+name\s*=\s*['"]Alice['"]/i,
+    ],
+    tags: ['update', 'beginner', 'where'],
+  },
 ];

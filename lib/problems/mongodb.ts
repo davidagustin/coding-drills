@@ -6848,4 +6848,208 @@ db.articles.insertOne({title: "MongoDB Guide", content: "Learn MongoDB"});`,
     validPatterns: [/\$let\s*:\s*\{\s*vars\s*:/i],
     tags: ['aggregation', '$let'],
   },
+
+  // ========================================
+  // BEGINNER FUNDAMENTALS
+  // ========================================
+  {
+    id: 'mongo-beginner-find-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find All Documents',
+    text: 'Find all documents in the employees collection.',
+    setup: 'Collection: employees with documents containing name, department, and salary fields',
+    setupCode: `db.employees.insertMany([
+  {name: "Alice", department: "Engineering", salary: 75000},
+  {name: "Bob", department: "Sales", salary: 55000}
+]);`,
+    expected: 'All employee documents',
+    sample: 'db.employees.find()',
+    hints: [
+      'Use find() with no arguments to get all documents',
+      'find() returns a cursor that iterates over all matching documents',
+    ],
+    validPatterns: [/db\.employees\.find\s*\(\s*\)/i],
+    tags: ['find', 'beginner', 'all-documents'],
+  },
+  {
+    id: 'mongo-beginner-find-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find with Specific Fields',
+    text: 'Find all employees but only return the name and department fields (exclude _id).',
+    setup: 'Collection: employees with documents containing name, department, and salary fields',
+    setupCode: `db.employees.insertMany([
+  {name: "Alice", department: "Engineering", salary: 75000},
+  {name: "Bob", department: "Sales", salary: 55000}
+]);`,
+    expected: 'Documents with only name and department fields',
+    sample: 'db.employees.find({}, {name: 1, department: 1, _id: 0})',
+    hints: [
+      'Second parameter to find() is the projection',
+      'Use 1 to include fields, 0 to exclude',
+      '_id is included by default unless explicitly excluded',
+    ],
+    validPatterns: [/db\.employees\.find\s*\(\s*\{\s*\}\s*,\s*\{.*name\s*:\s*1/i],
+    tags: ['find', 'beginner', 'projection'],
+  },
+  {
+    id: 'mongo-beginner-find-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Single Document',
+    text: 'Find a single document for the employee named "Alice".',
+    setup: 'Collection: employees with multiple documents',
+    setupCode: `db.employees.insertMany([
+  {name: "Alice", department: "Engineering"},
+  {name: "Bob", department: "Sales"}
+]);`,
+    expected: 'Single document for Alice',
+    sample: 'db.employees.findOne({name: "Alice"})',
+    hints: [
+      'Use findOne() instead of find() for single document',
+      'Returns the first matching document, not a cursor',
+    ],
+    validPatterns: [/db\.employees\.findOne\s*\(\s*\{\s*name\s*:\s*"Alice"\s*\}\s*\)/i],
+    tags: ['findOne', 'beginner'],
+  },
+  {
+    id: 'mongo-beginner-find-004',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find with Sort',
+    text: 'Find all employees sorted by salary in descending order.',
+    setup: 'Collection: employees with salary field',
+    setupCode: `db.employees.insertMany([
+  {name: "Alice", salary: 75000},
+  {name: "Bob", salary: 55000},
+  {name: "Carol", salary: 85000}
+]);`,
+    expected: 'Employees sorted from highest to lowest salary',
+    sample: 'db.employees.find().sort({salary: -1})',
+    hints: ['Use sort() to order results', '1 for ascending order, -1 for descending order'],
+    validPatterns: [
+      /db\.employees\.find\s*\(\s*\)\s*\.sort\s*\(\s*\{\s*salary\s*:\s*-1\s*\}\s*\)/i,
+    ],
+    tags: ['find', 'beginner', 'sort'],
+  },
+  {
+    id: 'mongo-beginner-query-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Query with Equality',
+    text: 'Find all employees in the Engineering department.',
+    setup: 'Collection: employees with department field',
+    setupCode: `db.employees.insertMany([
+  {name: "Alice", department: "Engineering"},
+  {name: "Bob", department: "Sales"}
+]);`,
+    expected: 'Alice',
+    sample: 'db.employees.find({department: "Engineering"})',
+    hints: ['Pass query object to find()', 'Simple key-value pairs match exact values'],
+    validPatterns: [/db\.employees\.find\s*\(\s*\{\s*department\s*:\s*"Engineering"\s*\}\s*\)/i],
+    tags: ['find', 'beginner', 'equality'],
+  },
+  {
+    id: 'mongo-beginner-query-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Query with Comparison',
+    text: 'Find all employees with salary greater than 60000.',
+    setup: 'Collection: employees with salary field',
+    setupCode: `db.employees.insertMany([
+  {name: "Alice", salary: 75000},
+  {name: "Bob", salary: 55000}
+]);`,
+    expected: 'Alice',
+    sample: 'db.employees.find({salary: {$gt: 60000}})',
+    hints: [
+      'Use $gt operator for greater than',
+      'Comparison operators: $gt, $gte, $lt, $lte, $ne, $eq',
+    ],
+    validPatterns: [
+      /db\.employees\.find\s*\(\s*\{\s*salary\s*:\s*\{\s*\$gt\s*:\s*60000\s*\}\s*\}\s*\)/i,
+    ],
+    tags: ['find', 'beginner', 'comparison', '$gt'],
+  },
+  {
+    id: 'mongo-beginner-query-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Query with Multiple Conditions',
+    text: 'Find employees in Engineering with salary greater than 70000.',
+    setup: 'Collection: employees with department and salary fields',
+    setupCode: `db.employees.insertMany([
+  {name: "Alice", department: "Engineering", salary: 75000},
+  {name: "Bob", department: "Engineering", salary: 65000},
+  {name: "Carol", department: "Sales", salary: 80000}
+]);`,
+    expected: 'Alice',
+    sample: 'db.employees.find({department: "Engineering", salary: {$gt: 70000}})',
+    hints: [
+      'Multiple conditions in query object act as AND',
+      'All conditions must be true for a document to match',
+    ],
+    validPatterns: [
+      /db\.employees\.find\s*\(\s*\{\s*department\s*:\s*"Engineering"\s*,\s*salary\s*:\s*\{\s*\$gt\s*:\s*70000\s*\}/i,
+    ],
+    tags: ['find', 'beginner', 'multiple-conditions'],
+  },
+  {
+    id: 'mongo-beginner-insert-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Insert Single Document',
+    text: 'Insert a new employee document with name "David", department "Marketing", and salary 60000.',
+    setup: 'Collection: employees (empty or existing)',
+    setupCode: 'db.employees.deleteMany({});',
+    expected: 'Document inserted with generated _id',
+    sample: 'db.employees.insertOne({name: "David", department: "Marketing", salary: 60000})',
+    hints: [
+      'Use insertOne() to insert a single document',
+      'MongoDB automatically generates an _id if not provided',
+    ],
+    validPatterns: [
+      /db\.employees\.insertOne\s*\(\s*\{\s*name\s*:\s*"David"\s*,\s*department\s*:\s*"Marketing"\s*,\s*salary\s*:\s*60000\s*\}\s*\)/i,
+    ],
+    tags: ['insert', 'beginner', 'insertOne'],
+  },
+  {
+    id: 'mongo-beginner-insert-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Insert Multiple Documents',
+    text: 'Insert two employee documents in a single operation.',
+    setup: 'Collection: employees (empty or existing)',
+    setupCode: 'db.employees.deleteMany({});',
+    expected: '2 documents inserted',
+    sample:
+      'db.employees.insertMany([{name: "Eve", department: "Engineering"}, {name: "Frank", department: "Sales"}])',
+    hints: [
+      'Use insertMany() with an array of documents',
+      'More efficient than multiple insertOne() calls',
+    ],
+    validPatterns: [/db\.employees\.insertMany\s*\(\s*\[/i],
+    tags: ['insert', 'beginner', 'insertMany'],
+  },
+  {
+    id: 'mongo-beginner-update-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Update Single Document',
+    text: 'Update the salary to 80000 for the employee named "Alice".',
+    setup: 'Collection: employees with existing documents',
+    setupCode: `db.employees.insertOne({name: "Alice", salary: 75000});`,
+    expected: '1 document updated',
+    sample: 'db.employees.updateOne({name: "Alice"}, {$set: {salary: 80000}})',
+    hints: [
+      'Use updateOne() with filter and update documents',
+      '$set operator sets specific field values',
+      'Always use $set or other update operators, not raw document replacement',
+    ],
+    validPatterns: [
+      /db\.employees\.updateOne\s*\(\s*\{\s*name\s*:\s*"Alice"\s*\}\s*,\s*\{\s*\$set\s*:\s*\{\s*salary\s*:\s*80000\s*\}\s*\}\s*\)/i,
+    ],
+    tags: ['update', 'beginner', 'updateOne', '$set'],
+  },
 ];

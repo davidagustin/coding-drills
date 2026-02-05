@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { getBeginnerProblemIds, hasBeginnerProblems } from '@/lib/problems/beginner';
 import { problemsByLanguage } from '@/lib/problems/index';
 import {
   getInterviewRecommendedIds,
@@ -321,6 +322,7 @@ export default function ProblemsPage() {
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [interviewOnly, setInterviewOnly] = useState(false);
+  const [beginnerOnly, setBeginnerOnly] = useState(false);
   const [sortField, setSortField] = useState<SortField>('number');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -403,6 +405,12 @@ export default function ProblemsPage() {
       result = result.filter((p) => ids.has(p.id));
     }
 
+    // Beginner mode filter
+    if (beginnerOnly) {
+      const ids = getBeginnerProblemIds(language);
+      result = result.filter((p) => ids.has(p.id));
+    }
+
     // Sort
     result.sort((a, b) => {
       let comparison = 0;
@@ -435,6 +443,7 @@ export default function ProblemsPage() {
     difficultyFilter,
     statusFilter,
     interviewOnly,
+    beginnerOnly,
     language,
     sortField,
     sortDirection,
@@ -607,6 +616,37 @@ export default function ProblemsPage() {
               <div
                 className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
                   interviewOnly ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Beginner Mode Toggle */}
+      {hasBeginnerProblems(language) && (
+        <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="block text-sm font-medium text-zinc-300">Beginner Mode</span>
+              <span className="text-xs text-zinc-500">
+                Show only fundamental problems: loops, conditionals, basic data structures (
+                {getBeginnerProblemIds(language).size})
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setBeginnerOnly(!beginnerOnly)}
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
+                beginnerOnly ? 'bg-emerald-500' : 'bg-zinc-600'
+              }`}
+              role="switch"
+              aria-checked={beginnerOnly}
+              aria-label="Filter to beginner problems"
+            >
+              <div
+                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
+                  beginnerOnly ? 'translate-x-7' : 'translate-x-1'
                 }`}
               />
             </button>

@@ -50,7 +50,11 @@ An interactive learning platform for mastering programming languages through han
 
 ### Drill Mode
 
-Type code in a Monaco Editor (VS Code’s engine) with syntax highlighting and IntelliSense. Real-time execution for JavaScript/TypeScript; pattern matching for other languages. Scoring uses speed, difficulty, and streaks.
+Type code in a Monaco Editor (VS Code's engine) with syntax highlighting and IntelliSense. Real-time execution for JavaScript/TypeScript; pattern matching for other languages. Scoring uses speed, difficulty, and streaks.
+
+**Filters:**
+- **Beginner Mode** — Focus on fundamentals: loops, conditionals, and basic data structures. ~270 curated problems across all 24 languages.
+- **Interview Recommended** — Curated problems commonly tested in technical interviews (JavaScript/TypeScript only).
 
 ### Quiz Mode
 
@@ -60,7 +64,7 @@ Type code in a Monaco Editor (VS Code’s engine) with syntax highlighting and I
 
 ### Method Training / Query Training
 
-Browse coding challenges by language. Filter by category, difficulty, and completion. Each problem has a dedicated page (description + code editor), prev/next navigation, and progress. Programming languages use “Method Training”; PostgreSQL, MySQL, and MongoDB use “Query Training”.
+Browse coding challenges by language. Filter by category, difficulty, completion, and beginner/interview focus. Each problem has a dedicated page (description + code editor), prev/next navigation, and progress. Programming languages use "Method Training"; PostgreSQL, MySQL, and MongoDB use "Query Training".
 
 ### Building Blocks
 

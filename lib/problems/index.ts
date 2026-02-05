@@ -4,6 +4,14 @@
 
 import type { LanguageId, Problem } from '../types';
 
+// Export beginner problem utilities
+export {
+  getBeginnerProblemCount,
+  getBeginnerProblemIds,
+  hasBeginnerProblems,
+  isBeginnerProblem,
+} from './beginner';
+
 // Import language-specific problems (original languages)
 import { cProblems } from './c';
 // Import new language problems

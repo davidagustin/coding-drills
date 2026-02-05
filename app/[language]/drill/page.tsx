@@ -6,6 +6,11 @@ import { useCallback, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
 import { QuestionCountSlider } from '@/components/QuestionCountSlider';
 import { formatOutput, validateProblemAnswer } from '@/lib/codeValidator';
+import {
+  getBeginnerProblemCount,
+  getBeginnerProblemIds,
+  hasBeginnerProblems,
+} from '@/lib/problems/beginner';
 import { problemsByLanguage } from '@/lib/problems/index';
 import {
   getInterviewRecommendedCount,
@@ -31,6 +36,7 @@ interface DrillConfig {
   selectedQuestionIds?: string[];
   includeSiblingLanguage?: boolean;
   interviewOnly?: boolean;
+  beginnerOnly?: boolean;
 }
 
 // Define sibling language pairs
@@ -258,6 +264,14 @@ function selectProblems(language: LanguageId, config: DrillConfig): ProblemWithL
     });
   }
 
+  // Filter by beginner mode
+  if (config.beginnerOnly) {
+    problems = problems.filter((p) => {
+      const ids = getBeginnerProblemIds(p.sourceLanguage);
+      return ids.has(p.id);
+    });
+  }
+
   // Filter by categories
   if (config.categories.length > 0) {
     problems = problems.filter((p) => config.categories.includes(p.category));
@@ -394,6 +408,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
   const [questionCount, setQuestionCount] = useState(10);
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
   const [interviewOnly, setInterviewOnly] = useState(false);
+  const [beginnerOnly, setBeginnerOnly] = useState(false);
   const [showQuestionBrowser, setShowQuestionBrowser] = useState(false);
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
@@ -411,6 +426,15 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
       const siblingIds =
         includeSibling && siblingLanguage
           ? getInterviewRecommendedIds(siblingLanguage)
+          : new Set<string>();
+      problems = problems.filter((p) => langIds.has(p.id) || siblingIds.has(p.id));
+    }
+
+    if (beginnerOnly) {
+      const langIds = getBeginnerProblemIds(language);
+      const siblingIds =
+        includeSibling && siblingLanguage
+          ? getBeginnerProblemIds(siblingLanguage)
           : new Set<string>();
       problems = problems.filter((p) => langIds.has(p.id) || siblingIds.has(p.id));
     }
@@ -447,6 +471,7 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
         selectedQuestionIds.size > 0 ? Array.from(selectedQuestionIds) : undefined,
       includeSiblingLanguage: includeSibling,
       interviewOnly,
+      beginnerOnly,
     });
   };
 
@@ -587,6 +612,36 @@ function SetupPhase({ language, onStart }: SetupPhaseProps) {
               <div
                 className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
                   interviewOnly ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        )}
+
+        {/* Beginner Mode Filter */}
+        {hasBeginnerProblems(language) && (
+          <div className="flex items-center justify-between p-4 bg-emerald-500/5 rounded-lg border border-emerald-500/20">
+            <div>
+              <span className="block text-sm font-medium text-zinc-300">Beginner Mode</span>
+              <span className="text-xs text-zinc-500">
+                Fundamentals: loops, conditionals, basic data structures (
+                {getBeginnerProblemCount(
+                  language,
+                  includeSibling && siblingLanguage ? siblingLanguage : undefined,
+                )}
+                )
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setBeginnerOnly(!beginnerOnly)}
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 cursor-pointer ${
+                beginnerOnly ? 'bg-emerald-500' : 'bg-zinc-600'
+              }`}
+            >
+              <div
+                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
+                  beginnerOnly ? 'translate-x-7' : 'translate-x-1'
                 }`}
               />
             </button>

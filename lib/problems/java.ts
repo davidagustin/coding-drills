@@ -9384,6 +9384,198 @@ text.lines()
     validPatterns: [/Collectors\.toMap\([^)]+TreeMap::new/],
     tags: ['Stream', 'Collectors', 'toMap', 'TreeMap'],
   },
+
+  // ========================================
+  // BEGINNER FUNDAMENTALS
+  // ========================================
+
+  // -- For Loops (4 problems) --
+  {
+    id: 'java-beginner-loop-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic For Loop',
+    text: 'Write a for loop that prints numbers 1 through 5',
+    setup: '// Print numbers 1 to 5',
+    setupCode: '// Print numbers 1 to 5',
+    expected: '1 2 3 4 5',
+    sample: 'for (int i = 1; i <= 5; i++) {\n  System.out.print(i + " ");\n}',
+    hints: [
+      'Use a for loop with initialization, condition, and increment',
+      'Start at 1 and go while i <= 5',
+    ],
+    tags: ['for-loop', 'iteration', 'beginner'],
+  },
+  {
+    id: 'java-beginner-loop-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Sum Numbers with For Loop',
+    text: 'Calculate the sum of numbers from 1 to 10 using a for loop',
+    setup: 'int sum = 0;',
+    setupCode: 'int sum = 0;',
+    expected: 55,
+    sample: 'for (int i = 1; i <= 10; i++) {\n  sum += i;\n}',
+    hints: ['Initialize sum to 0 before the loop', 'Add each number to sum inside the loop'],
+    tags: ['for-loop', 'sum', 'beginner'],
+  },
+  {
+    id: 'java-beginner-loop-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'While Loop Countdown',
+    text: 'Write a while loop that counts down from 5 to 1',
+    setup: 'int count = 5;',
+    setupCode: 'int count = 5;',
+    expected: '5 4 3 2 1',
+    sample: 'while (count >= 1) {\n  System.out.print(count + " ");\n  count--;\n}',
+    hints: ['Continue while count is >= 1', 'Decrement count in each iteration'],
+    tags: ['while-loop', 'countdown', 'beginner'],
+  },
+  {
+    id: 'java-beginner-loop-004',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Enhanced For Loop',
+    text: 'Use an enhanced for loop to print all elements of an array',
+    setup: 'int[] numbers = {10, 20, 30, 40, 50};',
+    setupCode: 'int[] numbers = {10, 20, 30, 40, 50};',
+    expected: '10 20 30 40 50',
+    sample: 'for (int num : numbers) {\n  System.out.print(num + " ");\n}',
+    hints: ['Enhanced for loop syntax: for (type item : collection)', 'No need for index variable'],
+    tags: ['for-each', 'array', 'beginner'],
+  },
+
+  // -- Conditionals (3 problems) --
+  {
+    id: 'java-beginner-cond-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic If-Else',
+    text: 'Check if a number is positive, negative, or zero',
+    setup: 'int num = -5;',
+    setupCode: 'int num = -5;',
+    expected: 'negative',
+    sample:
+      'if (num > 0) {\n  System.out.println("positive");\n} else if (num < 0) {\n  System.out.println("negative");\n} else {\n  System.out.println("zero");\n}',
+    hints: [
+      'Use if for the first condition',
+      'Use else if for additional conditions',
+      'Use else for the default case',
+    ],
+    tags: ['if-else', 'conditionals', 'beginner'],
+  },
+  {
+    id: 'java-beginner-cond-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Even or Odd',
+    text: 'Determine if a number is even or odd using modulo operator',
+    setup: 'int num = 7;',
+    setupCode: 'int num = 7;',
+    expected: 'odd',
+    sample:
+      'if (num % 2 == 0) {\n  System.out.println("even");\n} else {\n  System.out.println("odd");\n}',
+    hints: [
+      'Use the modulo operator (%) to get remainder',
+      'If remainder is 0 when divided by 2, number is even',
+    ],
+    tags: ['if-else', 'modulo', 'beginner'],
+  },
+  {
+    id: 'java-beginner-cond-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Switch Statement',
+    text: 'Use a switch statement to convert day number (1-7) to day name',
+    setup: 'int day = 3;',
+    setupCode: 'int day = 3;',
+    expected: 'Wednesday',
+    sample:
+      'switch (day) {\n  case 1: System.out.println("Monday"); break;\n  case 2: System.out.println("Tuesday"); break;\n  case 3: System.out.println("Wednesday"); break;\n  case 4: System.out.println("Thursday"); break;\n  case 5: System.out.println("Friday"); break;\n  case 6: System.out.println("Saturday"); break;\n  case 7: System.out.println("Sunday"); break;\n  default: System.out.println("Invalid");\n}',
+    hints: [
+      'Use switch with the day variable',
+      'Each case handles one day number',
+      "Don't forget the break statements",
+    ],
+    tags: ['switch', 'conditionals', 'beginner'],
+  },
+
+  // -- Arrays (3 problems) --
+  {
+    id: 'java-beginner-array-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Create and Access Array',
+    text: 'Create an array of 5 integers and access the third element',
+    setup: '// Create array and access element at index 2',
+    setupCode: '// Create array and access element at index 2',
+    expected: 30,
+    sample: 'int[] nums = {10, 20, 30, 40, 50};\nint third = nums[2];',
+    hints: ['Array indices start at 0', 'Third element is at index 2'],
+    tags: ['array', 'access', 'beginner'],
+  },
+  {
+    id: 'java-beginner-array-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Array Length',
+    text: 'Get the length of an array',
+    setup: 'String[] fruits = {"apple", "banana", "cherry", "date"};',
+    setupCode: 'String[] fruits = {"apple", "banana", "cherry", "date"};',
+    expected: 4,
+    sample: 'int length = fruits.length;',
+    hints: ['Use the length property (not a method)', 'Array length is fixed after creation'],
+    tags: ['array', 'length', 'beginner'],
+  },
+  {
+    id: 'java-beginner-array-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Maximum in Array',
+    text: 'Find the maximum value in an integer array',
+    setup: 'int[] nums = {3, 7, 2, 9, 5};',
+    setupCode: 'int[] nums = {3, 7, 2, 9, 5};',
+    expected: 9,
+    sample:
+      'int max = nums[0];\nfor (int num : nums) {\n  if (num > max) {\n    max = num;\n  }\n}',
+    hints: ['Start with the first element as max', 'Compare each element and update max if larger'],
+    tags: ['array', 'max', 'iteration', 'beginner'],
+  },
+
+  // -- Collections (2 problems) --
+  {
+    id: 'java-beginner-collection-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Create and Add to ArrayList',
+    text: 'Create an ArrayList and add three elements to it',
+    setup: '// Create ArrayList and add "red", "green", "blue"',
+    setupCode: '// Create ArrayList and add "red", "green", "blue"',
+    expected: ['red', 'green', 'blue'],
+    sample:
+      'ArrayList<String> colors = new ArrayList<>();\ncolors.add("red");\ncolors.add("green");\ncolors.add("blue");',
+    hints: ['Use ArrayList<Type> for generic ArrayList', 'Use add() method to add elements'],
+    tags: ['ArrayList', 'add', 'collections', 'beginner'],
+  },
+  {
+    id: 'java-beginner-collection-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Create and Use HashMap',
+    text: 'Create a HashMap mapping names to ages and retrieve a value',
+    setup: '// Create HashMap and get age for "Alice"',
+    setupCode: '// Create HashMap and get age for "Alice"',
+    expected: 25,
+    sample:
+      'HashMap<String, Integer> ages = new HashMap<>();\nages.put("Alice", 25);\nages.put("Bob", 30);\nint aliceAge = ages.get("Alice");',
+    hints: [
+      'Use HashMap<KeyType, ValueType>',
+      'Use put() to add key-value pairs',
+      'Use get() to retrieve values',
+    ],
+    tags: ['HashMap', 'put', 'get', 'collections', 'beginner'],
+  },
 ];
 
 export default javaProblems;

@@ -6358,6 +6358,203 @@ export const csharpProblems: Problem[] = [
     hints: ['<> for open generic type', '<T> for closed generic'],
     tags: ['generic', 'typeof', 'reflection'],
   },
+
+  // ========================================
+  // BEGINNER FUNDAMENTALS
+  // ========================================
+
+  // -- For Loops (4 problems) --
+  {
+    id: 'cs-beginner-loop-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic For Loop',
+    text: 'Write a for loop that prints numbers 1 through 5',
+    setup: '// Print numbers 1 to 5',
+    setupCode: '// Print numbers 1 to 5',
+    expected: '1 2 3 4 5',
+    sample: 'for (int i = 1; i <= 5; i++)\n{\n    Console.Write(i + " ");\n}',
+    hints: [
+      'Use a for loop with initialization, condition, and increment',
+      'Start at 1 and go while i <= 5',
+    ],
+    tags: ['for-loop', 'iteration', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-loop-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Sum Numbers with For Loop',
+    text: 'Calculate the sum of numbers from 1 to 10 using a for loop',
+    setup: 'int sum = 0;',
+    setupCode: 'int sum = 0;',
+    expected: 55,
+    sample: 'for (int i = 1; i <= 10; i++)\n{\n    sum += i;\n}',
+    hints: ['Initialize sum to 0 before the loop', 'Add each number to sum inside the loop'],
+    tags: ['for-loop', 'sum', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-loop-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'While Loop Countdown',
+    text: 'Write a while loop that counts down from 5 to 1',
+    setup: 'int count = 5;',
+    setupCode: 'int count = 5;',
+    expected: '5 4 3 2 1',
+    sample: 'while (count >= 1)\n{\n    Console.Write(count + " ");\n    count--;\n}',
+    hints: ['Continue while count is >= 1', 'Decrement count in each iteration'],
+    tags: ['while-loop', 'countdown', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-loop-004',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Foreach Loop',
+    text: 'Use a foreach loop to print all elements of an array',
+    setup: 'int[] numbers = { 10, 20, 30, 40, 50 };',
+    setupCode: 'int[] numbers = { 10, 20, 30, 40, 50 };',
+    expected: '10 20 30 40 50',
+    sample: 'foreach (int num in numbers)\n{\n    Console.Write(num + " ");\n}',
+    hints: ['Foreach loop syntax: foreach (type item in collection)', 'No need for index variable'],
+    tags: ['foreach', 'array', 'beginner'],
+  },
+
+  // -- Conditionals (3 problems) --
+  {
+    id: 'cs-beginner-cond-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic If-Else',
+    text: 'Check if a number is positive, negative, or zero',
+    setup: 'int num = -5;',
+    setupCode: 'int num = -5;',
+    expected: 'negative',
+    sample:
+      'if (num > 0)\n{\n    Console.WriteLine("positive");\n}\nelse if (num < 0)\n{\n    Console.WriteLine("negative");\n}\nelse\n{\n    Console.WriteLine("zero");\n}',
+    hints: [
+      'Use if for the first condition',
+      'Use else if for additional conditions',
+      'Use else for the default case',
+    ],
+    tags: ['if-else', 'conditionals', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-cond-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Even or Odd',
+    text: 'Determine if a number is even or odd using modulo operator',
+    setup: 'int num = 7;',
+    setupCode: 'int num = 7;',
+    expected: 'odd',
+    sample:
+      'if (num % 2 == 0)\n{\n    Console.WriteLine("even");\n}\nelse\n{\n    Console.WriteLine("odd");\n}',
+    hints: [
+      'Use the modulo operator (%) to get remainder',
+      'If remainder is 0 when divided by 2, number is even',
+    ],
+    tags: ['if-else', 'modulo', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-cond-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Switch Statement',
+    text: 'Use a switch statement to convert day number (1-7) to day name',
+    setup: 'int day = 3;',
+    setupCode: 'int day = 3;',
+    expected: 'Wednesday',
+    sample:
+      'switch (day)\n{\n    case 1: Console.WriteLine("Monday"); break;\n    case 2: Console.WriteLine("Tuesday"); break;\n    case 3: Console.WriteLine("Wednesday"); break;\n    case 4: Console.WriteLine("Thursday"); break;\n    case 5: Console.WriteLine("Friday"); break;\n    case 6: Console.WriteLine("Saturday"); break;\n    case 7: Console.WriteLine("Sunday"); break;\n    default: Console.WriteLine("Invalid"); break;\n}',
+    hints: [
+      'Use switch with the day variable',
+      'Each case handles one day number',
+      "Don't forget the break statements",
+    ],
+    tags: ['switch', 'conditionals', 'beginner'],
+  },
+
+  // -- Arrays/Lists (3 problems) --
+  {
+    id: 'cs-beginner-array-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Create and Access Array',
+    text: 'Create an array of 5 integers and access the third element',
+    setup: '// Create array and access element at index 2',
+    setupCode: '// Create array and access element at index 2',
+    expected: 30,
+    sample: 'int[] nums = { 10, 20, 30, 40, 50 };\nint third = nums[2];',
+    hints: ['Array indices start at 0', 'Third element is at index 2'],
+    tags: ['array', 'access', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-array-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Array Length',
+    text: 'Get the length of an array',
+    setup: 'string[] fruits = { "apple", "banana", "cherry", "date" };',
+    setupCode: 'string[] fruits = { "apple", "banana", "cherry", "date" };',
+    expected: 4,
+    sample: 'int length = fruits.Length;',
+    hints: ['Use the Length property for arrays', 'Use Count property for Lists'],
+    tags: ['array', 'length', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-array-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Maximum in Array',
+    text: 'Find the maximum value in an integer array',
+    setup: 'int[] nums = { 3, 7, 2, 9, 5 };',
+    setupCode: 'int[] nums = { 3, 7, 2, 9, 5 };',
+    expected: 9,
+    sample:
+      'int max = nums[0];\nforeach (int num in nums)\n{\n    if (num > max)\n    {\n        max = num;\n    }\n}',
+    hints: [
+      'Start with the first element as max',
+      'Compare each element and update max if larger',
+      'Or use nums.Max() with System.Linq',
+    ],
+    tags: ['array', 'max', 'iteration', 'beginner'],
+  },
+
+  // -- Dictionaries (2 problems) --
+  {
+    id: 'cs-beginner-dict-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Create and Add to Dictionary',
+    text: 'Create a Dictionary and add three key-value pairs',
+    setup: '// Create Dictionary mapping colors to hex codes',
+    setupCode: '// Create Dictionary mapping colors to hex codes',
+    expected: '{"red": "#FF0000", "green": "#00FF00", "blue": "#0000FF"}',
+    sample:
+      'Dictionary<string, string> colors = new Dictionary<string, string>();\ncolors.Add("red", "#FF0000");\ncolors["green"] = "#00FF00";\ncolors["blue"] = "#0000FF";',
+    hints: ['Use Dictionary<TKey, TValue>', 'Add using Add() method or indexer'],
+    tags: ['dictionary', 'add', 'beginner'],
+  },
+  {
+    id: 'cs-beginner-dict-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Access Dictionary Value',
+    text: 'Create a Dictionary mapping names to ages and retrieve a value',
+    setup:
+      'Dictionary<string, int> ages = new Dictionary<string, int>\n{\n    { "Alice", 25 },\n    { "Bob", 30 }\n};',
+    setupCode:
+      'Dictionary<string, int> ages = new Dictionary<string, int>\n{\n    { "Alice", 25 },\n    { "Bob", 30 }\n};',
+    expected: 25,
+    sample: 'int aliceAge = ages["Alice"];',
+    hints: [
+      'Use indexer to access values by key',
+      'Use TryGetValue() for safe access',
+      'Throws KeyNotFoundException if key does not exist',
+    ],
+    tags: ['dictionary', 'access', 'beginner'],
+  },
 ];
 
 export default csharpProblems;

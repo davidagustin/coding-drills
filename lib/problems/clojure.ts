@@ -7560,6 +7560,192 @@ export const clojureProblems: Problem[] = [
     hints: ['s/every for collections', 'More options than coll-of'],
     tags: ['s/every', 'collection', 'flexible'],
   },
+
+  // ========================================
+  // BEGINNER FUNDAMENTALS
+  // ========================================
+
+  // -- Recursion (3 problems) --
+  {
+    id: 'clj-beginner-recursion-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Recursive Sum with loop/recur',
+    text: 'Use the sum-to function to calculate the sum from 1 to n.',
+    setup:
+      '(defn sum-to [n]\n  (loop [i n acc 0]\n    (if (zero? i)\n      acc\n      (recur (dec i) (+ acc i)))))\n(def n 5)',
+    setupCode:
+      '(defn sum-to [n]\n  (loop [i n acc 0]\n    (if (zero? i)\n      acc\n      (recur (dec i) (+ acc i)))))\n(def n 5)',
+    expected: 15,
+    sample: '(sum-to n)',
+    hints: [
+      'loop/recur provides tail recursion',
+      'recur jumps back to loop with new values',
+      'Accumulator pattern avoids stack overflow',
+    ],
+    validPatterns: [/\(\s*sum-to\s+n\s*\)/, /sum-to\s+5/],
+    tags: ['recursion', 'beginner', 'loop', 'recur'],
+  },
+  {
+    id: 'clj-beginner-recursion-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Recursive Factorial',
+    text: 'Use the factorial function to calculate 5 factorial.',
+    setup:
+      '(defn factorial [n]\n  (if (<= n 1)\n    1\n    (* n (factorial (dec n)))))\n(def num 5)',
+    setupCode:
+      '(defn factorial [n]\n  (if (<= n 1)\n    1\n    (* n (factorial (dec n)))))\n(def num 5)',
+    expected: 120,
+    sample: '(factorial num)',
+    hints: [
+      'Base case: n <= 1 returns 1',
+      'Recursive case: n * factorial(n-1)',
+      'dec decrements by 1',
+    ],
+    validPatterns: [/\(\s*factorial\s+num\s*\)/, /factorial\s+5/],
+    tags: ['recursion', 'beginner', 'factorial'],
+  },
+  {
+    id: 'clj-beginner-recursion-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Recursive Length',
+    text: 'Use the my-length function to find the length of the sequence.',
+    setup:
+      '(defn my-length [coll]\n  (if (empty? coll)\n    0\n    (inc (my-length (rest coll)))))\n(def words ["hello" "world" "clojure"])',
+    setupCode:
+      '(defn my-length [coll]\n  (if (empty? coll)\n    0\n    (inc (my-length (rest coll)))))\n(def words ["hello" "world" "clojure"])',
+    expected: 3,
+    sample: '(my-length words)',
+    hints: [
+      'Base case: empty? returns true for empty collection',
+      'rest returns all but first element',
+      'inc increments by 1',
+    ],
+    validPatterns: [/\(\s*my-length\s+words\s*\)/, /my-length/],
+    tags: ['recursion', 'beginner', 'length'],
+  },
+
+  // -- Conditionals (3 problems) --
+  {
+    id: 'clj-beginner-cond-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Simple if Expression',
+    text: 'Use if to return "positive" if n is greater than 0, else "non-positive".',
+    setup: '(def n 5)',
+    setupCode: '(def n 5)',
+    expected: 'positive',
+    sample: '(if (> n 0) "positive" "non-positive")',
+    hints: [
+      'if takes condition, then-branch, else-branch',
+      'No parentheses around branches',
+      'Returns value of chosen branch',
+    ],
+    validPatterns: [/\(\s*if\s+\(\s*>\s+n\s+0\s*\)/, /if.*positive/],
+    tags: ['conditional', 'beginner', 'if'],
+  },
+  {
+    id: 'clj-beginner-cond-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Multi-way cond',
+    text: 'Use cond to classify n as "negative", "zero", or "positive".',
+    setup: '(def n 0)',
+    setupCode: '(def n 0)',
+    expected: 'zero',
+    sample: '(cond\n  (< n 0) "negative"\n  (= n 0) "zero"\n  :else "positive")',
+    hints: ['cond takes test/expr pairs', ':else is the default case', 'First true test wins'],
+    validPatterns: [/\(\s*cond/, /:else\s+"positive"/],
+    tags: ['conditional', 'beginner', 'cond'],
+  },
+  {
+    id: 'clj-beginner-cond-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'when for Side Effects',
+    text: 'Use when to return the doubled value only if n is positive.',
+    setup: '(def n 5)',
+    setupCode: '(def n 5)',
+    expected: 10,
+    sample: '(when (> n 0) (* n 2))',
+    hints: [
+      'when is like if without else',
+      'Returns nil if condition false',
+      'Good for conditional execution',
+    ],
+    validPatterns: [/\(\s*when\s+\(\s*>\s+n\s+0\s*\)/, /when.*\*\s+n\s+2/],
+    tags: ['conditional', 'beginner', 'when'],
+  },
+
+  // -- Sequences (2 problems) --
+  {
+    id: 'clj-beginner-seq-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Concatenate Vectors',
+    text: 'Use concat to join the two vectors into a single sequence.',
+    setup: '(def v1 [1 2 3])\n(def v2 [4 5 6])',
+    setupCode: '(def v1 [1 2 3])\n(def v2 [4 5 6])',
+    expected: [1, 2, 3, 4, 5, 6],
+    sample: '(vec (concat v1 v2))',
+    hints: [
+      'concat returns lazy sequence',
+      'Use vec to convert to vector',
+      'Can concat multiple collections',
+    ],
+    validPatterns: [/concat\s+v1\s+v2/, /into\s+v1\s+v2/],
+    tags: ['sequence', 'beginner', 'concat'],
+  },
+  {
+    id: 'clj-beginner-seq-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Conj to Vector',
+    text: 'Use conj to add 0 to the beginning of the list and 4 to the end of the vector.',
+    setup: '(def nums [1 2 3])',
+    setupCode: '(def nums [1 2 3])',
+    expected: [1, 2, 3, 4],
+    sample: '(conj nums 4)',
+    hints: ['conj adds to "natural" position', 'Vectors add at end', 'Lists add at front'],
+    validPatterns: [/\(\s*conj\s+nums\s+4\s*\)/],
+    tags: ['sequence', 'beginner', 'conj'],
+  },
+
+  // -- Maps (2 problems) --
+  {
+    id: 'clj-beginner-map-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Access Map Value',
+    text: 'Get the value associated with :name from the map.',
+    setup: '(def person {:name "Alice" :age 30})',
+    setupCode: '(def person {:name "Alice" :age 30})',
+    expected: 'Alice',
+    sample: '(:name person)',
+    hints: ['Keywords can be used as functions', 'Or use (get person :name)', 'Or (person :name)'],
+    validPatterns: [/\(\s*:name\s+person\s*\)/, /get\s+person\s+:name/],
+    tags: ['map', 'beginner', 'access'],
+  },
+  {
+    id: 'clj-beginner-map-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Update Map Value',
+    text: 'Use assoc to update the :age value to 31.',
+    setup: '(def person {:name "Alice" :age 30})',
+    setupCode: '(def person {:name "Alice" :age 30})',
+    expected: { name: 'Alice', age: 31 },
+    sample: '(assoc person :age 31)',
+    hints: [
+      'assoc adds or updates key-value',
+      'Returns new map (immutable)',
+      'Can assoc multiple pairs',
+    ],
+    validPatterns: [/\(\s*assoc\s+person\s+:age\s+31\s*\)/],
+    tags: ['map', 'beginner', 'assoc', 'update'],
+  },
 ];
 
 export default clojureProblems;

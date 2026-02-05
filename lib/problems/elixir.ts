@@ -1653,6 +1653,203 @@ export const elixirProblems: Problem[] = [
     ],
     tags: ['stream', 'iterate', 'filter', 'prime', 'math'],
   },
+
+  // ========================================
+  // BEGINNER FUNDAMENTALS
+  // ========================================
+
+  // -- Recursion (3 problems) --
+  {
+    id: 'ex-beginner-recursion-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Recursive Sum',
+    text: 'Use the recursive sum_to function to calculate the sum of numbers from 1 to n.',
+    setup:
+      'defmodule Math do\n  def sum_to(0), do: 0\n  def sum_to(n), do: n + sum_to(n - 1)\nend\nn = 5',
+    setupCode:
+      'defmodule Math do\n  def sum_to(0), do: 0\n  def sum_to(n), do: n + sum_to(n - 1)\nend\nn = 5',
+    expected: 15,
+    sample: 'Math.sum_to(n)',
+    hints: [
+      'Base case: sum_to(0) returns 0',
+      'Recursive case: n + sum_to(n-1)',
+      'Call the function with n',
+    ],
+    validPatterns: [/Math\.sum_to\s*\(\s*n\s*\)/, /sum_to\s*\(\s*5\s*\)/],
+    tags: ['recursion', 'beginner', 'sum'],
+  },
+  {
+    id: 'ex-beginner-recursion-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Recursive Factorial',
+    text: 'Use the recursive factorial function to calculate 5 factorial.',
+    setup:
+      'defmodule Math do\n  def factorial(0), do: 1\n  def factorial(n), do: n * factorial(n - 1)\nend\nnum = 5',
+    setupCode:
+      'defmodule Math do\n  def factorial(0), do: 1\n  def factorial(n), do: n * factorial(n - 1)\nend\nnum = 5',
+    expected: 120,
+    sample: 'Math.factorial(num)',
+    hints: [
+      'Base case: factorial(0) returns 1',
+      'Recursive case: n * factorial(n-1)',
+      'Pattern matching on function head',
+    ],
+    validPatterns: [/Math\.factorial\s*\(\s*num\s*\)/, /factorial\s*\(\s*5\s*\)/],
+    tags: ['recursion', 'beginner', 'factorial'],
+  },
+  {
+    id: 'ex-beginner-recursion-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Recursive Length',
+    text: 'Use the recursive my_length function to find the length of the list.',
+    setup:
+      'defmodule MyList do\n  def my_length([]), do: 0\n  def my_length([_head | tail]), do: 1 + my_length(tail)\nend\nwords = ["hello", "world", "elixir"]',
+    setupCode:
+      'defmodule MyList do\n  def my_length([]), do: 0\n  def my_length([_head | tail]), do: 1 + my_length(tail)\nend\nwords = ["hello", "world", "elixir"]',
+    expected: 3,
+    sample: 'MyList.my_length(words)',
+    hints: [
+      'Base case: empty list returns 0',
+      'Pattern match [_head | tail] for non-empty list',
+      'Recursive case: 1 + length of tail',
+    ],
+    validPatterns: [/MyList\.my_length\s*\(\s*words\s*\)/, /my_length\s*\(/],
+    tags: ['recursion', 'beginner', 'length', 'list'],
+  },
+
+  // -- Pattern Matching (3 problems) --
+  {
+    id: 'ex-beginner-pattern-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Pattern Match Head',
+    text: 'Use pattern matching to extract the first element of the list.',
+    setup: '[first | _rest] = [10, 20, 30]',
+    setupCode: 'numbers = [10, 20, 30]',
+    expected: 10,
+    sample: '[first | _rest] = numbers; first',
+    hints: [
+      'Pattern [head | tail] destructures lists',
+      'Use underscore prefix for unused variables',
+      'head binds to first element',
+    ],
+    validPatterns: [/\[\s*\w+\s*\|\s*_?\w*\s*\]\s*=/, /hd\s*\(\s*numbers\s*\)/],
+    tags: ['pattern-matching', 'beginner', 'head', 'list'],
+  },
+  {
+    id: 'ex-beginner-pattern-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Pattern Match Tuple',
+    text: 'Use pattern matching to extract the second element from the tuple.',
+    setup: 'pair = {"hello", 42}',
+    setupCode: 'pair = {"hello", 42}',
+    expected: 42,
+    sample: '{_first, second} = pair; second',
+    hints: [
+      'Tuples use curly braces {}',
+      'Pattern {a, b} matches 2-element tuple',
+      'Use _first to ignore first element',
+    ],
+    validPatterns: [/\{\s*_?\w+\s*,\s*\w+\s*\}\s*=/, /elem\s*\(\s*pair\s*,\s*1\s*\)/],
+    tags: ['pattern-matching', 'beginner', 'tuple'],
+  },
+  {
+    id: 'ex-beginner-pattern-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Pattern Match in Case',
+    text: 'Use case with pattern matching to describe the boolean value.',
+    setup: 'value = true',
+    setupCode: 'value = true',
+    expected: 'yes',
+    sample: 'case value do\n  true -> "yes"\n  false -> "no"\nend',
+    hints: [
+      'case expression matches patterns',
+      'Each clause has pattern -> result',
+      'Patterns are checked top to bottom',
+    ],
+    validPatterns: [/case\s+value\s+do/, /true\s*->\s*"yes"/],
+    tags: ['pattern-matching', 'beginner', 'case', 'boolean'],
+  },
+
+  // -- Lists (2 problems) --
+  {
+    id: 'ex-beginner-list-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Concatenate Lists',
+    text: 'Use the ++ operator to concatenate the two lists.',
+    setup: 'list1 = [1, 2, 3]\nlist2 = [4, 5, 6]',
+    setupCode: 'list1 = [1, 2, 3]\nlist2 = [4, 5, 6]',
+    expected: [1, 2, 3, 4, 5, 6],
+    sample: 'list1 ++ list2',
+    hints: ['++ concatenates two lists', 'Left list comes first', 'Returns a new list'],
+    validPatterns: [/list1\s*\+\+\s*list2/, /Enum\.concat\s*\(\s*list1\s*,\s*list2\s*\)/],
+    tags: ['list', 'beginner', 'concatenation'],
+  },
+  {
+    id: 'ex-beginner-list-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Cons Operator',
+    text: 'Use the | (cons) operator to prepend 0 to the list.',
+    setup: 'numbers = [1, 2, 3]',
+    setupCode: 'numbers = [1, 2, 3]',
+    expected: [0, 1, 2, 3],
+    sample: '[0 | numbers]',
+    hints: ['| prepends element to a list', 'Syntax is [element | list]', 'Creates a new list'],
+    validPatterns: [/\[\s*0\s*\|\s*numbers\s*\]/],
+    tags: ['list', 'beginner', 'cons'],
+  },
+
+  // -- Maps (2 problems) --
+  {
+    id: 'ex-beginner-map-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Create Map',
+    text: 'Access the value associated with the :name key in the map.',
+    setup: 'person = %{name: "Alice", age: 30}',
+    setupCode: 'person = %{name: "Alice", age: 30}',
+    expected: 'Alice',
+    sample: 'person.name',
+    hints: [
+      'Use dot notation for atom keys',
+      'Or use Map.get(map, :key)',
+      'Or pattern match %{name: name} = person',
+    ],
+    validPatterns: [
+      /person\.name/,
+      /Map\.get\s*\(\s*person\s*,\s*:name\s*\)/,
+      /person\s*\[\s*:name\s*\]/,
+    ],
+    tags: ['map', 'beginner', 'access'],
+  },
+  {
+    id: 'ex-beginner-map-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Update Map',
+    text: 'Update the :age value in the map to 31.',
+    setup: 'person = %{name: "Alice", age: 30}',
+    setupCode: 'person = %{name: "Alice", age: 30}',
+    expected: { name: 'Alice', age: 31 },
+    sample: '%{person | age: 31}',
+    hints: [
+      'Use %{map | key: value} syntax',
+      'Or use Map.put(map, :key, value)',
+      'Creates a new map (immutable)',
+    ],
+    validPatterns: [
+      /%\{\s*person\s*\|\s*age:\s*31\s*\}/,
+      /Map\.put\s*\(\s*person\s*,\s*:age\s*,\s*31\s*\)/,
+    ],
+    tags: ['map', 'beginner', 'update'],
+  },
 ];
 
 export default elixirProblems;
