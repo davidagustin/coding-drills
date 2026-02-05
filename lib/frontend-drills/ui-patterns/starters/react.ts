@@ -120,7 +120,7 @@ function App() {
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
         <span style={{fontWeight:600,color:'#e2e8f0'}}>Autosave Editor</span>
         <span className={'status ' + status}>
-          {status === 'saving' ? '\\u23F3 Saving...' : '\\u2713 Saved'}
+          {status === 'saving' ? '⏳ Saving...' : '✓ Saved'}
         </span>
       </div>
       <label>Title</label>
@@ -181,7 +181,7 @@ function PasswordStrength() {
           <div className="rules">
             {rules.map((r, i) => (
               <div key={i} className={'rule ' + (r.test ? 'pass' : 'fail')}>
-                {r.test ? '\\u2713' : '○'} {r.label}
+                {r.test ? '✓' : '○'} {r.label}
               </div>
             ))}
           </div>
@@ -221,8 +221,8 @@ function App() {
           <span className="file-size">{f.size}</span>
           {f.progress < 100
             ? <div className="progress-bar" style={{width:80}}><div className="progress-fill" style={{width:f.progress+'%'}} /></div>
-            : <span style={{color:'#22c55e'}}>\\u2713</span>}
-          <button className="remove" onClick={() => setFiles(prev => prev.filter(x => x.id !== f.id))}>\\u00D7</button>
+            : <span style={{color:'#22c55e'}}>✓</span>}
+          <button className="remove" onClick={() => setFiles(prev => prev.filter(x => x.id !== f.id))}>×</button>
         </div>
       ))}
     </div>
@@ -251,7 +251,7 @@ function App() {
         <div className="slider-row">
           <label>H</label>
           <input type="range" min="0" max="360" value={h} onChange={e => setH(+e.target.value)} />
-          <span>{h}\\u00B0</span>
+          <span>{h}°</span>
         </div>
         <div className="slider-row">
           <label>S</label>
@@ -382,7 +382,7 @@ function App() {
         {feats.map(f => (
           <div key={f.id} className={'option' + (features.includes(f.id) ? ' selected' : '')} onClick={() => toggleFeat(f.id)}>
             <div className={'check-box' + (features.includes(f.id) ? ' active' : '')}>
-              {features.includes(f.id) && '\\u2713'}
+              {features.includes(f.id) && '✓'}
             </div>
             <span className="opt-label">{f.label}</span>
           </div>
@@ -599,7 +599,7 @@ function App() {
           onClick={() => setOpen(!open)} onKeyDown={onKey}
           role="combobox" aria-expanded={open}>
           <span>{selected || 'Select...'}</span>
-          <span>{open ? '\\u25B2' : '▼'}</span>
+          <span>{open ? '▲' : '▼'}</span>
         </div>
         {open && (
           <div className="dropdown" role="listbox">
@@ -608,7 +608,7 @@ function App() {
                 role="option" aria-selected={o === selected}
                 onMouseEnter={() => setActive(i)}
                 onClick={() => { setSelected(o); setOpen(false); }}>
-                {o} {o === selected && '\\u2713'}
+                {o} {o === selected && '✓'}
               </div>
             ))}
           </div>
@@ -633,7 +633,7 @@ function CopyBox({ label, text }) {
       <div className="copy-box">
         <code>{text}</code>
         <button className={'copy-btn' + (copied ? ' copied' : '')} onClick={copy}>
-          {copied ? '\\u2713 Copied!' : 'Copy'}
+          {copied ? '✓ Copied!' : 'Copy'}
         </button>
       </div>
     </div>
@@ -1122,7 +1122,7 @@ function App() {
         </div>
       </div>
       <div className="zoom-controls">
-        <button className="zoom-btn" onClick={zoomOut}>\\u2212</button>
+        <button className="zoom-btn" onClick={zoomOut}>−</button>
         <span className="zoom-level">{Math.round(scale * 100)}%</span>
         <button className="zoom-btn" onClick={zoomIn}>+</button>
         <button className="zoom-btn" onClick={reset}>Reset</button>
@@ -1148,11 +1148,11 @@ function App() {
   return (
     <div>
       <div className={'pull-area' + (refreshing ? ' refreshing' : '')} style={{height: refreshing ? 40 : 0}}>
-        {refreshing && <span><span className="spinner">\\u21BB</span> Refreshing...</span>}
+        {refreshing && <span><span className="spinner">↻</span> Refreshing...</span>}
       </div>
       <button onClick={refresh} disabled={refreshing}
         style={{width:'100%',padding:'10px',borderRadius:8,border:'1px dashed #334155',background:'none',color:'#64748b',cursor:'pointer',marginBottom:12}}>
-        {refreshing ? 'Refreshing...' : '\\u2193 Pull to refresh (click to simulate)'}
+        {refreshing ? 'Refreshing...' : '↓ Pull to refresh (click to simulate)'}
       </button>
       {items.map(item => (
         <div key={item.id} className="feed-item">
@@ -1195,7 +1195,7 @@ function App() {
           className={'list-item' + (dragIdx === i ? ' dragging' : '') + (overIdx === i ? ' over' : '')}
           draggable onDragStart={() => onDragStart(i)} onDragOver={e => onDragOver(e, i)}
           onDrop={() => onDrop(i)} onDragEnd={onDragEnd}>
-          <span className="handle">\\u2630</span>
+          <span className="handle">☰</span>
           <span className="item-num">{i + 1}.</span>
           <span className="item-text">{item}</span>
         </div>
@@ -1231,11 +1231,11 @@ function PhotoCard({ photo }) {
     <div className="photo-card">
       <div className="photo-area" style={{background: photo.bg}} onClick={handleClick}>
         {photo.emoji}
-        {anim && <span className="heart-anim">\\u2764</span>}
+        {anim && <span className="heart-anim">❤</span>}
       </div>
       <div className="card-footer">
         <span className="likes">{likes} likes</span>
-        <button className="like-btn" onClick={toggleLike}>{liked ? '\\u2764' : '🤍'}</button>
+        <button className="like-btn" onClick={toggleLike}>{liked ? '❤' : '🤍'}</button>
       </div>
     </div>
   );
@@ -1292,7 +1292,7 @@ function App() {
         </div>
       </div>
       <button className="toggle-link" onClick={() => setShowAdvanced(!showAdvanced)}>
-        {showAdvanced ? '\\u25B2 Hide' : '▼ Show'} advanced options
+        {showAdvanced ? '▲ Hide' : '▼ Show'} advanced options
       </button>
       <div className={'advanced' + (showAdvanced ? ' visible' : ' hidden')}>
         <div className="section" style={{marginTop: 8}}>
@@ -1339,14 +1339,14 @@ function App() {
     </div>
   ];
 
-  if (done) return <div className="success"><div style={{fontSize:32}}>\\u2713</div><div style={{fontSize:18,marginTop:8}}>Account Created!</div></div>;
+  if (done) return <div className="success"><div style={{fontSize:32}}>✓</div><div style={{fontSize:18,marginTop:8}}>Account Created!</div></div>;
 
   return (
     <div>
       <div className="steps">
         {stepLabels.map((l, i) => (
           <div key={i} className={'step' + (i === step ? ' active' : '') + (i < step ? ' done' : '')}>
-            <div className="step-num">{i < step ? '\\u2713' : i + 1}</div>
+            <div className="step-num">{i < step ? '✓' : i + 1}</div>
             <div className="step-label">{l}</div>
           </div>
         ))}
@@ -1395,8 +1395,8 @@ function App() {
           style={{background: c}} onClick={() => setColor(c)} />)}
       </div>
       <div className="toolbar">
-        <button className="tool-btn" disabled={histIdx <= 0} onClick={undo}>\\u21A9 Undo</button>
-        <button className="tool-btn" disabled={histIdx >= history.length-1} onClick={redo}>Redo \\u21AA</button>
+        <button className="tool-btn" disabled={histIdx <= 0} onClick={undo}>↩ Undo</button>
+        <button className="tool-btn" disabled={histIdx >= history.length-1} onClick={redo}>Redo ↪</button>
       </div>
       <div className="canvas">
         {grid.map((c, i) => <div key={i} className="cell" style={{background: c}} onClick={() => paint(i)} />)}
@@ -1426,7 +1426,7 @@ function App() {
     { cmd: 'bold', label: 'B', style: {fontWeight:700} },
     { cmd: 'italic', label: 'I', style: {fontStyle:'italic'} },
     { cmd: 'underline', label: 'U', style: {textDecoration:'underline'} },
-    { cmd: 'insertUnorderedList', label: '\\u2022 List' },
+    { cmd: 'insertUnorderedList', label: '• List' },
     { cmd: 'insertOrderedList', label: '1. List' },
   ];
 
@@ -1440,7 +1440,7 @@ function App() {
           </button>
         ))}
         <button className="fmt-btn" onMouseDown={e => { e.preventDefault(); exec('formatBlock', 'h2'); }}>H2</button>
-        <button className="fmt-btn" onMouseDown={e => { e.preventDefault(); exec('formatBlock', 'blockquote'); }}>\\u201C</button>
+        <button className="fmt-btn" onMouseDown={e => { e.preventDefault(); exec('formatBlock', 'blockquote'); }}>“</button>
       </div>
       <div ref={editorRef} className="editor-area" contentEditable
         onKeyUp={updateActive} onMouseUp={updateActive}
@@ -1586,7 +1586,7 @@ function App() {
       </div>
       {selected && (
         <div className="lightbox" onClick={() => setSelected(null)}>
-          <button className="lightbox-close">\\u00D7</button>
+          <button className="lightbox-close">×</button>
           <div className="lightbox-content" onClick={e => e.stopPropagation()}>
             <div>{selected.emoji}</div>
             <div style={{fontSize:16,color:'#e2e8f0',marginTop:12}}>{selected.label}</div>
@@ -1656,7 +1656,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
           </div>
           <div className="card-footer">
             <span className="card-tag" style={{background: c.color+'22',color: c.color}}>{c.tag}</span>
-            <button className="card-btn">Learn more \\u2192</button>
+            <button className="card-btn">Learn more →</button>
           </div>
         </div>
       ))}
@@ -1790,7 +1790,7 @@ function App() {
       {filtered.map((p, i) => (
         <div key={i} className="item-row">
           <span className="item-name">{p.name}</span>
-          <span className="item-detail">{p.cat} \\u00B7 \${p.price} \\u00B7 \\u2605 {p.rating}</span>
+          <span className="item-detail">{p.cat} · \${p.price} · ★ {p.rating}</span>
         </div>
       ))}
       <div style={{fontSize:12,color:'#64748b',marginTop:8}}>{filtered.length} results</div>
@@ -1884,7 +1884,7 @@ function App() {
         {cols.map(c => (
           <th key={c.key} className={sortKey === c.key ? 'sorted' : ''} onClick={() => toggle(c.key)}>
             {c.label}
-            {sortKey === c.key && <span className="sort-arrow">{asc ? '\\u25B2' : '▼'}</span>}
+            {sortKey === c.key && <span className="sort-arrow">{asc ? '▲' : '▼'}</span>}
           </th>
         ))}
       </tr></thead>
@@ -1982,7 +1982,7 @@ function App() {
             </div>
           </div>
         ))}
-        {loading && <div className="loader"><span className="spinner">\\u21BB</span> Loading more...</div>}
+        {loading && <div className="loader"><span className="spinner">↻</span> Loading more...</div>}
       </div>
       <div style={{fontSize:12,color:'#64748b',marginTop:8}}>{items.length} items loaded</div>
     </div>
@@ -2014,7 +2014,7 @@ function App() {
           <div className="widget-title">{s.label}</div>
           <div className="widget-val" style={{color: s.color}}>{s.value}</div>
           <div className="widget-change" style={{color: s.up ? '#22c55e' : '#ef4444'}}>
-            {s.up ? '\\u25B2' : '▼'} {s.change}
+            {s.up ? '▲' : '▼'} {s.change}
           </div>
         </div>
       ))}
@@ -2188,7 +2188,7 @@ function App() {
       <div className="mobile-header">
         <span className="brand">📱 MyApp</span>
         <button className="menu-btn" onClick={() => setOpen(!open)}>
-          {open ? '\\u2715' : '\\u2630'}
+          {open ? '✕' : '☰'}
         </button>
       </div>
       <nav className={'mobile-nav' + (open ? ' open' : ' closed')}>
@@ -3896,7 +3896,7 @@ function App() {
       <label style={{fontSize:14,color:'#94a3b8',display:'block',marginBottom:6}}>Languages</label>
       <button className="ms-trigger" onClick={() => setOpen(!open)}>
         <span>{selected.length ? \`\${selected.length} selected\` : 'Select...'}</span>
-        <span>{open ? '\\u25B2' : '▼'}</span>
+        <span>{open ? '▲' : '▼'}</span>
       </button>
       {open && (
         <div className="ms-dropdown">
@@ -5098,7 +5098,7 @@ function App() {
             <div className="stat-label">{s.label}</div>
             <div className="stat-value">{s.value}</div>
             <div className={\`stat-trend \${s.up ? 'trend-up' : 'trend-down'}\`}>
-              {s.up ? '\\u25B2' : '▼'} {s.trend}
+              {s.up ? '▲' : '▼'} {s.trend}
             </div>
           </div>
         ))}
@@ -5364,8 +5364,8 @@ const features = [
 ];
 
 function Cell({ val }) {
-  if (val === true) return <span className="check">\\u2713</span>;
-  if (val === false) return <span className="cross">\\u2717</span>;
+  if (val === true) return <span className="check">✓</span>;
+  if (val === false) return <span className="cross">✗</span>;
   return <span>{val}</span>;
 }
 
@@ -5412,7 +5412,7 @@ function App() {
             <div className="plan-name">{p.name}</div>
             <div className="plan-price">\${annual ? Math.round(p.monthly * 0.8) : p.monthly}</div>
             <div className="plan-period">per month{annual ? ', billed annually' : ''}</div>
-            {p.features.map(f => <div key={f} className="plan-feature">\\u2713 {f}</div>)}
+            {p.features.map(f => <div key={f} className="plan-feature">✓ {f}</div>)}
             <button className={\`plan-btn \${p.popular ? 'primary' : 'secondary'}\`}>Get Started</button>
           </div>
         ))}
@@ -5467,7 +5467,7 @@ function App() {
       <h3 style={{marginBottom:12,textAlign:'center'}}>What People Say</h3>
       {testimonials.map((t, i) => (
         <div className="test-card" key={i}>
-          <div className="test-stars">{'\\u2605'.repeat(t.stars)}{'\\u2606'.repeat(5 - t.stars)}</div>
+          <div className="test-stars">{'★'.repeat(t.stars)}{'☆'.repeat(5 - t.stars)}</div>
           <div className="test-quote">{t.quote}</div>
           <div className="test-author">
             <div className="test-av">{t.name[0]}</div>
@@ -5614,7 +5614,7 @@ function App() {
             <div className="md-card-label">{m.label}</div>
             <div className="md-card-val">{m.val}</div>
             <div className={\`md-card-change \${m.change > 0 ? 'up' : 'down'}\`}>
-              {m.change > 0 ? '\\u25B2' : '▼'} {Math.abs(m.change)}%
+              {m.change > 0 ? '▲' : '▼'} {Math.abs(m.change)}%
             </div>
             <Sparkline data={m.data} color={m.color} />
           </div>
@@ -5733,7 +5733,7 @@ function App() {
     <div className="page" ref={ref}>
       <h3>Scroll Down</h3>
       {Array(15).fill(0).map((_, i) => <p key={i}>Paragraph {i + 1}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>)}
-      <button className={\`stt-btn \${show ? 'visible' : ''}\`} onClick={scrollTop}>\\u2191</button>
+      <button className={\`stt-btn \${show ? 'visible' : ''}\`} onClick={scrollTop}>↑</button>
     </div>
   );
 }
@@ -5842,7 +5842,7 @@ function App() {
         {stepNames.map((_, i) => (
           <React.Fragment key={i}>
             <div className={\`step-circle \${i < current ? 'completed' : i === current ? 'active' : 'upcoming'}\`}>
-              {i < current ? '\\u2713' : i + 1}
+              {i < current ? '✓' : i + 1}
             </div>
             {i < stepNames.length - 1 && <div className={\`step-line \${i < current ? 'done' : ''}\`} />}
           </React.Fragment>
@@ -6223,7 +6223,7 @@ function App() {
       {Array(20).fill(0).map((_, i) => <p key={i}>Paragraph {i + 1}: Scroll down to see the progress indicator on the back-to-top button.</p>)}
       <button className={\`btt-btn \${show ? 'visible' : ''}\`} onClick={() => ref.current.scrollTo({top:0,behavior:'smooth'})}>
         <svg width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#334155" strokeWidth="3" /><circle cx="24" cy="24" r="18" fill="none" stroke="#4fc3f7" strokeWidth="3" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" /></svg>
-        <span className="btt-arrow">\\u2191</span>
+        <span className="btt-arrow">↑</span>
       </button>
     </div>
   );
@@ -6277,7 +6277,7 @@ function App() {
   return (
     <div className={\`theme-wrap \${dark ? 'dark' : 'light'}\`}>
       <div className="theme-toggle">
-        <span>{dark ? '🌙' : '\\u2600'}</span>
+        <span>{dark ? '🌙' : '☀'}</span>
         <div className="toggle-track" onClick={() => setDark(!dark)}>
           <div className="toggle-thumb" />
         </div>
@@ -6295,9 +6295,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 
 const translations = {
   en: { greeting: 'Hello, World!', desc: 'This page demonstrates internationalization. Switch languages to see translations update in real-time.', cta: 'Get Started', locale: 'English', dir: 'ltr' },
-  es: { greeting: '\\u00A1Hola, Mundo!', desc: 'Esta p\\u00E1gina demuestra la internacionalizaci\\u00F3n. Cambia de idioma para ver las traducciones actualizarse en tiempo real.', cta: 'Comenzar', locale: 'Espa\\u00F1ol', dir: 'ltr' },
-  ja: { greeting: '\\u3053\\u3093\\u306B\\u3061\\u306F\\u4E16\\u754C\\uFF01', desc: '\\u3053\\u306E\\u30DA\\u30FC\\u30B8\\u306F\\u56FD\\u969B\\u5316\\u3092\\u5B9F\\u6F14\\u3057\\u307E\\u3059\\u3002\\u8A00\\u8A9E\\u3092\\u5207\\u308A\\u66FF\\u3048\\u3066\\u3001\\u30EA\\u30A2\\u30EB\\u30BF\\u30A4\\u30E0\\u3067\\u7FFB\\u8A33\\u304C\\u66F4\\u65B0\\u3055\\u308C\\u308B\\u306E\\u3092\\u3054\\u89A7\\u304F\\u3060\\u3055\\u3044\\u3002', cta: '\\u59CB\\u3081\\u308B', locale: '\\u65E5\\u672C\\u8A9E', dir: 'ltr' },
-  ar: { greeting: '\\u0645\\u0631\\u062D\\u0628\\u0627 \\u0628\\u0627\\u0644\\u0639\\u0627\\u0644\\u0645!', desc: '\\u062A\\u0648\\u0636\\u062D \\u0647\\u0630\\u0647 \\u0627\\u0644\\u0635\\u0641\\u062D\\u0629 \\u0627\\u0644\\u062A\\u062F\\u0648\\u064A\\u0644. \\u0642\\u0645 \\u0628\\u062A\\u0628\\u062F\\u064A\\u0644 \\u0627\\u0644\\u0644\\u063A\\u0627\\u062A \\u0644\\u0631\\u0624\\u064A\\u0629 \\u0627\\u0644\\u062A\\u0631\\u062C\\u0645\\u0627\\u062A.', cta: '\\u0627\\u0628\\u062F\\u0623', locale: '\\u0627\\u0644\\u0639\\u0631\\u0628\\u064A\\u0629', dir: 'rtl' },
+  es: { greeting: '¡Hola, Mundo!', desc: 'Esta página demuestra la internacionalización. Cambia de idioma para ver las traducciones actualizarse en tiempo real.', cta: 'Comenzar', locale: 'Español', dir: 'ltr' },
+  ja: { greeting: 'こんにちは世界！', desc: 'このページは国際化を実演します。言語を切り替えて、リアルタイムで翻訳が更新されるのをご覧ください。', cta: '始める', locale: '日本語', dir: 'ltr' },
+  ar: { greeting: 'مرحبا بالعالم!', desc: 'توضح هذه الصفحة التدويل. قم بتبديل اللغات لرؤية الترجمات.', cta: 'ابدأ', locale: 'العربية', dir: 'rtl' },
 };
 
 function App() {
@@ -6510,7 +6510,7 @@ function App() {
       <h3 style={{marginBottom:10}}>Optimistic Updates</h3>
       {items.map(item => (
         <div key={item.id} className={\`ou-item \${item.status === 'saving' ? 'pending' : ''} \${item.status === 'failed' ? 'error' : ''}\`}>
-          <button className="ou-like" onClick={() => toggleLike(item.id)}>\\u2764</button>
+          <button className="ou-like" onClick={() => toggleLike(item.id)}>❤</button>
           <span className="ou-count">{item.likes}</span>
           <span>{item.name}</span>
           <span className={\`ou-status \${item.status}\`}>{item.status === 'saving' ? 'Saving...' : item.status === 'failed' ? 'Failed!' : 'Saved'}</span>
@@ -6547,8 +6547,8 @@ function App() {
     <div className="um-wrap">
       <h3 style={{marginBottom:8}}>Pixel Painter (Undo/Redo)</h3>
       <div className="um-toolbar">
-        <button className="um-btn" onClick={undo} disabled={histIdx === 0}>\\u21A9 Undo</button>
-        <button className="um-btn" onClick={redo} disabled={histIdx >= history.length - 1}>\\u21AA Redo</button>
+        <button className="um-btn" onClick={undo} disabled={histIdx === 0}>↩ Undo</button>
+        <button className="um-btn" onClick={redo} disabled={histIdx >= history.length - 1}>↪ Redo</button>
         <button className="um-btn" onClick={() => { setGrid(initGrid); setHistory([initGrid]); setHistIdx(0); }}>Clear</button>
         <span style={{marginLeft:'auto',fontSize:11,color:'#555'}}>{histIdx}/{history.length - 1} steps</span>
       </div>
@@ -7011,7 +7011,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 const alerts = [
   { type: 'info', icon: 'ℹ', title: 'Info', msg: 'A new update is available for download.' },
   { type: 'success', icon: '✅', title: 'Success', msg: 'Your changes have been saved successfully.' },
-  { type: 'warning', icon: '\\u26A0', title: 'Warning', msg: 'Your storage is almost full (90% used).' },
+  { type: 'warning', icon: '⚠', title: 'Warning', msg: 'Your storage is almost full (90% used).' },
   { type: 'error', icon: '❌', title: 'Error', msg: 'Failed to process payment. Please try again.' },
 ];
 
@@ -7046,7 +7046,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
   'react-callout': `const { useState } = React;
 
 function Callout({ type, title, children }) {
-  const icons = { note: '📝', tip: '💡', warning: '\\u26A0', danger: '🚨' };
+  const icons = { note: '📝', tip: '💡', warning: '⚠', danger: '🚨' };
   return (
     <div className={\`callout \${type}\`}>
       <div className="callout-header">{icons[type]} {title}</div>

@@ -1783,7 +1783,7 @@ function render() {
   document.getElementById('prev-btn').disabled = page === 0;
   document.getElementById('next-btn').disabled = start + pageSize >= d.length;
   ['name','age','city'].forEach(c => {
-    document.getElementById('sort-' + c).textContent = sortCol === c ? (sortDir === 'asc' ? '\\u25B2' : '\\u25BC') : '';
+    document.getElementById('sort-' + c).textContent = sortCol === c ? (sortDir === 'asc' ? '▲' : '▼') : '';
   });
 }
 
@@ -2690,7 +2690,7 @@ const messages = {
   warning: 'Please check your input values.',
   info: 'New updates are available.',
 };
-const icons = { success: '\\u2713', error: '\\u2717', warning: '\\u26A0', info: '\\u2139' };
+const icons = { success: '✓', error: '✗', warning: '⚠', info: 'ℹ' };
 
 function showToast(type) {
   const toast = document.createElement('div');
@@ -3233,15 +3233,15 @@ loadMore();`,
 }`,
       js: `// Simulating Angular image gallery with lightbox overlay
 const images = [
-  { emoji: '\\u{1F305}', label: 'Sunrise', bg: '#7c3aed' },
-  { emoji: '\\u{1F3D4}', label: 'Mountain', bg: '#2563eb' },
-  { emoji: '\\u{1F30A}', label: 'Ocean Wave', bg: '#0891b2' },
-  { emoji: '\\u{1F33B}', label: 'Sunflower', bg: '#ca8a04' },
-  { emoji: '\\u{1F30C}', label: 'Galaxy', bg: '#7c3aed' },
-  { emoji: '\\u{1F308}', label: 'Rainbow', bg: '#059669' },
-  { emoji: '\\u{1F3DE}', label: 'Landscape', bg: '#16a34a' },
-  { emoji: '\\u{1F319}', label: 'Night Sky', bg: '#1e3a5f' },
-  { emoji: '\\u{1F33F}', label: 'Nature', bg: '#15803d' },
+  { emoji: '🌅', label: 'Sunrise', bg: '#7c3aed' },
+  { emoji: '🏔', label: 'Mountain', bg: '#2563eb' },
+  { emoji: '🌊', label: 'Ocean Wave', bg: '#0891b2' },
+  { emoji: '🌻', label: 'Sunflower', bg: '#ca8a04' },
+  { emoji: '🌌', label: 'Galaxy', bg: '#7c3aed' },
+  { emoji: '🌈', label: 'Rainbow', bg: '#059669' },
+  { emoji: '🏞', label: 'Landscape', bg: '#16a34a' },
+  { emoji: '🌙', label: 'Night Sky', bg: '#1e3a5f' },
+  { emoji: '🌿', label: 'Nature', bg: '#15803d' },
 ];
 
 const gallery = document.getElementById('gallery');
@@ -3366,12 +3366,12 @@ document.addEventListener('keydown', (e) => {
 }`,
       js: `// Simulating Angular Flex Layout responsive card grid
 const cards = [
-  { icon: '\\u{1F4E6}', title: 'Components', desc: 'Reusable building blocks for UI', tag: 'core' },
-  { icon: '\\u{1F527}', title: 'Services', desc: 'Shared logic and data access', tag: 'core' },
-  { icon: '\\u{1F6E1}', title: 'Guards', desc: 'Route protection and auth', tag: 'routing' },
-  { icon: '\\u{1F4E1}', title: 'Interceptors', desc: 'HTTP request/response handling', tag: 'http' },
-  { icon: '\\u{1F3AF}', title: 'Directives', desc: 'DOM manipulation utilities', tag: 'template' },
-  { icon: '\\u{1F50D}', title: 'Pipes', desc: 'Data transformation in templates', tag: 'template' },
+  { icon: '📦', title: 'Components', desc: 'Reusable building blocks for UI', tag: 'core' },
+  { icon: '🔧', title: 'Services', desc: 'Shared logic and data access', tag: 'core' },
+  { icon: '🛡', title: 'Guards', desc: 'Route protection and auth', tag: 'routing' },
+  { icon: '📡', title: 'Interceptors', desc: 'HTTP request/response handling', tag: 'http' },
+  { icon: '🎯', title: 'Directives', desc: 'DOM manipulation utilities', tag: 'template' },
+  { icon: '🔍', title: 'Pipes', desc: 'Data transformation in templates', tag: 'template' },
 ];
 
 const grid = document.getElementById('grid');
@@ -5202,7 +5202,7 @@ function save() { localStorage.setItem('ng-favs', JSON.stringify(favorites)); }
 
 function render() {
   document.getElementById('items').innerHTML = items.map(item =>
-    '<div class="item-card"><span class="name">' + item + '</span><button class="fav-btn' + (favorites.includes(item) ? ' active' : '') + '" data-item="' + item + '">' + (favorites.includes(item) ? '\\u2665' : '\\u2661') + '</button></div>'
+    '<div class="item-card"><span class="name">' + item + '</span><button class="fav-btn' + (favorites.includes(item) ? ' active' : '') + '" data-item="' + item + '">' + (favorites.includes(item) ? '♥' : '♡') + '</button></div>'
   ).join('');
 
   document.getElementById('fav-count').textContent = favorites.length;
@@ -5678,19 +5678,19 @@ btn.addEventListener('click', () => {
 const container = document.getElementById('empty-state');
 const states = {
   'no-data': {
-    icon: '\\u{1F4E6}',
+    icon: '📦',
     title: 'No items yet',
     desc: 'Get started by creating your first item. It only takes a few seconds.',
     actions: '<button class="empty-action" onclick="alert(\\'Create clicked\\')">Create First Item</button>'
   },
   'no-results': {
-    icon: '\\u{1F50D}',
+    icon: '🔍',
     title: 'No results found',
     desc: 'Try adjusting your search or filters to find what you are looking for.',
     actions: '<button class="empty-action" onclick="alert(\\'Filters cleared\\')">Clear Filters</button><button class="empty-action secondary" onclick="alert(\\'Help opened\\')">Get Help</button>'
   },
   'error': {
-    icon: '\\u{26A0}',
+    icon: '⚠',
     title: 'Something went wrong',
     desc: 'We had trouble loading your data. Please check your connection and try again.',
     actions: '<button class="empty-action" onclick="alert(\\'Retrying...\\')">Retry</button>'
@@ -9732,8 +9732,8 @@ select { padding: 6px 10px; border: 1px solid #334155; border-radius: 6px; backg
       js: `// Simulating Angular i18n locale behavior
 const translations = {
   en: { title: 'Internationalization', greeting: 'Hello! Welcome to our app.', btn: 'Get Started', locale: 'en-US' },
-  es: { title: 'Internacionalizaci\\u00f3n', greeting: '\\u00a1Hola! Bienvenido a nuestra app.', btn: 'Comenzar', locale: 'es-ES' },
-  ja: { title: '\\u56fd\\u969b\\u5316', greeting: '\\u3053\\u3093\\u306b\\u3061\\u306f\\uff01\\u30a2\\u30d7\\u30ea\\u3078\\u3088\\u3046\\u3053\\u305d\\u3002', btn: '\\u59cb\\u3081\\u308b', locale: 'ja-JP' }
+  es: { title: 'Internacionalización', greeting: '¡Hola! Bienvenido a nuestra app.', btn: 'Comenzar', locale: 'es-ES' },
+  ja: { title: '国際化', greeting: 'こんにちは！アプリへようこそ。', btn: '始める', locale: 'ja-JP' }
 };
 
 const sel = document.getElementById('locale-select');

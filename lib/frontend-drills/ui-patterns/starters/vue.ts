@@ -618,12 +618,12 @@ createApp({
     const search = ref('');
     const sortBy = ref('name');
     const cards = [
-      { id: 1, name: 'Dashboard', icon: '\\u{1F4CA}', color: '#3b82f6', category: 'Analytics', description: 'View your project metrics' },
-      { id: 2, name: 'Settings', icon: '\\u{2699}', color: '#8b5cf6', category: 'Config', description: 'Manage app preferences' },
-      { id: 3, name: 'Messages', icon: '\\u{1F4AC}', color: '#22c55e', category: 'Social', description: 'Chat with your team' },
-      { id: 4, name: 'Profile', icon: '\\u{1F464}', color: '#f59e0b', category: 'Config', description: 'Edit your profile info' },
-      { id: 5, name: 'Reports', icon: '\\u{1F4C4}', color: '#ef4444', category: 'Analytics', description: 'Generate detailed reports' },
-      { id: 6, name: 'Friends', icon: '\\u{1F465}', color: '#06b6d4', category: 'Social', description: 'Manage your connections' },
+      { id: 1, name: 'Dashboard', icon: '📊', color: '#3b82f6', category: 'Analytics', description: 'View your project metrics' },
+      { id: 2, name: 'Settings', icon: '⚙', color: '#8b5cf6', category: 'Config', description: 'Manage app preferences' },
+      { id: 3, name: 'Messages', icon: '💬', color: '#22c55e', category: 'Social', description: 'Chat with your team' },
+      { id: 4, name: 'Profile', icon: '👤', color: '#f59e0b', category: 'Config', description: 'Edit your profile info' },
+      { id: 5, name: 'Reports', icon: '📄', color: '#ef4444', category: 'Analytics', description: 'Generate detailed reports' },
+      { id: 6, name: 'Friends', icon: '👥', color: '#06b6d4', category: 'Social', description: 'Manage your connections' },
     ];
 
     const filtered = computed(() => {
@@ -706,11 +706,11 @@ createApp({
     const activeItem = ref('home');
 
     const navItems = [
-      { id: 'home', label: 'Home', icon: '\\u{1F3E0}' },
-      { id: 'analytics', label: 'Analytics', icon: '\\u{1F4CA}' },
-      { id: 'messages', label: 'Messages', icon: '\\u{1F4AC}' },
-      { id: 'settings', label: 'Settings', icon: '\\u{2699}' },
-      { id: 'profile', label: 'Profile', icon: '\\u{1F464}' },
+      { id: 'home', label: 'Home', icon: '🏠' },
+      { id: 'analytics', label: 'Analytics', icon: '📊' },
+      { id: 'messages', label: 'Messages', icon: '💬' },
+      { id: 'settings', label: 'Settings', icon: '⚙' },
+      { id: 'profile', label: 'Profile', icon: '👤' },
     ];
 
     const currentItem = null; // TODO: Implement currentItem
@@ -783,11 +783,11 @@ createApp({
   setup() {
     const activeTab = ref('home');
     const tabs = [
-      { id: 'home', label: 'Home', icon: '\\u{1F3E0}', desc: 'Your personalized feed and latest updates.' },
-      { id: 'search', label: 'Search', icon: '\\u{1F50D}', desc: 'Find people, places, and content.' },
-      { id: 'add', label: 'Create', icon: '\\u{2795}', desc: 'Share a new post or story.' },
-      { id: 'inbox', label: 'Inbox', icon: '\\u{1F514}', desc: 'View your notifications and messages.' },
-      { id: 'profile', label: 'Profile', icon: '\\u{1F464}', desc: 'Manage your profile and settings.' },
+      { id: 'home', label: 'Home', icon: '🏠', desc: 'Your personalized feed and latest updates.' },
+      { id: 'search', label: 'Search', icon: '🔍', desc: 'Find people, places, and content.' },
+      { id: 'add', label: 'Create', icon: '➕', desc: 'Share a new post or story.' },
+      { id: 'inbox', label: 'Inbox', icon: '🔔', desc: 'View your notifications and messages.' },
+      { id: 'profile', label: 'Profile', icon: '👤', desc: 'Manage your profile and settings.' },
     ];
 
     const currentTab = null; // TODO: Implement currentTab
@@ -945,11 +945,11 @@ createApp({
 createApp({
   setup() {
     const items = [
-      { id: 1, name: 'Vue.js', icon: '\\u{1F49A}', color: '#22c55e', category: 'Framework' },
-      { id: 2, name: 'TypeScript', icon: '\\u{1F4D8}', color: '#3b82f6', category: 'Language' },
-      { id: 3, name: 'Vite', icon: '\\u{26A1}', color: '#8b5cf6', category: 'Build Tool' },
-      { id: 4, name: 'Pinia', icon: '\\u{1F34D}', color: '#f59e0b', category: 'State' },
-      { id: 5, name: 'Tailwind', icon: '\\u{1F3A8}', color: '#06b6d4', category: 'CSS' },
+      { id: 1, name: 'Vue.js', icon: '💚', color: '#22c55e', category: 'Framework' },
+      { id: 2, name: 'TypeScript', icon: '📘', color: '#3b82f6', category: 'Language' },
+      { id: 3, name: 'Vite', icon: '⚡', color: '#8b5cf6', category: 'Build Tool' },
+      { id: 4, name: 'Pinia', icon: '🍍', color: '#f59e0b', category: 'State' },
+      { id: 5, name: 'Tailwind', icon: '🎨', color: '#06b6d4', category: 'CSS' },
     ];
 
     const stored = localStorage.getItem('vue-favorites');
@@ -1249,9 +1249,9 @@ createApp({
 createApp({
   setup() {
     const codes = [
-      { code: 'US', dial: '+1', flag: '\\u{1F1FA}\\u{1F1F8}' },
-      { code: 'GB', dial: '+44', flag: '\\u{1F1EC}\\u{1F1E7}' },
-      { code: 'DE', dial: '+49', flag: '\\u{1F1E9}\\u{1F1EA}' },
+      { code: 'US', dial: '+1', flag: '🇺🇸' },
+      { code: 'GB', dial: '+44', flag: '🇬🇧' },
+      { code: 'DE', dial: '+49', flag: '🇩🇪' },
     ];
     const country = ref(codes[0]);
     const phone = ref('');
@@ -1269,8 +1269,8 @@ createApp({
   setup() {
     const currencies = [
       { code: 'USD', symbol: '$', locale: 'en-US' },
-      { code: 'EUR', symbol: '\\u20AC', locale: 'de-DE' },
-      { code: 'GBP', symbol: '\\u00A3', locale: 'en-GB' },
+      { code: 'EUR', symbol: '€', locale: 'de-DE' },
+      { code: 'GBP', symbol: '£', locale: 'en-GB' },
     ];
     const currency = ref(currencies[0]);
     const rawInput = ref('');
@@ -1636,10 +1636,10 @@ createApp({
   setup() {
     const open = ref(false);
     const options = [
-      { name: 'Email', icon: '\\u2709', color: '#ef4444' },
-      { name: 'Copy', icon: '\\u2398', color: '#3b82f6' },
-      { name: 'Save', icon: '\\u2193', color: '#22c55e' },
-      { name: 'Print', icon: '\\u2399', color: '#f59e0b' },
+      { name: 'Email', icon: '✉', color: '#ef4444' },
+      { name: 'Copy', icon: '⎘', color: '#3b82f6' },
+      { name: 'Save', icon: '↓', color: '#22c55e' },
+      { name: 'Print', icon: '⎙', color: '#f59e0b' },
     ];
     return { open, options };
   }
@@ -1655,11 +1655,11 @@ createApp({
     const searchInput = ref(null);
     const commands = [
       { name: 'New File', icon: '+', shortcut: 'Ctrl+N' },
-      { name: 'Open File', icon: '\\u2191', shortcut: 'Ctrl+O' },
-      { name: 'Save', icon: '\\u2193', shortcut: 'Ctrl+S' },
-      { name: 'Find', icon: '\\u2315', shortcut: 'Ctrl+F' },
-      { name: 'Toggle Theme', icon: '\\u263E', shortcut: '' },
-      { name: 'Settings', icon: '\\u2699', shortcut: 'Ctrl+,' },
+      { name: 'Open File', icon: '↑', shortcut: 'Ctrl+O' },
+      { name: 'Save', icon: '↓', shortcut: 'Ctrl+S' },
+      { name: 'Find', icon: '⌕', shortcut: 'Ctrl+F' },
+      { name: 'Toggle Theme', icon: '☾', shortcut: '' },
+      { name: 'Settings', icon: '⚙', shortcut: 'Ctrl+,' },
       { name: 'Terminal', icon: '>', shortcut: 'Ctrl+\\u0060' },
     ];
     const filtered = []; // TODO: Filtered — filter items, remove item
@@ -1721,9 +1721,9 @@ createApp({
   setup() {
     const expanded = ref(false);
     const actions = [
-      { label: 'Upload', icon: '\\u2191', color: '#3b82f6' },
-      { label: 'Share', icon: '\\u2197', color: '#22c55e' },
-      { label: 'Edit', icon: '\\u270E', color: '#f59e0b' },
+      { label: 'Upload', icon: '↑', color: '#3b82f6' },
+      { label: 'Share', icon: '↗', color: '#22c55e' },
+      { label: 'Edit', icon: '✎', color: '#f59e0b' },
     ];
     return { expanded, actions };
   }
@@ -1797,9 +1797,9 @@ createApp({
   setup() {
     const stats = [
       { label: 'Revenue', value: '$12,450', icon: '$', iconBg: 'rgba(79,195,247,0.2)', trend: 12.5 },
-      { label: 'Users', value: '3,284', icon: '\\u2605', iconBg: 'rgba(34,197,94,0.2)', trend: 8.2 },
-      { label: 'Orders', value: '842', icon: '\\u2606', iconBg: 'rgba(245,158,11,0.2)', trend: -3.1 },
-      { label: 'Bounce Rate', value: '24%', icon: '\\u21B5', iconBg: 'rgba(239,68,68,0.2)', trend: -5.4 },
+      { label: 'Users', value: '3,284', icon: '★', iconBg: 'rgba(34,197,94,0.2)', trend: 8.2 },
+      { label: 'Orders', value: '842', icon: '☆', iconBg: 'rgba(245,158,11,0.2)', trend: -3.1 },
+      { label: 'Bounce Rate', value: '24%', icon: '↵', iconBg: 'rgba(239,68,68,0.2)', trend: -5.4 },
     ];
     return { stats };
   }
@@ -1947,10 +1947,10 @@ createApp({
 createApp({
   setup() {
     const features = [
-      { title: 'Fast Build', desc: 'Lightning-fast HMR and optimized production builds.', icon: '\\u26A1', iconBg: 'rgba(245,158,11,0.2)' },
+      { title: 'Fast Build', desc: 'Lightning-fast HMR and optimized production builds.', icon: '⚡', iconBg: 'rgba(245,158,11,0.2)' },
       { title: 'TypeScript', desc: 'First-class TypeScript support out of the box.', icon: 'TS', iconBg: 'rgba(59,130,246,0.2)' },
-      { title: 'Composables', desc: 'Reusable logic with the Composition API.', icon: '\\u2699', iconBg: 'rgba(34,197,94,0.2)' },
-      { title: 'SSR Ready', desc: 'Server-side rendering with Nuxt or custom setup.', icon: '\\u2601', iconBg: 'rgba(139,92,246,0.2)' },
+      { title: 'Composables', desc: 'Reusable logic with the Composition API.', icon: '⚙', iconBg: 'rgba(34,197,94,0.2)' },
+      { title: 'SSR Ready', desc: 'Server-side rendering with Nuxt or custom setup.', icon: '☁', iconBg: 'rgba(139,92,246,0.2)' },
     ];
     return { features };
   }
@@ -2174,10 +2174,10 @@ createApp({
     const collapsed = ref(false);
     const active = ref('Dashboard');
     const navItems = [
-      { label: 'Dashboard', icon: '\\u2302' },
-      { label: 'Projects', icon: '\\u2606' },
-      { label: 'Messages', icon: '\\u2709' },
-      { label: 'Settings', icon: '\\u2699' },
+      { label: 'Dashboard', icon: '⌂' },
+      { label: 'Projects', icon: '☆' },
+      { label: 'Messages', icon: '✉' },
+      { label: 'Settings', icon: '⚙' },
     ];
     return { collapsed, active, navItems };
   }
@@ -2705,9 +2705,9 @@ createApp({
   setup() {
     const makeAlerts = () => [
       { id: 1, type: 'info', icon: 'i', message: 'A new version is available.', dismissed: false },
-      { id: 2, type: 'success', icon: '\\u2713', message: 'Your changes have been saved.', dismissed: false },
-      { id: 3, type: 'warning', icon: '\\u26A0', message: 'Your trial expires in 3 days.', dismissed: false },
-      { id: 4, type: 'error', icon: '\\u2715', message: 'Failed to connect to the server.', dismissed: false },
+      { id: 2, type: 'success', icon: '✓', message: 'Your changes have been saved.', dismissed: false },
+      { id: 3, type: 'warning', icon: '⚠', message: 'Your trial expires in 3 days.', dismissed: false },
+      { id: 4, type: 'error', icon: '✕', message: 'Failed to connect to the server.', dismissed: false },
     ];
     const alerts = reactive(makeAlerts());
     const resetAlerts = () => {
@@ -2722,10 +2722,10 @@ createApp({
 createApp({
   setup() {
     const callouts = reactive([
-      { type: 'tip', icon: '\\u2714', title: 'Tip', body: 'Use the Composition API for better TypeScript support.', open: true },
+      { type: 'tip', icon: '✔', title: 'Tip', body: 'Use the Composition API for better TypeScript support.', open: true },
       { type: 'note', icon: 'i', title: 'Note', body: 'Vue 3 requires Node.js 16 or higher.', open: true },
-      { type: 'warning', icon: '\\u26A0', title: 'Warning', body: 'This API is deprecated and will be removed in v4.', open: false },
-      { type: 'danger', icon: '\\u2715', title: 'Danger', body: 'Never expose API keys in client-side code.', open: false },
+      { type: 'warning', icon: '⚠', title: 'Warning', body: 'This API is deprecated and will be removed in v4.', open: false },
+      { type: 'danger', icon: '✕', title: 'Danger', body: 'Never expose API keys in client-side code.', open: false },
     ]);
     return { callouts };
   }
@@ -2736,10 +2736,10 @@ createApp({
 createApp({
   setup() {
     const states = [
-      { type: 'no-data', icon: '\\u2205', iconBg: 'rgba(79,195,247,0.2)', title: 'No Data Yet', desc: 'Start by creating your first item.', action: 'Create Item' },
+      { type: 'no-data', icon: '∅', iconBg: 'rgba(79,195,247,0.2)', title: 'No Data Yet', desc: 'Start by creating your first item.', action: 'Create Item' },
       { type: 'no-results', icon: '?', iconBg: 'rgba(245,158,11,0.2)', title: 'No Results', desc: 'Try adjusting your search or filters.', action: 'Clear Filters' },
       { type: 'error', icon: '!', iconBg: 'rgba(239,68,68,0.2)', title: 'Something Went Wrong', desc: 'We could not load the data. Please try again.', action: 'Retry' },
-      { type: 'welcome', icon: '\\u2605', iconBg: 'rgba(34,197,94,0.2)', title: 'Welcome!', desc: 'Get started by exploring the features.', action: 'Get Started' },
+      { type: 'welcome', icon: '★', iconBg: 'rgba(34,197,94,0.2)', title: 'Welcome!', desc: 'Get started by exploring the features.', action: 'Get Started' },
     ];
     const active = ref('no-data');
     return { states, active };

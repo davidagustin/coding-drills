@@ -4502,7 +4502,7 @@ let rating = 0;
 for (let i = 1; i <= 5; i++) {
   const s = document.createElement('span');
   s.className = 'star';
-  s.textContent = '\\u2605';
+  s.textContent = '★';
   s.dataset.value = i;
   s.tabIndex = 0;
   s.setAttribute('role', 'radio');
@@ -6795,9 +6795,9 @@ const items = [
   { bg: '#1e3a5f', emoji: '🌊', cap: 'Ocean' },
   { bg: '#3b1f5e', emoji: '🌌', cap: 'Galaxy' },
   { bg: '#1f4a3b', emoji: '🌲', cap: 'Forest' },
-  { bg: '#5e3b1f', emoji: '\\u{1F3DC}', cap: 'Desert' },
+  { bg: '#5e3b1f', emoji: '🏜', cap: 'Desert' },
   { bg: '#1f3b5e', emoji: '❄', cap: 'Snow' },
-  { bg: '#4a1f3b', emoji: '\\u{1F338}', cap: 'Blossom' },
+  { bg: '#4a1f3b', emoji: '🌸', cap: 'Blossom' },
 ];
 const grid = document.getElementById('lb-grid'),
   overlay = document.getElementById('lb-overlay'),
@@ -10110,8 +10110,8 @@ features.forEach((f) => {
     const td = document.createElement('td');
     if (typeof v === 'boolean') {
       td.innerHTML = v
-        ? '<span class="ct-check">\\u2713</span>'
-        : '<span class="ct-cross">\\u2717</span>';
+        ? '<span class="ct-check">✓</span>'
+        : '<span class="ct-cross">✗</span>';
     } else {
       td.textContent = v;
       td.style.color = '#e0e0e0';
@@ -10254,7 +10254,7 @@ input:checked + .pt-slider::before {
   padding: 4px 0;
 }
 .pt-features li::before {
-  content: "\\u2713 ";
+  content: "✓ ";
   color: #4fc3f7;
 }
 .pt-cta {
@@ -10592,8 +10592,8 @@ function show(i) {
       '">' +
       t.name[0] +
       '</div><div class="tm-stars">' +
-      '\\u2605'.repeat(t.stars) +
-      '\\u2606'.repeat(5 - t.stars) +
+      '★'.repeat(t.stars) +
+      '☆'.repeat(5 - t.stars) +
       '</div><p class="tm-quote">"' +
       t.quote +
       '"</p><div class="tm-name">' +
@@ -10773,7 +10773,7 @@ team.forEach((m) => {
   position: relative;
 }
 .cl-items li::before {
-  content: "\\u2022";
+  content: "•";
   position: absolute;
   left: 4px;
   color: #475569;
@@ -11094,7 +11094,7 @@ metrics.forEach((m) => {
     '</div><div class="md-trend ' +
     (m.up ? 'md-up' : 'md-down') +
     '">' +
-    (m.up ? '\\u2191' : '\\u2193') +
+    (m.up ? '↑' : '↓') +
     ' ' +
     m.trend +
     '</div><div class="md-bars">' +
@@ -13420,12 +13420,12 @@ const translations = {
     button: 'Comenzar',
   },
   ja: {
-    title: '\\u3088\\u3046\\u3053\\u305D',
+    title: 'ようこそ',
     description:
-      '\\u79C1\\u305F\\u3061\\u306E\\u30D7\\u30E9\\u30C3\\u30C8\\u30D5\\u30A9\\u30FC\\u30E0\\u3067\\u7D20\\u6674\\u3089\\u3057\\u3044\\u88FD\\u54C1\\u3092\\u4F5C\\u308A\\u307E\\u3057\\u3087\\u3046\\u3002',
-    price_label: '\\u4FA1\\u683C',
-    date_label: '\\u65E5\\u4ED8',
-    button: '\\u59CB\\u3081\\u308B',
+      '私たちのプラットフォームで素晴らしい製品を作りましょう。',
+    price_label: '価格',
+    date_label: '日付',
+    button: '始める',
   },
 };
 const lang = document.getElementById('i18-lang');

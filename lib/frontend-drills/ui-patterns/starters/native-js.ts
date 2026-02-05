@@ -750,7 +750,7 @@ let rating = 0;
 for (let i = 1; i <= 5; i++) {
   const s = document.createElement('span');
   s.className = 'star';
-  s.textContent = '\\u2605';
+  s.textContent = '★';
   s.dataset.value = i;
   s.tabIndex = 0;
   s.setAttribute('role', 'radio');
@@ -1117,12 +1117,12 @@ document.addEventListener('click', (e) => {
 
   'js-lightbox': `
 const items = [
-  { bg: '#1e3a5f', emoji: '\\u{1F30A}', cap: 'Ocean' },
-  { bg: '#3b1f5e', emoji: '\\u{1F30C}', cap: 'Galaxy' },
-  { bg: '#1f4a3b', emoji: '\\u{1F332}', cap: 'Forest' },
-  { bg: '#5e3b1f', emoji: '\\u{1F3DC}', cap: 'Desert' },
-  { bg: '#1f3b5e', emoji: '\\u{2744}', cap: 'Snow' },
-  { bg: '#4a1f3b', emoji: '\\u{1F338}', cap: 'Blossom' },
+  { bg: '#1e3a5f', emoji: '🌊', cap: 'Ocean' },
+  { bg: '#3b1f5e', emoji: '🌌', cap: 'Galaxy' },
+  { bg: '#1f4a3b', emoji: '🌲', cap: 'Forest' },
+  { bg: '#5e3b1f', emoji: '🏜', cap: 'Desert' },
+  { bg: '#1f3b5e', emoji: '❄', cap: 'Snow' },
+  { bg: '#4a1f3b', emoji: '🌸', cap: 'Blossom' },
 ];
 const grid = document.getElementById('lb-grid'),
   overlay = document.getElementById('lb-overlay'),
@@ -1403,19 +1403,19 @@ overlay.addEventListener('click', (e) => {
   'js-spotlight-search': `
 const data = {
   Pages: [
-    { name: 'Home', icon: '\\uD83C\\uDFE0' },
-    { name: 'Dashboard', icon: '\\uD83D\\uDCCA' },
-    { name: 'Settings', icon: '\\u2699' },
+    { name: 'Home', icon: '🏠' },
+    { name: 'Dashboard', icon: '📊' },
+    { name: 'Settings', icon: '⚙' },
   ],
   Actions: [
-    { name: 'Create New', icon: '\\u2795' },
-    { name: 'Import Data', icon: '\\uD83D\\uDCE5' },
-    { name: 'Export PDF', icon: '\\uD83D\\uDCC4' },
+    { name: 'Create New', icon: '➕' },
+    { name: 'Import Data', icon: '📥' },
+    { name: 'Export PDF', icon: '📄' },
   ],
   Users: [
-    { name: 'Alice Johnson', icon: '\\uD83D\\uDC64' },
-    { name: 'Bob Smith', icon: '\\uD83D\\uDC64' },
-    { name: 'Carol White', icon: '\\uD83D\\uDC64' },
+    { name: 'Alice Johnson', icon: '👤' },
+    { name: 'Bob Smith', icon: '👤' },
+    { name: 'Carol White', icon: '👤' },
   ],
 };
 const overlay = document.getElementById('ss-overlay'),
@@ -1743,7 +1743,7 @@ render();
   'js-feature-list': `
 const features = [
   {
-    icon: '\\u26A1',
+    icon: '⚡',
     bg: '#1e3a5f',
     name: 'Fast Performance',
     desc: 'Optimized for speed',
@@ -1751,7 +1751,7 @@ const features = [
       'Built with cutting-edge web technologies for sub-second load times.',
   },
   {
-    icon: '\\uD83D\\uDD12',
+    icon: '🔒',
     bg: '#3b1f5e',
     name: 'Secure',
     desc: 'Enterprise-grade security',
@@ -1759,14 +1759,14 @@ const features = [
       'End-to-end encryption, SSO, and compliance with industry standards.',
   },
   {
-    icon: '\\uD83C\\uDF0D',
+    icon: '🌍',
     bg: '#1f4a3b',
     name: 'Global CDN',
     desc: 'Worldwide distribution',
     detail: 'Content delivered from 200+ edge locations across 6 continents.',
   },
   {
-    icon: '\\uD83D\\uDCC8',
+    icon: '📈',
     bg: '#5e3b1f',
     name: 'Analytics',
     desc: 'Real-time insights',
@@ -2274,12 +2274,12 @@ const translations = {
     button: 'Comenzar',
   },
   ja: {
-    title: '\\u3088\\u3046\\u3053\\u305D',
+    title: 'ようこそ',
     description:
-      '\\u79C1\\u305F\\u3061\\u306E\\u30D7\\u30E9\\u30C3\\u30C8\\u30D5\\u30A9\\u30FC\\u30E0\\u3067\\u7D20\\u6674\\u3089\\u3057\\u3044\\u88FD\\u54C1\\u3092\\u4F5C\\u308A\\u307E\\u3057\\u3087\\u3046\\u3002',
-    price_label: '\\u4FA1\\u683C',
-    date_label: '\\u65E5\\u4ED8',
-    button: '\\u59CB\\u3081\\u308B',
+      '私たちのプラットフォームで素晴らしい製品を作りましょう。',
+    price_label: '価格',
+    date_label: '日付',
+    button: '始める',
   },
 };
 const lang = document.getElementById('i18-lang');
