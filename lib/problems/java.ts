@@ -9576,6 +9576,149 @@ text.lines()
     ],
     tags: ['HashMap', 'put', 'get', 'collections', 'beginner'],
   },
+
+  // -- String Operations (2 problems) --
+  {
+    id: 'java-beginner-string-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Concatenation',
+    text: 'Concatenate two strings together with a space between them',
+    setup: 'String first = "Hello";\nString second = "World";',
+    setupCode: 'String first = "Hello";\nString second = "World";',
+    expected: 'Hello World',
+    sample: 'String result = first + " " + second;',
+    hints: [
+      'Use the + operator to concatenate strings',
+      'Add a space string between the two words',
+    ],
+    tags: ['string', 'concatenation', 'beginner'],
+  },
+  {
+    id: 'java-beginner-string-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Length',
+    text: 'Get the length of a string',
+    setup: 'String message = "Hello, Java!";',
+    setupCode: 'String message = "Hello, Java!";',
+    expected: 12,
+    sample: 'int len = message.length();',
+    hints: [
+      'Use the length() method on strings',
+      'Note: length() is a method for String, not a property',
+    ],
+    tags: ['string', 'length', 'beginner'],
+  },
+
+  // -- While/Do-While Loops (2 problems) --
+  {
+    id: 'java-beginner-while-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic While Loop',
+    text: 'Use a while loop to print numbers 1 through 5',
+    setup: 'int i = 1;',
+    setupCode: 'int i = 1;',
+    expected: '1 2 3 4 5',
+    sample: 'while (i <= 5) {\n  System.out.print(i + " ");\n  i++;\n}',
+    hints: [
+      'Initialize counter before the loop',
+      'Update the counter inside the loop to avoid infinite loop',
+    ],
+    tags: ['while-loop', 'iteration', 'beginner'],
+  },
+  {
+    id: 'java-beginner-while-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Do-While Loop',
+    text: 'Use a do-while loop to print numbers 1 through 3',
+    setup: 'int i = 1;',
+    setupCode: 'int i = 1;',
+    expected: '1 2 3',
+    sample: 'do {\n  System.out.print(i + " ");\n  i++;\n} while (i <= 3);',
+    hints: [
+      'Do-while executes at least once before checking condition',
+      'Condition is checked at the end of each iteration',
+    ],
+    tags: ['do-while', 'iteration', 'beginner'],
+  },
+
+  // -- Nested Loops (1 problem) --
+  {
+    id: 'java-beginner-nested-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Nested For Loop',
+    text: 'Print a 3x3 grid of asterisks using nested for loops',
+    setup: '// Print 3 rows of 3 asterisks each',
+    setupCode: '// Print 3 rows of 3 asterisks each',
+    expected: '***\n***\n***',
+    sample:
+      'for (int i = 0; i < 3; i++) {\n  for (int j = 0; j < 3; j++) {\n    System.out.print("*");\n  }\n  System.out.println();\n}',
+    hints: [
+      'Outer loop controls rows',
+      'Inner loop controls columns',
+      'Print newline after each row',
+    ],
+    tags: ['nested-loop', 'for-loop', 'beginner'],
+  },
+
+  // -- Boolean Operations (1 problem) --
+  {
+    id: 'java-beginner-bool-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Boolean AND/OR Operations',
+    text: 'Check if a number is between 1 and 100 (inclusive) using AND, or equal to 0 using OR',
+    setup: 'int num = 50;',
+    setupCode: 'int num = 50;',
+    expected: true,
+    sample: 'boolean result = (num >= 1 && num <= 100) || num == 0;',
+    hints: [
+      'Use && for AND operation',
+      'Use || for OR operation',
+      'Parentheses control evaluation order',
+    ],
+    tags: ['boolean', 'and', 'or', 'conditionals', 'beginner'],
+  },
+
+  // -- Advanced Array Operations (2 problems) --
+  {
+    id: 'java-beginner-arr-adv-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Maximum with Arrays Stream',
+    text: 'Find the maximum value in an array using Arrays.stream()',
+    setup: 'int[] nums = {3, 7, 2, 9, 5};',
+    setupCode: 'int[] nums = {3, 7, 2, 9, 5};',
+    expected: 9,
+    sample: 'int max = Arrays.stream(nums).max().getAsInt();',
+    hints: [
+      'Arrays.stream() converts array to IntStream',
+      'max() returns OptionalInt',
+      'getAsInt() extracts the value',
+    ],
+    tags: ['array', 'stream', 'max', 'beginner'],
+  },
+  {
+    id: 'java-beginner-arr-adv-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Count Array Elements Matching Condition',
+    text: 'Count how many numbers in the array are greater than 5',
+    setup: 'int[] nums = {3, 7, 2, 9, 5, 8, 1};',
+    setupCode: 'int[] nums = {3, 7, 2, 9, 5, 8, 1};',
+    expected: 3,
+    sample: 'long count = Arrays.stream(nums).filter(n -> n > 5).count();',
+    hints: [
+      'Use filter() with a lambda to select elements',
+      'count() returns the number of matching elements',
+      'count() returns a long, not int',
+    ],
+    tags: ['array', 'stream', 'filter', 'count', 'beginner'],
+  },
 ];
 
 export default javaProblems;

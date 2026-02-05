@@ -3157,6 +3157,150 @@ export const cppProblems: Problem[] = [
     ],
     tags: ['map', 'access', 'beginner'],
   },
+
+  // -- String Operations (2 problems) --
+  {
+    id: 'cpp-beginner-string-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Concatenation',
+    text: 'Concatenate two strings together with a space between them',
+    setup: 'std::string first = "Hello";\nstd::string second = "World";',
+    setupCode: 'std::string first = "Hello";\nstd::string second = "World";',
+    expected: '"Hello World"',
+    sample: 'std::string result = first + " " + second;',
+    hints: [
+      'Use the + operator to concatenate std::string',
+      'Add a space string between the two words',
+    ],
+    tags: ['string', 'concatenation', 'beginner'],
+  },
+  {
+    id: 'cpp-beginner-string-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Length',
+    text: 'Get the length of a string',
+    setup: 'std::string message = "Hello, C++!";',
+    setupCode: 'std::string message = "Hello, C++!";',
+    expected: '11',
+    sample: 'size_t len = message.length();',
+    hints: [
+      'Use length() or size() method on std::string',
+      'Both methods return the same value',
+      'Return type is size_t',
+    ],
+    tags: ['string', 'length', 'size', 'beginner'],
+  },
+
+  // -- While/Do-While Loops (2 problems) --
+  {
+    id: 'cpp-beginner-while-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic While Loop',
+    text: 'Use a while loop to print numbers 1 through 5',
+    setup: 'int i = 1;',
+    setupCode: 'int i = 1;',
+    expected: '"1 2 3 4 5"',
+    sample: 'while (i <= 5) {\n  std::cout << i << " ";\n  i++;\n}',
+    hints: [
+      'Initialize counter before the loop',
+      'Update the counter inside the loop to avoid infinite loop',
+    ],
+    tags: ['while-loop', 'iteration', 'beginner'],
+  },
+  {
+    id: 'cpp-beginner-while-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Do-While Loop',
+    text: 'Use a do-while loop to print numbers 1 through 3',
+    setup: 'int i = 1;',
+    setupCode: 'int i = 1;',
+    expected: '"1 2 3"',
+    sample: 'do {\n  std::cout << i << " ";\n  i++;\n} while (i <= 3);',
+    hints: [
+      'Do-while executes at least once before checking condition',
+      'Condition is checked at the end of each iteration',
+    ],
+    tags: ['do-while', 'iteration', 'beginner'],
+  },
+
+  // -- Nested Loops (1 problem) --
+  {
+    id: 'cpp-beginner-nested-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Nested For Loop',
+    text: 'Print a 3x3 grid of asterisks using nested for loops',
+    setup: '// Print 3 rows of 3 asterisks each',
+    setupCode: '// Print 3 rows of 3 asterisks each',
+    expected: '"***\\n***\\n***"',
+    sample:
+      'for (int i = 0; i < 3; i++) {\n  for (int j = 0; j < 3; j++) {\n    std::cout << "*";\n  }\n  std::cout << "\\n";\n}',
+    hints: [
+      'Outer loop controls rows',
+      'Inner loop controls columns',
+      'Print newline after each row',
+    ],
+    tags: ['nested-loop', 'for-loop', 'beginner'],
+  },
+
+  // -- Boolean Operations (1 problem) --
+  {
+    id: 'cpp-beginner-bool-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Boolean AND/OR Operations',
+    text: 'Check if a number is between 1 and 100 (inclusive) using AND, or equal to 0 using OR',
+    setup: 'int num = 50;',
+    setupCode: 'int num = 50;',
+    expected: 'true',
+    sample: 'bool result = (num >= 1 && num <= 100) || num == 0;',
+    hints: [
+      'Use && for AND operation',
+      'Use || for OR operation',
+      'Parentheses control evaluation order',
+    ],
+    tags: ['boolean', 'and', 'or', 'conditionals', 'beginner'],
+  },
+
+  // -- Advanced Vector Operations (2 problems) --
+  {
+    id: 'cpp-beginner-vec-adv-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Maximum in Vector',
+    text: 'Find the maximum value in a vector using std::max_element',
+    setup: 'std::vector<int> nums = {3, 7, 2, 9, 5};',
+    setupCode: 'std::vector<int> nums = {3, 7, 2, 9, 5};',
+    expected: '9',
+    sample: 'int maxVal = *std::max_element(nums.begin(), nums.end());',
+    hints: [
+      'std::max_element returns an iterator',
+      'Dereference the iterator with * to get the value',
+      'Include <algorithm> header',
+    ],
+    tags: ['vector', 'algorithm', 'max_element', 'beginner'],
+  },
+  {
+    id: 'cpp-beginner-vec-adv-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Count Vector Elements Matching Condition',
+    text: 'Count how many numbers in the vector are greater than 5',
+    setup: 'std::vector<int> nums = {3, 7, 2, 9, 5, 8, 1};',
+    setupCode: 'std::vector<int> nums = {3, 7, 2, 9, 5, 8, 1};',
+    expected: '3',
+    sample: 'int count = std::count_if(nums.begin(), nums.end(), [](int n) { return n > 5; });',
+    hints: [
+      'std::count_if counts elements matching a predicate',
+      'Use a lambda function as the predicate',
+      'Include <algorithm> header',
+    ],
+    tags: ['vector', 'algorithm', 'count_if', 'lambda', 'beginner'],
+  },
 ];
 
 export default cppProblems;

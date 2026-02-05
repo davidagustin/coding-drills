@@ -2906,6 +2906,133 @@ export const cProblems: Problem[] = [
     ],
     tags: ['array', 'loop', 'sum', 'beginner'],
   },
+
+  // -- Strings (2 problems) --
+  {
+    id: 'c-beginner-string-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Concatenation',
+    text: 'Use strcat to concatenate str2 onto the end of str1.',
+    setup:
+      '#include <stdio.h>\n#include <string.h>\nchar str1[50] = "Hello ";\nchar str2[] = "World";',
+    setupCode:
+      '#include <stdio.h>\n#include <string.h>\nchar str1[50] = "Hello ";\nchar str2[] = "World";',
+    expected: 'strcat(str1, str2);',
+    sample: 'strcat(str1, str2);\nprintf("%s", str1);',
+    hints: [
+      'strcat appends src to dest',
+      'Destination must have enough space',
+      'Modifies the destination string in place',
+    ],
+    validPatterns: [/strcat\s*\(\s*str1\s*,\s*str2\s*\)/],
+    tags: ['string', 'beginner', 'strcat', 'concatenation'],
+  },
+  {
+    id: 'c-beginner-string-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Length',
+    text: 'Use strlen to find the length of the string.',
+    setup: '#include <stdio.h>\n#include <string.h>\nchar message[] = "Hello";',
+    setupCode: '#include <stdio.h>\n#include <string.h>\nchar message[] = "Hello";',
+    expected: 'size_t len = strlen(message);',
+    sample: 'size_t len = strlen(message);\nprintf("Length: %zu", len);',
+    hints: [
+      'strlen returns number of characters',
+      'Does not count null terminator',
+      'Returns size_t type',
+    ],
+    validPatterns: [/strlen\s*\(\s*message\s*\)/],
+    tags: ['string', 'beginner', 'strlen', 'length'],
+  },
+
+  // -- While/Do-While (2 problems) --
+  {
+    id: 'c-beginner-while-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'While Loop Sum',
+    text: 'Use a while loop to calculate the sum of numbers from 1 to n.',
+    setup: '#include <stdio.h>\nint n = 5;\nint sum = 0;\nint i = 1;',
+    setupCode: '#include <stdio.h>\nint n = 5;\nint sum = 0;\nint i = 1;',
+    expected: 'while (i <= n) { sum += i; i++; }',
+    sample: 'while (i <= n) {\n    sum += i;\n    i++;\n}\nprintf("Sum: %d", sum);',
+    hints: [
+      'Initialize counter before loop',
+      'Check condition: i <= n',
+      'Increment counter inside loop',
+    ],
+    validPatterns: [/while\s*\(\s*i\s*<=\s*n\s*\)/, /sum\s*\+=\s*i/, /i\s*\+\+/],
+    tags: ['loop', 'while', 'sum', 'beginner'],
+  },
+  {
+    id: 'c-beginner-while-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Do-While Input Validation',
+    text: 'Write a do-while loop that would prompt until getting valid input (simulate with counter).',
+    setup: '#include <stdio.h>\nint attempts = 0;\nint valid = 0;',
+    setupCode: '#include <stdio.h>\nint attempts = 0;\nint valid = 0;',
+    expected: 'do { attempts++; if (attempts >= 3) valid = 1; } while (!valid);',
+    sample:
+      'do {\n    attempts++;\n    if (attempts >= 3) valid = 1;\n} while (!valid);\nprintf("Attempts: %d", attempts);',
+    hints: [
+      'do-while executes body at least once',
+      'Condition checked after body',
+      'Use !valid or valid == 0',
+    ],
+    validPatterns: [/do\s*\{/, /\}\s*while\s*\(\s*!?\s*valid/, /attempts\s*\+\+/],
+    tags: ['loop', 'do-while', 'validation', 'beginner'],
+  },
+
+  // -- Advanced Array Operations (2 problems) --
+  {
+    id: 'c-beginner-array-adv-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Maximum in Array',
+    text: 'Write a loop to find the maximum value in the array.',
+    setup: '#include <stdio.h>\nint arr[5] = {72, 85, 91, 68, 79};\nint max = arr[0];',
+    setupCode: '#include <stdio.h>\nint arr[5] = {72, 85, 91, 68, 79};\nint max = arr[0];',
+    expected: 'for (int i = 1; i < 5; i++) if (arr[i] > max) max = arr[i];',
+    sample:
+      'for (int i = 1; i < 5; i++) {\n    if (arr[i] > max) {\n        max = arr[i];\n    }\n}\nprintf("Max: %d", max);',
+    hints: [
+      'Initialize max with first element',
+      'Start loop from index 1',
+      'Update max when larger found',
+    ],
+    validPatterns: [
+      /for\s*\([^)]+\).*if\s*\(\s*arr\s*\[\s*i\s*\]\s*>\s*max\s*\)/s,
+      /max\s*=\s*arr\s*\[\s*i\s*\]/,
+    ],
+    tags: ['array', 'loop', 'maximum', 'beginner'],
+  },
+  {
+    id: 'c-beginner-array-adv-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Count Occurrences',
+    text: 'Write a loop to count how many times the target value appears in the array.',
+    setup:
+      '#include <stdio.h>\nint arr[7] = {1, 3, 2, 3, 4, 3, 5};\nint target = 3;\nint count = 0;',
+    setupCode:
+      '#include <stdio.h>\nint arr[7] = {1, 3, 2, 3, 4, 3, 5};\nint target = 3;\nint count = 0;',
+    expected: 'for (int i = 0; i < 7; i++) if (arr[i] == target) count++;',
+    sample:
+      'for (int i = 0; i < 7; i++) {\n    if (arr[i] == target) {\n        count++;\n    }\n}\nprintf("Count: %d", count);',
+    hints: [
+      'Initialize count to 0',
+      'Compare each element with target',
+      'Increment count when match found',
+    ],
+    validPatterns: [
+      /for\s*\([^)]+\).*if\s*\(\s*arr\s*\[\s*i\s*\]\s*==\s*target\s*\)/s,
+      /count\s*\+\+/,
+    ],
+    tags: ['array', 'loop', 'count', 'beginner'],
+  },
 ];
 
 // Helper functions

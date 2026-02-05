@@ -1850,6 +1850,123 @@ export const elixirProblems: Problem[] = [
     ],
     tags: ['map', 'beginner', 'update'],
   },
+
+  // -- Strings (2 problems) --
+  {
+    id: 'ex-beginner-string-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Concatenation',
+    text: 'Use the <> operator to concatenate the two strings with a space between them.',
+    setup: 'greeting = "Hello"\nname = "World"',
+    setupCode: 'greeting = "Hello"\nname = "World"',
+    expected: 'Hello World',
+    sample: 'greeting <> " " <> name',
+    hints: [
+      '<> is the string concatenation operator',
+      'Add a space string " " between',
+      'Works with binaries (strings)',
+    ],
+    validPatterns: [/greeting\s*<>\s*"\s*"\s*<>\s*name/, /#{greeting}\s+#{name}/],
+    tags: ['string', 'beginner', 'concatenation'],
+  },
+  {
+    id: 'ex-beginner-string-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Length',
+    text: 'Use String.length to find the number of graphemes (characters) in the string.',
+    setup: 'message = "Elixir"',
+    setupCode: 'message = "Elixir"',
+    expected: 6,
+    sample: 'String.length(message)',
+    hints: ['String.length counts graphemes', 'Returns an integer', 'Use byte_size for byte count'],
+    validPatterns: [/String\.length\s*\(\s*message\s*\)/],
+    tags: ['string', 'beginner', 'length'],
+  },
+
+  // -- Guards (2 problems) --
+  {
+    id: 'ex-beginner-guard-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic Guard Clause',
+    text: 'Use the absolute function with a guard to get the absolute value of the number.',
+    setup:
+      'defmodule Math do\n  def absolute(n) when n < 0, do: -n\n  def absolute(n), do: n\nend\nnum = -5',
+    setupCode:
+      'defmodule Math do\n  def absolute(n) when n < 0, do: -n\n  def absolute(n), do: n\nend\nnum = -5',
+    expected: 5,
+    sample: 'Math.absolute(num)',
+    hints: [
+      'Guards use when keyword',
+      'Guards are checked before pattern matching',
+      'Multiple function clauses handle different cases',
+    ],
+    validPatterns: [/Math\.absolute\s*\(\s*num\s*\)/, /absolute\s*\(\s*-5\s*\)/],
+    tags: ['guards', 'beginner', 'conditional'],
+  },
+  {
+    id: 'ex-beginner-guard-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Multiple Guard Conditions',
+    text: 'Use the grade function to convert the score to a letter grade.',
+    setup:
+      'defmodule Grader do\n  def grade(score) when score >= 90, do: "A"\n  def grade(score) when score >= 80, do: "B"\n  def grade(score) when score >= 70, do: "C"\n  def grade(score) when score >= 60, do: "D"\n  def grade(_score), do: "F"\nend\nstudent_score = 85',
+    setupCode:
+      'defmodule Grader do\n  def grade(score) when score >= 90, do: "A"\n  def grade(score) when score >= 80, do: "B"\n  def grade(score) when score >= 70, do: "C"\n  def grade(score) when score >= 60, do: "D"\n  def grade(_score), do: "F"\nend\nstudent_score = 85',
+    expected: 'B',
+    sample: 'Grader.grade(student_score)',
+    hints: [
+      'Function clauses are checked in order',
+      'First matching clause wins',
+      'Use _ for unused parameters',
+    ],
+    validPatterns: [/Grader\.grade\s*\(\s*student_score\s*\)/, /grade\s*\(\s*85\s*\)/],
+    tags: ['guards', 'beginner', 'conditional', 'grading'],
+  },
+
+  // -- Advanced List Operations (2 problems) --
+  {
+    id: 'ex-beginner-list-adv-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Maximum',
+    text: 'Use Enum.max to find the largest element in the list.',
+    setup: 'scores = [72, 85, 91, 68, 79]',
+    setupCode: 'scores = [72, 85, 91, 68, 79]',
+    expected: 91,
+    sample: 'Enum.max(scores)',
+    hints: [
+      'Enum.max finds the maximum element',
+      'Works on any enumerable',
+      'Raises if list is empty',
+    ],
+    validPatterns: [/Enum\.max\s*\(\s*scores\s*\)/],
+    tags: ['list', 'beginner', 'enum', 'maximum'],
+  },
+  {
+    id: 'ex-beginner-list-adv-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Check List Membership',
+    text: 'Use Enum.member? to check if the value exists in the list.',
+    setup: 'fruits = ["apple", "banana", "cherry"]\nsearch_for = "banana"',
+    setupCode: 'fruits = ["apple", "banana", "cherry"]\nsearch_for = "banana"',
+    expected: true,
+    sample: 'Enum.member?(fruits, search_for)',
+    hints: [
+      'Enum.member? checks if element is in enumerable',
+      'Returns true or false',
+      'Also works with in operator: search_for in fruits',
+    ],
+    validPatterns: [
+      /Enum\.member\?\s*\(\s*fruits\s*,\s*search_for\s*\)/,
+      /search_for\s+in\s+fruits/,
+    ],
+    tags: ['list', 'beginner', 'enum', 'membership'],
+  },
 ];
 
 export default elixirProblems;

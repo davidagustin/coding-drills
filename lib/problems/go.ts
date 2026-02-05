@@ -5396,6 +5396,151 @@ export const goProblems: Problem[] = [
     ],
     tags: ['map', 'access', 'beginner'],
   },
+
+  // -- String Operations (2 problems) --
+  {
+    id: 'go-beginner-string-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Concatenation',
+    text: 'Concatenate two strings together with a space between them',
+    setup: 'first := "Hello"\nsecond := "World"',
+    setupCode: 'first := "Hello"\nsecond := "World"',
+    expected: '"Hello World"',
+    sample: 'result := first + " " + second',
+    hints: [
+      'Use the + operator to concatenate strings',
+      'Or use fmt.Sprintf("%s %s", first, second)',
+    ],
+    tags: ['string', 'concatenation', 'beginner'],
+  },
+  {
+    id: 'go-beginner-string-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Length',
+    text: 'Get the length of a string in bytes',
+    setup: 'message := "Hello, Go!"',
+    setupCode: 'message := "Hello, Go!"',
+    expected: '10',
+    sample: 'length := len(message)',
+    hints: [
+      'Use len() function for string length in bytes',
+      'For rune count use utf8.RuneCountInString()',
+    ],
+    tags: ['string', 'length', 'len', 'beginner'],
+  },
+
+  // -- For Loop as While (1 problem) --
+  {
+    id: 'go-beginner-while-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'For Loop as While',
+    text: 'Use a for loop as a while loop to print numbers 1 through 5',
+    setup: 'i := 1',
+    setupCode: 'i := 1',
+    expected: '"1 2 3 4 5"',
+    sample: 'for i <= 5 {\n    fmt.Print(i, " ")\n    i++\n}',
+    hints: [
+      'Go has no while keyword - use for with just a condition',
+      'Omit init and post statements for while-like behavior',
+    ],
+    tags: ['for-loop', 'while', 'iteration', 'beginner'],
+  },
+
+  // -- Nested Loops (1 problem) --
+  {
+    id: 'go-beginner-nested-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Nested For Loop',
+    text: 'Print a 3x3 grid of asterisks using nested for loops',
+    setup: '// Print 3 rows of 3 asterisks each',
+    setupCode: '// Print 3 rows of 3 asterisks each',
+    expected: '"***\\n***\\n***"',
+    sample:
+      'for i := 0; i < 3; i++ {\n    for j := 0; j < 3; j++ {\n        fmt.Print("*")\n    }\n    fmt.Println()\n}',
+    hints: [
+      'Outer loop controls rows',
+      'Inner loop controls columns',
+      'Use fmt.Println() for newline',
+    ],
+    tags: ['nested-loop', 'for-loop', 'beginner'],
+  },
+
+  // -- Boolean Operations (1 problem) --
+  {
+    id: 'go-beginner-bool-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Boolean AND/OR Operations',
+    text: 'Check if a number is between 1 and 100 (inclusive) using AND, or equal to 0 using OR',
+    setup: 'num := 50',
+    setupCode: 'num := 50',
+    expected: 'true',
+    sample: 'result := (num >= 1 && num <= 100) || num == 0',
+    hints: [
+      'Use && for AND operation',
+      'Use || for OR operation',
+      'Parentheses control evaluation order',
+    ],
+    tags: ['boolean', 'and', 'or', 'conditionals', 'beginner'],
+  },
+
+  // -- Advanced Slice Operations (3 problems) --
+  {
+    id: 'go-beginner-slice-adv-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Find Maximum in Slice',
+    text: 'Find the maximum value in a slice of integers',
+    setup: 'nums := []int{3, 7, 2, 9, 5}',
+    setupCode: 'nums := []int{3, 7, 2, 9, 5}',
+    expected: '9',
+    sample:
+      'maxVal := nums[0]\nfor _, n := range nums {\n    if n > maxVal {\n        maxVal = n\n    }\n}',
+    hints: [
+      'Go has no built-in max function for slices',
+      'Iterate and track the maximum manually',
+      'Start with first element as initial max',
+    ],
+    tags: ['slice', 'max', 'range', 'beginner'],
+  },
+  {
+    id: 'go-beginner-slice-adv-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Append Multiple Elements',
+    text: 'Append multiple elements to a slice in one call',
+    setup: 'nums := []int{1, 2, 3}',
+    setupCode: 'nums := []int{1, 2, 3}',
+    expected: '[1, 2, 3, 4, 5, 6]',
+    sample: 'nums = append(nums, 4, 5, 6)',
+    hints: [
+      'append() can take multiple values after the slice',
+      'Remember to assign result back to the slice variable',
+    ],
+    tags: ['slice', 'append', 'variadic', 'beginner'],
+  },
+  {
+    id: 'go-beginner-slice-adv-003',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Check if Slice Contains Element',
+    text: 'Check if a slice contains a specific value',
+    setup: 'nums := []int{1, 2, 3, 4, 5}',
+    setupCode: 'nums := []int{1, 2, 3, 4, 5}',
+    expected: 'true',
+    sample:
+      'contains := false\nfor _, n := range nums {\n    if n == 3 {\n        contains = true\n        break\n    }\n}',
+    hints: [
+      'Go has no built-in contains function for slices',
+      'Use a loop to check each element',
+      'Use break to exit early once found',
+    ],
+    tags: ['slice', 'contains', 'range', 'beginner'],
+  },
 ];
 
 export default goProblems;

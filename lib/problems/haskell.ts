@@ -4348,4 +4348,107 @@ export const haskellProblems: Problem[] = [
     ],
     tags: ['list', 'beginner', 'range'],
   },
+
+  // -- Strings (2 problems) --
+  {
+    id: 'hs-beginner-string-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Concatenation',
+    text: 'Use the ++ operator to concatenate the two strings with a space between them.',
+    setup: 'greeting = "Hello"\nname = "World"',
+    setupCode: 'greeting = "Hello"\nname = "World"',
+    expected: 'Hello World',
+    sample: 'greeting ++ " " ++ name',
+    hints: [
+      '++ works on strings (which are lists of Char)',
+      'Add a space string " " between',
+      'Concatenation is left-associative',
+    ],
+    tags: ['string', 'beginner', 'concatenation'],
+  },
+  {
+    id: 'hs-beginner-string-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'String Length',
+    text: 'Use the length function to find the number of characters in the string.',
+    setup: 'message = "Haskell"',
+    setupCode: 'message = "Haskell"',
+    expected: 7,
+    sample: 'length message',
+    hints: ['length works on any list', 'Strings are lists of Char', 'Returns an Int'],
+    tags: ['string', 'beginner', 'length'],
+  },
+
+  // -- Guards (2 problems) --
+  {
+    id: 'hs-beginner-guard-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Basic Guards',
+    text: 'Use the absolute function with guards to get the absolute value of the number.',
+    setup: 'absolute :: Int -> Int\nabsolute n\n  | n < 0     = -n\n  | otherwise = n\nnum = -5',
+    setupCode:
+      'absolute :: Int -> Int\nabsolute n\n  | n < 0     = -n\n  | otherwise = n\nnum = -5',
+    expected: 5,
+    sample: 'absolute num',
+    hints: [
+      'Guards use | followed by boolean condition',
+      'otherwise is always True (catch-all)',
+      'Guards are checked top to bottom',
+    ],
+    tags: ['guards', 'beginner', 'conditional'],
+  },
+  {
+    id: 'hs-beginner-guard-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'Multiple Guards',
+    text: 'Use the grade function to convert the score to a letter grade.',
+    setup:
+      'grade :: Int -> String\ngrade score\n  | score >= 90 = "A"\n  | score >= 80 = "B"\n  | score >= 70 = "C"\n  | score >= 60 = "D"\n  | otherwise   = "F"\nstudentScore = 85',
+    setupCode:
+      'grade :: Int -> String\ngrade score\n  | score >= 90 = "A"\n  | score >= 80 = "B"\n  | score >= 70 = "C"\n  | score >= 60 = "D"\n  | otherwise   = "F"\nstudentScore = 85',
+    expected: 'B',
+    sample: 'grade studentScore',
+    hints: [
+      'Guards are checked in order',
+      'First True guard wins',
+      'No need for upper bound checks',
+    ],
+    tags: ['guards', 'beginner', 'conditional', 'grading'],
+  },
+
+  // -- Advanced List Operations (2 problems) --
+  {
+    id: 'hs-beginner-list-adv-001',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'List Maximum',
+    text: 'Use the maximum function to find the largest element in the list.',
+    setup: 'scores = [72, 85, 91, 68, 79]',
+    setupCode: 'scores = [72, 85, 91, 68, 79]',
+    expected: 91,
+    sample: 'maximum scores',
+    hints: ['maximum finds the largest element', 'Works on any Ord type', 'List must be non-empty'],
+    tags: ['list', 'beginner', 'maximum'],
+  },
+  {
+    id: 'hs-beginner-list-adv-002',
+    category: 'Beginner Fundamentals',
+    difficulty: 'easy',
+    title: 'List Membership',
+    text: 'Use the elem function to check if the value exists in the list.',
+    setup: 'fruits = ["apple", "banana", "cherry"]\nsearchFor = "banana"',
+    setupCode: 'fruits = ["apple", "banana", "cherry"]\nsearchFor = "banana"',
+    expected: true,
+    sample: 'elem searchFor fruits',
+    hints: [
+      'elem checks if element is in list',
+      'Returns True or False',
+      'Can also write: searchFor `elem` fruits',
+    ],
+    tags: ['list', 'beginner', 'elem', 'membership'],
+  },
 ];

@@ -45,6 +45,26 @@ const JS_BEGINNER_IDS: string[] = [
   // -- Functions (2 problems) --
   'js-beginner-func-001',
   'js-beginner-func-002',
+
+  // -- Strings (3 problems) --
+  'js-beginner-string-001',
+  'js-beginner-string-002',
+  'js-beginner-string-003',
+
+  // -- While Loops (2 problems) --
+  'js-beginner-while-001',
+  'js-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'js-beginner-nested-001',
+
+  // -- Boolean Logic (2 problems) --
+  'js-beginner-bool-001',
+  'js-beginner-bool-002',
+
+  // -- Advanced Arrays (2 problems) --
+  'js-beginner-arr-adv-001',
+  'js-beginner-arr-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -77,6 +97,26 @@ const TS_BEGINNER_IDS: string[] = [
   // -- Functions (2 problems) --
   'ts-beginner-func-001',
   'ts-beginner-func-002',
+
+  // -- Strings (3 problems) --
+  'ts-beginner-string-001',
+  'ts-beginner-string-002',
+  'ts-beginner-string-003',
+
+  // -- While Loops (2 problems) --
+  'ts-beginner-while-001',
+  'ts-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'ts-beginner-nested-001',
+
+  // -- Boolean Logic (2 problems) --
+  'ts-beginner-bool-001',
+  'ts-beginner-bool-002',
+
+  // -- Advanced Arrays (2 problems) --
+  'ts-beginner-arr-adv-001',
+  'ts-beginner-arr-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -109,6 +149,26 @@ const PY_BEGINNER_IDS: string[] = [
   // -- Functions (2 problems) --
   'py-beginner-func-001',
   'py-beginner-func-002',
+
+  // -- Strings (3 problems) --
+  'py-beginner-string-001',
+  'py-beginner-string-002',
+  'py-beginner-string-003',
+
+  // -- While Loops (2 problems) --
+  'py-beginner-while-001',
+  'py-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'py-beginner-nested-001',
+
+  // -- Boolean Logic (2 problems) --
+  'py-beginner-bool-001',
+  'py-beginner-bool-002',
+
+  // -- Tuples (2 problems) --
+  'py-beginner-tuple-001',
+  'py-beginner-tuple-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -135,6 +195,24 @@ const JAVA_BEGINNER_IDS: string[] = [
   // -- Collections (2 problems) --
   'java-beginner-collection-001',
   'java-beginner-collection-002',
+
+  // -- Strings (2 problems) --
+  'java-beginner-string-001',
+  'java-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'java-beginner-while-001',
+  'java-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'java-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'java-beginner-bool-001',
+
+  // -- Advanced Arrays (2 problems) --
+  'java-beginner-arr-adv-001',
+  'java-beginner-arr-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -161,6 +239,24 @@ const CPP_BEGINNER_IDS: string[] = [
   // -- Maps (2 problems) --
   'cpp-beginner-map-001',
   'cpp-beginner-map-002',
+
+  // -- Strings (2 problems) --
+  'cpp-beginner-string-001',
+  'cpp-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'cpp-beginner-while-001',
+  'cpp-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'cpp-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'cpp-beginner-bool-001',
+
+  // -- Advanced Vectors (2 problems) --
+  'cpp-beginner-vec-adv-001',
+  'cpp-beginner-vec-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -187,6 +283,24 @@ const CSHARP_BEGINNER_IDS: string[] = [
   // -- Dictionaries (2 problems) --
   'cs-beginner-dict-001',
   'cs-beginner-dict-002',
+
+  // -- Strings (2 problems) --
+  'cs-beginner-string-001',
+  'cs-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'cs-beginner-while-001',
+  'cs-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'cs-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'cs-beginner-bool-001',
+
+  // -- Advanced Arrays (2 problems) --
+  'cs-beginner-arr-adv-001',
+  'cs-beginner-arr-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -213,6 +327,24 @@ const GO_BEGINNER_IDS: string[] = [
   // -- Maps (2 problems) --
   'go-beginner-map-001',
   'go-beginner-map-002',
+
+  // -- Strings (2 problems) --
+  'go-beginner-string-001',
+  'go-beginner-string-002',
+
+  // -- While Loops (1 problem) --
+  'go-beginner-while-001',
+
+  // -- Nested Loops (1 problem) --
+  'go-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'go-beginner-bool-001',
+
+  // -- Advanced Slices (3 problems) --
+  'go-beginner-slice-adv-001',
+  'go-beginner-slice-adv-002',
+  'go-beginner-slice-adv-003',
 ];
 
 // ---------------------------------------------------------------------------
@@ -239,6 +371,24 @@ const RUBY_BEGINNER_IDS: string[] = [
   // -- Hashes (2 problems) --
   'rb-beginner-hash-001',
   'rb-beginner-hash-002',
+
+  // -- Strings (2 problems) --
+  'rb-beginner-string-001',
+  'rb-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'rb-beginner-while-001',
+  'rb-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'rb-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'rb-beginner-bool-001',
+
+  // -- Advanced Arrays (2 problems) --
+  'rb-beginner-arr-adv-001',
+  'rb-beginner-arr-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -265,6 +415,24 @@ const PHP_BEGINNER_IDS: string[] = [
   // -- Associative Arrays (2 problems) --
   'php-beginner-assoc-001',
   'php-beginner-assoc-002',
+
+  // -- Strings (2 problems) --
+  'php-beginner-string-001',
+  'php-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'php-beginner-while-001',
+  'php-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'php-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'php-beginner-bool-001',
+
+  // -- Advanced Arrays (2 problems) --
+  'php-beginner-arr-adv-001',
+  'php-beginner-arr-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -291,6 +459,24 @@ const KOTLIN_BEGINNER_IDS: string[] = [
   // -- Maps (2 problems) --
   'kt-beginner-map-001',
   'kt-beginner-map-002',
+
+  // -- Strings (2 problems) --
+  'kt-beginner-string-001',
+  'kt-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'kt-beginner-while-001',
+  'kt-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'kt-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'kt-beginner-bool-001',
+
+  // -- Advanced Lists (2 problems) --
+  'kt-beginner-list-adv-001',
+  'kt-beginner-list-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -317,6 +503,24 @@ const SWIFT_BEGINNER_IDS: string[] = [
   // -- Dictionaries (2 problems) --
   'swift-beginner-dict-001',
   'swift-beginner-dict-002',
+
+  // -- Strings (2 problems) --
+  'swift-beginner-string-001',
+  'swift-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'swift-beginner-while-001',
+  'swift-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'swift-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'swift-beginner-bool-001',
+
+  // -- Advanced Arrays (2 problems) --
+  'swift-beginner-arr-adv-001',
+  'swift-beginner-arr-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -343,6 +547,24 @@ const DART_BEGINNER_IDS: string[] = [
   // -- Maps (2 problems) --
   'dart-beginner-map-001',
   'dart-beginner-map-002',
+
+  // -- Strings (2 problems) --
+  'dart-beginner-string-001',
+  'dart-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'dart-beginner-while-001',
+  'dart-beginner-while-002',
+
+  // -- Nested Loops (1 problem) --
+  'dart-beginner-nested-001',
+
+  // -- Boolean Logic (1 problem) --
+  'dart-beginner-bool-001',
+
+  // -- Advanced Lists (2 problems) --
+  'dart-beginner-list-adv-001',
+  'dart-beginner-list-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -369,6 +591,18 @@ const RUST_BEGINNER_IDS: string[] = [
   // -- HashMaps (2 problems) --
   'rs-beginner-hashmap-001',
   'rs-beginner-hashmap-002',
+
+  // -- Strings (2 problems) --
+  'rs-beginner-string-001',
+  'rs-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'rs-beginner-while-001',
+  'rs-beginner-while-002',
+
+  // -- Advanced Vectors (2 problems) --
+  'rs-beginner-vec-adv-001',
+  'rs-beginner-vec-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -393,6 +627,18 @@ const SCALA_BEGINNER_IDS: string[] = [
   // -- Maps (2 problems) --
   'scala-beginner-map-001',
   'scala-beginner-map-002',
+
+  // -- Strings (2 problems) --
+  'scala-beginner-string-001',
+  'scala-beginner-string-002',
+
+  // -- While Loops (1 problem) --
+  'scala-beginner-while-001',
+
+  // -- Advanced Lists (3 problems) --
+  'scala-beginner-list-adv-001',
+  'scala-beginner-list-adv-002',
+  'scala-beginner-list-adv-003',
 ];
 
 // ---------------------------------------------------------------------------
@@ -417,6 +663,18 @@ const R_BEGINNER_IDS: string[] = [
   // -- Lists (2 problems) --
   'r-beginner-list-001',
   'r-beginner-list-002',
+
+  // -- Strings (2 problems) --
+  'r-beginner-string-001',
+  'r-beginner-string-002',
+
+  // -- While Loops (1 problem) --
+  'r-beginner-while-001',
+
+  // -- Advanced Vectors (3 problems) --
+  'r-beginner-vector-adv-001',
+  'r-beginner-vector-adv-002',
+  'r-beginner-vector-adv-003',
 ];
 
 // ---------------------------------------------------------------------------
@@ -441,6 +699,20 @@ const PERL_BEGINNER_IDS: string[] = [
   // -- Hashes (2 problems) --
   'perl-beginner-hash-001',
   'perl-beginner-hash-002',
+
+  // -- Strings (2 problems) --
+  'perl-beginner-string-001',
+  'perl-beginner-string-002',
+
+  // -- While Loops (1 problem) --
+  'perl-beginner-while-001',
+
+  // -- Advanced Arrays (2 problems) --
+  'perl-beginner-array-adv-001',
+  'perl-beginner-array-adv-002',
+
+  // -- Advanced Hashes (1 problem) --
+  'perl-beginner-hash-adv-001',
 ];
 
 // ---------------------------------------------------------------------------
@@ -463,6 +735,18 @@ const LUA_BEGINNER_IDS: string[] = [
   'lua-beginner-table-002',
   'lua-beginner-table-003',
   'lua-beginner-table-004',
+
+  // -- Strings (2 problems) --
+  'lua-beginner-string-001',
+  'lua-beginner-string-002',
+
+  // -- While Loops (1 problem) --
+  'lua-beginner-while-001',
+
+  // -- Advanced Tables (3 problems) --
+  'lua-beginner-table-adv-001',
+  'lua-beginner-table-adv-002',
+  'lua-beginner-table-adv-003',
 ];
 
 // ---------------------------------------------------------------------------
@@ -485,6 +769,18 @@ const HASKELL_BEGINNER_IDS: string[] = [
   'hs-beginner-list-002',
   'hs-beginner-list-003',
   'hs-beginner-list-004',
+
+  // -- Strings (2 problems) --
+  'hs-beginner-string-001',
+  'hs-beginner-string-002',
+
+  // -- Guards (2 problems) --
+  'hs-beginner-guard-001',
+  'hs-beginner-guard-002',
+
+  // -- Advanced Lists (2 problems) --
+  'hs-beginner-list-adv-001',
+  'hs-beginner-list-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -509,6 +805,18 @@ const ELIXIR_BEGINNER_IDS: string[] = [
   // -- Maps (2 problems) --
   'ex-beginner-map-001',
   'ex-beginner-map-002',
+
+  // -- Strings (2 problems) --
+  'ex-beginner-string-001',
+  'ex-beginner-string-002',
+
+  // -- Guards (2 problems) --
+  'ex-beginner-guard-001',
+  'ex-beginner-guard-002',
+
+  // -- Advanced Lists (2 problems) --
+  'ex-beginner-list-adv-001',
+  'ex-beginner-list-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -533,6 +841,18 @@ const CLOJURE_BEGINNER_IDS: string[] = [
   // -- Maps (2 problems) --
   'clj-beginner-map-001',
   'clj-beginner-map-002',
+
+  // -- Strings (2 problems) --
+  'clj-beginner-string-001',
+  'clj-beginner-string-002',
+
+  // -- Let Bindings (2 problems) --
+  'clj-beginner-let-001',
+  'clj-beginner-let-002',
+
+  // -- Advanced Sequences (2 problems) --
+  'clj-beginner-seq-adv-001',
+  'clj-beginner-seq-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -555,6 +875,18 @@ const C_BEGINNER_IDS: string[] = [
   'c-beginner-array-001',
   'c-beginner-array-002',
   'c-beginner-array-003',
+
+  // -- Strings (2 problems) --
+  'c-beginner-string-001',
+  'c-beginner-string-002',
+
+  // -- While Loops (2 problems) --
+  'c-beginner-while-001',
+  'c-beginner-while-002',
+
+  // -- Advanced Arrays (2 problems) --
+  'c-beginner-array-adv-001',
+  'c-beginner-array-adv-002',
 ];
 
 // ---------------------------------------------------------------------------
@@ -579,6 +911,20 @@ const MYSQL_BEGINNER_IDS: string[] = [
 
   // -- UPDATE (1 problem) --
   'mysql-beginner-update-001',
+
+  // -- ORDER BY (2 problems) --
+  'mysql-beginner-orderby-001',
+  'mysql-beginner-orderby-002',
+
+  // -- LIMIT (2 problems) --
+  'mysql-beginner-limit-001',
+  'mysql-beginner-limit-002',
+
+  // -- COUNT (1 problem) --
+  'mysql-beginner-count-001',
+
+  // -- DELETE (1 problem) --
+  'mysql-beginner-delete-001',
 ];
 
 // ---------------------------------------------------------------------------
@@ -603,6 +949,20 @@ const POSTGRESQL_BEGINNER_IDS: string[] = [
 
   // -- UPDATE (1 problem) --
   'pg-beginner-update-001',
+
+  // -- ORDER BY (2 problems) --
+  'pg-beginner-orderby-001',
+  'pg-beginner-orderby-002',
+
+  // -- LIMIT (2 problems) --
+  'pg-beginner-limit-001',
+  'pg-beginner-limit-002',
+
+  // -- COUNT (1 problem) --
+  'pg-beginner-count-001',
+
+  // -- DELETE (1 problem) --
+  'pg-beginner-delete-001',
 ];
 
 // ---------------------------------------------------------------------------
@@ -627,6 +987,22 @@ const MONGODB_BEGINNER_IDS: string[] = [
 
   // -- Update (1 problem) --
   'mongo-beginner-update-001',
+
+  // -- Sort (2 problems) --
+  'mongo-beginner-sort-001',
+  'mongo-beginner-sort-002',
+
+  // -- Limit (1 problem) --
+  'mongo-beginner-limit-001',
+
+  // -- Skip (1 problem) --
+  'mongo-beginner-skip-001',
+
+  // -- Count (1 problem) --
+  'mongo-beginner-count-001',
+
+  // -- Delete (1 problem) --
+  'mongo-beginner-delete-001',
 ];
 
 // ---------------------------------------------------------------------------
