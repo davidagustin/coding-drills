@@ -30,7 +30,7 @@ const PROGRAMMING_LANGUAGES: SupportedLanguage[] = [
   'clojure',
 ];
 
-const DATABASE_LANGUAGES: SupportedLanguage[] = ['postgresql', 'mysql', 'mongodb'];
+const DATABASE_LANGUAGES: SupportedLanguage[] = ['postgresql', 'mysql', 'mongodb', 'redis'];
 
 export function LanguageSwitcher({ language }: { language: SupportedLanguage }) {
   const [isOpen, setIsOpen] = useState(false);

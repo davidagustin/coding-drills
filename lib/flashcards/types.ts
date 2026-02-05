@@ -13,7 +13,8 @@ export type FlashcardSource =
   | 'time-complexity'
   | 'space-complexity'
   | 'pattern'
-  | 'frontend';
+  | 'frontend'
+  | 'cheatsheet';
 
 export type ConfidenceRating = 'missed' | 'shaky' | 'knew-it';
 

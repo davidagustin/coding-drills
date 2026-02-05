@@ -12,6 +12,11 @@ import {
   getPatternProblems,
 } from '@/lib/algorithmPatterns';
 import {
+  type CheatsheetEntry,
+  getCategoriesForCheatsheet,
+  getCheatsheetForLanguage,
+} from '@/lib/cheatsheets';
+import {
   type ComplexityQuestion,
   getComplexityCategories,
   getComplexityQuestionsByCategory,
@@ -144,6 +149,37 @@ function frontendToFlashcard(q: FrontendQuizQuestion): Flashcard {
   };
 }
 
+function cheatsheetToFlashcard(entry: CheatsheetEntry, language: string): Flashcard {
+  // Build code block showing the example
+  const codeBlock = `// ${entry.syntax}\n${entry.example.code}\n\n// Output:\n${entry.example.output}`;
+
+  // Map priority to difficulty
+  const difficultyMap: Record<string, 'easy' | 'medium' | 'hard'> = {
+    essential: 'easy',
+    common: 'medium',
+    useful: 'hard',
+  };
+
+  return {
+    id: `cheatsheet:${language}:${entry.name}`,
+    source: 'cheatsheet',
+    front: {
+      prompt: `What command/method does this?`,
+      code: codeBlock,
+      detail: entry.description,
+      badge: entry.category,
+    },
+    back: {
+      answer: entry.name,
+      explanation: entry.interviewTip ?? entry.gotchas?.join(' ') ?? entry.description,
+      meta: `Time: ${entry.timeComplexity}, Space: ${entry.spaceComplexity}`,
+    },
+    difficulty: difficultyMap[entry.priority] ?? 'medium',
+    category: entry.category,
+    interviewRecommended: entry.priority === 'essential',
+  };
+}
+
 // ── Helpers ──────────────────────────────────────────────────
 
 function categoriseDifficulty(method: Method): 'easy' | 'medium' | 'hard' {
@@ -206,6 +242,14 @@ export function getAllFlashcards(options: GetFlashcardsOptions): Flashcard[] {
         }
         break;
       }
+      case 'cheatsheet': {
+        const lang = (options.language ?? 'javascript') as LanguageId;
+        const entries = getCheatsheetForLanguage(lang);
+        for (const entry of entries) {
+          cards.push(cheatsheetToFlashcard(entry, lang));
+        }
+        break;
+      }
     }
   }
 
@@ -250,6 +294,8 @@ export function getAvailableCategories(
       const questions = getQuizQuestions(fw);
       return [...new Set(questions.map((q) => q.category))].sort();
     }
+    case 'cheatsheet':
+      return getCategoriesForCheatsheet((context?.language ?? 'javascript') as LanguageId);
   }
 }
 
@@ -272,6 +318,8 @@ export function getSourceCardCount(
       const fw = (context?.framework ?? 'react') as FrameworkId;
       return getQuizQuestions(fw).length;
     }
+    case 'cheatsheet':
+      return getCheatsheetForLanguage((context?.language ?? 'javascript') as LanguageId).length;
   }
 }
 

@@ -29,6 +29,7 @@ import {
   type ScoreResult,
 } from '@/lib/quizGenerator';
 import type { LanguageId, QuizQuestion } from '@/lib/types';
+import { isDatabaseLanguage } from '../config';
 
 // ============================================================================
 // Types
@@ -1451,8 +1452,8 @@ export default function QuizPage() {
     typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const initialQuizType = (searchParams?.get('type') as QuizType) || 'methods';
 
-  // Database languages don't support quiz mode (no method reference data)
-  const isDatabaseLanguage = ['postgresql', 'mysql', 'mongodb'].includes(language);
+  // Check if this is a database language
+  const isDbLanguage = isDatabaseLanguage(language);
 
   const availableCategories = getCategoriesForLanguage(language);
   const categoryCounts = getCategoryCountsForLanguage(language);
@@ -1700,22 +1701,30 @@ export default function QuizPage() {
     };
   }, []);
 
-  // Render error message for database languages
-  if (isDatabaseLanguage) {
+  // Redirect database languages to study mode which supports cheatsheet-based flashcards
+  if (isDbLanguage) {
     return (
       <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
         <div className="text-center max-w-md px-4">
-          <h1 className="text-3xl font-bold mb-4">Quiz Mode Not Available</h1>
+          <h1 className="text-3xl font-bold mb-4">Use Study Mode Instead</h1>
           <p className="text-zinc-400 mb-6">
-            Quiz mode is not available for database languages. Please use Drill Mode or Problems
-            instead.
+            For database languages, use Study Mode to practice commands and queries as flashcards.
+            No timers, no scoring — just focused recall at your own pace.
           </p>
-          <a
-            href={`/${language}`}
-            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-          >
-            Back to {language.charAt(0).toUpperCase() + language.slice(1)}
-          </a>
+          <div className="flex flex-col gap-3">
+            <a
+              href={`/${language}/study`}
+              className="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-lg transition-colors font-semibold"
+            >
+              Go to Study Mode
+            </a>
+            <a
+              href={`/${language}`}
+              className="inline-block px-6 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-lg transition-colors"
+            >
+              Back to {language.charAt(0).toUpperCase() + language.slice(1)}
+            </a>
+          </div>
         </div>
       </div>
     );

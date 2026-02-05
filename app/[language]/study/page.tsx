@@ -21,6 +21,7 @@ import type {
   StudyPhase,
   StudySessionConfig,
 } from '@/lib/flashcards/types';
+import { isDatabaseLanguage } from '../config';
 
 // Fisher-Yates shuffle
 function shuffle<T>(arr: T[]): T[] {
@@ -32,16 +33,25 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-const LANGUAGE_SOURCES: { id: FlashcardSource; label: string }[] = [
+/** Sources for general programming languages */
+const PROGRAMMING_SOURCES: { id: FlashcardSource; label: string }[] = [
   { id: 'method', label: 'Drill Mode Methods' },
   { id: 'time-complexity', label: 'Time Complexity' },
   { id: 'space-complexity', label: 'Space Complexity' },
   { id: 'pattern', label: 'Algorithm Patterns' },
 ];
 
+/** Sources for database languages (no method-based drills) */
+const DATABASE_SOURCES: { id: FlashcardSource; label: string }[] = [
+  { id: 'cheatsheet', label: 'Commands & Queries' },
+];
+
 export default function LanguageStudyPage() {
   const params = useParams();
   const language = (params?.language as string) || 'javascript';
+
+  // Use different sources for database languages vs programming languages
+  const availableSources = isDatabaseLanguage(language) ? DATABASE_SOURCES : PROGRAMMING_SOURCES;
 
   const { studyState, getWeakCardIds, rateCard, completeSession, prioritiseWeak } =
     useFlashcardStudy();
@@ -157,7 +167,7 @@ export default function LanguageStudyPage() {
   if (phase === 'setup') {
     return (
       <StudySetup
-        availableSources={LANGUAGE_SOURCES}
+        availableSources={availableSources}
         context={{ language }}
         weakCardCount={weakCardCount}
         onStart={handleStart}

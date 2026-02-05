@@ -235,5 +235,9 @@ export function isFlashcardInterviewRecommended(
       return context.category ? INTERVIEW_PATTERN_CATEGORIES.has(context.category) : true;
     case 'frontend':
       return context.category ? INTERVIEW_FRONTEND_CATEGORIES.has(context.category) : true;
+    case 'cheatsheet':
+      // Cheatsheet entries marked as "essential" are interview-recommended
+      // (this is handled in the adapter based on priority)
+      return true;
   }
 }

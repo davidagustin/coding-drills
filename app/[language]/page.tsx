@@ -16,7 +16,12 @@ import { getMethodCountByLanguage } from '@/lib/methods/index';
 import { problemsByLanguage } from '@/lib/problems/index';
 import { getRegexProblemCount } from '@/lib/regexTrainer';
 import type { LanguageId } from '@/lib/types';
-import { isValidLanguage, LANGUAGE_CONFIG, type SupportedLanguage } from './config';
+import {
+  isDatabaseLanguage,
+  isValidLanguage,
+  LANGUAGE_CONFIG,
+  type SupportedLanguage,
+} from './config';
 import { LanguageIcon } from './LanguageIcon';
 
 // Stats interface for localStorage
@@ -424,23 +429,26 @@ export default function LanguagePage() {
 
   const config = LANGUAGE_CONFIG[language];
 
-  // Database languages don't have algorithm exercises or method references
-  const isDatabaseLanguage = ['postgresql', 'mysql', 'mongodb'].includes(language);
+  // Check if this is a database language (uses Query Training instead of Method Training)
+  const isDbLanguage = isDatabaseLanguage(language);
 
   // Get counts for badges
   const methodCounts = getMethodCountByLanguage();
   const methodCount = methodCounts[language] || 0;
-  const exerciseCount = !isDatabaseLanguage ? getExerciseCount(language) : 0;
+  const exerciseCount = !isDbLanguage ? getExerciseCount(language) : 0;
   const interviewProblemCount = algorithmProblems.length + getSystemDesignProblemCount();
   const complexityCount = complexityQuestions.length;
-  const quizTotalCount = methodCount + complexityCount;
+  // For database languages, quiz questions come from cheatsheet
+  const cheatsheetCount = getSourceCardCount('cheatsheet', { language });
+  const quizTotalCount = isDbLanguage ? cheatsheetCount : methodCount + complexityCount;
   const regexProblemCount = getRegexProblemCount();
-  const studyCardCount = !isDatabaseLanguage
-    ? getSourceCardCount('method', { language }) +
+  // For database languages, study cards come from cheatsheet
+  const studyCardCount = isDbLanguage
+    ? cheatsheetCount
+    : getSourceCardCount('method', { language }) +
       getSourceCardCount('time-complexity', {}) +
       getSourceCardCount('space-complexity', {}) +
-      getSourceCardCount('pattern', {})
-    : 0;
+      getSourceCardCount('pattern', {});
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
@@ -496,7 +504,7 @@ export default function LanguagePage() {
         </div>
 
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-          {isDatabaseLanguage
+          {isDbLanguage
             ? `Master ${config.name} through interactive drills, quizzes, and problem-solving.`
             : language === 'typescript'
               ? `Master ${config.name} types and methods through interactive drills, quizzes, and comprehensive references.`
@@ -520,35 +528,39 @@ export default function LanguagePage() {
           badge={methodCount > 0 ? `${methodCount} methods` : undefined}
         />
 
-        {!isDatabaseLanguage && (
-          <>
-            <ModeCard
-              href={`/${language}/quiz`}
-              icon={<LightbulbIcon className="w-8 h-8" />}
-              title="Quiz Mode"
-              description="Match inputs and outputs to methods, plus time & space complexity challenges. Test your knowledge and learn new patterns."
-              buttonText="Start Quiz"
-              config={config}
-              badge={quizTotalCount > 0 ? `${quizTotalCount} questions` : undefined}
-            />
-            <ModeCard
-              href={`/${language}/study`}
-              icon={<StudyIcon className="w-8 h-8" />}
-              title="Study Mode"
-              description="Study the same questions from Quiz and Drill Mode as flashcards. No timers, no scoring — just focused recall."
-              buttonText="Start Studying"
-              config={config}
-              badge={studyCardCount > 0 ? `${studyCardCount} cards` : undefined}
-            />
-          </>
-        )}
+        <ModeCard
+          href={`/${language}/quiz`}
+          icon={<LightbulbIcon className="w-8 h-8" />}
+          title="Quiz Mode"
+          description={
+            isDbLanguage
+              ? 'Test your knowledge of commands, queries, and syntax. Identify the correct operation from examples.'
+              : 'Match inputs and outputs to methods, plus time & space complexity challenges. Test your knowledge and learn new patterns.'
+          }
+          buttonText="Start Quiz"
+          config={config}
+          badge={quizTotalCount > 0 ? `${quizTotalCount} questions` : undefined}
+        />
+        <ModeCard
+          href={`/${language}/study`}
+          icon={<StudyIcon className="w-8 h-8" />}
+          title="Study Mode"
+          description={
+            isDbLanguage
+              ? 'Study commands and queries as flashcards. No timers, no scoring — just focused recall at your own pace.'
+              : 'Study the same questions from Quiz and Drill Mode as flashcards. No timers, no scoring — just focused recall.'
+          }
+          buttonText="Start Studying"
+          config={config}
+          badge={studyCardCount > 0 ? `${studyCardCount} cards` : undefined}
+        />
 
         <ModeCard
           href={`/${language}/problems`}
           icon={<ListBulletIcon className="w-8 h-8" />}
-          title={isDatabaseLanguage ? 'Query Training' : 'Method Training'}
+          title={isDbLanguage ? 'Query Training' : 'Method Training'}
           description={
-            isDatabaseLanguage
+            isDbLanguage
               ? 'Train your ability to write queries, use operators, and master database patterns. Build muscle memory for common operations.'
               : language === 'typescript'
                 ? 'Train your ability to use utility types, type guards, generics, and type-level patterns. Build muscle memory for TypeScript idioms.'
@@ -559,7 +571,7 @@ export default function LanguagePage() {
           badge={`${problemsByLanguage[language as LanguageId]?.length || 0} exercises`}
         />
 
-        {!isDatabaseLanguage && (
+        {!isDbLanguage && (
           <>
             <ModeCard
               href={`/${language}/exercises`}
@@ -610,7 +622,7 @@ export default function LanguagePage() {
           icon={<ClipboardIcon className="w-8 h-8" />}
           title="Cheatsheet"
           description={
-            isDatabaseLanguage
+            isDbLanguage
               ? 'Quick reference for coding interviews. Essential functions, queries, and syntax with examples and tips.'
               : 'Quick reference for coding interviews. Essential methods with syntax, complexity, and tips.'
           }
@@ -618,7 +630,7 @@ export default function LanguagePage() {
           config={config}
         />
 
-        {!isDatabaseLanguage && (
+        {!isDbLanguage && (
           <ModeCard
             href={`/${language}/interview`}
             icon={<ChatBubbleIcon className="w-8 h-8" />}
@@ -638,10 +650,10 @@ export default function LanguagePage() {
       <div className="mt-12 text-center">
         <h3 className="text-lg font-medium text-zinc-300 mb-4">Quick Tips for {config.name}</h3>
         <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-          {isDatabaseLanguage
+          {isDbLanguage
             ? [
                 'Start with Drill Mode to practice queries',
-                'Browse Problems for real-world scenarios',
+                'Use Study Mode for flashcard-style recall',
                 'Use Cheatsheet for quick reference',
               ].map((tip, index) => (
                 <span
