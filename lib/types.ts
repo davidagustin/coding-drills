@@ -29,7 +29,8 @@ export type LanguageId =
   | 'sql'
   | 'postgresql'
   | 'mysql'
-  | 'mongodb';
+  | 'mongodb'
+  | 'redis';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 

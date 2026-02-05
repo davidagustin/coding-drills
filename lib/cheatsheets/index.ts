@@ -30,6 +30,7 @@ import { phpCheatsheet } from './php';
 import { postgresqlCheatsheet } from './postgresql';
 import { pythonCheatsheet } from './python';
 import { rCheatsheet } from './r';
+import { redisCheatsheet } from './redis';
 import { rubyCheatsheet } from './ruby';
 import { rustCheatsheet } from './rust';
 import { scalaCheatsheet } from './scala';
@@ -64,6 +65,7 @@ export const cheatsheetsByLanguage: Record<LanguageId, CheatsheetEntry[]> = {
   postgresql: postgresqlCheatsheet,
   mysql: mysqlCheatsheet,
   mongodb: mongodbCheatsheet,
+  redis: redisCheatsheet,
 };
 
 /**

@@ -122,10 +122,8 @@ function calculatePoints(
 // ============================================================================
 
 // Problem loaders - dynamically imported only when needed
-const problemLoaders: Record<
-  LanguageId,
-  () => Promise<{ default: Problem[] } | { [key: string]: Problem[] }>
-> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const problemLoaders: Record<LanguageId, () => Promise<Record<string, any>>> = {
   javascript: () => import('@/lib/problems/javascript'),
   typescript: () => import('@/lib/problems/typescript'),
   python: () => import('@/lib/problems/python'),
@@ -152,12 +150,14 @@ const problemLoaders: Record<
   sql: () => import('@/lib/problems/mysql'), // Generic SQL uses MySQL problem set
   postgresql: () => import('@/lib/problems/postgresql'),
   mysql: () => import('@/lib/problems/mysql'),
-  mongodb: () => Promise.resolve({ default: [] }), // MongoDB problems can be added later
+  mongodb: () => import('@/lib/problems/mongodb'),
+  redis: () => import('@/lib/problems/redis'),
 };
 
 // Extract problems from module based on naming convention
 function extractProblems(
-  mod: { default?: Problem[]; [key: string]: Problem[] | undefined },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mod: Record<string, any>,
   language: LanguageId,
 ): Problem[] {
   // Try default export first

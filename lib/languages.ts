@@ -430,6 +430,25 @@ export const languages: Record<LanguageId, Language> = {
     monacoLanguage: 'javascript',
     categories: ['Query Operators', 'Update Operators', 'Aggregation Pipeline', 'Indexes'],
   },
+  redis: {
+    id: 'redis',
+    name: 'Redis',
+    icon: 'RD',
+    color: '#DC382D',
+    secondaryColor: '#A41E11',
+    fileExtension: '.redis',
+    monacoLanguage: 'shell',
+    categories: [
+      'String Operations',
+      'List Operations',
+      'Hash Operations',
+      'Set Operations',
+      'Sorted Set Operations',
+      'Key Management',
+      'Transactions',
+      'Pub/Sub',
+    ],
+  },
 };
 
 export const getLanguage = (id: LanguageId): Language => languages[id];

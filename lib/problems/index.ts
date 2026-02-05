@@ -33,6 +33,7 @@ import { phpProblems } from './php';
 import { postgresqlProblems } from './postgresql';
 import { pythonProblems } from './python';
 import { rProblems } from './r';
+import { redisProblems } from './redis';
 import { rubyProblems } from './ruby';
 import { rustProblems } from './rust';
 import { scalaProblems } from './scala';
@@ -60,6 +61,7 @@ export { phpProblems } from './php';
 export { postgresqlProblems } from './postgresql';
 export { pythonProblems } from './python';
 export { rProblems } from './r';
+export { redisProblems } from './redis';
 export { rubyProblems } from './ruby';
 export { rustProblems } from './rust';
 export { scalaProblems } from './scala';
@@ -95,6 +97,7 @@ export const problemsByLanguage: Partial<Record<LanguageId, Problem[]>> = {
   mysql: mysqlProblems,
   postgresql: postgresqlProblems,
   mongodb: mongodbProblems,
+  redis: redisProblems,
 };
 
 // Get problems for a specific language

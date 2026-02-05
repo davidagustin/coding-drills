@@ -37,6 +37,7 @@ const LANGUAGE_TO_MONACO: Record<LanguageId, string> = {
   postgresql: 'sql',
   mysql: 'sql',
   mongodb: 'javascript', // MongoDB uses JavaScript syntax
+  redis: 'shell', // Redis commands use shell-like syntax
 };
 
 /**
@@ -70,6 +71,7 @@ const LANGUAGE_EXTENSIONS: Record<LanguageId, string> = {
   postgresql: '.sql',
   mysql: '.sql',
   mongodb: '.js',
+  redis: '.redis',
 };
 
 /**

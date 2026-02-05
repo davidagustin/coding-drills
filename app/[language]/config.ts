@@ -28,6 +28,7 @@ export const SUPPORTED_LANGUAGES = [
   'postgresql',
   'mysql',
   'mongodb',
+  'redis',
 ] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -272,6 +273,15 @@ export const LANGUAGE_CONFIG: Record<
     version: '7.0',
     docsUrl: 'https://www.mongodb.com/docs/',
   },
+  redis: {
+    name: 'Redis',
+    color: 'text-red-500',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    hoverBg: 'hover:bg-red-500/20',
+    version: '7.x',
+    docsUrl: 'https://redis.io/docs/',
+  },
 };
 
 export function isValidLanguage(language: string): language is SupportedLanguage {
@@ -284,7 +294,8 @@ export function isDatabaseLanguage(language: string): boolean {
     language === 'sql' ||
     language === 'postgresql' ||
     language === 'mysql' ||
-    language === 'mongodb'
+    language === 'mongodb' ||
+    language === 'redis'
   );
 }
 
