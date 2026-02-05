@@ -573,8 +573,12 @@ export function StudySetup({
                         Answer
                       </div>
                       {qaShowAnswers ? (
-                        <>
-                          <div className="text-lg text-emerald-400 font-semibold">
+                        <button
+                          type="button"
+                          onClick={() => setQaShowAnswers(false)}
+                          className="text-left w-full group/answer cursor-pointer"
+                        >
+                          <div className="text-lg text-emerald-400 font-semibold group-hover/answer:text-emerald-300 transition-colors">
                             {card.back.answer}
                           </div>
                           {card.back.explanation && (
@@ -584,14 +588,38 @@ export function StudySetup({
                                 : card.back.explanation}
                             </div>
                           )}
-                        </>
+                          <div className="text-xs text-zinc-600 mt-3 opacity-0 group-hover/answer:opacity-100 transition-opacity">
+                            Click to hide answers
+                          </div>
+                        </button>
                       ) : (
                         <button
                           type="button"
                           onClick={() => setQaShowAnswers(true)}
-                          className="text-sm text-zinc-600 italic hover:text-zinc-400 transition-colors cursor-pointer"
+                          className="w-full min-h-[80px] flex items-center justify-center rounded-xl border-2 border-dashed border-zinc-700 hover:border-zinc-500 bg-zinc-900/30 hover:bg-zinc-900/50 transition-all cursor-pointer group/reveal"
                         >
-                          Click to reveal answers
+                          <div className="flex flex-col items-center gap-2 text-zinc-500 group-hover/reveal:text-zinc-300 transition-colors">
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={1.5}
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                            </svg>
+                            <span className="text-sm font-medium">Click to reveal answers</span>
+                          </div>
                         </button>
                       )}
                     </div>
