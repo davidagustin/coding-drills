@@ -6792,11 +6792,11 @@ document.addEventListener('click', (e) => {
       `,
       js: `
 const items = [
-  { bg: '#1e3a5f', emoji: '\\u{1F30A}', cap: 'Ocean' },
-  { bg: '#3b1f5e', emoji: '\\u{1F30C}', cap: 'Galaxy' },
-  { bg: '#1f4a3b', emoji: '\\u{1F332}', cap: 'Forest' },
+  { bg: '#1e3a5f', emoji: '🌊', cap: 'Ocean' },
+  { bg: '#3b1f5e', emoji: '🌌', cap: 'Galaxy' },
+  { bg: '#1f4a3b', emoji: '🌲', cap: 'Forest' },
   { bg: '#5e3b1f', emoji: '\\u{1F3DC}', cap: 'Desert' },
-  { bg: '#1f3b5e', emoji: '\\u{2744}', cap: 'Snow' },
+  { bg: '#1f3b5e', emoji: '❄', cap: 'Snow' },
   { bg: '#4a1f3b', emoji: '\\u{1F338}', cap: 'Blossom' },
 ];
 const grid = document.getElementById('lb-grid'),
@@ -7528,7 +7528,7 @@ function buildTree(items, parent) {
       node.appendChild(arrow);
       const icon = document.createElement('span');
       icon.className = 'icon';
-      icon.textContent = '\\uD83D\\uDCC1';
+      icon.textContent = '📁';
       node.appendChild(icon);
     } else {
       const sp = document.createElement('span');
@@ -7536,7 +7536,7 @@ function buildTree(items, parent) {
       node.appendChild(sp);
       const icon = document.createElement('span');
       icon.className = 'icon';
-      icon.textContent = '\\uD83D\\uDCC4';
+      icon.textContent = '📄';
       node.appendChild(icon);
     }
     const name = document.createElement('span');
@@ -8269,19 +8269,19 @@ overlay.addEventListener('click', (e) => {
       js: `
 const data = {
   Pages: [
-    { name: 'Home', icon: '\\uD83C\\uDFE0' },
-    { name: 'Dashboard', icon: '\\uD83D\\uDCCA' },
-    { name: 'Settings', icon: '\\u2699' },
+    { name: 'Home', icon: '🏠' },
+    { name: 'Dashboard', icon: '📊' },
+    { name: 'Settings', icon: '⚙' },
   ],
   Actions: [
-    { name: 'Create New', icon: '\\u2795' },
-    { name: 'Import Data', icon: '\\uD83D\\uDCE5' },
-    { name: 'Export PDF', icon: '\\uD83D\\uDCC4' },
+    { name: 'Create New', icon: '➕' },
+    { name: 'Import Data', icon: '📥' },
+    { name: 'Export PDF', icon: '📄' },
   ],
   Users: [
-    { name: 'Alice Johnson', icon: '\\uD83D\\uDC64' },
-    { name: 'Bob Smith', icon: '\\uD83D\\uDC64' },
-    { name: 'Carol White', icon: '\\uD83D\\uDC64' },
+    { name: 'Alice Johnson', icon: '👤' },
+    { name: 'Bob Smith', icon: '👤' },
+    { name: 'Carol White', icon: '👤' },
   ],
 };
 const overlay = document.getElementById('ss-overlay'),
@@ -10412,7 +10412,7 @@ render();
       js: `
 const features = [
   {
-    icon: '\\u26A1',
+    icon: '⚡',
     bg: '#1e3a5f',
     name: 'Fast Performance',
     desc: 'Optimized for speed',
@@ -10420,7 +10420,7 @@ const features = [
       'Built with cutting-edge web technologies for sub-second load times.',
   },
   {
-    icon: '\\uD83D\\uDD12',
+    icon: '🔒',
     bg: '#3b1f5e',
     name: 'Secure',
     desc: 'Enterprise-grade security',
@@ -10428,14 +10428,14 @@ const features = [
       'End-to-end encryption, SSO, and compliance with industry standards.',
   },
   {
-    icon: '\\uD83C\\uDF0D',
+    icon: '🌍',
     bg: '#1f4a3b',
     name: 'Global CDN',
     desc: 'Worldwide distribution',
     detail: 'Content delivered from 200+ edge locations across 6 continents.',
   },
   {
-    icon: '\\uD83D\\uDCC8',
+    icon: '📈',
     bg: '#5e3b1f',
     name: 'Analytics',
     desc: 'Real-time insights',

@@ -558,7 +558,7 @@ function App() {
         onDragLeave={() => setOver(false)}
         onDrop={e => { e.preventDefault(); setOver(false); addFiles(e.dataTransfer.files); }}
         onClick={() => inputRef.current.click()}>
-        <p style={{fontSize:24}}>\\u{1F4C1}</p>
+        <p style={{fontSize:24}}>📁</p>
         <p>Drag files here or click to browse</p>
         <input ref={inputRef} type="file" multiple hidden onChange={e => addFiles(e.target.files)} />
       </div>
@@ -2023,10 +2023,10 @@ function App() {
       ))}
       {menu && (
         <div className="context-menu" style={{left: menu.x, top: menu.y}} onClick={e => e.stopPropagation()}>
-          <div className="ctx-item" onClick={() => setMenu(null)}>\\u270F Edit</div>
-          <div className="ctx-item" onClick={() => setMenu(null)}>\\u{1F4CB} Duplicate</div>
-          <div className="ctx-item" onClick={() => setMenu(null)}>\\u{1F4E6} Archive</div>
-          <div className="ctx-item" style={{color:'#ef4444'}} onClick={() => setMenu(null)}>\\u{1F5D1} Delete</div>
+          <div className="ctx-item" onClick={() => setMenu(null)}>✏ Edit</div>
+          <div className="ctx-item" onClick={() => setMenu(null)}>📋 Duplicate</div>
+          <div className="ctx-item" onClick={() => setMenu(null)}>📦 Archive</div>
+          <div className="ctx-item" style={{color:'#ef4444'}} onClick={() => setMenu(null)}>🗑 Delete</div>
         </div>
       )}
       <div className="hint">Long press (hold) on an item for context menu</div>
@@ -2072,8 +2072,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 }`,
       js: `const { useState } = React;
 
-const emojis = ['\\u{1F680}','\\u{2B50}','\\u{1F525}','\\u{1F48E}','\\u{1F30D}','\\u{1F308}','\\u{26A1}','\\u{1F3AF}',
-  '\\u{1F4A1}','\\u{1F33F}','\\u{1F3B5}','\\u{2764}','\\u{1F680}','\\u{1F31F}','\\u{1F30A}','\\u{1F33B}'];
+const emojis = ['🚀','⭐','🔥','💎','🌍','🌈','⚡','🎯',
+  '💡','🌿','🎵','❤','🚀','🌟','🌊','🌻'];
 const colors = ['#3b82f6','#22c55e','#eab308','#ef4444','#a855f7','#ec4899','#06b6d4','#f97316'];
 
 function App() {
@@ -2277,8 +2277,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState, useRef } = React;
 
 const photos = [
-  { id: 1, bg: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', emoji: '\\u{1F3DE}' },
-  { id: 2, bg: 'linear-gradient(135deg, #22c55e, #06b6d4)', emoji: '\\u{1F305}' },
+  { id: 1, bg: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', emoji: '🏞' },
+  { id: 2, bg: 'linear-gradient(135deg, #22c55e, #06b6d4)', emoji: '🌅' },
 ];
 
 function PhotoCard({ photo }) {
@@ -2306,11 +2306,11 @@ function PhotoCard({ photo }) {
     <div className="photo-card">
       <div className="photo-area" style={{background: photo.bg}} onClick={handleClick}>
         {photo.emoji}
-        {anim && <span className="heart-anim">\\u2764\\uFE0F</span>}
+        {anim && <span className="heart-anim">\\u2764</span>}
       </div>
       <div className="card-footer">
         <span className="likes">{likes} likes</span>
-        <button className="like-btn" onClick={toggleLike}>{liked ? '\\u2764\\uFE0F' : '\\u{1F90D}'}</button>
+        <button className="like-btn" onClick={toggleLike}>{liked ? '\\u2764' : '🤍'}</button>
       </div>
     </div>
   );
@@ -2737,9 +2737,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const pages = [
-  { icon: '\\u{1F680}', title: 'Welcome', desc: 'Swipe or use arrows to navigate', bg: 'linear-gradient(180deg, rgba(59,130,246,0.1), transparent)' },
-  { icon: '\\u{2B50}', title: 'Features', desc: 'Discover powerful tools at your fingertips', bg: 'linear-gradient(180deg, rgba(234,179,8,0.1), transparent)' },
-  { icon: '\\u{1F3AF}', title: 'Get Started', desc: 'Begin your journey today', bg: 'linear-gradient(180deg, rgba(34,197,94,0.1), transparent)' },
+  { icon: '🚀', title: 'Welcome', desc: 'Swipe or use arrows to navigate', bg: 'linear-gradient(180deg, rgba(59,130,246,0.1), transparent)' },
+  { icon: '⭐', title: 'Features', desc: 'Discover powerful tools at your fingertips', bg: 'linear-gradient(180deg, rgba(234,179,8,0.1), transparent)' },
+  { icon: '🎯', title: 'Get Started', desc: 'Begin your journey today', bg: 'linear-gradient(180deg, rgba(34,197,94,0.1), transparent)' },
 ];
 
 function App() {
@@ -2879,8 +2879,8 @@ function App() {
           <div className="article-title">{a.title}</div>
           <div className="article-desc">{a.desc}</div>
           <div className="article-footer">
-            <span>\\u{1F4D6} {a.mins} min read</span>
-            <span>\\u{1F441} {a.reads} reads</span>
+            <span>📖 {a.mins} min read</span>
+            <span>👁 {a.reads} reads</span>
           </div>
         </div>
       ))}
@@ -2930,12 +2930,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const items = [
-  { emoji: '\\u{1F3DE}', label: 'Landscape', bg: '#1e3a5f' },
-  { emoji: '\\u{1F305}', label: 'Sunset', bg: '#5f1e1e' },
-  { emoji: '\\u{1F30A}', label: 'Ocean', bg: '#1e3a5f' },
-  { emoji: '\\u{1F3D4}', label: 'Mountain', bg: '#2d3a1e' },
-  { emoji: '\\u{1F33B}', label: 'Flower', bg: '#3a2d1e' },
-  { emoji: '\\u{1F308}', label: 'Rainbow', bg: '#2d1e3a' },
+  { emoji: '🏞', label: 'Landscape', bg: '#1e3a5f' },
+  { emoji: '🌅', label: 'Sunset', bg: '#5f1e1e' },
+  { emoji: '🌊', label: 'Ocean', bg: '#1e3a5f' },
+  { emoji: '🏔', label: 'Mountain', bg: '#2d3a1e' },
+  { emoji: '🌻', label: 'Flower', bg: '#3a2d1e' },
+  { emoji: '🌈', label: 'Rainbow', bg: '#2d1e3a' },
 ];
 
 function App() {
@@ -2994,14 +2994,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const thumbs = [
-  { icon: '\\u{1F4C1}', label: 'Documents', bg: '#1e3a5f' },
-  { icon: '\\u{1F3B5}', label: 'Music', bg: '#3a1e3a' },
-  { icon: '\\u{1F3AC}', label: 'Videos', bg: '#3a2d1e' },
-  { icon: '\\u{1F5BC}', label: 'Photos', bg: '#1e3a2d' },
-  { icon: '\\u{1F4E6}', label: 'Packages', bg: '#3a3a1e' },
-  { icon: '\\u{2699}', label: 'Settings', bg: '#2d2d3a' },
-  { icon: '\\u{1F512}', label: 'Secure', bg: '#3a1e1e' },
-  { icon: '\\u{2B50}', label: 'Favorites', bg: '#3a351e' },
+  { icon: '📁', label: 'Documents', bg: '#1e3a5f' },
+  { icon: '🎵', label: 'Music', bg: '#3a1e3a' },
+  { icon: '🎬', label: 'Videos', bg: '#3a2d1e' },
+  { icon: '🖼', label: 'Photos', bg: '#1e3a2d' },
+  { icon: '📦', label: 'Packages', bg: '#3a3a1e' },
+  { icon: '⚙', label: 'Settings', bg: '#2d2d3a' },
+  { icon: '🔒', label: 'Secure', bg: '#3a1e1e' },
+  { icon: '⭐', label: 'Favorites', bg: '#3a351e' },
 ];
 
 function App() {
@@ -3062,10 +3062,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 .card-btn { background: none; border: none; color: #3b82f6; font-size: 12px; cursor: pointer; }`,
       js: `function App() {
   const cards = [
-    { icon: '\\u{1F680}', title: 'Performance', desc: 'Optimize your app with code splitting and lazy loading.', tag: 'Core', color: '#3b82f6', bg: 'linear-gradient(135deg,#1e3a5f,#1e293b)' },
-    { icon: '\\u{1F3A8}', title: 'Theming', desc: 'Dark mode, custom palettes, and CSS variables.', tag: 'UI', color: '#a855f7', bg: 'linear-gradient(135deg,#2d1e3a,#1e293b)' },
-    { icon: '\\u{1F512}', title: 'Security', desc: 'Authentication, authorization, and input sanitization.', tag: 'Auth', color: '#ef4444', bg: 'linear-gradient(135deg,#3a1e1e,#1e293b)' },
-    { icon: '\\u{1F4CA}', title: 'Analytics', desc: 'Track events, user flows, and conversion metrics.', tag: 'Data', color: '#22c55e', bg: 'linear-gradient(135deg,#1e3a2d,#1e293b)' },
+    { icon: '🚀', title: 'Performance', desc: 'Optimize your app with code splitting and lazy loading.', tag: 'Core', color: '#3b82f6', bg: 'linear-gradient(135deg,#1e3a5f,#1e293b)' },
+    { icon: '🎨', title: 'Theming', desc: 'Dark mode, custom palettes, and CSS variables.', tag: 'UI', color: '#a855f7', bg: 'linear-gradient(135deg,#2d1e3a,#1e293b)' },
+    { icon: '🔒', title: 'Security', desc: 'Authentication, authorization, and input sanitization.', tag: 'Auth', color: '#ef4444', bg: 'linear-gradient(135deg,#3a1e1e,#1e293b)' },
+    { icon: '📊', title: 'Analytics', desc: 'Track events, user flows, and conversion metrics.', tag: 'Data', color: '#22c55e', bg: 'linear-gradient(135deg,#1e3a2d,#1e293b)' },
   ];
 
   return (
@@ -3119,14 +3119,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState, useMemo } = React;
 
 const items = [
-  { name: 'React Guide', cat: 'Tutorial', icon: '\\u{1F4D8}' },
-  { name: 'Auth System', cat: 'Project', icon: '\\u{1F512}' },
-  { name: 'CSS Grid Intro', cat: 'Tutorial', icon: '\\u{1F4D8}' },
-  { name: 'E-commerce App', cat: 'Project', icon: '\\u{1F6D2}' },
-  { name: 'Testing Basics', cat: 'Tutorial', icon: '\\u{1F4D8}' },
-  { name: 'Chat App', cat: 'Project', icon: '\\u{1F4AC}' },
-  { name: 'TypeScript Tips', cat: 'Article', icon: '\\u{1F4DD}' },
-  { name: 'Performance Guide', cat: 'Article', icon: '\\u{1F4DD}' },
+  { name: 'React Guide', cat: 'Tutorial', icon: '📘' },
+  { name: 'Auth System', cat: 'Project', icon: '🔒' },
+  { name: 'CSS Grid Intro', cat: 'Tutorial', icon: '📘' },
+  { name: 'E-commerce App', cat: 'Project', icon: '🛒' },
+  { name: 'Testing Basics', cat: 'Tutorial', icon: '📘' },
+  { name: 'Chat App', cat: 'Project', icon: '💬' },
+  { name: 'TypeScript Tips', cat: 'Article', icon: '📝' },
+  { name: 'Performance Guide', cat: 'Article', icon: '📝' },
 ];
 
 const catColors = { Tutorial: '#3b82f6', Project: '#22c55e', Article: '#eab308' };
@@ -3217,7 +3217,7 @@ function App() {
   return (
     <div>
       <div className="search-box">
-        <span className="search-icon">\\u{1F50D}</span>
+        <span className="search-icon">🔍</span>
         <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search resources..." />
       </div>
       {results.length === 0 ? (
@@ -3861,7 +3861,7 @@ function App() {
   return (
     <div>
       <nav className="navbar">
-        <div className="nav-brand">\\u{1F680} AppName</div>
+        <div className="nav-brand">🚀 AppName</div>
         <div className="nav-links">
           {links.map(l => (
             <button key={l} className={'nav-link' + (active === l ? ' active' : '')}
@@ -3912,10 +3912,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const items = [
-  { icon: '\\u{1F3E0}', label: 'Dashboard' },
-  { icon: '\\u{1F4CA}', label: 'Analytics' },
-  { icon: '\\u{1F465}', label: 'Users' },
-  { icon: '\\u2699', label: 'Settings' },
+  { icon: '🏠', label: 'Dashboard' },
+  { icon: '📊', label: 'Analytics' },
+  { icon: '👥', label: 'Users' },
+  { icon: '⚙', label: 'Settings' },
 ];
 
 function App() {
@@ -3986,7 +3986,7 @@ function App() {
   return (
     <div>
       <div className="mobile-header">
-        <span className="brand">\\u{1F4F1} MyApp</span>
+        <span className="brand">📱 MyApp</span>
         <button className="menu-btn" onClick={() => setOpen(!open)}>
           {open ? '\\u2715' : '\\u2630'}
         </button>
@@ -4033,11 +4033,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const tabs = [
-  { id: 'home', icon: '\\u{1F3E0}', label: 'Home' },
-  { id: 'search', icon: '\\u{1F50D}', label: 'Search' },
-  { id: 'add', icon: '\\u2795', label: 'Create' },
-  { id: 'notif', icon: '\\u{1F514}', label: 'Alerts' },
-  { id: 'profile', icon: '\\u{1F464}', label: 'Profile' },
+  { id: 'home', icon: '🏠', label: 'Home' },
+  { id: 'search', icon: '🔍', label: 'Search' },
+  { id: 'add', icon: '➕', label: 'Create' },
+  { id: 'notif', icon: '🔔', label: 'Alerts' },
+  { id: 'profile', icon: '👤', label: 'Profile' },
 ];
 
 function App() {
@@ -4111,11 +4111,11 @@ function App() {
   }, []);
 
   const items = [
-    { icon: '\\u270F', label: 'Edit' },
-    { icon: '\\u{1F4CB}', label: 'Duplicate' },
-    { icon: '\\u{1F4E6}', label: 'Archive' },
+    { icon: '✏', label: 'Edit' },
+    { icon: '📋', label: 'Duplicate' },
+    { icon: '📦', label: 'Archive' },
     'divider',
-    { icon: '\\u{1F5D1}', label: 'Delete', danger: true },
+    { icon: '🗑', label: 'Delete', danger: true },
   ];
 
   return (
@@ -9456,12 +9456,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState, useEffect } = React;
 
 const images = [
-  { emoji: '\\u{1F304}', label: 'Sunrise' },
-  { emoji: '\\u{1F30A}', label: 'Wave' },
-  { emoji: '\\u{1F3D4}', label: 'Mountain' },
-  { emoji: '\\u{1F308}', label: 'Rainbow' },
-  { emoji: '\\u{1F33B}', label: 'Sunflower' },
-  { emoji: '\\u{1F30C}', label: 'Galaxy' },
+  { emoji: '🌄', label: 'Sunrise' },
+  { emoji: '🌊', label: 'Wave' },
+  { emoji: '🏔', label: 'Mountain' },
+  { emoji: '🌈', label: 'Rainbow' },
+  { emoji: '🌻', label: 'Sunflower' },
+  { emoji: '🌌', label: 'Galaxy' },
 ];
 
 function App() {
@@ -9846,7 +9846,7 @@ function TreeNode({ node, depth = 0 }) {
     <div>
       <div className={\`tree-label \${hasChildren ? '' : 'tree-leaf'}\`} onClick={() => hasChildren && setOpen(!open)} style={{paddingLeft: depth * 12}}>
         <span className="tree-icon">{hasChildren ? (open ? '▼' : '▶') : '○'}</span>
-        <span className="tree-name">{hasChildren ? '\\u{1F4C1}' : '\\u{1F4C4}'} {node.name}</span>
+        <span className="tree-name">{hasChildren ? '📁' : '📄'} {node.name}</span>
       </div>
       {open && hasChildren && (
         <div className="tree-node">
@@ -10209,9 +10209,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const actions = [
-  { icon: '\\u{1F4DD}', label: 'New Note' },
-  { icon: '\\u{1F4F7}', label: 'Upload Photo' },
-  { icon: '\\u{1F517}', label: 'Add Link' },
+  { icon: '📝', label: 'New Note' },
+  { icon: '📷', label: 'Upload Photo' },
+  { icon: '🔗', label: 'Add Link' },
 ];
 
 function App() {
@@ -10538,11 +10538,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const items = [
-  { type: 'commit', icon: '\\u{1F4E6}', user: 'Alice', action: 'pushed 3 commits to', target: 'main', time: '2m ago', desc: 'feat: add user dashboard' },
-  { type: 'merge', icon: '\\u{1F500}', user: 'Bob', action: 'merged PR #42 into', target: 'main', time: '15m ago', desc: 'fix: resolve auth race condition' },
-  { type: 'issue', icon: '\\u{1F41B}', user: 'Charlie', action: 'opened issue', target: '#128', time: '1h ago', desc: 'Bug: sidebar collapse broken on mobile' },
-  { type: 'comment', icon: '\\u{1F4AC}', user: 'Diana', action: 'commented on', target: '#125', time: '2h ago', desc: 'This looks good, approved!' },
-  { type: 'commit', icon: '\\u{1F4E6}', user: 'Eve', action: 'pushed 1 commit to', target: 'feature/api', time: '3h ago', desc: 'chore: update dependencies' },
+  { type: 'commit', icon: '📦', user: 'Alice', action: 'pushed 3 commits to', target: 'main', time: '2m ago', desc: 'feat: add user dashboard' },
+  { type: 'merge', icon: '🔀', user: 'Bob', action: 'merged PR #42 into', target: 'main', time: '15m ago', desc: 'fix: resolve auth race condition' },
+  { type: 'issue', icon: '🐛', user: 'Charlie', action: 'opened issue', target: '#128', time: '1h ago', desc: 'Bug: sidebar collapse broken on mobile' },
+  { type: 'comment', icon: '💬', user: 'Diana', action: 'commented on', target: '#125', time: '2h ago', desc: 'This looks good, approved!' },
+  { type: 'commit', icon: '📦', user: 'Eve', action: 'pushed 1 commit to', target: 'feature/api', time: '3h ago', desc: 'chore: update dependencies' },
 ];
 
 function App() {
@@ -11033,12 +11033,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const features = [
-  { icon: '\\u26A1', title: 'Lightning Fast', desc: 'Optimized for speed with lazy loading and code splitting.' },
-  { icon: '\\u{1F512}', title: 'Secure', desc: 'Built-in authentication and authorization with JWT tokens.' },
-  { icon: '\\u{1F4F1}', title: 'Responsive', desc: 'Works beautifully on desktop, tablet, and mobile devices.' },
-  { icon: '\\u{1F527}', title: 'Customizable', desc: 'Fully themeable with CSS variables and design tokens.' },
-  { icon: '\\u{1F4E6}', title: 'Modular', desc: 'Pick only the components you need. Tree-shakeable.' },
-  { icon: '\\u{267F}', title: 'Accessible', desc: 'WCAG 2.1 AA compliant with full keyboard support.' },
+  { icon: '⚡', title: 'Lightning Fast', desc: 'Optimized for speed with lazy loading and code splitting.' },
+  { icon: '🔒', title: 'Secure', desc: 'Built-in authentication and authorization with JWT tokens.' },
+  { icon: '📱', title: 'Responsive', desc: 'Works beautifully on desktop, tablet, and mobile devices.' },
+  { icon: '🔧', title: 'Customizable', desc: 'Fully themeable with CSS variables and design tokens.' },
+  { icon: '📦', title: 'Modular', desc: 'Pick only the components you need. Tree-shakeable.' },
+  { icon: '♿', title: 'Accessible', desc: 'WCAG 2.1 AA compliant with full keyboard support.' },
 ];
 
 function App() {
@@ -11961,9 +11961,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState, useEffect, useRef } = React;
 
 const pages = [
-  { name: 'Home', icon: '\\u{1F3E0}', desc: 'Welcome to the home page. Navigate between pages to see the transition effects.' },
-  { name: 'About', icon: '\\u{1F4CB}', desc: 'This is the about page. Notice the smooth slide and fade transition.' },
-  { name: 'Contact', icon: '\\u{2709}', desc: 'Get in touch! Each page transition animates in from the right.' },
+  { name: 'Home', icon: '🏠', desc: 'Welcome to the home page. Navigate between pages to see the transition effects.' },
+  { name: 'About', icon: '📋', desc: 'This is the about page. Notice the smooth slide and fade transition.' },
+  { name: 'Contact', icon: '✉', desc: 'Get in touch! Each page transition animates in from the right.' },
 ];
 
 function App() {
@@ -12033,7 +12033,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
 function LoginPage({ onLogin }) {
   return (
     <div className="rg-card">
-      <div className="rg-lock">\\u{1F512}</div>
+      <div className="rg-lock">🔒</div>
       <h3>Login Required</h3>
       <p>You must be logged in to access this page.</p>
       <button className="rg-btn rg-login" onClick={onLogin}>Log In</button>
@@ -12062,7 +12062,7 @@ function App() {
       <div className="rg-nav">
         {protectedPages.map(p => (
           <button key={p} className={page === p ? 'active' : ''} onClick={() => setPage(p)}>
-            {loggedIn ? '' : '\\u{1F512} '}{p}
+            {loggedIn ? '' : '🔒 '}{p}
           </button>
         ))}
       </div>
@@ -12500,7 +12500,7 @@ function App() {
   return (
     <div className={\`theme-wrap \${dark ? 'dark' : 'light'}\`}>
       <div className="theme-toggle">
-        <span>{dark ? '\\u{1F319}' : '\\u2600\\uFE0F'}</span>
+        <span>{dark ? '🌙' : '\\u2600'}</span>
         <div className="toggle-track" onClick={() => setDark(!dark)}>
           <div className="toggle-thumb" />
         </div>
@@ -12923,7 +12923,7 @@ function App() {
       <h3 style={{marginBottom:10}}>Optimistic Updates</h3>
       {items.map(item => (
         <div key={item.id} className={\`ou-item \${item.status === 'saving' ? 'pending' : ''} \${item.status === 'failed' ? 'error' : ''}\`}>
-          <button className="ou-like" onClick={() => toggleLike(item.id)}>\\u2764\\uFE0F</button>
+          <button className="ou-like" onClick={() => toggleLike(item.id)}>\\u2764</button>
           <span className="ou-count">{item.likes}</span>
           <span>{item.name}</span>
           <span className={\`ou-status \${item.status}\`}>{item.status === 'saving' ? 'Saving...' : item.status === 'failed' ? 'Failed!' : 'Saved'}</span>
@@ -13211,7 +13211,7 @@ function App() {
     <div className="id-wrap">
       <h3>Idle Detector</h3>
       <div className={\`id-circle \${status}\`}>
-        <span className="id-icon">{status === 'active' ? '\\u{1F7E2}' : status === 'idle' ? '\\u{1F7E1}' : '\\u{1F534}'}</span>
+        <span className="id-icon">{status === 'active' ? '🟢' : status === 'idle' ? '🟡' : '🔴'}</span>
         <span className="id-label">{status.toUpperCase()}</span>
       </div>
       <div className="id-timer">Idle for: {idle}s</div>
@@ -13274,7 +13274,7 @@ function App() {
   }, []);
 
   const device = isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop';
-  const icon = isMobile ? '\\u{1F4F1}' : isTablet ? '\\u{1F4BB}' : '\\u{1F5A5}';
+  const icon = isMobile ? '📱' : isTablet ? '💻' : '🖥';
 
   const queries = [
     ['Mobile (<=640px)', isMobile],
@@ -13808,10 +13808,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const alerts = [
-  { type: 'info', icon: '\\u{2139}\\uFE0F', title: 'Info', msg: 'A new update is available for download.' },
-  { type: 'success', icon: '\\u2705', title: 'Success', msg: 'Your changes have been saved successfully.' },
-  { type: 'warning', icon: '\\u26A0\\uFE0F', title: 'Warning', msg: 'Your storage is almost full (90% used).' },
-  { type: 'error', icon: '\\u274C', title: 'Error', msg: 'Failed to process payment. Please try again.' },
+  { type: 'info', icon: 'ℹ', title: 'Info', msg: 'A new update is available for download.' },
+  { type: 'success', icon: '✅', title: 'Success', msg: 'Your changes have been saved successfully.' },
+  { type: 'warning', icon: '\\u26A0', title: 'Warning', msg: 'Your storage is almost full (90% used).' },
+  { type: 'error', icon: '❌', title: 'Error', msg: 'Failed to process payment. Please try again.' },
 ];
 
 function App() {
@@ -13869,7 +13869,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 function Callout({ type, title, children }) {
-  const icons = { note: '\\u{1F4DD}', tip: '\\u{1F4A1}', warning: '\\u26A0\\uFE0F', danger: '\\u{1F6A8}' };
+  const icons = { note: '📝', tip: '💡', warning: '\\u26A0', danger: '🚨' };
   return (
     <div className={\`callout \${type}\`}>
       <div className="callout-header">{icons[type]} {title}</div>
@@ -13917,9 +13917,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const states = [
-  { icon: '\\u{1F4E6}', title: 'No Projects Yet', desc: 'Create your first project to get started building something amazing.', action: 'Create Project' },
-  { icon: '\\u{1F50D}', title: 'No Results Found', desc: 'Try adjusting your search or filter to find what you are looking for.', action: 'Clear Filters' },
-  { icon: '\\u{1F514}', title: 'No Notifications', desc: 'You are all caught up! New notifications will appear here.', action: 'Settings' },
+  { icon: '📦', title: 'No Projects Yet', desc: 'Create your first project to get started building something amazing.', action: 'Create Project' },
+  { icon: '🔍', title: 'No Results Found', desc: 'Try adjusting your search or filter to find what you are looking for.', action: 'Clear Filters' },
+  { icon: '🔔', title: 'No Notifications', desc: 'You are all caught up! New notifications will appear here.', action: 'Settings' },
 ];
 
 function App() {
@@ -14234,15 +14234,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState } = React;
 
 const cards = [
-  { icon: '\\u{1F3A8}', title: 'Design', desc: 'Beautiful interfaces with modern design principles.' },
-  { icon: '\\u{1F680}', title: 'Performance', desc: 'Optimized for speed.' },
-  { icon: '\\u{1F512}', title: 'Security', desc: 'Built-in authentication and authorization with industry-standard protocols and encryption.' },
-  { icon: '\\u{1F4F1}', title: 'Mobile', desc: 'Responsive and touch-friendly.' },
-  { icon: '\\u{2699}', title: 'Config', desc: 'Highly customizable with environment variables, config files, and runtime options for any deployment.' },
-  { icon: '\\u{1F4CA}', title: 'Analytics', desc: 'Real-time insights and dashboards.' },
-  { icon: '\\u{1F310}', title: 'i18n', desc: 'Multi-language support with RTL layout handling and locale-aware formatting for dates and numbers.' },
-  { icon: '\\u{1F9EA}', title: 'Testing', desc: 'Comprehensive test suite.' },
-  { icon: '\\u{1F4E6}', title: 'Deploy', desc: 'One-click deployments.' },
+  { icon: '🎨', title: 'Design', desc: 'Beautiful interfaces with modern design principles.' },
+  { icon: '🚀', title: 'Performance', desc: 'Optimized for speed.' },
+  { icon: '🔒', title: 'Security', desc: 'Built-in authentication and authorization with industry-standard protocols and encryption.' },
+  { icon: '📱', title: 'Mobile', desc: 'Responsive and touch-friendly.' },
+  { icon: '⚙', title: 'Config', desc: 'Highly customizable with environment variables, config files, and runtime options for any deployment.' },
+  { icon: '📊', title: 'Analytics', desc: 'Real-time insights and dashboards.' },
+  { icon: '🌐', title: 'i18n', desc: 'Multi-language support with RTL layout handling and locale-aware formatting for dates and numbers.' },
+  { icon: '🧪', title: 'Testing', desc: 'Comprehensive test suite.' },
+  { icon: '📦', title: 'Deploy', desc: 'One-click deployments.' },
 ];
 
 function App() {
@@ -14362,11 +14362,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState, useRef, useEffect } = React;
 
 const cards = [
-  { icon: '\\u{1F3AF}', title: 'Focus', desc: 'Stay focused on what matters most with smart prioritization.' },
-  { icon: '\\u26A1', title: 'Speed', desc: 'Lightning-fast performance with optimized rendering pipeline.' },
-  { icon: '\\u{1F6E1}', title: 'Secure', desc: 'Enterprise-grade security with end-to-end encryption.' },
-  { icon: '\\u{1F4CA}', title: 'Insights', desc: 'Real-time analytics and actionable business insights.' },
-  { icon: '\\u{1F91D}', title: 'Collaborate', desc: 'Seamless team collaboration with real-time sync.' },
+  { icon: '🎯', title: 'Focus', desc: 'Stay focused on what matters most with smart prioritization.' },
+  { icon: '⚡', title: 'Speed', desc: 'Lightning-fast performance with optimized rendering pipeline.' },
+  { icon: '🛡', title: 'Secure', desc: 'Enterprise-grade security with end-to-end encryption.' },
+  { icon: '📊', title: 'Insights', desc: 'Real-time analytics and actionable business insights.' },
+  { icon: '🤝', title: 'Collaborate', desc: 'Seamless team collaboration with real-time sync.' },
 ];
 
 function App() {
@@ -14433,9 +14433,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);`,
       js: `const { useState, useRef, useEffect, useCallback } = React;
 
 const sections = [
-  { bg: '\\u{1F30C}', title: 'Explore', desc: 'Discover new horizons with parallax scrolling.', cls: 's1' },
-  { bg: '\\u{1F3D4}', title: 'Adventure', desc: 'Each layer moves at a different speed creating depth.', cls: 's2' },
-  { bg: '\\u{1F30A}', title: 'Create', desc: 'Build immersive experiences with simple scroll effects.', cls: 's3' },
+  { bg: '🌌', title: 'Explore', desc: 'Discover new horizons with parallax scrolling.', cls: 's1' },
+  { bg: '🏔', title: 'Adventure', desc: 'Each layer moves at a different speed creating depth.', cls: 's2' },
+  { bg: '🌊', title: 'Create', desc: 'Build immersive experiences with simple scroll effects.', cls: 's3' },
 ];
 
 function App() {
@@ -14640,7 +14640,7 @@ function App() {
   return (
     <div className="conf-wrap">
       <canvas ref={canvasRef} />
-      <button className="conf-btn" onClick={fire}>\\u{1F389} Celebrate!</button>
+      <button className="conf-btn" onClick={fire}>🎉 Celebrate!</button>
       <div className="conf-msg">Click the button to launch confetti</div>
     </div>
   );
