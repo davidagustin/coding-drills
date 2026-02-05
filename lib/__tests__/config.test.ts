@@ -121,6 +121,14 @@ describe('isDatabaseLanguage', () => {
     expect(isDatabaseLanguage('mongodb')).toBe(true);
   });
 
+  it('should return true for redis', () => {
+    expect(isDatabaseLanguage('redis')).toBe(true);
+  });
+
+  it('should return true for sql', () => {
+    expect(isDatabaseLanguage('sql')).toBe(true);
+  });
+
   it('should return false for javascript', () => {
     expect(isDatabaseLanguage('javascript')).toBe(false);
   });

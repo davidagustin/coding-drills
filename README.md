@@ -296,6 +296,59 @@ Solutions must use the intended method or pattern, not hardcoded answers. Proble
 
 Contributions are welcome. See existing problem and visualization patterns in `lib/problems/`, `lib/algorithmPatterns.ts`, and `components/visualizations/`. For new problems, follow the `Problem` interface and add `validPatterns` and expected output. For new visualizations, use the viz scripts and the shared animation/control components.
 
+### Adding a New Language
+
+When adding a new programming or database language, update **all** the following locations. Missing any will cause bugs (wrong language displayed, missing from dropdowns, broken modes).
+
+#### Checklist: All Languages
+
+| # | File | What to Update |
+|---|------|----------------|
+| 1 | `lib/types.ts` | Add to `LanguageId` union type |
+| 2 | `app/[language]/config.ts` | Add to `SUPPORTED_LANGUAGES` array |
+| 3 | `app/[language]/config.ts` | Add entry to `LANGUAGE_CONFIG` object (name, colors, docsUrl, version) |
+| 4 | `app/[language]/config.ts` | If database language: add to `isDatabaseLanguage()` function |
+| 5 | `app/[language]/drill/page.tsx` | Add to local `SUPPORTED_LANGUAGES` array (~line 292) |
+| 6 | `app/[language]/drill/page.tsx` | Add to `problemLoaders` object (~line 126) |
+| 7 | `lib/problems/{language}.ts` | Create problems file with `{language}Problems` export |
+| 8 | `lib/problems/index.ts` | Import and export the new problems array |
+| 9 | `lib/cheatsheets/{language}.ts` | Create cheatsheet file with `{language}Cheatsheet` export |
+| 10 | `lib/cheatsheets/index.ts` | Import and add to `cheatsheetsByLanguage` map |
+| 11 | `lib/methods/{language}.ts` | Create methods file (programming languages only) |
+| 12 | `lib/methods/index.ts` | Import and export (programming languages only) |
+
+#### Checklist: Database Languages Only
+
+Database languages (PostgreSQL, MySQL, MongoDB, Redis) have additional requirements:
+
+| # | File | What to Update |
+|---|------|----------------|
+| 13 | `app/[language]/LanguageSwitcher.tsx` | Add to `DATABASE_LANGUAGES` array (~line 33) |
+| 14 | `lib/codeValidator.ts` | Add to local `isDatabaseLanguage` check (~line 494) |
+| 15 | `e2e/problems/all-problems-validation.spec.ts` | Add to `DATABASE_LANGUAGES` array and `EXPECTED_DATABASE_COUNTS` |
+| 16 | `lib/__tests__/config.test.ts` | Add test case for `isDatabaseLanguage('{language}')` |
+
+#### Verification
+
+After adding a new language, run these checks:
+
+```bash
+pnpm typecheck                    # No TypeScript errors
+pnpm test lib/__tests__/config    # Config tests pass
+pnpm build                        # Build succeeds
+```
+
+Then manually verify:
+- Language appears in the language switcher dropdown
+- `/{language}` homepage shows correct name and colors
+- `/{language}/drill` loads the correct problems (not JavaScript)
+- `/{language}/cheatsheet` displays content
+- For database languages: navbar shows only Drill, Quiz, Study, Problems, Regex, Cheatsheet (no Building Blocks, Reference, or Interview)
+
+#### Why So Many Files?
+
+The codebase has some duplicated language lists for historical and performance reasons (lazy loading, bundle splitting). The central config (`app/[language]/config.ts`) is the source of truth, but some files have local copies for code-splitting or test isolation. A future refactor could consolidate these, but for now, follow the checklist above.
+
 ---
 
 ## License

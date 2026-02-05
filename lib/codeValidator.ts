@@ -492,7 +492,10 @@ export function validateDrillAnswer(
   // For database languages: if validPatterns were provided and matched (patternCheck is null),
   // return success immediately with expected output
   const isDatabaseLanguage =
-    language === 'postgresql' || language === 'mysql' || language === 'mongodb';
+    language === 'postgresql' ||
+    language === 'mysql' ||
+    language === 'mongodb' ||
+    language === 'redis';
   if (isDatabaseLanguage && validPatterns && validPatterns.length > 0) {
     // Patterns matched (patternCheck is null), return success
     return { success: true, output: expectedOutput };

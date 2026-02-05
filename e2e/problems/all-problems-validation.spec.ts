@@ -35,13 +35,14 @@ import type { LanguageId, Problem } from '../../lib/types';
 // For database languages, test EVERY problem (no sampling) - 263 total problems
 // For other languages, test a representative sample to keep test suite manageable
 const PROBLEMS_PER_LANGUAGE = 10; // Test first 10 problems from each language (non-database)
-const DATABASE_LANGUAGES = ['mongodb', 'postgresql', 'mysql'] as const;
+const DATABASE_LANGUAGES = ['mongodb', 'postgresql', 'mysql', 'redis'] as const;
 
 // Expected problem counts for database languages (MEMORY)
 const EXPECTED_DATABASE_COUNTS = {
   mongodb: 130,
   postgresql: 63,
   mysql: 70,
+  redis: 154,
 } as const;
 
 // ============================================================================

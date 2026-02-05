@@ -18,6 +18,15 @@ interface Project {
 
 const projects: Project[] = [
   {
+    title: 'Backend Engineer Detective',
+    description:
+      'An interactive detective game where you investigate real-world backend engineering incidents. Analyze logs, metrics, code, and testimonies to diagnose root causes across database, caching, networking, auth, memory, and distributed systems — with an AI mentor to guide your investigation using Socratic questioning.',
+    tags: ['Backend', 'System Design', 'Debugging', 'AI Mentor', 'Cloudflare Workers'],
+    githubUrl: 'https://github.com/davidagustin/backend-engineer-detective',
+    liveUrl: 'https://backend-engineer-detective.davidsyagustin.workers.dev',
+    stats: '22 cases, 6 categories, Junior → Principal difficulty',
+  },
+  {
     title: 'Coding Tricks Practice',
     description:
       'A LeetCode-style coding platform focused on JavaScript and TypeScript mastery. Features 155+ challenges across 19 categories with a Monaco Editor integration, sandboxed test runner, progress tracking, and real-time code validation.',

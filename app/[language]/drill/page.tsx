@@ -314,6 +314,7 @@ function isValidLanguage(lang: string): lang is LanguageId {
     'postgresql',
     'mysql',
     'mongodb',
+    'redis',
   ];
   return SUPPORTED_LANGUAGES.includes(lang as LanguageId);
 }
