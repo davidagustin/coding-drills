@@ -20,11 +20,19 @@ const projects: Project[] = [
   {
     title: 'Backend Engineer Detective',
     description:
-      'An interactive detective game where you investigate real-world backend engineering incidents. Analyze logs, metrics, code, and testimonies to diagnose root causes across database, caching, networking, auth, memory, and distributed systems — with an AI mentor to guide your investigation using Socratic questioning.',
-    tags: ['Backend', 'System Design', 'Debugging', 'AI Mentor', 'Cloudflare Workers'],
+      'An interactive detective game where you investigate real-world backend engineering incidents. Analyze logs, metrics, code, and testimonies to diagnose root causes — with an AI mentor to guide your investigation. Covers AWS, databases, Kubernetes, message queues, auth, monitoring, load balancing, resilience patterns, and more.',
+    tags: [
+      'Backend',
+      'System Design',
+      'Debugging',
+      'AI Mentor',
+      'Cloudflare Workers',
+      'AWS',
+      'Kubernetes',
+    ],
     githubUrl: 'https://github.com/davidagustin/backend-engineer-detective',
     liveUrl: 'https://backend-engineer-detective.davidsyagustin.workers.dev',
-    stats: '22 cases, 6 categories, Junior → Principal difficulty',
+    stats: '121 cases, 11 categories, Junior → Principal difficulty',
   },
   {
     title: 'Coding Tricks Practice',
