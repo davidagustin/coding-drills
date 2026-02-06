@@ -31,7 +31,7 @@ const projects: Project[] = [
       'Kubernetes',
     ],
     githubUrl: 'https://github.com/davidagustin/backend-engineer-detective',
-    liveUrl: 'https://backend-engineer-detective.davidsyagustin.workers.dev',
+    liveUrl: 'https://backend-engineer-detective.app-production.workers.dev/',
     stats: '121 cases, 11 categories, Junior → Principal difficulty',
   },
   {
