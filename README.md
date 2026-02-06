@@ -150,7 +150,7 @@ Hundreds of algorithm exercises include step-through visualizations: play/pause,
 | Clojure | PostgreSQL | MySQL | MongoDB |
 | Redis | | | |
 
-25 languages total. Database languages (PostgreSQL, MySQL, MongoDB, Redis) have Query Training and no method-based Quiz/Reference.
+25 languages total. Database languages (PostgreSQL, MySQL, MongoDB, Redis) have Query Training and no Quiz, Building Blocks, Reference, or Interview modes.
 
 ---
 
@@ -343,7 +343,7 @@ Then manually verify:
 - `/{language}` homepage shows correct name and colors
 - `/{language}/drill` loads the correct problems (not JavaScript)
 - `/{language}/cheatsheet` displays content
-- For database languages: navbar shows only Drill, Quiz, Study, Problems, Regex, Cheatsheet (no Building Blocks, Reference, or Interview)
+- For database languages: navbar shows only Drill, Study, Problems, Regex, Cheatsheet (no Quiz, Building Blocks, Reference, or Interview)
 
 #### Why So Many Files?
 

@@ -438,9 +438,8 @@ export default function LanguagePage() {
   const exerciseCount = !isDbLanguage ? getExerciseCount(language) : 0;
   const interviewProblemCount = algorithmProblems.length + getSystemDesignProblemCount();
   const complexityCount = complexityQuestions.length;
-  // For database languages, quiz questions come from cheatsheet
   const cheatsheetCount = getSourceCardCount('cheatsheet', { language });
-  const quizTotalCount = isDbLanguage ? cheatsheetCount : methodCount + complexityCount;
+  const quizTotalCount = !isDbLanguage ? methodCount + complexityCount : 0;
   const regexProblemCount = getRegexProblemCount();
   // For database languages, study cards come from cheatsheet
   const studyCardCount = isDbLanguage
@@ -505,7 +504,7 @@ export default function LanguagePage() {
 
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
           {isDbLanguage
-            ? `Master ${config.name} through interactive drills, quizzes, and problem-solving.`
+            ? `Master ${config.name} through interactive drills, study cards, and problem-solving.`
             : language === 'typescript'
               ? `Master ${config.name} types and methods through interactive drills, quizzes, and comprehensive references.`
               : `Master ${config.name} methods through interactive drills, quizzes, and comprehensive references.`}
@@ -528,19 +527,17 @@ export default function LanguagePage() {
           badge={methodCount > 0 ? `${methodCount} methods` : undefined}
         />
 
-        <ModeCard
-          href={`/${language}/quiz`}
-          icon={<LightbulbIcon className="w-8 h-8" />}
-          title="Quiz Mode"
-          description={
-            isDbLanguage
-              ? 'Test your knowledge of commands, queries, and syntax. Identify the correct operation from examples.'
-              : 'Match inputs and outputs to methods, plus time & space complexity challenges. Test your knowledge and learn new patterns.'
-          }
-          buttonText="Start Quiz"
-          config={config}
-          badge={quizTotalCount > 0 ? `${quizTotalCount} questions` : undefined}
-        />
+        {!isDbLanguage && (
+          <ModeCard
+            href={`/${language}/quiz`}
+            icon={<LightbulbIcon className="w-8 h-8" />}
+            title="Quiz Mode"
+            description="Match inputs and outputs to methods, plus time & space complexity challenges. Test your knowledge and learn new patterns."
+            buttonText="Start Quiz"
+            config={config}
+            badge={quizTotalCount > 0 ? `${quizTotalCount} questions` : undefined}
+          />
+        )}
         <ModeCard
           href={`/${language}/study`}
           icon={<StudyIcon className="w-8 h-8" />}
