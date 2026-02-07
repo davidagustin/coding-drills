@@ -18,13 +18,51 @@ function EthereumIcon({ className }: { className?: string }) {
   );
 }
 
+function CopyIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" strokeWidth={2} />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+function truncateAddress(address: string) {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
 const addresses = [
   {
     label: 'BTC',
     address: 'bc1qkqrp0v0av6ch6ekm2e2scav93a0d83mawcjcd3',
     icon: BitcoinIcon,
     color: 'text-orange-400',
-    hoverBorder: 'hover:border-orange-500/50',
+    hoverBorder: 'hover:border-orange-500/40',
     bg: 'hover:bg-orange-500/5',
   },
   {
@@ -32,7 +70,7 @@ const addresses = [
     address: '0x846a124b1438f5dc657309e686c57b03647888f2',
     icon: EthereumIcon,
     color: 'text-blue-400',
-    hoverBorder: 'hover:border-blue-500/50',
+    hoverBorder: 'hover:border-blue-500/40',
     bg: 'hover:bg-blue-500/5',
   },
 ];
@@ -49,32 +87,21 @@ export function DonationAddresses() {
   return (
     <div className="mt-6 pt-6 border-t border-gray-800/30 text-center">
       <p className="text-gray-500 text-xs mb-3">Support this project</p>
-      <div className="flex items-center justify-center gap-3">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
         {addresses.map(({ label, address, icon: Icon, color, hoverBorder, bg }) => (
           <button
             key={label}
             type="button"
             onClick={() => handleCopy(address)}
-            title={`Copy ${label} address`}
-            className={`relative inline-flex items-center justify-center w-10 h-10 rounded-full border border-zinc-700/50 bg-zinc-800/50 ${hoverBorder} ${bg} transition-all duration-200 cursor-pointer group`}
+            title={`Copy ${label} address: ${address}`}
+            className={`inline-flex items-center gap-2.5 px-3.5 py-2 rounded-lg border border-zinc-700/50 bg-zinc-800/50 ${hoverBorder} ${bg} transition-all duration-200 cursor-pointer group`}
           >
+            <Icon className={`w-4.5 h-4.5 ${color} shrink-0`} />
+            <code className="text-zinc-500 text-xs">{truncateAddress(address)}</code>
             {copied === address ? (
-              <svg
-                className="w-5 h-5 text-green-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+              <CheckIcon className="w-3.5 h-3.5 text-green-400 shrink-0" />
             ) : (
-              <Icon className={`w-5 h-5 ${color} group-hover:scale-110 transition-transform`} />
+              <CopyIcon className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0 transition-colors" />
             )}
           </button>
         ))}
