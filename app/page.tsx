@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { DonationAddresses } from '@/components/DonationAddresses';
 import { LanguageGrid } from '@/components/LanguageGrid';
 import {
   FRAMEWORK_CONFIG,
@@ -867,6 +868,8 @@ export default function Home() {
           <div className="mt-6 pt-6 border-t border-gray-800/30 text-center text-gray-600 text-xs">
             © {new Date().getFullYear()} Coding Drills. All rights reserved.
           </div>
+
+          <DonationAddresses />
         </div>
       </footer>
     </div>
