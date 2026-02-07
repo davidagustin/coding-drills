@@ -97,6 +97,7 @@ export function DonationAddresses() {
             className={`inline-flex items-center gap-2.5 px-3.5 py-2 rounded-lg border border-zinc-700/50 bg-zinc-800/50 ${hoverBorder} ${bg} transition-all duration-200 cursor-pointer group`}
           >
             <Icon className={`w-4.5 h-4.5 ${color} shrink-0`} />
+            <span className={`text-xs font-semibold ${color}`}>{label}</span>
             <code className="text-zinc-500 text-xs">{truncateAddress(address)}</code>
             {copied === address ? (
               <CheckIcon className="w-3.5 h-3.5 text-green-400 shrink-0" />
