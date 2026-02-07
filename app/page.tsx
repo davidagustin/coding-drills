@@ -865,11 +865,11 @@ export default function Home() {
             </div>
           </div>
 
+          <DonationAddresses />
+
           <div className="mt-6 pt-6 border-t border-gray-800/30 text-center text-gray-600 text-xs">
             © {new Date().getFullYear()} Coding Drills. All rights reserved.
           </div>
-
-          <DonationAddresses />
         </div>
       </footer>
     </div>
